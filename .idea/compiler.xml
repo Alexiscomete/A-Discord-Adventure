@@ -10,7 +10,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="A-Discord-Adventure" target="1.5" />
+      <module name="A-Discord-Adventure" target="8" />
     </bytecodeTargetLevel>
   </component>
 </project>
