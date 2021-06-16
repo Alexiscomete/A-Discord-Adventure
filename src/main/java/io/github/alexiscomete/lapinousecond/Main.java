@@ -27,5 +27,6 @@ public class Main {
         api.addListener(new ListenerMain());
 
         ListenerMain.commands.put("help", new Help());
+        ListenerMain.commands.put("hello", new Hello());
     }
 }
