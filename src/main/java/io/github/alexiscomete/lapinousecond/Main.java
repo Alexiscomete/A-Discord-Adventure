@@ -21,9 +21,9 @@ public class Main {
 
     public static void main(String[] args) {
         System.out.println("RIP Lapinou premier");
-
+        config.loadAll();
         api = new DiscordApiBuilder().setToken(config.getContent().get(0)).login().join();
         api.updateActivity("Prefix : -");
-
+        api.addListener(new ListenerMain());
     }
 }
