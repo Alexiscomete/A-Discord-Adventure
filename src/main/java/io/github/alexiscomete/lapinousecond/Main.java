@@ -25,5 +25,7 @@ public class Main {
         api = new DiscordApiBuilder().setToken(config.getContent().get(0)).login().join();
         api.updateActivity("Prefix : -");
         api.addListener(new ListenerMain());
+
+        ListenerMain.commands.put("help", new Help());
     }
 }
