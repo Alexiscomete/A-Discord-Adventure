@@ -21,6 +21,10 @@ public class InventoryC extends CommandBot {
             builder.setDescription("Serveur actuel : " + p.server).setTitle("Inventaire").setColor(Color.green);
             builder.addField("Ressources et argent", "**Rabbitcoins :** "  + p.bal);
             messageCreateEvent.getMessage().reply(builder);
+            if (p.tuto == 2) {
+                messageCreateEvent.getMessage().reply("Bon ... comme vous l'avez vu vous n'avez pas d'argent (sauf si vous refaites le tuto 👀). Utilisez la commande `work` pour en gagner un peu ...");
+                p.tuto = 3;
+            }
         }
     }
 

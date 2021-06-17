@@ -28,6 +28,8 @@ public class Main {
 
         ListenerMain.commands.put("help", new Help());
         ListenerMain.commands.put("hello", new Hello());
+        ListenerMain.commands.put("work", new Work());
+        ListenerMain.commands.put("sec", new Sec());
         ListenerMain.commands.put("inv", new InventoryC());
         ListenerMain.commands.put("start", new StartAdventure());
         ListenerMain.commands.put("intro", new Introduction());
