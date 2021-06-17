@@ -1,6 +1,9 @@
 package io.github.alexiscomete.lapinousecond;
 
+import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.event.message.MessageCreateEvent;
+
+import java.awt.*;
 
 public class InventoryC extends CommandBot {
 
@@ -10,7 +13,15 @@ public class InventoryC extends CommandBot {
 
     @Override
     void execute(MessageCreateEvent messageCreateEvent, String content, String[] args) {
-        messageCreateEvent.getMessage().reply("L'inventaire est bientôt disponible");
+        Player p = SaveManager.getPlayer(messageCreateEvent.getMessageAuthor().getId());
+        if (p == null) {
+            messageCreateEvent.getMessage().reply("Vous devez d'abord faire la commande start avant de continuer");
+        } else {
+            EmbedBuilder builder = new EmbedBuilder();
+            builder.setDescription("Serveur actuel : " + p.server).setTitle("Inventaire").setColor(Color.green);
+            builder.addField("Ressources et argent", "**Rabbitcoins :** "  + p.bal);
+            messageCreateEvent.getMessage().reply(builder);
+        }
     }
 
 }

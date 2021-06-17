@@ -17,7 +17,7 @@ public class ListenerMain implements MessageCreateListener {
             String[] args = content.split(" ");
             CommandBot commandBot = commands.get(args[0]);
             System.out.println("null?");
-            if (commandBot != null) {
+            if (commandBot != null && !messageCreateEvent.getMessageAuthor().isBotUser()) {
                 System.out.println("no");
                 commandBot.execute(messageCreateEvent, content, args);
             }
