@@ -23,7 +23,7 @@ public class Sec extends CommandBot {
             if (p.tuto == 1) {
                 p.tuto = 2;
                 User user = messageCreateEvent.getMessageAuthor().asUser().get();
-                user.sendMessage("Continuons le tuto. Vous pouvez utiliser la commande `inv` pour voir votre inventaire.");
+                user.sendMessage("Ce choix n'est pas définitif. Pour garantir une meilleur expérience de jeu, n'hésitez pas à nous signaler un serveur qui vous empêche de continuer l'aventure dans de bonnes conditions. Continuons le tuto. Vous pouvez utiliser la commande `inv` pour voir votre inventaire.");
             }
         } catch (NumberFormatException e) {
             messageCreateEvent.getMessage().reply("👀");

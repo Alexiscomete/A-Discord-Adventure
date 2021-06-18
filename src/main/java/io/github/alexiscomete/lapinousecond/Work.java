@@ -1,6 +1,12 @@
 package io.github.alexiscomete.lapinousecond;
 
+import org.javacord.api.entity.message.embed.EmbedBuilder;
+import org.javacord.api.entity.server.Server;
 import org.javacord.api.event.message.MessageCreateEvent;
+
+import java.awt.*;
+import java.util.Optional;
+import java.util.Random;
 
 public class Work extends CommandBot {
 
@@ -10,6 +16,38 @@ public class Work extends CommandBot {
 
     @Override
     void execute(MessageCreateEvent messageCreateEvent, String content, String[] args) {
-        messageCreateEvent.getMessage().reply("Impossible pour le moment");
+        Player p = SaveManager.getPlayer(messageCreateEvent.getMessageAuthor().getId());
+        if (p == null) {
+            messageCreateEvent.getMessage().reply("👀 Utilisez la commande start pour vous créer un compte !");
+        } else {
+            Optional<Server> servOp = messageCreateEvent.getServer();
+            if (servOp.isPresent()) {
+                Server serv = servOp.get();
+                if (serv.getId() == p.server) {
+                    WorkEnum[] wo = WorkEnum.values();
+                    int i = new Random().nextInt(wo.length);
+                    WorkEnum w = wo[i];
+                    EmbedBuilder builder = new EmbedBuilder();
+                    String[] strings = w.answer.split("rc");
+                    int r = new Random().nextInt(w.max - w.min) + w.min;
+                    String answer;
+                    if (strings.length > 1) {
+                        answer = strings[0] + r + strings[1];
+                    } else {
+                        answer = strings[0];
+                    }
+                    builder.setDescription(answer).setTitle("Work").setColor(Color.red);
+                    messageCreateEvent.getMessage().reply(builder);
+                    p.setBal(p.bal + r);
+                    if (p.tuto == 3) {
+                        messageCreateEvent.getMessage().reply("Félicitations, vous pouvez si vous le souhaitez réutiliser la commande inv pour voir l'argent que vous avez gagné (vous n'avez bien sûr pas besoin de faire ce qui est écrit dessus).");
+                    }
+                } else {
+                    messageCreateEvent.getMessage().reply("Utilisez cette commande dans un salon du serveur actuel : " + p.server);
+                }
+            } else {
+                messageCreateEvent.getMessage().reply("Utilisez cette commande dans un salon du serveur actuel : " + p.server);
+            }
+        }
     }
 }
