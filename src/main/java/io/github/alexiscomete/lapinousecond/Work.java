@@ -24,23 +24,29 @@ public class Work extends CommandBot {
             if (servOp.isPresent()) {
                 Server serv = servOp.get();
                 if (serv.getId() == p.server) {
-                    WorkEnum[] wo = WorkEnum.values();
-                    int i = new Random().nextInt(wo.length);
-                    WorkEnum w = wo[i];
-                    EmbedBuilder builder = new EmbedBuilder();
-                    String[] strings = w.answer.split("rc");
-                    int r = new Random().nextInt(w.max - w.min) + w.min;
-                    String answer;
-                    if (strings.length > 1) {
-                        answer = strings[0] + r + strings[1];
+                    if (System.currentTimeMillis() - p.getWorkTime() > 200000) {
+                        WorkEnum[] wo = WorkEnum.values();
+                        int i = new Random().nextInt(wo.length);
+                        WorkEnum w = wo[i];
+                        EmbedBuilder builder = new EmbedBuilder();
+                        String[] strings = w.answer.split("rc");
+                        int r = new Random().nextInt(w.max - w.min) + w.min;
+                        String answer;
+                        if (strings.length > 1) {
+                            answer = strings[0] + r + strings[1];
+                        } else {
+                            answer = strings[0];
+                        }
+                        builder.setDescription(answer).setTitle("Work").setColor(Color.red);
+                        messageCreateEvent.getMessage().reply(builder);
+                        p.setBal(p.bal + r);
+                        p.setWorkTime(System.currentTimeMillis());
+                        if (p.tuto == 3) {
+                            messageCreateEvent.getMessage().reply("Félicitations, vous pouvez si vous le souhaitez réutiliser la commande inv pour voir l'argent que vous avez gagné (vous n'avez bien sûr pas besoin de faire ce qui est écrit dessus).");
+                            p.setTuto((short) 4);
+                        }
                     } else {
-                        answer = strings[0];
-                    }
-                    builder.setDescription(answer).setTitle("Work").setColor(Color.red);
-                    messageCreateEvent.getMessage().reply(builder);
-                    p.setBal(p.bal + r);
-                    if (p.tuto == 3) {
-                        messageCreateEvent.getMessage().reply("Félicitations, vous pouvez si vous le souhaitez réutiliser la commande inv pour voir l'argent que vous avez gagné (vous n'avez bien sûr pas besoin de faire ce qui est écrit dessus).");
+                        messageCreateEvent.getMessage().reply("Cooldown ! Temps entre 2 work : 200s, temps écoulé : " + (System.currentTimeMillis() - p.getWorkTime()) / 1000 + "s");
                     }
                 } else {
                     messageCreateEvent.getMessage().reply("Utilisez cette commande dans un salon du serveur actuel : " + p.server);

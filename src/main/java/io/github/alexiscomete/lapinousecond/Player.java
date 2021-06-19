@@ -8,6 +8,16 @@ public class Player {
     short tuto;
     short security;
 
+    public long getWorkTime() {
+        return workTime;
+    }
+
+    public void setWorkTime(long workTime) {
+        this.workTime = workTime;
+    }
+
+    long workTime;
+
     public long getId() {
         return id;
     }
@@ -48,11 +58,12 @@ public class Player {
         this.security = security;
     }
 
-    public Player(long id, long bal, long server, short tuto, short security) {
+    public Player(long id, long bal, long server, short tuto, short security, long workTime) {
         this.id = id;
         this.bal = bal;
         this.server = server;
         this.tuto = tuto;
         this.security = security;
+        this.workTime = workTime;
     }
 }
