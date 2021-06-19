@@ -29,11 +29,11 @@ public class Work extends CommandBot {
                         int i = new Random().nextInt(wo.length);
                         WorkEnum w = wo[i];
                         EmbedBuilder builder = new EmbedBuilder();
-                        String[] strings = w.answer.split("rc");
+                        String[] strings = w.answer.split(" rc ");
                         int r = new Random().nextInt(w.max - w.min) + w.min;
                         String answer;
                         if (strings.length > 1) {
-                            answer = strings[0] + r + strings[1];
+                            answer = strings[0] +" "+  r +" "+ strings[1];
                         } else {
                             answer = strings[0];
                         }
