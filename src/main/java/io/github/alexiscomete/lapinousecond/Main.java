@@ -30,6 +30,10 @@ public class Main {
         ListenerMain.commands.put("hello", new Hello());
         ListenerMain.commands.put("work", new Work());
         ListenerMain.commands.put("sec", new Sec());
+        ListenerMain.commands.put("pc", new PlayerShop());
+        ListenerMain.commands.put("buy", new Buy());
+        ListenerMain.commands.put("give", new Give());
+        ListenerMain.commands.put("sell", new SellPlayerShop());
         ListenerMain.commands.put("inv", new InventoryC());
         ListenerMain.commands.put("start", new StartAdventure());
         ListenerMain.commands.put("intro", new Introduction());
