@@ -26,6 +26,10 @@ public class Main {
         api.updateActivity("Prefix : -");
         api.addListener(new ListenerMain());
 
+        SaveManager.path = config.getContent().get(1);
+        SaveManager.user = config.getContent().get(2);
+        SaveManager.mdp = config.getContent().get(3);
+
         ListenerMain.commands.put("help", new Help());
         ListenerMain.commands.put("hello", new Hello());
         ListenerMain.commands.put("work", new Work());
