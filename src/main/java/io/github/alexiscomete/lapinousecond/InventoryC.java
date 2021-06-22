@@ -18,12 +18,12 @@ public class InventoryC extends CommandBot {
             messageCreateEvent.getMessage().reply("Vous devez d'abord faire la commande start avant de continuer");
         } else {
             EmbedBuilder builder = new EmbedBuilder();
-            builder.setDescription("Serveur actuel : " + p.server).setTitle("Inventaire").setColor(Color.green);
-            builder.addField("Ressources et argent", "**Rabbitcoins :** "  + p.bal);
+            builder.setDescription("Serveur actuel : " + p.getServer()).setTitle("Inventaire").setColor(Color.green);
+            builder.addField("Ressources et argent", "**Rabbitcoins :** "  + p.getBal());
             messageCreateEvent.getMessage().reply(builder);
-            if (p.tuto == 2) {
+            if (p.getTuto() == 2) {
                 messageCreateEvent.getMessage().reply("Bon ... comme vous l'avez vu vous n'avez pas d'argent (sauf si vous refaites le tuto 👀). Utilisez la commande `work` pour en gagner un peu ...");
-                p.tuto = 3;
+                p.setTuto((short) 3);
             }
         }
     }

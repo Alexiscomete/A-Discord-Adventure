@@ -2,11 +2,12 @@ package io.github.alexiscomete.lapinousecond;
 
 public class Player {
 
-    long id;
-    long bal;
-    long server;
-    short tuto;
-    short security;
+    private long id;
+    private long bal;
+    private long server;
+    private short tuto;
+    private short security;
+    private long workTime;
 
     public long getWorkTime() {
         return workTime;
@@ -15,8 +16,6 @@ public class Player {
     public void setWorkTime(long workTime) {
         this.workTime = workTime;
     }
-
-    long workTime;
 
     public long getId() {
         return id;
@@ -50,7 +49,7 @@ public class Player {
         this.tuto = tuto;
     }
 
-    public short getSecurity() {
+    public short getSecurity(short s) {
         return security;
     }
 

@@ -23,7 +23,7 @@ public class Work extends CommandBot {
             Optional<Server> servOp = messageCreateEvent.getServer();
             if (servOp.isPresent()) {
                 Server serv = servOp.get();
-                if (serv.getId() == p.server) {
+                if (serv.getId() == p.getServer()) {
                     if (System.currentTimeMillis() - p.getWorkTime() > 200000) {
                         WorkEnum[] wo = WorkEnum.values();
                         int i = new Random().nextInt(wo.length);
@@ -39,9 +39,9 @@ public class Work extends CommandBot {
                         }
                         builder.setDescription(answer).setTitle("Work").setColor(Color.red);
                         messageCreateEvent.getMessage().reply(builder);
-                        p.setBal(p.bal + r);
+                        p.setBal(p.getBal() + r);
                         p.setWorkTime(System.currentTimeMillis());
-                        if (p.tuto == 3) {
+                        if (p.getTuto() == 3) {
                             messageCreateEvent.getMessage().reply("Félicitations, vous pouvez si vous le souhaitez réutiliser la commande inv pour voir l'argent que vous avez gagné (vous n'avez bien sûr pas besoin de faire ce qui est écrit dessus).");
                             p.setTuto((short) 4);
                         }
@@ -49,10 +49,10 @@ public class Work extends CommandBot {
                         messageCreateEvent.getMessage().reply("Cooldown ! Temps entre 2 work : 200s, temps écoulé : " + (System.currentTimeMillis() - p.getWorkTime()) / 1000 + "s");
                     }
                 } else {
-                    messageCreateEvent.getMessage().reply("Utilisez cette commande dans un salon du serveur actuel : " + p.server);
+                    messageCreateEvent.getMessage().reply("Utilisez cette commande dans un salon du serveur actuel : " + p.getServer());
                 }
             } else {
-                messageCreateEvent.getMessage().reply("Utilisez cette commande dans un salon du serveur actuel : " + p.server);
+                messageCreateEvent.getMessage().reply("Utilisez cette commande dans un salon du serveur actuel : " + p.getServer());
             }
         }
     }
