@@ -30,17 +30,21 @@ public class Main {
         SaveManager.user = config.getContent().get(2);
         SaveManager.mdp = config.getContent().get(3);
 
-        ListenerMain.commands.put("help", new Help());
-        ListenerMain.commands.put("hello", new Hello());
-        ListenerMain.commands.put("work", new Work());
-        ListenerMain.commands.put("sec", new Sec());
-        ListenerMain.commands.put("pc", new PlayerShop());
-        ListenerMain.commands.put("buy", new Buy());
-        ListenerMain.commands.put("give", new Give());
-        ListenerMain.commands.put("sell", new SellPlayerShop());
-        ListenerMain.commands.put("inv", new InventoryC());
-        ListenerMain.commands.put("start", new StartAdventure());
-        ListenerMain.commands.put("intro", new Introduction());
+        addCommand(new Help());
+        addCommand(new Hello());
+        addCommand(new Work());
+        addCommand(new Sec());
+        addCommand(new PlayerShop());
+        addCommand(new Buy());
+        addCommand(new Give());
+        addCommand(new SellPlayerShop());
+        addCommand(new InventoryC());
+        addCommand(new StartAdventure());
+        addCommand(new Introduction());
 
+    }
+
+    public static void addCommand(CommandBot commandBot) {
+        ListenerMain.commands.put(commandBot.name, commandBot);
     }
 }
