@@ -21,7 +21,7 @@ public abstract class CommandInServer extends CommandBot{
             if (servOp.isPresent()) {
                 Server serv = servOp.get();
                 if (serv.getId() == p.getServer()) {
-                    executeC(messageCreateEvent, content, args);
+                    executeC(messageCreateEvent, content, args, p);
                 } else {
                     messageCreateEvent.getMessage().reply("Utilisez cette commande dans un salon du serveur actuel : " + p.getServer());
                 }
@@ -31,5 +31,5 @@ public abstract class CommandInServer extends CommandBot{
         }
     }
 
-    public abstract void executeC(MessageCreateEvent messageCreateEvent, String content, String[] args);
+    public abstract void executeC(MessageCreateEvent messageCreateEvent, String content, String[] args, Player p);
 }
