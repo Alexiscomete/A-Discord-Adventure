@@ -30,6 +30,8 @@ public class Main {
         SaveManager.user = config.getContent().get(2);
         SaveManager.mdp = config.getContent().get(3);
 
+        SaveManager.connection();
+
         addCommand(new Help());
         addCommand(new Hello());
         addCommand(new Work());

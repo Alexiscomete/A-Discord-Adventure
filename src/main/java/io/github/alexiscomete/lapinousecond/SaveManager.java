@@ -36,7 +36,8 @@ public class SaveManager {
             try {
                 ResultSet resultSet = st.executeQuery("SELECT * FROM players WHERE id = " + l);
                 if (resultSet.next()) {
-                    p = new Player(Long.parseLong(resultSet.getString("id")), Long.parseLong(resultSet.getString("bal")), Long.parseLong(resultSet.getString("server")), Short.parseShort(resultSet.getString("tuto")), Short.parseShort(resultSet.getString("sec")), Long.parseLong(resultSet.getString("wt")));
+                    p = new Player(Long.parseLong(resultSet.getString("id")), Long.parseLong(resultSet.getString("bal")), Long.parseLong(resultSet.getString("serv")), Short.parseShort(resultSet.getString("tuto")), Short.parseShort(resultSet.getString("sec")), Long.parseLong(resultSet.getString("wt")));
+                    players.put(l, p);
                 }
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
@@ -49,7 +50,15 @@ public class SaveManager {
     public static ServerBot getServer(long l) {
         ServerBot serverBot = servers.get(l);
         if (serverBot == null) {
-            System.out.println("new Server");
+            try {
+                ResultSet resultSet = st.executeQuery("SELECT * FROM servers WHERE id = " + l);
+                if (resultSet.next()) {
+                    serverBot = new ServerBot();
+                    servers.put(l, serverBot);
+                }
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
         }
         return serverBot;
     }
