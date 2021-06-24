@@ -17,9 +17,10 @@ public class SaveManager {
 
     public static void connection() {
         try {
+            Class.forName("com.mysql.jdbc.Driver");
             co = DriverManager.getConnection(path, user, mdp);
             st = co.createStatement();
-        } catch (SQLException throwable) {
+        } catch (SQLException | ClassNotFoundException throwable) {
             throwable.printStackTrace();
             if (co != null) {
                 try {
