@@ -54,7 +54,12 @@ public class SaveManager {
             try {
                 ResultSet resultSet = st.executeQuery("SELECT * FROM servers WHERE id = " + l);
                 if (resultSet.next()) {
-                    serverBot = new ServerBot();
+                    String[] str = resultSet.getString("travel").split(";");
+                    long[] arr = new long[str.length];
+                    for (int i = 0; i < str.length; i++) {
+                        arr[i] = Long.parseLong(str[i]);
+                    }
+                    serverBot = new ServerBot(Integer.parseInt(resultSet.getString("x")), Integer.parseInt(resultSet.getString("y")), Integer.parseInt(resultSet.getString("z")), Long.parseLong(resultSet.getString("id")), resultSet.getString("desc"), resultSet.getString("name"), arr);
                     servers.put(l, serverBot);
                 }
             } catch (SQLException throwables) {
