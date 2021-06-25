@@ -1,5 +1,7 @@
 package io.github.alexiscomete.lapinousecond;
 
+import java.sql.SQLException;
+
 public class Player {
 
     private long id;
@@ -15,6 +17,11 @@ public class Player {
 
     public void setWorkTime(long workTime) {
         this.workTime = workTime;
+        try {
+            SaveManager.st.executeUpdate("UPDATE players SET wt = " + workTime + " WHERE id = " + id);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 
     public long getId() {
@@ -23,6 +30,11 @@ public class Player {
 
     public void setId(long id) {
         this.id = id;
+        try {
+            SaveManager.st.executeUpdate("UPDATE players SET id = " + id + " WHERE id = " + this.id);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 
     public long getBal() {
@@ -31,6 +43,11 @@ public class Player {
 
     public void setBal(long bal) {
         this.bal = bal;
+        try {
+            SaveManager.st.executeUpdate("UPDATE players SET bal = " + bal + " WHERE id = " + id);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 
     public long getServer() {
@@ -39,6 +56,11 @@ public class Player {
 
     public void setServer(long server) {
         this.server = server;
+        try {
+            SaveManager.st.executeUpdate("UPDATE players SET serv = " + server + " WHERE id = " + id);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 
     public short getTuto() {
@@ -47,6 +69,11 @@ public class Player {
 
     public void setTuto(short tuto) {
         this.tuto = tuto;
+        try {
+            SaveManager.st.executeUpdate("UPDATE players SET tuto = " + tuto + " WHERE id = " + id);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 
     public short getSecurity(short s) {
@@ -55,6 +82,11 @@ public class Player {
 
     public void setSecurity(short security) {
         this.security = security;
+        try {
+            SaveManager.st.executeUpdate("UPDATE players SET sec = " + security + " WHERE id = " + id);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 
     public Player(long id, long bal, long server, short tuto, short security, long workTime) {

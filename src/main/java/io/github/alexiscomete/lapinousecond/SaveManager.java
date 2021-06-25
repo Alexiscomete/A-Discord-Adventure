@@ -13,11 +13,11 @@ public class SaveManager {
     public static HashMap<Long, ServerBot> servers = new HashMap<>();
 
     static Connection co = null;
-    static Statement st = null;
+    public static Statement st = null;
 
     public static void connection() {
         try {
-            Class.forName("com.mysql.jdbc.Driver");
+            Class.forName("com.mysql.cj.jdbc.Driver");
             co = DriverManager.getConnection(path, user, mdp);
             st = co.createStatement();
         } catch (SQLException | ClassNotFoundException throwable) {
@@ -62,5 +62,13 @@ public class SaveManager {
             }
         }
         return serverBot;
+    }
+
+    public static void addPlayer(long id, long bal, long server, short tuto, short security, long workTime) {
+        try {
+            st.executeUpdate("INSERT INTO players (id, bal, serv, tuto, sec, wt) VALUES (" + id + ", " + bal + ", " + server + ", " + tuto + ", " + security + ", " + workTime + ")");
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 }

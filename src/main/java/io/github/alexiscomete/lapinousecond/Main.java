@@ -5,6 +5,7 @@ import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
 
 import java.io.IOException;
+import java.util.function.Function;
 
 public class Main {
 
@@ -13,7 +14,7 @@ public class Main {
 
     static {
         try {
-            config = new SaveLocation<>(";", "/config.txt", (String a) -> a);
+            config = new SaveLocation<String>(";", "/config.txt", a -> a);
         } catch (IOException e) {
             e.printStackTrace();
         }
