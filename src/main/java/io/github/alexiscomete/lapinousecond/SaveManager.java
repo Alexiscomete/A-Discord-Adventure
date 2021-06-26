@@ -52,14 +52,14 @@ public class SaveManager {
         ServerBot serverBot = servers.get(l);
         if (serverBot == null) {
             try {
-                ResultSet resultSet = st.executeQuery("SELECT * FROM servers WHERE id = " + l);
+                ResultSet resultSet = st.executeQuery("SELECT * FROM guilds WHERE id = " + l);
                 if (resultSet.next()) {
                     String[] str = resultSet.getString("travel").split(";");
                     long[] arr = new long[str.length];
                     for (int i = 0; i < str.length; i++) {
                         arr[i] = Long.parseLong(str[i]);
                     }
-                    serverBot = new ServerBot(Integer.parseInt(resultSet.getString("x")), Integer.parseInt(resultSet.getString("y")), Integer.parseInt(resultSet.getString("z")), Long.parseLong(resultSet.getString("id")), resultSet.getString("desc"), resultSet.getString("name"), arr);
+                    serverBot = new ServerBot(Integer.parseInt(resultSet.getString("x")), Integer.parseInt(resultSet.getString("y")), Integer.parseInt(resultSet.getString("z")), Long.parseLong(resultSet.getString("id")), resultSet.getString("descr"), resultSet.getString("namerp"), arr);
                     servers.put(l, serverBot);
                 }
             } catch (SQLException throwables) {
@@ -72,6 +72,14 @@ public class SaveManager {
     public static void addPlayer(long id, long bal, long server, short tuto, short security, long workTime) {
         try {
             st.executeUpdate("INSERT INTO players (id, bal, serv, tuto, sec, wt) VALUES (" + id + ", " + bal + ", " + server + ", " + tuto + ", " + security + ", " + workTime + ")");
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    public static void addServer(int x, int y, int z, long id, String description, String name, String travel) {
+        try {
+            st.executeUpdate("INSERT INTO guilds (x, y, z, id, descr, namerp, travel) VALUES (" + x + ", " + y + ", " + z + ", " + id + ", '" + description + "', '" + name + "', '" + travel + "')");
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
