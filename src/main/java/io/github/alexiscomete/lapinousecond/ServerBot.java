@@ -8,6 +8,7 @@ public class ServerBot {
     private long id;
     private String description, name;
     private long[] travel;
+    short sec;
 
     public int getY() {
         return y;
@@ -105,7 +106,7 @@ public class ServerBot {
         }
     }
 
-    public ServerBot(int x, int y, int z, long id, String description, String name, long[] travel) {
+    public ServerBot(int x, int y, int z, long id, String description, String name, long[] travel, short sec) {
         this.x = x;
         this.y = y;
         this.z = z;
@@ -113,5 +114,6 @@ public class ServerBot {
         this.description = description;
         this.name = name;
         this.travel = travel;
+        this.sec = sec;
     }
 }
