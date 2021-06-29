@@ -42,6 +42,7 @@ public class Main {
         addCommand(new Give());
         addCommand(new SellPlayerShop());
         addCommand(new InventoryC());
+        addCommand(new ConfigServ());
         addCommand(new Travel());
         addCommand(new Hub());
         addCommand(new StartAdventure());
