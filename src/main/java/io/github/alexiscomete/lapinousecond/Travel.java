@@ -1,11 +1,21 @@
 package io.github.alexiscomete.lapinousecond;
 
+import org.javacord.api.entity.channel.Channel;
+import org.javacord.api.entity.channel.ServerChannel;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.entity.server.Server;
+import org.javacord.api.entity.server.invite.InviteBuilder;
+import org.javacord.api.entity.server.invite.RichInvite;
 import org.javacord.api.event.message.MessageCreateEvent;
 
 import java.awt.*;
+import java.io.File;
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.function.Consumer;
 
 public class Travel extends CommandInServer {
 
@@ -34,7 +44,20 @@ public class Travel extends CommandInServer {
             if (serverOp.isPresent()) {
                 Server server = serverOp.get();
                 if (args.length > 2) {
-
+                    List<ServerChannel> channels = server.getChannels();
+                    if (channels.size() == 0)  {
+                        messageCreateEvent.getMessage().reply("Bon je pense que ce serveur ne vaux pas la peine : il n'y aucun salon !! Je ne peux même pas vous inviter.");
+                        server.getOwner().get().sendMessage("Bon ... si il n'y a même pas de salon dans votre serveur je ne peux rien faire. Pas de chance : une personne voulais le rejoindre");
+                        return;
+                    }
+                    //ajouter le prix !!!
+                    InviteBuilder inv = new InviteBuilder(channels.get(0));
+                    try {
+                        messageCreateEvent.getMessageAuthor().asUser().get().sendMessage(inv.create().get().getUrl().toString());
+                        p.setServer(nextServer.getId());
+                    } catch (InterruptedException | ExecutionException e) {
+                        messageCreateEvent.getMessage().reply("Une erreur est survenue à la création de l'invitation.");
+                    }
                 } else {
 
                 }
