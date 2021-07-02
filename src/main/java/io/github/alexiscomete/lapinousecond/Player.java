@@ -76,7 +76,7 @@ public class Player {
         }
     }
 
-    public short getSecurity(short s) {
+    public short getSecurity() {
         return security;
     }
 
