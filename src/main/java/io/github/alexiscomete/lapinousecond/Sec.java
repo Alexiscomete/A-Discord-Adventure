@@ -19,7 +19,7 @@ public class Sec extends CommandBot {
                 messageCreateEvent.getMessage().reply("Par contre il faut vous créer un compte ... 🙄");
                 return;
             }
-            p.getSecurity();
+            p.setSecurity(s);
             if (p.getTuto() == 1) {
                 p.setTuto((short) 2);
                 User user = messageCreateEvent.getMessageAuthor().asUser().get();

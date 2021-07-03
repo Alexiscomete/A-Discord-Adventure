@@ -70,7 +70,7 @@ public class Travel extends CommandInServer {
                         messageCreateEvent.getMessage().reply("Une erreur est survenue lors de la création de l'invitation.");
                     }
                 } else {
-                    messageCreateEvent.getMessage().reply("Prix pour aller dans ce serveur : " + price);
+                    messageCreateEvent.getMessage().reply("Prix pour aller dans ce serveur : " + price + ". Tapez la même commande avec oui à la fin pour confirmer votre choix (ce dernier est irrévocable)");
                 }
             } else {
                 messageCreateEvent.getMessage().reply("Désolé, l'id su serveur est incorrect, mais il est dans notre base de données, il est possible que le serveur ai été supprimé ou que le bot ai été retiré");
