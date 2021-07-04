@@ -1,6 +1,7 @@
 package io.github.alexiscomete.lapinousecond;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class SaveManager {
@@ -82,6 +83,20 @@ public class SaveManager {
             st.executeUpdate("INSERT INTO guilds (x, y, z, id, descr, namerp, travel, sec) VALUES (" + x + ", " + y + ", " + z + ", " + id + ", '" + description + "', '" + name + "', '" + travel + "', " + sec + ")");
         } catch (SQLException throwables) {
             throwables.printStackTrace();
+        }
+    }
+
+    public static ArrayList<Long> getTravels() {
+        try {
+            ResultSet resultSet = st.executeQuery("SELECT id FROM table ORDER BY RAND() LIMIT 8");
+            ArrayList<Long> longs = new ArrayList<>();
+            while (resultSet.next()) {
+                longs.add(Long.valueOf(resultSet.getString("id")));
+            }
+            return longs;
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+            return new ArrayList<>();
         }
     }
 }

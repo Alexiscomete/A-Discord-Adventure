@@ -5,7 +5,6 @@ import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
 
 import java.io.IOException;
-import java.util.function.Function;
 
 public class Main {
 

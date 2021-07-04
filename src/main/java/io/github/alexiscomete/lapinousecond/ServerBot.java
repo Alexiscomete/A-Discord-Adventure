@@ -83,7 +83,7 @@ public class ServerBot {
         this.travel = travel;
         StringBuilder answer = new StringBuilder();
         for (long l : travel) {
-            answer.append(String.valueOf(l));
+            answer.append(l);
             answer.append(";");
         }
         try {
