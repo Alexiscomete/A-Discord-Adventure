@@ -27,6 +27,11 @@ public class Travel extends CommandInServer {
         if (args.length <= 1 || args[1].equals("list")) {
             EmbedBuilder builder = new EmbedBuilder();
             builder.setDescription("Serveur actuel : " + p.getServer() + "; " + currentServer.getName() + ". Pour voyager vers un serveur, indiquez sont id, le prix  est indiqué à côté. Si le serveur n'est pas dasn la liste, alors le prix est égual à la distance au carré.").setTitle("Voyages disponibles").setColor(Color.green);
+            for (long tra : currentServer.getTravel()) {
+                ServerBot serv = SaveManager.getServer(tra);
+                builder.addField(serv.getName() + " ; " + serv.getId() + " ; " + serv.getX() + " " + serv.getY() + " " + serv.getZ(), serv.getDescription());
+            }
+            messageCreateEvent.getMessage().reply(builder);
         } else {
             ServerBot nextServer = SaveManager.getServer(Long.parseLong(args[1]));
             if (nextServer == null) {
@@ -41,6 +46,7 @@ public class Travel extends CommandInServer {
                 for (long travel : travels) {
                     if (travel == nextServer.getId()) {
                         price = Math.sqrt(Math.pow(currentServer.getX() - nextServer.getX(), 2) + Math.pow(currentServer.getY() - nextServer.getY(), 2) + Math.pow(currentServer.getZ() - nextServer.getZ(), 2));
+                        break;
                     }
                 }
                 if (price == -1) {
@@ -73,7 +79,7 @@ public class Travel extends CommandInServer {
                     messageCreateEvent.getMessage().reply("Prix pour aller dans ce serveur : " + price + ". Tapez la même commande avec oui à la fin pour confirmer votre choix (ce dernier est irrévocable)");
                 }
             } else {
-                messageCreateEvent.getMessage().reply("Désolé, l'id su serveur est incorrect, mais il est dans notre base de données, il est possible que le serveur ai été supprimé ou que le bot ai été retiré");
+                messageCreateEvent.getMessage().reply("Désolé, l'id du serveur est incorrect, mais il est dans notre base de données, il est possible que le serveur ai été supprimé ou que le bot ai été retiré");
             }
         }
     }
