@@ -56,7 +56,7 @@ public class ServerBot {
     public void setDescription(String description) {
         this.description = description;
         try {
-            SaveManager.st.executeUpdate("UPDATE guilds SET descr = " + description + " WHERE id = " + id);
+            SaveManager.st.executeUpdate("UPDATE guilds SET descr = '" + description + "' WHERE id = " + id);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -69,7 +69,7 @@ public class ServerBot {
     public void setName(String name) {
         this.name = name;
         try {
-            SaveManager.st.executeUpdate("UPDATE guilds SET namerp = " + name + " WHERE id = " + id);
+            SaveManager.st.executeUpdate("UPDATE guilds SET namerp = '" + name + "' WHERE id = " + id);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -87,7 +87,7 @@ public class ServerBot {
             answer.append(";");
         }
         try {
-            SaveManager.st.executeUpdate("UPDATE guilds SET travel = " + answer + " WHERE id = " + id);
+            SaveManager.st.executeUpdate("UPDATE guilds SET travel = '" + answer + "' WHERE id = " + id);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
