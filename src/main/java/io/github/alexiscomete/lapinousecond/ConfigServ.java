@@ -51,6 +51,17 @@ public class ConfigServ extends CommandBot {
                             }
                             server.setDescription(name.toString());
                             messageCreateEvent.getMessage().reply("Fait");
+                        } else if (args[1].equalsIgnoreCase("travel")) {
+                            if (server.getTravel().length < 8) {
+                                ArrayList<Long> longs = SaveManager.getTravels();
+                                long[] travels = new long[longs.size()];
+                                for (int i = 0; i < longs.size(); i++) {
+                                    travels[i] = longs.get(i);
+                                }
+                                server.setTravel(travels);
+                            } else {
+                                messageCreateEvent.getMessage().reply("Vous avez déjà atteint le nombre de serveurs autorisés");
+                            }
                         } else {
                             messageCreateEvent.getMessage().reply("Utilisez config name [name] pour le nom et config desc [description] pour la description. Le nom peut être RP.");
                         }
