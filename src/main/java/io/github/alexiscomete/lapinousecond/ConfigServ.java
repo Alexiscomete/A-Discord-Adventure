@@ -54,11 +54,18 @@ public class ConfigServ extends CommandBot {
                         } else if (args[1].equalsIgnoreCase("travel")) {
                             if (server.getTravel().length < 8) {
                                 ArrayList<Long> longs = SaveManager.getTravels();
+                                for (Long l : longs) {
+                                    if (l == server.getId()) {
+                                        longs.remove(l);
+                                        break;
+                                    }
+                                }
                                 long[] travels = new long[longs.size()];
                                 for (int i = 0; i < longs.size(); i++) {
                                     travels[i] = longs.get(i);
                                 }
                                 server.setTravel(travels);
+                                messageCreateEvent.getMessage().reply("fait ...");
                             } else {
                                 messageCreateEvent.getMessage().reply("Vous avez déjà atteint le nombre de serveurs autorisés");
                             }

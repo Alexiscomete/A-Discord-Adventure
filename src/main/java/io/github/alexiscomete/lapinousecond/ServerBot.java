@@ -79,6 +79,19 @@ public class ServerBot {
         return travel;
     }
 
+    public short getSec() {
+        return sec;
+    }
+
+    public void setSec(short sec) {
+        this.sec = sec;
+        try {
+            SaveManager.st.executeUpdate("UPDATE guilds SET sec = " + sec + " WHERE id = " + id);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
     public void setTravel(long[] travel) {
         this.travel = travel;
         StringBuilder answer = new StringBuilder();

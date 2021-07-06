@@ -29,7 +29,9 @@ public class Travel extends CommandInServer {
             builder.setDescription("Serveur actuel : " + p.getServer() + "; " + currentServer.getName() + ". Pour voyager vers un serveur, indiquez sont id, le prix  est indiqué à côté. Si le serveur n'est pas dasn la liste, alors le prix est égual à la distance au carré.").setTitle("Voyages disponibles").setColor(Color.green);
             for (long tra : currentServer.getTravel()) {
                 ServerBot serv = SaveManager.getServer(tra);
-                builder.addField(serv.getName() + " ; " + serv.getId() + " ; " + serv.getX() + " " + serv.getY() + " " + serv.getZ(), serv.getDescription());
+                if (serv != null) {
+                    builder.addField(serv.getName() + " ; " + serv.getId() + " ; " + serv.getX() + " " + serv.getY() + " " + serv.getZ(), serv.getDescription());
+                }
             }
             messageCreateEvent.getMessage().reply(builder);
         } else {

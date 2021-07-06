@@ -58,7 +58,11 @@ public class SaveManager {
                     String[] str = resultSet.getString("travel").split(";");
                     long[] arr = new long[str.length];
                     for (int i = 0; i < str.length; i++) {
-                        arr[i] = Long.parseLong(str[i]);
+                        try {
+                            arr[i] = Long.parseLong(str[i]);
+                        } catch (NumberFormatException ignored) {
+
+                        }
                     }
                     serverBot = new ServerBot(Integer.parseInt(resultSet.getString("x")), Integer.parseInt(resultSet.getString("y")), Integer.parseInt(resultSet.getString("z")), Long.parseLong(resultSet.getString("id")), resultSet.getString("descr"), resultSet.getString("namerp"), arr, Short.parseShort(resultSet.getString("sec")));
                     servers.put(l, serverBot);
