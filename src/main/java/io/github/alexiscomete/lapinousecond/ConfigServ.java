@@ -17,22 +17,26 @@ public class ConfigServ extends CommandBot {
             if (messageCreateEvent.getMessageAuthor().isServerAdmin()) {
                 ServerBot server = SaveManager.getServer(messageCreateEvent.getServer().get().getId());
                 if (server == null) {
-                    messageCreateEvent.getMessage().reply("Création en cours ....");
-                    Random ran = new Random();
-                    int x = ran.nextInt(1000), y = ran.nextInt(1000), z = ran.nextInt(100);
-                    ArrayList<Long> longs = SaveManager.getTravels();
-                    long[] travels = new long[longs.size()];
-                    for (int i = 0; i < longs.size(); i++) {
-                        travels[i] = longs.get(i);
+                    if (args.length > 1) {
+                        messageCreateEvent.getMessage().reply("Création en cours ....");
+                        Random ran = new Random();
+                        int x = ran.nextInt(1000), y = ran.nextInt(1000), z = ran.nextInt(100);
+                        ArrayList<Long> longs = SaveManager.getTravels();
+                        long[] travels = new long[longs.size()];
+                        for (int i = 0; i < longs.size(); i++) {
+                            travels[i] = longs.get(i);
+                        }
+                        server = new ServerBot(x, y, z, messageCreateEvent.getServer().get().getId(), "ee", "ee", travels, (short) 1);
+                        SaveManager.servers.put(server.getId(), server);
+                        StringBuilder travels2 = new StringBuilder();
+                        for (long tra : travels) {
+                            travels2.append(tra).append(";");
+                        }
+                        SaveManager.addServer(x, y, z, messageCreateEvent.getServer().get().getId(), "ee", "ee", travels2.toString(), (short) 1);
+                        messageCreateEvent.getMessage().reply("Configuration finie, tapez config name ou config desc pour configurer le nom et la description.");
+                    } else {
+                        messageCreateEvent.getMessage().reply("En continuant (tapez oui à la fin de la commande), vous vous engagez à fournir aux joueurs un serveur respectueux dans lequel ils peuvent s'intégrer ou continuer leur aventure de de bonnes conditions");
                     }
-                    server = new ServerBot(x, y, z, messageCreateEvent.getServer().get().getId(), "ee", "ee", travels, (short) 1);
-                    SaveManager.servers.put(server.getId(), server);
-                    StringBuilder travels2 = new StringBuilder();
-                    for (long tra : travels) {
-                        travels2.append(tra).append(";");
-                    }
-                    SaveManager.addServer(x, y, z, messageCreateEvent.getServer().get().getId(), "ee", "ee", travels2.toString(), (short) 1);
-                    messageCreateEvent.getMessage().reply("Configuration finie, tapez config name ou config desc pour configurer le nom et la description");
                 } else {
                     if (args.length > 1) {
                         if (args[1].equalsIgnoreCase("name") && args.length > 2) {
