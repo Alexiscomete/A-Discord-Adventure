@@ -6,7 +6,7 @@ public class ServerBot {
 
     private int x, y, z;
     private long id;
-    private String description, name;
+    private String description, name, in, out;
     private long[] travel;
     short sec;
 
@@ -119,7 +119,33 @@ public class ServerBot {
         }
     }
 
-    public ServerBot(int x, int y, int z, long id, String description, String name, long[] travel, short sec) {
+    public String getIn() {
+        return in;
+    }
+
+    public void setIn(String in) {
+        this.in = in;
+        try {
+            SaveManager.st.executeUpdate("UPDATE guilds SET train = '" + in + "' WHERE id = " + id);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    public String getOut() {
+        return out;
+    }
+
+    public void setOut(String out) {
+        this.out = out;
+        try {
+            SaveManager.st.executeUpdate("UPDATE guilds SET traout = '" + out + "' WHERE id = " + id);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    public ServerBot(int x, int y, int z, long id, String description, String name, long[] travel, short sec, String in, String out) {
         this.x = x;
         this.y = y;
         this.z = z;
@@ -128,5 +154,7 @@ public class ServerBot {
         this.name = name;
         this.travel = travel;
         this.sec = sec;
+        this.in = in;
+        this.out = out;
     }
 }

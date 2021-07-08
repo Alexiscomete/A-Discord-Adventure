@@ -26,7 +26,7 @@ public class ConfigServ extends CommandBot {
                         for (int i = 0; i < longs.size(); i++) {
                             travels[i] = longs.get(i);
                         }
-                        server = new ServerBot(x, y, z, messageCreateEvent.getServer().get().getId(), "ee", "ee", travels, (short) 1);
+                        server = new ServerBot(x, y, z, messageCreateEvent.getServer().get().getId(), "ee", "ee", travels, (short) 1, "", "");
                         SaveManager.servers.put(server.getId(), server);
                         StringBuilder travels2 = new StringBuilder();
                         for (long tra : travels) {
@@ -73,6 +73,22 @@ public class ConfigServ extends CommandBot {
                             } else {
                                 messageCreateEvent.getMessage().reply("Vous avez déjà atteint le nombre de serveurs autorisés");
                             }
+                        } else if (args[1].equalsIgnoreCase("in") && args.length > 2) {
+                            StringBuilder name = new StringBuilder();
+                            for (int i = 2; i < args.length; i++) {
+                                name.append(args[i]);
+                                name.append(" ");
+                            }
+                            server.setIn(name.toString());
+                            messageCreateEvent.getMessage().reply("Fait");
+                        } else if (args[1].equalsIgnoreCase("out") && args.length > 2) {
+                            StringBuilder name = new StringBuilder();
+                            for (int i = 2; i < args.length; i++) {
+                                name.append(args[i]);
+                                name.append(" ");
+                            }
+                            server.setOut(name.toString());
+                            messageCreateEvent.getMessage().reply("Fait");
                         } else {
                             messageCreateEvent.getMessage().reply("Utilisez config name [name] pour le nom et config desc [description] pour la description. Le nom peut être RP.");
                         }

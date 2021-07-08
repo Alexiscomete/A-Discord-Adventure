@@ -64,7 +64,7 @@ public class SaveManager {
 
                         }
                     }
-                    serverBot = new ServerBot(Integer.parseInt(resultSet.getString("x")), Integer.parseInt(resultSet.getString("y")), Integer.parseInt(resultSet.getString("z")), Long.parseLong(resultSet.getString("id")), resultSet.getString("descr"), resultSet.getString("namerp"), arr, Short.parseShort(resultSet.getString("sec")));
+                    serverBot = new ServerBot(Integer.parseInt(resultSet.getString("x")), Integer.parseInt(resultSet.getString("y")), Integer.parseInt(resultSet.getString("z")), Long.parseLong(resultSet.getString("id")), resultSet.getString("descr"), resultSet.getString("namerp"), arr, Short.parseShort(resultSet.getString("sec")), resultSet.getString("in"), resultSet.getString("out"));
                     servers.put(l, serverBot);
                 }
             } catch (SQLException throwables) {
