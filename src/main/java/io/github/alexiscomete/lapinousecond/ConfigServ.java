@@ -40,19 +40,11 @@ public class ConfigServ extends CommandBot {
                 } else {
                     if (args.length > 1) {
                         if (args[1].equalsIgnoreCase("name") && args.length > 2) {
-                            StringBuilder name = new StringBuilder();
-                            for (int i = 2; i < args.length; i++) {
-                                name.append(args[i]);
-                                name.append(" ");
-                            }
+                            StringBuilder name = getStr(args);
                             server.setName(name.toString());
                             messageCreateEvent.getMessage().reply("Fait");
                         } else if (args[1].equalsIgnoreCase("desc") && args.length > 2) {
-                            StringBuilder name = new StringBuilder();
-                            for (int i = 2; i < args.length; i++) {
-                                name.append(args[i]);
-                                name.append(" ");
-                            }
+                            StringBuilder name = getStr(args);
                             server.setDescription(name.toString());
                             messageCreateEvent.getMessage().reply("Fait");
                         } else if (args[1].equalsIgnoreCase("travel")) {
@@ -74,19 +66,11 @@ public class ConfigServ extends CommandBot {
                                 messageCreateEvent.getMessage().reply("Vous avez déjà atteint le nombre de serveurs autorisés");
                             }
                         } else if (args[1].equalsIgnoreCase("in") && args.length > 2) {
-                            StringBuilder name = new StringBuilder();
-                            for (int i = 2; i < args.length; i++) {
-                                name.append(args[i]);
-                                name.append(" ");
-                            }
+                            StringBuilder name = getStr(args);
                             server.setIn(name.toString());
                             messageCreateEvent.getMessage().reply("Fait");
                         } else if (args[1].equalsIgnoreCase("out") && args.length > 2) {
-                            StringBuilder name = new StringBuilder();
-                            for (int i = 2; i < args.length; i++) {
-                                name.append(args[i]);
-                                name.append(" ");
-                            }
+                            StringBuilder name = getStr(args);
                             server.setOut(name.toString());
                             messageCreateEvent.getMessage().reply("Fait");
                         } else {
@@ -100,5 +84,14 @@ public class ConfigServ extends CommandBot {
         } else {
             System.out.println("Comment voulez vous configurer un serveur sans être dans un serveur ?");
         }
+    }
+
+    public static StringBuilder getStr(String[] args) {
+        StringBuilder name = new StringBuilder();
+        for (int i = 2; i < args.length; i++) {
+            name.append(args[i]);
+            name.append(" ");
+        }
+        return name;
     }
 }
