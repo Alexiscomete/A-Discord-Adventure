@@ -4,6 +4,7 @@ import org.javacord.api.entity.channel.ServerChannel;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.entity.server.Server;
 import org.javacord.api.entity.server.invite.InviteBuilder;
+import org.javacord.api.entity.user.User;
 import org.javacord.api.event.message.MessageCreateEvent;
 
 import java.awt.*;
@@ -71,7 +72,10 @@ public class Travel extends CommandInServer {
                     }
                     InviteBuilder inv = new InviteBuilder(channels.get(0));
                     try {
-                        messageCreateEvent.getMessageAuthor().asUser().get().sendMessage(inv.create().get().getUrl().toString());
+                        User user = messageCreateEvent.getMessageAuthor().asUser().get();
+                        user.sendMessage(currentServer.getOut());
+                        user.sendMessage(inv.create().get().getUrl().toString());
+                        user.sendMessage(nextServer.getIn());
                         p.setServer(nextServer.getId());
                         p.setBal((long) (p.getBal() - price));
                     } catch (InterruptedException | ExecutionException e) {
