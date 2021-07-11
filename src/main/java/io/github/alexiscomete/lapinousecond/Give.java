@@ -4,7 +4,7 @@ import org.javacord.api.event.message.MessageCreateEvent;
 
 public class Give extends CommandBot {
     public Give() {
-        super("description", "name", "totalDescription");
+        super("description", "give", "totalDescription");
     }
 
     @Override

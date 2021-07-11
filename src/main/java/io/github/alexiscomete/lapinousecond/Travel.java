@@ -73,9 +73,13 @@ public class Travel extends CommandInServer {
                     InviteBuilder inv = new InviteBuilder(channels.get(0));
                     try {
                         User user = messageCreateEvent.getMessageAuthor().asUser().get();
-                        user.sendMessage(currentServer.getOut());
+                        if (currentServer.getOut() != null) {
+                            user.sendMessage(currentServer.getOut());
+                        }
                         user.sendMessage(inv.create().get().getUrl().toString());
-                        user.sendMessage(nextServer.getIn());
+                        if (nextServer.getIn() != null) {
+                            user.sendMessage(nextServer.getIn());
+                        }
                         p.setServer(nextServer.getId());
                         p.setBal((long) (p.getBal() - price));
                     } catch (InterruptedException | ExecutionException e) {

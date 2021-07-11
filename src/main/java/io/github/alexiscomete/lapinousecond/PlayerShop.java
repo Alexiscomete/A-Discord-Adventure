@@ -4,7 +4,7 @@ import org.javacord.api.event.message.MessageCreateEvent;
 
 public class PlayerShop extends CommandBot {
     public PlayerShop() {
-        super("description", "name", "totalDescription");
+        super("description", "ps", "totalDescription");
     }
 
     @Override
