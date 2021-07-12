@@ -17,7 +17,7 @@ public class ConfigServ extends CommandBot {
             if (messageCreateEvent.getMessageAuthor().isServerAdmin()) {
                 ServerBot server = SaveManager.getServer(messageCreateEvent.getServer().get().getId());
                 if (server == null) {
-                    if (args.length > 1) {
+                    if (content.endsWith("oui")) {
                         messageCreateEvent.getMessage().reply("Création en cours ....");
                         Random ran = new Random();
                         int x = ran.nextInt(1000), y = ran.nextInt(1000), z = ran.nextInt(100);
@@ -35,7 +35,7 @@ public class ConfigServ extends CommandBot {
                         SaveManager.addServer(x, y, z, messageCreateEvent.getServer().get().getId(), "ee", "ee", travels2.toString(), (short) 1);
                         messageCreateEvent.getMessage().reply("Configuration finie, tapez config name ou config desc pour configurer le nom et la description.");
                     } else {
-                        messageCreateEvent.getMessage().reply("En continuant (tapez oui à la fin de la commande), vous vous engagez à fournir aux joueurs un serveur respectueux dans lequel ils peuvent s'intégrer ou continuer leur aventure de de bonnes conditions");
+                        messageCreateEvent.getMessage().reply("En continuant (tapez oui à la fin de la commande), vous vous engagez à fournir aux joueurs un serveur respectueux dans lequel ils peuvent s'intégrer ou continuer leur aventure de de bonnes conditions. Vous acceptez aussi que le bot puisse inviter des personne sur votre serveur");
                     }
                 } else {
                     if (args.length > 1) {
