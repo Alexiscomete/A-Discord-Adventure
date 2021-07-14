@@ -31,6 +31,12 @@ public class ConfigServ extends CommandBot {
                         StringBuilder travels2 = new StringBuilder();
                         for (long tra : travels) {
                             travels2.append(tra).append(";");
+                            ServerBot serverBot = SaveManager.getServer(tra);
+                            long[] l = serverBot.getTravel();
+                            long[] t = new long[l.length + 1];
+                            System.arraycopy(l, 0, t, 0, l.length);
+                            System.arraycopy(new long[]{serverBot.getId()}, 0, t, l.length, 1);
+                            serverBot.setTravel(t);
                         }
                         SaveManager.addServer(x, y, z, messageCreateEvent.getServer().get().getId(), "ee", "ee", travels2.toString(), (short) 1);
                         messageCreateEvent.getMessage().reply("Configuration finie, tapez config name ou config desc pour configurer le nom et la description.");
@@ -48,7 +54,7 @@ public class ConfigServ extends CommandBot {
                             server.setDescription(name.toString());
                             messageCreateEvent.getMessage().reply("Fait");
                         } else if (args[1].equalsIgnoreCase("travel")) {
-                            if (server.getTravel().length < 8) {
+                            if (server.getTravel().length < 5) {
                                 ArrayList<Long> longs = SaveManager.getTravels();
                                 for (Long l : longs) {
                                     if (l == server.getId()) {

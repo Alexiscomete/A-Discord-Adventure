@@ -92,7 +92,7 @@ public class SaveManager {
 
     public static ArrayList<Long> getTravels() {
         try {
-            ResultSet resultSet = st.executeQuery("SELECT id FROM guilds ORDER BY RAND() LIMIT 8");
+            ResultSet resultSet = st.executeQuery("SELECT id FROM guilds ORDER BY RAND() LIMIT 6");
             ArrayList<Long> longs = new ArrayList<>();
             while (resultSet.next()) {
                 longs.add(Long.valueOf(resultSet.getString("id")));
