@@ -56,10 +56,10 @@ public class SaveManager {
                 ResultSet resultSet = st.executeQuery("SELECT * FROM guilds WHERE id = " + l);
                 if (resultSet.next()) {
                     String[] str = resultSet.getString("travel").split(";");
-                    long[] arr = new long[str.length];
-                    for (int i = 0; i < str.length; i++) {
+                    ArrayList<Long> arr = new ArrayList<>();
+                    for (String s : str) {
                         try {
-                            arr[i] = Long.parseLong(str[i]);
+                            arr.add(Long.parseLong(s));
                         } catch (NumberFormatException ignored) {
 
                         }

@@ -8,6 +8,7 @@ import org.javacord.api.entity.user.User;
 import org.javacord.api.event.message.MessageCreateEvent;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
@@ -45,7 +46,7 @@ public class Travel extends CommandInServer {
             if (serverOp.isPresent()) {
                 Server server = serverOp.get();
                 double price = -1;
-                long[] travels = currentServer.getTravel();
+                ArrayList<Long> travels = currentServer.getTravel();
                 for (long travel : travels) {
                     if (travel == nextServer.getId()) {
                         price = Math.sqrt(Math.pow(currentServer.getX() - nextServer.getX(), 2) + Math.pow(currentServer.getY() - nextServer.getY(), 2) + Math.pow(currentServer.getZ() - nextServer.getZ(), 2));

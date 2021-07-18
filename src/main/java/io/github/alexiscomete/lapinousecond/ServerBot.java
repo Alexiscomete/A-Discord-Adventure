@@ -1,13 +1,14 @@
 package io.github.alexiscomete.lapinousecond;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class ServerBot {
 
     private int x, y, z;
     private long id;
     private String description, name, in, out;
-    private long[] travel;
+    private ArrayList<Long> travel;
     short sec;
 
     public int getY() {
@@ -75,7 +76,7 @@ public class ServerBot {
         }
     }
 
-    public long[] getTravel() {
+    public ArrayList<Long> getTravel() {
         return travel;
     }
 
@@ -92,7 +93,7 @@ public class ServerBot {
         }
     }
 
-    public void setTravel(long[] travel) {
+    public void setTravel(ArrayList<Long> travel) {
         this.travel = travel;
         StringBuilder answer = new StringBuilder();
         for (long l : travel) {
@@ -145,7 +146,7 @@ public class ServerBot {
         }
     }
 
-    public ServerBot(int x, int y, int z, long id, String description, String name, long[] travel, short sec, String in, String out) {
+    public ServerBot(int x, int y, int z, long id, String description, String name, ArrayList<Long> travel, short sec, String in, String out) {
         this.x = x;
         this.y = y;
         this.z = z;

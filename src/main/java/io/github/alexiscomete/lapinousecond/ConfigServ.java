@@ -26,17 +26,15 @@ public class ConfigServ extends CommandBot {
                         for (int i = 0; i < longs.size(); i++) {
                             travels[i] = longs.get(i);
                         }
-                        server = new ServerBot(x, y, z, messageCreateEvent.getServer().get().getId(), "ee", "ee", travels, (short) 1, "", "");
+                        server = new ServerBot(x, y, z, messageCreateEvent.getServer().get().getId(), "ee", "ee", longs, (short) 1, "", "");
                         SaveManager.servers.put(server.getId(), server);
                         StringBuilder travels2 = new StringBuilder();
                         for (long tra : travels) {
                             travels2.append(tra).append(";");
                             ServerBot serverBot = SaveManager.getServer(tra);
-                            long[] l = serverBot.getTravel();
-                            long[] t = new long[l.length + 1];
-                            System.arraycopy(l, 0, t, 0, l.length);
-                            System.arraycopy(new long[]{serverBot.getId()}, 0, t, l.length, 1);
-                            serverBot.setTravel(t);
+                            ArrayList<Long> l = serverBot.getTravel();
+                            l.add(server.getId());
+                            serverBot.setTravel(l);
                         }
                         SaveManager.addServer(x, y, z, messageCreateEvent.getServer().get().getId(), "ee", "ee", travels2.toString(), (short) 1);
                         messageCreateEvent.getMessage().reply("Configuration finie, tapez config name ou config desc pour configurer le nom et la description.");
@@ -54,7 +52,7 @@ public class ConfigServ extends CommandBot {
                             server.setDescription(name.toString());
                             messageCreateEvent.getMessage().reply("Fait");
                         } else if (args[1].equalsIgnoreCase("travel")) {
-                            if (server.getTravel().length < 5) {
+                            if (server.getTravel().size() < 5) {
                                 ArrayList<Long> longs = SaveManager.getTravels();
                                 for (Long l : longs) {
                                     if (l == server.getId()) {
@@ -62,11 +60,7 @@ public class ConfigServ extends CommandBot {
                                         break;
                                     }
                                 }
-                                long[] travels = new long[longs.size()];
-                                for (int i = 0; i < longs.size(); i++) {
-                                    travels[i] = longs.get(i);
-                                }
-                                server.setTravel(travels);
+                                server.setTravel(longs);
                                 messageCreateEvent.getMessage().reply("fait ...");
                             } else {
                                 messageCreateEvent.getMessage().reply("Vous avez déjà atteint le nombre de serveurs autorisés");
