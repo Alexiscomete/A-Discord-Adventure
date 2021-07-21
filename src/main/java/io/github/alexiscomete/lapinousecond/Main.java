@@ -48,6 +48,7 @@ public class Main {
         addCommand(new Hub());
         addCommand(new StartAdventure());
         addCommand(new Introduction());
+        addCommand(new UseCommand());
 
     }
 
