@@ -1,6 +1,9 @@
 package io.github.alexiscomete.lapinousecond;
 
+import com.sun.tools.javac.jvm.Items;
+
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class Player {
 
@@ -10,6 +13,7 @@ public class Player {
     private short tuto;
     private short security;
     private long workTime;
+    private final ArrayList<Item> items = new ArrayList<>();
 
     public long getWorkTime() {
         return workTime;
@@ -35,6 +39,10 @@ public class Player {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
+    }
+
+    public ArrayList<Item> getItems() {
+        return items;
     }
 
     public long getBal() {
