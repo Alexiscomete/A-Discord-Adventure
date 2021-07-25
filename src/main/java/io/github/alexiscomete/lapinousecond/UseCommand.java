@@ -23,6 +23,7 @@ public class UseCommand extends CommandBot {
             if (item.name.equalsIgnoreCase(name)) {
                 if (item.use(messageCreateEvent, content, args, p)) {
                     p.getItems().remove(item);
+                    messageCreateEvent.getMessage().reply("L'objet a été consommé !");
                 }
                 return;
             }

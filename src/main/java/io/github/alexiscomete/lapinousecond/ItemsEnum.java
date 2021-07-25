@@ -27,7 +27,7 @@ public enum ItemsEnum {
             event.getMessage().reply("Il faut entrer un nombre à l'argument 2 ...");
             return false;
         }
-    }, "Rob ring", "Permet de voler 1% des RabbitCoins d'une personne qui a moins de 100% de différence", 1000));
+    }, "Rob ring", "Permet de voler 1% des RabbitCoins d'une personne qui a moins de 100% de différence", 1000, "ROB"));
 
     public GetItem getItem;
 

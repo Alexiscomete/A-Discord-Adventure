@@ -45,6 +45,22 @@ public class Player {
         return items;
     }
 
+    public void updateItems() {
+        StringBuilder itemsList = new StringBuilder();
+        for (int i = 0; i < items.size(); i++) {
+            Item item = items.get(i);
+            itemsList.append(item.jname);
+            if (i != items.size()-1) {
+                itemsList.append(";");
+            }
+        }
+        try {
+            SaveManager.st.executeUpdate("UPDATE players SET items = " + itemsList + " WHERE id = " + this.id);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
     public long getBal() {
         return bal;
     }
