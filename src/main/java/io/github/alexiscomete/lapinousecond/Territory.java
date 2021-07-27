@@ -1,8 +1,8 @@
 package io.github.alexiscomete.lapinousecond;
 
 public class Territory {
-    public long getValue(long time, int numberOfBattles) {
-        return (long) getValueTime(time) * getValueBattles(numberOfBattles);
+    public int getValue(long time, int numberOfBattles) {
+        return getValueTime(time) * getValueBattles(numberOfBattles);
     }
 
     public int getValueTime(long time) {
@@ -65,6 +65,31 @@ public class Territory {
     }
 
     public int getValueBattles(int numberOfBattles) {
-        return 1;
+        switch (numberOfBattles) {
+            case 0:
+                return 1;
+            case 1:
+                return 20;
+            case 2:
+                return 35;
+            case 3:
+                return 50;
+            case 4:
+                return 75;
+            case 5:
+                return 100;
+            case 6:
+                return 150;
+            case 7:
+                return 210;
+            case 8:
+                return 280;
+            case 9:
+                return 400;
+            case 10:
+                return 700;
+            default:
+                return 800 + (90 * (numberOfBattles - 8));
+        }
     }
 }
