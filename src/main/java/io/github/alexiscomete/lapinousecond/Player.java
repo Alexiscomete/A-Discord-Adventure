@@ -1,7 +1,5 @@
 package io.github.alexiscomete.lapinousecond;
 
-import com.sun.tools.javac.jvm.Items;
-
 import java.sql.SQLException;
 import java.util.ArrayList;
 
