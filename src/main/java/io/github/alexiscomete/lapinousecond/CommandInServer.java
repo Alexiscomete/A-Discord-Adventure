@@ -7,8 +7,8 @@ import java.util.Optional;
 
 public abstract class CommandInServer extends CommandBot{
 
-    public CommandInServer(String description, String name, String totalDescription) {
-        super(description, name, totalDescription);
+    public CommandInServer(String description, String name, String totalDescription, String... perms) {
+        super(description, name, totalDescription, perms);
     }
 
     @Override

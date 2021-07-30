@@ -103,4 +103,16 @@ public class SaveManager {
             return new ArrayList<>();
         }
     }
+
+    public static UserPerms getPlayerPerms(long id) {
+        try {
+            ResultSet resultSet = st.executeQuery("SELECT * FROM perms WHERE id = " + id);
+            if (resultSet.next()) {
+                return new UserPerms(resultSet.getBoolean("play"), resultSet.getBoolean("create_server"), resultSet.getBoolean("set_server_sec"), resultSet.getBoolean("manage_perms"));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return new UserPerms(true, false, false, false);
+    }
 }
