@@ -19,7 +19,7 @@ public class ListenerMain implements MessageCreateListener {
             System.out.println("null?");
             if (commandBot != null && !messageCreateEvent.getMessageAuthor().isBotUser()) {
                 System.out.println("no");
-                commandBot.execute(messageCreateEvent, content, args);
+                commandBot.checkAndExecute(messageCreateEvent, content, args);
             }
         }
     }

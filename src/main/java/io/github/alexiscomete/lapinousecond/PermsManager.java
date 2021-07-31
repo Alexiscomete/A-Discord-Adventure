@@ -9,6 +9,19 @@ public class PermsManager extends CommandBot {
 
     @Override
     void execute(MessageCreateEvent messageCreateEvent, String content, String[] args) {
+        if (args.length < 4) {
+            messageCreateEvent.getMessage().reply("pm [user] [perm name] [true/false]");
+            return;
+        }
+        boolean value = Boolean.parseBoolean(args[3]);
+        String perm = args[2];
+        try {
+            UserPerms userPerms = SaveManager.getPlayerPerms(Long.parseLong(args[1]));
+            if (userPerms.isDefault) {
 
+            }
+        } catch (NumberFormatException e) {
+            messageCreateEvent.getMessage().reply("Vous devez indiquer un format de nombre valide pour l'argument user");
+        }
     }
 }

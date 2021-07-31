@@ -15,12 +15,14 @@ public abstract class CommandBot {
     }
 
     public void checkAndExecute(MessageCreateEvent messageCreateEvent, String content, String[] args) {
-        if (perms == null) {
+        if (perms == null || perms.length == 0) {
             execute(messageCreateEvent, content, args);
             return;
         }
         if (UserPerms.check(messageCreateEvent.getMessageAuthor().getId(), perms)) {
             execute(messageCreateEvent, content, args);
+        } else {
+            messageCreateEvent.getMessage().reply("Vous n'avez pas le droit d'exécuter cette commande");
         }
     }
 
