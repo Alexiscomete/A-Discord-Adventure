@@ -108,11 +108,19 @@ public class SaveManager {
         try {
             ResultSet resultSet = st.executeQuery("SELECT * FROM perms WHERE id = " + id);
             if (resultSet.next()) {
-                return new UserPerms(resultSet.getBoolean("play"), resultSet.getBoolean("create_server"), resultSet.getBoolean("set_server_sec"), resultSet.getBoolean("manage_perms"), false);
+                return new UserPerms(toBoolean(resultSet.getInt("PLAY")), toBoolean(resultSet.getInt("CREATE_SERVER")), toBoolean(resultSet.getInt("SET_SERVER_SEC")), toBoolean(resultSet.getInt("MANAGE_PERMS")), false);
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
         return new UserPerms(true, false, false, false, true);
+    }
+
+    public static boolean toBoolean(int s) {
+        return s == 1;
+    }
+
+    public static String toBooleanString(boolean b) {
+        return b ? "1" : "0";
     }
 }
