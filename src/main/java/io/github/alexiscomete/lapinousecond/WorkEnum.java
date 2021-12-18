@@ -13,10 +13,40 @@ public enum WorkEnum {
     WORK9("video games", "*Vous écrivez un article sur Minecraft qui vous rapporte rc Rabbitcoins ...*", 30, 80),
     WORK10("computer science", "*Vous recodez le système informatique en C++, on vous récompense avec rc Rabbitcoins", 40, 90);
 
-    String type;
-    String answer;
-    int min;
-    int max;
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getAnswer() {
+        return answer;
+    }
+
+    public void setAnswer(String answer) {
+        this.answer = answer;
+    }
+
+    public int getMin() {
+        return min;
+    }
+
+    public void setMin(int min) {
+        this.min = min;
+    }
+
+    public int getMax() {
+        return max;
+    }
+
+    public void setMax(int max) {
+        this.max = max;
+    }
+
+    String type, answer;
+    int min, max;
 
     WorkEnum(String type, String answer, int min, int max) {
         this.type = type;

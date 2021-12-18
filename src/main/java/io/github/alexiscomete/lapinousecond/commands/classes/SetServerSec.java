@@ -1,5 +1,8 @@
-package io.github.alexiscomete.lapinousecond;
+package io.github.alexiscomete.lapinousecond.commands.classes;
 
+import io.github.alexiscomete.lapinousecond.SaveManager;
+import io.github.alexiscomete.lapinousecond.ServerBot;
+import io.github.alexiscomete.lapinousecond.commands.CommandBot;
 import org.javacord.api.event.message.MessageCreateEvent;
 
 public class SetServerSec extends CommandBot {

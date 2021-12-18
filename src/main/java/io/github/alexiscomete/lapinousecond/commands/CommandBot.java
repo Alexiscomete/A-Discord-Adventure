@@ -1,10 +1,35 @@
-package io.github.alexiscomete.lapinousecond;
+package io.github.alexiscomete.lapinousecond.commands;
 
+import io.github.alexiscomete.lapinousecond.UserPerms;
 import org.javacord.api.event.message.MessageCreateEvent;
 
 public abstract class CommandBot {
 
-    String description, name, totalDescription;
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getTotalDescription() {
+        return totalDescription;
+    }
+
+    public void setTotalDescription(String totalDescription) {
+        this.totalDescription = totalDescription;
+    }
+
+    private String description, name, totalDescription;
     String[] perms;
 
     public CommandBot(String description, String name, String totalDescription, String... perms) {
@@ -26,5 +51,5 @@ public abstract class CommandBot {
         }
     }
 
-    abstract void execute(MessageCreateEvent messageCreateEvent, String content, String[] args);
+    public abstract void execute(MessageCreateEvent messageCreateEvent, String content, String[] args);
 }

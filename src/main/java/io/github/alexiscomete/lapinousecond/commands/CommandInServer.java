@@ -1,11 +1,14 @@
-package io.github.alexiscomete.lapinousecond;
+package io.github.alexiscomete.lapinousecond.commands;
 
+import io.github.alexiscomete.lapinousecond.Player;
+import io.github.alexiscomete.lapinousecond.SaveManager;
+import io.github.alexiscomete.lapinousecond.commands.CommandBot;
 import org.javacord.api.entity.server.Server;
 import org.javacord.api.event.message.MessageCreateEvent;
 
 import java.util.Optional;
 
-public abstract class CommandInServer extends CommandBot{
+public abstract class CommandInServer extends CommandBot {
 
     public CommandInServer(String description, String name, String totalDescription, String... perms) {
         super(description, name, totalDescription, perms);

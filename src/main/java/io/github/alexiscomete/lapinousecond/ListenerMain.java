@@ -1,5 +1,6 @@
 package io.github.alexiscomete.lapinousecond;
 
+import io.github.alexiscomete.lapinousecond.commands.CommandBot;
 import org.javacord.api.event.message.MessageCreateEvent;
 import org.javacord.api.listener.message.MessageCreateListener;
 

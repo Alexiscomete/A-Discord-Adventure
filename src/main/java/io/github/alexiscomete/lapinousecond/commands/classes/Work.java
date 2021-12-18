@@ -1,5 +1,8 @@
-package io.github.alexiscomete.lapinousecond;
+package io.github.alexiscomete.lapinousecond.commands.classes;
 
+import io.github.alexiscomete.lapinousecond.Player;
+import io.github.alexiscomete.lapinousecond.WorkEnum;
+import io.github.alexiscomete.lapinousecond.commands.CommandInServer;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.event.message.MessageCreateEvent;
 
@@ -19,8 +22,8 @@ public class Work extends CommandInServer {
             int i = new Random().nextInt(wo.length);
             WorkEnum w = wo[i];
             EmbedBuilder builder = new EmbedBuilder();
-            String[] strings = w.answer.split(" rc ");
-            int r = new Random().nextInt(w.max - w.min) + w.min;
+            String[] strings = w.getAnswer().split(" rc ");
+            int r = new Random().nextInt(w.getMax() - w.getMin()) + w.getMin();
             String answer;
             if (strings.length > 1) {
                 answer = strings[0] +" "+  r +" "+ strings[1];

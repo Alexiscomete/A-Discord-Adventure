@@ -1,6 +1,8 @@
 package io.github.alexiscomete.lapinousecond;
 
 
+import io.github.alexiscomete.lapinousecond.commands.CommandBot;
+import io.github.alexiscomete.lapinousecond.commands.classes.*;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
 
@@ -13,7 +15,7 @@ public class Main {
 
     static {
         try {
-            config = new SaveLocation<String>(";", "/config.txt", a -> a);
+            config = new SaveLocation<>(";", "/config.txt", a -> a);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -53,6 +55,6 @@ public class Main {
     }
 
     public static void addCommand(CommandBot commandBot) {
-        ListenerMain.commands.put(commandBot.name, commandBot);
+        ListenerMain.commands.put(commandBot.getName(), commandBot);
     }
 }
