@@ -13,7 +13,7 @@ public class UseCommand extends CommandBot {
     }
 
     @Override
-    void execute(MessageCreateEvent messageCreateEvent, String content, String[] args) {
+    public void execute(MessageCreateEvent messageCreateEvent, String content, String[] args) {
         Player p = SaveManager.getPlayer(messageCreateEvent.getMessageAuthor().getId());
         if (p == null) {
             messageCreateEvent.getMessage().reply("Vous devez avoir un compte pour continuer");
@@ -24,7 +24,7 @@ public class UseCommand extends CommandBot {
             return;
         }
         for (Item item : p.getItems()) {
-            if (item.name.equalsIgnoreCase(name)) {
+            if (item.name.equalsIgnoreCase(getName())) {
                 if (item.use(messageCreateEvent, content, args, p)) {
                     p.getItems().remove(item);
                     messageCreateEvent.getMessage().reply("L'objet a été consommé !");

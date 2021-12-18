@@ -1,5 +1,7 @@
 package io.github.alexiscomete.lapinousecond;
 
+import io.github.alexiscomete.lapinousecond.worlds.ServerBot;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;

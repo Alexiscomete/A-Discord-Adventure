@@ -1,4 +1,6 @@
-package io.github.alexiscomete.lapinousecond;
+package io.github.alexiscomete.lapinousecond.worlds;
+
+import io.github.alexiscomete.lapinousecond.SaveManager;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
