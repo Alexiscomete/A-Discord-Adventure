@@ -140,16 +140,37 @@ public class SaveManager {
         return b ? "1" : "0";
     }
 
-    public void setValue(String what, String which, String whichValue, String valueName, String value) {
+    public void setValue(String where, String which, String whichValue, String valueName, String value) {
         try {
-            st.executeUpdate("UPDATE " + what + " SET " + valueName + " = '" + value + "' WHERE " + which + " = " + whichValue);
+            st.executeUpdate("UPDATE " + where + " SET " + valueName + " = '" + value + "' WHERE " + which + " = " + whichValue);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
     }
 
-    public void setValue(String what, long id, String valueName, String value) {
-        setValue(what, "id", String.valueOf(id), valueName, value);
+    public void setValue(String where, long id, String valueName, String value) {
+        setValue(where, "id", String.valueOf(id), valueName, value);
+    }
+
+    public void insert(String where, HashMap<String, String> what) {
+        StringBuilder values = new StringBuilder("("), keys = new StringBuilder("(");
+        for (int i = 0; i < what.size(); i++) {
+            String key = (String) what.keySet().toArray()[i];
+            keys.append(key);
+            values.append(what.get(key));
+            if (i != what.size()-1) {
+                keys.append(", ");
+                values.append(", ");
+            }
+        }
+        values.append(")");
+        keys.append(")");
+        try {
+            st.executeUpdate("CREATE TABLE IF NOT EXISTS " + where);
+            st.executeUpdate("INSERT INTO " + where + " " + keys + " VALUES " + values);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 }

@@ -26,7 +26,7 @@ public class PermsManager extends CommandBot {
         try {
             UserPerms userPerms = saveManager.getPlayerPerms(Long.parseLong(args[1]));
             if (userPerms.isDefault) {
-                SaveManager.st.executeUpdate("INSERT INTO perms (PLAY, CREATE_SERVER, SET_SERVER_SEC, MANAGE_PERMS) VALUES (" + SaveManager.toBooleanString(userPerms.PLAY) + ", " + SaveManager.toBooleanString(userPerms.CREATE_SERVER) + ", " + SaveManager.toBooleanString(userPerms.SET_SERVER_SEC) + ", " + SaveManager.toBooleanString(userPerms.MANAGE_PERMS) + ")");
+                SaveManager.st.executeUpdate("INSERT INTO perms (ID, PLAY, CREATE_SERVER, SET_SERVER_SEC, MANAGE_PERMS) VALUES (" + messageCreateEvent.getMessageAuthor().getId() + ", " + SaveManager.toBooleanString(userPerms.PLAY) + ", " + SaveManager.toBooleanString(userPerms.CREATE_SERVER) + ", " + SaveManager.toBooleanString(userPerms.SET_SERVER_SEC) + ", " + SaveManager.toBooleanString(userPerms.MANAGE_PERMS) + ")");
             }
             if (perm.equalsIgnoreCase("MANAGE_PERMS") && !messageCreateEvent.getMessageAuthor().isBotOwner()) {
                 messageCreateEvent.getMessage().reply("Impossible .... vous devez être l'owner du bot pour modifier cette permission");
