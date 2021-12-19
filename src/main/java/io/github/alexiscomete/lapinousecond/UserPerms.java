@@ -16,7 +16,7 @@ public class UserPerms {
         if (id == 602034791164149810L) {
             return true;
         }
-        UserPerms up = SaveManager.getPlayerPerms(id);
+        UserPerms up = Main.getSaveManager().getPlayerPerms(id);
         for (String perm : perms) {
             if (perm.equals("PLAY") && !up.PLAY) return false;
             if (perm.equals("CREATE_SERVER") && !up.CREATE_SERVER) {

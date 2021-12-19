@@ -8,17 +8,31 @@ import java.util.HashMap;
 
 public class SaveManager {
 
-    public static String path = "";
-    public static String user = "";
-    public static String mdp = "";
+    private final String path, user, mdp;
 
-    public static HashMap<Long, Player> players = new HashMap<>();
-    public static HashMap<Long, ServerBot> servers = new HashMap<>();
+    private HashMap<Long, Player> players = new HashMap<>();
 
-    static Connection co = null;
-    public static Statement st = null;
+    public HashMap<Long, Player> getPlayers() {
+        return players;
+    }
 
-    public static void connection() {
+    public HashMap<Long, ServerBot> getServers() {
+        return servers;
+    }
+
+    private HashMap<Long, ServerBot> servers = new HashMap<>();
+
+    private Connection co = null;
+    private Statement st = null;
+
+    public SaveManager(String path, String user, String mdp) {
+        this.path = path;
+        this.user = user;
+        this.mdp = mdp;
+        connection();
+    }
+
+    public void connection() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             co = DriverManager.getConnection(path, user, mdp);
@@ -34,7 +48,7 @@ public class SaveManager {
         }
     }
 
-    public static Player getPlayer(long l) {
+    public Player getPlayer(long l) {
         Player p = players.get(l);
         if (p == null) {
             try {
@@ -51,7 +65,7 @@ public class SaveManager {
 
     }
 
-    public static ServerBot getServer(long l) {
+    public ServerBot getServer(long l) {
         ServerBot serverBot = servers.get(l);
         if (serverBot == null) {
             try {
@@ -76,7 +90,7 @@ public class SaveManager {
         return serverBot;
     }
 
-    public static void addPlayer(long id, long bal, long server, short tuto, short security, long workTime) {
+    public void addPlayer(long id, long bal, long server, short tuto, short security, long workTime) {
         try {
             st.executeUpdate("INSERT INTO players (id, bal, serv, tuto, sec, wt) VALUES (" + id + ", " + bal + ", " + server + ", " + tuto + ", " + security + ", " + workTime + ")");
         } catch (SQLException throwables) {
@@ -84,7 +98,7 @@ public class SaveManager {
         }
     }
 
-    public static void addServer(int x, int y, int z, long id, String description, String name, String travel, short sec) {
+    public void addServer(int x, int y, int z, long id, String description, String name, String travel, short sec) {
         try {
             st.executeUpdate("INSERT INTO guilds (x, y, z, id, descr, namerp, travel, sec) VALUES (" + x + ", " + y + ", " + z + ", " + id + ", '" + description + "', '" + name + "', '" + travel + "', " + sec + ")");
         } catch (SQLException throwables) {
@@ -92,7 +106,7 @@ public class SaveManager {
         }
     }
 
-    public static ArrayList<Long> getTravels() {
+    public ArrayList<Long> getTravels() {
         try {
             ResultSet resultSet = st.executeQuery("SELECT id FROM guilds ORDER BY RAND() LIMIT 6");
             ArrayList<Long> longs = new ArrayList<>();
@@ -106,7 +120,7 @@ public class SaveManager {
         }
     }
 
-    public static UserPerms getPlayerPerms(long id) {
+    public UserPerms getPlayerPerms(long id) {
         try {
             ResultSet resultSet = st.executeQuery("SELECT * FROM perms WHERE id = " + id);
             if (resultSet.next()) {
@@ -125,4 +139,45 @@ public class SaveManager {
     public static String toBooleanString(boolean b) {
         return b ? "1" : "0";
     }
+
+    public void setValue(String where, String which, String whichValue, String valueName, String value) {
+        try {
+            st.executeUpdate("UPDATE " + where + " SET " + valueName + " = '" + value + "' WHERE " + which + " = " + whichValue);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    public void setValue(String where, long id, String valueName, String value) {
+        setValue(where, "id", String.valueOf(id), valueName, value);
+    }
+
+    public void insert(String where, HashMap<String, String> what) {
+        StringBuilder values = new StringBuilder("("), keys = new StringBuilder("("), create = new StringBuilder("(\n");
+        for (int i = 0; i < what.size(); i++) {
+            String key = (String) what.keySet().toArray()[i];
+            keys.append(key);
+            values.append(what.get(key));
+            if (key.equals("ID")) {
+                create.append("ID STRING PRIMARY KEY NOT NULL");
+            } else {
+                create.append(key).append(" STRING,");
+            }
+            if (i != what.size()-1) {
+                keys.append(", ");
+                values.append(", ");
+                create.append(",\n");
+            }
+        }
+        values.append(")");
+        keys.append(")");
+        create.append("\n)");
+        try {
+            st.executeUpdate("CREATE TABLE IF NOT EXISTS " + where + "\n" + create);
+            st.executeUpdate("INSERT INTO " + where + " " + keys + " VALUES " + values);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

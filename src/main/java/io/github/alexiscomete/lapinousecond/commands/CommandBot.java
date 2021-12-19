@@ -9,27 +9,16 @@ public abstract class CommandBot {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
 
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getTotalDescription() {
         return totalDescription;
     }
 
-    public void setTotalDescription(String totalDescription) {
-        this.totalDescription = totalDescription;
-    }
-
-    private String description, name, totalDescription;
+    private final String description, name, totalDescription;
     String[] perms;
 
     public CommandBot(String description, String name, String totalDescription, String... perms) {

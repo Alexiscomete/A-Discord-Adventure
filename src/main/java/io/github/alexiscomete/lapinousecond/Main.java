@@ -13,6 +13,12 @@ public class Main {
     public static DiscordApi api;
     public static SaveLocation<String> config;
 
+    public static SaveManager getSaveManager() {
+        return saveManager;
+    }
+
+    private static SaveManager saveManager;
+
     static {
         try {
             config = new SaveLocation<>(";", "/config.txt", a -> a);
@@ -28,11 +34,7 @@ public class Main {
         api.updateActivity("Prefix : -");
         api.addListener(new ListenerMain());
 
-        SaveManager.path = config.getContent().get(1);
-        SaveManager.user = config.getContent().get(2);
-        SaveManager.mdp = config.getContent().get(3);
-
-        SaveManager.connection();
+        saveManager = new SaveManager(config.getContent().get(1), config.getContent().get(2), config.getContent().get(3));
 
         addCommand(new Help());
         addCommand(new Hello());
@@ -51,7 +53,7 @@ public class Main {
         addCommand(new StartAdventure());
         addCommand(new Introduction());
         addCommand(new UseCommand());
-
+        addCommand(new PermsManager());
     }
 
     public static void addCommand(CommandBot commandBot) {

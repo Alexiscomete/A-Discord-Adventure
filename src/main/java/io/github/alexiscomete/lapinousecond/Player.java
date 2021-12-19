@@ -5,13 +5,14 @@ import java.util.ArrayList;
 
 public class Player {
 
-    private long id;
+    private final long id;
     private long bal;
     private long server;
     private short tuto;
     private short security;
     private long workTime;
     private final ArrayList<Item> items = new ArrayList<>();
+    private final SaveManager saveManager = Main.getSaveManager();
 
     public long getWorkTime() {
         return workTime;
@@ -23,15 +24,6 @@ public class Player {
 
     public long getId() {
         return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-        try {
-            SaveManager.st.executeUpdate("UPDATE players SET id = " + id + " WHERE id = " + this.id);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
     }
 
     public ArrayList<Item> getItems() {
@@ -47,11 +39,7 @@ public class Player {
                 itemsList.append(";");
             }
         }
-        try {
-            SaveManager.st.executeUpdate("UPDATE players SET items = " + itemsList + " WHERE id = " + this.id);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
+        saveManager.setValue("players", this.id, "items", itemsList.toString());
     }
 
     public long getBal() {
@@ -60,11 +48,7 @@ public class Player {
 
     public void setBal(long bal) {
         this.bal = bal;
-        try {
-            SaveManager.st.executeUpdate("UPDATE players SET bal = " + bal + " WHERE id = " + id);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
+        saveManager.setValue("players", id, "bal", String.valueOf(bal));
     }
 
     public long getServer() {
@@ -73,11 +57,7 @@ public class Player {
 
     public void setServer(long server) {
         this.server = server;
-        try {
-            SaveManager.st.executeUpdate("UPDATE players SET serv = " + server + " WHERE id = " + id);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
+        saveManager.setValue("players", id, "serv", String.valueOf(server));
     }
 
     public short getTuto() {
@@ -86,11 +66,7 @@ public class Player {
 
     public void setTuto(short tuto) {
         this.tuto = tuto;
-        try {
-            SaveManager.st.executeUpdate("UPDATE players SET tuto = " + tuto + " WHERE id = " + id);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
+        saveManager.setValue("player", id, "tuto", String.valueOf(tuto));
     }
 
     public short getSecurity() {
@@ -99,11 +75,7 @@ public class Player {
 
     public void setSecurity(short security) {
         this.security = security;
-        try {
-            SaveManager.st.executeUpdate("UPDATE players SET sec = " + security + " WHERE id = " + id);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
+        saveManager.setValue("players", id, "sec", String.valueOf(security));
     }
 
     public Player(long id, long bal, long server, short tuto, short security) {
