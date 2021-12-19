@@ -53,7 +53,7 @@ public class Main {
         addCommand(new StartAdventure());
         addCommand(new Introduction());
         addCommand(new UseCommand());
-
+        addCommand(new PermsManager());
     }
 
     public static void addCommand(CommandBot commandBot) {

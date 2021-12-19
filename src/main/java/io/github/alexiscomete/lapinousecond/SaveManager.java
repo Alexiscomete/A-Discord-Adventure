@@ -153,20 +153,27 @@ public class SaveManager {
     }
 
     public void insert(String where, HashMap<String, String> what) {
-        StringBuilder values = new StringBuilder("("), keys = new StringBuilder("(");
+        StringBuilder values = new StringBuilder("("), keys = new StringBuilder("("), create = new StringBuilder("(\n");
         for (int i = 0; i < what.size(); i++) {
             String key = (String) what.keySet().toArray()[i];
             keys.append(key);
             values.append(what.get(key));
+            if (key.equals("ID")) {
+                create.append("ID STRING PRIMARY KEY NOT NULL");
+            } else {
+                create.append(key).append(" STRING,");
+            }
             if (i != what.size()-1) {
                 keys.append(", ");
                 values.append(", ");
+                create.append(",\n");
             }
         }
         values.append(")");
         keys.append(")");
+        create.append("\n)");
         try {
-            st.executeUpdate("CREATE TABLE IF NOT EXISTS " + where);
+            st.executeUpdate("CREATE TABLE IF NOT EXISTS " + where + "\n" + create);
             st.executeUpdate("INSERT INTO " + where + " " + keys + " VALUES " + values);
         } catch (SQLException e) {
             e.printStackTrace();
