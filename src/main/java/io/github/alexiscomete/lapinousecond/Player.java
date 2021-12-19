@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 public class Player {
 
-    private long id;
+    private final long id;
     private long bal;
     private long server;
     private short tuto;
@@ -25,15 +25,6 @@ public class Player {
         return id;
     }
 
-    public void setId(long id) {
-        this.id = id;
-        try {
-            SaveManager.st.executeUpdate("UPDATE players SET id = " + id + " WHERE id = " + this.id);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-    }
-
     public ArrayList<Item> getItems() {
         return items;
     }
@@ -47,11 +38,7 @@ public class Player {
                 itemsList.append(";");
             }
         }
-        try {
-            SaveManager.st.executeUpdate("UPDATE players SET items = " + itemsList + " WHERE id = " + this.id);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
+        SaveManager.setValue("players", String.valueOf(this.id), "items", itemsList.toString());
     }
 
     public long getBal() {
@@ -60,11 +47,7 @@ public class Player {
 
     public void setBal(long bal) {
         this.bal = bal;
-        try {
-            SaveManager.st.executeUpdate("UPDATE players SET bal = " + bal + " WHERE id = " + id);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
+        SaveManager.setValue("players", String.valueOf(id), "bal", String.valueOf(bal));
     }
 
     public long getServer() {
@@ -73,11 +56,7 @@ public class Player {
 
     public void setServer(long server) {
         this.server = server;
-        try {
-            SaveManager.st.executeUpdate("UPDATE players SET serv = " + server + " WHERE id = " + id);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
+        SaveManager.setValue("players", String.valueOf(id), "serv", String.valueOf(server));
     }
 
     public short getTuto() {
