@@ -99,11 +99,7 @@ public class Player {
 
     public void setSecurity(short security) {
         this.security = security;
-        try {
-            SaveManager.st.executeUpdate("UPDATE players SET sec = " + security + " WHERE id = " + id);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
+        SaveManager.setValue("players", String.valueOf(id), "sec", String.valueOf(security));
     }
 
     public Player(long id, long bal, long server, short tuto, short security) {

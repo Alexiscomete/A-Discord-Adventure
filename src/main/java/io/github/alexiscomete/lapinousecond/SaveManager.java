@@ -125,4 +125,21 @@ public class SaveManager {
     public static String toBooleanString(boolean b) {
         return b ? "1" : "0";
     }
+
+    public static void setValue(String what, String which, String whichValue, String valueName, String value) {
+        try {
+            st.executeUpdate("UPDATE " + what + " SET " + valueName + " = " + value + " WHERE " + which + " = " + whichValue);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    public static void setValue(String what, String id, String valueName, String value) {
+        setValue(what, "id", id, valueName, value);
+        try {
+            st.executeUpdate("UPDATE " + what + " SET " + valueName + " = " + value + " WHERE id = " + id);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
 }
