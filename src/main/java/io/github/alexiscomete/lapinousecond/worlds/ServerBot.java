@@ -1,17 +1,18 @@
 package io.github.alexiscomete.lapinousecond.worlds;
 
+import io.github.alexiscomete.lapinousecond.Main;
 import io.github.alexiscomete.lapinousecond.SaveManager;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class ServerBot {
 
     private int x, y, z;
-    private long id;
+    private final long id;
     private String description, name, in, out;
     private ArrayList<Long> travel;
-    short sec;
+    private short sec;
+    private final SaveManager sv = Main.getSaveManager();
 
     public int getY() {
         return y;
@@ -19,11 +20,7 @@ public class ServerBot {
 
     public void setY(int y) {
         this.y = y;
-        try {
-            SaveManager.st.executeUpdate("UPDATE guilds SET y = " + y + " WHERE id = " + id);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
+        sv.setValue("guilds", id, "y", String.valueOf(y));
     }
 
     public int getZ() {
@@ -32,24 +29,11 @@ public class ServerBot {
 
     public void setZ(int z) {
         this.z = z;
-        try {
-            SaveManager.st.executeUpdate("UPDATE guilds SET z = " + z + " WHERE id = " + id);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
+        sv.setValue("guilds", id, "z", String.valueOf(z));
     }
 
     public long getId() {
         return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-        try {
-            SaveManager.st.executeUpdate("UPDATE guilds SET id = " + id + " WHERE id = " + id);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
     }
 
     public String getDescription() {
@@ -58,11 +42,7 @@ public class ServerBot {
 
     public void setDescription(String description) {
         this.description = description;
-        try {
-            SaveManager.st.executeUpdate("UPDATE guilds SET descr = '" + description + "' WHERE id = " + id);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
+        sv.setValue("guilds", id, "descr", description);
     }
 
     public String getName() {
@@ -71,11 +51,7 @@ public class ServerBot {
 
     public void setName(String name) {
         this.name = name;
-        try {
-            SaveManager.st.executeUpdate("UPDATE guilds SET namerp = '" + name + "' WHERE id = " + id);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
+        sv.setValue("guilds", id, "namerp", name);
     }
 
     public ArrayList<Long> getTravel() {
@@ -88,11 +64,7 @@ public class ServerBot {
 
     public void setSec(short sec) {
         this.sec = sec;
-        try {
-            SaveManager.st.executeUpdate("UPDATE guilds SET sec = " + sec + " WHERE id = " + id);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
+        sv.setValue("guilds", id, "sec", String.valueOf(sec));
     }
 
     public void setTravel(ArrayList<Long> travel) {
@@ -102,11 +74,7 @@ public class ServerBot {
             answer.append(l);
             answer.append(";");
         }
-        try {
-            SaveManager.st.executeUpdate("UPDATE guilds SET travel = '" + answer + "' WHERE id = " + id);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
+        sv.setValue("guilds", id, "travel", answer.toString());
     }
 
     public int getX() {
@@ -115,24 +83,16 @@ public class ServerBot {
 
     public void setX(int x) {
         this.x = x;
-        try {
-            SaveManager.st.executeUpdate("UPDATE guilds SET x = " + x + " WHERE id = " + id);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
+        sv.setValue("guilds", id, "x", String.valueOf(x));
     }
 
     public String getIn() {
         return in;
     }
 
-    public void setIn(String in) {
+    public void setIn(String in) { // train = travel in
         this.in = in;
-        try {
-            SaveManager.st.executeUpdate("UPDATE guilds SET train = '" + in + "' WHERE id = " + id);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
+        sv.setValue("guilds", id, "train", in);
     }
 
     public String getOut() {
@@ -141,11 +101,7 @@ public class ServerBot {
 
     public void setOut(String out) {
         this.out = out;
-        try {
-            SaveManager.st.executeUpdate("UPDATE guilds SET traout = '" + out + "' WHERE id = " + id);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
+        sv.setValue("guilds", id, "traout", out);
     }
 
     public ServerBot(int x, int y, int z, long id, String description, String name, ArrayList<Long> travel, short sec, String in, String out) {

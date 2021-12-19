@@ -1,5 +1,6 @@
 package io.github.alexiscomete.lapinousecond.commands;
 
+import io.github.alexiscomete.lapinousecond.Main;
 import io.github.alexiscomete.lapinousecond.Player;
 import io.github.alexiscomete.lapinousecond.SaveManager;
 import io.github.alexiscomete.lapinousecond.commands.CommandBot;
@@ -15,8 +16,9 @@ public abstract class CommandInServer extends CommandBot {
     }
 
     @Override
-    void execute(MessageCreateEvent messageCreateEvent, String content, String[] args) {
-        Player p = SaveManager.getPlayer(messageCreateEvent.getMessageAuthor().getId());
+    public void execute(MessageCreateEvent messageCreateEvent, String content, String[] args) {
+        SaveManager saveManager = Main.getSaveManager();
+        Player p = saveManager.getPlayer(messageCreateEvent.getMessageAuthor().getId());
         if (p == null) {
             messageCreateEvent.getMessage().reply("👀 Utilisez la commande start pour vous créer un compte !");
         } else {

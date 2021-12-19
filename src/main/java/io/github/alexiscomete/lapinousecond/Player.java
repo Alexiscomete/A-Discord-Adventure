@@ -12,6 +12,7 @@ public class Player {
     private short security;
     private long workTime;
     private final ArrayList<Item> items = new ArrayList<>();
+    private final SaveManager saveManager = Main.getSaveManager();
 
     public long getWorkTime() {
         return workTime;
@@ -38,7 +39,7 @@ public class Player {
                 itemsList.append(";");
             }
         }
-        SaveManager.setValue("players", String.valueOf(this.id), "items", itemsList.toString());
+        saveManager.setValue("players", this.id, "items", itemsList.toString());
     }
 
     public long getBal() {
@@ -47,7 +48,7 @@ public class Player {
 
     public void setBal(long bal) {
         this.bal = bal;
-        SaveManager.setValue("players", String.valueOf(id), "bal", String.valueOf(bal));
+        saveManager.setValue("players", id, "bal", String.valueOf(bal));
     }
 
     public long getServer() {
@@ -56,7 +57,7 @@ public class Player {
 
     public void setServer(long server) {
         this.server = server;
-        SaveManager.setValue("players", String.valueOf(id), "serv", String.valueOf(server));
+        saveManager.setValue("players", id, "serv", String.valueOf(server));
     }
 
     public short getTuto() {
@@ -65,11 +66,7 @@ public class Player {
 
     public void setTuto(short tuto) {
         this.tuto = tuto;
-        try {
-            SaveManager.st.executeUpdate("UPDATE players SET tuto = " + tuto + " WHERE id = " + id);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
+        saveManager.setValue("player", id, "tuto", String.valueOf(tuto));
     }
 
     public short getSecurity() {
@@ -78,7 +75,7 @@ public class Player {
 
     public void setSecurity(short security) {
         this.security = security;
-        SaveManager.setValue("players", String.valueOf(id), "sec", String.valueOf(security));
+        saveManager.setValue("players", id, "sec", String.valueOf(security));
     }
 
     public Player(long id, long bal, long server, short tuto, short security) {
