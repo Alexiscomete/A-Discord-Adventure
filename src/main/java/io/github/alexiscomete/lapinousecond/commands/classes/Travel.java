@@ -61,7 +61,7 @@ public class Travel extends CommandInServer {
                 if (price == -1) {
                     price = Math.pow(currentServer.getX() - nextServer.getX(), 2) + Math.pow(currentServer.getY() - nextServer.getY(), 2) + Math.pow(currentServer.getZ() - nextServer.getZ(), 2);
                 }
-                if (p.getSecurity() > nextServer.sec) {
+                if (p.getSecurity() > nextServer.getSec()) {
                     messageCreateEvent.getMessage().reply("Ce serveur a une securité inférieur à celle que vous demandez, choisissez un autre serveur ou utilisez la commande -sec");
                     return;
                 }

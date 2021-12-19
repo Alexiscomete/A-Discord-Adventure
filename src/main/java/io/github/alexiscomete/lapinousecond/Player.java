@@ -17,13 +17,8 @@ public class Player {
         return workTime;
     }
 
-    public void setWorkTime(long workTime) {
-        this.workTime = workTime;
-        try {
-            SaveManager.st.executeUpdate("UPDATE players SET wt = " + workTime + " WHERE id = " + id);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
+    public void updateWorkTime() {
+        this.workTime = System.currentTimeMillis();
     }
 
     public long getId() {
@@ -111,12 +106,12 @@ public class Player {
         }
     }
 
-    public Player(long id, long bal, long server, short tuto, short security, long workTime) {
+    public Player(long id, long bal, long server, short tuto, short security) {
         this.id = id;
         this.bal = bal;
         this.server = server;
         this.tuto = tuto;
         this.security = security;
-        this.workTime = workTime;
+        this.workTime = 0;
     }
 }

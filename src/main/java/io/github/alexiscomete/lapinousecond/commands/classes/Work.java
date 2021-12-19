@@ -33,7 +33,7 @@ public class Work extends CommandInServer {
             builder.setDescription(answer).setTitle("Work").setColor(Color.red);
             messageCreateEvent.getMessage().reply(builder);
             p.setBal(p.getBal() + r);
-            p.setWorkTime(System.currentTimeMillis());
+            p.updateWorkTime();
             if (p.getTuto() == 3) {
                 messageCreateEvent.getMessage().reply("Félicitations, vous pouvez si vous le souhaitez réutiliser la commande inv pour voir l'argent que vous avez gagné (vous n'avez bien sûr pas besoin de faire ce qui est écrit dessus).");
                 p.setTuto((short) 4);
