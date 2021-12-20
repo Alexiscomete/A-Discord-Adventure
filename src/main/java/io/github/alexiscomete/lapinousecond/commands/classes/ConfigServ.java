@@ -18,28 +18,28 @@ public class ConfigServ extends CommandBot {
     public void execute(MessageCreateEvent messageCreateEvent, String content, String[] args) {
         if (messageCreateEvent.isServerMessage()) {
             if (messageCreateEvent.getMessageAuthor().isServerAdmin()) {
-                ServerBot server = SaveManager.getServer(messageCreateEvent.getServer().get().getId());
+                ServerBot server = saveManager.getServer(messageCreateEvent.getServer().get().getId());
                 if (server == null) {
                     if (content.endsWith("oui")) {
                         messageCreateEvent.getMessage().reply("Création en cours ....");
                         Random ran = new Random();
                         int x = ran.nextInt(1000), y = ran.nextInt(1000), z = ran.nextInt(100);
-                        ArrayList<Long> longs = SaveManager.getTravels();
+                        ArrayList<Long> longs = saveManager.getTravels();
                         long[] travels = new long[longs.size()];
                         for (int i = 0; i < longs.size(); i++) {
                             travels[i] = longs.get(i);
                         }
                         server = new ServerBot(x, y, z, messageCreateEvent.getServer().get().getId(), "ee", "ee", longs, (short) 1, "", "");
-                        SaveManager.servers.put(server.getId(), server);
+                        saveManager.getServers().put(server.getId(), server);
                         StringBuilder travels2 = new StringBuilder();
                         for (long tra : travels) {
                             travels2.append(tra).append(";");
-                            ServerBot serverBot = SaveManager.getServer(tra);
+                            ServerBot serverBot = saveManager.getServer(tra);
                             ArrayList<Long> l = serverBot.getTravel();
                             l.add(server.getId());
                             serverBot.setTravel(l);
                         }
-                        SaveManager.addServer(x, y, z, messageCreateEvent.getServer().get().getId(), "ee", "ee", travels2.toString(), (short) 1);
+                        saveManager.addServer(x, y, z, messageCreateEvent.getServer().get().getId(), "ee", "ee", travels2.toString(), (short) 1);
                         messageCreateEvent.getMessage().reply("Configuration finie, tapez config name ou config desc pour configurer le nom et la description.");
                     } else {
                         messageCreateEvent.getMessage().reply("En continuant (tapez oui à la fin de la commande), vous vous engagez à fournir aux joueurs un serveur respectueux dans lequel ils peuvent s'intégrer ou continuer leur aventure de de bonnes conditions. Vous acceptez aussi que le bot puisse inviter des personne sur votre serveur");
@@ -56,7 +56,7 @@ public class ConfigServ extends CommandBot {
                             messageCreateEvent.getMessage().reply("Fait");
                         } else if (args[1].equalsIgnoreCase("travel")) {
                             if (server.getTravel().size() < 5) {
-                                ArrayList<Long> longs = SaveManager.getTravels();
+                                ArrayList<Long> longs = saveManager.getTravels();
                                 for (Long l : longs) {
                                     if (l == server.getId()) {
                                         longs.remove(l);
