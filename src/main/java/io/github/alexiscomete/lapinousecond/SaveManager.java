@@ -10,7 +10,7 @@ public class SaveManager {
 
     private final String path, user, mdp;
 
-    private HashMap<Long, Player> players = new HashMap<>();
+    private final HashMap<Long, Player> players = new HashMap<>();
 
     public HashMap<Long, Player> getPlayers() {
         return players;
@@ -20,7 +20,7 @@ public class SaveManager {
         return servers;
     }
 
-    private HashMap<Long, ServerBot> servers = new HashMap<>();
+    private final HashMap<Long, ServerBot> servers = new HashMap<>();
 
     private Connection co = null;
     private Statement st = null;
