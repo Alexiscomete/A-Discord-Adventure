@@ -16,7 +16,7 @@ public class Report extends CommandBot {
     }
 
     @Override
-    void execute(MessageCreateEvent messageCreateEvent, String content, String[] args) {
+    public void execute(MessageCreateEvent messageCreateEvent, String content, String[] args) {
         if (args.length > 1) {
             Optional<Channel> chop = Main.api.getChannelById(862268273113825310L);
             if (chop.isPresent()) {

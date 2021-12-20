@@ -9,7 +9,7 @@ public class SellPlayerShop extends CommandBot {
     }
 
     @Override
-    void execute(MessageCreateEvent messageCreateEvent, String content, String[] args) {
+    public void execute(MessageCreateEvent messageCreateEvent, String content, String[] args) {
 
     }
 }

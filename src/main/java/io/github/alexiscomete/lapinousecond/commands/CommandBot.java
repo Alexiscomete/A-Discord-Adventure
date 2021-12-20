@@ -1,9 +1,13 @@
 package io.github.alexiscomete.lapinousecond.commands;
 
+import io.github.alexiscomete.lapinousecond.Main;
+import io.github.alexiscomete.lapinousecond.SaveManager;
 import io.github.alexiscomete.lapinousecond.UserPerms;
 import org.javacord.api.event.message.MessageCreateEvent;
 
 public abstract class CommandBot {
+
+    protected SaveManager saveManager = Main.getSaveManager();
 
     public String getDescription() {
         return description;

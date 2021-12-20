@@ -13,11 +13,11 @@ public class Sec extends CommandBot {
     }
 
     @Override
-    void execute(MessageCreateEvent messageCreateEvent, String content, String[] args) {
+    public void execute(MessageCreateEvent messageCreateEvent, String content, String[] args) {
         try {
             short s = Short.parseShort(args[1]);
             messageCreateEvent.getMessage().reply("✔");
-            Player p = SaveManager.getPlayer(messageCreateEvent.getMessageAuthor().getId());
+            Player p = saveManager.getPlayer(messageCreateEvent.getMessageAuthor().getId());
             if (p == null) {
                 messageCreateEvent.getMessage().reply("Par contre il faut vous créer un compte ... 🙄");
                 return;

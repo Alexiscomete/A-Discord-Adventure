@@ -20,7 +20,7 @@ public enum ItemsEnum {
             }
             try {
                 long l = Long.parseLong(args[2]);
-                Player victim = SaveManager.getPlayer(l);
+                Player victim = Main.getSaveManager().getPlayer(l);
                 if (victim == null) {
                     event.getMessage().reply("Ce joueur n'existe pas ou n'a pas de compte");
                     return false;
