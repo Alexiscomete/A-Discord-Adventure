@@ -7,7 +7,12 @@ public class WorldWithCoos extends World {
     }
 
     @Override
-    public int getPriceForDistance(int distance) {
+    public int getPriceForDistance(int distance, boolean place) {
+        return 0;
+    }
+
+    @Override
+    public int getDistance(Place place1, Place place2) {
         return 0;
     }
 }

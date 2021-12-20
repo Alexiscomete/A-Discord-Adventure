@@ -12,5 +12,6 @@ public abstract class World {
         this.desc = desc;
     }
 
-    public abstract int getPriceForDistance(int distance);
+    public abstract int getPriceForDistance(int distance, boolean place);
+    public abstract int getDistance(Place place1, Place place2);
 }
