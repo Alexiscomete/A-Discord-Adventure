@@ -15,10 +15,10 @@ public class InventoryC extends CommandBot {
     }
 
     @Override
-    void execute(MessageCreateEvent messageCreateEvent, String content, String[] args) {
+    public void execute(MessageCreateEvent messageCreateEvent, String content, String[] args) {
         if (args.length > 1) {
             try {
-                Player p = SaveManager.getPlayer(Long.parseLong(args[1]));
+                Player p = saveManager.getPlayer(Long.parseLong(args[1]));
                 if (p == null) {
                     messageCreateEvent.getMessage().reply("Cette personne n'a pas encore de compte");
                 } else {
@@ -28,7 +28,7 @@ public class InventoryC extends CommandBot {
                 messageCreateEvent.getMessage().reply("Pour voir l'inventiare d'une personne, vous devez indiquez son id");
             }
         } else {
-            Player p = SaveManager.getPlayer(messageCreateEvent.getMessageAuthor().getId());
+            Player p = saveManager.getPlayer(messageCreateEvent.getMessageAuthor().getId());
             if (p == null) {
                 messageCreateEvent.getMessage().reply("Vous devez d'abord faire la commande start avant de continuer");
             } else {

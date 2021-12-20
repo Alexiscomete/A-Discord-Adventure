@@ -1,5 +1,6 @@
 package io.github.alexiscomete.lapinousecond.commands.classes;
 
+import io.github.alexiscomete.lapinousecond.Main;
 import io.github.alexiscomete.lapinousecond.Player;
 import io.github.alexiscomete.lapinousecond.SaveManager;
 import io.github.alexiscomete.lapinousecond.commands.CommandBot;
@@ -13,7 +14,7 @@ public class Hub extends CommandBot {
 
     @Override
     public void execute(MessageCreateEvent messageCreateEvent, String content, String[] args) {
-        Player p = SaveManager.getPlayer(messageCreateEvent.getMessageAuthor().getId());
+        Player p = Main.getSaveManager().getPlayer(messageCreateEvent.getMessageAuthor().getId());
         if (p == null) {
             messageCreateEvent.getMessage().reply("Voici le serveur principal : <https://discord.gg/q4hVQ6gwyx>");
             return;

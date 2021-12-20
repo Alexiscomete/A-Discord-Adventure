@@ -12,10 +12,10 @@ public class SetServerSec extends CommandBot {
     }
 
     @Override
-    void execute(MessageCreateEvent messageCreateEvent, String content, String[] args) {
+    public void execute(MessageCreateEvent messageCreateEvent, String content, String[] args) {
         if (messageCreateEvent.getMessageAuthor().isBotOwner()) {
             if (messageCreateEvent.getServer().isPresent()) {
-                ServerBot serverBot = SaveManager.getServer(messageCreateEvent.getServer().get().getId());
+                ServerBot serverBot = saveManager.getServer(messageCreateEvent.getServer().get().getId());
                 if (serverBot == null) {
                     messageCreateEvent.getMessage().reply("Serveur non configuré");
                     return;

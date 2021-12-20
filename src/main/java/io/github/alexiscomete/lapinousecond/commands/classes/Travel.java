@@ -26,7 +26,7 @@ public class Travel extends CommandInServer {
 
     @Override
     public void executeC(MessageCreateEvent messageCreateEvent, String content, String[] args, Player p) {
-        ServerBot currentServer = SaveManager.getServer(p.getServer());
+        ServerBot currentServer = saveManager.getServer(p.getServer());
         if (currentServer == null) {
             messageCreateEvent.getMessage().reply("Impossible de voyager, votre serveur actuel est introuvable dan la base de données, il existe 2 solutions : revenir au hub ou configurer le serveur");
             return;
@@ -35,14 +35,14 @@ public class Travel extends CommandInServer {
             EmbedBuilder builder = new EmbedBuilder();
             builder.setDescription("Serveur actuel : " + p.getServer() + "; " + currentServer.getName() + ". Pour voyager vers un serveur, indiquez sont id, le prix  est indiqué à côté. Si le serveur n'est pas dasn la liste, alors le prix est égual à la distance au carré.").setTitle("Voyages disponibles").setColor(Color.green);
             for (long tra : currentServer.getTravel()) {
-                ServerBot serv = SaveManager.getServer(tra);
+                ServerBot serv = saveManager.getServer(tra);
                 if (serv != null) {
                     builder.addField(serv.getName() + " ; " + serv.getId() + " ; " + serv.getX() + " " + serv.getY() + " " + serv.getZ(), serv.getDescription());
                 }
             }
             messageCreateEvent.getMessage().reply(builder);
         } else {
-            ServerBot nextServer = SaveManager.getServer(Long.parseLong(args[1]));
+            ServerBot nextServer = saveManager.getServer(Long.parseLong(args[1]));
             if (nextServer == null) {
                 messageCreateEvent.getMessage().reply("Ce serveur n'est pas dans la base de données");
                 return;
