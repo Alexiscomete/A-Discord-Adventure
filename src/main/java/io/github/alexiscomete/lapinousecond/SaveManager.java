@@ -8,7 +8,7 @@ import java.util.HashMap;
 
 public class SaveManager {
 
-    private final String path, user, mdp;
+    private final String path;
 
     private final HashMap<Long, Player> players = new HashMap<>();
 
@@ -25,19 +25,16 @@ public class SaveManager {
     private Connection co = null;
     private Statement st = null;
 
-    public SaveManager(String path, String user, String mdp) {
+    public SaveManager(String path) {
         this.path = path;
-        this.user = user;
-        this.mdp = mdp;
         connection();
     }
 
     public void connection() {
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            co = DriverManager.getConnection(path, user, mdp);
+            co = DriverManager.getConnection(path);
             st = co.createStatement();
-        } catch (SQLException | ClassNotFoundException throwable) {
+        } catch (SQLException throwable) {
             throwable.printStackTrace();
             if (co != null) {
                 try {
