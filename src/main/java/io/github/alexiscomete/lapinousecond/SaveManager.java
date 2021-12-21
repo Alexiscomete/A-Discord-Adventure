@@ -32,9 +32,10 @@ public class SaveManager {
 
     public void connection() {
         try {
+            Class.forName("org.sqlite.JDBC");
             co = DriverManager.getConnection(path);
             st = co.createStatement();
-        } catch (SQLException throwable) {
+        } catch (SQLException | ClassNotFoundException throwable) {
             throwable.printStackTrace();
             if (co != null) {
                 try {
@@ -139,6 +140,7 @@ public class SaveManager {
 
     public void setValue(String where, String which, String whichValue, String valueName, String value) {
         try {
+            st.executeUpdate("CREATE TABLE IF NOT EXISTS " + where);
             st.executeUpdate("UPDATE " + where + " SET " + valueName + " = '" + value + "' WHERE " + which + " = " + whichValue);
         } catch (SQLException throwables) {
             throwables.printStackTrace();

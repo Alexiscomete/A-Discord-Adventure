@@ -3,8 +3,8 @@
     <output-path>$PROJECT_DIR$/out/artifacts/la2_jar</output-path>
     <root id="archive" name="la2.jar">
       <element id="module-output" name="A-Discord-Adventure" />
-      <element id="extracted-dir" path="$PROJECT_DIR$/../javacord-3.3.0-shaded.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$USER_HOME$/Downloads/mysql-connector-java-8.0.22.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/IdeaProjects/javacord-3.3.2-shaded.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/jars/sqlite-jdbc-3.36.0.3.jar" path-in-jar="/" />
     </root>
   </artifact>
 </component>
