@@ -16,4 +16,17 @@ public class Table {
     public TableRow[] getRows() {
         return rows;
     }
+
+    public void configTable() {
+        StringBuilder createTable = new StringBuilder("\n(\n");
+        for (int i = 0; i < rows.length; i++) {
+            TableRow row = rows[i];
+            createTable.append(row.getName()).append(row.getType());
+            if (i != rows.length-1) {
+                createTable.append(",");
+            }
+            createTable.append("\n");
+        }
+        createTable.append(")");
+    }
 }
