@@ -40,10 +40,9 @@ public class Main {
         addCommand(new Hello());
         addCommand(new Work());
         addCommand(new Sec());
-        addCommand(new PlayerShop());
-        addCommand(new Buy());
+        addCommand(new Shop());
         addCommand(new Give());
-        addCommand(new SellPlayerShop());
+        addCommand(new PlayerShop());
         addCommand(new InventoryC());
         addCommand(new ConfigServ());
         addCommand(new Travel());
