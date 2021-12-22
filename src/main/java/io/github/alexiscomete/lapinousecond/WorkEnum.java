@@ -9,7 +9,7 @@ public enum WorkEnum {
     WORK5("default", "*Le serveur vous récompense avec rc Rabbitcoins pour avoir défendu le serveur contre Alphabet Lapin !*", 15, 55),
     WORK6("default", "*Carlos le chat virtuel est passé par là ... vous gagnez rc Rabbitcoins ...*", 15, 40),
     WORK7("default", "*Vous passez un peu de temps avec les Togerts, ils vous donnent rc Rabbitcoins*", 15, 40),
-    WORK8("default", "*Vous échangez une information sur le Wumpus d'or contre un peu d'argent (rc)*", 25, 70);
+    WORK8("default", "*Vous échangez une information sur le Wumpus d'or contre un peu d'argent ( rc )*", 25, 70);
 
     public String getType() {
         return type;

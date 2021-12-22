@@ -5,7 +5,7 @@ import org.javacord.api.event.message.MessageCreateEvent;
 
 public class PlayerShop extends CommandBot {
     public PlayerShop() {
-        super("description", "ps", "totalDescription");
+        super("Marché des joueurs", "playershop", "Vous pouvez vendre ici des items pour le prix que vous voulez (playershop sell). C'est ensuite aux autres joueurs de l'acheter (playershop buy et playershop list)");
     }
 
     @Override

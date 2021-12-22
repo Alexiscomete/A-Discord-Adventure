@@ -3,6 +3,8 @@ package io.github.alexiscomete.lapinousecond;
 
 import io.github.alexiscomete.lapinousecond.commands.CommandBot;
 import io.github.alexiscomete.lapinousecond.commands.classes.*;
+import io.github.alexiscomete.lapinousecond.save.SaveLocation;
+import io.github.alexiscomete.lapinousecond.save.SaveManager;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
 
@@ -40,10 +42,9 @@ public class Main {
         addCommand(new Hello());
         addCommand(new Work());
         addCommand(new Sec());
-        addCommand(new PlayerShop());
-        addCommand(new Buy());
+        addCommand(new Shop());
         addCommand(new Give());
-        addCommand(new SellPlayerShop());
+        addCommand(new PlayerShop());
         addCommand(new InventoryC());
         addCommand(new ConfigServ());
         addCommand(new Travel());
