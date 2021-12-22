@@ -27,7 +27,7 @@ public class Travel extends CommandInServer {
     public void executeC(MessageCreateEvent messageCreateEvent, String content, String[] args, Player p) {
         ServerBot currentServer = saveManager.getServer(p.getServer());
         if (currentServer == null) {
-            messageCreateEvent.getMessage().reply("Impossible de voyager, votre serveur actuel est introuvable dan la base de données, il existe 2 solutions : revenir au hub ou configurer le serveur");
+            messageCreateEvent.getMessage().reply("Impossible de voyager, votre serveur actuel est introuvable dans la base de données, il existe 2 solutions : revenir au hub ou configurer le serveur");
             return;
         }
         if (args.length <= 1 || args[1].equals("list")) {
