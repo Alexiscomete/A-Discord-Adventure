@@ -34,7 +34,7 @@ public class Main {
         api.updateActivity("Prefix : -");
         api.addListener(new ListenerMain());
 
-        saveManager = new SaveManager(config.getContent().get(1), config.getContent().get(2), config.getContent().get(3));
+        saveManager = new SaveManager(config.getContent().get(1));
 
         addCommand(new Help());
         addCommand(new Hello());
@@ -46,8 +46,6 @@ public class Main {
         addCommand(new SellPlayerShop());
         addCommand(new InventoryC());
         addCommand(new ConfigServ());
-        addCommand(new Report());
-        addCommand(new SetServerSec());
         addCommand(new Travel());
         addCommand(new Hub());
         addCommand(new StartAdventure());

@@ -8,7 +8,7 @@ import java.util.HashMap;
 
 public class SaveManager {
 
-    private final String path, user, mdp;
+    private final String path;
 
     private final HashMap<Long, Player> players = new HashMap<>();
 
@@ -25,17 +25,15 @@ public class SaveManager {
     private Connection co = null;
     private Statement st = null;
 
-    public SaveManager(String path, String user, String mdp) {
+    public SaveManager(String path) {
         this.path = path;
-        this.user = user;
-        this.mdp = mdp;
         connection();
     }
 
     public void connection() {
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            co = DriverManager.getConnection(path, user, mdp);
+            Class.forName("org.sqlite.JDBC");
+            co = DriverManager.getConnection(path);
             st = co.createStatement();
         } catch (SQLException | ClassNotFoundException throwable) {
             throwable.printStackTrace();
@@ -142,6 +140,7 @@ public class SaveManager {
 
     public void setValue(String where, String which, String whichValue, String valueName, String value) {
         try {
+            st.executeUpdate("CREATE TABLE IF NOT EXISTS " + where);
             st.executeUpdate("UPDATE " + where + " SET " + valueName + " = '" + value + "' WHERE " + which + " = " + whichValue);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
