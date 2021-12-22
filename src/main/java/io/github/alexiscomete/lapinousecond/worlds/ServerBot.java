@@ -1,7 +1,7 @@
 package io.github.alexiscomete.lapinousecond.worlds;
 
 import io.github.alexiscomete.lapinousecond.Main;
-import io.github.alexiscomete.lapinousecond.SaveManager;
+import io.github.alexiscomete.lapinousecond.save.SaveManager;
 
 import java.util.ArrayList;
 

@@ -3,6 +3,8 @@ package io.github.alexiscomete.lapinousecond;
 
 import io.github.alexiscomete.lapinousecond.commands.CommandBot;
 import io.github.alexiscomete.lapinousecond.commands.classes.*;
+import io.github.alexiscomete.lapinousecond.save.SaveLocation;
+import io.github.alexiscomete.lapinousecond.save.SaveManager;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
 
