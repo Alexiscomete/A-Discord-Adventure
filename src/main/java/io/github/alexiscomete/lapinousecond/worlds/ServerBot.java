@@ -58,15 +58,6 @@ public class ServerBot {
         return travel;
     }
 
-    public short getSec() {
-        return sec;
-    }
-
-    public void setSec(short sec) {
-        this.sec = sec;
-        sv.setValue(Tables.SERVERS.getTable(), id, "sec", String.valueOf(sec));
-    }
-
     public void setTravel(ArrayList<Long> travel) {
         this.travel = travel;
         StringBuilder answer = new StringBuilder();
@@ -104,7 +95,7 @@ public class ServerBot {
         sv.setValue(Tables.SERVERS.getTable(), id, "traout", out);
     }
 
-    public ServerBot(int x, int y, int z, long id, String description, String name, ArrayList<Long> travel, short sec, String in, String out) {
+    public ServerBot(int x, int y, int z, long id, String description, String name, ArrayList<Long> travel, String in, String out) {
         this.x = x;
         this.y = y;
         this.z = z;
@@ -112,7 +103,6 @@ public class ServerBot {
         this.description = description;
         this.name = name;
         this.travel = travel;
-        this.sec = sec;
         this.in = in;
         this.out = out;
     }
