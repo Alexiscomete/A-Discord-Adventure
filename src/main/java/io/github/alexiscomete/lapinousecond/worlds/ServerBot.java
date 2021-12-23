@@ -2,6 +2,7 @@ package io.github.alexiscomete.lapinousecond.worlds;
 
 import io.github.alexiscomete.lapinousecond.Main;
 import io.github.alexiscomete.lapinousecond.save.SaveManager;
+import io.github.alexiscomete.lapinousecond.save.Tables;
 
 import java.util.ArrayList;
 
@@ -20,7 +21,7 @@ public class ServerBot {
 
     public void setY(int y) {
         this.y = y;
-        sv.setValue("guilds", id, "y", String.valueOf(y));
+        sv.setValue(Tables.SERVERS.getTable(), id, "y", String.valueOf(y));
     }
 
     public int getZ() {
@@ -29,7 +30,7 @@ public class ServerBot {
 
     public void setZ(int z) {
         this.z = z;
-        sv.setValue("guilds", id, "z", String.valueOf(z));
+        sv.setValue(Tables.SERVERS.getTable(), id, "z", String.valueOf(z));
     }
 
     public long getId() {
@@ -42,7 +43,7 @@ public class ServerBot {
 
     public void setDescription(String description) {
         this.description = description;
-        sv.setValue("guilds", id, "descr", description);
+        sv.setValue(Tables.SERVERS.getTable(), id, "descr", description);
     }
 
     public String getName() {
@@ -51,7 +52,7 @@ public class ServerBot {
 
     public void setName(String name) {
         this.name = name;
-        sv.setValue("guilds", id, "namerp", name);
+        sv.setValue(Tables.SERVERS.getTable(), id, "namerp", name);
     }
 
     public ArrayList<Long> getTravel() {
@@ -64,7 +65,7 @@ public class ServerBot {
 
     public void setSec(short sec) {
         this.sec = sec;
-        sv.setValue("guilds", id, "sec", String.valueOf(sec));
+        sv.setValue(Tables.SERVERS.getTable(), id, "sec", String.valueOf(sec));
     }
 
     public void setTravel(ArrayList<Long> travel) {
@@ -74,7 +75,7 @@ public class ServerBot {
             answer.append(l);
             answer.append(";");
         }
-        sv.setValue("guilds", id, "travel", answer.toString());
+        sv.setValue(Tables.SERVERS.getTable(), id, "travel", answer.toString());
     }
 
     public int getX() {
@@ -83,7 +84,7 @@ public class ServerBot {
 
     public void setX(int x) {
         this.x = x;
-        sv.setValue("guilds", id, "x", String.valueOf(x));
+        sv.setValue(Tables.SERVERS.getTable(), id, "x", String.valueOf(x));
     }
 
     public String getIn() {
@@ -92,7 +93,7 @@ public class ServerBot {
 
     public void setIn(String in) { // train = travel in
         this.in = in;
-        sv.setValue("guilds", id, "train", in);
+        sv.setValue(Tables.SERVERS.getTable(), id, "train", in);
     }
 
     public String getOut() {
@@ -101,7 +102,7 @@ public class ServerBot {
 
     public void setOut(String out) {
         this.out = out;
-        sv.setValue("guilds", id, "traout", out);
+        sv.setValue(Tables.SERVERS.getTable(), id, "traout", out);
     }
 
     public ServerBot(int x, int y, int z, long id, String description, String name, ArrayList<Long> travel, short sec, String in, String out) {

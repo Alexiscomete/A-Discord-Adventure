@@ -30,9 +30,9 @@ public class Table {
             createTable.append("\n");
         }
         createTable.append(")");
-        Main.getSaveManager().execute("CREATE TABLE IF NOT EXISTS " + name + createTable);
+        Main.getSaveManager().execute("CREATE TABLE IF NOT EXISTS " + name + createTable, false);
         for (TableRow tableRow : rows) {
-            Main.getSaveManager().execute("ALTER TABLE " + name + " ADD COLUMN " + tableRow.getName() + " " + tableRow.getType());
+            Main.getSaveManager().execute("ALTER TABLE " + name + " ADD COLUMN " + tableRow.getName() + " " + tableRow.getType(), false);
         }
     }
 }

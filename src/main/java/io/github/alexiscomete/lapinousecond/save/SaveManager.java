@@ -54,7 +54,7 @@ public class SaveManager {
             try {
                 ResultSet resultSet = st.executeQuery("SELECT * FROM players WHERE id = " + l);
                 if (resultSet.next()) {
-                    p = new Player(Long.parseLong(resultSet.getString("id")), Long.parseLong(resultSet.getString("bal")), Long.parseLong(resultSet.getString("serv")), Short.parseShort(resultSet.getString("tuto")), Short.parseShort(resultSet.getString("sec")));
+                    p = new Player(Long.parseLong(resultSet.getString("id")), Long.parseLong(resultSet.getString("bal")), Long.parseLong(resultSet.getString("serv")), Short.parseShort(resultSet.getString("tuto")));
                     players.put(l, p);
                 }
             } catch (SQLException throwables) {
@@ -124,12 +124,12 @@ public class SaveManager {
         try {
             ResultSet resultSet = st.executeQuery("SELECT * FROM perms WHERE id = " + id);
             if (resultSet.next()) {
-                return new UserPerms(toBoolean(resultSet.getInt("PLAY")), toBoolean(resultSet.getInt("CREATE_SERVER")), toBoolean(resultSet.getInt("SET_SERVER_SEC")), toBoolean(resultSet.getInt("MANAGE_PERMS")), false);
+                return new UserPerms(toBoolean(resultSet.getInt("PLAY")), toBoolean(resultSet.getInt("CREATE_SERVER")), toBoolean(resultSet.getInt("MANAGE_PERMS")), false);
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-        return new UserPerms(true, false, false, false, true);
+        return new UserPerms(true, false, false, true);
     }
 
     public static boolean toBoolean(int s) {
@@ -140,7 +140,7 @@ public class SaveManager {
         return b ? "1" : "0";
     }
 
-    public void setValue(String where, String which, String whichValue, String valueName, String value) {
+    private void setValue(String where, String which, String whichValue, String valueName, String value) {
         try {
             st.executeUpdate("UPDATE " + where + " SET " + valueName + " = '" + value + "' WHERE " + which + " = " + whichValue);
         } catch (SQLException throwables) {
@@ -148,8 +148,12 @@ public class SaveManager {
         }
     }
 
-    public void setValue(String where, long id, String valueName, String value) {
-        setValue(where, "id", String.valueOf(id), valueName, value);
+    public void setValue(Table table, TableRow row1, String value1, TableRow row2, String value2) {
+        setValue(table.getName(), row1.getName(), value1, row2.getName(), value2);
+    }
+
+    public void setValue(Table table, long id, String row, String value) {
+        setValue(table.getName(), "id", String.valueOf(id), row, value);
     }
 
     public void insert(String where, HashMap<String, String> what) {
@@ -158,7 +162,6 @@ public class SaveManager {
             String key = (String) what.keySet().toArray()[i];
             keys.append(key);
             values.append(what.get(key));
-            //create.append("ID STRING PRIMARY KEY NOT NULL");
             if (i != what.size() - 1) {
                 keys.append(", ");
                 values.append(", ");
@@ -174,10 +177,16 @@ public class SaveManager {
     }
 
     public void execute(String ex) {
+        execute(ex, true);
+    }
+
+    public void execute(String ex, boolean bo) {
         try {
             st.executeUpdate(ex);
         } catch (SQLException e) {
-            e.printStackTrace();
+            if (bo) {
+                e.printStackTrace();
+            }
         }
     }
 
