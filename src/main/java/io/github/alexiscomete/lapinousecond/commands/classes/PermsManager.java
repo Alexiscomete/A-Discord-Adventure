@@ -4,6 +4,7 @@ import io.github.alexiscomete.lapinousecond.Main;
 import io.github.alexiscomete.lapinousecond.save.SaveManager;
 import io.github.alexiscomete.lapinousecond.UserPerms;
 import io.github.alexiscomete.lapinousecond.commands.CommandBot;
+import io.github.alexiscomete.lapinousecond.save.Tables;
 import org.javacord.api.event.message.MessageCreateEvent;
 
 import java.util.HashMap;
@@ -37,7 +38,7 @@ public class PermsManager extends CommandBot {
                 messageCreateEvent.getMessage().reply("Impossible .... vous devez être l'owner du bot pour modifier cette permission");
                 return;
             }
-            saveManager.setValue("perms", messageCreateEvent.getMessageAuthor().getId(), perm, SaveManager.toBooleanString(value));
+            saveManager.setValue(Tables.PERMS.getTable(), messageCreateEvent.getMessageAuthor().getId(), perm, SaveManager.toBooleanString(value));
         } catch (NumberFormatException e) {
             messageCreateEvent.getMessage().reply("Vous devez indiquer un format de nombre valide pour l'argument user");
         }

@@ -5,6 +5,8 @@ import io.github.alexiscomete.lapinousecond.commands.CommandBot;
 import io.github.alexiscomete.lapinousecond.commands.classes.*;
 import io.github.alexiscomete.lapinousecond.save.SaveLocation;
 import io.github.alexiscomete.lapinousecond.save.SaveManager;
+import io.github.alexiscomete.lapinousecond.save.Table;
+import io.github.alexiscomete.lapinousecond.save.Tables;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
 
@@ -37,6 +39,7 @@ public class Main {
         api.addListener(new ListenerMain());
 
         saveManager = new SaveManager(config.getContent().get(1));
+        Tables.testTables();
 
         addCommand(new Help());
         addCommand(new Hello());

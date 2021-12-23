@@ -1,5 +1,6 @@
 package io.github.alexiscomete.lapinousecond.save;
 
+import com.sun.rowset.internal.Row;
 import io.github.alexiscomete.lapinousecond.Player;
 import io.github.alexiscomete.lapinousecond.UserPerms;
 import io.github.alexiscomete.lapinousecond.worlds.ServerBot;
@@ -140,7 +141,7 @@ public class SaveManager {
         return b ? "1" : "0";
     }
 
-    public void setValue(String where, String which, String whichValue, String valueName, String value) {
+    private void setValue(String where, String which, String whichValue, String valueName, String value) {
         try {
             st.executeUpdate("UPDATE " + where + " SET " + valueName + " = '" + value + "' WHERE " + which + " = " + whichValue);
         } catch (SQLException throwables) {
@@ -148,8 +149,12 @@ public class SaveManager {
         }
     }
 
-    public void setValue(String where, long id, String valueName, String value) {
-        setValue(where, "id", String.valueOf(id), valueName, value);
+    public void setValue(Table table, TableRow row1, String value1, TableRow row2, String value2) {
+        setValue(table.getName(), row1.getName(), value1, row2.getName(), value2);
+    }
+
+    public void setValue(Table table, long id, String row, String value) {
+        setValue(table.getName(), "id", String.valueOf(id), row, value);
     }
 
     public void insert(String where, HashMap<String, String> what) {
@@ -174,10 +179,16 @@ public class SaveManager {
     }
 
     public void execute(String ex) {
+        execute(ex, true);
+    }
+
+    public void execute(String ex, boolean bo) {
         try {
             st.executeUpdate(ex);
         } catch (SQLException e) {
-            e.printStackTrace();
+            if (bo) {
+                e.printStackTrace();
+            }
         }
     }
 

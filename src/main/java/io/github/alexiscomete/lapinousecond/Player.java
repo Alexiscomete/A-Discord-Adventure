@@ -1,6 +1,7 @@
 package io.github.alexiscomete.lapinousecond;
 
 import io.github.alexiscomete.lapinousecond.save.SaveManager;
+import io.github.alexiscomete.lapinousecond.save.Tables;
 
 import java.util.ArrayList;
 
@@ -40,7 +41,7 @@ public class Player {
                 itemsList.append(";");
             }
         }
-        saveManager.setValue("players", this.id, "items", itemsList.toString());
+        saveManager.setValue(Tables.PLAYERS.getTable(), this.id, "items", itemsList.toString());
     }
 
     public long getBal() {
@@ -49,7 +50,7 @@ public class Player {
 
     public void setBal(long bal) {
         this.bal = bal;
-        saveManager.setValue("players", id, "bal", String.valueOf(bal));
+        saveManager.setValue(Tables.PLAYERS.getTable(), id, "bal", String.valueOf(bal));
     }
 
     public long getServer() {
@@ -58,7 +59,7 @@ public class Player {
 
     public void setServer(long server) {
         this.server = server;
-        saveManager.setValue("players", id, "serv", String.valueOf(server));
+        saveManager.setValue(Tables.PLAYERS.getTable(), id, "serv", String.valueOf(server));
     }
 
     public short getTuto() {
@@ -67,7 +68,7 @@ public class Player {
 
     public void setTuto(short tuto) {
         this.tuto = tuto;
-        saveManager.setValue("player", id, "tuto", String.valueOf(tuto));
+        saveManager.setValue(Tables.PLAYERS.getTable(), id, "tuto", String.valueOf(tuto));
     }
 
     public short getSecurity() {
@@ -76,7 +77,7 @@ public class Player {
 
     public void setSecurity(short security) {
         this.security = security;
-        saveManager.setValue("players", id, "sec", String.valueOf(security));
+        saveManager.setValue(Tables.PLAYERS.getTable(), id, "sec", String.valueOf(security));
     }
 
     public Player(long id, long bal, long server, short tuto, short security) {
