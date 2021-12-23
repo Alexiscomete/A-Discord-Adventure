@@ -11,7 +11,6 @@ public class Player {
     private long bal;
     private long server;
     private short tuto;
-    private short security;
     private long workTime;
     private final ArrayList<Item> items = new ArrayList<>();
     private final SaveManager saveManager = Main.getSaveManager();
@@ -71,21 +70,11 @@ public class Player {
         saveManager.setValue(Tables.PLAYERS.getTable(), id, "tuto", String.valueOf(tuto));
     }
 
-    public short getSecurity() {
-        return security;
-    }
-
-    public void setSecurity(short security) {
-        this.security = security;
-        saveManager.setValue(Tables.PLAYERS.getTable(), id, "sec", String.valueOf(security));
-    }
-
-    public Player(long id, long bal, long server, short tuto, short security) {
+    public Player(long id, long bal, long server, short tuto) {
         this.id = id;
         this.bal = bal;
         this.server = server;
         this.tuto = tuto;
-        this.security = security;
         this.workTime = 0;
     }
 }

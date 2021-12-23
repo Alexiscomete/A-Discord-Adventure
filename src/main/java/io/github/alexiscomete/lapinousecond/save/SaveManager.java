@@ -1,6 +1,5 @@
 package io.github.alexiscomete.lapinousecond.save;
 
-import com.sun.rowset.internal.Row;
 import io.github.alexiscomete.lapinousecond.Player;
 import io.github.alexiscomete.lapinousecond.UserPerms;
 import io.github.alexiscomete.lapinousecond.worlds.ServerBot;
@@ -55,7 +54,7 @@ public class SaveManager {
             try {
                 ResultSet resultSet = st.executeQuery("SELECT * FROM players WHERE id = " + l);
                 if (resultSet.next()) {
-                    p = new Player(Long.parseLong(resultSet.getString("id")), Long.parseLong(resultSet.getString("bal")), Long.parseLong(resultSet.getString("serv")), Short.parseShort(resultSet.getString("tuto")), Short.parseShort(resultSet.getString("sec")));
+                    p = new Player(Long.parseLong(resultSet.getString("id")), Long.parseLong(resultSet.getString("bal")), Long.parseLong(resultSet.getString("serv")), Short.parseShort(resultSet.getString("tuto")));
                     players.put(l, p);
                 }
             } catch (SQLException throwables) {
@@ -125,12 +124,12 @@ public class SaveManager {
         try {
             ResultSet resultSet = st.executeQuery("SELECT * FROM perms WHERE id = " + id);
             if (resultSet.next()) {
-                return new UserPerms(toBoolean(resultSet.getInt("PLAY")), toBoolean(resultSet.getInt("CREATE_SERVER")), toBoolean(resultSet.getInt("SET_SERVER_SEC")), toBoolean(resultSet.getInt("MANAGE_PERMS")), false);
+                return new UserPerms(toBoolean(resultSet.getInt("PLAY")), toBoolean(resultSet.getInt("CREATE_SERVER")), toBoolean(resultSet.getInt("MANAGE_PERMS")), false);
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-        return new UserPerms(true, false, false, false, true);
+        return new UserPerms(true, false, false, true);
     }
 
     public static boolean toBoolean(int s) {
@@ -163,7 +162,6 @@ public class SaveManager {
             String key = (String) what.keySet().toArray()[i];
             keys.append(key);
             values.append(what.get(key));
-            //create.append("ID STRING PRIMARY KEY NOT NULL");
             if (i != what.size() - 1) {
                 keys.append(", ");
                 values.append(", ");

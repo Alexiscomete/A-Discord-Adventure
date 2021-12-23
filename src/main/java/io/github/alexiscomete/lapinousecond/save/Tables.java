@@ -1,9 +1,9 @@
 package io.github.alexiscomete.lapinousecond.save;
 
 public enum Tables {
-    PLAYERS(new Table("PLAYERS", new TableRow[]{})),
-    PERMS(new Table("PERMS", new TableRow[]{})),
-    SERVERS(new Table("SERVERS", new TableRow[]{}));
+    PLAYERS(new Table("PLAYERS", new TableRow[]{new TableRow("id", "ID INTEGER PRIMARY KEY NOT NULL"), new TableRow("BAL", "INTEGER"), new TableRow("SERVER", "INTEGER"), new TableRow("TUTO", "INTEGER"), new TableRow("ITEMS", "TEXT")})),
+    PERMS(new Table("PERMS", new TableRow[]{new TableRow("id", "ID BIGINT PRIMARY KEY NOT NULL"), new TableRow("PLAY", "INTEGER"), new TableRow("CREATE_SERVER", "INTEGER"), new TableRow("MANAGE_PERMS", "INTEGER")})),
+    SERVERS(new Table("SERVERS", new TableRow[]{new TableRow("id", "ID BIGINT PRIMARY KEY NOT NULL")}));
 
     private final Table table;
 
