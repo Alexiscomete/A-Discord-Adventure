@@ -12,7 +12,6 @@ public class ServerBot {
     private final long id;
     private String description, name, in, out;
     private ArrayList<Long> travel;
-    private short sec;
     private final SaveManager sv = Main.getSaveManager();
 
     public int getY() {
