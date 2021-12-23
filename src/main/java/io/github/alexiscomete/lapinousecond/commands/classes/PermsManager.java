@@ -30,7 +30,6 @@ public class PermsManager extends CommandBot {
                 what.put("ID", String.valueOf(messageCreateEvent.getMessageAuthor().getId()));
                 what.put("PLAY", SaveManager.toBooleanString(userPerms.PLAY));
                 what.put("CREATE_SERVER", SaveManager.toBooleanString(userPerms.CREATE_SERVER));
-                what.put("SET_SERVER_SEC", SaveManager.toBooleanString(userPerms.SET_SERVER_SEC));
                 what.put("MANAGE_PERMS", SaveManager.toBooleanString(userPerms.MANAGE_PERMS));
                 saveManager.insert("perms", what);
             }
