@@ -51,9 +51,9 @@ public class Main {
         addCommand(new Travel());
         addCommand(new Hub());
         addCommand(new StartAdventure());
-        addCommand(new Introduction());
         addCommand(new UseCommand());
         addCommand(new PermsManager());
+        addCommand(new Invite());
     }
 
     public static void addCommand(CommandBot commandBot) {

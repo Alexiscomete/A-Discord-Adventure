@@ -2,10 +2,11 @@ package io.github.alexiscomete.lapinousecond.commands.classes;
 
 import io.github.alexiscomete.lapinousecond.Main;
 import io.github.alexiscomete.lapinousecond.Player;
-import io.github.alexiscomete.lapinousecond.save.SaveManager;
 import io.github.alexiscomete.lapinousecond.commands.CommandBot;
+import io.github.alexiscomete.lapinousecond.save.SaveManager;
 import org.javacord.api.entity.user.User;
 import org.javacord.api.event.message.MessageCreateEvent;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Optional;
@@ -26,6 +27,10 @@ public class StartAdventure extends CommandBot {
             } else {
                 Optional<User> msga = messageCreateEvent.getMessageAuthor().asUser();
                 if (msga.isPresent()) {
+                    String userData = Verify.getUserData(messageCreateEvent.getMessageAuthor().getId());
+                    if (userData != null) {
+                        
+                    }
                     User user = msga.get();
                     HashMap<String, String> what = new HashMap<>();
                     what.put("id", String.valueOf(user.getId()));
