@@ -39,7 +39,7 @@ public class Work extends CommandInServer {
                 p.setTuto((short) 4);
             }
         } else {
-            messageCreateEvent.getMessage().reply("Cooldown ! Temps entre 2 work : 200s, temps écoulé : " + (System.currentTimeMillis() - p.getWorkTime()) / 1000 + "s");
+            messageCreateEvent.getMessage().reply("Cooldown ! Temps entre 2 work : 200s, temps écoulé : " + (System.currentTimeMillis() - p.getWorkTime()) / 1000 + "s. Temps avant le prochain : <t:" + p.getWorkTime() + 200000 + ":R>");
         }
     }
 }

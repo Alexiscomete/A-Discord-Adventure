@@ -6,7 +6,6 @@ import io.github.alexiscomete.lapinousecond.commands.CommandBot;
 import io.github.alexiscomete.lapinousecond.save.SaveManager;
 import org.javacord.api.entity.user.User;
 import org.javacord.api.event.message.MessageCreateEvent;
-import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Optional;
@@ -27,12 +26,22 @@ public class StartAdventure extends CommandBot {
             } else {
                 Optional<User> msga = messageCreateEvent.getMessageAuthor().asUser();
                 if (msga.isPresent()) {
-                    String userData = Verify.getUserData(messageCreateEvent.getMessageAuthor().getId());
-                    if (userData != null) {
-                        
-                    }
-                    User user = msga.get();
                     HashMap<String, String> what = new HashMap<>();
+                    Verify.UserData userData = Verify.getUserData(messageCreateEvent.getMessageAuthor().getId());
+                    if (userData.hasAccount()) {
+                        if (userData.isVerify()) {
+                            messageCreateEvent.getMessage().reply("Votre compte va être associé à votre pixel. Vous avez la vérification");
+                        } else {
+                            messageCreateEvent.getMessage().reply("Votre compte va être associé à votre pixel. Vous n'avez malheuresement pas la vérification 😕");
+                        }
+                    } else {
+                        messageCreateEvent.getMessage().reply("Aucun compte de pixel trouvé");
+                    }
+                    what.put("x", String.valueOf(userData.getX()));
+                    what.put("y", String.valueOf(userData.getY()));
+                    what.put("hasAccount", SaveManager.toBooleanString(userData.hasAccount()));
+                    what.put("isVerify", SaveManager.toBooleanString(userData.isVerify()));
+                    User user = msga.get();
                     what.put("id", String.valueOf(user.getId()));
                     what.put("bal", String.valueOf(0));
                     what.put("serv", String.valueOf(854288660147994634L));
