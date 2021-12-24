@@ -4,13 +4,9 @@ import io.github.alexiscomete.lapinousecond.Main;
 import io.github.alexiscomete.lapinousecond.Player;
 import io.github.alexiscomete.lapinousecond.commands.CommandBot;
 import io.github.alexiscomete.lapinousecond.save.SaveManager;
-import io.github.alexiscomete.lapinousecond.save.Tables;
 import org.javacord.api.entity.user.User;
 import org.javacord.api.event.message.MessageCreateEvent;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Optional;
 
@@ -38,6 +34,8 @@ public class StartAdventure extends CommandBot {
                         } else {
                             messageCreateEvent.getMessage().reply("Votre compte va être associé à votre pixel. Vous n'avez malheuresement pas la vérification 😕");
                         }
+                    } else {
+                        messageCreateEvent.getMessage().reply("Aucun compte de pixel trouvé");
                     }
                     what.put("x", String.valueOf(userData.getX()));
                     what.put("y", String.valueOf(userData.getY()));

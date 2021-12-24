@@ -14,26 +14,30 @@ import java.util.Scanner;
 
 public class Verify extends CommandBot {
 
-    public Verify(String description, String name, String totalDescription, String... perms) {
-        super(description, name, totalDescription, perms);
+    public Verify() {
+        super("Permet de vérifier votre compte", "verify", "Permet de vérifier votre compte grâce au bot de l'ORU");
     }
 
     @Override
     public void execute(MessageCreateEvent messageCreateEvent, String content, String[] args) {
-        messageCreateEvent.getMessage().reply("Votre vérification est en cours");
-        UserData userData = getUserData(messageCreateEvent.getMessageAuthor().getId());
-        if (userData.hasAccount()) {
-            if (userData.isVerify()) {
-                messageCreateEvent.getMessage().reply("Votre compte va être associé à votre pixel. Vous avez la vérification");
+        if (saveManager.getPlayer(messageCreateEvent.getMessageAuthor().getId()) != null) {
+            messageCreateEvent.getMessage().reply("Votre vérification est en cours");
+            UserData userData = getUserData(messageCreateEvent.getMessageAuthor().getId());
+            if (userData.hasAccount()) {
+                if (userData.isVerify()) {
+                    messageCreateEvent.getMessage().reply("Votre compte va être associé à votre pixel. Vous avez la vérification");
+                } else {
+                    messageCreateEvent.getMessage().reply("Votre compte va être associé à votre pixel. Vous n'avez malheuresement pas la vérification 😕");
+                }
+                saveManager.setValue(Tables.PLAYERS.getTable(), messageCreateEvent.getMessageAuthor().getId(), "x", String.valueOf(userData.getX()));
+                saveManager.setValue(Tables.PLAYERS.getTable(), messageCreateEvent.getMessageAuthor().getId(), "y", String.valueOf(userData.getY()));
+                saveManager.setValue(Tables.PLAYERS.getTable(), messageCreateEvent.getMessageAuthor().getId(), "hasAccount", SaveManager.toBooleanString(userData.isVerify));
+                saveManager.setValue(Tables.PLAYERS.getTable(), messageCreateEvent.getMessageAuthor().getId(), "isVerify", "1");
             } else {
-                messageCreateEvent.getMessage().reply("Votre compte va être associé à votre pixel. Vous n'avez malheuresement pas la vérification 😕");
+                messageCreateEvent.getMessage().reply("Vous n'avez pas encore de compte avec l'ORU");
             }
-            saveManager.setValue(Tables.PLAYERS.getTable(), messageCreateEvent.getMessageAuthor().getId(), "x", String.valueOf(userData.getX()));
-            saveManager.setValue(Tables.PLAYERS.getTable(), messageCreateEvent.getMessageAuthor().getId(), "y", String.valueOf(userData.getY()));
-            saveManager.setValue(Tables.PLAYERS.getTable(), messageCreateEvent.getMessageAuthor().getId(), "hasAccount", SaveManager.toBooleanString(userData.isVerify));
-            saveManager.setValue(Tables.PLAYERS.getTable(), messageCreateEvent.getMessageAuthor().getId(), "isVerify", "1");
         } else {
-            messageCreateEvent.getMessage().reply("Vous n'avez pas encore de compte avec l'ORU");
+            messageCreateEvent.getMessage().reply("Utilisez -start");
         }
     }
 
@@ -59,8 +63,11 @@ public class Verify extends CommandBot {
 
     public static UserData getUserData(long id) {
         String userData = Verify.getUser(id);
+        System.out.println("Data :");
+        System.out.println(userData);
         if (userData != null) {
             JSONObject jsonObject = new JSONObject(userData);
+            System.out.println(jsonObject.getString("back"));
             JSONObject back = jsonObject.getJSONObject("back");
             if (!back.isEmpty()) {
                 JSONObject member = back.getJSONObject("member");
@@ -73,7 +80,6 @@ public class Verify extends CommandBot {
                     return new UserData(jsonArray.getInt(0), jsonArray.getInt(1), false, true);
                 }
             }
-            return new UserData(-1, -1, false, false);
         }
         return new UserData(-1, -1, false, false);
     }

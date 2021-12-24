@@ -54,6 +54,7 @@ public class Main {
         addCommand(new UseCommand());
         addCommand(new PermsManager());
         addCommand(new Invite());
+        addCommand(new Verify());
     }
 
     public static void addCommand(CommandBot commandBot) {
