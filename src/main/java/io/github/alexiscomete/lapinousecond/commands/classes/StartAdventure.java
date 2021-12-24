@@ -4,6 +4,7 @@ import io.github.alexiscomete.lapinousecond.Main;
 import io.github.alexiscomete.lapinousecond.Player;
 import io.github.alexiscomete.lapinousecond.commands.CommandBot;
 import io.github.alexiscomete.lapinousecond.save.SaveManager;
+import io.github.alexiscomete.lapinousecond.save.Tables;
 import org.javacord.api.entity.user.User;
 import org.javacord.api.event.message.MessageCreateEvent;
 import org.json.JSONArray;
@@ -29,26 +30,20 @@ public class StartAdventure extends CommandBot {
             } else {
                 Optional<User> msga = messageCreateEvent.getMessageAuthor().asUser();
                 if (msga.isPresent()) {
-                    String userData = Verify.getUserData(messageCreateEvent.getMessageAuthor().getId());
-                    if (userData != null) {
-                        JSONObject jsonObject = new JSONObject(userData);
-                        JSONObject back = jsonObject.getJSONObject("back");
-                        if (!back.isEmpty()) {
-                            JSONObject member = back.getJSONObject("member");
-                            boolean verified = member.getBoolean("verified");
-                            if (verified) {
-                                JSONArray jsonArray = member.getJSONArray("coordinatesVerified");
-                                int[] array = {jsonArray.getInt(0), jsonArray.getInt(1)};
-                                messageCreateEvent.getMessage().reply("Vous avez un compte vérifié chez l'ORU : " + Arrays.toString(array));
-                            } else {
-                                JSONArray jsonArray = member.getJSONArray("coordinatesUnverified");
-                                int[] array = {jsonArray.getInt(0), jsonArray.getInt(1)};
-                                messageCreateEvent.getMessage().reply("Vous avez un compte non vérifié chez l'ORU : " + Arrays.toString(array));
-                            }
+                    HashMap<String, String> what = new HashMap<>();
+                    Verify.UserData userData = Verify.getUserData(messageCreateEvent.getMessageAuthor().getId());
+                    if (userData.hasAccount()) {
+                        if (userData.isVerify()) {
+                            messageCreateEvent.getMessage().reply("Votre compte va être associé à votre pixel. Vous avez la vérification");
+                        } else {
+                            messageCreateEvent.getMessage().reply("Votre compte va être associé à votre pixel. Vous n'avez malheuresement pas la vérification 😕");
                         }
                     }
+                    what.put("x", String.valueOf(userData.getX()));
+                    what.put("y", String.valueOf(userData.getY()));
+                    what.put("hasAccount", SaveManager.toBooleanString(userData.hasAccount()));
+                    what.put("isVerify", SaveManager.toBooleanString(userData.isVerify()));
                     User user = msga.get();
-                    HashMap<String, String> what = new HashMap<>();
                     what.put("id", String.valueOf(user.getId()));
                     what.put("bal", String.valueOf(0));
                     what.put("serv", String.valueOf(854288660147994634L));
