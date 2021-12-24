@@ -43,18 +43,15 @@ public class Verify extends CommandBot {
 
     public static String getUser(long id) {
         try {
-            HttpURLConnection connection = (HttpURLConnection) new URL("https://dirtybiology.captaincommand.repl.co/api/?authorization=&request=getInfosByDiscordId&datas=%7B%22discordId%22:%22" + id + "%22%7D").openConnection();
+            HttpURLConnection connection = (HttpURLConnection) new URL("https://dirtybiology.captaincommand.repl.co/api/?authorization=mXpn9frxWJh0RPjZYSPMilfnK5ooxjhL&request=getInfosByDiscordId&datas=%7B%22discordId%22:%22" + id + "%22%7D").openConnection();
             connection.setRequestMethod("GET");
-            int responseCode = connection.getResponseCode();
-            if (responseCode == 200) {
-                String response = "";
-                Scanner scanner = new Scanner(connection.getInputStream());
-                if (scanner.hasNextLine()) {
-                    response += scanner.nextLine();
-                }
-                scanner.close();
-                return response;
+            String response = "";
+            Scanner scanner = new Scanner(connection.getInputStream());
+            if (scanner.hasNextLine()) {
+                response += scanner.nextLine();
             }
+            scanner.close();
+            return response;
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -67,7 +64,6 @@ public class Verify extends CommandBot {
         System.out.println(userData);
         if (userData != null) {
             JSONObject jsonObject = new JSONObject(userData);
-            System.out.println(jsonObject.getString("back"));
             JSONObject back = jsonObject.getJSONObject("back");
             if (!back.isEmpty()) {
                 JSONObject member = back.getJSONObject("member");
