@@ -1,2 +1,17 @@
 
 out/artifacts/la2_jar/la2.jar
+out/artifacts/la2_jar/la2.jar
+target/classes/io/github/alexiscomete/lapinousecond/ItemsEnum$1.class
+target/classes/io/github/alexiscomete/lapinousecond/Main.class
+target/classes/io/github/alexiscomete/lapinousecond/Player.class
+target/classes/io/github/alexiscomete/lapinousecond/UserPerms.class
+target/classes/io/github/alexiscomete/lapinousecond/commands/classes/ConfigServ.class
+target/classes/io/github/alexiscomete/lapinousecond/commands/classes/PermsManager.class
+target/classes/io/github/alexiscomete/lapinousecond/commands/classes/StartAdventure.class
+target/classes/io/github/alexiscomete/lapinousecond/commands/classes/Travel.class
+target/classes/io/github/alexiscomete/lapinousecond/save/SaveManager.class
+target/classes/io/github/alexiscomete/lapinousecond/worlds/ServerBot.class
+target/classes/io/github/alexiscomete/lapinousecond/save/RowValue.class
+target/classes/io/github/alexiscomete/lapinousecond/save/Table.class
+target/classes/io/github/alexiscomete/lapinousecond/save/TableRow.class
+target/classes/io/github/alexiscomete/lapinousecond/save/Tables.class

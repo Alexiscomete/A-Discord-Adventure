@@ -1,9 +1,9 @@
 package io.github.alexiscomete.lapinousecond.save;
 
 public enum Tables {
-    PLAYERS(new Table("PLAYERS", new TableRow[]{new TableRow("id", "ID INTEGER PRIMARY KEY NOT NULL"), new TableRow("BAL", "INTEGER"), new TableRow("SERVER", "INTEGER"), new TableRow("TUTO", "INTEGER"), new TableRow("ITEMS", "TEXT")})),
-    PERMS(new Table("PERMS", new TableRow[]{new TableRow("id", "ID BIGINT PRIMARY KEY NOT NULL"), new TableRow("PLAY", "INTEGER"), new TableRow("CREATE_SERVER", "INTEGER"), new TableRow("MANAGE_PERMS", "INTEGER")})),
-    SERVERS(new Table("SERVERS", new TableRow[]{new TableRow("id", "ID BIGINT PRIMARY KEY NOT NULL")}));
+    PLAYERS(new Table("players", new TableRow[]{new TableRow("id", "ID INTEGER PRIMARY KEY NOT NULL"), new TableRow("bal", "INTEGER"), new TableRow("server", "INTEGER"), new TableRow("tuto", "INTEGER"), new TableRow("items", "TEXT")})),
+    PERMS(new Table("perms", new TableRow[]{new TableRow("id", "ID INTEGER PRIMARY KEY NOT NULL"), new TableRow("play", "INTEGER"), new TableRow("create_server", "INTEGER"), new TableRow("manage_perms", "INTEGER")})),
+    SERVERS(new Table("guilds", new TableRow[]{new TableRow("id", "ID INTEGER PRIMARY KEY NOT NULL"), new TableRow("x", "INTEGER"), new TableRow("y", "INTEGER"), new TableRow("z", "INTEGER"), new TableRow("descr", "TEXT"), new TableRow("namerp", "TEXT"), new TableRow("train", "TEXT"), new TableRow("traout", "TEXT"), new TableRow("travel", "TEXT")}));
 
     private final Table table;
 

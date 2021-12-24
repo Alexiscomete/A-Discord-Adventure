@@ -27,10 +27,10 @@ public class Travel extends CommandInServer {
     public void executeC(MessageCreateEvent messageCreateEvent, String content, String[] args, Player p) {
         ServerBot currentServer = saveManager.getServer(p.getServer());
         if (currentServer == null) {
-            messageCreateEvent.getMessage().reply("Impossible de voyager, votre serveur actuel est introuvable dans la base de données, il existe 2 solutions : revenir au hub ou configurer le serveur");
+            messageCreateEvent.getMessage().reply("Impossible de voyager, votre serveur actuel est introuvable dans la base de données ! Tapez -hub pour vous débloquer. Si vous êtes l'admin il faudrait utiliser -config");
             return;
         }
-        if (args.length <= 1 || args[1].equals("list")) {
+        if (args.length <= 2 || args[2].equals("list")) {
             EmbedBuilder builder = new EmbedBuilder();
             builder.setDescription("Serveur actuel : " + p.getServer() + "; " + currentServer.getName() + ". Pour voyager vers un serveur, indiquez sont id, le prix  est indiqué à côté. Si le serveur n'est pas dasn la liste, alors le prix est égual à la distance au carré.").setTitle("Voyages disponibles").setColor(Color.green);
             for (long tra : currentServer.getTravel()) {
@@ -60,7 +60,7 @@ public class Travel extends CommandInServer {
                 if (price == -1) {
                     price = Math.pow(currentServer.getX() - nextServer.getX(), 2) + Math.pow(currentServer.getY() - nextServer.getY(), 2) + Math.pow(currentServer.getZ() - nextServer.getZ(), 2);
                 }
-                if (args.length > 2) {
+                if (args.length > 3) {
                     List<ServerChannel> channels = server.getChannels();
                     if (channels.size() == 0)  {
                         messageCreateEvent.getMessage().reply("Bon je pense que ce serveur ne vaux pas la peine : il n'y aucun salon !! Je ne peux même pas vous inviter.");

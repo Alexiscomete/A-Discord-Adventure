@@ -32,7 +32,7 @@ public class InventoryC extends CommandBot {
                 messageCreateEvent.getMessage().reply("Vous devez d'abord faire la commande start avant de continuer");
             } else {
                 invOf(p, messageCreateEvent);
-                if (p.getTuto() == 2) {
+                if (p.getTuto() == 1) {
                     messageCreateEvent.getMessage().reply("Bon ... comme vous l'avez vu vous n'avez pas d'argent (sauf si vous refaites le tuto 👀). Utilisez la commande `work` pour en gagner un peu ...");
                     p.setTuto((short) 3);
                 }

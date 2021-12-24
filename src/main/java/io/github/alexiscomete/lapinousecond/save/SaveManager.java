@@ -80,7 +80,7 @@ public class SaveManager {
 
                         }
                     }
-                    serverBot = new ServerBot(Integer.parseInt(resultSet.getString("x")), Integer.parseInt(resultSet.getString("y")), Integer.parseInt(resultSet.getString("z")), Long.parseLong(resultSet.getString("id")), resultSet.getString("descr"), resultSet.getString("namerp"), arr, Short.parseShort(resultSet.getString("sec")), resultSet.getString("train"), resultSet.getString("traout"));
+                    serverBot = new ServerBot(Integer.parseInt(resultSet.getString("x")), Integer.parseInt(resultSet.getString("y")), Integer.parseInt(resultSet.getString("z")), Long.parseLong(resultSet.getString("id")), resultSet.getString("descr"), resultSet.getString("namerp"), arr, resultSet.getString("train"), resultSet.getString("traout"));
                     servers.put(l, serverBot);
                 }
             } catch (SQLException throwables) {
@@ -88,14 +88,6 @@ public class SaveManager {
             }
         }
         return serverBot;
-    }
-
-    public void addPlayer(long id, long bal, long server, short tuto, short security, long workTime) {
-        try {
-            st.executeUpdate("INSERT INTO players (id, bal, serv, tuto, sec, wt) VALUES (" + id + ", " + bal + ", " + server + ", " + tuto + ", " + security + ", " + workTime + ")");
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
     }
 
     public void addServer(int x, int y, int z, long id, String description, String name, String travel, short sec) {
