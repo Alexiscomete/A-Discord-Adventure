@@ -23,7 +23,7 @@ public class Verify extends CommandBot {
 
     public static String getUserData(long id) {
         try {
-            HttpURLConnection connection = (HttpURLConnection) new URL("https://dirtybiology.captaincommand.repl.co/api/?authorization=mXpn9frxWJh0RPjZYSPMilfnK5ooxjhL&request=getInfosByDiscordId&datas=%7B%22discordId%22:%22" + id + "%22%7D").openConnection();
+            HttpURLConnection connection = (HttpURLConnection) new URL("https://dirtybiology.captaincommand.repl.co/api/?authorization=&request=getInfosByDiscordId&datas=%7B%22discordId%22:%22" + id + "%22%7D").openConnection();
             connection.setRequestMethod("GET");
             int responseCode = connection.getResponseCode();
             if (responseCode == 200) {

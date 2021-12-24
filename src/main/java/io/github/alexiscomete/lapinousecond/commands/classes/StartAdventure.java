@@ -6,8 +6,10 @@ import io.github.alexiscomete.lapinousecond.commands.CommandBot;
 import io.github.alexiscomete.lapinousecond.save.SaveManager;
 import org.javacord.api.entity.user.User;
 import org.javacord.api.event.message.MessageCreateEvent;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Optional;
 
@@ -29,7 +31,21 @@ public class StartAdventure extends CommandBot {
                 if (msga.isPresent()) {
                     String userData = Verify.getUserData(messageCreateEvent.getMessageAuthor().getId());
                     if (userData != null) {
-                        
+                        JSONObject jsonObject = new JSONObject(userData);
+                        JSONObject back = jsonObject.getJSONObject("back");
+                        if (!back.isEmpty()) {
+                            JSONObject member = back.getJSONObject("member");
+                            boolean verified = member.getBoolean("verified");
+                            if (verified) {
+                                JSONArray jsonArray = member.getJSONArray("coordinatesVerified");
+                                int[] array = {jsonArray.getInt(0), jsonArray.getInt(1)};
+                                messageCreateEvent.getMessage().reply("Vous avez un compte vérifié chez l'ORU : " + Arrays.toString(array));
+                            } else {
+                                JSONArray jsonArray = member.getJSONArray("coordinatesUnverified");
+                                int[] array = {jsonArray.getInt(0), jsonArray.getInt(1)};
+                                messageCreateEvent.getMessage().reply("Vous avez un compte non vérifié chez l'ORU : " + Arrays.toString(array));
+                            }
+                        }
                     }
                     User user = msga.get();
                     HashMap<String, String> what = new HashMap<>();
