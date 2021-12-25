@@ -92,18 +92,22 @@ public class Player {
 
     public void setVerify(boolean verify) {
         isVerify = verify;
+        saveManager.setValue(Tables.PLAYERS.getTable(), id, "is_verify", SaveManager.toBooleanString(verify));
     }
 
     public void setHasAccount(boolean hasAccount) {
         this.hasAccount = hasAccount;
+        saveManager.setValue(Tables.PLAYERS.getTable(), id, "has_account", SaveManager.toBooleanString(hasAccount));
     }
 
     public void setX(int x) {
         this.x = x;
+        saveManager.setValue(Tables.PLAYERS.getTable(), id, "x", String.valueOf(x));
     }
 
     public void setY(int y) {
         this.y = y;
+        saveManager.setValue(Tables.PLAYERS.getTable(), id, "y", String.valueOf(y));
     }
 
     public Player(long id, long bal, long server, short tuto, boolean isVerify, boolean hasAccount, int x, int y) {
