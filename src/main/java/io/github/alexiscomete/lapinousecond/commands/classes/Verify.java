@@ -1,5 +1,6 @@
 package io.github.alexiscomete.lapinousecond.commands.classes;
 
+import io.github.alexiscomete.lapinousecond.Player;
 import io.github.alexiscomete.lapinousecond.commands.CommandBot;
 import io.github.alexiscomete.lapinousecond.save.SaveManager;
 import io.github.alexiscomete.lapinousecond.save.Tables;
@@ -24,15 +25,17 @@ public class Verify extends CommandBot {
             messageCreateEvent.getMessage().reply("Votre vérification est en cours");
             UserData userData = getUserData(messageCreateEvent.getMessageAuthor().getId());
             if (userData.hasAccount()) {
+                Player player = saveManager.getPlayer(messageCreateEvent.getMessageAuthor().getId());
+                player.setX(userData.getX());
+                player.setY(userData.getY());
+                player.setHasAccount(userData.hasAccount());
+                player.setVerify(userData.isVerify());
+
                 if (userData.isVerify()) {
-                    messageCreateEvent.getMessage().reply("Votre compte va être associé à votre pixel. Vous avez la vérification");
+                    messageCreateEvent.getMessage().reply("Votre compte a été associé à votre pixel. Vous avez la vérification");
                 } else {
-                    messageCreateEvent.getMessage().reply("Votre compte va être associé à votre pixel. Vous n'avez malheuresement pas la vérification 😕");
+                    messageCreateEvent.getMessage().reply("Votre compte a été associé à votre pixel. Vous n'avez malheuresement pas la vérification 😕");
                 }
-                saveManager.setValue(Tables.PLAYERS.getTable(), messageCreateEvent.getMessageAuthor().getId(), "x", String.valueOf(userData.getX()));
-                saveManager.setValue(Tables.PLAYERS.getTable(), messageCreateEvent.getMessageAuthor().getId(), "y", String.valueOf(userData.getY()));
-                saveManager.setValue(Tables.PLAYERS.getTable(), messageCreateEvent.getMessageAuthor().getId(), "hasAccount", SaveManager.toBooleanString(userData.isVerify));
-                saveManager.setValue(Tables.PLAYERS.getTable(), messageCreateEvent.getMessageAuthor().getId(), "isVerify", "1");
             } else {
                 messageCreateEvent.getMessage().reply("Vous n'avez pas encore de compte avec l'ORU");
             }
