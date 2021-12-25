@@ -11,6 +11,10 @@ public class Player {
     private long bal;
     private long server;
     private short tuto;
+    private boolean isVerify;
+    private boolean hasAccount;
+    private int x;
+    private int y;
     private long workTime;
     private final ArrayList<Item> items = new ArrayList<>();
     private final SaveManager saveManager = Main.getSaveManager();
@@ -70,11 +74,47 @@ public class Player {
         saveManager.setValue(Tables.PLAYERS.getTable(), id, "tuto", String.valueOf(tuto));
     }
 
-    public Player(long id, long bal, long server, short tuto) {
+    public boolean isVerify() {
+        return isVerify;
+    }
+
+    public boolean hasAccount() {
+        return hasAccount;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void setVerify(boolean verify) {
+        isVerify = verify;
+    }
+
+    public void setHasAccount(boolean hasAccount) {
+        this.hasAccount = hasAccount;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    public Player(long id, long bal, long server, short tuto, boolean isVerify, boolean hasAccount, int x, int y) {
         this.id = id;
         this.bal = bal;
         this.server = server;
         this.tuto = tuto;
+        this.isVerify = isVerify;
+        this.hasAccount = hasAccount;
+        this.x = x;
+        this.y = y;
         this.workTime = 0;
     }
 }

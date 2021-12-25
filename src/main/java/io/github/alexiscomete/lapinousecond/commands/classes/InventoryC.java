@@ -33,7 +33,7 @@ public class InventoryC extends CommandBot {
             } else {
                 invOf(p, messageCreateEvent);
                 if (p.getTuto() == 1) {
-                    messageCreateEvent.getMessage().reply("Bon ... comme vous l'avez vu vous n'avez pas d'argent (sauf si vous refaites le tuto 👀). Utilisez la commande `work` pour en gagner un peu ...");
+                    messageCreateEvent.getMessage().reply("Bon ... comme vous l'avez vu vous n'avez normalement pas d'argent. Utilisez la commande `work` pour en gagner un peu ...");
                     p.setTuto((short) 3);
                 }
             }
@@ -41,10 +41,19 @@ public class InventoryC extends CommandBot {
     }
 
     public void invOf(Player p, MessageCreateEvent messageCreateEvent) {
-        EmbedBuilder builder = new EmbedBuilder();
-        builder.setDescription("Serveur actuel : " + p.getServer()).setTitle("Inventaire").setColor(Color.green);
-        builder.addField("Ressources et argent", "**Rabbitcoins :** " + p.getBal());
+        EmbedBuilder builder = new EmbedBuilder()
+                .setDescription("Serveur actuel : " + p.getServer())
+                .setTitle("Infos joueur")
+                .setAuthor(messageCreateEvent.getMessageAuthor())
+                .setTimestampToNow()
+                .addField("Pixel", )
+                .setColor(Color.green);
         messageCreateEvent.getMessage().reply(builder);
+        EmbedBuilder builder2 = new EmbedBuilder()
+                .setTitle("Inventaire : ressources, items, argent")
+                .setColor(Color.ORANGE)
+                .addField("Rabbitcoins", String.valueOf(p.getBal()));
+        messageCreateEvent.getMessage().reply(builder2);
     }
 
 }

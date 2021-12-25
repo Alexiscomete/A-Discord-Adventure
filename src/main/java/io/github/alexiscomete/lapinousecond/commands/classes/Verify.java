@@ -31,8 +31,9 @@ public class Verify extends CommandBot {
                 }
                 saveManager.setValue(Tables.PLAYERS.getTable(), messageCreateEvent.getMessageAuthor().getId(), "x", String.valueOf(userData.getX()));
                 saveManager.setValue(Tables.PLAYERS.getTable(), messageCreateEvent.getMessageAuthor().getId(), "y", String.valueOf(userData.getY()));
-                saveManager.setValue(Tables.PLAYERS.getTable(), messageCreateEvent.getMessageAuthor().getId(), "hasAccount", SaveManager.toBooleanString(userData.isVerify));
-                saveManager.setValue(Tables.PLAYERS.getTable(), messageCreateEvent.getMessageAuthor().getId(), "isVerify", "1");
+                saveManager.setValue(Tables.PLAYERS.getTable(), messageCreateEvent.getMessageAuthor().getId(), "has_account", SaveManager.toBooleanString(userData.isVerify));
+                saveManager.setValue(Tables.PLAYERS.getTable(), messageCreateEvent.getMessageAuthor().getId(), "is_verify", "1");
+                //TODO : set player
             } else {
                 messageCreateEvent.getMessage().reply("Vous n'avez pas encore de compte avec l'ORU");
             }
