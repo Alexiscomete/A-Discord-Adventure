@@ -46,8 +46,9 @@ public class InventoryC extends CommandBot {
                 .setTitle("Infos joueur")
                 .setAuthor(messageCreateEvent.getMessageAuthor())
                 .setTimestampToNow()
-                .addField("Pixel", )
-                .setColor(Color.green);
+                .addField("Pixel", "Compte sur l'ORU : " + (p.hasAccount()?"oui":"non") + "\nVérification : " + (p.isVerify()?"oui":"non") + "\nPixel : " + (p.getX()==-1?"pixel inconnu":("[" + p.getX() + ":" + p.getY() + "]")))
+                .setColor(Color.green)
+                .setThumbnail("https://tenor.com/view/chest-surprise-loot-drop-gif-19498042");
         messageCreateEvent.getMessage().reply(builder);
         EmbedBuilder builder2 = new EmbedBuilder()
                 .setTitle("Inventaire : ressources, items, argent")
