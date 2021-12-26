@@ -7,6 +7,7 @@ import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.event.message.MessageCreateEvent;
 
 import java.awt.*;
+import java.time.Instant;
 import java.util.Random;
 
 public class Work extends CommandInServer {
@@ -39,7 +40,7 @@ public class Work extends CommandInServer {
                 p.setTuto((short) 4);
             }
         } else {
-            messageCreateEvent.getMessage().reply("Cooldown ! Temps entre 2 work : 200s, temps écoulé : " + (System.currentTimeMillis() - p.getWorkTime()) / 1000 + "s. Temps avant le prochain : <t:" + p.getWorkTime() + 200000 + ":R>");
+            messageCreateEvent.getMessage().reply("Cooldown ! Temps entre 2 work : 200s, temps écoulé : " + (System.currentTimeMillis() - p.getWorkTime()) / 1000 + "s. Temps avant le prochain : <t:" + (Instant.now().getEpochSecond() + 200 - (System.currentTimeMillis() - p.getWorkTime()) / 1000) + ":R>");
         }
     }
 }
