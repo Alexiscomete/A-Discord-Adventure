@@ -27,7 +27,7 @@ public class Work extends CommandInServer {
             int r = new Random().nextInt(w.getMax() - w.getMin()) + w.getMin();
             String answer;
             if (strings.length > 1) {
-                answer = strings[0] +" "+  r +" "+ strings[1];
+                answer = strings[0] + " " + r + " " + strings[1];
             } else {
                 answer = strings[0];
             }
