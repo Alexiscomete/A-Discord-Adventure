@@ -34,15 +34,17 @@ public class InventoryC extends CommandBot {
                     EmbedBuilder embedBuilder = new EmbedBuilder()
                             .setTitle("Classement des joueurs par bal")
                             .setColor(Color.CYAN);
-                    StringBuilder builder = new StringBuilder();
+                    //StringBuilder builder = new StringBuilder();
+                    String[] top = {""};
                     final int[] ints = {players.size()};
                     for (Player player : players) {
                         Main.api.getUserById(player.getId()).thenAccept(user -> {
                             System.out.println("...");
                             ints[0]--;
-                            builder.append(user.getName()).append(" -> ").append(player.getBal()).append("\n");
+                            top[0] = user.getName() + " -> " + player.getBal() + "\n" + top[0];
+                            //builder.append(user.getName()).append(" -> ").append(player.getBal()).append("\n");
                             if (ints[0] == 0) {
-                                embedBuilder.setDescription(builder.toString());
+                                embedBuilder.setDescription(top[0]);
                                 messageCreateEvent.getMessage().reply(embedBuilder);
                             }
                         });
