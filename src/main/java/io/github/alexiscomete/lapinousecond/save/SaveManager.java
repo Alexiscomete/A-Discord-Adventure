@@ -116,12 +116,12 @@ public class SaveManager {
         try {
             ResultSet resultSet = st.executeQuery("SELECT * FROM perms WHERE id = " + id);
             if (resultSet.next()) {
-                return new UserPerms(toBoolean(resultSet.getInt("PLAY")), toBoolean(resultSet.getInt("CREATE_SERVER")), toBoolean(resultSet.getInt("MANAGE_PERMS")), false);
+                return new UserPerms(toBoolean(resultSet.getInt("play")), toBoolean(resultSet.getInt("create_server")), toBoolean(resultSet.getInt("manage_perms")), toBoolean(resultSet.getInt("manage_roles")), false);
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-        return new UserPerms(true, false, false, true);
+        return new UserPerms(true, false, false, false, true);
     }
 
     public static boolean toBoolean(int s) {

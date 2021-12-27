@@ -1,5 +1,6 @@
 package io.github.alexiscomete.lapinousecond;
 
+import io.github.alexiscomete.lapinousecond.roles.Role;
 import io.github.alexiscomete.lapinousecond.save.SaveManager;
 import io.github.alexiscomete.lapinousecond.save.Tables;
 
@@ -16,6 +17,7 @@ public class Player {
     private int x;
     private int y;
     private long workTime;
+    private ArrayList<Role> roles = new ArrayList<>();
     private final ArrayList<Item> items = new ArrayList<>();
     private final SaveManager saveManager = Main.getSaveManager();
 

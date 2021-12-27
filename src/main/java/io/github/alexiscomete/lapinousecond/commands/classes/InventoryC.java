@@ -34,7 +34,6 @@ public class InventoryC extends CommandBot {
                     EmbedBuilder embedBuilder = new EmbedBuilder()
                             .setTitle("Classement des joueurs par bal")
                             .setColor(Color.CYAN);
-                    //StringBuilder builder = new StringBuilder();
                     String[] top = {""};
                     final int[] ints = {players.size()};
                     for (Player player : players) {
@@ -42,7 +41,6 @@ public class InventoryC extends CommandBot {
                             System.out.println("...");
                             ints[0]--;
                             top[0] = user.getName() + " -> " + player.getBal() + "\n" + top[0];
-                            //builder.append(user.getName()).append(" -> ").append(player.getBal()).append("\n");
                             if (ints[0] == 0) {
                                 embedBuilder.setDescription(top[0]);
                                 messageCreateEvent.getMessage().reply(embedBuilder);
@@ -64,7 +62,7 @@ public class InventoryC extends CommandBot {
                         invOf(p, messageCreateEvent);
                     }
                 } catch (NumberFormatException e) {
-                    messageCreateEvent.getMessage().reply("Pour voir l'inventiare d'une personne, vous devez indiquez son id ou la mentionner");
+                    messageCreateEvent.getMessage().reply("Pour voir l'inventiare d'une personne, vous devez indiquer son id ou la mentionner");
                 }
             }
         } else {
