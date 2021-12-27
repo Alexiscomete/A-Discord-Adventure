@@ -132,16 +132,12 @@ public class SaveManager {
         return b ? "1" : "0";
     }
 
-    private void setValue(String where, String which, String whichValue, String valueName, String value) {
+    public void setValue(String where, String which, String whichValue, String valueName, String value) {
         try {
             st.executeUpdate("UPDATE " + where + " SET " + valueName + " = '" + value + "' WHERE " + which + " = " + whichValue);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-    }
-
-    public void setValue(Table table, TableRow row1, String value1, TableRow row2, String value2) {
-        setValue(table.getName(), row1.getName(), value1, row2.getName(), value2);
     }
 
     public void setValue(Table table, long id, String row, String value) {
@@ -182,4 +178,14 @@ public class SaveManager {
         }
     }
 
+    public ResultSet executeQuery(String ex, boolean bo) {
+        try {
+            return st.executeQuery(ex);
+        } catch (SQLException e) {
+            if (bo) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
 }
