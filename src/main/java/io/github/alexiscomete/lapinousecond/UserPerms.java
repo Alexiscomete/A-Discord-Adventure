@@ -2,13 +2,14 @@ package io.github.alexiscomete.lapinousecond;
 
 public class UserPerms {
 
-    public final boolean PLAY, CREATE_SERVER, MANAGE_PERMS, isDefault;
+    public final boolean PLAY, CREATE_SERVER, MANAGE_PERMS, MANAGE_ROLES, isDefault;
 
-    public UserPerms(boolean PLAY, boolean CREATE_SERVER, boolean MANAGE_PERMS, boolean isDefault) {
+    public UserPerms(boolean PLAY, boolean CREATE_SERVER, boolean MANAGE_PERMS, boolean MANAGE_ROLES, boolean isDefault) {
         this.PLAY = PLAY;
         this.CREATE_SERVER = CREATE_SERVER;
         this.MANAGE_PERMS = MANAGE_PERMS;
         this.isDefault = isDefault;
+        this.MANAGE_ROLES = MANAGE_ROLES;
     }
 
     public static boolean check(long id, String[] perms) {
@@ -22,6 +23,9 @@ public class UserPerms {
                 return false;
             }
             if (perm.equals("MANAGE_PERMS") && !up.MANAGE_PERMS) {
+                return false;
+            }
+            if (perm.equals("MANAGE_ROLES") && !up.MANAGE_ROLES) {
                 return false;
             }
         }

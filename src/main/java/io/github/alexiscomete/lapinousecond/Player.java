@@ -1,5 +1,7 @@
 package io.github.alexiscomete.lapinousecond;
 
+import io.github.alexiscomete.lapinousecond.roles.Role;
+import io.github.alexiscomete.lapinousecond.roles.RolesEnum;
 import io.github.alexiscomete.lapinousecond.save.SaveManager;
 import io.github.alexiscomete.lapinousecond.save.Tables;
 
@@ -16,6 +18,7 @@ public class Player {
     private int x;
     private int y;
     private long workTime;
+    private final ArrayList<Role> roles;
     private final ArrayList<Item> items = new ArrayList<>();
     private final SaveManager saveManager = Main.getSaveManager();
 
@@ -110,7 +113,7 @@ public class Player {
         saveManager.setValue(Tables.PLAYERS.getTable(), id, "y", String.valueOf(y));
     }
 
-    public Player(long id, long bal, long server, short tuto, boolean isVerify, boolean hasAccount, int x, int y) {
+    public Player(long id, long bal, long server, short tuto, boolean isVerify, boolean hasAccount, int x, int y, String roles) {
         this.id = id;
         this.bal = bal;
         this.server = server;
@@ -120,5 +123,15 @@ public class Player {
         this.x = x;
         this.y = y;
         this.workTime = 0;
+        this.roles = RolesEnum.getRoles(roles);
+    }
+
+    public ArrayList<Role> getRoles() {
+        return roles;
+    }
+
+    public void addRole(Role role) {
+        roles.add(role);
+        saveManager.setValue(Tables.PLAYERS.getTable(), id, "roles", RolesEnum.rolesToString(roles));
     }
 }
