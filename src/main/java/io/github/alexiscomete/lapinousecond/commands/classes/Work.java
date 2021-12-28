@@ -14,7 +14,7 @@ import java.util.Random;
 public class Work extends CommandInServer {
 
     public Work() {
-        super("Gagnez de l'argent du jeu", "work", "Utilisable régulièrement pour gagner un peut d'argent du jeu, c'est le moyen le plus simple d'en gagner. Plus vous évolurez dans le jeu plus cette commande vous donnera de l'argent. Votre métier peut aussi influencer le gain. Vous pourrez peut-être choisir un type de work. Bon je parle mais en fait tout ça est loin d'être codé.");
+        super("Gagnez de l'argent du jeu", "work", "Utilisable régulièrement pour gagner un peut d'argent du jeu, c'est le moyen le plus simple d'en gagner. Plus vous évolurez dans le jeu plus cette commande vous donnera de l'argent. Votre métier peut aussi influencer le gain. Vous pourrez peut-être choisir un type de work. Bon je parle mais en fait tout ça est loin d'être codé.", "PLAY");
     }
 
     @Override
@@ -39,6 +39,8 @@ public class Work extends CommandInServer {
             roles.append("\n");
         }
         embedBuilder.addField("Roles", roles.toString());
+
+
         if (System.currentTimeMillis() - p.getWorkTime() > 200000) {
             WorkEnum[] wo = WorkEnum.values();
             int i = new Random().nextInt(wo.length);
