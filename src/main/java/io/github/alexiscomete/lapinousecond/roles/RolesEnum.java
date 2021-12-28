@@ -47,7 +47,7 @@ public enum RolesEnum {
         return stringBuilder.toString();
     }
 
-    public static boolean check(String[] strings, Role[] roles, long serverID) {
+    public static boolean check(String[] strings, ArrayList<Role> roles, long serverID) {
         for (String string : strings) {
             boolean perm;
             switch (string) {
