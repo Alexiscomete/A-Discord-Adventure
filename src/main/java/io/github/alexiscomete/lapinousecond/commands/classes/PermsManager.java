@@ -38,6 +38,7 @@ public class PermsManager extends CommandBot {
                 return;
             }
             saveManager.setValue(Tables.PERMS.getTable(), messageCreateEvent.getMessageAuthor().getId(), perm, SaveManager.toBooleanString(value));
+            messageCreateEvent.getMessage().reply("Fait");
         } catch (NumberFormatException e) {
             messageCreateEvent.getMessage().reply("Vous devez indiquer un format de nombre valide pour l'argument user");
         }
