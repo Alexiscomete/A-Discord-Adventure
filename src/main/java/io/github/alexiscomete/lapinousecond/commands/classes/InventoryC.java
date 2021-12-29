@@ -26,7 +26,7 @@ public class InventoryC extends CommandBot {
                     ArrayList<Player> players = new ArrayList<>();
                     try {
                         while (resultSet.next()) {
-                            players.add(new Player(resultSet.getLong("id"), resultSet.getDouble("bal"), resultSet.getLong("serv"), resultSet.getShort("tuto"), resultSet.getBoolean("is_verify"), resultSet.getBoolean("has_account"), resultSet.getInt("x"), resultSet.getInt("y"), resultSet.getString("roles")));
+                            players.add(new Player(resultSet.getLong("id"), resultSet.getDouble("bal"), resultSet.getLong("serv"), resultSet.getShort("tuto"), resultSet.getBoolean("is_verify"), resultSet.getBoolean("has_account"), resultSet.getInt("x"), resultSet.getInt("y"), resultSet.getString("roles"), resultSet.getString("resources")));
                         }
                     } catch (SQLException e) {
                         e.printStackTrace();

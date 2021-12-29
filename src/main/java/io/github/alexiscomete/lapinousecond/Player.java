@@ -141,4 +141,8 @@ public class Player {
     public ArrayList<ResourceManager> getResourceManagers() {
         return resourceManagers;
     }
+
+    public void updateResources() {
+        saveManager.setValue(Tables.PLAYERS.getTable(), id, "resources", ResourceManager.toString(resourceManagers));
+    }
 }
