@@ -74,6 +74,9 @@ public class InventoryC extends CommandBot {
                 if (p.getTuto() == 1) {
                     messageCreateEvent.getMessage().reply("Bon ... comme vous l'avez vu vous n'avez normalement pas d'argent. Utilisez la commande `work` pour en gagner un peu ...");
                     p.setTuto((short) 3);
+                } else if (p.getTuto() == 4) {
+                    messageCreateEvent.getMessage().reply("Vous remarquerez quelques changements. Utilisez -shop pour échanger ce que vous avez récupéré");
+                    p.setTuto((short) 5);
                 }
             }
         }

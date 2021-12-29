@@ -14,7 +14,7 @@ import java.util.Random;
 public class Work extends CommandInServer {
 
     public Work() {
-        super("Gagnez de l'argent du jeu", "work", "Utilisable régulièrement pour gagner un peut d'argent du jeu, c'est le moyen le plus simple d'en gagner. Plus vous évolurez dans le jeu plus cette commande vous donnera de l'argent. Votre métier peut aussi influencer le gain. Vous pourrez peut-être choisir un type de work. Bon je parle mais en fait tout ça est loin d'être codé.", "PLAY");
+        super("Gagnez de l'argent et/ou des ressources", "work", "Utilisable régulièrement pour gagner un peut d'argent ou des ressources, c'est le moyen le plus simple d'en gagner.", "PLAY");
     }
 
     @Override
@@ -43,10 +43,26 @@ public class Work extends CommandInServer {
 
         if (System.currentTimeMillis() - p.getWorkTime() > 200000) {
             WorkEnum[] wo = WorkEnum.values();
-            int i = new Random().nextInt(wo.length);
-            WorkEnum w = wo[i];
-            String[] strings = w.getAnswer().split(" rc ");
-            int r = new Random().nextInt(w.getMax() - w.getMin()) + w.getMin();
+            boolean find = true;
+            int i = 0;
+            WorkEnum woAnswer = null;
+            Random random = new Random();
+            while (find) {
+                WorkEnum workInTest = wo[i];
+                if (i == wo.length-1) {
+                    int num = random.nextInt(workInTest.getRandomMax());
+                    if (num < workInTest.getRandomMin()) {
+                        woAnswer = workInTest;
+                        find = false;
+                    }
+                } else {
+                    woAnswer = workInTest;
+                    find = false;
+                }
+                i++;
+            }
+            String[] strings = woAnswer.getAnswer().split(" rc ");
+            int r = new Random().nextInt(woAnswer.getMax() - woAnswer.getMin()) + woAnswer.getMin();
             String answer;
             if (strings.length > 1) {
                 answer = strings[0] + " " + r + " " + strings[1];
@@ -57,7 +73,7 @@ public class Work extends CommandInServer {
             p.setBal(p.getBal() + r);
             p.updateWorkTime();
             if (p.getTuto() == 3) {
-                messageCreateEvent.getMessage().reply("Félicitations, vous pouvez si vous le souhaitez réutiliser la commande inv pour voir l'argent que vous avez gagné ||(vous n'avez bien sûr pas besoin de faire ce qui est écrit dessus)||.");
+                messageCreateEvent.getMessage().reply("La récompense peut varier d'un work à un autre. Utilisez inv ...");
                 p.setTuto((short) 4);
             }
         } else {
