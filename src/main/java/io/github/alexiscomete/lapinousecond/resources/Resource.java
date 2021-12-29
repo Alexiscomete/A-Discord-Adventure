@@ -3,7 +3,9 @@ package io.github.alexiscomete.lapinousecond.resources;
 public enum Resource {
 
     WOOD("Bois", "C'est juste du bois, utile pendant tout le jeu", "WOOD", 0.25),
-    STONE("Pierre", "Très utile", "STONE", 0.5);
+    STONE("Pierre", "Très utile", "STONE", 0.5),
+    BRANCH("Branche", "Souvent utile pour la fabrication d'objets", "BRANCH", 0.25),
+    DIAMOND("Diamant", "Rare", "DIAMOND", 5);
 
     private final String name, description, progName;
     private double price;
