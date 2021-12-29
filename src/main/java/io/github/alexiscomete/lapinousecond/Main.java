@@ -55,6 +55,7 @@ public class Main {
         addCommand(new PermsManager());
         addCommand(new Invite());
         addCommand(new Verify());
+        addCommand(new RoleCommand());
     }
 
     public static void addCommand(CommandBot commandBot) {

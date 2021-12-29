@@ -1,7 +1,7 @@
 package io.github.alexiscomete.lapinousecond.commands.classes;
 
 import io.github.alexiscomete.lapinousecond.Player;
-import io.github.alexiscomete.lapinousecond.WorkEnum;
+import io.github.alexiscomete.lapinousecond.resources.WorkEnum;
 import io.github.alexiscomete.lapinousecond.commands.CommandInServer;
 import io.github.alexiscomete.lapinousecond.roles.Role;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
@@ -27,19 +27,19 @@ public class Work extends CommandInServer {
 
 
         StringBuilder roles = new StringBuilder();
+        roles.append("Nom (serveur id) salaire ou cooldown\n");
         for (Role role : p.getRoles()) {
             roles.append(role.getName()).append(" (").append(role.getServerID()).append(") ");
-            if (role.getCoolDown() + role.getCoolDownSize() > System.currentTimeMillis()) {
+            if (System.currentTimeMillis() - role.getCoolDown() > role.getCoolDownSize()) {
                 roles.append(role.getSalary());
                 p.setBal(p.getBal() + role.getSalary());
                 role.updateCoolDown();
             } else {
-                roles.append("<t:").append((Instant.now().getEpochSecond() + role.getCoolDownSize()/1000 - (System.currentTimeMillis() - role.getCoolDown()) / 1000)).append(":R>");
+                roles.append("<t:").append((Instant.now().getEpochSecond() + role.getCoolDownSize() / 1000 - (System.currentTimeMillis() - role.getCoolDown()) / 1000)).append(":R>");
             }
             roles.append("\n");
         }
         embedBuilder.addField("Roles", roles.toString());
-
 
         if (System.currentTimeMillis() - p.getWorkTime() > 200000) {
             WorkEnum[] wo = WorkEnum.values();
@@ -63,6 +63,8 @@ public class Work extends CommandInServer {
         } else {
             embedBuilder.addField("Work", "Cooldown ! Temps entre 2 work : 200s, temps écoulé : " + (System.currentTimeMillis() - p.getWorkTime()) / 1000 + "s. Temps avant le prochain : <t:" + (Instant.now().getEpochSecond() + 200 - (System.currentTimeMillis() - p.getWorkTime()) / 1000) + ":R>");
         }
+
+
         messageCreateEvent.getMessage().reply(embedBuilder);
     }
 }

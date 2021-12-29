@@ -16,3 +16,6 @@ target/classes/io/github/alexiscomete/lapinousecond/save/Table.class
 target/classes/io/github/alexiscomete/lapinousecond/save/TableRow.class
 target/classes/io/github/alexiscomete/lapinousecond/save/Tables.class
 out/artifacts/la2_jar/la2.jar
+out/artifacts/ada_jar/A-Discord-Adventure.jar
+target/classes/io/github/alexiscomete/lapinousecond/resources/ResourceManager.class
+target/classes/io/github/alexiscomete/lapinousecond/resources/Resource.class

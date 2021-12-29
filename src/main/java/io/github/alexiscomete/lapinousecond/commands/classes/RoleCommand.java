@@ -5,7 +5,10 @@ import io.github.alexiscomete.lapinousecond.UserPerms;
 import io.github.alexiscomete.lapinousecond.commands.CommandBot;
 import io.github.alexiscomete.lapinousecond.roles.Role;
 import io.github.alexiscomete.lapinousecond.roles.RolesEnum;
+import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.event.message.MessageCreateEvent;
+
+import java.awt.*;
 
 public class RoleCommand extends CommandBot {
 
@@ -21,6 +24,7 @@ public class RoleCommand extends CommandBot {
             return;
         }
         if (messageCreateEvent.isServerMessage()) {
+            System.out.println(args.length);
 
             if (args.length == 1) {
                 StringBuilder roles = new StringBuilder();
@@ -31,7 +35,7 @@ public class RoleCommand extends CommandBot {
                     }
                     roles.append("\n");
                 }
-
+                messageCreateEvent.getMessage().reply(new EmbedBuilder().setDescription(roles.toString()).setColor(Color.BLUE).setTitle("Roles"));
 
             } else if (args[1].equalsIgnoreCase("add")) {
                 if (args.length > 3) {
@@ -59,13 +63,13 @@ public class RoleCommand extends CommandBot {
 
     private void addRole(String[] args, MessageCreateEvent messageCreateEvent) {
         try {
-            RolesEnum rolesEnum = RolesEnum.valueOf(args[2]);
+            RolesEnum rolesEnum = RolesEnum.valueOf(args[2].toUpperCase());
             Role role = rolesEnum.getInstance(messageCreateEvent.getServer().get().getId());
             Player dest = saveManager.getPlayer(Long.parseLong(args[3]));
             dest.addRole(role);
             messageCreateEvent.getMessage().reply("Role ajouté ✅");
         } catch (IllegalArgumentException e) {
-            messageCreateEvent.getMessage().reply("Argument 2 invalide");
+            messageCreateEvent.getMessage().reply("Argument 2 ou 3 invalide");
         }
     }
 }

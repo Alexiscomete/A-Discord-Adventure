@@ -25,12 +25,12 @@ public enum ItemsEnum {
                     event.getMessage().reply("Ce joueur n'existe pas ou n'a pas de compte");
                     return false;
                 }
-                long diff = ownerOfItem.getBal() - victim.getBal();
+                double diff = ownerOfItem.getBal() - victim.getBal();
                 if (diff < ownerOfItem.getBal() * -1 || diff > ownerOfItem.getBal()) {
                     event.getMessage().reply("Cette personne a une trop grande différence d'argent avec vous !");
                     return false;
                 }
-                long rob = victim.getBal() / 100;
+                double rob = victim.getBal() / 100;
                 victim.setBal(victim.getBal() - rob);
                 ownerOfItem.setBal(ownerOfItem.getBal() + rob);
                 return true;

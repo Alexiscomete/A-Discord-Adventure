@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class Player {
 
     private final long id;
-    private long bal;
+    private double bal;
     private long server;
     private short tuto;
     private boolean isVerify;
@@ -50,11 +50,11 @@ public class Player {
         saveManager.setValue(Tables.PLAYERS.getTable(), this.id, "items", itemsList.toString());
     }
 
-    public long getBal() {
+    public double getBal() {
         return bal;
     }
 
-    public void setBal(long bal) {
+    public void setBal(double bal) {
         this.bal = bal;
         saveManager.setValue(Tables.PLAYERS.getTable(), id, "bal", String.valueOf(bal));
     }
@@ -113,7 +113,7 @@ public class Player {
         saveManager.setValue(Tables.PLAYERS.getTable(), id, "y", String.valueOf(y));
     }
 
-    public Player(long id, long bal, long server, short tuto, boolean isVerify, boolean hasAccount, int x, int y, String roles) {
+    public Player(long id, double bal, long server, short tuto, boolean isVerify, boolean hasAccount, int x, int y, String roles) {
         this.id = id;
         this.bal = bal;
         this.server = server;
