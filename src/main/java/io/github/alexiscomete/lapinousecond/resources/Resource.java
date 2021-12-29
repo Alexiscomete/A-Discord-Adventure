@@ -2,12 +2,13 @@ package io.github.alexiscomete.lapinousecond.resources;
 
 public enum Resource {
 
-    ;
+    WOOD("Bois", "C'est juste du bois, utile pendant tout le jeu", "WOOD", 0.25),
+    STONE("Pierre", "Très utile", "STONE", 0.5);
 
     private final String name, description, progName;
-    private int price;
+    private double price;
 
-    public void setPrice(int price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 
@@ -23,11 +24,11 @@ public enum Resource {
         return progName;
     }
 
-    public int getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    Resource(String name, String description, String progName, int price) {
+    Resource(String name, String description, String progName, double price) {
         this.name = name;
         this.description = description;
         this.progName = progName;
