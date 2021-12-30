@@ -1,6 +1,7 @@
 package io.github.alexiscomete.lapinousecond.commands.classes;
 
 import io.github.alexiscomete.lapinousecond.Player;
+import io.github.alexiscomete.lapinousecond.resources.ResourceManager;
 import io.github.alexiscomete.lapinousecond.resources.WorkEnum;
 import io.github.alexiscomete.lapinousecond.commands.CommandInServer;
 import io.github.alexiscomete.lapinousecond.roles.Role;
@@ -70,7 +71,18 @@ public class Work extends CommandInServer {
                 answer = strings[0];
             }
             embedBuilder.addField("Work", answer);
-            p.setBal(p.getBal() + r);
+            if (woAnswer.getResource() == null) {
+                p.setBal(p.getBal() + r);
+            } else {
+                ResourceManager resourceManager = p.getResourceManagers().get(woAnswer.getResource());
+                if (resourceManager == null)  {
+                    resourceManager = new ResourceManager(woAnswer.getResource(), r);
+                    p.getResourceManagers().put(woAnswer.getResource(), resourceManager);
+                } else {
+                    resourceManager.setQuantity(resourceManager.getQuantity() + r);
+                }
+                p.updateResources();
+            }
             p.updateWorkTime();
             if (p.getTuto() == 3) {
                 messageCreateEvent.getMessage().reply("La récompense peut varier d'un work à un autre. Utilisez inv ...");

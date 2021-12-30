@@ -1,5 +1,6 @@
 package io.github.alexiscomete.lapinousecond;
 
+import io.github.alexiscomete.lapinousecond.resources.Resource;
 import io.github.alexiscomete.lapinousecond.resources.ResourceManager;
 import io.github.alexiscomete.lapinousecond.roles.Role;
 import io.github.alexiscomete.lapinousecond.roles.RolesEnum;
@@ -7,6 +8,7 @@ import io.github.alexiscomete.lapinousecond.save.SaveManager;
 import io.github.alexiscomete.lapinousecond.save.Tables;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Player {
 
@@ -21,7 +23,7 @@ public class Player {
     private long workTime;
     private final ArrayList<Role> roles;
     private final ArrayList<Item> items = new ArrayList<>();
-    private final ArrayList<ResourceManager> resourceManagers;
+    private final HashMap<Resource, ResourceManager> resourceManagers;
     private final SaveManager saveManager = Main.getSaveManager();
 
     public long getWorkTime() {
@@ -138,11 +140,11 @@ public class Player {
         saveManager.setValue(Tables.PLAYERS.getTable(), id, "roles", RolesEnum.rolesToString(roles));
     }
 
-    public ArrayList<ResourceManager> getResourceManagers() {
+    public HashMap<Resource, ResourceManager> getResourceManagers() {
         return resourceManagers;
     }
 
     public void updateResources() {
-        saveManager.setValue(Tables.PLAYERS.getTable(), id, "resources", ResourceManager.toString(resourceManagers));
+        saveManager.setValue(Tables.PLAYERS.getTable(), id, "resources", ResourceManager.toString(resourceManagers.values()));
     }
 }

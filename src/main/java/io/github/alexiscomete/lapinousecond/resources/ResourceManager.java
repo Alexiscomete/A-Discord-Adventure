@@ -1,6 +1,7 @@
 package io.github.alexiscomete.lapinousecond.resources;
 
-import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 
 public class ResourceManager {
 
@@ -24,8 +25,8 @@ public class ResourceManager {
         this.quantity = quantity;
     }
 
-    public static ArrayList<ResourceManager> stringToArray(String str) {
-        ArrayList<ResourceManager> resourceManagers = new ArrayList<>();
+    public static HashMap<Resource, ResourceManager> stringToArray(String str) {
+        HashMap<Resource, ResourceManager> resourceManagers = new HashMap<>();
         if (str == null || str.equals("")) {
             return resourceManagers;
         }
@@ -34,13 +35,13 @@ public class ResourceManager {
                 strings) {
             String[] elements = s.split(":");
             if (elements.length > 1) {
-                resourceManagers.add(new ResourceManager(Resource.valueOf(elements[0]), Integer.parseInt(elements[1])));
+                resourceManagers.put(Resource.valueOf(elements[0]) , new ResourceManager(Resource.valueOf(elements[0]), Integer.parseInt(elements[1])));
             }
         }
         return resourceManagers;
     }
 
-    public static String toString(ArrayList<ResourceManager> resourceManagers) {
+    public static String toString(Collection<ResourceManager> resourceManagers) {
         StringBuilder stringBuilder = new StringBuilder();
         for (ResourceManager re :
                 resourceManagers) {
