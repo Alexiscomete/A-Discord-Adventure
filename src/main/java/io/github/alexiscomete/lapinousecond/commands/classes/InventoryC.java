@@ -3,6 +3,7 @@ package io.github.alexiscomete.lapinousecond.commands.classes;
 import io.github.alexiscomete.lapinousecond.Main;
 import io.github.alexiscomete.lapinousecond.Player;
 import io.github.alexiscomete.lapinousecond.commands.CommandBot;
+import io.github.alexiscomete.lapinousecond.resources.ResourceManager;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.event.message.MessageCreateEvent;
 
@@ -92,10 +93,17 @@ public class InventoryC extends CommandBot {
                 .setColor(Color.green)
                 .setThumbnail("https://cdn.discordapp.com/attachments/854322477152337920/924612939879702588/unknown.png");
         messageCreateEvent.getMessage().reply(builder);
+        StringBuilder re = new StringBuilder()
+                .append("Nom -> quantité");
+        for (ResourceManager reM :
+                p.getResourceManagers().values()) {
+            re.append(reM.getResource().getName()).append(" -> ").append(reM.getQuantity());
+        }
         EmbedBuilder builder2 = new EmbedBuilder()
                 .setTitle("Inventaire : ressources, items, argent")
                 .setColor(Color.ORANGE)
-                .addField("Rabbitcoins", String.valueOf(p.getBal()));
+                .addField("Rabbitcoins", String.valueOf(p.getBal()))
+                .addField("Ressources", re.toString());
         messageCreateEvent.getMessage().reply(builder2);
     }
 
