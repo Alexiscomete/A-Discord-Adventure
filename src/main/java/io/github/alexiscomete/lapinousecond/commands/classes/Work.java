@@ -43,25 +43,27 @@ public class Work extends CommandInServer {
         embedBuilder.addField("Roles", roles.toString());
 
         if (System.currentTimeMillis() - p.getWorkTime() > 200000) {
+
             WorkEnum[] wo = WorkEnum.values();
-            boolean find = true;
-            int i = 0;
-            WorkEnum woAnswer = null;
             Random random = new Random();
-            while (find) {
-                WorkEnum workInTest = wo[i];
-                if (i == wo.length-1) {
-                    int num = random.nextInt(workInTest.getRandomMax());
-                    if (num < workInTest.getRandomMin()) {
-                        woAnswer = workInTest;
-                        find = false;
-                    }
-                } else {
-                    woAnswer = workInTest;
-                    find = false;
-                }
-                i++;
+
+            int total = 0;
+            for (WorkEnum w :
+                    wo) {
+                total += w.getCoef();
             }
+
+            WorkEnum woAnswer = wo[0];
+            int ran = random.nextInt(total);
+            for (WorkEnum w :
+                    wo) {
+                ran -= w.getCoef();
+                if (ran < 0) {
+                    woAnswer = w;
+                    break;
+                }
+            }
+
             String[] strings = woAnswer.getAnswer().split(" rc ");
             int r = new Random().nextInt(woAnswer.getMax() - woAnswer.getMin()) + woAnswer.getMin();
             String answer;
@@ -71,6 +73,7 @@ public class Work extends CommandInServer {
                 answer = strings[0];
             }
             embedBuilder.addField("Work", answer);
+
             if (woAnswer.getResource() == null) {
                 p.setBal(p.getBal() + r);
             } else {
@@ -83,6 +86,7 @@ public class Work extends CommandInServer {
                 }
                 p.updateResources();
             }
+
             p.updateWorkTime();
             if (p.getTuto() == 3) {
                 messageCreateEvent.getMessage().reply("La récompense peut varier d'un work à un autre. Utilisez inv ...");
@@ -91,7 +95,6 @@ public class Work extends CommandInServer {
         } else {
             embedBuilder.addField("Work", "Cooldown ! Temps entre 2 work : 200s, temps écoulé : " + (System.currentTimeMillis() - p.getWorkTime()) / 1000 + "s. Temps avant le prochain : <t:" + (Instant.now().getEpochSecond() + 200 - (System.currentTimeMillis() - p.getWorkTime()) / 1000) + ":R>");
         }
-
 
         messageCreateEvent.getMessage().reply(embedBuilder);
     }

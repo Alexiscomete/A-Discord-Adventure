@@ -94,10 +94,10 @@ public class InventoryC extends CommandBot {
                 .setThumbnail("https://cdn.discordapp.com/attachments/854322477152337920/924612939879702588/unknown.png");
         messageCreateEvent.getMessage().reply(builder);
         StringBuilder re = new StringBuilder()
-                .append("Nom -> quantité");
+                .append("Nom -> quantité\n");
         for (ResourceManager reM :
                 p.getResourceManagers().values()) {
-            re.append(reM.getResource().getName()).append(" -> ").append(reM.getQuantity());
+            re.append(reM.getResource().getName()).append(" -> ").append(reM.getQuantity()).append("\n");
         }
         EmbedBuilder builder2 = new EmbedBuilder()
                 .setTitle("Inventaire : ressources, items, argent")
