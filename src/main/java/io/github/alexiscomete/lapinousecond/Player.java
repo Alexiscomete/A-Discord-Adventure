@@ -1,11 +1,14 @@
 package io.github.alexiscomete.lapinousecond;
 
+import io.github.alexiscomete.lapinousecond.resources.Resource;
+import io.github.alexiscomete.lapinousecond.resources.ResourceManager;
 import io.github.alexiscomete.lapinousecond.roles.Role;
 import io.github.alexiscomete.lapinousecond.roles.RolesEnum;
 import io.github.alexiscomete.lapinousecond.save.SaveManager;
 import io.github.alexiscomete.lapinousecond.save.Tables;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Player {
 
@@ -20,6 +23,7 @@ public class Player {
     private long workTime;
     private final ArrayList<Role> roles;
     private final ArrayList<Item> items = new ArrayList<>();
+    private final HashMap<Resource, ResourceManager> resourceManagers;
     private final SaveManager saveManager = Main.getSaveManager();
 
     public long getWorkTime() {
@@ -113,7 +117,7 @@ public class Player {
         saveManager.setValue(Tables.PLAYERS.getTable(), id, "y", String.valueOf(y));
     }
 
-    public Player(long id, double bal, long server, short tuto, boolean isVerify, boolean hasAccount, int x, int y, String roles) {
+    public Player(long id, double bal, long server, short tuto, boolean isVerify, boolean hasAccount, int x, int y, String roles, String resources) {
         this.id = id;
         this.bal = bal;
         this.server = server;
@@ -124,6 +128,7 @@ public class Player {
         this.y = y;
         this.workTime = 0;
         this.roles = RolesEnum.getRoles(roles);
+        this.resourceManagers = ResourceManager.stringToArray(resources);
     }
 
     public ArrayList<Role> getRoles() {
@@ -133,5 +138,13 @@ public class Player {
     public void addRole(Role role) {
         roles.add(role);
         saveManager.setValue(Tables.PLAYERS.getTable(), id, "roles", RolesEnum.rolesToString(roles));
+    }
+
+    public HashMap<Resource, ResourceManager> getResourceManagers() {
+        return resourceManagers;
+    }
+
+    public void updateResources() {
+        saveManager.setValue(Tables.PLAYERS.getTable(), id, "resources", ResourceManager.toString(resourceManagers.values()));
     }
 }

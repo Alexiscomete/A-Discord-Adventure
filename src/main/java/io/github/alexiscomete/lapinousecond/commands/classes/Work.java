@@ -1,6 +1,7 @@
 package io.github.alexiscomete.lapinousecond.commands.classes;
 
 import io.github.alexiscomete.lapinousecond.Player;
+import io.github.alexiscomete.lapinousecond.resources.ResourceManager;
 import io.github.alexiscomete.lapinousecond.resources.WorkEnum;
 import io.github.alexiscomete.lapinousecond.commands.CommandInServer;
 import io.github.alexiscomete.lapinousecond.roles.Role;
@@ -14,7 +15,7 @@ import java.util.Random;
 public class Work extends CommandInServer {
 
     public Work() {
-        super("Gagnez de l'argent du jeu", "work", "Utilisable régulièrement pour gagner un peut d'argent du jeu, c'est le moyen le plus simple d'en gagner. Plus vous évolurez dans le jeu plus cette commande vous donnera de l'argent. Votre métier peut aussi influencer le gain. Vous pourrez peut-être choisir un type de work. Bon je parle mais en fait tout ça est loin d'être codé.", "PLAY");
+        super("Gagnez de l'argent et/ou des ressources", "work", "Utilisable régulièrement pour gagner un peut d'argent ou des ressources, c'est le moyen le plus simple d'en gagner.", "PLAY");
     }
 
     @Override
@@ -42,11 +43,29 @@ public class Work extends CommandInServer {
         embedBuilder.addField("Roles", roles.toString());
 
         if (System.currentTimeMillis() - p.getWorkTime() > 200000) {
+
             WorkEnum[] wo = WorkEnum.values();
-            int i = new Random().nextInt(wo.length);
-            WorkEnum w = wo[i];
-            String[] strings = w.getAnswer().split(" rc ");
-            int r = new Random().nextInt(w.getMax() - w.getMin()) + w.getMin();
+            Random random = new Random();
+
+            int total = 0;
+            for (WorkEnum w :
+                    wo) {
+                total += w.getCoef();
+            }
+
+            WorkEnum woAnswer = wo[0];
+            int ran = random.nextInt(total);
+            for (WorkEnum w :
+                    wo) {
+                ran -= w.getCoef();
+                if (ran < 0) {
+                    woAnswer = w;
+                    break;
+                }
+            }
+
+            String[] strings = woAnswer.getAnswer().split(" rc ");
+            int r = new Random().nextInt(woAnswer.getMax() - woAnswer.getMin()) + woAnswer.getMin();
             String answer;
             if (strings.length > 1) {
                 answer = strings[0] + " " + r + " " + strings[1];
@@ -54,16 +73,28 @@ public class Work extends CommandInServer {
                 answer = strings[0];
             }
             embedBuilder.addField("Work", answer);
-            p.setBal(p.getBal() + r);
+
+            if (woAnswer.getResource() == null) {
+                p.setBal(p.getBal() + r);
+            } else {
+                ResourceManager resourceManager = p.getResourceManagers().get(woAnswer.getResource());
+                if (resourceManager == null)  {
+                    resourceManager = new ResourceManager(woAnswer.getResource(), r);
+                    p.getResourceManagers().put(woAnswer.getResource(), resourceManager);
+                } else {
+                    resourceManager.setQuantity(resourceManager.getQuantity() + r);
+                }
+                p.updateResources();
+            }
+
             p.updateWorkTime();
             if (p.getTuto() == 3) {
-                messageCreateEvent.getMessage().reply("Félicitations, vous pouvez si vous le souhaitez réutiliser la commande inv pour voir l'argent que vous avez gagné ||(vous n'avez bien sûr pas besoin de faire ce qui est écrit dessus)||.");
+                messageCreateEvent.getMessage().reply("La récompense peut varier d'un work à un autre. Utilisez inv ...");
                 p.setTuto((short) 4);
             }
         } else {
             embedBuilder.addField("Work", "Cooldown ! Temps entre 2 work : 200s, temps écoulé : " + (System.currentTimeMillis() - p.getWorkTime()) / 1000 + "s. Temps avant le prochain : <t:" + (Instant.now().getEpochSecond() + 200 - (System.currentTimeMillis() - p.getWorkTime()) / 1000) + ":R>");
         }
-
 
         messageCreateEvent.getMessage().reply(embedBuilder);
     }

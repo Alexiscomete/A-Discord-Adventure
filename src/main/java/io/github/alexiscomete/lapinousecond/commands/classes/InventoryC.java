@@ -3,6 +3,7 @@ package io.github.alexiscomete.lapinousecond.commands.classes;
 import io.github.alexiscomete.lapinousecond.Main;
 import io.github.alexiscomete.lapinousecond.Player;
 import io.github.alexiscomete.lapinousecond.commands.CommandBot;
+import io.github.alexiscomete.lapinousecond.resources.ResourceManager;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.event.message.MessageCreateEvent;
 
@@ -26,7 +27,7 @@ public class InventoryC extends CommandBot {
                     ArrayList<Player> players = new ArrayList<>();
                     try {
                         while (resultSet.next()) {
-                            players.add(new Player(resultSet.getLong("id"), resultSet.getDouble("bal"), resultSet.getLong("serv"), resultSet.getShort("tuto"), resultSet.getBoolean("is_verify"), resultSet.getBoolean("has_account"), resultSet.getInt("x"), resultSet.getInt("y"), resultSet.getString("roles")));
+                            players.add(new Player(resultSet.getLong("id"), resultSet.getDouble("bal"), resultSet.getLong("serv"), resultSet.getShort("tuto"), resultSet.getBoolean("is_verify"), resultSet.getBoolean("has_account"), resultSet.getInt("x"), resultSet.getInt("y"), resultSet.getString("roles"), resultSet.getString("resources")));
                         }
                     } catch (SQLException e) {
                         e.printStackTrace();
@@ -74,6 +75,9 @@ public class InventoryC extends CommandBot {
                 if (p.getTuto() == 1) {
                     messageCreateEvent.getMessage().reply("Bon ... comme vous l'avez vu vous n'avez normalement pas d'argent. Utilisez la commande `work` pour en gagner un peu ...");
                     p.setTuto((short) 3);
+                } else if (p.getTuto() == 4) {
+                    messageCreateEvent.getMessage().reply("Vous remarquerez quelques changements. Utilisez -shop pour échanger ce que vous avez récupéré");
+                    p.setTuto((short) 5);
                 }
             }
         }
@@ -89,10 +93,17 @@ public class InventoryC extends CommandBot {
                 .setColor(Color.green)
                 .setThumbnail("https://cdn.discordapp.com/attachments/854322477152337920/924612939879702588/unknown.png");
         messageCreateEvent.getMessage().reply(builder);
+        StringBuilder re = new StringBuilder()
+                .append("Nom -> quantité\n");
+        for (ResourceManager reM :
+                p.getResourceManagers().values()) {
+            re.append(reM.getResource().getName()).append(" -> ").append(reM.getQuantity()).append("\n");
+        }
         EmbedBuilder builder2 = new EmbedBuilder()
                 .setTitle("Inventaire : ressources, items, argent")
                 .setColor(Color.ORANGE)
-                .addField("Rabbitcoins", String.valueOf(p.getBal()));
+                .addField("Rabbitcoins", String.valueOf(p.getBal()))
+                .addField("Ressources", re.toString());
         messageCreateEvent.getMessage().reply(builder2);
     }
 

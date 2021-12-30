@@ -66,10 +66,24 @@ public class RoleCommand extends CommandBot {
             RolesEnum rolesEnum = RolesEnum.valueOf(args[2].toUpperCase());
             Role role = rolesEnum.getInstance(messageCreateEvent.getServer().get().getId());
             Player dest = saveManager.getPlayer(Long.parseLong(args[3]));
-            dest.addRole(role);
-            messageCreateEvent.getMessage().reply("Role ajouté ✅");
+            if (hasRole(dest, role)) {
+                messageCreateEvent.getMessage().reply("Cette personne a déjà ce rôle sur ce serveur");
+            } else {
+                dest.addRole(role);
+                messageCreateEvent.getMessage().reply("Role ajouté ✅");
+            }
         } catch (IllegalArgumentException e) {
             messageCreateEvent.getMessage().reply("Argument 2 ou 3 invalide");
         }
+    }
+
+    public boolean hasRole(Player p, Role roleI) {
+        for (Role role :
+                p.getRoles()) {
+            if (role.getProgName().equals(roleI.getProgName()) && role.getServerID() == roleI.getServerID()) {
+                return true;
+            }
+        }
+        return false;
     }
 }

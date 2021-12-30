@@ -19,3 +19,4 @@ out/artifacts/la2_jar/la2.jar
 out/artifacts/ada_jar/A-Discord-Adventure.jar
 target/classes/io/github/alexiscomete/lapinousecond/resources/ResourceManager.class
 target/classes/io/github/alexiscomete/lapinousecond/resources/Resource.class
+target/classes/io/github/alexiscomete/lapinousecond/resources/WorkEnum.class
