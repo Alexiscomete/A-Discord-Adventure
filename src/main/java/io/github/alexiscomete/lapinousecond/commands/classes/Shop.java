@@ -24,7 +24,7 @@ public class Shop extends CommandInServer {
                     .append("Resource -> prix d'achat; prix de vente; prix réel; nom à entrer");
             for (Resource r :
                     Resource.values()) {
-                stringBuilder.append(r.getName()).append(" -> ").append(r.getPrice() * buyCoef).append("; ").append(r.getPrice() * sellCoef).append("; ").append(r.getPrice()).append("; ").append(r.getProgName());
+                stringBuilder.append("\n").append(r.getName()).append(" -> ").append(r.getPrice() * buyCoef).append("; ").append(r.getPrice() * sellCoef).append("; ").append(r.getPrice()).append("; ").append(r.getProgName());
             }
             EmbedBuilder embedBuilder = new EmbedBuilder()
                     .setTitle("Liste du shop")
