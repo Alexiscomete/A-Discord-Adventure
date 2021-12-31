@@ -53,7 +53,7 @@ public class InventoryC extends CommandBot {
                 }
             } else {
                 if (args[1].startsWith("<@")) {
-                    args[1] = args[1].substring(2, args.length-1);
+                    args[1] = args[1].substring(2, args[1].length()-1);
                 }
                 try {
                     Player p = saveManager.getPlayer(Long.parseLong(args[1]));

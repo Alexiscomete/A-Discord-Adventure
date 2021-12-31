@@ -58,7 +58,7 @@ public class Work extends CommandInServer {
             for (WorkEnum w :
                     wo) {
                 ran -= w.getCoef();
-                if (ran < 0) {
+                if (ran <= 0) {
                     woAnswer = w;
                     break;
                 }
