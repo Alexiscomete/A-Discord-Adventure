@@ -73,7 +73,7 @@ public class TravelPrice {
         } else {
             taxe = place2.getWorld().getTravelPrice();
             //TODO : le joueur a des informations comme les différents lieux en fonction du monde ... le prix peut être différent, je pourrais surement enlever place1
-            
+
         }
         return new TravelPrice(price, price + (taxe==null?0:taxe), taxe, distanceCoos, distanceID);
     }
