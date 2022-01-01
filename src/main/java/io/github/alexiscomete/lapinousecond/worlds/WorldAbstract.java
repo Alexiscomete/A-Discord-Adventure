@@ -17,10 +17,9 @@ public class WorldAbstract extends World {
     public double getDistance(Place place1, Place place2) {
         Optional<Long> idPl1 = place1.getServerID(), idPl2 = place2.getServerID();
         if (idPl1.isPresent() && idPl2.isPresent()) {
-            return Math.sqrt(idPl1.get()-idPl2.get());
+            return Math.sqrt(Math.abs(idPl1.get()-idPl2.get())) / 1000000;
         } else {
-
+            return 500;
         }
-        return 0;
     }
 }
