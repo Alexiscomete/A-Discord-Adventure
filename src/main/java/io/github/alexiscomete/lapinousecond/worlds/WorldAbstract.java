@@ -10,14 +10,14 @@ public class WorldAbstract extends World {
 
     @Override
     public double getPriceForDistance(double distance, boolean place) {
-        return distance*travelPrice/100;
+        return distance*getTravelPrice()/100;
     }
 
     @Override
     public double getDistance(Place place1, Place place2) {
         Optional<Long> idPl1 = place1.getServerID(), idPl2 = place2.getServerID();
         if (idPl1.isPresent() && idPl2.isPresent()) {
-            return Math.sqrt(Math.abs(idPl1.get()-idPl2.get())) / 1000000;
+            return Math.sqrt(Math.abs(idPl1.get()-idPl2.get())) / 100000;
         } else {
             return 500;
         }
