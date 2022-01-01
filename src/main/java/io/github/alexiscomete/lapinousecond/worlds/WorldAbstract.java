@@ -1,5 +1,7 @@
 package io.github.alexiscomete.lapinousecond.worlds;
 
+import java.util.Optional;
+
 public class WorldAbstract extends World {
 
     public WorldAbstract(int travelPrice, String name, String nameRP, String progName, String desc) {
@@ -7,12 +9,18 @@ public class WorldAbstract extends World {
     }
 
     @Override
-    public int getPriceForDistance(int distance, boolean place) {
+    public double getPriceForDistance(double distance, boolean place) {
         return distance*travelPrice/100;
     }
 
     @Override
-    public int getDistance(Place place1, Place place2) {
+    public double getDistance(Place place1, Place place2) {
+        Optional<Long> idPl1 = place1.getServerID(), idPl2 = place2.getServerID();
+        if (idPl1.isPresent() && idPl2.isPresent()) {
+            return Math.sqrt(idPl1.get()-idPl2.get());
+        } else {
+
+        }
         return 0;
     }
 }
