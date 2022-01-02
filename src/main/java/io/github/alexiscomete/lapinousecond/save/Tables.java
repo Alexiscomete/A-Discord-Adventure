@@ -17,8 +17,21 @@ public enum Tables {
             new TableRow("default_world_place", "INTEGER"),
             new TableRow("flag_world_place", "INTEGER")
     })),
-    PERMS(new Table("perms", new TableRow[]{new TableRow("id", "INTEGER PRIMARY KEY"), new TableRow("play", "INTEGER"), new TableRow("create_server", "INTEGER"), new TableRow("manage_perms", "INTEGER"), new TableRow("manage_roles", "INTEGER")})),
-    SERVERS(new Table("guilds", new TableRow[]{new TableRow("id", "INTEGER PRIMARY KEY"), new TableRow("x", "INTEGER"), new TableRow("y", "INTEGER"), new TableRow("z", "INTEGER"), new TableRow("descr", "TEXT"), new TableRow("namerp", "TEXT"), new TableRow("train", "TEXT"), new TableRow("traout", "TEXT"), new TableRow("travel", "TEXT")})),
+    PERMS(new Table("perms", new TableRow[]{
+            new TableRow("id", "INTEGER PRIMARY KEY"),
+            new TableRow("play", "INTEGER"),
+            new TableRow("create_server", "INTEGER"),
+            new TableRow("manage_perms", "INTEGER"),
+            new TableRow("manage_roles", "INTEGER")
+    })),
+    SERVERS(new Table("guilds", new TableRow[]{
+            new TableRow("id", "INTEGER PRIMARY KEY"),
+            new TableRow("descr", "TEXT"),
+            new TableRow("namerp", "TEXT"),
+            new TableRow("train", "TEXT"),
+            new TableRow("traout", "TEXT"),
+            new TableRow("travel", "TEXT")
+    })),
     PLACES(new Table("places", new TableRow[]{
             new TableRow("id", "INTEGER PRIMARY KEY"),
             new TableRow("serv", "INTEGER"),
