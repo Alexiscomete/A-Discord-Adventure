@@ -28,9 +28,8 @@ public enum Tables {
             new TableRow("id", "INTEGER PRIMARY KEY"),
             new TableRow("descr", "TEXT"),
             new TableRow("namerp", "TEXT"),
-            new TableRow("train", "TEXT"),
-            new TableRow("traout", "TEXT"),
-            new TableRow("travel", "TEXT")
+            new TableRow("place", "INTEGER"),
+            new TableRow("welcome", "TEXT")
     })),
     PLACES(new Table("places", new TableRow[]{
             new TableRow("id", "INTEGER PRIMARY KEY"),
@@ -39,8 +38,10 @@ public enum Tables {
             new TableRow("x", "INTEGER"),
             new TableRow("y", "INTEGER"),
             new TableRow("world", "TEXT"),
+            new TableRow("train", "TEXT"),
+            new TableRow("traout", "TEXT"),
             new TableRow("connections", "TEXT"),
-            new TableRow("type", "TEXT") // océan, ville, ...
+            new TableRow("type", "TEXT") // océan, ville, serveur ...
     }));
 
     private final Table table;
