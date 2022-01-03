@@ -8,29 +8,10 @@ import java.util.ArrayList;
 
 public class ServerBot {
 
-    private int x, y, z;
     private final long id;
     private String description, name, in, out;
     private ArrayList<Long> travel;
     private final SaveManager sv = Main.getSaveManager();
-
-    public int getY() {
-        return y;
-    }
-
-    public void setY(int y) {
-        this.y = y;
-        sv.setValue(Tables.SERVERS.getTable(), id, "y", String.valueOf(y));
-    }
-
-    public int getZ() {
-        return z;
-    }
-
-    public void setZ(int z) {
-        this.z = z;
-        sv.setValue(Tables.SERVERS.getTable(), id, "z", String.valueOf(z));
-    }
 
     public long getId() {
         return id;
@@ -68,15 +49,6 @@ public class ServerBot {
         sv.setValue(Tables.SERVERS.getTable(), id, "travel", answer.toString());
     }
 
-    public int getX() {
-        return x;
-    }
-
-    public void setX(int x) {
-        this.x = x;
-        sv.setValue(Tables.SERVERS.getTable(), id, "x", String.valueOf(x));
-    }
-
     public String getIn() {
         return in;
     }
@@ -95,10 +67,7 @@ public class ServerBot {
         sv.setValue(Tables.SERVERS.getTable(), id, "traout", out);
     }
 
-    public ServerBot(int x, int y, int z, long id, String description, String name, ArrayList<Long> travel, String in, String out) {
-        this.x = x;
-        this.y = y;
-        this.z = z;
+    public ServerBot(long id, String description, String name, ArrayList<Long> travel, String in, String out) {
         this.id = id;
         this.description = description;
         this.name = name;
