@@ -28,7 +28,7 @@ public enum Tables {
             new TableRow("id", "INTEGER PRIMARY KEY"),
             new TableRow("descr", "TEXT"),
             new TableRow("namerp", "TEXT"),
-            new TableRow("place", "INTEGER"),
+            new TableRow("places", "TEXT"),
             new TableRow("welcome", "TEXT")
     })),
     PLACES(new Table("places", new TableRow[]{

@@ -3,6 +3,7 @@ package io.github.alexiscomete.lapinousecond;
 
 import io.github.alexiscomete.lapinousecond.commands.CommandBot;
 import io.github.alexiscomete.lapinousecond.commands.classes.*;
+import io.github.alexiscomete.lapinousecond.reactions.ReactionManager;
 import io.github.alexiscomete.lapinousecond.save.SaveLocation;
 import io.github.alexiscomete.lapinousecond.save.SaveManager;
 import io.github.alexiscomete.lapinousecond.save.Tables;
@@ -19,8 +20,12 @@ public class Main {
     public static SaveManager getSaveManager() {
         return saveManager;
     }
+    public static ReactionManager getReactionManager() {
+        return reactionManager;
+    }
 
     private static SaveManager saveManager;
+    private static ReactionManager reactionManager;
 
     static {
         try {
@@ -36,6 +41,8 @@ public class Main {
         api = new DiscordApiBuilder().setToken(config.getContent().get(0)).login().join();
         api.updateActivity("Prefix : -");
         api.addListener(new ListenerMain());
+        reactionManager = new ReactionManager();
+        api.addListener(reactionManager);
 
         saveManager = new SaveManager(config.getContent().get(1));
         Tables.testTables();
