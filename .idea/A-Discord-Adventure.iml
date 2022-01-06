@@ -11,9 +11,9 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="javacord-3.3.0-shaded" level="project" />
-    <orderEntry type="library" name="Maven: org.javacord:javacord-api:3.3.0" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Maven: org.javacord:javacord-core:3.3.0" level="project" />
+    <orderEntry type="library" name="json-20211205" level="project" />
+    <orderEntry type="library" name="Maven: org.javacord:javacord-api:3.3.2" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Maven: org.javacord:javacord-core:3.3.2" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: com.squareup.okhttp3:okhttp:3.9.1" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: com.squareup.okio:okio:1.13.0" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: com.squareup.okhttp3:logging-interceptor:3.9.1" level="project" />
@@ -27,6 +27,5 @@
     <orderEntry type="library" scope="RUNTIME" name="Maven: io.vavr:vavr:0.10.1" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: io.vavr:vavr-match:0.10.1" level="project" />
     <orderEntry type="library" name="Maven: org.xerial:sqlite-jdbc:3.15.1" level="project" />
-    <orderEntry type="library" name="json-20211205" level="project" />
   </component>
 </module>
