@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="javacord-3.3.0-shaded">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/../javacord-3.3.0-shaded.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>

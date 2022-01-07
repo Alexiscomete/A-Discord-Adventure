@@ -80,7 +80,7 @@ public class SaveManager {
 
                         }
                     }
-                    serverBot = new ServerBot(Integer.parseInt(resultSet.getString("x")), Integer.parseInt(resultSet.getString("y")), Integer.parseInt(resultSet.getString("z")), Long.parseLong(resultSet.getString("id")), resultSet.getString("descr"), resultSet.getString("namerp"), arr, resultSet.getString("train"), resultSet.getString("traout"));
+                    serverBot = new ServerBot(Long.parseLong(resultSet.getString("id")), resultSet.getString("descr"), resultSet.getString("namerp"), arr, resultSet.getString("train"), resultSet.getString("traout"));
                     servers.put(l, serverBot);
                 }
             } catch (SQLException throwables) {
