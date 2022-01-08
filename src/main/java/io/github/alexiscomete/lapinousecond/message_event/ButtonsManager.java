@@ -5,7 +5,6 @@ import org.javacord.api.event.interaction.MessageComponentCreateEvent;
 import org.javacord.api.listener.interaction.MessageComponentCreateListener;
 
 import java.util.HashMap;
-import java.util.Map;
 import java.util.function.Consumer;
 
 public class ButtonsManager implements MessageComponentCreateListener {
@@ -22,7 +21,7 @@ public class ButtonsManager implements MessageComponentCreateListener {
             }
         } else {
             Message message = messageComponentCreateEvent.getMessageComponentInteraction().getMessage().get();
-            message.edit("Les boutons d'un message ne sont pas stockés dans la mémoire à long terme, il est donc impossible de répondre à cette demande");
+            message.edit("Il est impossible de répondre à cette demande, soit le bouton est invalide soit le bot a été redémarré (pas de mémoire à long terme pour les boutons)");
         }
     }
 

@@ -20,10 +20,7 @@ public class Help extends CommandBot {
         EmbedBuilder builder = new EmbedBuilder();
         builder.setDescription("Pensez au préfix !").setTitle("Aide").setColor(Color.blue);
         if (args.length < 2) {
-            Collection<CommandBot> commandBots = ListenerMain.commands.values();
-            for (CommandBot commandBot : commandBots) {
-                builder.addField(commandBot.getName(), commandBot.getDescription());
-            }
+            addCommands(builder, 0);
         } else {
             CommandBot commandBot = ListenerMain.commands.get(args[1]);
             if (commandBot == null) {
@@ -34,5 +31,17 @@ public class Help extends CommandBot {
         }
         messageCreateEvent.getMessage().reply(builder);
 
+    }
+
+    public void addCommands(EmbedBuilder embedBuilder, int min) {
+        CommandBot[] commandBots = ListenerMain.commands.values().toArray(new CommandBot[0]);
+        if (commandBots.length > min) {
+            for (int i = min; i < commandBots.length && i < min + 10; i++) {
+                CommandBot commandBot = commandBots[i];
+                embedBuilder.addField(commandBot.getName(), commandBot.getDescription());
+            }
+        } else {
+            embedBuilder.setDescription("Pas de commande n°" + min);
+        }
     }
 }
