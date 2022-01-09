@@ -28,7 +28,7 @@ public class ConfigServ extends CommandBot {
                         for (int i = 0; i < longs.size(); i++) {
                             travels[i] = longs.get(i);
                         }
-                        server = new ServerBot(x, y, z, messageCreateEvent.getServer().get().getId(), "ee", "ee", longs, "", "");
+                        server = new ServerBot(messageCreateEvent.getServer().get().getId(), "ee", "ee", longs, "", "");
                         saveManager.getServers().put(server.getId(), server);
                         StringBuilder travels2 = new StringBuilder();
                         for (long tra : travels) {

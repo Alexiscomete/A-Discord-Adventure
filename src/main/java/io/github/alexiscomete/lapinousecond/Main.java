@@ -3,6 +3,7 @@ package io.github.alexiscomete.lapinousecond;
 
 import io.github.alexiscomete.lapinousecond.commands.CommandBot;
 import io.github.alexiscomete.lapinousecond.commands.classes.*;
+import io.github.alexiscomete.lapinousecond.message_event.ButtonsManager;
 import io.github.alexiscomete.lapinousecond.message_event.ReactionManager;
 import io.github.alexiscomete.lapinousecond.save.SaveLocation;
 import io.github.alexiscomete.lapinousecond.save.SaveManager;
@@ -20,12 +21,18 @@ public class Main {
     public static SaveManager getSaveManager() {
         return saveManager;
     }
+
     public static ReactionManager getReactionManager() {
         return reactionManager;
     }
 
+    public static ButtonsManager getButtonsManager() {
+        return buttonsManager;
+    }
+
     private static SaveManager saveManager;
     private static ReactionManager reactionManager;
+    private static ButtonsManager buttonsManager;
 
     static {
         try {
@@ -42,7 +49,9 @@ public class Main {
         api.updateActivity("Prefix : -");
         api.addListener(new ListenerMain());
         reactionManager = new ReactionManager();
+        buttonsManager = new ButtonsManager();
         api.addListener(reactionManager);
+        api.addListener(buttonsManager);
 
         saveManager = new SaveManager(config.getContent().get(1));
         Tables.testTables();

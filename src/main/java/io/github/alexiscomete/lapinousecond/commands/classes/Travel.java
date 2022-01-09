@@ -36,7 +36,7 @@ public class Travel extends CommandInServer {
             for (long tra : currentServer.getTravel()) {
                 ServerBot serv = saveManager.getServer(tra);
                 if (serv != null) {
-                    builder.addField(serv.getName() + " ; " + serv.getId() + " ; " + serv.getX() + " " + serv.getY() + " " + serv.getZ(), serv.getDescription());
+                    builder.addField(serv.getName() + " ; " + serv.getId(), serv.getDescription());
                 }
             }
             messageCreateEvent.getMessage().reply(builder);
@@ -53,13 +53,10 @@ public class Travel extends CommandInServer {
                 ArrayList<Long> travels = currentServer.getTravel();
                 for (long travel : travels) {
                     if (travel == nextServer.getId()) {
-                        price = Math.sqrt(Math.pow(currentServer.getX() - nextServer.getX(), 2) + Math.pow(currentServer.getY() - nextServer.getY(), 2) + Math.pow(currentServer.getZ() - nextServer.getZ(), 2));
-                        break;
+
                     }
                 }
-                if (price == -1) {
-                    price = Math.pow(currentServer.getX() - nextServer.getX(), 2) + Math.pow(currentServer.getY() - nextServer.getY(), 2) + Math.pow(currentServer.getZ() - nextServer.getZ(), 2);
-                }
+
                 if (args.length > 3) {
                     List<ServerChannel> channels = server.getChannels();
                     if (channels.size() == 0)  {
