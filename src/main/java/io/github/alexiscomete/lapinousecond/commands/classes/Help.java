@@ -24,13 +24,13 @@ public class Help extends CommandBot {
     @Override
     public void execute(MessageCreateEvent messageCreateEvent, String content, String[] args) {
         EmbedBuilder builder = new EmbedBuilder();
-        builder.setDescription("Pensez au préfix !").setTitle("Aide").setColor(Color.blue);
+        builder.setDescription("Pensez au préfixe !").setTitle("Aide").setColor(Color.blue);
         if (args.length < 2) {
             MessageBuilder messageBuilder = new MessageBuilder();
             addCommands(builder, 0);
             EventAnswer eventAnswer = new EventAnswer(builder);
             messageBuilder.addComponents(eventAnswer.getComponents());
-            messageBuilder.append(builder);
+            messageBuilder.setEmbed(builder);
             try {
                 eventAnswer.register(messageBuilder.send(messageCreateEvent.getChannel()).get().getId());
             } catch (InterruptedException | ExecutionException e) {
