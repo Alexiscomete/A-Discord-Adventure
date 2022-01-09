@@ -45,6 +45,7 @@ public class Help extends CommandBot {
                         level[0] += 10;
                         builder.removeAllFields();
                         addCommands(builder, level[0]);
+                        messageComponentCreateEvent.getMessageComponentInteraction().createImmediateResponder().removeAllEmbeds().addEmbed(builder);
                     }
                 });
                 hashMap.put("last_page", messageComponentCreateEvent -> {
@@ -52,6 +53,7 @@ public class Help extends CommandBot {
                         level[0] -= 10;
                         builder.removeAllFields();
                         addCommands(builder, level[0]);
+                        messageComponentCreateEvent.getMessageComponentInteraction().createImmediateResponder().removeAllEmbeds().addEmbed(builder);
                     }
                 });
                 Main.getButtonsManager().addMessage(msg.getId(), hashMap);
