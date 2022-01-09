@@ -28,16 +28,17 @@ public class Help extends CommandBot {
         System.out.println("help!!");
         EmbedBuilder builder = new EmbedBuilder();
         MessageBuilder messageBuilder = new MessageBuilder();
-        messageBuilder.append(builder);
         builder.setDescription("Pensez au préfix !").setTitle("Aide").setColor(Color.blue);
         if (args.length < 2) {
             addCommands(builder, 0);
             messageBuilder.addComponents(
-                    ActionRow.of(Button.success("next_page", "Page suivante"),
-                            Button.success("last_page", "Page précédente")
+                    ActionRow.of(
+                            Button.success("last_page", "Page précédente"),
+                            Button.success("next_page", "Page suivante")
                     ));
             try {
                 int[] level = {0};
+                messageBuilder.append(builder);
                 Message msg = messageBuilder.send(messageCreateEvent.getChannel()).get();
                 HashMap<String, Consumer<MessageComponentCreateEvent>> hashMap = new HashMap<>();
                 hashMap.put("next_page", messageComponentCreateEvent -> {
@@ -45,7 +46,7 @@ public class Help extends CommandBot {
                         level[0] += 10;
                         builder.removeAllFields();
                         addCommands(builder, level[0]);
-                        messageComponentCreateEvent.getMessageComponentInteraction().createImmediateResponder().removeAllEmbeds().addEmbed(builder);
+                        messageComponentCreateEvent.getMessageComponentInteraction().createImmediateResponder().removeAllEmbeds().addEmbed(builder).respond();
                     }
                 });
                 hashMap.put("last_page", messageComponentCreateEvent -> {
@@ -53,7 +54,7 @@ public class Help extends CommandBot {
                         level[0] -= 10;
                         builder.removeAllFields();
                         addCommands(builder, level[0]);
-                        messageComponentCreateEvent.getMessageComponentInteraction().createImmediateResponder().removeAllEmbeds().addEmbed(builder);
+                        messageComponentCreateEvent.getMessageComponentInteraction().createImmediateResponder().removeAllEmbeds().addEmbed(builder).respond();
                     }
                 });
                 Main.getButtonsManager().addMessage(msg.getId(), hashMap);
