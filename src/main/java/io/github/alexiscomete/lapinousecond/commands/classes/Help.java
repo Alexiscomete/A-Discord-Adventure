@@ -3,17 +3,14 @@ package io.github.alexiscomete.lapinousecond.commands.classes;
 import io.github.alexiscomete.lapinousecond.ListenerMain;
 import io.github.alexiscomete.lapinousecond.Main;
 import io.github.alexiscomete.lapinousecond.commands.CommandBot;
-import org.javacord.api.entity.message.Message;
 import org.javacord.api.entity.message.MessageBuilder;
 import org.javacord.api.entity.message.component.ActionRow;
 import org.javacord.api.entity.message.component.Button;
-import org.javacord.api.entity.message.component.LowLevelComponent;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.event.interaction.MessageComponentCreateEvent;
 import org.javacord.api.event.message.MessageCreateEvent;
 
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
@@ -32,12 +29,13 @@ public class Help extends CommandBot {
             MessageBuilder messageBuilder = new MessageBuilder();
             addCommands(builder, 0);
             EventAnswer eventAnswer = new EventAnswer(builder);
-            messageBuilder.addComponents(
-                    ActionRow.of(
-                            Button.success("last_page", "Page précédente"),
-                            Button.success("next_page", "Page suivante")
-                    ));
+            messageBuilder.addComponents(eventAnswer.getComponents());
             messageBuilder.append(builder);
+            try {
+                eventAnswer.register(messageBuilder.send(messageCreateEvent.getChannel()).get().getId());
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+            }
         } else {
             CommandBot commandBot = ListenerMain.commands.get(args[1]);
             if (commandBot == null) {
@@ -103,12 +101,15 @@ public class Help extends CommandBot {
             }
         }
 
-        public EventAnswer(EmbedBuilder embedBuilder, long id) {
-            builder = embedBuilder;
+        public void register(long id) {
             HashMap<String, Consumer<MessageComponentCreateEvent>> hashMap = new HashMap<>();
             hashMap.put("next_page", this::next);
             hashMap.put("last_page", this::last);
             Main.getButtonsManager().addMessage(id, hashMap);
+        }
+
+        public EventAnswer(EmbedBuilder embedBuilder) {
+            builder = embedBuilder;
         }
     }
 }
