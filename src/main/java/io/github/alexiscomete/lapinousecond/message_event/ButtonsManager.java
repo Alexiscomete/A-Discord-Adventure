@@ -17,11 +17,14 @@ public class ButtonsManager implements MessageComponentCreateListener {
             if (h.containsKey(messageComponentCreateEvent.getMessageComponentInteraction().getCustomId())) {
                 h.get(messageComponentCreateEvent.getMessageComponentInteraction().getCustomId()).accept(messageComponentCreateEvent);
             } else {
-                messageComponentCreateEvent.getMessageComponentInteraction().getMessage().get().reply("Hum ... étrange, ce bouton semble ne pas exister");
+                messageComponentCreateEvent.getMessageComponentInteraction().createOriginalMessageUpdater()
+                        .removeAllComponents()
+                        .removeAllEmbeds()
+                        .setContent("Hum ... étrange, ce bouton semble ne pas exister")
+                        .update();
             }
         } else {
-            Message message = messageComponentCreateEvent.getMessageComponentInteraction().getMessage().get();
-            message.edit("Il est impossible de répondre à cette demande, soit le bouton est invalide soit le bot a été redémarré (pas de mémoire à long terme pour les boutons)");
+            messageComponentCreateEvent.getMessageComponentInteraction().createOriginalMessageUpdater().removeAllEmbeds().removeAllComponents().setContent("Il est impossible de répondre à cette demande, soit le bouton est invalide soit le bot a été redémarré (pas de mémoire à long terme pour les boutons)").update();
         }
     }
 
