@@ -69,7 +69,7 @@ public class Help extends CommandBot {
                 level += 10;
                 builder.removeAllFields();
                 addCommands(builder, level);
-                messageComponentCreateEvent.getMessageComponentInteraction().createOriginalMessageUpdater().removeAllEmbeds().addEmbed(builder).update();
+                messageComponentCreateEvent.getMessageComponentInteraction().createOriginalMessageUpdater().removeAllEmbeds().addEmbed(builder).addComponents(getComponents()).update();
             }
         }
 
@@ -78,7 +78,7 @@ public class Help extends CommandBot {
                 level -= 10;
                 builder.removeAllFields();
                 addCommands(builder, level);
-                messageComponentCreateEvent.getMessageComponentInteraction().createOriginalMessageUpdater().removeAllEmbeds().addEmbed(builder).update();
+                messageComponentCreateEvent.getMessageComponentInteraction().createOriginalMessageUpdater().removeAllEmbeds().addEmbed(builder).addComponents(getComponents()).update();
             }
         }
 
