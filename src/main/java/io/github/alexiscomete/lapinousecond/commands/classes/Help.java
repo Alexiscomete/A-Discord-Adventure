@@ -42,11 +42,11 @@ public class Help extends CommandBot {
                 Message msg = messageBuilder.send(messageCreateEvent.getChannel()).get();
                 HashMap<String, Consumer<MessageComponentCreateEvent>> hashMap = new HashMap<>();
                 hashMap.put("next_page", messageComponentCreateEvent -> {
-                    if (level[0] < ListenerMain.commands.size()) {
+                    if (level[0] + 10 < ListenerMain.commands.size()) {
                         level[0] += 10;
                         builder.removeAllFields();
                         addCommands(builder, level[0]);
-                        messageComponentCreateEvent.getMessageComponentInteraction().createImmediateResponder().removeAllEmbeds().addEmbed(builder).respond();
+                        messageComponentCreateEvent.getMessageComponentInteraction().createOriginalMessageUpdater().removeAllEmbeds().addEmbed(builder).update();
                     }
                 });
                 hashMap.put("last_page", messageComponentCreateEvent -> {
@@ -54,7 +54,7 @@ public class Help extends CommandBot {
                         level[0] -= 10;
                         builder.removeAllFields();
                         addCommands(builder, level[0]);
-                        messageComponentCreateEvent.getMessageComponentInteraction().createImmediateResponder().removeAllEmbeds().addEmbed(builder).respond();
+                        messageComponentCreateEvent.getMessageComponentInteraction().createOriginalMessageUpdater().removeAllEmbeds().addEmbed(builder).update();
                     }
                 });
                 Main.getButtonsManager().addMessage(msg.getId(), hashMap);
@@ -80,7 +80,7 @@ public class Help extends CommandBot {
                 embedBuilder.addField(commandBot.getName(), commandBot.getDescription());
             }
         } else {
-            embedBuilder.setDescription("Pas de commande n°" + min);
+            embedBuilder.addField("Erreur", "Impossible de trouver la commande n°" + min);
         }
     }
 }
