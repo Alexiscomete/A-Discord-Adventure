@@ -86,5 +86,15 @@ public class SaveLocation<E> {
             System.out.println(file.createNewFile());
         }
     }
+
+    public synchronized long generateUniqueID() {
+        try {
+            Thread.sleep(2);
+            return System.currentTimeMillis();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            return System.currentTimeMillis();
+        }
+    }
 }
 

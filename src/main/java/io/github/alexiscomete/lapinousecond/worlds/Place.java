@@ -1,6 +1,7 @@
 package io.github.alexiscomete.lapinousecond.worlds;
 
 import java.util.Optional;
+import java.util.UUID;
 
 public class Place {
     private Long serverID;
@@ -10,7 +11,7 @@ public class Place {
     private Integer y;
 
 
-    public Place(ServerBot serverBot, World world, Integer x, Integer y) {
+    public Place(ServerBot serverBot, World world, Integer x, Integer y, long id) {
         this.serverBot = serverBot;
         this.world = world;
         this.x = x;
