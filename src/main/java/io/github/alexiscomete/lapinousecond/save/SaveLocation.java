@@ -87,7 +87,7 @@ public class SaveLocation<E> {
         }
     }
 
-    public synchronized long generateUniqueID() {
+    public static synchronized long generateUniqueID() {
         try {
             Thread.sleep(2);
             return System.currentTimeMillis();
