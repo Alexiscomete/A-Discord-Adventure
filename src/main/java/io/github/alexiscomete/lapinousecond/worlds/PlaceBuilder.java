@@ -7,6 +7,6 @@ public class PlaceBuilder {
     }
 
     public Place getNewPlace() {
-
+        return null;
     }
 }

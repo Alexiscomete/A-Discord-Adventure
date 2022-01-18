@@ -1,7 +1,9 @@
 package io.github.alexiscomete.lapinousecond.worlds;
 
-import io.github.alexiscomete.lapinousecond.save.SaveLocation;
+import io.github.alexiscomete.lapinousecond.Main;
+import io.github.alexiscomete.lapinousecond.save.*;
 
+import java.util.HashMap;
 import java.util.Optional;
 
 public class Place {
@@ -16,6 +18,7 @@ public class Place {
     private long[] connections;
     private String type;
     private final long id;
+    private final HashMap<String, CacheValue> cache = new HashMap<>();
 
 
     public Place(ServerBot serverBot, World world, Integer x, Integer y, long id) {
@@ -91,5 +94,24 @@ public class Place {
 
     public long getID() {
         return id;
+    }
+
+    public String getString(String row) {
+        if (cache.containsKey(row)) {
+            return cache.get(row).getString();
+        } else {
+            String str = Main.getSaveManager().getString(Tables.PLACES.getTable(), row, "TEXT", id);
+            cache.put(row, new CacheValue(str));
+            return str;
+        }
+    }
+
+    public void set(String row, String value) {
+        if (cache.containsKey(row)) {
+            cache.get(row).set(value);
+        } else {
+            cache.put(row, new CacheValue(value));
+        }
+        Main.getSaveManager().setValue(Tables.PLACES.getTable(), id, row, value, "TEXT");
     }
 }
