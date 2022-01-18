@@ -144,6 +144,11 @@ public class SaveManager {
         setValue(table.getName(), "id", String.valueOf(id), row, value);
     }
 
+    public void setValue(Table table, long id, String row, String value, String type) {
+        execute("ALTER TABLE " + table.getName() + " ADD COLUMN " + row + " " + type, false);
+        setValue(table, id, row, value);
+    }
+
     public void insert(String where, HashMap<String, String> what) {
         StringBuilder values = new StringBuilder("("), keys = new StringBuilder("(");
         for (int i = 0; i < what.size(); i++) {
@@ -186,6 +191,17 @@ public class SaveManager {
                 e.printStackTrace();
             }
             return null;
+        }
+    }
+
+    public String getString(Table table, String row, String type, long id) {
+        execute("ALTER TABLE " + table.getName() + " ADD COLUMN " + row + " " + type, false);
+        ResultSet resultSet = executeQuery("SELECT " + row + " WHERE id=" + id, false);
+        try {
+            return resultSet.getString(row);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return "";
         }
     }
 }
