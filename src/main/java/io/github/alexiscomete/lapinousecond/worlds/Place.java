@@ -12,11 +12,7 @@ public class Place {
     private World world;
     private Integer x;
     private Integer y;
-    private String name;
-    private String traIn;
-    private String traOut;
     private long[] connections;
-    private String type;
     private final long id;
     private final HashMap<String, CacheValue> cache = new HashMap<>();
 
@@ -34,16 +30,12 @@ public class Place {
         }
     }
 
-    public Place(ServerBot serverBot, World world, Integer x, Integer y, String name, String traIn, String traOut, long[] connections, String type) {
+    public Place(ServerBot serverBot, World world, Integer x, Integer y, long[] connections) {
         this.serverBot = serverBot;
         this.world = world;
         this.x = x;
         this.y = y;
-        this.name = name;
-        this.traIn = traIn;
-        this.traOut = traOut;
         this.connections = connections;
-        this.type = type;
         this.id = SaveLocation.generateUniqueID();
         if (serverBot == null) {
             this.serverID = null;
@@ -113,5 +105,13 @@ public class Place {
             cache.put(row, new CacheValue(value));
         }
         Main.getSaveManager().setValue(Tables.PLACES.getTable(), id, row, value, "TEXT");
+    }
+
+    public long[] getConnections() {
+        return connections;
+    }
+
+    public void setConnections(long[] connections) {
+        this.connections = connections;
     }
 }

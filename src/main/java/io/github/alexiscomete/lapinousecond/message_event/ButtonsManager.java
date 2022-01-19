@@ -1,6 +1,5 @@
 package io.github.alexiscomete.lapinousecond.message_event;
 
-import org.javacord.api.entity.message.Message;
 import org.javacord.api.event.interaction.MessageComponentCreateEvent;
 import org.javacord.api.listener.interaction.MessageComponentCreateListener;
 
