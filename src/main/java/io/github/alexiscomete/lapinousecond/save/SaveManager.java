@@ -80,7 +80,7 @@ public class SaveManager {
 
                         }
                     }
-                    serverBot = new ServerBot(Long.parseLong(resultSet.getString("id")), resultSet.getString("descr"), resultSet.getString("namerp"), arr, resultSet.getString("train"), resultSet.getString("traout"));
+                    serverBot = new ServerBot(Long.parseLong(resultSet.getString("id")));
                     servers.put(l, serverBot);
                 }
             } catch (SQLException throwables) {
@@ -90,9 +90,9 @@ public class SaveManager {
         return serverBot;
     }
 
-    public void addServer(int x, int y, int z, long id, String description, String name, String travel, short sec) {
+    public void addServer(long id) {
         try {
-            st.executeUpdate("INSERT INTO guilds (x, y, z, id, descr, namerp, travel, sec) VALUES (" + x + ", " + y + ", " + z + ", " + id + ", '" + description + "', '" + name + "', '" + travel + "', " + sec + ")");
+            st.executeUpdate("INSERT INTO guilds (id) VALUES (" + id + ")");
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }

@@ -21,24 +21,10 @@ public class ConfigServ extends CommandBot {
                 if (server == null) {
                     if (content.endsWith("oui")) {
                         messageCreateEvent.getMessage().reply("Création en cours ....");
-                        Random ran = new Random();
-                        int x = ran.nextInt(1000), y = ran.nextInt(1000), z = ran.nextInt(100);
                         ArrayList<Long> longs = saveManager.getTravels();
-                        long[] travels = new long[longs.size()];
-                        for (int i = 0; i < longs.size(); i++) {
-                            travels[i] = longs.get(i);
-                        }
-                        server = new ServerBot(messageCreateEvent.getServer().get().getId(), "ee", "ee", longs, "", "");
+                        server = new ServerBot(messageCreateEvent.getServer().get().getId());
                         saveManager.getServers().put(server.getId(), server);
-                        StringBuilder travels2 = new StringBuilder();
-                        for (long tra : travels) {
-                            travels2.append(tra).append(";");
-                            ServerBot serverBot = saveManager.getServer(tra);
-                            ArrayList<Long> l = serverBot.getTravel();
-                            l.add(server.getId());
-                            serverBot.setTravel(l);
-                        }
-                        saveManager.addServer(x, y, z, messageCreateEvent.getServer().get().getId(), "ee", "ee", travels2.toString(), (short) 1);
+                        saveManager.addServer(messageCreateEvent.getServer().get().getId());
                         messageCreateEvent.getMessage().reply("Configuration finie, tapez config name ou config desc pour configurer le nom et la description.");
                     } else {
                         messageCreateEvent.getMessage().reply("En continuant (tapez oui à la fin de la commande), vous vous engagez à fournir aux joueurs un serveur respectueux dans lequel ils peuvent s'intégrer ou continuer leur aventure de de bonnes conditions. Vous acceptez aussi que le bot puisse inviter des personne sur votre serveur");
@@ -47,12 +33,12 @@ public class ConfigServ extends CommandBot {
                     if (args.length > 1) {
                         if (args[1].equalsIgnoreCase("name") && args.length > 2) {
                             StringBuilder name = getStr(args);
-                            server.setName(name.toString());
-                            messageCreateEvent.getMessage().reply("Fait");
+                            server.set("namerp", name.toString());
+                            messageCreateEvent.getMessage().reply("Nom changé");
                         } else if (args[1].equalsIgnoreCase("desc") && args.length > 2) {
                             StringBuilder name = getStr(args);
-                            server.setDescription(name.toString());
-                            messageCreateEvent.getMessage().reply("Fait");
+                            server.set("descr", name.toString());
+                            messageCreateEvent.getMessage().reply("Description modifiée");
                         } else if (args[1].equalsIgnoreCase("travel")) {
                             if (server.getTravel().size() < 5) {
                                 ArrayList<Long> longs = saveManager.getTravels();
@@ -69,14 +55,14 @@ public class ConfigServ extends CommandBot {
                             }
                         } else if (args[1].equalsIgnoreCase("in") && args.length > 2) {
                             StringBuilder name = getStr(args);
-                            server.setIn(name.toString());
-                            messageCreateEvent.getMessage().reply("Fait");
+                            server.set("train", name.toString());
+                            messageCreateEvent.getMessage().reply("Message d' arrivé modifié");
                         } else if (args[1].equalsIgnoreCase("out") && args.length > 2) {
                             StringBuilder name = getStr(args);
-                            server.setOut(name.toString());
-                            messageCreateEvent.getMessage().reply("Fait");
+                            server.set("traout", name.toString());
+                            messageCreateEvent.getMessage().reply("Message de départ modifié");
                         } else {
-                            messageCreateEvent.getMessage().reply("Utilisez config name [name] pour le nom et config desc [description] pour la description. Le nom peut être RP.");
+                            messageCreateEvent.getMessage().reply("Utilisez config [what] [value]. Possibilités de what :\n - name, peut être RP\n - desc, description\n - in, message d' arrivé\n - out, message de départ");
                         }
                     }
                 }
