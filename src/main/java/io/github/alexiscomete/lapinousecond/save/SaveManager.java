@@ -71,16 +71,7 @@ public class SaveManager {
             try {
                 ResultSet resultSet = st.executeQuery("SELECT * FROM guilds WHERE id = " + l);
                 if (resultSet.next()) {
-                    String[] str = resultSet.getString("travel").split(";");
-                    ArrayList<Long> arr = new ArrayList<>();
-                    for (String s : str) {
-                        try {
-                            arr.add(Long.parseLong(s));
-                        } catch (NumberFormatException ignored) {
-
-                        }
-                    }
-                    serverBot = new ServerBot(Long.parseLong(resultSet.getString("id")), resultSet.getString("descr"), resultSet.getString("namerp"), arr, resultSet.getString("train"), resultSet.getString("traout"));
+                    serverBot = new ServerBot(Long.parseLong(resultSet.getString("id")));
                     servers.put(l, serverBot);
                 }
             } catch (SQLException throwables) {
@@ -90,9 +81,9 @@ public class SaveManager {
         return serverBot;
     }
 
-    public void addServer(int x, int y, int z, long id, String description, String name, String travel, short sec) {
+    public void addServer(long id) {
         try {
-            st.executeUpdate("INSERT INTO guilds (x, y, z, id, descr, namerp, travel, sec) VALUES (" + x + ", " + y + ", " + z + ", " + id + ", '" + description + "', '" + name + "', '" + travel + "', " + sec + ")");
+            st.executeUpdate("INSERT INTO guilds (id) VALUES (" + id + ")");
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }

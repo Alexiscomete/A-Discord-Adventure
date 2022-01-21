@@ -4,6 +4,7 @@ package io.github.alexiscomete.lapinousecond;
 import io.github.alexiscomete.lapinousecond.commands.CommandBot;
 import io.github.alexiscomete.lapinousecond.commands.classes.*;
 import io.github.alexiscomete.lapinousecond.message_event.ButtonsManager;
+import io.github.alexiscomete.lapinousecond.message_event.MessagesManager;
 import io.github.alexiscomete.lapinousecond.message_event.ReactionManager;
 import io.github.alexiscomete.lapinousecond.save.SaveLocation;
 import io.github.alexiscomete.lapinousecond.save.SaveManager;
@@ -30,9 +31,14 @@ public class Main {
         return buttonsManager;
     }
 
+    public static MessagesManager getMessagesManager() {
+        return messagesManager;
+    }
+
     private static SaveManager saveManager;
     private static ReactionManager reactionManager;
     private static ButtonsManager buttonsManager;
+    private static MessagesManager messagesManager;
 
     static {
         try {
@@ -50,8 +56,10 @@ public class Main {
         api.addListener(new ListenerMain());
         reactionManager = new ReactionManager();
         buttonsManager = new ButtonsManager();
+        messagesManager = new MessagesManager();
         api.addListener(reactionManager);
         api.addListener(buttonsManager);
+        api.addListener(messagesManager);
 
         saveManager = new SaveManager(config.getContent().get(1));
         Tables.testTables();

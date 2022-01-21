@@ -1,38 +1,22 @@
 package io.github.alexiscomete.lapinousecond.worlds;
 
 import io.github.alexiscomete.lapinousecond.Main;
+import io.github.alexiscomete.lapinousecond.save.CacheValue;
 import io.github.alexiscomete.lapinousecond.save.SaveManager;
 import io.github.alexiscomete.lapinousecond.save.Tables;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class ServerBot {
 
     private final long id;
-    private String description, name, in, out;
-    private ArrayList<Long> travel;
+    private ArrayList<Long> travel = new ArrayList<>();
     private final SaveManager sv = Main.getSaveManager();
+    private final HashMap<String, CacheValue> cache = new HashMap<>();
 
     public long getId() {
         return id;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-        sv.setValue(Tables.SERVERS.getTable(), id, "descr", description);
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-        sv.setValue(Tables.SERVERS.getTable(), id, "namerp", name);
     }
 
     public ArrayList<Long> getTravel() {
@@ -49,30 +33,26 @@ public class ServerBot {
         sv.setValue(Tables.SERVERS.getTable(), id, "travel", answer.toString());
     }
 
-    public String getIn() {
-        return in;
-    }
-
-    public void setIn(String in) { // train = travel in
-        this.in = in;
-        sv.setValue(Tables.SERVERS.getTable(), id, "train", in);
-    }
-
-    public String getOut() {
-        return out;
-    }
-
-    public void setOut(String out) {
-        this.out = out;
-        sv.setValue(Tables.SERVERS.getTable(), id, "traout", out);
-    }
-
-    public ServerBot(long id, String description, String name, ArrayList<Long> travel, String in, String out) {
+    public ServerBot(long id) {
         this.id = id;
-        this.description = description;
-        this.name = name;
-        this.travel = travel;
-        this.in = in;
-        this.out = out;
+    }
+
+    public String getString(String row) {
+        if (cache.containsKey(row)) {
+            return cache.get(row).getString();
+        } else {
+            String str = Main.getSaveManager().getString(Tables.SERVERS.getTable(), row, "TEXT", id);
+            cache.put(row, new CacheValue(str));
+            return str;
+        }
+    }
+
+    public void set(String row, String value) {
+        if (cache.containsKey(row)) {
+            cache.get(row).set(value);
+        } else {
+            cache.put(row, new CacheValue(value));
+        }
+        Main.getSaveManager().setValue(Tables.SERVERS.getTable(), id, row, value, "TEXT");
     }
 }

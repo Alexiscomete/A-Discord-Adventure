@@ -13,12 +13,23 @@ public class MessagesManager implements MessageCreateListener {
 
     @Override
     public void onMessageCreate(MessageCreateEvent messageCreateEvent) {
-        if (consumers.containsKey(messageCreateEvent.getChannel())) {
+        if (consumers.containsKey(messageCreateEvent.getChannel()) && !messageCreateEvent.getMessage().getContent().startsWith("-")) {
             HashMap<User, Consumer<MessageCreateEvent>> hashMap = consumers.get(messageCreateEvent.getChannel());
             if (messageCreateEvent.getMessageAuthor().isUser() && hashMap.containsKey(messageCreateEvent.getMessageAuthor().asUser().get())) {
-                hashMap.get(messageCreateEvent.getMessageAuthor().asUser().get()).accept(messageCreateEvent);
+                Consumer<MessageCreateEvent> messageCreateEventConsumer = hashMap.get(messageCreateEvent.getMessageAuthor().asUser().get());
                 hashMap.remove(messageCreateEvent.getMessageAuthor().asUser().get());
+                messageCreateEventConsumer.accept(messageCreateEvent);
             }
+        }
+    }
+
+    public void addListener(TextChannel textChannel, User user, Consumer<MessageCreateEvent> messageCreateEventConsumer) {
+        if (consumers.containsKey(textChannel)) {
+            consumers.get(textChannel).put(user, messageCreateEventConsumer);
+        } else {
+            HashMap<User, Consumer<MessageCreateEvent>> hashMap = new HashMap<>();
+            hashMap.put(user, messageCreateEventConsumer);
+            consumers.put(textChannel, hashMap);
         }
     }
 }
