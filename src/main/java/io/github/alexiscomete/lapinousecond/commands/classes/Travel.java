@@ -32,11 +32,11 @@ public class Travel extends CommandInServer {
         }
         if (args.length <= 2 || args[2].equals("list")) {
             EmbedBuilder builder = new EmbedBuilder();
-            builder.setDescription("Serveur actuel : " + p.getServer() + "; " + currentServer.getName() + ". Pour voyager vers un serveur, indiquez sont id, le prix  est indiqué à côté. Si le serveur n'est pas dasn la liste, alors le prix est égual à la distance au carré.").setTitle("Voyages disponibles").setColor(Color.green);
+            builder.setDescription("Serveur actuel : " + p.getServer() + "; " + currentServer.getString("namerp") + ". Pour voyager vers un serveur, indiquez sont id, le prix  est indiqué à côté. Si le serveur n'est pas dasn la liste, alors le prix est égual à la distance au carré.").setTitle("Voyages disponibles").setColor(Color.green);
             for (long tra : currentServer.getTravel()) {
                 ServerBot serv = saveManager.getServer(tra);
                 if (serv != null) {
-                    builder.addField(serv.getName() + " ; " + serv.getId(), serv.getDescription());
+                    builder.addField(serv.getString("namerp") + " ; " + serv.getId(), serv.getString("descr"));
                 }
             }
             messageCreateEvent.getMessage().reply(builder);
@@ -59,7 +59,7 @@ public class Travel extends CommandInServer {
 
                 if (args.length > 3) {
                     List<ServerChannel> channels = server.getChannels();
-                    if (channels.size() == 0)  {
+                    if (channels.size() == 0) {
                         messageCreateEvent.getMessage().reply("Bon je pense que ce serveur ne vaux pas la peine : il n'y aucun salon !! Je ne peux même pas vous inviter.");
                         server.getOwner().get().sendMessage("Bon ... si il n'y a même pas de salon dans votre serveur je ne peux rien faire. Pas de chance : une personne voulais le rejoindre");
                         return;
@@ -71,13 +71,10 @@ public class Travel extends CommandInServer {
                     InviteBuilder inv = new InviteBuilder(channels.get(0));
                     try {
                         User user = messageCreateEvent.getMessageAuthor().asUser().get();
-                        if (currentServer.getOut() != null) {
-                            user.sendMessage(currentServer.getOut());
-                        }
                         user.sendMessage(inv.create().get().getUrl().toString());
-                        if (nextServer.getIn() != null) {
-                            user.sendMessage(nextServer.getIn());
-                        }
+
+                        user.sendMessage(nextServer.getString("train"));
+
                         p.setServer(nextServer.getId());
                         p.setBal((long) (p.getBal() - price));
                     } catch (InterruptedException | ExecutionException e) {

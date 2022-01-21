@@ -48,7 +48,7 @@ public class ConfigServ extends CommandBot {
                                                         if (messageCreateEvent.getMessageContent().length() < 1500) {
                                                             finalServer.set("welcome", messageCreateEvent.getMessageContent());
                                                             messageCreateEvent.getMessage().reply("Maintenant le message d' arrivé sur votre serveur :");
-                                                            messageCreateEvent.getMessage().reply("Configuration terminée !! Enfin ! (et moi j' ai fini de coder ça, maintenant c'est les lieux 😑) Tapez config name ou config desc pour configurer le nom et la description.");
+                                                            messageCreateEvent.getMessage().reply("Configuration terminée !! Enfin ! (et moi j' ai fini de coder ça, maintenant c'est les lieux 😑) Vous pouvez modifier tout cela à n' importe quel moment avec config [what] [value].");
                                                         } else {
                                                             messageCreateEvent.getMessage().reply("Le message d' arrivé doit être de - de 1500 caractères, réessayez, votre taille :" + messageCreateEvent.getMessageContent().length());
                                                             Main.getMessagesManager().addListener(messageCreateEvent.getChannel(), user, this);
