@@ -1,6 +1,5 @@
 package io.github.alexiscomete.lapinousecond.message_event;
 
-import io.github.alexiscomete.lapinousecond.commands.CommandBot;
 import org.javacord.api.entity.channel.TextChannel;
 import org.javacord.api.entity.user.User;
 import org.javacord.api.event.message.MessageCreateEvent;
@@ -14,7 +13,7 @@ public class MessagesManager implements MessageCreateListener {
 
     @Override
     public void onMessageCreate(MessageCreateEvent messageCreateEvent) {
-        if (consumers.containsKey(messageCreateEvent.getChannel())) {
+        if (consumers.containsKey(messageCreateEvent.getChannel()) && !messageCreateEvent.getMessage().getContent().startsWith("-")) {
             HashMap<User, Consumer<MessageCreateEvent>> hashMap = consumers.get(messageCreateEvent.getChannel());
             if (messageCreateEvent.getMessageAuthor().isUser() && hashMap.containsKey(messageCreateEvent.getMessageAuthor().asUser().get())) {
                 Consumer<MessageCreateEvent> messageCreateEventConsumer = hashMap.get(messageCreateEvent.getMessageAuthor().asUser().get());

@@ -2,11 +2,8 @@ package io.github.alexiscomete.lapinousecond.worlds;
 
 public enum WorldEnum {
 
-    DEFAULT(new WorldAbstract(30, "Serveur sans type", "Monde du chaos", "DEFAULT", "Ces serveurs sont ici dans l'attente d'être classé ou si ils sont inclassables.")),
-    PROJECT(new WorldAbstract(30, "Serveur de projet", "Monde des objectifs", "PROJECT", "Cette catégorie est la plus vaste car n'importe qui peut très facilement créer un projet. Journaux, archives, wiki, Dibi, ....")),
-    GOUV(new WorldAbstract(50, "Serveur d'organisation gouvernemental", "Monde des décisions", "GOUV", "Ici vous trouverez des serveurs officiels comme l'ORU, la RPDB ou l'AASR (si ils ajoutent la bot)")),
-    REG(new WorldWithCoos(20, "Serveur de région ou de département", "Monde du drapeau", "REG", "Dans ce monde vous trouverez les serveurs des régions et des départements, avec leurs différentes villes.")),
-    POL(new WorldAbstract(200, "Serveur politique", "Monde des idées", "POL", "Les différents partis politiques **de la RPBD** ont une catégorie à part, ce ne sont pas des projets. Il est important de rappeler que le bot ne prend aucun parti."));
+    NORMAL(new WorldAbstract(30, "Serveur normal", "Monde du chaos", "NORMAL", "Ce monde regroupe tous les serveurs discord sans territoire et qui ne rentrent dans aucune catégorie")),
+    DIBIMAP(new WorldWithCoos(20, "Server de territoire", "Monde du drapeau", "DIBIMAP", "Le serveur est un département (avec villes) ? Une région (avec départements ?) ? Une ville ? Ou tout autre chose avec un territoire ? Alors vous le trouverez ici."));
 
     private final World world;
 

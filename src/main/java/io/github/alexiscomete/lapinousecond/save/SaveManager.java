@@ -71,15 +71,6 @@ public class SaveManager {
             try {
                 ResultSet resultSet = st.executeQuery("SELECT * FROM guilds WHERE id = " + l);
                 if (resultSet.next()) {
-                    String[] str = resultSet.getString("travel").split(";");
-                    ArrayList<Long> arr = new ArrayList<>();
-                    for (String s : str) {
-                        try {
-                            arr.add(Long.parseLong(s));
-                        } catch (NumberFormatException ignored) {
-
-                        }
-                    }
                     serverBot = new ServerBot(Long.parseLong(resultSet.getString("id")));
                     servers.put(l, serverBot);
                 }

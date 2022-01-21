@@ -4,6 +4,10 @@ import io.github.alexiscomete.lapinousecond.Main;
 import io.github.alexiscomete.lapinousecond.commands.CommandBot;
 import io.github.alexiscomete.lapinousecond.message_event.MessagesManager;
 import io.github.alexiscomete.lapinousecond.worlds.ServerBot;
+import io.github.alexiscomete.lapinousecond.worlds.World;
+import io.github.alexiscomete.lapinousecond.worlds.WorldEnum;
+import org.javacord.api.entity.message.MessageBuilder;
+import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.entity.user.User;
 import org.javacord.api.event.message.MessageCreateEvent;
 
@@ -47,8 +51,39 @@ public class ConfigServ extends CommandBot {
                                                     public void accept(MessageCreateEvent messageCreateEvent) {
                                                         if (messageCreateEvent.getMessageContent().length() < 1500) {
                                                             finalServer.set("welcome", messageCreateEvent.getMessageContent());
-                                                            messageCreateEvent.getMessage().reply("Maintenant le message d' arrivé sur votre serveur :");
-                                                            messageCreateEvent.getMessage().reply("Configuration terminée !! Enfin ! (et moi j' ai fini de coder ça, maintenant c'est les lieux 😑) Vous pouvez modifier tout cela à n' importe quel moment avec config [what] [value].");
+                                                            EmbedBuilder embedBuilder = new EmbedBuilder()
+                                                                    .setTitle("Les mondes")
+                                                                    .setDescription("Maintenant configurons le monde de votre serveur ...");
+                                                            for (WorldEnum worldEnum :
+                                                                    WorldEnum.values()) {
+                                                                World w = worldEnum.getWorld();
+                                                                embedBuilder.addField(w.getName(), "RP : " + w.getNameRP() + "\nNom à entrer : " + w.getProgName() + "\nDescription : " + w.getDesc());
+                                                            }
+                                                            messageCreateEvent.getMessage().reply(embedBuilder);
+
+                                                            Consumer<MessageCreateEvent> cW = new Consumer<MessageCreateEvent>() {
+                                                                @Override
+                                                                public void accept(MessageCreateEvent messageCreateEvent) {
+                                                                    try {
+                                                                        World world = WorldEnum.valueOf(messageCreateEvent.getMessageContent()).getWorld();
+                                                                        finalServer.set("world", world.getProgName());
+                                                                        messageCreateEvent.getMessage().reply("Configuration terminée !! Enfin ! (et moi j' ai fini de coder ça, maintenant c'est les lieux 😑) Vous pouvez modifier tout cela à n' importe quel moment avec config [what] [value].");
+                                                                    } catch (IllegalArgumentException e) {
+                                                                        messageCreateEvent.getMessage().reply("Ceci n' est pas un monde valide");
+                                                                        EmbedBuilder embedBuilder = new EmbedBuilder()
+                                                                                .setTitle("Les mondes")
+                                                                                .setDescription("SVP lisez");
+                                                                        for (WorldEnum worldEnum :
+                                                                                WorldEnum.values()) {
+                                                                            World w = worldEnum.getWorld();
+                                                                            embedBuilder.addField(w.getName(), "RP : " + w.getNameRP() + "\nNom à entrer : " + w.getProgName() + "\nDescription : " + w.getDesc());
+                                                                        }
+                                                                        messageCreateEvent.getMessage().reply(embedBuilder);
+                                                                        Main.getMessagesManager().addListener(messageCreateEvent.getChannel(), user, this);
+                                                                    }
+                                                                }
+                                                            };
+                                                            Main.getMessagesManager().addListener(messageCreateEvent.getChannel(), messageCreateEvent.getMessageAuthor().asUser().get(), cW);
                                                         } else {
                                                             messageCreateEvent.getMessage().reply("Le message d' arrivé doit être de - de 1500 caractères, réessayez, votre taille :" + messageCreateEvent.getMessageContent().length());
                                                             Main.getMessagesManager().addListener(messageCreateEvent.getChannel(), user, this);
