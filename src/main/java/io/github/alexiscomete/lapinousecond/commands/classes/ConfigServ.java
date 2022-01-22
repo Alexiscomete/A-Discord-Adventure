@@ -2,18 +2,16 @@ package io.github.alexiscomete.lapinousecond.commands.classes;
 
 import io.github.alexiscomete.lapinousecond.Main;
 import io.github.alexiscomete.lapinousecond.Player;
-import io.github.alexiscomete.lapinousecond.commands.CommandBot;
 import io.github.alexiscomete.lapinousecond.commands.CommandWithAccount;
-import io.github.alexiscomete.lapinousecond.message_event.MessagesManager;
 import io.github.alexiscomete.lapinousecond.worlds.ServerBot;
 import io.github.alexiscomete.lapinousecond.worlds.World;
 import io.github.alexiscomete.lapinousecond.worlds.WorldEnum;
-import org.javacord.api.entity.message.MessageBuilder;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.entity.user.User;
 import org.javacord.api.event.message.MessageCreateEvent;
 
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 public class ConfigServ extends CommandWithAccount {
@@ -25,10 +23,31 @@ public class ConfigServ extends CommandWithAccount {
     @Override
     public void execute(MessageCreateEvent messageCreateEvent, String content, String[] args, Player p) {
         if (messageCreateEvent.isServerMessage()) {
+            ServerBot server = saveManager.getServer(messageCreateEvent.getServer().get().getId());
             if (messageCreateEvent.getMessage().getContent().equalsIgnoreCase("-config info")) {
-                
-            }else if (messageCreateEvent.getMessageAuthor().isServerAdmin()) {
-                ServerBot server = saveManager.getServer(messageCreateEvent.getServer().get().getId());
+                if (server == null) {
+                    messageCreateEvent.getMessage().reply("Le serveur n' est pas configuré");
+                } else {
+                    String name = server.getString("namerp");
+                    String descr = server.getString("descr");
+                    long id = server.getId();
+                    String welcome = server.getString("welcome");
+                    String world = server.getString("world");
+                    try {
+                        World w = WorldEnum.valueOf(world).getWorld();
+                        world = w.getName();
+                    } catch (IllegalArgumentException e) {
+                        world = "Monde invalide";
+                    }
+                    EmbedBuilder embedBuilder = new EmbedBuilder()
+                            .setDescription(!Objects.equals(descr, "") ? descr : "Description invalide")
+                            .setTitle(Objects.equals(name, "") ? "Nom invalide" : name)
+                            .setAuthor(String.valueOf(id))
+                            .addField("Message de bienvenue", Objects.equals(welcome, "") ? "Message d' arrivé invalide" : welcome)
+                            .addField("Monde", world);
+                    messageCreateEvent.getMessage().reply(embedBuilder);
+                }
+            } else if (messageCreateEvent.getMessageAuthor().isServerAdmin()) {
                 if (server == null) {
                     if (content.endsWith("oui")) {
                         messageCreateEvent.getMessage().reply("Création en cours ....");
@@ -71,7 +90,7 @@ public class ConfigServ extends CommandWithAccount {
                                                                     try {
                                                                         World world = WorldEnum.valueOf(messageCreateEvent.getMessageContent()).getWorld();
                                                                         finalServer.set("world", world.getProgName());
-                                                                        messageCreateEvent.getMessage().reply("Configuration terminée !! Enfin ! (et moi j' ai fini de coder ça, maintenant c'est les lieux 😑) Vous pouvez modifier tout cela à n' importe quel moment avec config [what] [value].");
+                                                                        messageCreateEvent.getMessage().reply("Configuration terminée !! Enfin ! (et moi j' ai fini de coder ça, maintenant c'est les lieux 😑) Vous pouvez modifier tout cela à n' importe quel moment avec config [what] [value] et voir la configuration avec -config info.");
                                                                     } catch (IllegalArgumentException e) {
                                                                         messageCreateEvent.getMessage().reply("Ceci n' est pas un monde valide");
                                                                         EmbedBuilder embedBuilder = new EmbedBuilder()
