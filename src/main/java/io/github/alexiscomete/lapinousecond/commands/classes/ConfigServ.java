@@ -1,7 +1,9 @@
 package io.github.alexiscomete.lapinousecond.commands.classes;
 
 import io.github.alexiscomete.lapinousecond.Main;
+import io.github.alexiscomete.lapinousecond.Player;
 import io.github.alexiscomete.lapinousecond.commands.CommandBot;
+import io.github.alexiscomete.lapinousecond.commands.CommandWithAccount;
 import io.github.alexiscomete.lapinousecond.message_event.MessagesManager;
 import io.github.alexiscomete.lapinousecond.worlds.ServerBot;
 import io.github.alexiscomete.lapinousecond.worlds.World;
@@ -14,16 +16,18 @@ import org.javacord.api.event.message.MessageCreateEvent;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
-public class ConfigServ extends CommandBot {
+public class ConfigServ extends CommandWithAccount {
 
     public ConfigServ() {
-        super("Configuration de votre serveur", "config", "Permet de configurer le serveur actuel si c'est le votre");
+        super("Configuration du serveur, config info pour la configuration actuelle", "config", "Permet de configurer le serveur actuel si c'est le votre, config info permet sinon de voir les infos du serveur (pour tout le monde)");
     }
 
     @Override
-    public void execute(MessageCreateEvent messageCreateEvent, String content, String[] args) {
+    public void execute(MessageCreateEvent messageCreateEvent, String content, String[] args, Player p) {
         if (messageCreateEvent.isServerMessage()) {
-            if (messageCreateEvent.getMessageAuthor().isServerAdmin()) {
+            if (messageCreateEvent.getMessage().getContent().equalsIgnoreCase("-config info")) {
+                
+            }else if (messageCreateEvent.getMessageAuthor().isServerAdmin()) {
                 ServerBot server = saveManager.getServer(messageCreateEvent.getServer().get().getId());
                 if (server == null) {
                     if (content.endsWith("oui")) {

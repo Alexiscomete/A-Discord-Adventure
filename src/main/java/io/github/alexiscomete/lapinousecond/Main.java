@@ -80,6 +80,7 @@ public class Main {
         addCommand(new Invite());
         addCommand(new Verify());
         addCommand(new RoleCommand());
+        addCommand(new PlaceCommand());
     }
 
     public static void addCommand(CommandBot commandBot) {
