@@ -26,10 +26,7 @@ public enum Tables {
     })),
     SERVERS(new Table("guilds", new TableRow[]{
             new TableRow("id", "INTEGER PRIMARY KEY"),
-            new TableRow("descr", "TEXT"),
-            new TableRow("namerp", "TEXT"),
-            new TableRow("places", "TEXT"),
-            new TableRow("welcome", "TEXT")
+            new TableRow("places", "TEXT")
     })),
     PLACES(new Table("places", new TableRow[]{
             new TableRow("id", "INTEGER PRIMARY KEY"),
