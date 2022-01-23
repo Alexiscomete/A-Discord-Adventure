@@ -2,6 +2,7 @@ package io.github.alexiscomete.lapinousecond.commands.classes;
 
 import io.github.alexiscomete.lapinousecond.Player;
 import io.github.alexiscomete.lapinousecond.commands.CommandWithAccount;
+import io.github.alexiscomete.lapinousecond.worlds.Place;
 import io.github.alexiscomete.lapinousecond.worlds.ServerBot;
 import org.javacord.api.event.message.MessageCreateEvent;
 
@@ -24,10 +25,10 @@ public class PlaceCommand extends CommandWithAccount {
                                 if (messageCreateEvent.getMessage().getContent().endsWith(String.valueOf(p.getId() - 42))) {
                                     switch (serverBot.getString("world")) {
                                         case "NORMAL":
-                                            createNormalPlace(messageCreateEvent);
+                                            createNormalPlace(messageCreateEvent, serverBot, p);
                                             break;
                                         case "DIBIMAP":
-                                            createWorldPlace(messageCreateEvent);
+                                            createWorldPlace(messageCreateEvent, serverBot, p);
                                             break;
                                         default:
                                             messageCreateEvent.getMessage().reply("Impossible de créer un lieu officiel pour ce monde");
@@ -51,11 +52,13 @@ public class PlaceCommand extends CommandWithAccount {
         }
     }
 
-    public void createNormalPlace(MessageCreateEvent messageCreateEvent) {
-
+    public void createNormalPlace(MessageCreateEvent messageCreateEvent, ServerBot serverBot, Player p) {
+        if (serverBot.)
+        Place place = new Place();
+        messageCreateEvent.getMessage().reply("Votre lieu a pour id : " + place.getID());
     }
 
-    public void createWorldPlace(MessageCreateEvent messageCreateEvent) {
+    public void createWorldPlace(MessageCreateEvent messageCreateEvent, ServerBot serverBot, Player p) {
 
     }
 }
