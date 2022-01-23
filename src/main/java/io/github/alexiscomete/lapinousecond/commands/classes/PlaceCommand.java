@@ -6,6 +6,8 @@ import io.github.alexiscomete.lapinousecond.worlds.Place;
 import io.github.alexiscomete.lapinousecond.worlds.ServerBot;
 import org.javacord.api.event.message.MessageCreateEvent;
 
+import java.util.Objects;
+
 public class PlaceCommand extends CommandWithAccount {
     public PlaceCommand() {
         super("Commande des lieux, configuration + description", "place", "Salut ! Je suis une commande. Pour créer un lieu faites place create_new_place, place list pour la list des lieux du serveur");
@@ -53,9 +55,13 @@ public class PlaceCommand extends CommandWithAccount {
     }
 
     public void createNormalPlace(MessageCreateEvent messageCreateEvent, ServerBot serverBot, Player p) {
-        if (serverBot.)
-        Place place = new Place();
-        messageCreateEvent.getMessage().reply("Votre lieu a pour id : " + place.getID());
+        if (serverBot.getArray("places").length == 1 && Objects.equals(serverBot.getArray("places")[0], "")) {
+            Place place = new Place();
+            messageCreateEvent.getMessage().reply("Votre lieu a pour id : " + place.getID());
+            
+        } else {
+            messageCreateEvent.getMessage().reply("Impossible : un serveur du monde normal ne peut avoir qu' un seul lieu");
+        }
     }
 
     public void createWorldPlace(MessageCreateEvent messageCreateEvent, ServerBot serverBot, Player p) {

@@ -5,7 +5,6 @@ import io.github.alexiscomete.lapinousecond.save.CacheValue;
 import io.github.alexiscomete.lapinousecond.save.SaveManager;
 import io.github.alexiscomete.lapinousecond.save.Tables;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ServerBot {
