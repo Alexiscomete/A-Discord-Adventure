@@ -20,10 +20,23 @@ public class PlaceCommand extends CommandWithAccount {
                 if (args.length > 1) {
                     switch (args[1]) {
                         case "create_new_place":
-                            if (messageCreateEvent.getMessage().getContent().endsWith(String.valueOf(p.getId()))) {
-                                
+                            if (messageCreateEvent.getMessageAuthor().canManageRolesOnServer()) {
+                                if (messageCreateEvent.getMessage().getContent().endsWith(String.valueOf(p.getId() - 42))) {
+                                    switch (serverBot.getString("world")) {
+                                        case "NORMAL":
+                                            createNormalPlace(messageCreateEvent);
+                                            break;
+                                        case "DIBIMAP":
+                                            createWorldPlace(messageCreateEvent);
+                                            break;
+                                        default:
+                                            messageCreateEvent.getMessage().reply("Impossible de créer un lieu officiel pour ce monde");
+                                    }
+                                } else {
+                                    messageCreateEvent.getMessage().reply("**En créant un lieu**, vous garantissez que votre serveur est le **serveur officiel** de **ce lieu**. Si ce n' est pas le cas les modérateurs du bot pourront supprimer le lieu et infliger une pénalité pour le **serveur** sur le bot (ou même une **réinitialisation**). Il existe **d' autres façon** de créer un lieu **non officiel**. Tapez **" + (p.getId() - 42) + "** à la fin de la **même commande** pour valider");
+                                }
                             } else {
-
+                                messageCreateEvent.getMessage().reply("Vous devez avoir la permission de gérer les rôles pour utiliser cette commande");
                             }
                             break;
                         case "list":
@@ -31,9 +44,18 @@ public class PlaceCommand extends CommandWithAccount {
                             break;
                         default:
                             messageCreateEvent.getMessage().reply("Action inconnue");
+                            break;
                     }
                 }
             }
         }
+    }
+
+    public void createNormalPlace(MessageCreateEvent messageCreateEvent) {
+
+    }
+
+    public void createWorldPlace(MessageCreateEvent messageCreateEvent) {
+
     }
 }
