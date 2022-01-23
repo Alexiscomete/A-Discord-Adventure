@@ -187,7 +187,7 @@ public class SaveManager {
 
     public String getString(Table table, String row, String type, long id) {
         execute("ALTER TABLE " + table.getName() + " ADD COLUMN " + row + " " + type, false);
-        ResultSet resultSet = executeQuery("SELECT " + row + " WHERE id=" + id, false);
+        ResultSet resultSet = executeQuery("SELECT " + row + " FROM " + table.getName() + " WHERE id=" + id, true);
         try {
             return resultSet.getString(row);
         } catch (SQLException e) {
