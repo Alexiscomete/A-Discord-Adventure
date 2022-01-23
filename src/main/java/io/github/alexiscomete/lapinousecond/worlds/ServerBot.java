@@ -44,4 +44,13 @@ public class ServerBot {
         }
         sv.setValue(Tables.SERVERS.getTable(), id, row, value, "TEXT");
     }
+
+    public String testValueAndSet(int len, String message, String prog_name) {
+        if (message.length() < len) {
+            set(prog_name, message);
+            return "";
+        } else {
+            return "Impossible : trop de caractères : " + message.length() + ", nombre autorisé : " + len;
+        }
+    }
 }
