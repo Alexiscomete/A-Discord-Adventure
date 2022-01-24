@@ -136,13 +136,13 @@ public class ConfigServ extends CommandWithAccount {
                         if (args[1].equalsIgnoreCase("name") && args.length > 2) {
                             StringBuilder name = getStr(args);
                             server.set("namerp", name.toString());
-                            messageCreateEvent.getMessage().reply("Nom changé");
+                            messageCreateEvent.getMessage().reply("Nom modifié");
                         } else if (args[1].equalsIgnoreCase("desc") && args.length > 2) {
                             StringBuilder name = getStr(args);
                             server.set("descr", name.toString());
                             messageCreateEvent.getMessage().reply("Description modifiée");
                         } else if (args[1].equalsIgnoreCase("travel")) {
-                            if (server.getTravel().size() < 5) {
+                            /*if (server.getTravel().size() < 5) {
                                 ArrayList<Long> longs = saveManager.getTravels();
                                 for (Long l : longs) {
                                     if (l == server.getId()) {
@@ -154,8 +154,9 @@ public class ConfigServ extends CommandWithAccount {
                                 messageCreateEvent.getMessage().reply("fait ...");
                             } else {
                                 messageCreateEvent.getMessage().reply("Vous avez déjà atteint le nombre de serveurs autorisés");
-                            }
+                            }*/
                         } else if (args[1].equalsIgnoreCase("in") && args.length > 2) {
+                            setValue(messageCreateEvent, "welcome", "Message d' arrivé modifiée", 1500, server, args);
                             StringBuilder name = getStr(args);
                             server.set("welcome", name.toString());
                             messageCreateEvent.getMessage().reply("Message d' arrivé modifié");
@@ -179,5 +180,19 @@ public class ConfigServ extends CommandWithAccount {
             name.append(" ");
         }
         return name;
+    }
+
+    public void setValueAndRetry(MessageCreateEvent messageCreateEvent, String prog_name, String message, int len, ServerBot serverBot) {
+
+    }
+
+    public void setValue(MessageCreateEvent messageCreateEvent, String prog_name, String message, int len, ServerBot serverBot, String[] args) {
+        StringBuilder value = getStr(args);
+        String v = serverBot.testValueAndSet(len, value.toString(), prog_name);
+        if (Objects.equals(v, "")) {
+            messageCreateEvent.getMessage().reply(message);
+        } else {
+            messageCreateEvent.getMessage().reply(v);
+        }
     }
 }

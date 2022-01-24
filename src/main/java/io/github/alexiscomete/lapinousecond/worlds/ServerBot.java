@@ -5,32 +5,16 @@ import io.github.alexiscomete.lapinousecond.save.CacheValue;
 import io.github.alexiscomete.lapinousecond.save.SaveManager;
 import io.github.alexiscomete.lapinousecond.save.Tables;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ServerBot {
 
     private final long id;
-    private ArrayList<Long> travel = new ArrayList<>();
     private final SaveManager sv = Main.getSaveManager();
     private final HashMap<String, CacheValue> cache = new HashMap<>();
 
     public long getId() {
         return id;
-    }
-
-    public ArrayList<Long> getTravel() {
-        return travel;
-    }
-
-    public void setTravel(ArrayList<Long> travel) {
-        this.travel = travel;
-        StringBuilder answer = new StringBuilder();
-        for (long l : travel) {
-            answer.append(l);
-            answer.append(";");
-        }
-        sv.setValue(Tables.SERVERS.getTable(), id, "travel", answer.toString());
     }
 
     public ServerBot(long id) {
@@ -41,10 +25,15 @@ public class ServerBot {
         if (cache.containsKey(row)) {
             return cache.get(row).getString();
         } else {
-            String str = Main.getSaveManager().getString(Tables.SERVERS.getTable(), row, "TEXT", id);
+            String str = sv.getString(Tables.SERVERS.getTable(), row, "TEXT", id);
             cache.put(row, new CacheValue(str));
             return str;
         }
+    }
+
+    public String[] getArray(String row) {
+        String str = getString(row);
+        return str.split(";");
     }
 
     public void set(String row, String value) {
@@ -53,6 +42,15 @@ public class ServerBot {
         } else {
             cache.put(row, new CacheValue(value));
         }
-        Main.getSaveManager().setValue(Tables.SERVERS.getTable(), id, row, value, "TEXT");
+        sv.setValue(Tables.SERVERS.getTable(), id, row, value, "TEXT");
+    }
+
+    public String testValueAndSet(int len, String message, String prog_name) {
+        if (message.length() < len) {
+            set(prog_name, message);
+            return "";
+        } else {
+            return "Impossible : trop de caractères : " + message.length() + ", nombre autorisé : " + len;
+        }
     }
 }

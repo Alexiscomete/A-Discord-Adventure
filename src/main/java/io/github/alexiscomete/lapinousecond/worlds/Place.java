@@ -16,6 +16,9 @@ public class Place {
     private final long id;
     private final HashMap<String, CacheValue> cache = new HashMap<>();
 
+    public Place() {
+        this.id = SaveLocation.generateUniqueID();
+    }
 
     public Place(ServerBot serverBot, World world, Integer x, Integer y, long id) {
         this.serverBot = serverBot;
@@ -98,13 +101,14 @@ public class Place {
         }
     }
 
-    public void set(String row, String value) {
+    public Place set(String row, String value) {
         if (cache.containsKey(row)) {
             cache.get(row).set(value);
         } else {
             cache.put(row, new CacheValue(value));
         }
         Main.getSaveManager().setValue(Tables.PLACES.getTable(), id, row, value, "TEXT");
+        return this;
     }
 
     public long[] getConnections() {
