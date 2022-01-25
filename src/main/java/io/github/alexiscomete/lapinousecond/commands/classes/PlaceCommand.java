@@ -56,9 +56,12 @@ public class PlaceCommand extends CommandWithAccount {
 
     public void createNormalPlace(MessageCreateEvent messageCreateEvent, ServerBot serverBot, Player p) {
         if (serverBot.getArray("places").length == 1 && Objects.equals(serverBot.getArray("places")[0], "")) {
-            Place place = new Place();
+            Place place = new Place()
+                    .setAndGet("name", serverBot.getString("namerp"))
+                    .setAndGet("world", serverBot.getString("world"))
+                    .setAndGet("serv", String.valueOf(serverBot.getId()))
+                    .setAndGet("type", "server");
             messageCreateEvent.getMessage().reply("Votre lieu a pour id : " + place.getID());
-            
         } else {
             messageCreateEvent.getMessage().reply("Impossible : un serveur du monde normal ne peut avoir qu' un seul lieu");
         }

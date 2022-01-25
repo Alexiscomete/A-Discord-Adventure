@@ -1,31 +1,27 @@
 package io.github.alexiscomete.lapinousecond.worlds;
 
-import io.github.alexiscomete.lapinousecond.Main;
 import io.github.alexiscomete.lapinousecond.save.*;
 
-import java.util.HashMap;
 import java.util.Optional;
 
-public class Place {
+public class Place extends CacheGetSet {
     private Long serverID;
     private ServerBot serverBot;
     private World world;
     private Integer x;
     private Integer y;
     private long[] connections;
-    private final long id;
-    private final HashMap<String, CacheValue> cache = new HashMap<>();
 
     public Place() {
-        this.id = SaveLocation.generateUniqueID();
+        super(SaveLocation.generateUniqueID(), Tables.PLACES.getTable());
     }
 
     public Place(ServerBot serverBot, World world, Integer x, Integer y, long id) {
+        super(id, Tables.PLACES.getTable());
         this.serverBot = serverBot;
         this.world = world;
         this.x = x;
         this.y = y;
-        this.id = id;
         if (serverBot == null) {
             this.serverID = null;
         } else {
@@ -34,12 +30,12 @@ public class Place {
     }
 
     public Place(ServerBot serverBot, World world, Integer x, Integer y, long[] connections) {
+        super(SaveLocation.generateUniqueID(), Tables.PLACES.getTable());
         this.serverBot = serverBot;
         this.world = world;
         this.x = x;
         this.y = y;
         this.connections = connections;
-        this.id = SaveLocation.generateUniqueID();
         if (serverBot == null) {
             this.serverID = null;
         } else {
@@ -91,31 +87,16 @@ public class Place {
         return id;
     }
 
-    public String getString(String row) {
-        if (cache.containsKey(row)) {
-            return cache.get(row).getString();
-        } else {
-            String str = Main.getSaveManager().getString(Tables.PLACES.getTable(), row, "TEXT", id);
-            cache.put(row, new CacheValue(str));
-            return str;
-        }
-    }
-
-    public Place set(String row, String value) {
-        if (cache.containsKey(row)) {
-            cache.get(row).set(value);
-        } else {
-            cache.put(row, new CacheValue(value));
-        }
-        Main.getSaveManager().setValue(Tables.PLACES.getTable(), id, row, value, "TEXT");
-        return this;
-    }
-
     public long[] getConnections() {
         return connections;
     }
 
     public void setConnections(long[] connections) {
         this.connections = connections;
+    }
+
+    public Place setAndGet(String row, String value) {
+        super.set(row, value);
+        return this;
     }
 }
