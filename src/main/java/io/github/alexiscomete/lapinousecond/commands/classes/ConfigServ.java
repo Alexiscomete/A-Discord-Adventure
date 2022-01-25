@@ -64,80 +64,42 @@ public class ConfigServ extends CommandWithAccount {
                         TextChannel textChannel = messageCreateEvent.getChannel();
                         setValueAndRetry(textChannel, user, "name", "Maintenant la description :", 50, finalServer, () -> {
                             setValueAndRetry(textChannel, user, "descr", "Maintenant le message d' arrivé sur votre serveur : ", 500, finalServer, () -> {
-
-                            });
-                        });
-                        Consumer<MessageCreateEvent> cName = new Consumer<MessageCreateEvent>() {
-                            @Override
-                            public void accept(MessageCreateEvent messageCreateEvent) {
-                                if (messageCreateEvent.getMessageContent().length() < 50) {
-                                    finalServer.set("name", messageCreateEvent.getMessageContent());
-                                    messageCreateEvent.getMessage().reply("Maintenant la description :");
-                                    Consumer<MessageCreateEvent> cDesc = new Consumer<MessageCreateEvent>() {
+                                EmbedBuilder embedBuilder = new EmbedBuilder()
+                                        .setTitle("Les mondes")
+                                        .setDescription("Maintenant configurons le monde de votre serveur ...");
+                                for (WorldEnum worldEnum :
+                                        WorldEnum.values()) {
+                                    World w = worldEnum.getWorld();
+                                    embedBuilder.addField(w.getName(), "RP : " + w.getNameRP() + "\nNom à entrer : " + w.getProgName() + "\nDescription : " + w.getDesc());
+                                }
+                                messageCreateEvent.getMessage().reply(embedBuilder);
+                                setValueAndRetry(textChannel, user, "welcome", embedBuilder, 1500, finalServer, () -> {
+                                    Consumer<MessageCreateEvent> cW = new Consumer<MessageCreateEvent>() {
                                         @Override
                                         public void accept(MessageCreateEvent messageCreateEvent) {
-                                            if (messageCreateEvent.getMessageContent().length() < 500) {
-                                                finalServer.set("descr", messageCreateEvent.getMessageContent());
-                                                messageCreateEvent.getMessage().reply("Maintenant le message d' arrivé sur votre serveur :");
-                                                Consumer<MessageCreateEvent> cIn = new Consumer<MessageCreateEvent>() {
-                                                    @Override
-                                                    public void accept(MessageCreateEvent messageCreateEvent) {
-                                                        if (messageCreateEvent.getMessageContent().length() < 1500) {
-                                                            finalServer.set("welcome", messageCreateEvent.getMessageContent());
-                                                            EmbedBuilder embedBuilder = new EmbedBuilder()
-                                                                    .setTitle("Les mondes")
-                                                                    .setDescription("Maintenant configurons le monde de votre serveur ...");
-                                                            for (WorldEnum worldEnum :
-                                                                    WorldEnum.values()) {
-                                                                World w = worldEnum.getWorld();
-                                                                embedBuilder.addField(w.getName(), "RP : " + w.getNameRP() + "\nNom à entrer : " + w.getProgName() + "\nDescription : " + w.getDesc());
-                                                            }
-                                                            messageCreateEvent.getMessage().reply(embedBuilder);
-
-                                                            Consumer<MessageCreateEvent> cW = new Consumer<MessageCreateEvent>() {
-                                                                @Override
-                                                                public void accept(MessageCreateEvent messageCreateEvent) {
-                                                                    try {
-                                                                        World world = WorldEnum.valueOf(messageCreateEvent.getMessageContent()).getWorld();
-                                                                        finalServer.set("world", world.getProgName());
-                                                                        messageCreateEvent.getMessage().reply("Configuration terminée !! Enfin ! (et moi j' ai fini de coder ça, maintenant c'est les lieux 😑) Vous pouvez modifier tout cela à n' importe quel moment avec config [what] [value] et voir la configuration avec -config info.");
-                                                                    } catch (IllegalArgumentException e) {
-                                                                        messageCreateEvent.getMessage().reply("Ceci n' est pas un monde valide");
-                                                                        EmbedBuilder embedBuilder = new EmbedBuilder()
-                                                                                .setTitle("Les mondes")
-                                                                                .setDescription("SVP lisez");
-                                                                        for (WorldEnum worldEnum :
-                                                                                WorldEnum.values()) {
-                                                                            World w = worldEnum.getWorld();
-                                                                            embedBuilder.addField(w.getName(), "RP : " + w.getNameRP() + "\nNom à entrer : " + w.getProgName() + "\nDescription : " + w.getDesc());
-                                                                        }
-                                                                        messageCreateEvent.getMessage().reply(embedBuilder);
-                                                                        Main.getMessagesManager().addListener(messageCreateEvent.getChannel(), user, this);
-                                                                    }
-                                                                }
-                                                            };
-                                                            Main.getMessagesManager().addListener(messageCreateEvent.getChannel(), messageCreateEvent.getMessageAuthor().asUser().get(), cW);
-                                                        } else {
-                                                            messageCreateEvent.getMessage().reply("Le message d' arrivé doit être de - de 1500 caractères, réessayez, votre taille :" + messageCreateEvent.getMessageContent().length());
-                                                            Main.getMessagesManager().addListener(messageCreateEvent.getChannel(), user, this);
-                                                        }
-                                                    }
-                                                };
-                                                Main.getMessagesManager().addListener(messageCreateEvent.getChannel(), messageCreateEvent.getMessageAuthor().asUser().get(), cIn);
-                                            } else {
-                                                messageCreateEvent.getMessage().reply("La description doit être de - de 500 caractères, réessayez, votre taille :" + messageCreateEvent.getMessageContent().length());
+                                            try {
+                                                World world = WorldEnum.valueOf(messageCreateEvent.getMessageContent()).getWorld();
+                                                finalServer.set("world", world.getProgName());
+                                                messageCreateEvent.getMessage().reply("Configuration terminée !! Enfin ! (et moi j' ai fini de coder ça, maintenant c'est les lieux 😑) Vous pouvez modifier tout cela à n' importe quel moment avec config [what] [value] et voir la configuration avec -config info.");
+                                            } catch (IllegalArgumentException e) {
+                                                messageCreateEvent.getMessage().reply("Ceci n' est pas un monde valide");
+                                                EmbedBuilder embedBuilder = new EmbedBuilder()
+                                                        .setTitle("Les mondes")
+                                                        .setDescription("SVP lisez");
+                                                for (WorldEnum worldEnum :
+                                                        WorldEnum.values()) {
+                                                    World w = worldEnum.getWorld();
+                                                    embedBuilder.addField(w.getName(), "RP : " + w.getNameRP() + "\nNom à entrer : " + w.getProgName() + "\nDescription : " + w.getDesc());
+                                                }
+                                                messageCreateEvent.getMessage().reply(embedBuilder);
                                                 Main.getMessagesManager().addListener(messageCreateEvent.getChannel(), user, this);
                                             }
                                         }
                                     };
-                                    Main.getMessagesManager().addListener(messageCreateEvent.getChannel(), messageCreateEvent.getMessageAuthor().asUser().get(), cDesc);
-                                } else {
-                                    messageCreateEvent.getMessage().reply("Le nom doit être de - de 50 caractères, réessayez, votre taille :" + messageCreateEvent.getMessageContent().length());
-                                    Main.getMessagesManager().addListener(messageCreateEvent.getChannel(), user, this);
-                                }
-                            }
-                        };
-                        Main.getMessagesManager().addListener(messageCreateEvent.getChannel(), messageCreateEvent.getMessageAuthor().asUser().get(), cName);
+                                    Main.getMessagesManager().addListener(textChannel, user, cW);
+                                });
+                            });
+                        });
                     } else {
                         messageCreateEvent.getMessage().reply("En continuant (tapez oui à la fin de la commande), vous vous engagez à fournir aux joueurs un serveur respectueux dans lequel ils peuvent s'intégrer ou continuer leur aventure de de bonnes conditions. Vous acceptez aussi que le bot puisse inviter des personne sur votre serveur");
                     }
@@ -152,6 +114,7 @@ public class ConfigServ extends CommandWithAccount {
                             server.set("descr", name.toString());
                             messageCreateEvent.getMessage().reply("Description modifiée");
                         } else if (args[1].equalsIgnoreCase("travel")) {
+                            messageCreateEvent.getMessage().reply("impossible pour le moment");
                             /*if (server.getTravel().size() < 5) {
                                 ArrayList<Long> longs = saveManager.getTravels();
                                 for (Long l : longs) {
@@ -193,6 +156,22 @@ public class ConfigServ extends CommandWithAccount {
     }
 
     public void setValueAndRetry(TextChannel textChannel, User user, String prog_name, String message, int len, ServerBot serverBot, Runnable ex) {
+        Main.getMessagesManager().addListener(textChannel, user, new Consumer<MessageCreateEvent>() {
+            @Override
+            public void accept(MessageCreateEvent msgE) {
+                if (msgE.getMessageContent().length() <= len) {
+                    serverBot.set(prog_name, msgE.getMessageContent());
+                    msgE.getMessage().reply(message);
+                    ex.run();
+                } else {
+                    textChannel.sendMessage("Taille maximale : " + len + ". Votre taille : " + msgE.getMessageContent().length());
+                    Main.getMessagesManager().addListener(textChannel, user, this);
+                }
+            }
+        });
+    }
+
+    public void setValueAndRetry(TextChannel textChannel, User user, String prog_name, EmbedBuilder message, int len, ServerBot serverBot, Runnable ex) {
         Main.getMessagesManager().addListener(textChannel, user, new Consumer<MessageCreateEvent>() {
             @Override
             public void accept(MessageCreateEvent msgE) {
