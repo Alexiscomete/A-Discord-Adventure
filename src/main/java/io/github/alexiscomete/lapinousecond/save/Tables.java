@@ -35,7 +35,6 @@ public enum Tables {
             new TableRow("serv", "INTEGER"),
             new TableRow("x", "INTEGER"),
             new TableRow("y", "INTEGER"),
-            new TableRow("train", "TEXT"),
             new TableRow("traout", "TEXT"),
             new TableRow("connections", "TEXT"),
             new TableRow("type", "TEXT") // océan, ville, serveur ...

@@ -1,7 +1,9 @@
 package io.github.alexiscomete.lapinousecond.worlds;
 
 import io.github.alexiscomete.lapinousecond.save.*;
+import org.javacord.api.entity.message.embed.EmbedBuilder;
 
+import java.awt.*;
 import java.util.Optional;
 
 public class Place extends CacheGetSet {
@@ -98,5 +100,15 @@ public class Place extends CacheGetSet {
     public Place setAndGet(String row, String value) {
         super.set(row, value);
         return this;
+    }
+
+    public EmbedBuilder getPlaceEmbed() {
+        return new EmbedBuilder()
+                .setAuthor(String.valueOf(id))
+                .setTitle(getString("name"))
+                .setColor(Color.green)
+                .setDescription(getString("descr"))
+                .addField("World", getString("world"), true)
+                .addField("Type", getString("type"), true);
     }
 }

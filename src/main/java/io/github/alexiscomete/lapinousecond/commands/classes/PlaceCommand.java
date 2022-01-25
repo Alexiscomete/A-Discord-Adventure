@@ -4,6 +4,7 @@ import io.github.alexiscomete.lapinousecond.Player;
 import io.github.alexiscomete.lapinousecond.commands.CommandWithAccount;
 import io.github.alexiscomete.lapinousecond.worlds.Place;
 import io.github.alexiscomete.lapinousecond.worlds.ServerBot;
+import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.event.message.MessageCreateEvent;
 
 import java.util.Objects;
@@ -60,8 +61,10 @@ public class PlaceCommand extends CommandWithAccount {
                     .setAndGet("name", serverBot.getString("namerp"))
                     .setAndGet("world", serverBot.getString("world"))
                     .setAndGet("serv", String.valueOf(serverBot.getId()))
-                    .setAndGet("type", "server");
-            messageCreateEvent.getMessage().reply("Votre lieu a pour id : " + place.getID());
+                    .setAndGet("type", "server")
+                    .setAndGet("train", serverBot.getString("welcome"))
+                    .setAndGet("descr", serverBot.getString("descr"));
+            messageCreateEvent.getMessage().reply(place.getPlaceEmbed());
         } else {
             messageCreateEvent.getMessage().reply("Impossible : un serveur du monde normal ne peut avoir qu' un seul lieu");
         }
