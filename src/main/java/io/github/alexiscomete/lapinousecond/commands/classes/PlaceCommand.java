@@ -8,6 +8,8 @@ import io.github.alexiscomete.lapinousecond.worlds.ServerBot;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.event.message.MessageCreateEvent;
 
+import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class PlaceCommand extends CommandWithAccount {
@@ -46,6 +48,8 @@ public class PlaceCommand extends CommandWithAccount {
                             }
                             break;
                         case "list":
+                            ResultSet resultSet = saveManager.executeQuery("SELECT id FROM places WHERE world = '"+ serverBot.getString("world") +"'", true);
+
                             messageCreateEvent.getMessage().reply("Impossible pour le moment");
                             break;
                         default:
@@ -67,6 +71,7 @@ public class PlaceCommand extends CommandWithAccount {
                     .setAndGet("train", serverBot.getString("welcome"))
                     .setAndGet("descr", serverBot.getString("descr"));
             messageCreateEvent.getMessage().reply(place.getPlaceEmbed());
+            messageCreateEvent.getMessage().reply("Message de départ du lieu :");
             Main.getMessagesManager().setValueAndRetry(messageCreateEvent.getChannel(), p.getId(), "traout", "Message de sortie mit à jour, configuration terminée. Comment voyager vers d' autres lieux dans ce monde ? Dans ce monde les joueurs dans un serveur peuvent payer pour créer une connection (nom RP à trouver) entre 2 lieux", 1500, serverBot, () -> {});
         } else {
             messageCreateEvent.getMessage().reply("Impossible : un serveur du monde normal ne peut avoir qu' un seul lieu");
@@ -75,5 +80,9 @@ public class PlaceCommand extends CommandWithAccount {
 
     public void createWorldPlace(MessageCreateEvent messageCreateEvent, ServerBot serverBot, Player p) {
 
+    }
+
+    public ArrayList<Place> getPlacesWithWorld(String world) {
+        return null;
     }
 }
