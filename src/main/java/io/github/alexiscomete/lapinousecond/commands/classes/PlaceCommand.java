@@ -1,9 +1,11 @@
 package io.github.alexiscomete.lapinousecond.commands.classes;
 
+import io.github.alexiscomete.lapinousecond.Main;
 import io.github.alexiscomete.lapinousecond.Player;
 import io.github.alexiscomete.lapinousecond.commands.CommandWithAccount;
 import io.github.alexiscomete.lapinousecond.worlds.Place;
 import io.github.alexiscomete.lapinousecond.worlds.ServerBot;
+import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.event.message.MessageCreateEvent;
 
 import java.util.Objects;
@@ -37,6 +39,7 @@ public class PlaceCommand extends CommandWithAccount {
                                     }
                                 } else {
                                     messageCreateEvent.getMessage().reply("**En créant un lieu**, vous garantissez que votre serveur est le **serveur officiel** de **ce lieu**. Si ce n' est pas le cas les modérateurs du bot pourront supprimer le lieu et infliger une pénalité pour le **serveur** sur le bot (ou même une **réinitialisation**). Il existe **d' autres façon** de créer un lieu **non officiel**. Tapez **" + (p.getId() - 42) + "** à la fin de la **même commande** pour valider");
+                                    messageCreateEvent.getMessage().delete();
                                 }
                             } else {
                                 messageCreateEvent.getMessage().reply("Vous devez avoir la permission de gérer les rôles pour utiliser cette commande");
@@ -56,9 +59,15 @@ public class PlaceCommand extends CommandWithAccount {
 
     public void createNormalPlace(MessageCreateEvent messageCreateEvent, ServerBot serverBot, Player p) {
         if (serverBot.getArray("places").length == 1 && Objects.equals(serverBot.getArray("places")[0], "")) {
-            Place place = new Place();
-            messageCreateEvent.getMessage().reply("Votre lieu a pour id : " + place.getID());
-            
+            Place place = new Place()
+                    .setAndGet("name", serverBot.getString("namerp"))
+                    .setAndGet("world", serverBot.getString("world"))
+                    .setAndGet("serv", String.valueOf(serverBot.getId()))
+                    .setAndGet("type", "server")
+                    .setAndGet("train", serverBot.getString("welcome"))
+                    .setAndGet("descr", serverBot.getString("descr"));
+            messageCreateEvent.getMessage().reply(place.getPlaceEmbed());
+            Main.getMessagesManager().setValueAndRetry(messageCreateEvent.getChannel(), p.getId(), "traout", "Message de sortie mit à jour, configuration terminée. Comment voyager vers d' autres lieux dans ce monde ? Dans ce monde les joueurs dans un serveur peuvent payer pour créer une connection (nom RP à trouver) entre 2 lieux", 1500, serverBot, () -> {});
         } else {
             messageCreateEvent.getMessage().reply("Impossible : un serveur du monde normal ne peut avoir qu' un seul lieu");
         }

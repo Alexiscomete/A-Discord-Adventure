@@ -25,7 +25,7 @@ public class Travel extends CommandInServer {
 
     @Override
     public void executeC(MessageCreateEvent messageCreateEvent, String content, String[] args, Player p) {
-        ServerBot currentServer = saveManager.getServer(p.getServer());
+        /*ServerBot currentServer = saveManager.getServer(p.getServer());
         if (currentServer == null) {
             messageCreateEvent.getMessage().reply("Impossible de voyager, votre serveur actuel est introuvable dans la base de données ! Tapez -hub pour vous débloquer. Si vous êtes l'admin il faudrait utiliser -config");
             return;
@@ -86,6 +86,6 @@ public class Travel extends CommandInServer {
             } else {
                 messageCreateEvent.getMessage().reply("Désolé, l'id du serveur est incorrect, mais il est dans notre base de données, il est possible que le serveur ai été supprimé ou que le bot ai été retiré");
             }
-        }
+        }*/
     }
 }
