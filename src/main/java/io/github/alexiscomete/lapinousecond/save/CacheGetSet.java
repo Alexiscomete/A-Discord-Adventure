@@ -32,4 +32,12 @@ public class CacheGetSet {
         }
         Main.getSaveManager().setValue(table, id, row, value, "TEXT");
     }
+
+    public String[] getArray(String row) {
+        String str = getString(row);
+        if (str == null) {
+            str = "";
+        }
+        return str.split(";");
+    }
 }
