@@ -2,14 +2,18 @@ package io.github.alexiscomete.lapinousecond.commands.classes;
 
 import io.github.alexiscomete.lapinousecond.Main;
 import io.github.alexiscomete.lapinousecond.Player;
+import io.github.alexiscomete.lapinousecond.UserPerms;
 import io.github.alexiscomete.lapinousecond.commands.CommandWithAccount;
 import io.github.alexiscomete.lapinousecond.worlds.ServerBot;
 import io.github.alexiscomete.lapinousecond.worlds.World;
 import io.github.alexiscomete.lapinousecond.worlds.WorldEnum;
+import org.javacord.api.entity.channel.TextChannel;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.entity.user.User;
 import org.javacord.api.event.message.MessageCreateEvent;
+import org.w3c.dom.Text;
 
+import java.lang.reflect.Executable;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -57,6 +61,12 @@ public class ConfigServ extends CommandWithAccount {
                         messageCreateEvent.getMessage().reply("Commençons par configurer le nom (entrez un nom) :");
                         ServerBot finalServer = server;
                         User user = messageCreateEvent.getMessageAuthor().asUser().get();
+                        TextChannel textChannel = messageCreateEvent.getChannel();
+                        setValueAndRetry(textChannel, user, "name", "Maintenant la description :", 50, finalServer, () -> {
+                            setValueAndRetry(textChannel, user, "descr", "Maintenant le message d' arrivé sur votre serveur : ", 500, finalServer, () -> {
+
+                            });
+                        });
                         Consumer<MessageCreateEvent> cName = new Consumer<MessageCreateEvent>() {
                             @Override
                             public void accept(MessageCreateEvent messageCreateEvent) {
@@ -182,8 +192,20 @@ public class ConfigServ extends CommandWithAccount {
         return name;
     }
 
-    public void setValueAndRetry(MessageCreateEvent messageCreateEvent, String prog_name, String message, int len, ServerBot serverBot) {
-
+    public void setValueAndRetry(TextChannel textChannel, User user, String prog_name, String message, int len, ServerBot serverBot, Runnable ex) {
+        Main.getMessagesManager().addListener(textChannel, user, new Consumer<MessageCreateEvent>() {
+            @Override
+            public void accept(MessageCreateEvent msgE) {
+                if (msgE.getMessageContent().length() <= len) {
+                    serverBot.set(prog_name, msgE.getMessageContent());
+                    msgE.getMessage().reply(message);
+                    ex.run();
+                } else {
+                    textChannel.sendMessage("Taille maximale : " + len + ". Votre taille : " + msgE.getMessageContent().length());
+                    Main.getMessagesManager().addListener(textChannel, user, this);
+                }
+            }
+        });
     }
 
     public void setValue(MessageCreateEvent messageCreateEvent, String prog_name, String message, int len, ServerBot serverBot, String[] args) {
