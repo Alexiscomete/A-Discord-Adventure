@@ -5,14 +5,21 @@ import io.github.alexiscomete.lapinousecond.Player;
 import io.github.alexiscomete.lapinousecond.commands.CommandWithAccount;
 import io.github.alexiscomete.lapinousecond.worlds.Place;
 import io.github.alexiscomete.lapinousecond.worlds.ServerBot;
+import org.javacord.api.entity.message.MessageBuilder;
+import org.javacord.api.entity.message.component.ActionRow;
+import org.javacord.api.entity.message.component.Button;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
+import org.javacord.api.event.interaction.MessageComponentCreateEvent;
 import org.javacord.api.event.message.MessageCreateEvent;
 
 import java.awt.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Objects;
+import java.util.concurrent.ExecutionException;
+import java.util.function.Consumer;
 
 public class PlaceCommand extends CommandWithAccount {
     public PlaceCommand() {
@@ -50,8 +57,18 @@ public class PlaceCommand extends CommandWithAccount {
                             }
                             break;
                         case "list":
-                            ResultSet resultSet = saveManager.executeQuery("SELECT id FROM places WHERE world = '"+ serverBot.getString("world") +"'", true);
-
+                            ArrayList<Place> places = getPlacesWithWorld(serverBot.getString("world"));
+                            MessageBuilder messageBuilder = new MessageBuilder();
+                            EmbedBuilder builder = new EmbedBuilder();
+                            setPlaceEmbed(builder, 0, Math.min(places.size(), 11), places);
+                            EventAnswer eventAnswer = new EventAnswer(builder, serverBot.getString("world"));
+                            messageBuilder.addComponents(eventAnswer.getComponents());
+                            messageBuilder.setEmbed(builder);
+                            try {
+                                eventAnswer.register(messageBuilder.send(messageCreateEvent.getChannel()).get().getId());
+                            } catch (InterruptedException | ExecutionException e) {
+                                e.printStackTrace();
+                            }
                             messageCreateEvent.getMessage().reply("Impossible pour le moment");
                             break;
                         default:
@@ -74,7 +91,8 @@ public class PlaceCommand extends CommandWithAccount {
                     .setAndGet("descr", serverBot.getString("descr"));
             messageCreateEvent.getMessage().reply(place.getPlaceEmbed());
             messageCreateEvent.getMessage().reply("Message de départ du lieu :");
-            Main.getMessagesManager().setValueAndRetry(messageCreateEvent.getChannel(), p.getId(), "traout", "Message de sortie mit à jour, configuration terminée. Comment voyager vers d' autres lieux dans ce monde ? Dans ce monde les joueurs dans un serveur peuvent payer pour créer une connection (nom RP à trouver) entre 2 lieux", 1500, serverBot, () -> {});
+            Main.getMessagesManager().setValueAndRetry(messageCreateEvent.getChannel(), p.getId(), "traout", "Message de sortie mit à jour, configuration terminée. Comment voyager vers d' autres lieux dans ce monde ? Dans ce monde les joueurs dans un serveur peuvent payer pour créer une connection (nom RP à trouver) entre 2 lieux", 1500, serverBot, () -> {
+            });
         } else {
             messageCreateEvent.getMessage().reply("Impossible : un serveur du monde normal ne peut avoir qu' un seul lieu");
         }
@@ -85,7 +103,7 @@ public class PlaceCommand extends CommandWithAccount {
     }
 
     public ArrayList<Place> getPlacesWithWorld(String world) {
-        ResultSet resultSet = saveManager.executeQuery("SELECT id FROM places WHERE world = '"+ world +"'", true);
+        ResultSet resultSet = saveManager.executeQuery("SELECT id FROM places WHERE world = '" + world + "'", true);
         ArrayList<Place> places = new ArrayList<>();
         try {
             long id = resultSet.getLong("id");
@@ -99,16 +117,69 @@ public class PlaceCommand extends CommandWithAccount {
         return places;
     }
 
-    public EmbedBuilder getPlaceEmbed(int min, int max, ArrayList<Place> places) {
-        EmbedBuilder embedBuilder = new EmbedBuilder()
-                .setTitle("Liste des lieux de " + min + " à " + max)
+    public void setPlaceEmbed(EmbedBuilder embedBuilder, int min, int max, ArrayList<Place> places) {
+        embedBuilder.setTitle("Liste des lieux de " + min + " à " + max)
                 .setColor(Color.ORANGE);
 
         for (int i = min; i < max; i++) {
             Place place = places.get(i);
             embedBuilder.addField(place.getString("name"), place.getID() + " -> " + place.getString("descr"));
         }
+    }
 
-        return embedBuilder;
+    public class EventAnswer {
+
+        private int level = 0;
+        private final EmbedBuilder builder;
+        private final ArrayList<Place> places;
+
+        public void next(MessageComponentCreateEvent messageComponentCreateEvent) {
+            if (level + 10 < places.size()) {
+                level += 10;
+                builder.removeAllFields();
+                setPlaceEmbed(builder, level, Math.min(places.size(), level + 11), places);
+                messageComponentCreateEvent.getMessageComponentInteraction().createOriginalMessageUpdater().removeAllEmbeds().addEmbed(builder).addComponents(getComponents()).update();
+            }
+        }
+
+        public void last(MessageComponentCreateEvent messageComponentCreateEvent) {
+            if (level > 9) {
+                level -= 10;
+                builder.removeAllFields();
+                setPlaceEmbed(builder, level, Math.min(places.size(), level + 11), places);
+                messageComponentCreateEvent.getMessageComponentInteraction().createOriginalMessageUpdater().removeAllEmbeds().addEmbed(builder).addComponents(getComponents()).update();
+            }
+        }
+
+        public ActionRow getComponents() {
+            if (level > 0 && level + 10 < places.size()) {
+                return ActionRow.of(
+                        org.javacord.api.entity.message.component.Button.success("last_page", "Page précédente"),
+                        org.javacord.api.entity.message.component.Button.success("next_page", "Page suivante")
+                );
+            } else if (level > 0) {
+                return ActionRow.of(
+                        org.javacord.api.entity.message.component.Button.success("last_page", "Page précédente")
+                );
+            } else if (level + 10 < places.size()) {
+                return ActionRow.of(
+                        Button.success("next_page", "Page suivante")
+                );
+            } else {
+                return ActionRow.of();
+            }
+        }
+
+        public void register(long id) {
+            HashMap<String, Consumer<MessageComponentCreateEvent>> hashMap = new HashMap<>();
+            hashMap.put("next_page", this::next);
+            hashMap.put("last_page", this::last);
+            Main.getButtonsManager().addMessage(id, hashMap);
+        }
+
+        public EventAnswer(EmbedBuilder embedBuilder, String world) {
+            builder = embedBuilder;
+            this.places = getPlacesWithWorld(world);
+        }
     }
 }
