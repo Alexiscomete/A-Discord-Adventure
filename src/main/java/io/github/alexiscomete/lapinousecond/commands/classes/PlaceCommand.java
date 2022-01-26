@@ -61,7 +61,7 @@ public class PlaceCommand extends CommandWithAccount {
                             MessageBuilder messageBuilder = new MessageBuilder();
                             EmbedBuilder builder = new EmbedBuilder();
                             setPlaceEmbed(builder, 0, Math.min(places.size(), 11), places);
-                            EventAnswer eventAnswer = new EventAnswer(builder, serverBot.getString("world"));
+                            EventAnswer eventAnswer = new EventAnswer(builder, places);
                             messageBuilder.addComponents(eventAnswer.getComponents());
                             messageBuilder.setEmbed(builder);
                             try {
@@ -69,8 +69,24 @@ public class PlaceCommand extends CommandWithAccount {
                             } catch (InterruptedException | ExecutionException e) {
                                 e.printStackTrace();
                             }
-                            messageCreateEvent.getMessage().reply("Impossible pour le moment");
                             break;
+                        case "links":
+                            messageCreateEvent.getMessage().reply("Tout les lieux qui ont un lien de voyage avec le lieu de votre serveur");
+                            Place place = new Place(serverBot.getId());
+                            ArrayList<Place> places1 = toPlaces(place.getString("connections"));
+                            MessageBuilder messageBuilder1 = new MessageBuilder();
+                            EmbedBuilder builder1 = new EmbedBuilder();
+                            setPlaceEmbed(builder1, 0, Math.min(places1.size(), 11), places1);
+                            EventAnswer eventAnswer1 = new EventAnswer(builder1, places1);
+                            messageBuilder1.addComponents(eventAnswer1.getComponents());
+                            messageBuilder1.setEmbed(builder1);
+                            try {
+                                eventAnswer1.register(messageBuilder1.send(messageCreateEvent.getChannel()).get().getId());
+                            } catch (InterruptedException | ExecutionException e) {
+                                e.printStackTrace();
+                            }
+                        case "add_link":
+                            messageCreateEvent.getMessage().reply("presque");
                         default:
                             messageCreateEvent.getMessage().reply("Action inconnue");
                             break;
@@ -115,6 +131,16 @@ public class PlaceCommand extends CommandWithAccount {
             e.printStackTrace();
         }
         return places;
+    }
+    
+    public ArrayList<Place> toPlaces(String places) {
+        String[] str = places.split(";");
+        ArrayList<Place> places1 = new ArrayList<>();
+        for (String s :
+                str) {
+            places1.add(new Place(Long.parseLong(s)));
+        }
+        return places1;
     }
 
     public void setPlaceEmbed(EmbedBuilder embedBuilder, int min, int max, ArrayList<Place> places) {
@@ -177,9 +203,9 @@ public class PlaceCommand extends CommandWithAccount {
             Main.getButtonsManager().addMessage(id, hashMap);
         }
 
-        public EventAnswer(EmbedBuilder embedBuilder, String world) {
+        public EventAnswer(EmbedBuilder embedBuilder, ArrayList<Place> places) {
             builder = embedBuilder;
-            this.places = getPlacesWithWorld(world);
+            this.places = places;
         }
     }
 }
