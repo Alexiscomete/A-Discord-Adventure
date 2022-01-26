@@ -86,11 +86,28 @@ public class PlaceCommand extends CommandWithAccount {
                                 e.printStackTrace();
                             }
                         case "add_link":
+                            if (args.length > 2) {
+                                try {
+                                    Place place1 = new Place(serverBot.getId());
+                                    Place place2 = new Place(Long.parseLong(args[2]));
+                                    if (Objects.equals(place1.getString("world"), place2.getString("world"))) {
+                                        
+                                    } else {
+                                        messageCreateEvent.getMessage().reply("Ce lieu n'est pas dans le même monde, donc pas de route entre les 2");
+                                    }
+                                } catch (NumberFormatException e) {
+                                    messageCreateEvent.getMessage().reply("Ceci n'est pas un nombre valide (arg 2)");
+                                }
+                            } else {
+                                messageCreateEvent.getMessage().reply("Action impossible : précisez l'id du lieu pour créer un lien");
+                            }
                             messageCreateEvent.getMessage().reply("presque");
                         default:
                             messageCreateEvent.getMessage().reply("Action inconnue");
                             break;
                     }
+                } else {
+                    messageCreateEvent.getMessage().reply("Actions possibles : create_new_place, links, add_link, list");
                 }
             }
         }
