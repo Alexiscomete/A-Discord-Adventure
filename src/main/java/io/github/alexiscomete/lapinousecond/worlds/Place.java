@@ -18,6 +18,10 @@ public class Place extends CacheGetSet {
         super(SaveLocation.generateUniqueID(), Tables.PLACES.getTable());
     }
 
+    public Place(long id) {
+        super(id, Tables.PLACES.getTable());
+    }
+
     public Place(ServerBot serverBot, World world, Integer x, Integer y, long id) {
         super(id, Tables.PLACES.getTable());
         this.serverBot = serverBot;

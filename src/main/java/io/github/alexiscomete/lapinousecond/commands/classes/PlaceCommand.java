@@ -8,7 +8,9 @@ import io.github.alexiscomete.lapinousecond.worlds.ServerBot;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.event.message.MessageCreateEvent;
 
+import java.awt.*;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -83,6 +85,30 @@ public class PlaceCommand extends CommandWithAccount {
     }
 
     public ArrayList<Place> getPlacesWithWorld(String world) {
-        return null;
+        ResultSet resultSet = saveManager.executeQuery("SELECT id FROM places WHERE world = '"+ world +"'", true);
+        ArrayList<Place> places = new ArrayList<>();
+        try {
+            long id = resultSet.getLong("id");
+            places.add(new Place(id));
+            while (resultSet.next()) {
+                places.add(new Place(resultSet.getLong("id")));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return places;
+    }
+
+    public EmbedBuilder getPlaceEmbed(int min, int max, ArrayList<Place> places) {
+        EmbedBuilder embedBuilder = new EmbedBuilder()
+                .setTitle("Liste des lieux de " + min + " à " + max)
+                .setColor(Color.ORANGE);
+
+        for (int i = min; i < max; i++) {
+            Place place = places.get(i);
+            embedBuilder.addField(place.getString("name"), place.getID() + " -> " + place.getString("descr"));
+        }
+
+        return embedBuilder;
     }
 }
