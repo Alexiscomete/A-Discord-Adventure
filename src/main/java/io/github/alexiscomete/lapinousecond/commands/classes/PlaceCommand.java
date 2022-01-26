@@ -91,7 +91,11 @@ public class PlaceCommand extends CommandWithAccount {
                                     Place place1 = new Place(serverBot.getId());
                                     Place place2 = new Place(Long.parseLong(args[2]));
                                     if (Objects.equals(place1.getString("world"), place2.getString("world"))) {
-                                        
+                                        if (place1.getString("world").equals("NORMAL")) {
+                                            
+                                        } else {
+                                            messageCreateEvent.getMessage().reply("Impossible pour ce monde pour le moment");
+                                        }
                                     } else {
                                         messageCreateEvent.getMessage().reply("Ce lieu n'est pas dans le même monde, donc pas de route entre les 2");
                                     }
