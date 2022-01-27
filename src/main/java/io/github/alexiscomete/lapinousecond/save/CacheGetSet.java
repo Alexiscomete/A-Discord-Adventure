@@ -54,4 +54,8 @@ public class CacheGetSet {
     public int hashCode() {
         return Objects.hash(id);
     }
+
+    public long getId() {
+        return id;
+    }
 }
