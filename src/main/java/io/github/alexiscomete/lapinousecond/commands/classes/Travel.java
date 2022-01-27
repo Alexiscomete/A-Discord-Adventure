@@ -15,78 +15,98 @@ import org.javacord.api.event.message.MessageCreateEvent;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
 public class Travel extends CommandInServer {
 
     public Travel() {
-        super("Vous permet de voyager vers un serveur", "travel", "travel / travel list / travel [server id]");
+        super("Vous permet de voyager vers un serveur", "travel", "travel [server id]");
     }
 
     @Override
     public void executeC(MessageCreateEvent messageCreateEvent, String content, String[] args, Player p) {
-        ServerBot currentServer = saveManager.getServer(p.getServer());
-        if (currentServer == null) {
-            messageCreateEvent.getMessage().reply("Impossible de voyager, votre serveur actuel est introuvable dans la base de données ! Tapez -hub pour vous débloquer. Si vous êtes l'admin il faudrait utiliser -config");
+
+        if (args.length <= 2 || args[2].equals("list")) {
+            messageCreateEvent.getMessage().reply("Utilisez place links pour voir les possibilités de voyage, si aucune ne vous convient tentez le create_link pour le monde NORMAL");
             return;
         }
-        if (args.length <= 2 || args[2].equals("list")) {
-            EmbedBuilder builder = new EmbedBuilder();
-            builder.setDescription("Serveur actuel : " + p.getServer() + "; " + currentServer.getString("namerp") + ". Pour voyager vers un serveur, indiquez sont id, le prix  est indiqué à côté. Si le serveur n'est pas dasn la liste, alors le prix est égual à la distance au carré.").setTitle("Voyages disponibles").setColor(Color.green);
-            for (long tra : currentServer.getTravel()) {
-                ServerBot serv = saveManager.getServer(tra);
-                if (serv != null) {
-                    builder.addField(serv.getString("namerp") + " ; " + serv.getId(), serv.getString("descr"));
-                }
-            }
-            messageCreateEvent.getMessage().reply(builder);
-        } else {
-            ServerBot nextServer = saveManager.getServer(Long.parseLong(args[1]));
-            if (nextServer == null) {
-                messageCreateEvent.getMessage().reply("Ce serveur n'est pas dans la base de données");
-                return;
-            }
-            Optional<Server> serverOp = Main.api.getServerById(args[1]);
-            if (serverOp.isPresent()) {
-                Server server = serverOp.get();
-                double price = -1;
-                ArrayList<Long> travels = currentServer.getTravel();
-                for (long travel : travels) {
-                    if (travel == nextServer.getId()) {
 
-                    }
-                }
+        String world = p.getString("current_world");
+        String placeID = p.getString("place_" + world);
+        if (Objects.equals(placeID, "")) {
+            placeID = new ServerBot(854288660147994634L).getString("places");
+        }
 
-                if (args.length > 3) {
-                    List<ServerChannel> channels = server.getChannels();
-                    if (channels.size() == 0) {
-                        messageCreateEvent.getMessage().reply("Bon je pense que ce serveur ne vaux pas la peine : il n'y aucun salon !! Je ne peux même pas vous inviter.");
-                        server.getOwner().get().sendMessage("Bon ... si il n'y a même pas de salon dans votre serveur je ne peux rien faire. Pas de chance : une personne voulais le rejoindre");
-                        return;
-                    }
-                    if (p.getBal() < price) {
-                        messageCreateEvent.getMessage().reply("Impossible !! Vous n'avez pas assez d'argent pour aller dans ce serveur. Il vous en faut encore " + (price - p.getBal()));
-                        return;
-                    }
-                    InviteBuilder inv = new InviteBuilder(channels.get(0));
-                    try {
-                        User user = messageCreateEvent.getMessageAuthor().asUser().get();
-                        user.sendMessage(inv.create().get().getUrl().toString());
+        Place place = new Place(Long.parseLong(placeID));
 
-                        user.sendMessage(nextServer.getString("train"));
+        ArrayList<Place> places = Place.toPlaces(place.getString("connections"));
 
-                        p.setServer(nextServer.getId());
-                        p.setBal((long) (p.getBal() - price));
-                    } catch (InterruptedException | ExecutionException e) {
-                        messageCreateEvent.getMessage().reply("Une erreur est survenue lors de la création de l'invitation.");
-                    }
-                } else {
-                    messageCreateEvent.getMessage().reply("Prix pour aller dans ce serveur : " + price + ". Tapez la même commande avec oui à la fin pour confirmer votre choix (ce dernier est irrévocable)");
-                }
-            } else {
-                messageCreateEvent.getMessage().reply("Désolé, l'id du serveur est incorrect, mais il est dans notre base de données, il est possible que le serveur ai été supprimé ou que le bot ai été retiré");
-            }
+        Place dest;
+
+        try {
+            dest = new Place(Long.parseLong(args[1]));
+        } catch (IllegalArgumentException e) {
+            messageCreateEvent.getMessage().reply("SVP ne jouez pas à entrer autre chose que des nombres");
+            return;
+        }
+
+        if (!places.contains(dest)) {
+            messageCreateEvent.getMessage().reply("Il n' existe pas de route entre votre lieu et votre destination");
+            return;
+        }
+
+        double bal = p.getBal();
+
+        if (bal < 100) {
+            messageCreateEvent.getMessage().reply("Il vous faut 100 rb pour voyager dans le monde normal");
+            return;
+        }
+
+
+        Optional<Server> serverOp = Main.api.getServerById(Long.parseLong(dest.getString("serv")));
+
+        if (!serverOp.isPresent()) {
+            messageCreateEvent.getMessage().reply("Voyage vers cette destination impossible : le serveur discord est inconnu. Possibilités : bot kick, serveur supprimé, corruption du lieu");
+            return;
+        }
+
+
+        Server server = serverOp.get();
+
+        if (args.length < 4) {
+            messageCreateEvent.getMessage().reply("Prix pour aller dans ce serveur : 100. Tapez la même commande avec oui à la fin pour confirmer votre choix (ce dernier est irrévocable)");
+            return;
+        }
+
+        List<ServerChannel> channels = server.getChannels();
+        if (channels.size() == 0) {
+            messageCreateEvent.getMessage().reply("Bon je pense que ce serveur ne vaux pas la peine : il n'y aucun salon !! Je ne peux même pas vous inviter.");
+            server.getOwner().get().sendMessage("Bon ... si il n'y a même pas de salon dans votre serveur je ne peux rien faire.");
+            return;
+        }
+
+        ServerBot nextServer = saveManager.getServer(Long.parseLong(dest.getString("serv")));
+
+        if (nextServer == null) {
+            messageCreateEvent.getMessage().reply("Voyage impossible : le serveur n' est pas configuré");
+            return;
+        }
+
+        InviteBuilder inv = new InviteBuilder(channels.get(0));
+        try {
+            User user = messageCreateEvent.getMessageAuthor().asUser().get();
+            user.sendMessage(inv.create().get().getUrl().toString());
+
+            user.sendMessage(nextServer.getString("train"));
+
+            p.setServer(nextServer.getId());
+            p.setBal(bal-100);
+
+            messageCreateEvent.getMessage().reply("Dans le monde NORMAL le voyage est instantané, au revoir !");
+        } catch (InterruptedException | ExecutionException e) {
+            messageCreateEvent.getMessage().reply("Une erreur est survenue lors de la création de l'invitation.");
         }
     }
 }

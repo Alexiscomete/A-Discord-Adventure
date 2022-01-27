@@ -20,6 +20,9 @@ public class CacheGetSet {
             return cache.get(row).getString();
         } else {
             String str = Main.getSaveManager().getString(table, row, "TEXT", id);
+            if (str == null) {
+                str = "";
+            }
             cache.put(row, new CacheValue(str));
             return str;
         }

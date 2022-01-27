@@ -4,6 +4,7 @@ import io.github.alexiscomete.lapinousecond.save.*;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Optional;
 
 public class Place extends CacheGetSet {
@@ -114,5 +115,15 @@ public class Place extends CacheGetSet {
                 .setDescription(getString("descr"))
                 .addField("World", getString("world"), true)
                 .addField("Type", getString("type"), true);
+    }
+
+    public static ArrayList<Place> toPlaces(String places) {
+        String[] str = places.split(";");
+        ArrayList<Place> places1 = new ArrayList<>();
+        for (String s :
+                str) {
+            places1.add(new Place(Long.parseLong(s)));
+        }
+        return places1;
     }
 }

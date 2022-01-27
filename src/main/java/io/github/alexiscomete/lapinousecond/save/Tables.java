@@ -1,7 +1,5 @@
 package io.github.alexiscomete.lapinousecond.save;
 
-import io.github.alexiscomete.lapinousecond.worlds.Place;
-
 public enum Tables {
     PLAYERS(new Table("players", new TableRow[]{
             new TableRow("id", "INTEGER PRIMARY KEY"),
@@ -15,9 +13,7 @@ public enum Tables {
             new TableRow("has_account", "INTEGER"),
             new TableRow("roles", "TEXT"),
             new TableRow("resources", "TEXT"),
-            new TableRow("current_world", "TEXT"),
-            new TableRow("default_world_place", "INTEGER"),
-            new TableRow("flag_world_place", "INTEGER")
+            new TableRow("current_world", "TEXT")
     })),
     PERMS(new Table("perms", new TableRow[]{
             new TableRow("id", "INTEGER PRIMARY KEY"),
