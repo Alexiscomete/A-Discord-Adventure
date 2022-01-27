@@ -4,15 +4,15 @@ import io.github.alexiscomete.lapinousecond.resources.Resource;
 import io.github.alexiscomete.lapinousecond.resources.ResourceManager;
 import io.github.alexiscomete.lapinousecond.roles.Role;
 import io.github.alexiscomete.lapinousecond.roles.RolesEnum;
+import io.github.alexiscomete.lapinousecond.save.CacheGetSet;
 import io.github.alexiscomete.lapinousecond.save.SaveManager;
 import io.github.alexiscomete.lapinousecond.save.Tables;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Player {
+public class Player extends CacheGetSet {
 
-    private final long id;
     private double bal;
     private long server;
     private short tuto;
@@ -32,10 +32,6 @@ public class Player {
 
     public void updateWorkTime() {
         this.workTime = System.currentTimeMillis();
-    }
-
-    public long getId() {
-        return id;
     }
 
     public ArrayList<Item> getItems() {
@@ -118,7 +114,7 @@ public class Player {
     }
 
     public Player(long id, double bal, long server, short tuto, boolean isVerify, boolean hasAccount, int x, int y, String roles, String resources) {
-        this.id = id;
+        super(id, Tables.PLAYERS.getTable());
         this.bal = bal;
         this.server = server;
         this.tuto = tuto;

@@ -73,7 +73,7 @@ public class PlaceCommand extends CommandWithAccount {
                         case "links":
                             messageCreateEvent.getMessage().reply("Tout les lieux qui ont un lien de voyage avec le lieu de votre serveur");
                             Place place = new Place(serverBot.getId());
-                            ArrayList<Place> places1 = toPlaces(place.getString("connections"));
+                            ArrayList<Place> places1 = Place.toPlaces(place.getString("connections"));
                             MessageBuilder messageBuilder1 = new MessageBuilder();
                             EmbedBuilder builder1 = new EmbedBuilder();
                             setPlaceEmbed(builder1, 0, Math.min(places1.size(), 11), places1);
@@ -97,8 +97,8 @@ public class PlaceCommand extends CommandWithAccount {
                                                 messageCreateEvent.getMessage().reply("Impossible de créer un lien : vous devez avoir au minimum 500 rb");
                                                 return;
                                             }
-                                            ArrayList<Place> connections1 = toPlaces(place1.getString("connections"));
-                                            ArrayList<Place> connections2 = toPlaces(place2.getString("connections"));
+                                            ArrayList<Place> connections1 = Place.toPlaces(place1.getString("connections"));
+                                            ArrayList<Place> connections2 = Place.toPlaces(place2.getString("connections"));
                                             if (connections1.contains(place2)) {
                                                 messageCreateEvent.getMessage().reply("Cette connection existe déjà");
                                                 return;
@@ -167,16 +167,6 @@ public class PlaceCommand extends CommandWithAccount {
             e.printStackTrace();
         }
         return places;
-    }
-
-    public ArrayList<Place> toPlaces(String places) {
-        String[] str = places.split(";");
-        ArrayList<Place> places1 = new ArrayList<>();
-        for (String s :
-                str) {
-            places1.add(new Place(Long.parseLong(s)));
-        }
-        return places1;
     }
 
     public String placesToString(ArrayList<Place> places) {

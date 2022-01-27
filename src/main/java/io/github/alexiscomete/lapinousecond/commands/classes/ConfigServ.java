@@ -8,7 +8,6 @@ import io.github.alexiscomete.lapinousecond.worlds.World;
 import io.github.alexiscomete.lapinousecond.worlds.WorldEnum;
 import org.javacord.api.entity.channel.TextChannel;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
-import org.javacord.api.entity.user.User;
 import org.javacord.api.event.message.MessageCreateEvent;
 
 import java.util.Objects;
