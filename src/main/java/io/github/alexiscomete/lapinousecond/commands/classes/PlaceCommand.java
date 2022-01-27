@@ -92,7 +92,22 @@ public class PlaceCommand extends CommandWithAccount {
                                     Place place2 = new Place(Long.parseLong(args[2]));
                                     if (Objects.equals(place1.getString("world"), place2.getString("world"))) {
                                         if (place1.getString("world").equals("NORMAL")) {
-                                            
+                                            double bal = p.getBal();
+                                            if (bal < 500) {
+                                                messageCreateEvent.getMessage().reply("Impossible de créer un lien : vous devez avoir au minimum 500 rb");
+                                                return;
+                                            }
+                                            ArrayList<Place> connections1 = toPlaces(place1.getString("connections"));
+                                            ArrayList<Place> connections2 = toPlaces(place2.getString("connections"));
+                                            if (connections1.contains(place2)) {
+                                                messageCreateEvent.getMessage().reply("Cette connection existe déjà");
+                                                return;
+                                            }
+                                            p.setBal(bal-500);
+                                            connections1.add(place2);
+                                            connections2.add(place1);
+                                            place1.set("connections", placesToString(connections1));
+                                            place2.set("connections", placesToString(connections2));
                                         } else {
                                             messageCreateEvent.getMessage().reply("Impossible pour ce monde pour le moment");
                                         }
@@ -153,7 +168,7 @@ public class PlaceCommand extends CommandWithAccount {
         }
         return places;
     }
-    
+
     public ArrayList<Place> toPlaces(String places) {
         String[] str = places.split(";");
         ArrayList<Place> places1 = new ArrayList<>();
@@ -162,6 +177,19 @@ public class PlaceCommand extends CommandWithAccount {
             places1.add(new Place(Long.parseLong(s)));
         }
         return places1;
+    }
+
+    public String placesToString(ArrayList<Place> places) {
+        if (places.size() == 0) {
+            return "";
+        }
+        StringBuilder builder = new StringBuilder()
+                .append(places.get(0).getID());
+        for (int i = 1; i < places.size(); i++) {
+            builder.append(";")
+                    .append(places.get(i));
+        }
+        return builder.toString();
     }
 
     public void setPlaceEmbed(EmbedBuilder embedBuilder, int min, int max, ArrayList<Place> places) {
