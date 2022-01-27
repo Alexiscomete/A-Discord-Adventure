@@ -102,7 +102,8 @@ public class Travel extends CommandInServer {
             user.sendMessage(nextServer.getString("train"));
 
             p.setServer(nextServer.getId());
-            p.setBal(bal-100);
+            p.setBal(bal - 100);
+            p.set("place_" + world, String.valueOf(nextServer.getId()));
 
             messageCreateEvent.getMessage().reply("Dans le monde NORMAL le voyage est instantané, au revoir !");
         } catch (InterruptedException | ExecutionException e) {
