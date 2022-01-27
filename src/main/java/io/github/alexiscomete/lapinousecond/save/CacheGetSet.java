@@ -3,6 +3,7 @@ package io.github.alexiscomete.lapinousecond.save;
 import io.github.alexiscomete.lapinousecond.Main;
 
 import java.util.HashMap;
+import java.util.Objects;
 
 public class CacheGetSet {
     private final HashMap<String, CacheValue> cache = new HashMap<>();
@@ -39,5 +40,18 @@ public class CacheGetSet {
             str = "";
         }
         return str.split(";");
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CacheGetSet that = (CacheGetSet) o;
+        return id == that.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

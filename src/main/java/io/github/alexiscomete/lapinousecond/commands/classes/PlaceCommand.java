@@ -61,7 +61,7 @@ public class PlaceCommand extends CommandWithAccount {
                             MessageBuilder messageBuilder = new MessageBuilder();
                             EmbedBuilder builder = new EmbedBuilder();
                             setPlaceEmbed(builder, 0, Math.min(places.size(), 11), places);
-                            EventAnswer eventAnswer = new EventAnswer(builder, serverBot.getString("world"));
+                            EventAnswer eventAnswer = new EventAnswer(builder, places);
                             messageBuilder.addComponents(eventAnswer.getComponents());
                             messageBuilder.setEmbed(builder);
                             try {
@@ -69,12 +69,64 @@ public class PlaceCommand extends CommandWithAccount {
                             } catch (InterruptedException | ExecutionException e) {
                                 e.printStackTrace();
                             }
-                            messageCreateEvent.getMessage().reply("Impossible pour le moment");
                             break;
+                        case "links":
+                            messageCreateEvent.getMessage().reply("Tout les lieux qui ont un lien de voyage avec le lieu de votre serveur");
+                            Place place = new Place(serverBot.getId());
+                            ArrayList<Place> places1 = toPlaces(place.getString("connections"));
+                            MessageBuilder messageBuilder1 = new MessageBuilder();
+                            EmbedBuilder builder1 = new EmbedBuilder();
+                            setPlaceEmbed(builder1, 0, Math.min(places1.size(), 11), places1);
+                            EventAnswer eventAnswer1 = new EventAnswer(builder1, places1);
+                            messageBuilder1.addComponents(eventAnswer1.getComponents());
+                            messageBuilder1.setEmbed(builder1);
+                            try {
+                                eventAnswer1.register(messageBuilder1.send(messageCreateEvent.getChannel()).get().getId());
+                            } catch (InterruptedException | ExecutionException e) {
+                                e.printStackTrace();
+                            }
+                        case "add_link":
+                            if (args.length > 2) {
+                                try {
+                                    Place place1 = new Place(serverBot.getId());
+                                    Place place2 = new Place(Long.parseLong(args[2]));
+                                    if (Objects.equals(place1.getString("world"), place2.getString("world"))) {
+                                        if (place1.getString("world").equals("NORMAL")) {
+                                            double bal = p.getBal();
+                                            if (bal < 500) {
+                                                messageCreateEvent.getMessage().reply("Impossible de créer un lien : vous devez avoir au minimum 500 rb");
+                                                return;
+                                            }
+                                            ArrayList<Place> connections1 = toPlaces(place1.getString("connections"));
+                                            ArrayList<Place> connections2 = toPlaces(place2.getString("connections"));
+                                            if (connections1.contains(place2)) {
+                                                messageCreateEvent.getMessage().reply("Cette connection existe déjà");
+                                                return;
+                                            }
+                                            p.setBal(bal-500);
+                                            connections1.add(place2);
+                                            connections2.add(place1);
+                                            place1.set("connections", placesToString(connections1));
+                                            place2.set("connections", placesToString(connections2));
+                                        } else {
+                                            messageCreateEvent.getMessage().reply("Impossible pour ce monde pour le moment");
+                                        }
+                                    } else {
+                                        messageCreateEvent.getMessage().reply("Ce lieu n'est pas dans le même monde, donc pas de route entre les 2");
+                                    }
+                                } catch (NumberFormatException e) {
+                                    messageCreateEvent.getMessage().reply("Ceci n'est pas un nombre valide (arg 2)");
+                                }
+                            } else {
+                                messageCreateEvent.getMessage().reply("Action impossible : précisez l'id du lieu pour créer un lien");
+                            }
+                            messageCreateEvent.getMessage().reply("presque");
                         default:
                             messageCreateEvent.getMessage().reply("Action inconnue");
                             break;
                     }
+                } else {
+                    messageCreateEvent.getMessage().reply("Actions possibles : create_new_place, links, add_link, list");
                 }
             }
         }
@@ -115,6 +167,29 @@ public class PlaceCommand extends CommandWithAccount {
             e.printStackTrace();
         }
         return places;
+    }
+
+    public ArrayList<Place> toPlaces(String places) {
+        String[] str = places.split(";");
+        ArrayList<Place> places1 = new ArrayList<>();
+        for (String s :
+                str) {
+            places1.add(new Place(Long.parseLong(s)));
+        }
+        return places1;
+    }
+
+    public String placesToString(ArrayList<Place> places) {
+        if (places.size() == 0) {
+            return "";
+        }
+        StringBuilder builder = new StringBuilder()
+                .append(places.get(0).getID());
+        for (int i = 1; i < places.size(); i++) {
+            builder.append(";")
+                    .append(places.get(i));
+        }
+        return builder.toString();
     }
 
     public void setPlaceEmbed(EmbedBuilder embedBuilder, int min, int max, ArrayList<Place> places) {
@@ -177,9 +252,9 @@ public class PlaceCommand extends CommandWithAccount {
             Main.getButtonsManager().addMessage(id, hashMap);
         }
 
-        public EventAnswer(EmbedBuilder embedBuilder, String world) {
+        public EventAnswer(EmbedBuilder embedBuilder, ArrayList<Place> places) {
             builder = embedBuilder;
-            this.places = getPlacesWithWorld(world);
+            this.places = places;
         }
     }
 }
