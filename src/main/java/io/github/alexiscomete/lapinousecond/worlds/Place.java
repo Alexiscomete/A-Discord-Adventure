@@ -100,7 +100,11 @@ public class Place extends CacheGetSet {
         ArrayList<Place> places1 = new ArrayList<>();
         for (String s :
                 str) {
-            places1.add(new Place(Long.parseLong(s)));
+            try {
+                places1.add(new Place(Long.parseLong(s)));
+            } catch (NumberFormatException ignore) {
+
+            }
         }
         return places1;
     }

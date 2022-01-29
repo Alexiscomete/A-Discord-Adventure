@@ -85,6 +85,7 @@ public class PlaceCommand extends CommandWithAccount {
                             } catch (InterruptedException | ExecutionException e) {
                                 e.printStackTrace();
                             }
+                            break;
                         case "add_link":
                             if (args.length > 2) {
                                 try {
@@ -120,7 +121,7 @@ public class PlaceCommand extends CommandWithAccount {
                             } else {
                                 messageCreateEvent.getMessage().reply("Action impossible : précisez l'id du lieu pour créer un lien");
                             }
-                            messageCreateEvent.getMessage().reply("presque");
+                            break;
                         default:
                             messageCreateEvent.getMessage().reply("Action inconnue");
                             break;

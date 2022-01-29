@@ -28,7 +28,7 @@ public class Travel extends CommandInServer {
     @Override
     public void executeC(MessageCreateEvent messageCreateEvent, String content, String[] args, Player p) {
 
-        if (args.length <= 2 || args[2].equals("list")) {
+        if (args.length < 2 || args[1].equals("list")) {
             messageCreateEvent.getMessage().reply("Utilisez place links pour voir les possibilités de voyage, si aucune ne vous convient tentez le create_link pour le monde NORMAL");
             return;
         }
