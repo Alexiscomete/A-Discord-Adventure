@@ -34,9 +34,14 @@ public class Travel extends CommandInServer {
         }
 
         String world = p.getString("current_world");
+        if (Objects.equals(world, "")) {
+            world = "NORMAL";
+            p.set("current_world", "NORMAL");
+        }
         String placeID = p.getString("place_" + world);
         if (Objects.equals(placeID, "")) {
             placeID = new ServerBot(854288660147994634L).getString("places");
+            p.set("place_NORMAL", "854288660147994634");
         }
 
         Place place = new Place(Long.parseLong(placeID));
