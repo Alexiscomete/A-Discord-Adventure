@@ -57,7 +57,7 @@ public class ConfigServ extends CommandWithAccount {
                         ServerBot finalServer = server;
                         Long id = messageCreateEvent.getMessageAuthor().getId();
                         TextChannel textChannel = messageCreateEvent.getChannel();
-                        Main.getMessagesManager().setValueAndRetry(textChannel, id, "name", "Maintenant la description :", 50, finalServer,
+                        Main.getMessagesManager().setValueAndRetry(textChannel, id, "namerp", "Maintenant la description :", 50, finalServer,
                                 () -> Main.getMessagesManager().setValueAndRetry(textChannel, id, "descr", "Maintenant le message d' arrivé sur votre serveur : ", 500, finalServer,
                                         () -> {
                                             EmbedBuilder embedBuilder = new EmbedBuilder()
