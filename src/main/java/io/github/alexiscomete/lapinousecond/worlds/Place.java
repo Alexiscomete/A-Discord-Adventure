@@ -1,10 +1,12 @@
 package io.github.alexiscomete.lapinousecond.worlds;
 
+import io.github.alexiscomete.lapinousecond.Main;
 import io.github.alexiscomete.lapinousecond.save.*;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Optional;
 
 public class Place extends CacheGetSet {
@@ -17,37 +19,13 @@ public class Place extends CacheGetSet {
 
     public Place() {
         super(SaveLocation.generateUniqueID(), Tables.PLACES.getTable());
+        HashMap<String, String> h = new HashMap<>();
+        h.put("id", String.valueOf(getID()));
+        Main.getSaveManager().insert("places", h);
     }
 
     public Place(long id) {
         super(id, Tables.PLACES.getTable());
-    }
-
-    public Place(ServerBot serverBot, World world, Integer x, Integer y, long id) {
-        super(id, Tables.PLACES.getTable());
-        this.serverBot = serverBot;
-        this.world = world;
-        this.x = x;
-        this.y = y;
-        if (serverBot == null) {
-            this.serverID = null;
-        } else {
-            this.serverID = serverBot.getId();
-        }
-    }
-
-    public Place(ServerBot serverBot, World world, Integer x, Integer y, long[] connections) {
-        super(SaveLocation.generateUniqueID(), Tables.PLACES.getTable());
-        this.serverBot = serverBot;
-        this.world = world;
-        this.x = x;
-        this.y = y;
-        this.connections = connections;
-        if (serverBot == null) {
-            this.serverID = null;
-        } else {
-            this.serverID = serverBot.getId();
-        }
     }
 
     public Optional<ServerBot> getServerBot() {

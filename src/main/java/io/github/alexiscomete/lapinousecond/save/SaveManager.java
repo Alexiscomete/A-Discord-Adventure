@@ -2,6 +2,7 @@ package io.github.alexiscomete.lapinousecond.save;
 
 import io.github.alexiscomete.lapinousecond.Player;
 import io.github.alexiscomete.lapinousecond.UserPerms;
+import io.github.alexiscomete.lapinousecond.worlds.Place;
 import io.github.alexiscomete.lapinousecond.worlds.ServerBot;
 
 import java.sql.*;
@@ -23,6 +24,7 @@ public class SaveManager {
     }
 
     private final HashMap<Long, ServerBot> servers = new HashMap<>();
+    private final HashMap<Long, Place> places = new HashMap<>();
 
     private Connection co = null;
     private Statement st = null;
@@ -79,6 +81,22 @@ public class SaveManager {
             }
         }
         return serverBot;
+    }
+
+    public Place getPlace(long id) {
+        Place p = places.get(id);
+        if (p == null) {
+            try {
+                ResultSet resultSet = st.executeQuery("SELECT * FROM places WHERE id = " + id);
+                if (resultSet.next()) {
+                    p = new Place(resultSet.getLong("id"));
+                    places.put(id, p);
+                }
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+        return p;
     }
 
     public void addServer(long id) {
