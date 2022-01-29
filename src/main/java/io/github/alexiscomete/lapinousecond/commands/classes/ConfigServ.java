@@ -68,7 +68,6 @@ public class ConfigServ extends CommandWithAccount {
                                                 World w = worldEnum.getWorld();
                                                 embedBuilder.addField(w.getName(), "RP : " + w.getNameRP() + "\nNom à entrer : " + w.getProgName() + "\nDescription : " + w.getDesc());
                                             }
-                                            messageCreateEvent.getMessage().reply(embedBuilder);
                                             Main.getMessagesManager().setValueAndRetry(textChannel, id, "welcome", embedBuilder, 1500, finalServer, () -> {
                                                 Main.getMessagesManager().addListener(textChannel, id, new Consumer<MessageCreateEvent>() {
                                                     @Override

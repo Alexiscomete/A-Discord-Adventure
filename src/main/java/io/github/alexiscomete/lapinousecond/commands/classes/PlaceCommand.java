@@ -72,7 +72,7 @@ public class PlaceCommand extends CommandWithAccount {
                             break;
                         case "links":
                             messageCreateEvent.getMessage().reply("Tout les lieux qui ont un lien de voyage avec le lieu de votre serveur");
-                            Place place = new Place(serverBot.getId());
+                            Place place = saveManager.getPlace(Long.parseLong(serverBot.getString("places")));
                             ArrayList<Place> places1 = Place.toPlaces(place.getString("connections"));
                             MessageBuilder messageBuilder1 = new MessageBuilder();
                             EmbedBuilder builder1 = new EmbedBuilder();
@@ -88,8 +88,8 @@ public class PlaceCommand extends CommandWithAccount {
                         case "add_link":
                             if (args.length > 2) {
                                 try {
-                                    Place place1 = new Place(serverBot.getId());
-                                    Place place2 = new Place(Long.parseLong(args[2]));
+                                    Place place1 = saveManager.getPlace(Long.parseLong(serverBot.getString("places")));
+                                    Place place2 = saveManager.getPlace(Long.parseLong(args[2]));
                                     if (Objects.equals(place1.getString("world"), place2.getString("world"))) {
                                         if (place1.getString("world").equals("NORMAL")) {
                                             double bal = p.getBal();
@@ -142,6 +142,7 @@ public class PlaceCommand extends CommandWithAccount {
                     .setAndGet("train", serverBot.getString("welcome"))
                     .setAndGet("descr", serverBot.getString("descr"));
             messageCreateEvent.getMessage().reply(place.getPlaceEmbed());
+            serverBot.set("places", String.valueOf(place.getID()));
             messageCreateEvent.getMessage().reply("Message de départ du lieu :");
             Main.getMessagesManager().setValueAndRetry(messageCreateEvent.getChannel(), p.getId(), "traout", "Message de sortie mit à jour, configuration terminée. Comment voyager vers d' autres lieux dans ce monde ? Dans ce monde les joueurs dans un serveur peuvent payer pour créer une connection (nom RP à trouver) entre 2 lieux", 1500, serverBot, () -> {
             });
@@ -155,7 +156,7 @@ public class PlaceCommand extends CommandWithAccount {
     }
 
     public ArrayList<Place> getPlacesWithWorld(String world) {
-        ResultSet resultSet = saveManager.executeQuery("SELECT id FROM places WHERE world = '" + world + "'", true);
+        ResultSet resultSet = saveManager.executeQuery("SELECT * FROM places WHERE world = '" + world + "'", true);
         ArrayList<Place> places = new ArrayList<>();
         try {
             long id = resultSet.getLong("id");
