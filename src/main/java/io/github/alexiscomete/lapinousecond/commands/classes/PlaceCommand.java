@@ -103,7 +103,7 @@ public class PlaceCommand extends CommandWithAccount {
                                                 messageCreateEvent.getMessage().reply("Cette connection existe déjà");
                                                 return;
                                             }
-                                            p.setBal(bal-500);
+                                            p.setBal(bal - 500);
                                             connections1.add(place2);
                                             connections2.add(place1);
                                             place1.set("connections", placesToString(connections1));
@@ -159,8 +159,9 @@ public class PlaceCommand extends CommandWithAccount {
         ResultSet resultSet = saveManager.executeQuery("SELECT * FROM places WHERE world = '" + world + "'", true);
         ArrayList<Place> places = new ArrayList<>();
         try {
-            long id = resultSet.getLong("id");
-            places.add(new Place(id));
+
+            //long id = resultSet.getLong("id"); places.add(new Place(id));
+
             while (resultSet.next()) {
                 places.add(new Place(resultSet.getLong("id")));
             }
@@ -184,12 +185,14 @@ public class PlaceCommand extends CommandWithAccount {
     }
 
     public void setPlaceEmbed(EmbedBuilder embedBuilder, int min, int max, ArrayList<Place> places) {
-        embedBuilder.setTitle("Liste des lieux de " + min + " à " + max)
-                .setColor(Color.ORANGE);
+        embedBuilder
+                .setTitle("Liste des lieux de " + min + " à " + max)
+                .setColor(Color.ORANGE)
+                .setDescription("Utilisez les boutons pour voir les autres pages");
 
         for (int i = min; i < max; i++) {
             Place place = places.get(i);
-            embedBuilder.addField(place.getString("name"), place.getID() + " -> " + place.getString("descr"));
+            embedBuilder.addField(Objects.equals(place.getString("name"), "") ? "Nom invalide" : place.getString("name"), place.getID() + " -> " + place.getString("descr"));
         }
     }
 
@@ -232,7 +235,7 @@ public class PlaceCommand extends CommandWithAccount {
                         Button.success("next_page", "Page suivante")
                 );
             } else {
-                return ActionRow.of();
+                return ActionRow.of(Button.success("null_page", "Aucune autre page"));
             }
         }
 
