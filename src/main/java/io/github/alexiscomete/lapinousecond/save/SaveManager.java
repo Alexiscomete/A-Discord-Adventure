@@ -209,9 +209,10 @@ public class SaveManager {
 
     public String getString(Table table, String row, String type, long id) {
         execute("ALTER TABLE " + table.getName() + " ADD COLUMN " + row + " " + type, false);
-        ResultSet resultSet = executeQuery("SELECT " + row + " FROM " + table.getName() + " WHERE id=" + id, true);
+        ResultSet resultSet;
         String str = "";
         try {
+            resultSet = st.executeQuery("SELECT " + row + " FROM " + table.getName() + " WHERE id=" + id);
             str = resultSet.getString(row);
             resultSet.close();
         } catch (SQLException e) {
