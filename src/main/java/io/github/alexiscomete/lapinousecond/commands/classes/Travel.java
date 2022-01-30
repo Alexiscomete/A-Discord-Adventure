@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class Travel extends CommandInServer {
 
@@ -86,12 +88,13 @@ public class Travel extends CommandInServer {
 
         Server server = serverOp.get();
 
-        if (args.length < 4) {
+        if (args.length < 3) {
             messageCreateEvent.getMessage().reply("Prix pour aller dans ce serveur : 100. Tapez la même commande avec oui à la fin pour confirmer votre choix (ce dernier est irrévocable)");
             return;
         }
 
         List<ServerChannel> channels = server.getChannels();
+        channels = channels.stream().filter(serverChannel -> serverChannel.getType().isTextChannelType()).collect(Collectors.toList());
         if (channels.size() == 0) {
             messageCreateEvent.getMessage().reply("Bon je pense que ce serveur ne vaux pas la peine : il n'y aucun salon !! Je ne peux même pas vous inviter.");
             server.getOwner().get().sendMessage("Bon ... si il n'y a même pas de salon dans votre serveur je ne peux rien faire.");
@@ -106,11 +109,13 @@ public class Travel extends CommandInServer {
         }
 
         InviteBuilder inv = new InviteBuilder(channels.get(0));
+        System.out.println(channels.get(0).getName());
         try {
-            User user = messageCreateEvent.getMessageAuthor().asUser().get();
-            user.sendMessage(inv.create().get().getUrl().toString());
 
-            user.sendMessage(nextServer.getString("train"));
+            User user = messageCreateEvent.getMessageAuthor().asUser().get();
+
+            user.sendMessage(inv.create().get().getUrl().toString());
+            user.sendMessage(dest.getString("train"));
 
             p.setServer(nextServer.getId());
             p.setBal(bal - 100);
@@ -119,6 +124,7 @@ public class Travel extends CommandInServer {
             messageCreateEvent.getMessage().reply("Dans le monde NORMAL le voyage est instantané, au revoir !");
         } catch (InterruptedException | ExecutionException e) {
             messageCreateEvent.getMessage().reply("Une erreur est survenue lors de la création de l'invitation.");
+            e.printStackTrace();
         }
     }
 }
