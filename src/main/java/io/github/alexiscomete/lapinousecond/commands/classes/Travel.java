@@ -47,6 +47,7 @@ public class Travel extends CommandInServer {
         Place place = saveManager.getPlace(Long.parseLong(placeID));
 
         if (place == null) {
+            System.out.println(placeID);
             messageCreateEvent.getMessage().reply("Votre lieu est introuvable");
             return;
         }
