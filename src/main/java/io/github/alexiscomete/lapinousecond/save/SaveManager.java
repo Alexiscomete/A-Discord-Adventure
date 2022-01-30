@@ -59,6 +59,7 @@ public class SaveManager {
                     p = new Player(resultSet.getLong("id"), resultSet.getDouble("bal"), resultSet.getLong("serv"), resultSet.getShort("tuto"), resultSet.getBoolean("is_verify"), resultSet.getBoolean("has_account"), resultSet.getInt("x"), resultSet.getInt("y"), resultSet.getString("roles"), resultSet.getString("resources"));
                     players.put(l, p);
                 }
+                resultSet.close();
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
@@ -76,6 +77,7 @@ public class SaveManager {
                     serverBot = new ServerBot(Long.parseLong(resultSet.getString("id")));
                     servers.put(l, serverBot);
                 }
+                resultSet.close();
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
@@ -92,6 +94,7 @@ public class SaveManager {
                     p = new Place(resultSet.getLong("id"));
                     places.put(id, p);
                 }
+                resultSet.close();
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
@@ -114,6 +117,7 @@ public class SaveManager {
             while (resultSet.next()) {
                 longs.add(Long.valueOf(resultSet.getString("id")));
             }
+            resultSet.close();
             return longs;
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -206,11 +210,13 @@ public class SaveManager {
     public String getString(Table table, String row, String type, long id) {
         execute("ALTER TABLE " + table.getName() + " ADD COLUMN " + row + " " + type, false);
         ResultSet resultSet = executeQuery("SELECT " + row + " FROM " + table.getName() + " WHERE id=" + id, true);
+        String str = "";
         try {
-            return resultSet.getString(row);
+            str = resultSet.getString(row);
+            resultSet.close();
         } catch (SQLException e) {
             e.printStackTrace();
-            return "";
         }
+        return str;
     }
 }
