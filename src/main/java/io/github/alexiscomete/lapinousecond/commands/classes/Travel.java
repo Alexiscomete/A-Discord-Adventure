@@ -41,10 +41,15 @@ public class Travel extends CommandInServer {
         String placeID = p.getString("place_" + world);
         if (Objects.equals(placeID, "")) {
             placeID = new ServerBot(854288660147994634L).getString("places");
-            p.set("place_NORMAL", "854288660147994634");
+            p.set("place_NORMAL", new ServerBot(854288660147994634L).getString("places"));
         }
 
-        Place place = new Place(Long.parseLong(placeID));
+        Place place = saveManager.getPlace(Long.parseLong(placeID));
+
+        if (place == null) {
+            messageCreateEvent.getMessage().reply("Votre lieu est introuvable");
+            return;
+        }
 
         ArrayList<Place> places = Place.toPlaces(place.getString("connections"));
 
