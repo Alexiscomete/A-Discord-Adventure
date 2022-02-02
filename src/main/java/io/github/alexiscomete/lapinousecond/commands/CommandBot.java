@@ -3,7 +3,11 @@ package io.github.alexiscomete.lapinousecond.commands;
 import io.github.alexiscomete.lapinousecond.Main;
 import io.github.alexiscomete.lapinousecond.save.SaveManager;
 import io.github.alexiscomete.lapinousecond.UserPerms;
+import org.javacord.api.entity.channel.ServerTextChannel;
+import org.javacord.api.entity.server.Server;
 import org.javacord.api.event.message.MessageCreateEvent;
+
+import java.util.Optional;
 
 public abstract class CommandBot {
 
@@ -33,6 +37,25 @@ public abstract class CommandBot {
     }
 
     public void checkAndExecute(MessageCreateEvent messageCreateEvent, String content, String[] args) {
+        if (messageCreateEvent.isServerMessage()) {
+            Optional<Server> serverOptional = messageCreateEvent.getServer();
+            if (serverOptional.isPresent()) {
+                Server s = serverOptional.get();
+                if (s.getId() == 904736069080186981L && messageCreateEvent.getChannel().getId() != 914268153796771950L) {
+                    return;
+                } else {
+                    Optional<ServerTextChannel> serverTextChannelOp = messageCreateEvent.getServerTextChannel();
+                    if (serverTextChannelOp.isPresent()) {
+                        ServerTextChannel sC = serverTextChannelOp.get();
+                        String name = sC.getName();
+                        // je pense que limiter les salons est important, venture permet d'inclure adventure et aventure
+                        if (! (name.contains("bot") || name.contains("command") || name.contains("spam") || name.contains("🤖") || name.contains("venture"))) {
+                            return;
+                        }
+                    }
+                }
+            }
+        }
         if (perms == null || perms.length == 0) {
             execute(messageCreateEvent, content, args);
             return;
