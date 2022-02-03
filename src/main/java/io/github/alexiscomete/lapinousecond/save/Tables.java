@@ -34,7 +34,8 @@ public enum Tables {
             new TableRow("traout", "TEXT"),
             new TableRow("connections", "TEXT"),
             new TableRow("type", "TEXT") // océan, ville, serveur ...
-    }));
+    })),
+    BUILDINGS(new Table("buildings", new TableRow[]{}));
 
     private final Table table;
 
