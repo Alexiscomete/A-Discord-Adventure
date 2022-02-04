@@ -119,7 +119,7 @@ public class Travel extends CommandInServer {
 
             p.setServer(nextServer.getId());
             p.setBal(bal - 100);
-            p.set("place_" + world, String.valueOf(nextServer.getId()));
+            p.set("place_" + world, String.valueOf(dest.getID()));
 
             messageCreateEvent.getMessage().reply("Dans le monde NORMAL le voyage est instantané, au revoir !");
         } catch (InterruptedException | ExecutionException e) {
