@@ -4,7 +4,6 @@ import io.github.alexiscomete.lapinousecond.Main;
 import io.github.alexiscomete.lapinousecond.worlds.ServerBot;
 import org.javacord.api.entity.channel.TextChannel;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
-import org.javacord.api.entity.user.User;
 import org.javacord.api.event.message.MessageCreateEvent;
 import org.javacord.api.listener.message.MessageCreateListener;
 

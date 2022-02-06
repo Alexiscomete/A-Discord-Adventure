@@ -4,6 +4,8 @@ import io.github.alexiscomete.lapinousecond.Player;
 import io.github.alexiscomete.lapinousecond.UserPerms;
 import io.github.alexiscomete.lapinousecond.worlds.Place;
 import io.github.alexiscomete.lapinousecond.worlds.ServerBot;
+import io.github.alexiscomete.lapinousecond.worlds.buildings.Building;
+import io.github.alexiscomete.lapinousecond.worlds.buildings.Buildings;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -74,7 +76,7 @@ public class SaveManager {
             try {
                 ResultSet resultSet = st.executeQuery("SELECT * FROM guilds WHERE id = " + l);
                 if (resultSet.next()) {
-                    serverBot = new ServerBot(Long.parseLong(resultSet.getString("id")));
+                    serverBot = new ServerBot(l);
                     servers.put(l, serverBot);
                 }
                 resultSet.close();
@@ -91,7 +93,7 @@ public class SaveManager {
             try {
                 ResultSet resultSet = st.executeQuery("SELECT * FROM places WHERE id = " + id);
                 if (resultSet.next()) {
-                    p = new Place(resultSet.getLong("id"));
+                    p = new Place(id);
                     places.put(id, p);
                 }
                 resultSet.close();
@@ -100,6 +102,19 @@ public class SaveManager {
             }
         }
         return p;
+    }
+
+    public String getBuildingType(long id) {
+        try {
+            ResultSet resultSet = st.executeQuery("SELECT * FROM " + Tables.BUILDINGS.getTable().getName() + " WHERE id = " + id);
+            if (resultSet.next()) {
+                return new CacheGetSet(id, Tables.BUILDINGS.getTable()).getString("type");
+            }
+            resultSet.close();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return null;
     }
 
     public void addServer(long id) {

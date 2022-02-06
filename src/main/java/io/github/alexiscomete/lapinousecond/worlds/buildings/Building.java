@@ -2,22 +2,16 @@ package io.github.alexiscomete.lapinousecond.worlds.buildings;
 
 import io.github.alexiscomete.lapinousecond.save.CacheGetSet;
 import io.github.alexiscomete.lapinousecond.save.Tables;
+import org.javacord.api.entity.message.MessageBuilder;
+import org.javacord.api.entity.message.embed.EmbedBuilder;
 
 public abstract class Building extends CacheGetSet {
 
-    String type, name, description;
-
-    public Building(long id, String type, String name, String description) {
+    public Building(long id) {
         super(id, Tables.BUILDINGS.getTable());
-        this.type = type;
-        this.name = name;
-        this.description = description;
     }
 
-    @Override
-    public String toString() {
-        StringBuilder stringBuilder = new StringBuilder();
+    public abstract EmbedBuilder getInfos();
+    public abstract MessageBuilder getCompleteInfos();
 
-        return stringBuilder.toString();
-    }
 }
