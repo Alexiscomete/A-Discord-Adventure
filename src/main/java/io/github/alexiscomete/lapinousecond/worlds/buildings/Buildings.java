@@ -1,5 +1,8 @@
 package io.github.alexiscomete.lapinousecond.worlds.buildings;
 
+import io.github.alexiscomete.lapinousecond.Main;
+import io.github.alexiscomete.lapinousecond.save.SaveManager;
+
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.function.Function;
@@ -22,18 +25,26 @@ public enum Buildings {
         this.evol = evol;
     }
 
-    public Building load(String save) {
-        String[] str = save.split(":");
-        if (str.length == 0) {
+    public static Building load(String save) {
+        if (save == null || save.equals("")) {
             return null;
         }
-        if (str.length == 1 || Objects.equals(str[1], "project")) {
-            return new BuildProject(Long.parseLong(str[0]));
+        try {
+            String type = Main.getSaveManager().getBuildingType(Long.parseLong(save));
+            if (type == null) {
+                return null;
+            }
+            if (Objects.equals(type, "project")) {
+                return new BuildProject(Long.parseLong(save));
+            }
+            Buildings buildings = valueOf(type);
+            return buildings.get(Long.parseLong(save));
+        } catch (IllegalArgumentException e) {
+            return null;
         }
-        return null;
     }
 
-    public ArrayList<Building> loadBuildings() {
+    public static ArrayList<Building> loadBuildings() {
         return null;
     }
 
