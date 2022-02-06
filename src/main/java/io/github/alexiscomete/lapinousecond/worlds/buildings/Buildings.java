@@ -1,6 +1,7 @@
 package io.github.alexiscomete.lapinousecond.worlds.buildings;
 
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.function.Function;
 
 public enum Buildings {
@@ -22,6 +23,13 @@ public enum Buildings {
     }
 
     public Building load(String save) {
+        String[] str = save.split(":");
+        if (str.length == 0) {
+            return null;
+        }
+        if (str.length == 1 || Objects.equals(str[1], "project")) {
+            return new BuildProject(Long.parseLong(str[0]));
+        }
         return null;
     }
 

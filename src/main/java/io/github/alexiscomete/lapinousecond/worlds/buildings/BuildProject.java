@@ -8,14 +8,14 @@ public class BuildProject extends Building {
         super(id);
     }
 
-    public BuildProject(String type) {
+    public BuildProject(Buildings buildings) {
         super(SaveLocation.generateUniqueID());
-        createNew(type);
+        createNew(buildings);
     }
 
-    public void createNew(String type) {
+    public void createNew(Buildings buildings) {
         set("id", String.valueOf(id));
-        set("type", type);
+        set("type", buildings.getType());
     }
 
 
