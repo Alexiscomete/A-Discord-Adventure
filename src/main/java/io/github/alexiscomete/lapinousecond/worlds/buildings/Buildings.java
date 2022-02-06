@@ -44,8 +44,19 @@ public enum Buildings {
         }
     }
 
-    public static ArrayList<Building> loadBuildings() {
-        return null;
+    public static ArrayList<Building> loadBuildings(String str) {
+        ArrayList<Building> buildings = new ArrayList<>();
+        String[] strings = str.split(";");
+
+        for (String s :
+                strings) {
+            Building b = load(s);
+            if (b != null) {
+                buildings.add(b);
+            }
+        }
+
+        return buildings;
     }
 
     public Building get(long id) {
