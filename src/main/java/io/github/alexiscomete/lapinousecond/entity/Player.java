@@ -1,5 +1,7 @@
-package io.github.alexiscomete.lapinousecond;
+package io.github.alexiscomete.lapinousecond.entity;
 
+import io.github.alexiscomete.lapinousecond.Item;
+import io.github.alexiscomete.lapinousecond.Main;
 import io.github.alexiscomete.lapinousecond.resources.Resource;
 import io.github.alexiscomete.lapinousecond.resources.ResourceManager;
 import io.github.alexiscomete.lapinousecond.roles.Role;
@@ -11,7 +13,7 @@ import io.github.alexiscomete.lapinousecond.save.Tables;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Player extends CacheGetSet {
+public class Player extends CacheGetSet implements Owner {
 
     private double bal;
     private long server;
@@ -142,5 +144,15 @@ public class Player extends CacheGetSet {
 
     public void updateResources() {
         saveManager.setValue(Tables.PLAYERS.getTable(), id, "resources", ResourceManager.toString(resourceManagers.values()));
+    }
+
+    @Override
+    public String getOwnerType() {
+        return "player";
+    }
+
+    @Override
+    public String getOwnerString() {
+        return String.valueOf(id);
     }
 }

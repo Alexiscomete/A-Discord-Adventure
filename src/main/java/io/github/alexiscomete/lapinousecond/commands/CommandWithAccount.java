@@ -1,7 +1,6 @@
 package io.github.alexiscomete.lapinousecond.commands;
 
-import io.github.alexiscomete.lapinousecond.Player;
-import io.github.alexiscomete.lapinousecond.worlds.Place;
+import io.github.alexiscomete.lapinousecond.entity.Player;
 import org.javacord.api.event.message.MessageCreateEvent;
 
 public abstract class CommandWithAccount extends CommandBot {

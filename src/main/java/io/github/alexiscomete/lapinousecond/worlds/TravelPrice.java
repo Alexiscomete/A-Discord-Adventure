@@ -1,6 +1,6 @@
 package io.github.alexiscomete.lapinousecond.worlds;
 
-import io.github.alexiscomete.lapinousecond.Player;
+import io.github.alexiscomete.lapinousecond.entity.Player;
 
 import java.util.Optional;
 

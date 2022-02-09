@@ -1,8 +1,6 @@
 package io.github.alexiscomete.lapinousecond.commands;
 
-import io.github.alexiscomete.lapinousecond.Main;
-import io.github.alexiscomete.lapinousecond.Player;
-import io.github.alexiscomete.lapinousecond.save.SaveManager;
+import io.github.alexiscomete.lapinousecond.entity.Player;
 import org.javacord.api.entity.server.Server;
 import org.javacord.api.event.message.MessageCreateEvent;
 

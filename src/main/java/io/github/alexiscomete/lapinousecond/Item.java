@@ -1,5 +1,6 @@
 package io.github.alexiscomete.lapinousecond;
 
+import io.github.alexiscomete.lapinousecond.entity.Player;
 import org.javacord.api.event.message.MessageCreateEvent;
 
 public abstract class Item {

@@ -1,11 +1,9 @@
 package io.github.alexiscomete.lapinousecond.save;
 
-import io.github.alexiscomete.lapinousecond.Player;
+import io.github.alexiscomete.lapinousecond.entity.Player;
 import io.github.alexiscomete.lapinousecond.UserPerms;
 import io.github.alexiscomete.lapinousecond.worlds.Place;
 import io.github.alexiscomete.lapinousecond.worlds.ServerBot;
-import io.github.alexiscomete.lapinousecond.worlds.buildings.Building;
-import io.github.alexiscomete.lapinousecond.worlds.buildings.Buildings;
 
 import java.sql.*;
 import java.util.ArrayList;

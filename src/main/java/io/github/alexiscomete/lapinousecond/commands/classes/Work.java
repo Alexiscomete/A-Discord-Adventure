@@ -1,6 +1,6 @@
 package io.github.alexiscomete.lapinousecond.commands.classes;
 
-import io.github.alexiscomete.lapinousecond.Player;
+import io.github.alexiscomete.lapinousecond.entity.Player;
 import io.github.alexiscomete.lapinousecond.resources.ResourceManager;
 import io.github.alexiscomete.lapinousecond.resources.WorkEnum;
 import io.github.alexiscomete.lapinousecond.commands.CommandInServer;
