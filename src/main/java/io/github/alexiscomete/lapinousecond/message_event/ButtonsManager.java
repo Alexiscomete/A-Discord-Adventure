@@ -8,6 +8,7 @@ import java.util.function.Consumer;
 
 public class ButtonsManager implements MessageComponentCreateListener {
     HashMap<Long, HashMap<String, Consumer<MessageComponentCreateEvent>>> hashMap = new HashMap<>();
+    HashMap<Long, Consumer<MessageComponentCreateEvent>> hashButton = new HashMap<>();
 
     @Override
     public void onComponentCreate(MessageComponentCreateEvent messageComponentCreateEvent) {
@@ -22,6 +23,8 @@ public class ButtonsManager implements MessageComponentCreateListener {
                         .setContent("Hum ... étrange, ce bouton semble ne pas exister")
                         .update();
             }
+        } else if (hashButton.containsKey(Long.parseLong(messageComponentCreateEvent.getMessageComponentInteraction().getCustomId()))) {
+            hashButton.get(Long.parseLong(messageComponentCreateEvent.getMessageComponentInteraction().getCustomId())).accept(messageComponentCreateEvent);
         } else {
             messageComponentCreateEvent.getMessageComponentInteraction().createOriginalMessageUpdater().removeAllEmbeds().removeAllComponents().setContent("Il est impossible de répondre à cette demande, soit le bouton est invalide soit le bot a été redémarré (pas de mémoire à long terme pour les boutons)").update();
         }
@@ -29,5 +32,9 @@ public class ButtonsManager implements MessageComponentCreateListener {
 
     public void addMessage(long id, HashMap<String, Consumer<MessageComponentCreateEvent>> hash) {
         hashMap.put(id, hash);
+    }
+
+    public void addButton(long id, Consumer<MessageComponentCreateEvent> eventConsumer) {
+        hashButton.put(id, eventConsumer);
     }
 }

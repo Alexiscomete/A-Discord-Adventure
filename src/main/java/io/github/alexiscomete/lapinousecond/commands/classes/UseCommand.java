@@ -1,7 +1,7 @@
 package io.github.alexiscomete.lapinousecond.commands.classes;
 
 import io.github.alexiscomete.lapinousecond.Item;
-import io.github.alexiscomete.lapinousecond.Player;
+import io.github.alexiscomete.lapinousecond.entity.Player;
 import io.github.alexiscomete.lapinousecond.commands.CommandBot;
 import org.javacord.api.event.message.MessageCreateEvent;
 

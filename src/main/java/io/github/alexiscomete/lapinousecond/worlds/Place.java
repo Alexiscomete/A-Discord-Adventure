@@ -1,6 +1,7 @@
 package io.github.alexiscomete.lapinousecond.worlds;
 
 import io.github.alexiscomete.lapinousecond.Main;
+import io.github.alexiscomete.lapinousecond.entity.Owner;
 import io.github.alexiscomete.lapinousecond.save.*;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 
@@ -9,7 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Optional;
 
-public class Place extends CacheGetSet {
+public class Place extends CacheGetSet implements Owner {
     private Long serverID;
     private ServerBot serverBot;
     private World world;
@@ -107,5 +108,15 @@ public class Place extends CacheGetSet {
             }
         }
         return places1;
+    }
+
+    @Override
+    public String getOwnerType() {
+        return null;
+    }
+
+    @Override
+    public String getOwnerString() {
+        return null;
     }
 }
