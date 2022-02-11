@@ -2,18 +2,20 @@ package io.github.alexiscomete.lapinousecond.worlds.buildings;
 
 import io.github.alexiscomete.lapinousecond.Main;
 import io.github.alexiscomete.lapinousecond.entity.Owner;
+import io.github.alexiscomete.lapinousecond.entity.Player;
 import io.github.alexiscomete.lapinousecond.save.SaveLocation;
 import io.github.alexiscomete.lapinousecond.save.Tables;
 import io.github.alexiscomete.lapinousecond.useful.ProgressionBar;
 import org.javacord.api.entity.message.MessageBuilder;
 import org.javacord.api.entity.message.component.ActionRow;
 import org.javacord.api.entity.message.component.Button;
-import org.javacord.api.entity.message.component.LowLevelComponent;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
+import org.javacord.api.interaction.MessageComponentInteraction;
 
 import java.awt.*;
 import java.util.AbstractMap;
 import java.util.HashMap;
+import java.util.Objects;
 
 public class BuildProject extends Building {
 
@@ -31,7 +33,7 @@ public class BuildProject extends Building {
                 .setTitle("Construction d'un bâtiment")
                 .setDescription("Type : " + getString("type"))
                 .addInlineField("Owner", "Type : " + getString("type") + "\nIdentification : " + getString("owner"))
-                .addInlineField("Progression", progressionBar.getBar());
+                .addInlineField("Progression", progressionBar.getBar() + "\n" + getString("collect_value") + "/" + getString("collect_target"));
     }
 
     @Override
@@ -40,12 +42,48 @@ public class BuildProject extends Building {
         MessageBuilder messageBuilder = new MessageBuilder()
                 .addEmbed(getInfos())
                 .addComponents(ActionRow.of(
-                        Button.success(String.valueOf(id), "Investire")
+                        Button.success(String.valueOf(id), "Investir")
                 ));
+
         Main.getButtonsManager().addButton(id, (messageComponentCreateEvent -> {
-            messageComponentCreateEvent.getMessageComponentInteraction().createImmediateResponder().setContent("Entrez le montant à investire (l'investissement ne rapporte pas une 'part' du bâtiment, il faut pour cela utiliser une entreprise)");
-            //TODO : suite
+            MessageComponentInteraction msg = messageComponentCreateEvent.getMessageComponentInteraction();
+
+            msg.createImmediateResponder().setContent("Entrez le montant à investir (l' investissement ne rapporte pas une 'part' du bâtiment, il faut pour cela utiliser une entreprise)");
+
+            Main.getMessagesManager().addListener(msg.getChannel().get(), msg.getUser().getId(), messageCreateEvent -> {
+                String content = messageCreateEvent.getMessageContent();
+                try {
+                    double price = Long.parseLong(content);
+                    Player player = Main.getSaveManager().getPlayer(messageCreateEvent.getMessageAuthor().getId());
+                    if (player == null) {
+                        messageCreateEvent.getMessage().reply("Vous n'avez pas de compte");
+                        return;
+                    }
+                    double bal = player.getBal();
+                    if (bal < price) {
+                        messageCreateEvent.getMessage().reply("Hum ... vous n'avez pas cette argent, annulation");
+                        return;
+                    }
+                    player.setBal(bal - price);
+                    double coValue = Double.parseDouble(getString("collect_value"));
+                    if (coValue + price > Double.parseDouble(getString("collect_target"))) {
+                        messageCreateEvent.getMessage().reply("Montant trop élevé");
+                        messageCreateEvent.getMessage().reply("Montant attendu : " + (Double.parseDouble(getString("collect_target")) - coValue));
+                        return;
+                    }
+                    set("collect_value", String.valueOf(coValue + price));
+                    messageCreateEvent.getMessage().reply("Transaction effectuée");
+                    if (Objects.equals(getString("collect_value"), getString("collect_target"))) {
+                        messageCreateEvent.getMessage().reply("Build terminé");
+                    } else {
+                        messageCreateEvent.getMessage().reply(getInfos());
+                    }
+                } catch (NumberFormatException numberFormatException) {
+                    messageCreateEvent.getMessage().reply("Ceci n'est pas un montant, annulation");
+                }
+            });
         }));
+
         return messageBuilder;
     }
 
@@ -60,6 +98,7 @@ public class BuildProject extends Building {
         set("build_status", "building");
         set("owner_type", owner.getOwnerType());
         set("owner", owner.getOwnerString());
+        set("collect_value", "0.0");
         for (AbstractMap.SimpleEntry<String, String> special :
              specialInfos) {
             set(special.getKey(), special.getValue());
