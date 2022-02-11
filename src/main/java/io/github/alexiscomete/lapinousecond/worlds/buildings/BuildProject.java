@@ -75,6 +75,8 @@ public class BuildProject extends Building {
                     messageCreateEvent.getMessage().reply("Transaction effectuée");
                     if (Objects.equals(getString("collect_value"), getString("collect_target"))) {
                         messageCreateEvent.getMessage().reply("Build terminé");
+                        set("build_status", "finish");
+                        // TODO : build
                     } else {
                         messageCreateEvent.getMessage().reply(getInfos());
                     }
