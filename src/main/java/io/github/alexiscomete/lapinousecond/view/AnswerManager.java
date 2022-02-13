@@ -2,16 +2,18 @@ package io.github.alexiscomete.lapinousecond.view;
 
 import org.json.JSONObject;
 
+import java.io.InputStream;
 import java.util.Scanner;
 
 public class AnswerManager {
     private final JSONObject jsonObject;
 
-    public AnswerManager(String path) {
-        Scanner sc = new Scanner(path);
+    public AnswerManager(InputStream input) {
+        Scanner sc = new Scanner(input);
         StringBuilder builder = new StringBuilder();
         sc.forEachRemaining(builder::append);
         jsonObject = new JSONObject(builder.toString());
+        sc.close();
     }
 
     public String getAnswer(LangageEnum langageEnum, AnswerEnum answerEnum) {

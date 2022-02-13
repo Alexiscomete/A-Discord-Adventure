@@ -14,5 +14,9 @@ public enum AnswerEnum {
         return name;
     }
 
+    private static final AnswerManager answerManager = new AnswerManager(AnswerEnum.class.getResourceAsStream("answers.json"));
 
+    public static AnswerManager getAnswerManager() {
+        return answerManager;
+    }
 }
