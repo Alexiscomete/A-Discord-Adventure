@@ -1,3 +1,10 @@
 {
-
+  "name": {
+    "french": "nom",
+    "dibi": "mitai"
+  },
+  "description": {
+    "french": "description",
+    "dibi": "staiti"
+  }
 }
