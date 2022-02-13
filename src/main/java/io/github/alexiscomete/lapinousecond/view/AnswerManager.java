@@ -5,7 +5,7 @@ import org.json.JSONObject;
 import java.util.Scanner;
 
 public class AnswerManager {
-    private JSONObject jsonObject;
+    private final JSONObject jsonObject;
 
     public AnswerManager(String path) {
         Scanner sc = new Scanner(path);
@@ -15,6 +15,23 @@ public class AnswerManager {
     }
 
     public String getAnswer(LangageEnum langageEnum, AnswerEnum answerEnum) {
-        return null;
+        JSONObject object = jsonObject.getJSONObject(answerEnum.getName());
+        if (object == null) {
+            return langageEnum.getInvalidAnswer();
+        }
+        String answer = object.getString(langageEnum.getName());
+        if (answer == null || answer.equals("")) {
+            return langageEnum.getInvalidAnswer();
+        }
+        return answer;
+    }
+
+    public String formatAnswer(String answer, Object... format) {
+        int i = 0;
+        for (Object form :
+                format) {
+            answer = answer.replace("replace" + i, form.toString());
+        }
+        return answer;
     }
 }
