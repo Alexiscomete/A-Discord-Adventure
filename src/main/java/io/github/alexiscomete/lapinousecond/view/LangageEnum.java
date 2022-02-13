@@ -3,7 +3,7 @@ package io.github.alexiscomete.lapinousecond.view;
 public enum LangageEnum {
 
     FRENCH("Réponse invalide", "french"),
-    DIBI("Arto kroleksi livalidial", "Dibi");
+    DIBI("Arto kroleksi livalidial", "dibi");
 
     private final String invalidAnswer, name;
 

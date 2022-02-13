@@ -9,6 +9,7 @@ import io.github.alexiscomete.lapinousecond.roles.RolesEnum;
 import io.github.alexiscomete.lapinousecond.save.CacheGetSet;
 import io.github.alexiscomete.lapinousecond.save.SaveManager;
 import io.github.alexiscomete.lapinousecond.save.Tables;
+import io.github.alexiscomete.lapinousecond.view.AnswerEnum;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -154,5 +155,17 @@ public class Player extends CacheGetSet implements Owner {
     @Override
     public String getOwnerString() {
         return String.valueOf(id);
+    }
+
+    public String getAnswer(AnswerEnum answerEnum) {
+        String langage = getString("langage");
+        if (langage == null || langage.equals("")) {
+            langage = "FRENCH";
+        }
+        try {
+
+        } catch (IllegalArgumentException argumentException) {
+            langage = "FRENCH";
+        }
     }
 }
