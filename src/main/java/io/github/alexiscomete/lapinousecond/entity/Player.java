@@ -158,19 +158,23 @@ public class Player extends CacheGetSet implements Owner {
         return String.valueOf(id);
     }
 
-    public String getAnswer(AnswerEnum answerEnum, Object... format) {
+    public String getAnswer(AnswerEnum answerEnum, boolean maj, Object... format) {
         String langage = getString("langage");
         LangageEnum langageEnum;
         if (langage == null || langage.equals("")) {
             langageEnum = LangageEnum.FRENCH;
         } else {
             try {
-                langageEnum = LangageEnum.valueOf(langage);
+                langageEnum = LangageEnum.valueOf(langage.toUpperCase());
             } catch (IllegalArgumentException argumentException) {
                 langageEnum = LangageEnum.FRENCH;
             }
         }
         String answer = AnswerEnum.getAnswerManager().getAnswer(langageEnum, answerEnum);
-        return AnswerEnum.getAnswerManager().formatAnswer(answer, format);
+        answer = AnswerEnum.getAnswerManager().formatAnswer(answer, format);
+        if (maj) {
+            answer = answer.substring(0, 1).toUpperCase() + answer.substring(1);
+        }
+        return answer;
     }
 }
