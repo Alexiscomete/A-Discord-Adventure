@@ -1,5 +1,6 @@
 package io.github.alexiscomete.lapinousecond.worlds.buildings;
 
+import io.github.alexiscomete.lapinousecond.entity.Player;
 import io.github.alexiscomete.lapinousecond.save.CacheGetSet;
 import io.github.alexiscomete.lapinousecond.save.Tables;
 import org.javacord.api.entity.message.MessageBuilder;
@@ -11,7 +12,7 @@ public abstract class Building extends CacheGetSet {
         super(id, Tables.BUILDINGS.getTable());
     }
 
-    public abstract EmbedBuilder getInfos();
-    public abstract MessageBuilder getCompleteInfos();
+    public abstract EmbedBuilder getInfos(Player p);
+    public abstract MessageBuilder getCompleteInfos(Player p);
 
 }

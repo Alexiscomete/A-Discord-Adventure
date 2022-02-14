@@ -2,7 +2,9 @@ package io.github.alexiscomete.lapinousecond.view;
 
 public enum AnswerEnum {
 
-    ;
+    NAME("name"),
+    DESCR("description"),
+    PROGRESSION("progression");
 
     private final String name;
 

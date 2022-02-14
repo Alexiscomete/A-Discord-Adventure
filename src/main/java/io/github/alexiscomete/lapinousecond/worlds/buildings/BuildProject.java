@@ -27,7 +27,7 @@ public class BuildProject extends Building {
     }
 
     @Override
-    public EmbedBuilder getInfos() {
+    public EmbedBuilder getInfos(Player p) {
         return new EmbedBuilder()
                 .setColor(Color.CYAN)
                 .setTitle("Construction d'un bâtiment")
@@ -37,10 +37,10 @@ public class BuildProject extends Building {
     }
 
     @Override
-    public MessageBuilder getCompleteInfos() {
+    public MessageBuilder getCompleteInfos(Player p) {
         long id = SaveLocation.generateUniqueID();
         MessageBuilder messageBuilder = new MessageBuilder()
-                .addEmbed(getInfos())
+                .addEmbed(getInfos(p))
                 .addComponents(ActionRow.of(
                         Button.success(String.valueOf(id), "Investir")
                 ));
@@ -78,7 +78,7 @@ public class BuildProject extends Building {
                         set("build_status", "finish");
                         // TODO : build
                     } else {
-                        messageCreateEvent.getMessage().reply(getInfos());
+                        messageCreateEvent.getMessage().reply(getInfos(p));
                     }
                 } catch (NumberFormatException numberFormatException) {
                     messageCreateEvent.getMessage().reply("Ceci n'est pas un montant, annulation");
