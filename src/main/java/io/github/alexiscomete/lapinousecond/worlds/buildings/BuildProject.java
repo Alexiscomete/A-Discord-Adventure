@@ -57,7 +57,7 @@ public class BuildProject extends Building {
                     double price = Long.parseLong(content);
                     Player player = Main.getSaveManager().getPlayer(messageCreateEvent.getMessageAuthor().getId());
                     if (player == null) {
-                        messageCreateEvent.getMessage().reply("Vous n'avez pas de compte");
+                        messageCreateEvent.getMessage().reply("Vous n'avez pas de compte, utilisez -start");
                         return;
                     }
                     double bal = player.getBal();
