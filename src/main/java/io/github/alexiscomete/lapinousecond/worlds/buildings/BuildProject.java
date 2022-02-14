@@ -6,6 +6,7 @@ import io.github.alexiscomete.lapinousecond.entity.Player;
 import io.github.alexiscomete.lapinousecond.save.SaveLocation;
 import io.github.alexiscomete.lapinousecond.save.Tables;
 import io.github.alexiscomete.lapinousecond.useful.ProgressionBar;
+import io.github.alexiscomete.lapinousecond.view.AnswerEnum;
 import org.javacord.api.entity.message.MessageBuilder;
 import org.javacord.api.entity.message.component.ActionRow;
 import org.javacord.api.entity.message.component.Button;
@@ -30,10 +31,10 @@ public class BuildProject extends Building {
     public EmbedBuilder getInfos(Player p) {
         return new EmbedBuilder()
                 .setColor(Color.CYAN)
-                .setTitle("Construction d'un bâtiment")
+                .setTitle(p.getAnswer(AnswerEnum.BUILDING_BA, true))
                 .setDescription("Type : " + getString("type"))
-                .addInlineField("Owner", "Type : " + getString("type") + "\nIdentification : " + getString("owner"))
-                .addInlineField("Progression", progressionBar.getBar() + "\n" + getString("collect_value") + "/" + getString("collect_target"));
+                .addInlineField(p.getAnswer(AnswerEnum.OWNER, true), "Type : " + getString("type") + "\nIdentification : " + getString("owner"))
+                .addInlineField(p.getAnswer(AnswerEnum.PROGRESSION, true), progressionBar.getBar() + "\n" + getString("collect_value") + "/" + getString("collect_target"));
     }
 
     @Override

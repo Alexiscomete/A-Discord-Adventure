@@ -9,6 +9,14 @@
   },
   "progression": {
     "french": "progression",
-    "dibi": ""
+    "dibi": "puori"
+  },
+  "owner": {
+    "french": "owner",
+    "dibi": "linakuan"
+  },
+  "building_ba": {
+    "french": "construction d'un bâtiment",
+    "dibi": "legoi iro"
   }
 }

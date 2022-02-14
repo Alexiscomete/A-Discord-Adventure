@@ -4,7 +4,9 @@ public enum AnswerEnum {
 
     NAME("name"),
     DESCR("description"),
-    PROGRESSION("progression");
+    PROGRESSION("progression"),
+    OWNER("owner"),
+    BUILDING_BA("building_ba");
 
     private final String name;
 
