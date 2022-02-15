@@ -6,6 +6,7 @@ import io.github.alexiscomete.lapinousecond.entity.Player;
 import io.github.alexiscomete.lapinousecond.save.SaveLocation;
 import io.github.alexiscomete.lapinousecond.save.Tables;
 import io.github.alexiscomete.lapinousecond.useful.ProgressionBar;
+import io.github.alexiscomete.lapinousecond.view.AnswerEnum;
 import org.javacord.api.entity.message.MessageBuilder;
 import org.javacord.api.entity.message.component.ActionRow;
 import org.javacord.api.entity.message.component.Button;
@@ -27,20 +28,20 @@ public class BuildProject extends Building {
     }
 
     @Override
-    public EmbedBuilder getInfos() {
+    public EmbedBuilder getInfos(Player p) {
         return new EmbedBuilder()
                 .setColor(Color.CYAN)
-                .setTitle("Construction d'un bâtiment")
+                .setTitle(p.getAnswer(AnswerEnum.BUILDING_BA, true))
                 .setDescription("Type : " + getString("type"))
-                .addInlineField("Owner", "Type : " + getString("type") + "\nIdentification : " + getString("owner"))
-                .addInlineField("Progression", progressionBar.getBar() + "\n" + getString("collect_value") + "/" + getString("collect_target"));
+                .addInlineField(p.getAnswer(AnswerEnum.OWNER, true), "Type : " + getString("type") + "\nIdentification : " + getString("owner"))
+                .addInlineField(p.getAnswer(AnswerEnum.PROGRESSION, true), progressionBar.getBar() + "\n" + getString("collect_value") + "/" + getString("collect_target"));
     }
 
     @Override
-    public MessageBuilder getCompleteInfos() {
+    public MessageBuilder getCompleteInfos(Player p) {
         long id = SaveLocation.generateUniqueID();
         MessageBuilder messageBuilder = new MessageBuilder()
-                .addEmbed(getInfos())
+                .addEmbed(getInfos(p))
                 .addComponents(ActionRow.of(
                         Button.success(String.valueOf(id), "Investir")
                 ));
@@ -56,7 +57,7 @@ public class BuildProject extends Building {
                     double price = Long.parseLong(content);
                     Player player = Main.getSaveManager().getPlayer(messageCreateEvent.getMessageAuthor().getId());
                     if (player == null) {
-                        messageCreateEvent.getMessage().reply("Vous n'avez pas de compte");
+                        messageCreateEvent.getMessage().reply("Vous n'avez pas de compte, utilisez -start");
                         return;
                     }
                     double bal = player.getBal();
@@ -78,7 +79,7 @@ public class BuildProject extends Building {
                         set("build_status", "finish");
                         // TODO : build
                     } else {
-                        messageCreateEvent.getMessage().reply(getInfos());
+                        messageCreateEvent.getMessage().reply(getInfos(p));
                     }
                 } catch (NumberFormatException numberFormatException) {
                     messageCreateEvent.getMessage().reply("Ceci n'est pas un montant, annulation");

@@ -1,3 +1,26 @@
 {
-
+  "name": {
+    "french": "nom",
+    "dibi": "mitai"
+  },
+  "description": {
+    "french": "description",
+    "dibi": "staiti"
+  },
+  "progression": {
+    "french": "progression",
+    "dibi": "puori"
+  },
+  "owner": {
+    "french": "owner",
+    "dibi": "linakuan"
+  },
+  "building_ba": {
+    "french": "construction d'un bâtiment",
+    "dibi": "legoi iro"
+  },
+  "pas_de_compte": {
+    "french": "Vous n'avez pas de compte, utilisez -start",
+    "dibi": "ilane ??? , duuzare -start"
+  }
 }
