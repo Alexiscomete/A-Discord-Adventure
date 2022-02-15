@@ -3,7 +3,6 @@ package io.github.alexiscomete.lapinousecond.worlds.buildings;
 import io.github.alexiscomete.lapinousecond.Main;
 
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.function.Function;
 
 public enum Buildings {
@@ -32,9 +31,6 @@ public enum Buildings {
             String type = Main.getSaveManager().getBuildingType(Long.parseLong(save));
             if (type == null) {
                 return null;
-            }
-            if (Objects.equals(type, "project")) {
-                return new BuildProject(Long.parseLong(save));
             }
             Buildings buildings = valueOf(type);
             return buildings.get(Long.parseLong(save));
