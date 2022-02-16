@@ -1,9 +1,12 @@
 package io.github.alexiscomete.lapinousecond.save;
 
 import io.github.alexiscomete.lapinousecond.UserPerms;
+import io.github.alexiscomete.lapinousecond.entity.Company;
 import io.github.alexiscomete.lapinousecond.entity.Player;
 import io.github.alexiscomete.lapinousecond.worlds.Place;
 import io.github.alexiscomete.lapinousecond.worlds.ServerBot;
+import io.github.alexiscomete.lapinousecond.worlds.buildings.Building;
+import io.github.alexiscomete.lapinousecond.worlds.buildings.Buildings;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -14,6 +17,8 @@ public class SaveManager {
     public final CacheCustom<Player> players = new CacheCustom<>(Tables.PLAYERS.getTable(), Player::new);
     public final CacheCustom<ServerBot> servers = new CacheCustom<>(Tables.SERVERS.getTable(), ServerBot::new);
     public final CacheCustom<Place> places = new CacheCustom<>(Tables.PLACES.getTable(), Place::new);
+    public final CacheCustom<Building> buildings = new CacheCustom<>(Tables.BUILDINGS.getTable(), aLong -> Buildings.load(String.valueOf(aLong)));
+    public final CacheCustom<Company> companies = new CacheCustom<>(Tables.COMPANY.getTable(), Company::new);
 
     private final String path;
 
