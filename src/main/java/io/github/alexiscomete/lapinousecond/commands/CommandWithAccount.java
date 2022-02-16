@@ -10,7 +10,7 @@ public abstract class CommandWithAccount extends CommandBot {
 
     @Override
     public void execute(MessageCreateEvent messageCreateEvent, String content, String[] args) {
-        Player p = saveManager.getPlayer(messageCreateEvent.getMessageAuthor().getId());
+        Player p = saveManager.players.get(messageCreateEvent.getMessageAuthor().getId());
         if (p == null) {
             messageCreateEvent.getMessage().reply("Vous devez d'abord vous créer un compte avec -start");
         } else {

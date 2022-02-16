@@ -14,7 +14,7 @@ public class Hub extends CommandBot {
 
     @Override
     public void execute(MessageCreateEvent messageCreateEvent, String content, String[] args) {
-        Player p = Main.getSaveManager().getPlayer(messageCreateEvent.getMessageAuthor().getId());
+        Player p = Main.getSaveManager().players.get(messageCreateEvent.getMessageAuthor().getId());
         if (p == null) {
             messageCreateEvent.getMessage().reply("Voici le serveur principal : <https://discord.gg/q4hVQ6gwyx>");
             return;

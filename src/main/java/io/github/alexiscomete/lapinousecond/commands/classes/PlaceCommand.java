@@ -29,7 +29,7 @@ public class PlaceCommand extends CommandWithAccount {
     @Override
     public void execute(MessageCreateEvent messageCreateEvent, String content, String[] args, Player p) {
         if (messageCreateEvent.getMessage().isServerMessage()) {
-            ServerBot serverBot = saveManager.getServer(messageCreateEvent.getServer().get().getId());
+            ServerBot serverBot = saveManager.servers.get(messageCreateEvent.getServer().get().getId());
             if (serverBot == null) {
                 messageCreateEvent.getMessage().reply("Utilisez d'abord le -config");
             } else {

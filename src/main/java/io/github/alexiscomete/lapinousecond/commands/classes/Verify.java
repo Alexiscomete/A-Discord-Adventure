@@ -19,11 +19,11 @@ public class Verify extends CommandBot {
 
     @Override
     public void execute(MessageCreateEvent messageCreateEvent, String content, String[] args) {
-        if (saveManager.getPlayer(messageCreateEvent.getMessageAuthor().getId()) != null) {
+        if (saveManager.players.get(messageCreateEvent.getMessageAuthor().getId()) != null) {
             messageCreateEvent.getMessage().reply("Votre vérification est en cours");
             UserData userData = getUserData(messageCreateEvent.getMessageAuthor().getId());
             if (userData.hasAccount()) {
-                Player player = saveManager.getPlayer(messageCreateEvent.getMessageAuthor().getId());
+                Player player = saveManager.players.get(messageCreateEvent.getMessageAuthor().getId());
                 player.setX(userData.getX());
                 player.setY(userData.getY());
                 player.setHasAccount(userData.hasAccount());

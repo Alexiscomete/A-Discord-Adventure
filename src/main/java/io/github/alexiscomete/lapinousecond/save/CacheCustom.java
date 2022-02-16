@@ -23,7 +23,7 @@ public class CacheCustom<U> {
         return hashMap;
     }
 
-    public U getPlayer(long l) {
+    public U get(long l) {
         U u = hashMap.get(l);
         if (u == null) {
             try {

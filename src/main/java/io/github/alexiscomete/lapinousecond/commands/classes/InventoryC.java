@@ -56,7 +56,7 @@ public class InventoryC extends CommandBot {
                     args[1] = args[1].substring(2, args[1].length()-1);
                 }
                 try {
-                    Player p = saveManager.getPlayer(Long.parseLong(args[1]));
+                    Player p = saveManager.players.get(Long.parseLong(args[1]));
                     if (p == null) {
                         messageCreateEvent.getMessage().reply("Cette personne n'a pas encore de compte");
                     } else {
@@ -67,7 +67,7 @@ public class InventoryC extends CommandBot {
                 }
             }
         } else {
-            Player p = saveManager.getPlayer(messageCreateEvent.getMessageAuthor().getId());
+            Player p = saveManager.players.get(messageCreateEvent.getMessageAuthor().getId());
             if (p == null) {
                 messageCreateEvent.getMessage().reply("Vous devez d'abord faire la commande start avant de continuer");
             } else {

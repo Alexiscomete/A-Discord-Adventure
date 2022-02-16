@@ -76,7 +76,7 @@ public abstract class Building extends CacheGetSet {
                 String content = messageCreateEvent.getMessageContent();
                 try {
                     double price = Long.parseLong(content);
-                    Player player = Main.getSaveManager().getPlayer(messageCreateEvent.getMessageAuthor().getId());
+                    Player player = Main.getSaveManager().players.get(messageCreateEvent.getMessageAuthor().getId());
                     if (player == null) {
                         messageCreateEvent.getMessage().reply("Vous n'avez pas de compte, utilisez -start");
                         return;

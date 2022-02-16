@@ -98,7 +98,7 @@ public class Travel extends CommandInServer {
             return;
         }
 
-        ServerBot nextServer = saveManager.getServer(Long.parseLong(dest.getString("serv")));
+        ServerBot nextServer = saveManager.servers.get(Long.parseLong(dest.getString("serv")));
 
         if (nextServer == null) {
             messageCreateEvent.getMessage().reply("Voyage impossible : le serveur n' est pas configuré");

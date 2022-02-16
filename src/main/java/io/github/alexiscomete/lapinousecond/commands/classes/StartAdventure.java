@@ -19,7 +19,7 @@ public class StartAdventure extends CommandBot {
     @Override
     public void execute(MessageCreateEvent messageCreateEvent, String content, String[] args) {
         SaveManager saveManager = Main.getSaveManager();
-        Player p = saveManager.getPlayer(messageCreateEvent.getMessageAuthor().getId());
+        Player p = saveManager.players.get(messageCreateEvent.getMessageAuthor().getId());
         if (p == null) {
             if (messageCreateEvent.isPrivateMessage() || messageCreateEvent.getServer().get().getId() != 854288660147994634L) {
                 messageCreateEvent.getMessage().reply("🙄 Ce bot propose une aventure se déroulant sur de nombreux serveurs, mais elle commence toujours sur le serveur du bot  (vous pourrez le quitter après) : <https://discord.gg/q4hVQ6gwyx>");
@@ -48,7 +48,7 @@ public class StartAdventure extends CommandBot {
                     what.put("tuto", String.valueOf(1));
                     saveManager.insert("players", what);
                     p = new Player(user.getId(), 0.0, 854288660147994634L, (short) 1, userData.isVerify(), userData.hasAccount(), userData.getX(), userData.getY(), "", "");
-                    saveManager.getPlayers().put(user.getId(), p);
+                    saveManager.players.getHashMap().put(user.getId(), p);
                     //TODO modifier lore
                     messageCreateEvent.getMessage().reply("*Vous vous réveillez un matin après un rêve sur le Wumpus d'or. Vous décidez de partir à la recherche de cette légende ...*\nBienvenue dans A Discord Adventure !\nPrêt vivre une aventure se déroulant sur plusieurs serveurs ? Le principe est simple : il existe une histoire principale commune à tout les serveurs, mais chaque serveur peut aussi avoir sa propre histoire plus ou moins configurable ! Les textes RP serons le plus souvent en *italique*. Vous pouvez voyager **de serveur en serveur** quand le bot vous envoie une **invitation**, le plus souvent après avoir **acheté** par exemple un **ticket** pour voyager sur un bateau !\nLes serveurs sont uniquement sur le thème de la **RPDB**, et le bot ne peut être configuré que par des **personnes autorisées**. Si vous voyez malgré tout un abus signalez le sur le **serveur principal du bot**. Commençont le tuto ... tapez la commande `ìnv`");
                 }
