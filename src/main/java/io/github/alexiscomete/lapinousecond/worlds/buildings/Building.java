@@ -50,6 +50,22 @@ public abstract class Building extends CacheGetSet {
     public abstract EmbedBuilder getInfos(Player p);
     public abstract MessageBuilder getCompleteInfos(Player p);
 
+    public EmbedBuilder infos(Player p) {
+        if (getString("build_status").equals("building")) {
+            return inBuildInfos(p);
+        } else {
+            return getInfos(p);
+        }
+    }
+
+    public MessageBuilder completeInfos(Player p) {
+        if (getString("build_status").equals("building")) {
+            return inBuildCompleteInfos(p);
+        } else {
+            return getCompleteInfos(p);
+        }
+    }
+
     EmbedBuilder inBuildInfos(Player p) {
         return new EmbedBuilder()
                 .setColor(Color.CYAN)
@@ -62,7 +78,7 @@ public abstract class Building extends CacheGetSet {
     MessageBuilder inBuildCompleteInfos(Player p) {
         long id = SaveLocation.generateUniqueID();
         MessageBuilder messageBuilder = new MessageBuilder()
-                .addEmbed(getInfos(p))
+                .addEmbed(inBuildInfos(p))
                 .addComponents(ActionRow.of(
                         Button.success(String.valueOf(id), "Investir")
                 ));
@@ -100,7 +116,7 @@ public abstract class Building extends CacheGetSet {
                         set("build_status", "finish");
                         // TODO : build
                     } else {
-                        messageCreateEvent.getMessage().reply(getInfos(p));
+                        messageCreateEvent.getMessage().reply(inBuildInfos(p));
                     }
                 } catch (NumberFormatException numberFormatException) {
                     messageCreateEvent.getMessage().reply("Ceci n'est pas un montant, annulation");
