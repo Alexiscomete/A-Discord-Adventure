@@ -13,11 +13,9 @@ public class SaveManager {
 
     public final CacheCustom<Player> players = new CacheCustom<>(Tables.PLAYERS.getTable(), Player::new);
     public final CacheCustom<ServerBot> servers = new CacheCustom<>(Tables.SERVERS.getTable(), ServerBot::new);
-
+    public final CacheCustom<Place> places = new CacheCustom<>(Tables.PLACES.getTable(), Place::new);
 
     private final String path;
-
-    private final HashMap<Long, Place> places = new HashMap<>();
 
     private Connection co = null;
     private Statement st = null;
@@ -41,23 +39,6 @@ public class SaveManager {
                 }
             }
         }
-    }
-
-    public Place getPlace(long id) {
-        Place p = places.get(id);
-        if (p == null) {
-            try {
-                ResultSet resultSet = st.executeQuery("SELECT * FROM places WHERE id = " + id);
-                if (resultSet.next()) {
-                    p = new Place(id);
-                    places.put(id, p);
-                }
-                resultSet.close();
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-            }
-        }
-        return p;
     }
 
     public String getBuildingType(long id) {
