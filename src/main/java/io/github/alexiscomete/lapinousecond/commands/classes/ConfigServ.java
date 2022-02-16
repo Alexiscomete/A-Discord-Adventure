@@ -52,7 +52,7 @@ public class ConfigServ extends CommandWithAccount {
                         messageCreateEvent.getMessage().reply("Création en cours ....");
                         server = new ServerBot(messageCreateEvent.getServer().get().getId());
                         saveManager.servers.getHashMap().put(server.getId(), server);
-                        saveManager.addServer(messageCreateEvent.getServer().get().getId());
+                        saveManager.servers.add(messageCreateEvent.getServer().get().getId());
                         messageCreateEvent.getMessage().reply("Commençons par configurer le nom (entrez un nom) :");
                         ServerBot finalServer = server;
                         Long id = messageCreateEvent.getMessageAuthor().getId();

@@ -54,14 +54,6 @@ public class SaveManager {
         return null;
     }
 
-    public void addServer(long id) {
-        try {
-            st.executeUpdate("INSERT INTO guilds (id) VALUES (" + id + ")");
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-    }
-
     public ArrayList<Long> getTravels() {
         try {
             ResultSet resultSet = st.executeQuery("SELECT id FROM guilds ORDER BY RAND() LIMIT 6");

@@ -38,6 +38,11 @@ public class CacheCustom<U> {
             }
         }
         return u;
+    }
 
+    public void add(long id) {
+        HashMap<String, String> hashMap = new HashMap<>();
+        hashMap.put("id", String.valueOf(id));
+        Main.getSaveManager().insert(table.getName(), hashMap);
     }
 }
