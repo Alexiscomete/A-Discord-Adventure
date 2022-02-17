@@ -29,7 +29,7 @@ public class PlaceCommand extends CommandWithAccount {
     @Override
     public void execute(MessageCreateEvent messageCreateEvent, String content, String[] args, Player p) {
         if (messageCreateEvent.getMessage().isServerMessage()) {
-            ServerBot serverBot = saveManager.getServer(messageCreateEvent.getServer().get().getId());
+            ServerBot serverBot = saveManager.servers.get(messageCreateEvent.getServer().get().getId());
             if (serverBot == null) {
                 messageCreateEvent.getMessage().reply("Utilisez d'abord le -config");
             } else {
@@ -72,7 +72,7 @@ public class PlaceCommand extends CommandWithAccount {
                             break;
                         case "links":
                             messageCreateEvent.getMessage().reply("Tout les lieux qui ont un lien de voyage avec le lieu de votre serveur");
-                            Place place = saveManager.getPlace(Long.parseLong(serverBot.getString("places")));
+                            Place place = saveManager.places.get(Long.parseLong(serverBot.getString("places")));
                             ArrayList<Place> places1 = Place.toPlaces(place.getString("connections"));
                             MessageBuilder messageBuilder1 = new MessageBuilder();
                             EmbedBuilder builder1 = new EmbedBuilder();
@@ -89,8 +89,8 @@ public class PlaceCommand extends CommandWithAccount {
                         case "add_link":
                             if (args.length > 2) {
                                 try {
-                                    Place place1 = saveManager.getPlace(Long.parseLong(serverBot.getString("places")));
-                                    Place place2 = saveManager.getPlace(Long.parseLong(args[2]));
+                                    Place place1 = saveManager.places.get(Long.parseLong(serverBot.getString("places")));
+                                    Place place2 = saveManager.places.get(Long.parseLong(args[2]));
                                     if (Objects.equals(place1.getString("world"), place2.getString("world"))) {
                                         if (place1.getString("world").equals("NORMAL")) {
                                             double bal = p.getBal();

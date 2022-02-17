@@ -6,7 +6,9 @@ public enum AnswerEnum {
     DESCR("description"),
     PROGRESSION("progression"),
     OWNER("owner"),
-    BUILDING_BA("building_ba");
+    BUILDING_BA("building_ba"),
+    ECHEC_TRANS("echec_trans"),
+    NO_ENOUGH_MONEY("no_enough_money");
 
     private final String name;
 

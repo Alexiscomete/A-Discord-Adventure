@@ -1,9 +1,12 @@
 package io.github.alexiscomete.lapinousecond.save;
 
-import io.github.alexiscomete.lapinousecond.entity.Player;
 import io.github.alexiscomete.lapinousecond.UserPerms;
+import io.github.alexiscomete.lapinousecond.entity.Company;
+import io.github.alexiscomete.lapinousecond.entity.Player;
 import io.github.alexiscomete.lapinousecond.worlds.Place;
 import io.github.alexiscomete.lapinousecond.worlds.ServerBot;
+import io.github.alexiscomete.lapinousecond.worlds.buildings.Building;
+import io.github.alexiscomete.lapinousecond.worlds.buildings.Buildings;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -11,20 +14,13 @@ import java.util.HashMap;
 
 public class SaveManager {
 
+    public final CacheCustom<Player> players = new CacheCustom<>(Tables.PLAYERS.getTable(), Player::new);
+    public final CacheCustom<ServerBot> servers = new CacheCustom<>(Tables.SERVERS.getTable(), ServerBot::new);
+    public final CacheCustom<Place> places = new CacheCustom<>(Tables.PLACES.getTable(), Place::new);
+    public final CacheCustom<Building> buildings = new CacheCustom<>(Tables.BUILDINGS.getTable(), aLong -> Buildings.load(String.valueOf(aLong)));
+    public final CacheCustom<Company> companies = new CacheCustom<>(Tables.COMPANY.getTable(), Company::new);
+
     private final String path;
-
-    private final HashMap<Long, Player> players = new HashMap<>();
-
-    public HashMap<Long, Player> getPlayers() {
-        return players;
-    }
-
-    public HashMap<Long, ServerBot> getServers() {
-        return servers;
-    }
-
-    private final HashMap<Long, ServerBot> servers = new HashMap<>();
-    private final HashMap<Long, Place> places = new HashMap<>();
 
     private Connection co = null;
     private Statement st = null;
@@ -50,58 +46,6 @@ public class SaveManager {
         }
     }
 
-    public Player getPlayer(long l) {
-        Player p = players.get(l);
-        if (p == null) {
-            try {
-                ResultSet resultSet = st.executeQuery("SELECT * FROM players WHERE id = " + l);
-                if (resultSet.next()) {
-                    p = new Player(resultSet.getLong("id"), resultSet.getDouble("bal"), resultSet.getLong("serv"), resultSet.getShort("tuto"), resultSet.getBoolean("is_verify"), resultSet.getBoolean("has_account"), resultSet.getInt("x"), resultSet.getInt("y"), resultSet.getString("roles"), resultSet.getString("resources"));
-                    players.put(l, p);
-                }
-                resultSet.close();
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-            }
-        }
-        return p;
-
-    }
-
-    public ServerBot getServer(long l) {
-        ServerBot serverBot = servers.get(l);
-        if (serverBot == null) {
-            try {
-                ResultSet resultSet = st.executeQuery("SELECT * FROM guilds WHERE id = " + l);
-                if (resultSet.next()) {
-                    serverBot = new ServerBot(l);
-                    servers.put(l, serverBot);
-                }
-                resultSet.close();
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-            }
-        }
-        return serverBot;
-    }
-
-    public Place getPlace(long id) {
-        Place p = places.get(id);
-        if (p == null) {
-            try {
-                ResultSet resultSet = st.executeQuery("SELECT * FROM places WHERE id = " + id);
-                if (resultSet.next()) {
-                    p = new Place(id);
-                    places.put(id, p);
-                }
-                resultSet.close();
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-            }
-        }
-        return p;
-    }
-
     public String getBuildingType(long id) {
         try {
             ResultSet resultSet = st.executeQuery("SELECT * FROM " + Tables.BUILDINGS.getTable().getName() + " WHERE id = " + id);
@@ -113,14 +57,6 @@ public class SaveManager {
             throwables.printStackTrace();
         }
         return null;
-    }
-
-    public void addServer(long id) {
-        try {
-            st.executeUpdate("INSERT INTO guilds (id) VALUES (" + id + ")");
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
     }
 
     public ArrayList<Long> getTravels() {

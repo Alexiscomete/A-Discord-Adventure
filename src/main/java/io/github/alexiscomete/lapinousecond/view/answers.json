@@ -19,8 +19,12 @@
     "french": "construction d'un bâtiment",
     "dibi": "legoi iro"
   },
-  "pas_de_compte": {
-    "french": "Vous n'avez pas de compte, utilisez -start",
-    "dibi": "ilane ??? , duuzare -start"
+  "echec_trans": {
+    "french": "la transaction a échoué : replace1",
+    "dibi": ""
+  },
+  "no_enough_money": {
+    "french": "pas assez d'argent",
+    "dibi": ""
   }
 }

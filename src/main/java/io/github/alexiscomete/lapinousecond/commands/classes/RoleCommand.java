@@ -18,7 +18,7 @@ public class RoleCommand extends CommandBot {
 
     @Override
     public void execute(MessageCreateEvent messageCreateEvent, String content, String[] args) {
-        Player p = saveManager.getPlayer(messageCreateEvent.getMessageAuthor().getId());
+        Player p = saveManager.players.get(messageCreateEvent.getMessageAuthor().getId());
         if (p == null) {
             messageCreateEvent.getMessage().reply("... vous n'avez pas de compte");
             return;
@@ -65,7 +65,7 @@ public class RoleCommand extends CommandBot {
         try {
             RolesEnum rolesEnum = RolesEnum.valueOf(args[2].toUpperCase());
             Role role = rolesEnum.getInstance(messageCreateEvent.getServer().get().getId());
-            Player dest = saveManager.getPlayer(Long.parseLong(args[3]));
+            Player dest = saveManager.players.get(Long.parseLong(args[3]));
             if (hasRole(dest, role)) {
                 messageCreateEvent.getMessage().reply("Cette personne a déjà ce rôle sur ce serveur");
             } else {

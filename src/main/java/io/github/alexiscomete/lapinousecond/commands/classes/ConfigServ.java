@@ -22,7 +22,7 @@ public class ConfigServ extends CommandWithAccount {
     @Override
     public void execute(MessageCreateEvent messageCreateEvent, String content, String[] args, Player p) {
         if (messageCreateEvent.isServerMessage() && messageCreateEvent.getServer().isPresent() && messageCreateEvent.getMessageAuthor().asUser().isPresent()) {
-            ServerBot server = saveManager.getServer(messageCreateEvent.getServer().get().getId());
+            ServerBot server = saveManager.servers.get(messageCreateEvent.getServer().get().getId());
             if (messageCreateEvent.getMessage().getContent().equalsIgnoreCase("-config info")) {
                 if (server == null) {
                     messageCreateEvent.getMessage().reply("Le serveur n' est pas configuré");
@@ -51,8 +51,8 @@ public class ConfigServ extends CommandWithAccount {
                     if (content.endsWith("oui")) {
                         messageCreateEvent.getMessage().reply("Création en cours ....");
                         server = new ServerBot(messageCreateEvent.getServer().get().getId());
-                        saveManager.getServers().put(server.getId(), server);
-                        saveManager.addServer(messageCreateEvent.getServer().get().getId());
+                        saveManager.servers.getHashMap().put(server.getId(), server);
+                        saveManager.servers.add(messageCreateEvent.getServer().get().getId());
                         messageCreateEvent.getMessage().reply("Commençons par configurer le nom (entrez un nom) :");
                         ServerBot finalServer = server;
                         Long id = messageCreateEvent.getMessageAuthor().getId();

@@ -13,7 +13,7 @@ public class UseCommand extends CommandBot {
 
     @Override
     public void execute(MessageCreateEvent messageCreateEvent, String content, String[] args) {
-        Player p = saveManager.getPlayer(messageCreateEvent.getMessageAuthor().getId());
+        Player p = saveManager.players.get(messageCreateEvent.getMessageAuthor().getId());
         if (p == null) {
             messageCreateEvent.getMessage().reply("Vous devez avoir un compte pour continuer");
             return;

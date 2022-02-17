@@ -30,6 +30,20 @@ public class Player extends CacheGetSet implements Owner {
     private final HashMap<Resource, ResourceManager> resourceManagers;
     private final SaveManager saveManager = Main.getSaveManager();
 
+    public Player(Long id) {
+        super(id, Tables.PLAYERS.getTable());
+        this.bal = Double.parseDouble(getString("bal"));
+        this.server = Long.parseLong(getString("serv"));
+        this.tuto = Short.parseShort(getString("tuto"));
+        this.isVerify = Boolean.parseBoolean(getString("is_verify"));
+        this.hasAccount = Boolean.parseBoolean(getString("has_account"));
+        this.x = Integer.parseInt("x");
+        this.y = Integer.parseInt("y");
+        this.workTime = 0;
+        this.roles = RolesEnum.getRoles(getString("roles"));
+        this.resourceManagers = ResourceManager.stringToArray(getString("ressources"));
+    }
+
     public long getWorkTime() {
         return workTime;
     }

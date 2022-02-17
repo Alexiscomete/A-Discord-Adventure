@@ -43,7 +43,7 @@ public class Travel extends CommandInServer {
             p.set("place_NORMAL", new ServerBot(854288660147994634L).getString("places"));
         }
 
-        Place place = saveManager.getPlace(Long.parseLong(placeID));
+        Place place = saveManager.places.get(Long.parseLong(placeID));
 
         if (place == null) {
             System.out.println(placeID);
@@ -98,7 +98,7 @@ public class Travel extends CommandInServer {
             return;
         }
 
-        ServerBot nextServer = saveManager.getServer(Long.parseLong(dest.getString("serv")));
+        ServerBot nextServer = saveManager.servers.get(Long.parseLong(dest.getString("serv")));
 
         if (nextServer == null) {
             messageCreateEvent.getMessage().reply("Voyage impossible : le serveur n' est pas configuré");
