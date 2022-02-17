@@ -49,6 +49,7 @@ public abstract class Building extends CacheGetSet {
 
     public abstract EmbedBuilder getInfos(Player p);
     public abstract MessageBuilder getCompleteInfos(Player p);
+    public abstract void configBuilding();
 
     public EmbedBuilder infos(Player p) {
         if (getString("build_status").equals("building")) {
@@ -85,7 +86,6 @@ public abstract class Building extends CacheGetSet {
 
         Main.getButtonsManager().addButton(id, (messageComponentCreateEvent -> {
             MessageComponentInteraction msg = messageComponentCreateEvent.getMessageComponentInteraction();
-
             msg.createImmediateResponder().setContent("Entrez le montant à investir (l' investissement ne rapporte pas une 'part' du bâtiment, il faut pour cela utiliser une entreprise)");
 
             Main.getMessagesManager().addListener(msg.getChannel().get(), msg.getUser().getId(), messageCreateEvent -> {
@@ -114,7 +114,7 @@ public abstract class Building extends CacheGetSet {
                     if (Objects.equals(getString("collect_value"), getString("collect_target"))) {
                         messageCreateEvent.getMessage().reply("Build terminé");
                         set("build_status", "finish");
-                        // TODO : build
+                        configBuilding();
                     } else {
                         messageCreateEvent.getMessage().reply(inBuildInfos(p));
                     }
