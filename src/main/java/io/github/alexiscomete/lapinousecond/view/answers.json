@@ -26,5 +26,9 @@
   "no_enough_money": {
     "french": "pas assez d'argent",
     "dibi": ""
+  },
+  "confirmation": {
+    "french": "Voulez-vous confirmer ?",
+    "dibi": ""
   }
 }
