@@ -20,12 +20,21 @@ public class Transaction {
     }
 
     public void make(TextChannel textChannel, Double quantity, Player player) {
+        if (basic(quantity)) {
+            textChannel.sendMessage(""); //TODO
+        } else {
+            textChannel.sendMessage(player.getAnswer(AnswerEnum.ECHEC_TRANS, true, player.getAnswer(AnswerEnum.NO_ENOUGH_MONEY, false)));
+        }
+    }
+
+    public boolean basic(Double quantity) {
         Double money = getMoney.get();
         if (money > quantity) {
             addMoney.accept(quantity);
             removeMoney.accept(quantity);
+            return true;
         } else {
-            textChannel.sendMessage(player.getAnswer(AnswerEnum.ECHEC_TRANS, true, player.getAnswer(AnswerEnum.NO_ENOUGH_MONEY, false)));
+            return false;
         }
     }
 }

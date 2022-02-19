@@ -8,7 +8,8 @@ public enum AnswerEnum {
     OWNER("owner"),
     BUILDING_BA("building_ba"),
     ECHEC_TRANS("echec_trans"),
-    NO_ENOUGH_MONEY("no_enough_money");
+    NO_ENOUGH_MONEY("no_enough_money"),
+    CONFIRMATION("confirmation");
 
     private final String name;
 
