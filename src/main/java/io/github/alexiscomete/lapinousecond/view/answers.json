@@ -30,5 +30,9 @@
   "confirmation": {
     "french": "Voulez-vous confirmer ?",
     "dibi": ""
+  },
+  "montant_tr": {
+    "french": "montant de la transaction : replace1 rb",
+    "dibi": ""
   }
 }

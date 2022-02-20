@@ -9,7 +9,8 @@ public enum AnswerEnum {
     BUILDING_BA("building_ba"),
     ECHEC_TRANS("echec_trans"),
     NO_ENOUGH_MONEY("no_enough_money"),
-    CONFIRMATION("confirmation");
+    CONFIRMATION("confirmation"),
+    MONTANT_TR("montant_tr");
 
     private final String name;
 

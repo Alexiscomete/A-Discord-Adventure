@@ -25,7 +25,9 @@ public class VerifTransaction extends Transaction {
         EmbedBuilder embedBuilder = new EmbedBuilder()
                 .setTitle(p.getAnswer(AnswerEnum.CONFIRMATION, true))
                 .setColor(Color.BLUE)
-                .setDescription("");
-        MessageBuilder messageBuilder = new MessageBuilder();
+                .setDescription(p.getAnswer(AnswerEnum.MONTANT_TR, true, String.valueOf(quantity)));
+        MessageBuilder messageBuilder = new MessageBuilder()
+                .addEmbed(embedBuilder);
+
     }
 }
