@@ -1,7 +1,6 @@
 package io.github.alexiscomete.lapinousecond.useful;
 
 import io.github.alexiscomete.lapinousecond.Main;
-import io.github.alexiscomete.lapinousecond.commands.classes.Help;
 import io.github.alexiscomete.lapinousecond.entity.Player;
 import io.github.alexiscomete.lapinousecond.save.SaveLocation;
 import io.github.alexiscomete.lapinousecond.view.AnswerEnum;
@@ -34,6 +33,10 @@ public class VerifTransaction extends Transaction {
                 .addEmbed(embedBuilder)
                 .addComponents(ActionRow.of(Button.success(String.valueOf(id), "Valider")));
         messageBuilder.send(textChannel);
-        Main.getButtonsManager().addButton(id, (messageComponentCreateEvent) -> make(textChannel, quantity, p));
+        Main.getButtonsManager().addButton(id, (messageComponentCreateEvent) -> {
+            if (messageComponentCreateEvent.getMessageComponentInteraction().getUser().getId() == p.getId()) {
+                make(quantity, p, (str) -> messageComponentCreateEvent.getMessageComponentInteraction().createImmediateResponder().setContent(str).respond(), (str) -> messageComponentCreateEvent.getMessageComponentInteraction().createImmediateResponder().setContent(str).respond());
+            }
+        });
     }
 }

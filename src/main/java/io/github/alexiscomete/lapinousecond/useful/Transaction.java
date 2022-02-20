@@ -20,10 +20,14 @@ public class Transaction {
     }
 
     public void make(TextChannel textChannel, Double quantity, Player player) {
+        make(quantity, player, textChannel::sendMessage, textChannel::sendMessage);
+    }
+
+    public void make(Double quantity, Player player, Consumer<String> acc, Consumer<String> de) {
         if (basic(quantity)) {
-            textChannel.sendMessage(player.getAnswer(AnswerEnum.TR_END, true)); //TODO
+            acc.accept(player.getAnswer(AnswerEnum.TR_END, true));
         } else {
-            textChannel.sendMessage(player.getAnswer(AnswerEnum.ECHEC_TRANS, true, player.getAnswer(AnswerEnum.NO_ENOUGH_MONEY, false)));
+            de.accept(player.getAnswer(AnswerEnum.ECHEC_TRANS, true, player.getAnswer(AnswerEnum.NO_ENOUGH_MONEY, false)));
         }
     }
 
