@@ -34,5 +34,9 @@
   "montant_tr": {
     "french": "montant de la transaction : replace1 rb",
     "dibi": ""
+  },
+  "tr_end": {
+    "french": "transaction effectuée",
+    "dibi": ""
   }
 }

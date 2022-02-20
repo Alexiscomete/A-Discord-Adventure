@@ -21,7 +21,7 @@ public class Transaction {
 
     public void make(TextChannel textChannel, Double quantity, Player player) {
         if (basic(quantity)) {
-            textChannel.sendMessage(""); //TODO
+            textChannel.sendMessage(player.getAnswer(AnswerEnum.TR_END, true)); //TODO
         } else {
             textChannel.sendMessage(player.getAnswer(AnswerEnum.ECHEC_TRANS, true, player.getAnswer(AnswerEnum.NO_ENOUGH_MONEY, false)));
         }

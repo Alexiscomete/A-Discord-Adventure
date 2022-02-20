@@ -10,7 +10,8 @@ public enum AnswerEnum {
     ECHEC_TRANS("echec_trans"),
     NO_ENOUGH_MONEY("no_enough_money"),
     CONFIRMATION("confirmation"),
-    MONTANT_TR("montant_tr");
+    MONTANT_TR("montant_tr"),
+    TR_END("tr_end");
 
     private final String name;
 
