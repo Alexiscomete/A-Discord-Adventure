@@ -18,15 +18,13 @@ import java.util.function.Supplier;
 public class VerifTransaction extends Transaction {
 
     Player p;
-    TextChannel textChannel;
 
-    public VerifTransaction(Consumer<Double> addMoney, Consumer<Double> removeMoney, Supplier<Double> getMoney, Player p, TextChannel textChannel) {
+    public VerifTransaction(Consumer<Double> addMoney, Consumer<Double> removeMoney, Supplier<Double> getMoney, Player p) {
         super(addMoney, removeMoney, getMoney);
         this.p = p;
-        this.textChannel = textChannel;
     }
 
-    public void ask(Double quantity) {
+    public void askVerif(Double quantity, TextChannel textChannel) {
         Long id = SaveLocation.generateUniqueID();
         EmbedBuilder embedBuilder = new EmbedBuilder()
                 .setTitle(p.getAnswer(AnswerEnum.CONFIRMATION, true))
@@ -36,8 +34,6 @@ public class VerifTransaction extends Transaction {
                 .addEmbed(embedBuilder)
                 .addComponents(ActionRow.of(Button.success(String.valueOf(id), "Valider")));
         messageBuilder.send(textChannel);
-        Main.getButtonsManager().addButton(id, (messageComponentCreateEvent) -> {
-            make(textChannel, quantity, p);
-        });
+        Main.getButtonsManager().addButton(id, (messageComponentCreateEvent) -> make(textChannel, quantity, p));
     }
 }

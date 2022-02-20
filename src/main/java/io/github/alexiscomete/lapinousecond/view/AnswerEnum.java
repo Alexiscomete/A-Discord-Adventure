@@ -11,7 +11,8 @@ public enum AnswerEnum {
     NO_ENOUGH_MONEY("no_enough_money"),
     CONFIRMATION("confirmation"),
     MONTANT_TR("montant_tr"),
-    TR_END("tr_end");
+    TR_END("tr_end"),
+    ASK_MONTANT("ask_montant");
 
     private final String name;
 

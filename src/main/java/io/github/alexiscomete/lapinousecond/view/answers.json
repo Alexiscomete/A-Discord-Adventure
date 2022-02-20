@@ -38,5 +38,9 @@
   "tr_end": {
     "french": "transaction effectuée",
     "dibi": ""
+  },
+  "ask_montant": {
+    "french": "entrez une quantité d' argent",
+    "dibi": ""
   }
 }
