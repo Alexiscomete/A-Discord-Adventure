@@ -12,7 +12,8 @@ public enum AnswerEnum {
     CONFIRMATION("confirmation"),
     MONTANT_TR("montant_tr"),
     TR_END("tr_end"),
-    ASK_MONTANT("ask_montant");
+    ASK_MONTANT("ask_montant"),
+    FORM_INVALID("form_invalid");
 
     private final String name;
 

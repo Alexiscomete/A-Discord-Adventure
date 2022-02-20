@@ -42,5 +42,8 @@
   "ask_montant": {
     "french": "entrez une quantité d' argent",
     "dibi": ""
+  },
+  "form_invalid": {
+    "french": "format invalide"
   }
 }
