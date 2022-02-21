@@ -92,20 +92,17 @@ public abstract class Building extends CacheGetSet {
             MessageComponentInteraction msg = messageComponentCreateEvent.getMessageComponentInteraction();
 
 
-            FullTransaction transaction = new FullTransaction(aDouble -> set("collect_value", String.valueOf(Double.parseDouble(getString("collect_value")) + aDouble)), aDouble -> p.setBal(p.getBal() - aDouble), p::getBal, p, () -> Double.parseDouble(getString("collect_target")) - Double.parseDouble(getString("collect_value")));
-            transaction.full(msg);
-
-
-            Main.getMessagesManager().addListener(msg.getChannel().get(), msg.getUser().getId(), messageCreateEvent -> {
+            FullTransaction transaction = new FullTransaction(aDouble -> {
+                set("collect_value", String.valueOf(Double.parseDouble(getString("collect_value")) + aDouble));
                 if (Objects.equals(getString("collect_value"), getString("collect_target"))) {
-                    messageCreateEvent.getMessage().reply("Build terminé");
+                    msg.getChannel().get().sendMessage("Build terminé");
                     set("build_status", "finish");
                     configBuilding();
                 } else {
-                    messageCreateEvent.getMessage().reply(inBuildInfos(p));
+                    msg.getChannel().get().sendMessage(inBuildInfos(p));
                 }
-
-            });
+            }, aDouble -> p.setBal(p.getBal() - aDouble), p::getBal, p, () -> Double.parseDouble(getString("collect_target")) - Double.parseDouble(getString("collect_value")));
+            transaction.full(msg);
         }));
 
         return messageBuilder;
