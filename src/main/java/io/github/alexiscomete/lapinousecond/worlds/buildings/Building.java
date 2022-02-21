@@ -6,6 +6,7 @@ import io.github.alexiscomete.lapinousecond.entity.Player;
 import io.github.alexiscomete.lapinousecond.save.CacheGetSet;
 import io.github.alexiscomete.lapinousecond.save.SaveLocation;
 import io.github.alexiscomete.lapinousecond.save.Tables;
+import io.github.alexiscomete.lapinousecond.useful.FullTransaction;
 import io.github.alexiscomete.lapinousecond.useful.ProgressionBar;
 import io.github.alexiscomete.lapinousecond.view.AnswerEnum;
 import org.javacord.api.entity.message.MessageBuilder;
@@ -48,7 +49,9 @@ public abstract class Building extends CacheGetSet {
     }
 
     public abstract EmbedBuilder getInfos(Player p);
+
     public abstract MessageBuilder getCompleteInfos(Player p);
+
     public abstract void configBuilding();
 
     public EmbedBuilder infos(Player p) {
@@ -81,46 +84,27 @@ public abstract class Building extends CacheGetSet {
         MessageBuilder messageBuilder = new MessageBuilder()
                 .addEmbed(inBuildInfos(p))
                 .addComponents(ActionRow.of(
-                        Button.success(String.valueOf(id), "Investir")
+                        Button.success(String.valueOf(id), "Donner de l'argent")
                 ));
+
 
         Main.getButtonsManager().addButton(id, (messageComponentCreateEvent -> {
             MessageComponentInteraction msg = messageComponentCreateEvent.getMessageComponentInteraction();
-            msg.createImmediateResponder().setContent("Entrez le montant à investir (l' investissement ne rapporte pas une 'part' du bâtiment, il faut pour cela utiliser une entreprise)");
+
+
+            FullTransaction transaction = new FullTransaction(aDouble -> set("collect_value", String.valueOf(Double.parseDouble(getString("collect_value")) + aDouble)), aDouble -> p.setBal(p.getBal() - aDouble), p::getBal, p, () -> Double.parseDouble(getString("collect_target")) - Double.parseDouble(getString("collect_value")));
+            transaction.full(msg);
+
 
             Main.getMessagesManager().addListener(msg.getChannel().get(), msg.getUser().getId(), messageCreateEvent -> {
-                String content = messageCreateEvent.getMessageContent();
-                try {
-                    double price = Long.parseLong(content);
-                    Player player = Main.getSaveManager().players.get(messageCreateEvent.getMessageAuthor().getId());
-                    if (player == null) {
-                        messageCreateEvent.getMessage().reply("Vous n'avez pas de compte, utilisez -start");
-                        return;
-                    }
-                    double bal = player.getBal();
-                    if (bal < price) {
-                        messageCreateEvent.getMessage().reply("Hum ... vous n'avez pas cette argent, annulation");
-                        return;
-                    }
-                    player.setBal(bal - price);
-                    double coValue = Double.parseDouble(getString("collect_value"));
-                    if (coValue + price > Double.parseDouble(getString("collect_target"))) {
-                        messageCreateEvent.getMessage().reply("Montant trop élevé");
-                        messageCreateEvent.getMessage().reply("Montant attendu : " + (Double.parseDouble(getString("collect_target")) - coValue));
-                        return;
-                    }
-                    set("collect_value", String.valueOf(coValue + price));
-                    messageCreateEvent.getMessage().reply("Transaction effectuée");
-                    if (Objects.equals(getString("collect_value"), getString("collect_target"))) {
-                        messageCreateEvent.getMessage().reply("Build terminé");
-                        set("build_status", "finish");
-                        configBuilding();
-                    } else {
-                        messageCreateEvent.getMessage().reply(inBuildInfos(p));
-                    }
-                } catch (NumberFormatException numberFormatException) {
-                    messageCreateEvent.getMessage().reply("Ceci n'est pas un montant, annulation");
+                if (Objects.equals(getString("collect_value"), getString("collect_target"))) {
+                    messageCreateEvent.getMessage().reply("Build terminé");
+                    set("build_status", "finish");
+                    configBuilding();
+                } else {
+                    messageCreateEvent.getMessage().reply(inBuildInfos(p));
                 }
+
             });
         }));
 

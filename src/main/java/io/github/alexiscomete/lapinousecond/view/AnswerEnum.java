@@ -13,7 +13,8 @@ public enum AnswerEnum {
     MONTANT_TR("montant_tr"),
     TR_END("tr_end"),
     ASK_MONTANT("ask_montant"),
-    FORM_INVALID("form_invalid");
+    FORM_INVALID("form_invalid"),
+    VALUE_TOO_HIGH("value_too_high");
 
     private final String name;
 
