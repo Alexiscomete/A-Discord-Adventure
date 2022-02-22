@@ -14,7 +14,8 @@ public enum AnswerEnum {
     TR_END("tr_end"),
     ASK_MONTANT("ask_montant"),
     FORM_INVALID("form_invalid"),
-    VALUE_TOO_HIGH("value_too_high");
+    VALUE_TOO_HIGH("value_too_high"),
+    IMP_SIT("imp_sit");
 
     private final String name;
 
