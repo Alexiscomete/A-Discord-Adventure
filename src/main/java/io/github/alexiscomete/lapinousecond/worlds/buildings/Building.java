@@ -48,9 +48,9 @@ public abstract class Building extends CacheGetSet {
         progressionBar = new ProgressionBar("💰", 3, "🧱", 3, " ", 1, price, 0.0, 60);
     }
 
-    public abstract EmbedBuilder getInfos(Player p);
+    protected abstract EmbedBuilder getInfos(Player p);
 
-    public abstract MessageBuilder getCompleteInfos(Player p);
+    protected abstract MessageBuilder getCompleteInfos(Player p);
 
     public abstract void configBuilding();
 
@@ -70,7 +70,7 @@ public abstract class Building extends CacheGetSet {
         }
     }
 
-    EmbedBuilder inBuildInfos(Player p) {
+    private EmbedBuilder inBuildInfos(Player p) {
         return new EmbedBuilder()
                 .setColor(Color.CYAN)
                 .setTitle(p.getAnswer(AnswerEnum.BUILDING_BA, true))
