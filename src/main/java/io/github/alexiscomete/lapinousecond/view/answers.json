@@ -45,5 +45,11 @@
   },
   "form_invalid": {
     "french": "format invalide"
+  },
+  "value_too_high": {
+    "french": "valeur trop élevée, valeur maximale : replace1"
+  },
+  "imp_sit": {
+    "french": "action impossible dans la situation actuelle ❌"
   }
 }

@@ -10,8 +10,16 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class FullTransaction extends VerifTransaction {
+    private final Supplier<Double> max;
+
+    public FullTransaction(Consumer<Double> addMoney, Consumer<Double> removeMoney, Supplier<Double> getMoney, Player p, Supplier<Double> max) {
+        super(addMoney, removeMoney, getMoney, p);
+        this.max = max;
+    }
+
     public FullTransaction(Consumer<Double> addMoney, Consumer<Double> removeMoney, Supplier<Double> getMoney, Player p) {
         super(addMoney, removeMoney, getMoney, p);
+        this.max = null;
     }
 
     public void askQuantity(Consumer<Double> after, TextChannel textChannel) {
@@ -28,6 +36,10 @@ public class FullTransaction extends VerifTransaction {
         Main.getMessagesManager().addListener(textChannel, p.getId(), (messageCreateEvent) -> {
             try {
                 double d = Double.parseDouble(messageCreateEvent.getMessage().getContent());
+                if (max != null && d > max.get()) {
+                    messageCreateEvent.getMessage().reply(p.getAnswer(AnswerEnum.VALUE_TOO_HIGH, true, max));
+                    addL(textChannel, after);
+                }
                 after.accept(d);
             } catch (IllegalArgumentException e) {
                 messageCreateEvent.getMessage().reply(p.getAnswer(AnswerEnum.FORM_INVALID, true));
