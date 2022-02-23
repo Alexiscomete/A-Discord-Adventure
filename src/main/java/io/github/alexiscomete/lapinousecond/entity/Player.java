@@ -11,9 +11,12 @@ import io.github.alexiscomete.lapinousecond.save.SaveManager;
 import io.github.alexiscomete.lapinousecond.save.Tables;
 import io.github.alexiscomete.lapinousecond.view.AnswerEnum;
 import io.github.alexiscomete.lapinousecond.view.LangageEnum;
+import io.github.alexiscomete.lapinousecond.worlds.Place;
+import io.github.alexiscomete.lapinousecond.worlds.ServerBot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 
 public class Player extends CacheGetSet implements Owner {
 
@@ -190,5 +193,20 @@ public class Player extends CacheGetSet implements Owner {
             answer = answer.substring(0, 1).toUpperCase() + answer.substring(1);
         }
         return answer;
+    }
+
+    public Place getPlace() {
+        String world = getString("current_world");
+        if (Objects.equals(world, "")) {
+            world = "NORMAL";
+            set("current_world", "NORMAL");
+        }
+        String placeID = getString("place_" + world);
+        if (Objects.equals(placeID, "")) {
+            placeID = new ServerBot(854288660147994634L).getString("places");
+            set("place_NORMAL", new ServerBot(854288660147994634L).getString("places"));
+        }
+
+        return saveManager.places.get(Long.parseLong(placeID));
     }
 }
