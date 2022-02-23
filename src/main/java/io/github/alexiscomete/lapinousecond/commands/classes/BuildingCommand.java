@@ -2,10 +2,16 @@ package io.github.alexiscomete.lapinousecond.commands.classes;
 
 import io.github.alexiscomete.lapinousecond.commands.CommandInServer;
 import io.github.alexiscomete.lapinousecond.entity.Player;
+import io.github.alexiscomete.lapinousecond.message_event.ListButtons;
 import io.github.alexiscomete.lapinousecond.view.AnswerEnum;
+import io.github.alexiscomete.lapinousecond.worlds.Place;
 import io.github.alexiscomete.lapinousecond.worlds.buildings.Building;
 import io.github.alexiscomete.lapinousecond.worlds.buildings.Buildings;
+import org.javacord.api.entity.message.MessageBuilder;
+import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.event.message.MessageCreateEvent;
+
+import java.util.ArrayList;
 
 public class BuildingCommand extends CommandInServer {
 
@@ -62,7 +68,13 @@ public class BuildingCommand extends CommandInServer {
             }
         } else {
             if (building1 == null) {
-
+                Place place = p.getPlace();
+                String buildingsString = place.getString("buildings");
+                ArrayList<Building> buildings = Buildings.loadBuildings(buildingsString);
+                MessageBuilder messageBuilder = new MessageBuilder();
+                EmbedBuilder embedBuilder = new EmbedBuilder();
+                messageBuilder.setEmbed(embedBuilder);
+                ListButtons<Building> buildingListButtons = new ListButtons<>(embedBuilder, buildings, this::addListBuild);
             } else {
                 messageCreateEvent.getMessage().reply(building1.infos(p));
             }
@@ -71,5 +83,9 @@ public class BuildingCommand extends CommandInServer {
 
     public void sendImpossible(MessageCreateEvent messageCreateEvent, Player p) {
         messageCreateEvent.getMessage().reply(p.getAnswer(AnswerEnum.IMP_SIT, true));
+    }
+
+    public void addListBuild(EmbedBuilder embedBuilder, int min, int num, ArrayList<Building> uArrayList) {
+
     }
 }

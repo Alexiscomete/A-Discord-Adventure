@@ -2,20 +2,20 @@ package io.github.alexiscomete.lapinousecond.message_event;
 
 import io.github.alexiscomete.lapinousecond.ListenerMain;
 import io.github.alexiscomete.lapinousecond.Main;
+import io.github.alexiscomete.lapinousecond.save.SaveLocation;
 import org.javacord.api.entity.message.component.ActionRow;
 import org.javacord.api.entity.message.component.Button;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.event.interaction.MessageComponentCreateEvent;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.function.Consumer;
 
 public class ListButtons<U> {
     private int level = 0;
     private final EmbedBuilder builder;
     private final ArrayList<U> uArrayList;
     private final AddContent<U> uAddContent;
+    private final String idLast = String.valueOf(SaveLocation.generateUniqueID()), idNext = String.valueOf(SaveLocation.generateUniqueID());
 
     public void next(MessageComponentCreateEvent messageComponentCreateEvent) {
         if (level + 10 < uArrayList.size()) {
@@ -38,16 +38,16 @@ public class ListButtons<U> {
     public ActionRow getComponents() {
         if (level > 0 && level + 10 < ListenerMain.commands.size()) {
             return ActionRow.of(
-                    Button.success("last_page", "Page précédente"),
-                    Button.success("next_page", "Page suivante")
+                    Button.success(idLast, "Page précédente"),
+                    Button.success(idNext, "Page suivante")
             );
         } else if (level > 0) {
             return ActionRow.of(
-                    Button.success("last_page", "Page précédente")
+                    Button.success(idLast, "Page précédente")
             );
         } else if (level + 10 < ListenerMain.commands.size()) {
             return ActionRow.of(
-                    Button.success("next_page", "Page suivante")
+                    Button.success(idNext, "Page suivante")
             );
         } else {
             return ActionRow.of();
@@ -55,18 +55,18 @@ public class ListButtons<U> {
     }
 
     public void register(long id) {
-        HashMap<String, Consumer<MessageComponentCreateEvent>> hashMap = new HashMap<>();
-        hashMap.put("next_page", this::next);
-        hashMap.put("last_page", this::last);
-        Main.getButtonsManager().addMessage(id, hashMap);
+        Main.getButtonsManager().addButton(Long.parseLong(idLast), this::last);
+        Main.getButtonsManager().addButton(Long.parseLong(idNext), this::next);
     }
 
     public ListButtons(EmbedBuilder embedBuilder, ArrayList<U> uArrayList, AddContent<U> uAddContent) {
-        builder = embedBuilder;
+        this.builder = embedBuilder;
         this.uArrayList = uArrayList;
         this.uAddContent = uAddContent;
+        uAddContent.add(embedBuilder, 0, Math.min(10, uArrayList.size()-level), uArrayList);
     }
 
+    @FunctionalInterface
     public interface AddContent<U> {
         void add(EmbedBuilder embedBuilder, int min, int num, ArrayList<U> uArrayList);
     }
