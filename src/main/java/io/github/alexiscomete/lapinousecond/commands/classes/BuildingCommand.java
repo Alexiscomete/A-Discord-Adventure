@@ -32,7 +32,15 @@ public class BuildingCommand extends CommandInServer {
             switch (args[1]) {
                 case "enter":
                     if (building1 == null) {
+                        if (args.length > 2) {
+                            try {
+                                long i = Long.parseLong(args[2]);
+                            } catch (IllegalArgumentException e) {
 
+                            }
+                        } else {
+                            sendArgs(messageCreateEvent, p);
+                        }
                     } else {
                         sendImpossible(messageCreateEvent, p);
                     }
@@ -81,10 +89,6 @@ public class BuildingCommand extends CommandInServer {
                 messageCreateEvent.getMessage().reply(building1.infos(p));
             }
         }
-    }
-
-    public void sendImpossible(MessageCreateEvent messageCreateEvent, Player p) {
-        messageCreateEvent.getMessage().reply(p.getAnswer(AnswerEnum.IMP_SIT, true));
     }
 
     public void addListBuild(EmbedBuilder embedBuilder, int min, int num, ArrayList<Building> uArrayList) {
