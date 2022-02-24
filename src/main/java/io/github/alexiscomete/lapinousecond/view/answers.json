@@ -51,5 +51,11 @@
   },
   "imp_sit": {
     "french": "action impossible dans la situation actuelle ❌"
+  },
+  "no_enough_args": {
+    "french": "pas assez d' arguments pour cette action"
+  },
+  "illegal_argument_number": {
+    "french": "argument replace1 : nombre attendu"
   }
 }

@@ -1,8 +1,10 @@
 package io.github.alexiscomete.lapinousecond.commands;
 
 import io.github.alexiscomete.lapinousecond.Main;
+import io.github.alexiscomete.lapinousecond.entity.Player;
 import io.github.alexiscomete.lapinousecond.save.SaveManager;
 import io.github.alexiscomete.lapinousecond.UserPerms;
+import io.github.alexiscomete.lapinousecond.view.AnswerEnum;
 import org.javacord.api.entity.channel.ServerTextChannel;
 import org.javacord.api.entity.server.Server;
 import org.javacord.api.event.message.MessageCreateEvent;
@@ -68,4 +70,12 @@ public abstract class CommandBot {
     }
 
     public abstract void execute(MessageCreateEvent messageCreateEvent, String content, String[] args);
+
+    public void sendImpossible(MessageCreateEvent messageCreateEvent, Player p) {
+        messageCreateEvent.getMessage().reply(p.getAnswer(AnswerEnum.IMP_SIT, true));
+    }
+
+    public void sendArgs(MessageCreateEvent messageCreateEvent, Player p) {
+        messageCreateEvent.getMessage().reply(p.getAnswer(AnswerEnum.NO_ENOUGH_ARGS, true));
+    }
 }
