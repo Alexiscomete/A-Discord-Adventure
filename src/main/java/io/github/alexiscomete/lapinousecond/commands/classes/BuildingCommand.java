@@ -75,6 +75,8 @@ public class BuildingCommand extends CommandInServer {
                 EmbedBuilder embedBuilder = new EmbedBuilder();
                 messageBuilder.setEmbed(embedBuilder);
                 ListButtons<Building> buildingListButtons = new ListButtons<>(embedBuilder, buildings, this::addListBuild);
+                buildingListButtons.register();
+                messageBuilder.send(messageCreateEvent.getChannel());
             } else {
                 messageCreateEvent.getMessage().reply(building1.infos(p));
             }
@@ -86,6 +88,9 @@ public class BuildingCommand extends CommandInServer {
     }
 
     public void addListBuild(EmbedBuilder embedBuilder, int min, int num, ArrayList<Building> uArrayList) {
-
+        for (int i = min; i < min + num; i++) {
+            Building u = uArrayList.get(i);
+            embedBuilder.addField(u.getString("name").equals("") ? "???" : u.getString("name"), u.getId() + " -> (" + u.getString("type") + " : " + u.getString("build_status") + ") " + u.getString("descr"));
+        }
     }
 }

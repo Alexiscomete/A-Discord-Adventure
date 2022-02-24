@@ -54,7 +54,7 @@ public class ListButtons<U> {
         }
     }
 
-    public void register(long id) {
+    public void register() {
         Main.getButtonsManager().addButton(Long.parseLong(idLast), this::last);
         Main.getButtonsManager().addButton(Long.parseLong(idNext), this::next);
     }
