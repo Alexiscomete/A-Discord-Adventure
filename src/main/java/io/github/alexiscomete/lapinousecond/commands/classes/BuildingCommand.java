@@ -49,7 +49,8 @@ public class BuildingCommand extends CommandInServer {
                                     //TODO : message
                                     return;
                                 } else {
-                                    
+                                    p.set("building", String.valueOf(i));
+                                    //TODO message
                                 }
                             } catch (IllegalArgumentException e) {
                                 sendNumberEx(messageCreateEvent, p, 2);
