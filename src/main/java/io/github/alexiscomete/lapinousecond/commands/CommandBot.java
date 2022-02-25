@@ -78,4 +78,8 @@ public abstract class CommandBot {
     public void sendArgs(MessageCreateEvent messageCreateEvent, Player p) {
         messageCreateEvent.getMessage().reply(p.getAnswer(AnswerEnum.NO_ENOUGH_ARGS, true));
     }
+
+    public void sendNumberEx(MessageCreateEvent messageCreateEvent, Player p, int i) {
+        messageCreateEvent.getMessage().reply(p.getAnswer(AnswerEnum.ILLEGAL_ARGUMENT_NUMBER, true, i));
+    }
 }

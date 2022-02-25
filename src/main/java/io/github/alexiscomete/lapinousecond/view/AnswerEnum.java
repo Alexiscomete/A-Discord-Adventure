@@ -16,7 +16,8 @@ public enum AnswerEnum {
     FORM_INVALID("form_invalid"),
     VALUE_TOO_HIGH("value_too_high"),
     IMP_SIT("imp_sit"),
-    NO_ENOUGH_ARGS("no_enough_args");
+    NO_ENOUGH_ARGS("no_enough_args"),
+    ILLEGAL_ARGUMENT_NUMBER("illegal_argument_number");
 
     private final String name;
 

@@ -35,8 +35,24 @@ public class BuildingCommand extends CommandInServer {
                         if (args.length > 2) {
                             try {
                                 long i = Long.parseLong(args[2]);
+                                Place place = p.getPlace();
+                                String buildingsString = place.getString("buildings");
+                                ArrayList<Building> buildings = Buildings.loadBuildings(buildingsString);
+                                Building b = null;
+                                for (Building bu :
+                                     buildings) {
+                                    if (bu.getId() == i) {
+                                        b = bu;
+                                    }
+                                }
+                                if (b == null) {
+                                    //TODO : message
+                                    return;
+                                } else {
+                                    
+                                }
                             } catch (IllegalArgumentException e) {
-
+                                sendNumberEx(messageCreateEvent, p, 2);
                             }
                         } else {
                             sendArgs(messageCreateEvent, p);
