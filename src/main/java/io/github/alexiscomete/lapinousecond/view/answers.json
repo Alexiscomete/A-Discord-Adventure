@@ -28,7 +28,7 @@
     "dibi": ""
   },
   "confirmation": {
-    "french": "Voulez-vous confirmer ?",
+    "french": "voulez-vous confirmer ?",
     "dibi": ""
   },
   "montant_tr": {
@@ -57,5 +57,8 @@
   },
   "illegal_argument_number": {
     "french": "argument replace1 : nombre attendu"
+  },
+  "entree_build":{
+    "french": "vous entrez dans le bâtiment"
   }
 }

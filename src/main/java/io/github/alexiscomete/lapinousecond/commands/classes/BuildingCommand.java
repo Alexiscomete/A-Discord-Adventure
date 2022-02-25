@@ -50,7 +50,7 @@ public class BuildingCommand extends CommandInServer {
                                     return;
                                 } else {
                                     p.set("building", String.valueOf(i));
-                                    //TODO message
+                                    messageCreateEvent.getMessage().reply(p.getAnswer(AnswerEnum.ENTREE_BUILD, true));
                                 }
                             } catch (IllegalArgumentException e) {
                                 sendNumberEx(messageCreateEvent, p, 2);
@@ -66,7 +66,7 @@ public class BuildingCommand extends CommandInServer {
                     if (building1 == null) {
                         sendImpossible(messageCreateEvent, p);
                     } else {
-
+                        p.set("building", "exit");
                     }
                     break;
                 case "infos":

@@ -17,7 +17,8 @@ public enum AnswerEnum {
     VALUE_TOO_HIGH("value_too_high"),
     IMP_SIT("imp_sit"),
     NO_ENOUGH_ARGS("no_enough_args"),
-    ILLEGAL_ARGUMENT_NUMBER("illegal_argument_number");
+    ILLEGAL_ARGUMENT_NUMBER("illegal_argument_number"),
+    ENTREE_BUILD("entree_build");
 
     private final String name;
 
