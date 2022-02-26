@@ -50,7 +50,7 @@ public class BuildingCommand extends CommandInServer {
                                     return;
                                 } else {
                                     p.set("building", String.valueOf(i));
-                                    //TODO message
+                                    messageCreateEvent.getMessage().reply(p.getAnswer(AnswerEnum.ENTREE_BUILD, true));
                                 }
                             } catch (IllegalArgumentException e) {
                                 sendNumberEx(messageCreateEvent, p, 2);
@@ -66,7 +66,8 @@ public class BuildingCommand extends CommandInServer {
                     if (building1 == null) {
                         sendImpossible(messageCreateEvent, p);
                     } else {
-
+                        p.set("building", "exit");
+                        sendList(messageCreateEvent, p);
                     }
                     break;
                 case "infos":
@@ -78,7 +79,11 @@ public class BuildingCommand extends CommandInServer {
                     break;
                 case "build":
                     if (building1 == null) {
+                        if (args.length > 2) {
 
+                        } else {
+                            sendBuildTypeList(messageCreateEvent, p);
+                        }
                     } else {
                         sendImpossible(messageCreateEvent, p);
                     }
@@ -93,19 +98,27 @@ public class BuildingCommand extends CommandInServer {
             }
         } else {
             if (building1 == null) {
-                Place place = p.getPlace();
-                String buildingsString = place.getString("buildings");
-                ArrayList<Building> buildings = Buildings.loadBuildings(buildingsString);
-                MessageBuilder messageBuilder = new MessageBuilder();
-                EmbedBuilder embedBuilder = new EmbedBuilder();
-                messageBuilder.setEmbed(embedBuilder);
-                ListButtons<Building> buildingListButtons = new ListButtons<>(embedBuilder, buildings, this::addListBuild);
-                buildingListButtons.register();
-                messageBuilder.send(messageCreateEvent.getChannel());
+                sendList(messageCreateEvent, p);
             } else {
                 messageCreateEvent.getMessage().reply(building1.infos(p));
             }
         }
+    }
+
+    public void sendBuildTypeList(MessageCreateEvent messageCreateEvent, Player p) {
+
+    }
+
+    public void sendList(MessageCreateEvent messageCreateEvent, Player p) {
+        Place place = p.getPlace();
+        String buildingsString = place.getString("buildings");
+        ArrayList<Building> buildings = Buildings.loadBuildings(buildingsString);
+        MessageBuilder messageBuilder = new MessageBuilder();
+        EmbedBuilder embedBuilder = new EmbedBuilder();
+        messageBuilder.setEmbed(embedBuilder);
+        ListButtons<Building> buildingListButtons = new ListButtons<>(embedBuilder, buildings, this::addListBuild);
+        buildingListButtons.register();
+        messageBuilder.send(messageCreateEvent.getChannel());
     }
 
     public void addListBuild(EmbedBuilder embedBuilder, int min, int num, ArrayList<Building> uArrayList) {
