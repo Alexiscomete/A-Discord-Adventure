@@ -67,6 +67,7 @@ public class BuildingCommand extends CommandInServer {
                         sendImpossible(messageCreateEvent, p);
                     } else {
                         p.set("building", "exit");
+                        sendList(messageCreateEvent, p);
                     }
                     break;
                 case "infos":
@@ -93,19 +94,23 @@ public class BuildingCommand extends CommandInServer {
             }
         } else {
             if (building1 == null) {
-                Place place = p.getPlace();
-                String buildingsString = place.getString("buildings");
-                ArrayList<Building> buildings = Buildings.loadBuildings(buildingsString);
-                MessageBuilder messageBuilder = new MessageBuilder();
-                EmbedBuilder embedBuilder = new EmbedBuilder();
-                messageBuilder.setEmbed(embedBuilder);
-                ListButtons<Building> buildingListButtons = new ListButtons<>(embedBuilder, buildings, this::addListBuild);
-                buildingListButtons.register();
-                messageBuilder.send(messageCreateEvent.getChannel());
+                sendList(messageCreateEvent, p);
             } else {
                 messageCreateEvent.getMessage().reply(building1.infos(p));
             }
         }
+    }
+
+    public void sendList(MessageCreateEvent messageCreateEvent, Player p) {
+        Place place = p.getPlace();
+        String buildingsString = place.getString("buildings");
+        ArrayList<Building> buildings = Buildings.loadBuildings(buildingsString);
+        MessageBuilder messageBuilder = new MessageBuilder();
+        EmbedBuilder embedBuilder = new EmbedBuilder();
+        messageBuilder.setEmbed(embedBuilder);
+        ListButtons<Building> buildingListButtons = new ListButtons<>(embedBuilder, buildings, this::addListBuild);
+        buildingListButtons.register();
+        messageBuilder.send(messageCreateEvent.getChannel());
     }
 
     public void addListBuild(EmbedBuilder embedBuilder, int min, int num, ArrayList<Building> uArrayList) {
