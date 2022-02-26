@@ -58,14 +58,18 @@ public abstract class CommandBot {
                 }
             }
         }
-        if (perms == null || perms.length == 0) {
-            execute(messageCreateEvent, content, args);
-            return;
-        }
-        if (UserPerms.check(messageCreateEvent.getMessageAuthor().getId(), perms)) {
-            execute(messageCreateEvent, content, args);
-        } else {
-            messageCreateEvent.getMessage().reply("Vous n'avez pas le droit d'exécuter cette commande");
+        try {
+            if (perms == null || perms.length == 0) {
+                execute(messageCreateEvent, content, args);
+                return;
+            }
+            if (UserPerms.check(messageCreateEvent.getMessageAuthor().getId(), perms)) {
+                execute(messageCreateEvent, content, args);
+            } else {
+                messageCreateEvent.getMessage().reply("Vous n'avez pas le droit d'exécuter cette commande");
+            }
+        } catch (Exception e) {
+            messageCreateEvent.getMessage().reply("Erreur : \n```\n" + e.getLocalizedMessage() + "\n```");
         }
     }
 
