@@ -1,18 +1,25 @@
 {
   "bar": {
-    "cost": 30000,
+    "cost": 40000,
     "évolution": [
       {
         "name": "auberge",
-        "cost": 30000
+        "cost": 40000
       }
     ],
-    "build": true
+    "build": true,
+    "autorisation": [
+      {
+        "name": "all",
+        "possibilités": []
+      }
+    ]
   },
   "auberge": {
     "cost": 0,
     "évolution": [],
-    "build": false
+    "build": false,
+    "autorisation": []
   },
   "journal": {
     "cost": 10000,
@@ -26,7 +33,7 @@
     ]
   },
   "maison": {
-    "cost": 30000,
+    "cost": 40000,
     "évolution": [],
     "build": true,
     "autorisation": [
@@ -40,7 +47,7 @@
     ]
   },
   "marché": {
-    "cost": 20000,
+    "cost": 30000,
     "évolution": [],
     "build": true,
     "autorisation": [
@@ -56,23 +63,158 @@
     ]
   },
   "boutique": {
+    "cost": 10000,
+    "évolution": [],
+    "build": true,
+    "autorisation": [
+      {
+        "name": "all",
+        "possibilités": []
+      }
+    ]
   },
   "casino": {
+    "cost": 30000,
+    "évolution": [],
+    "build": true,
+    "autorisation": [
+      {
+        "name": "choix_ville",
+        "possibilités": [
+          "habitants",
+          "joueurs",
+          "ville",
+          "entreprise"
+        ]
+      }
+    ]
   },
   "bibliothèque": {
+    "cost": 30000,
+    "évolution": [],
+    "build": true,
+    "autorisation": [
+      {
+        "name": "choix_ville",
+        "possibilités": [
+          "habitants",
+          "joueurs",
+          "ville",
+          "entreprise"
+        ]
+      }
+    ]
   },
   "hôpital": {
+    "cost": 30000,
+    "évolution": [],
+    "build": true,
+    "autorisation": [
+      {
+        "name": "choix_ville",
+        "possibilités": [
+          "habitants",
+          "joueurs",
+          "ville",
+          "entreprise"
+        ]
+      }
+    ]
   },
   "pharmacie": {
+    "cost": 30000,
+    "évolution": [],
+    "build": true,
+    "autorisation": [
+      {
+        "name": "choix_ville",
+        "possibilités": [
+          "habitants",
+          "joueurs",
+          "ville",
+          "entreprise"
+        ]
+      }
+    ]
   },
   "arrêt_bus": {
+    "cost": 30000,
+    "évolution": [],
+    "build": true,
+    "autorisation": [
+      {
+        "name": "choix_ville",
+        "possibilités": [
+          "habitants",
+          "joueurs",
+          "ville",
+          "entreprise"
+        ]
+      }
+    ]
   },
   "armurerie": {
+    "cost": 30000,
+    "évolution": [],
+    "build": true,
+    "autorisation": [
+      {
+        "name": "choix_ville",
+        "possibilités": [
+          "habitants",
+          "joueurs",
+          "ville",
+          "entreprise"
+        ]
+      }
+    ]
   },
   "mairie": {
+    "cost": 30000,
+    "évolution": [],
+    "build": true,
+    "autorisation": [
+      {
+        "name": "choix_ville",
+        "possibilités": [
+          "habitants",
+          "joueurs",
+          "ville",
+          "entreprise"
+        ]
+      }
+    ]
   },
   "banque": {
+    "cost": 30000,
+    "évolution": [],
+    "build": true,
+    "autorisation": [
+      {
+        "name": "choix_ville",
+        "possibilités": [
+          "habitants",
+          "joueurs",
+          "ville",
+          "entreprise"
+        ]
+      }
+    ]
   },
   "boulangerie": {
+    "cost": 30000,
+    "évolution": [],
+    "build": true,
+    "autorisation": [
+      {
+        "name": "choix_ville",
+        "possibilités": [
+          "habitants",
+          "joueurs",
+          "ville",
+          "entreprise"
+        ]
+      }
+    ]
   }
 }
