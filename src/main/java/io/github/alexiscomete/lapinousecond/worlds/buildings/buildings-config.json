@@ -1,14 +1,53 @@
 {
   "bar": {
-
+    "cost": 3000,
+    "évolution": [
+      {
+        "name": "auberge",
+        "cost": 3000
+      }
+    ],
+    "build": true
   },
   "auberge": {
-
+    "cost": 0,
+    "évolution": [],
+    "build": false
   },
   "journal": {
 
   },
   "maison": {
     
+  },
+  "marché": {
+
+  },
+  "casino": {
+
+  },
+  "bibliothèque": {
+
+  },
+  "hôpital": {
+
+  },
+  "pharmacie": {
+
+  },
+  "arrêt_bus": {
+
+  },
+  "armurerie": {
+
+  },
+  "mairie": {
+
+  },
+  "banque": {
+
+  },
+  "boulangerie": {
+
   }
 }
