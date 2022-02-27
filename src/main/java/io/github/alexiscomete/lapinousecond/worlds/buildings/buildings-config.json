@@ -106,24 +106,19 @@
     ]
   },
   "hôpital": {
-    "cost": 30000,
+    "cost": 0,
     "évolution": [],
-    "build": true,
-    "autorisation": [
-      {
-        "name": "choix_ville",
-        "possibilités": [
-          "habitants",
-          "joueurs",
-          "ville",
-          "entreprise"
-        ]
-      }
-    ]
+    "build": false,
+    "autorisation": []
   },
   "pharmacie": {
     "cost": 30000,
-    "évolution": [],
+    "évolution": [
+      {
+        "name": "hôpital",
+        "cost": 30000
+      }
+    ],
     "build": true,
     "autorisation": [
       {
@@ -145,8 +140,6 @@
       {
         "name": "choix_ville",
         "possibilités": [
-          "habitants",
-          "joueurs",
           "ville",
           "entreprise"
         ]
@@ -159,13 +152,8 @@
     "build": true,
     "autorisation": [
       {
-        "name": "choix_ville",
-        "possibilités": [
-          "habitants",
-          "joueurs",
-          "ville",
-          "entreprise"
-        ]
+        "name": "all",
+        "possibilités": []
       }
     ]
   },
@@ -175,26 +163,19 @@
     "build": true,
     "autorisation": [
       {
-        "name": "choix_ville",
-        "possibilités": [
-          "habitants",
-          "joueurs",
-          "ville",
-          "entreprise"
-        ]
+        "name": "ville",
+        "possibilités": []
       }
     ]
   },
   "banque": {
-    "cost": 30000,
+    "cost": 70000,
     "évolution": [],
     "build": true,
     "autorisation": [
       {
         "name": "choix_ville",
         "possibilités": [
-          "habitants",
-          "joueurs",
           "ville",
           "entreprise"
         ]
@@ -202,18 +183,13 @@
     ]
   },
   "boulangerie": {
-    "cost": 30000,
+    "cost": 15000,
     "évolution": [],
     "build": true,
     "autorisation": [
       {
-        "name": "choix_ville",
-        "possibilités": [
-          "habitants",
-          "joueurs",
-          "ville",
-          "entreprise"
-        ]
+        "name": "all",
+        "possibilités": []
       }
     ]
   }
