@@ -1,10 +1,10 @@
 {
   "bar": {
-    "cost": 3000,
+    "cost": 30000,
     "évolution": [
       {
         "name": "auberge",
-        "cost": 3000
+        "cost": 30000
       }
     ],
     "build": true
@@ -15,39 +15,64 @@
     "build": false
   },
   "journal": {
-
+    "cost": 10000,
+    "évolution": [],
+    "build": true,
+    "autorisation": [
+      {
+        "name": "entreprise",
+        "possibilités": []
+      }
+    ]
   },
   "maison": {
-    
+    "cost": 30000,
+    "évolution": [],
+    "build": true,
+    "autorisation": [
+      {
+        "name": "choix_ville",
+        "possibilités": [
+          "habitants",
+          "joueurs"
+        ]
+      }
+    ]
   },
   "marché": {
-
+    "cost": 20000,
+    "évolution": [],
+    "build": true,
+    "autorisation": [
+      {
+        "name": "choix_ville",
+        "possibilités": [
+          "habitants",
+          "joueurs",
+          "ville",
+          "entreprise"
+        ]
+      }
+    ]
+  },
+  "boutique": {
   },
   "casino": {
-
   },
   "bibliothèque": {
-
   },
   "hôpital": {
-
   },
   "pharmacie": {
-
   },
   "arrêt_bus": {
-
   },
   "armurerie": {
-
   },
   "mairie": {
-
   },
   "banque": {
-
   },
   "boulangerie": {
-
   }
 }
