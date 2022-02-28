@@ -1,13 +1,10 @@
 package io.github.alexiscomete.lapinousecond.worlds.buildings;
 
-import io.github.alexiscomete.lapinousecond.save.CacheGetSet;
-import io.github.alexiscomete.lapinousecond.save.Tables;
+public abstract class BuildingInteraction implements BuildMethods {
 
-public abstract class BuildingInteraction extends CacheGetSet {
+    protected Building building;
 
-    public BuildingInteraction(long id) {
-        super(id, Tables.BUILDINGS.getTable());
+    public BuildingInteraction(Building building) {
+        this.building = building;
     }
-
-    abstract void configBuilding();
 }
