@@ -1,26 +1,26 @@
 package io.github.alexiscomete.lapinousecond.worlds.buildings;
 
 import io.github.alexiscomete.lapinousecond.Main;
+import org.json.JSONObject;
 
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Scanner;
 import java.util.function.Function;
 
 public enum Buildings {
 
     ;
 
-    private final Function<Long, Building> getBuilding;
-    private final String type;
-    private final double basePrice;
-    private final String name;
-    private final String evol;
+    public static final JSONObject jsonObject;
 
-    Buildings(Function<Long, Building> getBuilding, String type, double basePrice, String name, String evol) {
-        this.getBuilding = getBuilding;
-        this.type = type;
-        this.basePrice = basePrice;
-        this.name = name;
-        this.evol = evol;
+    static {
+        InputStream inputStream = Buildings.class.getResourceAsStream("buildings-config.json");
+        assert inputStream != null;
+        Scanner sc = new Scanner(inputStream);
+        StringBuilder stringBuilder = new StringBuilder();
+        sc.forEachRemaining(stringBuilder::append);
+        jsonObject = new JSONObject(stringBuilder);
     }
 
     public static Building load(String save) {
@@ -54,12 +54,19 @@ public enum Buildings {
         return buildings;
     }
 
-    public Building get(long id) {
-        return getBuilding.apply(id);
+    private final Function<Long, Building> getBuilding;
+    private final double basePrice = 0.0;
+    private final String name;
+    private final ArrayList<Evolution> evol = null;
+    public final boolean build = true;
+
+    Buildings(Function<Long, Building> getBuilding, String name) {
+        this.getBuilding = getBuilding;
+        this.name = name;
     }
 
-    public String getType() {
-        return type;
+    public Building get(long id) {
+        return getBuilding.apply(id);
     }
 
     public double getBasePrice() {
@@ -70,7 +77,7 @@ public enum Buildings {
         return name;
     }
 
-    public String getEvol() {
+    public ArrayList<Evolution> getEvol() {
         return evol;
     }
 }
