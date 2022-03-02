@@ -20,8 +20,9 @@ import java.util.AbstractMap;
 import java.util.HashMap;
 import java.util.Objects;
 
-public abstract class Building extends CacheGetSet {
+public class Building extends CacheGetSet implements BuildMethods {
 
+    private BuildingInteraction buildingInteraction;
     private final ProgressionBar progressionBar;
 
     public Building(long id) {
@@ -48,11 +49,21 @@ public abstract class Building extends CacheGetSet {
         progressionBar = new ProgressionBar("💰", 3, "🧱", 3, " ", 1, price, 0.0, 60);
     }
 
-    protected abstract EmbedBuilder getInfos(Player p);
+    @Override
+    public void configBuilding() {
+        buildingInteraction.configBuilding();
+    }
 
-    protected abstract MessageBuilder getCompleteInfos(Player p);
+    @Override
+    public EmbedBuilder getInfos(Player p) {
+        return buildingInteraction.getInfos(p);
+    }
 
-    public abstract void configBuilding();
+    @Override
+    public MessageBuilder getCompleteInfos(Player p) {
+        return buildingInteraction.getCompleteInfos(p);
+    }
+
 
     public EmbedBuilder infos(Player p) {
         if (getString("build_status").equals("building")) {
@@ -107,5 +118,4 @@ public abstract class Building extends CacheGetSet {
 
         return messageBuilder;
     }
-
 }

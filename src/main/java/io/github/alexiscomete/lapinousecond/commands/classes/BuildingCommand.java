@@ -80,7 +80,7 @@ public class BuildingCommand extends CommandInServer {
                 case "build":
                     if (building1 == null) {
                         if (args.length > 2) {
-
+                            //TODO
                         } else {
                             sendBuildTypeList(messageCreateEvent, p);
                         }
@@ -92,7 +92,7 @@ public class BuildingCommand extends CommandInServer {
                     if (building1 == null) {
                         sendImpossible(messageCreateEvent, p);
                     } else {
-
+                        //TODO
                     }
                     break;
             }
@@ -106,7 +106,7 @@ public class BuildingCommand extends CommandInServer {
     }
 
     public void sendBuildTypeList(MessageCreateEvent messageCreateEvent, Player p) {
-
+        //TODO
     }
 
     public void sendList(MessageCreateEvent messageCreateEvent, Player p) {
