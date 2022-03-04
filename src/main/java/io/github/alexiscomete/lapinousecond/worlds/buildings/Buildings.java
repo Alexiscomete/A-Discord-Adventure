@@ -55,14 +55,19 @@ public enum Buildings {
     }
 
     private final Function<Long, Building> getBuilding;
-    private final double basePrice = 0.0;
     private final String name;
-    private final ArrayList<Evolution> evol = null;
-    public final boolean build = true;
+
+    private double basePrice = 0.0;
+    private final ArrayList<Evolution> evol = new ArrayList<>();
+    private boolean build = true;
 
     Buildings(Function<Long, Building> getBuilding, String name) {
         this.getBuilding = getBuilding;
         this.name = name;
+    }
+
+    public void setModelWithJson() {
+
     }
 
     public Building get(long id) {
