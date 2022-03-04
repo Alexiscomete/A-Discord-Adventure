@@ -4,12 +4,14 @@ import io.github.alexiscomete.lapinousecond.entity.Owner;
 
 public class TypeAutorisation<U> implements BuildingAutorisation {
 
+    Class<U> uClass;
+
+    public TypeAutorisation(Class<U> uClass) {
+        this.uClass = uClass;
+    }
 
     @Override
     public boolean isAutorise(Owner owner) {
-        if (owner instanceof U) {
-            return true;
-        }
-        return false;
+        return uClass.isInstance(owner);
     }
 }
