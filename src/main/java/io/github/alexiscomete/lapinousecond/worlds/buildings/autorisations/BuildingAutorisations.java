@@ -23,7 +23,7 @@ public class BuildingAutorisations {
         this.buildingAutorisationArrayList = buildingAutorisations;
     }
 
-    BuildingAutorisation toAutorisation(JSONObject jsonObject) {
+    public static BuildingAutorisation toAutorisation(JSONObject jsonObject) {
         switch (jsonObject.getString("name")) {
             case "joueurs":
                 return new TypeAutorisation<>(Player.class);
@@ -31,6 +31,10 @@ public class BuildingAutorisations {
                 return new TypeAutorisation<>(Company.class);
             case "ville":
                 return new TypeAutorisation<>(Place.class);
+            case "habitants":
+                return new Inhabitants();
+            case "choix_ville":
+                return new ChoicePlaceAutorisation(jsonObject.getJSONArray("possibilités"));
             default: // and "all"
                 return new AllAutorisation();
         }
