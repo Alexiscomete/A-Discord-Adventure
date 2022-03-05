@@ -29,6 +29,8 @@ public class BuildingAutorisations {
                 return new TypeAutorisation<>(Player.class);
             case "entreprise":
                 return new TypeAutorisation<>(Company.class);
+            case "ville":
+                return new TypeAutorisation<>(Place.class);
             default: // and "all"
                 return new AllAutorisation();
         }
