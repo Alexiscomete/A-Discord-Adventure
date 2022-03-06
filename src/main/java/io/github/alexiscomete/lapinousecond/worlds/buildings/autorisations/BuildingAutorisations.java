@@ -1,6 +1,7 @@
 package io.github.alexiscomete.lapinousecond.worlds.buildings.autorisations;
 
 import io.github.alexiscomete.lapinousecond.entity.Company;
+import io.github.alexiscomete.lapinousecond.entity.Owner;
 import io.github.alexiscomete.lapinousecond.entity.Player;
 import io.github.alexiscomete.lapinousecond.worlds.Place;
 import org.json.JSONArray;
@@ -8,7 +9,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class BuildingAutorisations {
+public class BuildingAutorisations implements BuildingAutorisation {
     private final ArrayList<BuildingAutorisation> buildingAutorisationArrayList;
 
     public BuildingAutorisations(ArrayList<BuildingAutorisation> buildingAutorisationArrayList) {
@@ -38,5 +39,15 @@ public class BuildingAutorisations {
             default: // and "all"
                 return new AllAutorisation();
         }
+    }
+
+    @Override
+    public boolean isAutorise(Owner owner) {
+        for (BuildingAutorisation buildingAutorisation : buildingAutorisationArrayList) {
+            if (buildingAutorisation.isAutorise(owner)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

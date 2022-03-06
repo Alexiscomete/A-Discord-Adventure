@@ -17,6 +17,12 @@ public class ChoicePlaceAutorisation implements BuildingAutorisation {
 
     @Override
     public boolean isAutorise(Owner owner) {
+        for (BuildingAutorisation b :
+                buildingAutorisations) {
+            if (b.isAutorise(owner)) {
+                return true;
+            }
+        }
         return false;
     }
 }
