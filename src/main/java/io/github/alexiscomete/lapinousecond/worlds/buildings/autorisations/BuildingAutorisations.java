@@ -9,11 +9,10 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class BuildingAutorisations implements BuildingAutorisation {
-    private final ArrayList<BuildingAutorisation> buildingAutorisationArrayList;
+public class BuildingAutorisations extends AutList {
 
     public BuildingAutorisations(ArrayList<BuildingAutorisation> buildingAutorisationArrayList) {
-        this.buildingAutorisationArrayList = buildingAutorisationArrayList;
+        this.buildingAutorisations = buildingAutorisationArrayList;
     }
 
     public BuildingAutorisations(JSONArray jsonArray) {
@@ -21,7 +20,7 @@ public class BuildingAutorisations implements BuildingAutorisation {
         for (int i = 0; i < jsonArray.length(); i++) {
             buildingAutorisations.add(toAutorisation(jsonArray.getJSONObject(i)));
         }
-        this.buildingAutorisationArrayList = buildingAutorisations;
+        this.buildingAutorisations = buildingAutorisations;
     }
 
     public static BuildingAutorisation toAutorisation(JSONObject jsonObject) {
@@ -39,15 +38,5 @@ public class BuildingAutorisations implements BuildingAutorisation {
             default: // and "all"
                 return new AllAutorisation();
         }
-    }
-
-    @Override
-    public boolean isAutorise(Owner owner) {
-        for (BuildingAutorisation buildingAutorisation : buildingAutorisationArrayList) {
-            if (buildingAutorisation.isAutorise(owner)) {
-                return true;
-            }
-        }
-        return false;
     }
 }

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class AutList implements BuildingAutorisation {
 
-    private final ArrayList<BuildingAutorisation> buildingAutorisations = new ArrayList<>();
+    protected ArrayList<BuildingAutorisation> buildingAutorisations = new ArrayList<>();
 
     @Override
     public boolean isAutorise(Owner owner) {
