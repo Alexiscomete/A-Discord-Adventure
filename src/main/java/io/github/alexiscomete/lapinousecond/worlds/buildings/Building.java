@@ -37,7 +37,7 @@ public class Building extends CacheGetSet implements BuildMethods {
         hashMap.put("id", String.valueOf(id));
         Main.getSaveManager().insert(Tables.BUILDINGS.getTable().getName(), hashMap);
         set("collect_target", String.valueOf(price));
-        set("type", buildings.getType());
+        set("type", buildings.getName());
         set("build_status", "building");
         set("owner_type", owner.getOwnerType());
         set("owner", owner.getOwnerString());

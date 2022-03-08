@@ -1,6 +1,7 @@
 package io.github.alexiscomete.lapinousecond.worlds.buildings;
 
 import io.github.alexiscomete.lapinousecond.Main;
+import io.github.alexiscomete.lapinousecond.worlds.buildings.autorisations.BuildingAutorisations;
 import org.json.JSONObject;
 
 import java.io.InputStream;
@@ -60,14 +61,16 @@ public enum Buildings {
     private double basePrice = 0.0;
     private final ArrayList<Evolution> evol = new ArrayList<>();
     private boolean build = true;
+    private BuildingAutorisations buildingAutorisations;
 
     Buildings(Function<Long, Building> getBuilding, String name) {
         this.getBuilding = getBuilding;
         this.name = name;
     }
 
-    public void setModelWithJson() {
-
+    public void setModelWithJson(JSONObject jsonObject) {
+        buildingAutorisations = new BuildingAutorisations(jsonObject.getJSONArray("autorisation"));
+        basePrice = jsonObject.getDouble("cost");
     }
 
     public Building get(long id) {
@@ -84,5 +87,9 @@ public enum Buildings {
 
     public ArrayList<Evolution> getEvol() {
         return evol;
+    }
+
+    public BuildingAutorisations getBuildingAutorisations() {
+        return buildingAutorisations;
     }
 }

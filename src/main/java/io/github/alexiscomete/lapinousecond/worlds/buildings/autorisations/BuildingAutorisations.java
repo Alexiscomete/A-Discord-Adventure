@@ -1,7 +1,6 @@
 package io.github.alexiscomete.lapinousecond.worlds.buildings.autorisations;
 
 import io.github.alexiscomete.lapinousecond.entity.Company;
-import io.github.alexiscomete.lapinousecond.entity.Owner;
 import io.github.alexiscomete.lapinousecond.entity.Player;
 import io.github.alexiscomete.lapinousecond.worlds.Place;
 import org.json.JSONArray;
