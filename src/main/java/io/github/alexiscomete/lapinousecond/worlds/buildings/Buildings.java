@@ -56,7 +56,7 @@ public enum Buildings {
         return buildings;
     }
 
-    private final Function<Long, Building> getBuilding;
+    private final Function<Long, BuildingInteraction> getBuildingM;
     private final String name;
 
     private double basePrice = 0.0;
@@ -64,8 +64,8 @@ public enum Buildings {
     private boolean build = true;
     private BuildingAutorisations buildingAutorisations;
 
-    Buildings(Function<Long, Building> getBuilding, String name) {
-        this.getBuilding = getBuilding;
+    Buildings(Function<Long, BuildingInteraction> getBuildingM, String name) {
+        this.getBuildingM = getBuildingM;
         this.name = name;
     }
 
@@ -74,8 +74,8 @@ public enum Buildings {
         basePrice = jsonObject.getDouble("cost");
     }
 
-    public Building get(long id) {
-        return getBuilding.apply(id);
+    public BuildMethods get(long id) {
+        return getBuildingM.apply(id);
     }
 
     public double getBasePrice() {

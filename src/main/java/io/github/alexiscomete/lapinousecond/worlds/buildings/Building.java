@@ -118,4 +118,8 @@ public class Building extends CacheGetSet implements BuildMethods {
 
         return messageBuilder;
     }
+
+    public void evolute(BuildMethods buildMethods) {
+        this.
+    }
 }

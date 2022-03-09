@@ -1,5 +1,7 @@
 package io.github.alexiscomete.lapinousecond.worlds.buildings.evolution;
 
+import io.github.alexiscomete.lapinousecond.worlds.buildings.BuildMethods;
+import io.github.alexiscomete.lapinousecond.worlds.buildings.Building;
 import io.github.alexiscomete.lapinousecond.worlds.buildings.Buildings;
 import org.json.JSONObject;
 
@@ -23,5 +25,10 @@ public class Evolution {
 
     public double getCost() {
         return cost;
+    }
+
+    public void evolute(Building building) {
+        BuildMethods buildMethods = evolutionTarget.get(building.getId());
+        building.;
     }
 }
