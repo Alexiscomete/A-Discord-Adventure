@@ -26,16 +26,17 @@ public enum Buildings {
     }
 
     public static Building load(String save) {
-        if (save == null || save.equals("")) {
+        if (save == null || !save.contains(":")) {
             return null;
         }
+        String[] strings = save.split(":");
         try {
-            String type = Main.getSaveManager().getBuildingType(Long.parseLong(save));
+            String type = Main.getSaveManager().getBuildingType(Long.parseLong(strings[0]));
             if (type == null) {
                 return null;
             }
             Buildings buildings = valueOf(type);
-            return buildings.get(Long.parseLong(save));
+            return new Building(Long.parseLong(strings[1]), buildings.get(Long.parseLong(strings[1])));
         } catch (IllegalArgumentException e) {
             return null;
         }
@@ -74,7 +75,7 @@ public enum Buildings {
         basePrice = jsonObject.getDouble("cost");
     }
 
-    public BuildMethods get(long id) {
+    public BuildingInteraction get(long id) {
         return getBuildingM.apply(id);
     }
 

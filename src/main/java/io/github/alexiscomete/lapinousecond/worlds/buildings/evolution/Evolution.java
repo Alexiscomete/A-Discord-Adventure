@@ -2,6 +2,7 @@ package io.github.alexiscomete.lapinousecond.worlds.buildings.evolution;
 
 import io.github.alexiscomete.lapinousecond.worlds.buildings.BuildMethods;
 import io.github.alexiscomete.lapinousecond.worlds.buildings.Building;
+import io.github.alexiscomete.lapinousecond.worlds.buildings.BuildingInteraction;
 import io.github.alexiscomete.lapinousecond.worlds.buildings.Buildings;
 import org.json.JSONObject;
 
@@ -28,7 +29,10 @@ public class Evolution {
     }
 
     public void evolute(Building building) {
-        BuildMethods buildMethods = evolutionTarget.get(building.getId());
-        building.;
+        BuildingInteraction buildMethods = evolutionTarget.get(building.getId());
+        building.evolute(buildMethods);
+        building.set("build_status", "evolute");
+        building.set("collect_value", "0.0");
+        building.set("collect_target", "0.0");
     }
 }

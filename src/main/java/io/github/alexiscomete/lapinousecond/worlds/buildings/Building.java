@@ -25,9 +25,10 @@ public class Building extends CacheGetSet implements BuildMethods {
     private BuildingInteraction buildingInteraction;
     private final ProgressionBar progressionBar;
 
-    public Building(long id) {
+    public Building(long id, BuildingInteraction buildingInteraction) {
         super(id, Tables.BUILDINGS.getTable());
         progressionBar = new ProgressionBar("💰", 3, "🧱", 3, " ", 1, Double.parseDouble(getString("collect_target")), Double.parseDouble(getString("collect_value")), 60);
+        this.buildingInteraction = buildingInteraction;
     }
 
     @SafeVarargs
@@ -119,7 +120,7 @@ public class Building extends CacheGetSet implements BuildMethods {
         return messageBuilder;
     }
 
-    public void evolute(BuildMethods buildMethods) {
-        this.
+    public void evolute(BuildingInteraction buildingInteraction) {
+        this.buildingInteraction = buildingInteraction;
     }
 }
