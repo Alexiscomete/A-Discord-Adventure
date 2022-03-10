@@ -16,21 +16,43 @@ import java.io.IOException;
 
 public class Main {
 
+    /**
+     * Instance de l'API Javacord
+     */
     public static DiscordApi api;
+    /**
+     * Configuration du bot
+     */
     public static SaveLocation<String> config;
 
+    /**
+     *
+     * @return le gestionnaire de la base de données
+     */
     public static SaveManager getSaveManager() {
         return saveManager;
     }
 
+    /**
+     *
+     * @return le gestionnaire des actions par réaction à un message
+     */
     public static ReactionManager getReactionManager() {
         return reactionManager;
     }
 
+    /**
+     *
+     * @return le gestionnaire des actions par utilisation d'un bouton sur un message
+     */
     public static ButtonsManager getButtonsManager() {
         return buttonsManager;
     }
 
+    /**
+     *
+     * @return le gestionnaire qui attend qu'une personne précise envoie un message dans un salon donné pour exécuter une action
+     */
     public static MessagesManager getMessagesManager() {
         return messagesManager;
     }
@@ -40,6 +62,7 @@ public class Main {
     private static ButtonsManager buttonsManager;
     private static MessagesManager messagesManager;
 
+    //Ouverture du fichier de configuration
     static {
         try {
             config = new SaveLocation<>(";", "/config.txt", a -> a);
@@ -48,6 +71,10 @@ public class Main {
         }
     }
 
+    /**
+     * Initialisation du bot discord, des gestionnaires et des commandes
+     * @param args habituel
+     */
     public static void main(String[] args) {
         System.out.println("RIP Lapinou premier");
         config.loadAll();
@@ -83,6 +110,10 @@ public class Main {
         addCommand(new PlaceCommand());
     }
 
+    /**
+     * Permet d'ajouter une commande à la liste pour qu'elle puisse être appelée
+     * @param commandBot la commande
+     */
     public static void addCommand(CommandBot commandBot) {
         ListenerMain.commands.put(commandBot.getName(), commandBot);
     }
