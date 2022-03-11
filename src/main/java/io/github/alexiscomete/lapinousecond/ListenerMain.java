@@ -10,6 +10,10 @@ public class ListenerMain implements MessageCreateListener {
 
     public static HashMap<String, CommandBot> commands = new HashMap<>();
 
+    /**
+     * Quand une personne envoie un message sur un salon visible par le bot
+     * @param messageCreateEvent le message
+     */
     @Override
     public void onMessageCreate(MessageCreateEvent messageCreateEvent) {
         if (messageCreateEvent.getMessageContent().startsWith("-")) {

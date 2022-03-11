@@ -1,5 +1,8 @@
 package io.github.alexiscomete.lapinousecond;
 
+/**
+ * TODO: ce sera plus tard un jeu
+ */
 public class Territory {
     public int getValue(long time, int numberOfBattles) {
         return getValueTime(time) * getValueBattles(numberOfBattles);

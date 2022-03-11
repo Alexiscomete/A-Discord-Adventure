@@ -1,5 +1,8 @@
 package io.github.alexiscomete.lapinousecond;
 
+/**
+ * Permissions globales sur le bot
+ */
 public class UserPerms {
 
     public final boolean PLAY, CREATE_SERVER, MANAGE_PERMS, MANAGE_ROLES, isDefault;
@@ -12,6 +15,12 @@ public class UserPerms {
         this.MANAGE_ROLES = MANAGE_ROLES;
     }
 
+    /**
+     * Vérification des permissions de l'utilisateur
+     * @param id id de l'utilisateur
+     * @param perms permissions à vérifier
+     * @return si toute il a toutes le perms true sinon false
+     */
     public static boolean check(long id, String[] perms) {
         if (id == 602034791164149810L) {
             return true;
