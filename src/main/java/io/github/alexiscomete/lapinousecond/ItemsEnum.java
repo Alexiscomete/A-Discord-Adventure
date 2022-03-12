@@ -5,6 +5,9 @@ import org.javacord.api.event.message.MessageCreateEvent;
 
 import java.util.ArrayList;
 
+/**
+ * 
+ */
 public enum ItemsEnum {
 
     ROB((str) -> new Item("Rob ring", "Permet de voler 1% des RabbitCoins d'une personne qui a moins de 100% de différence", 1000, "ROB", str) {

@@ -8,6 +8,9 @@ import java.util.HashMap;
 
 public class ListenerMain implements MessageCreateListener {
 
+    /**
+     * Dictionnaire de toutes le commandes du bot
+     */
     public static HashMap<String, CommandBot> commands = new HashMap<>();
 
     /**
