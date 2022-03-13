@@ -127,4 +127,13 @@ public class BuildingCommand extends CommandInServer {
             embedBuilder.addField(u.getString("name").equals("") ? "???" : u.getString("name"), u.getId() + " -> (" + u.getString("type") + " : " + u.getString("build_status") + ") " + u.getString("descr"));
         }
     }
+
+    /**
+     * TODO
+     * @param type le nom du type de bâtiment
+     * @return un nouveau bâtiment de ce type
+     */
+    public Building getNewBuilding(String type) {
+        return null;
+    }
 }
