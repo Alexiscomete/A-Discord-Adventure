@@ -3,6 +3,7 @@ package io.github.alexiscomete.lapinousecond.commands.classes;
 import io.github.alexiscomete.lapinousecond.commands.CommandInServer;
 import io.github.alexiscomete.lapinousecond.entity.Player;
 import io.github.alexiscomete.lapinousecond.message_event.ListButtons;
+import io.github.alexiscomete.lapinousecond.useful.FullTransaction;
 import io.github.alexiscomete.lapinousecond.view.AnswerEnum;
 import io.github.alexiscomete.lapinousecond.worlds.Place;
 import io.github.alexiscomete.lapinousecond.worlds.buildings.Building;
@@ -80,7 +81,14 @@ public class BuildingCommand extends CommandInServer {
                 case "build":
                     if (building1 == null) {
                         if (args.length > 2) {
-                            //TODO
+                            Buildings b = Buildings.valueOf(args[2]);
+                            if (b.isBuild() && b.getBuildingAutorisations().isAutorise(p)) {
+                                Building building2 = new Building(b, p);
+                                EmbedBuilder embedBuilder = building2.infos(p);
+                                messageCreateEvent.getMessage().reply(embedBuilder);
+                            } else {
+                                sendImpossible(messageCreateEvent, p);
+                            }
                         } else {
                             sendBuildTypeList(messageCreateEvent, p);
                         }
@@ -126,14 +134,5 @@ public class BuildingCommand extends CommandInServer {
             Building u = uArrayList.get(i);
             embedBuilder.addField(u.getString("name").equals("") ? "???" : u.getString("name"), u.getId() + " -> (" + u.getString("type") + " : " + u.getString("build_status") + ") " + u.getString("descr"));
         }
-    }
-
-    /**
-     * TODO
-     * @param type le nom du type de bâtiment
-     * @return un nouveau bâtiment de ce type
-     */
-    public Building getNewBuilding(String type) {
-        return null;
     }
 }

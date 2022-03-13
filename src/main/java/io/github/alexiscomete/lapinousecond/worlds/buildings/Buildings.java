@@ -73,6 +73,7 @@ public enum Buildings {
     public void setModelWithJson(JSONObject jsonObject) {
         buildingAutorisations = new BuildingAutorisations(jsonObject.getJSONArray("autorisation"));
         basePrice = jsonObject.getDouble("cost");
+        build = jsonObject.getBoolean("build");
     }
 
     public BuildingInteraction get(long id) {
@@ -93,5 +94,9 @@ public enum Buildings {
 
     public BuildingAutorisations getBuildingAutorisations() {
         return buildingAutorisations;
+    }
+
+    public boolean isBuild() {
+        return build;
     }
 }

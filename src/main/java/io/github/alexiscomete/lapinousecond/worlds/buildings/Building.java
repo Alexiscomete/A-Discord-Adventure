@@ -32,12 +32,12 @@ public class Building extends CacheGetSet implements BuildMethods {
     }
 
     @SafeVarargs
-    public Building(Buildings buildings, double price, Owner owner, AbstractMap.SimpleEntry<String, String>... specialInfos) {
+    public Building(Buildings buildings, Owner owner, AbstractMap.SimpleEntry<String, String>... specialInfos) {
         super(SaveLocation.generateUniqueID(), Tables.BUILDINGS.getTable());
         HashMap<String, String> hashMap = new HashMap<>();
         hashMap.put("id", String.valueOf(id));
         Main.getSaveManager().insert(Tables.BUILDINGS.getTable().getName(), hashMap);
-        set("collect_target", String.valueOf(price));
+        set("collect_target", String.valueOf(buildings.getBasePrice()));
         set("type", buildings.getName());
         set("build_status", "building");
         set("owner_type", owner.getOwnerType());
@@ -47,7 +47,7 @@ public class Building extends CacheGetSet implements BuildMethods {
                 specialInfos) {
             set(special.getKey(), special.getValue());
         }
-        progressionBar = new ProgressionBar("💰", 3, "🧱", 3, " ", 1, price, 0.0, 60);
+        progressionBar = new ProgressionBar("💰", 3, "🧱", 3, " ", 1, buildings.getBasePrice(), 0.0, 60);
     }
 
     @Override
