@@ -108,6 +108,7 @@ public class Main {
         addCommand(new Verify());
         addCommand(new RoleCommand());
         addCommand(new PlaceCommand());
+        addCommand(new BuildingCommand());
     }
 
     /**

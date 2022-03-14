@@ -70,6 +70,7 @@ public abstract class CommandBot {
             }
         } catch (Exception e) {
             messageCreateEvent.getMessage().reply("Erreur : \n```\n" + e.getLocalizedMessage() + "\n```");
+            e.printStackTrace();
         }
     }
 
