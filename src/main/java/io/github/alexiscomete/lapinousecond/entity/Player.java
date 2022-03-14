@@ -40,8 +40,8 @@ public class Player extends CacheGetSet implements Owner {
         this.tuto = Short.parseShort(getString("tuto"));
         this.isVerify = Boolean.parseBoolean(getString("is_verify"));
         this.hasAccount = Boolean.parseBoolean(getString("has_account"));
-        this.x = Integer.parseInt("x");
-        this.y = Integer.parseInt("y");
+        this.x = Integer.parseInt(getString("x"));
+        this.y = Integer.parseInt(getString("y"));
         this.workTime = 0;
         this.roles = RolesEnum.getRoles(getString("roles"));
         this.resourceManagers = ResourceManager.stringToArray(getString("ressources"));

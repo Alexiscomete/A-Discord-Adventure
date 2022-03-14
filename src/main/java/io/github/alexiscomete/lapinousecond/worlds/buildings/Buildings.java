@@ -17,7 +17,7 @@ public enum Buildings {
     public static final JSONObject jsonObject;
 
     static {
-        InputStream inputStream = Buildings.class.getResourceAsStream("buildings-config.json");
+        InputStream inputStream = Buildings.class.getResourceAsStream("./buildings-config.json");
         assert inputStream != null;
         Scanner sc = new Scanner(inputStream);
         StringBuilder stringBuilder = new StringBuilder();
