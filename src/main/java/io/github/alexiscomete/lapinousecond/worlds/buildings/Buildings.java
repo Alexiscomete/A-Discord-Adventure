@@ -19,11 +19,15 @@ public enum Buildings {
     static {
         InputStream inputStream = Buildings.class.getResourceAsStream("buildings-config.json");
         System.out.println(inputStream);
-        assert inputStream != null;
-        Scanner sc = new Scanner(inputStream);
-        StringBuilder stringBuilder = new StringBuilder();
-        sc.forEachRemaining(stringBuilder::append);
-        jsonObject = new JSONObject(stringBuilder);
+        if (inputStream == null) {
+            System.out.println("eeee");
+            jsonObject = new JSONObject("{}");
+        } else {
+            Scanner sc = new Scanner(inputStream);
+            StringBuilder stringBuilder = new StringBuilder();
+            sc.forEachRemaining(stringBuilder::append);
+            jsonObject = new JSONObject(stringBuilder);
+        }
     }
 
     public static Building load(String save) {
