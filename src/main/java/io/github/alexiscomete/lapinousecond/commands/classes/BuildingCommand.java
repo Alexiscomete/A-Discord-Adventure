@@ -80,12 +80,16 @@ public class BuildingCommand extends CommandInServer {
                 case "build":
                     if (building1 == null) {
                         if (args.length > 2) {
-                            Buildings b = Buildings.valueOf(args[2]);
-                            if (b.isBuild() && b.getBuildingAutorisations().isAutorise(p)) {
-                                Building building2 = new Building(b, p);
-                                EmbedBuilder embedBuilder = building2.infos(p);
-                                messageCreateEvent.getMessage().reply(embedBuilder);
-                            } else {
+                            try {
+                                Buildings b = Buildings.valueOf(args[2]);
+                                if (b.isBuild() && b.getBuildingAutorisations().isAutorise(p)) {
+                                    Building building2 = new Building(b, p);
+                                    EmbedBuilder embedBuilder = building2.infos(p);
+                                    messageCreateEvent.getMessage().reply(embedBuilder);
+                                } else {
+                                    sendImpossible(messageCreateEvent, p);
+                                }
+                            } catch (IllegalArgumentException e) {
                                 sendImpossible(messageCreateEvent, p);
                             }
                         } else {

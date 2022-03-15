@@ -46,7 +46,7 @@
       }
     ]
   },
-  "marché": {
+  "marche": {
     "cost": 30000,
     "évolution": [],
     "build": true,
@@ -105,7 +105,7 @@
       }
     ]
   },
-  "hôpital": {
+  "hopital": {
     "cost": 0,
     "évolution": [],
     "build": false,
@@ -115,7 +115,7 @@
     "cost": 30000,
     "évolution": [
       {
-        "name": "hôpital",
+        "name": "hopital",
         "cost": 30000
       }
     ],
