@@ -69,7 +69,7 @@ public class ConfigServ extends CommandWithAccount {
                                                 embedBuilder.addField(w.getName(), "RP : " + w.getNameRP() + "\nNom à entrer : " + w.getProgName() + "\nDescription : " + w.getDesc());
                                             }
                                             Main.getMessagesManager().setValueAndRetry(textChannel, id, "welcome", embedBuilder, 1500, finalServer, () -> {
-                                                Main.getMessagesManager().addListener(textChannel, id, new Consumer<MessageCreateEvent>() {
+                                                Main.getMessagesManager().addListener(textChannel, id, new Consumer<>() {
                                                     @Override
                                                     public void accept(MessageCreateEvent messageCreateEvent) {
                                                         try {
