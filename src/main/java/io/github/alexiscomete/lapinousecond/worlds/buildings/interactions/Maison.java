@@ -1,13 +1,12 @@
 package io.github.alexiscomete.lapinousecond.worlds.buildings.interactions;
 
 import io.github.alexiscomete.lapinousecond.entity.Player;
-import io.github.alexiscomete.lapinousecond.worlds.buildings.Building;
 import io.github.alexiscomete.lapinousecond.worlds.buildings.BuildingInteraction;
 import org.javacord.api.entity.message.MessageBuilder;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 
 public class Maison extends BuildingInteraction {
-    public Maison(Building building) {
+    public Maison(Long building) {
         super(building);
     }
 

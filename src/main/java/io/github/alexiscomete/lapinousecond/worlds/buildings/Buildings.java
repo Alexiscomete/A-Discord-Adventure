@@ -3,6 +3,7 @@ package io.github.alexiscomete.lapinousecond.worlds.buildings;
 import io.github.alexiscomete.lapinousecond.Main;
 import io.github.alexiscomete.lapinousecond.worlds.buildings.autorisations.BuildingAutorisations;
 import io.github.alexiscomete.lapinousecond.worlds.buildings.evolution.Evolution;
+import io.github.alexiscomete.lapinousecond.worlds.buildings.interactions.Armurerie;
 import org.json.JSONObject;
 
 import java.io.InputStream;
@@ -12,7 +13,9 @@ import java.util.function.Function;
 
 public enum Buildings {
 
-    ;
+    ARMURERIE((l) -> {
+        return new Armurerie(l);
+    }, "armurerie");
 
     public static final JSONObject jsonObject;
 

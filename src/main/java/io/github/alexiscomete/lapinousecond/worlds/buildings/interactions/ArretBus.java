@@ -7,7 +7,7 @@ import org.javacord.api.entity.message.MessageBuilder;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 
 public class ArretBus extends BuildingInteraction {
-    public ArretBus(Building building) {
+    public ArretBus(Long building) {
         super(building);
     }
 
