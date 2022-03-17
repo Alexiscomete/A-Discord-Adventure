@@ -3,7 +3,7 @@ package io.github.alexiscomete.lapinousecond.worlds.buildings;
 import io.github.alexiscomete.lapinousecond.Main;
 import io.github.alexiscomete.lapinousecond.worlds.buildings.autorisations.BuildingAutorisations;
 import io.github.alexiscomete.lapinousecond.worlds.buildings.evolution.Evolution;
-import io.github.alexiscomete.lapinousecond.worlds.buildings.interactions.Armurerie;
+import io.github.alexiscomete.lapinousecond.worlds.buildings.interactions.*;
 import org.json.JSONObject;
 
 import java.io.InputStream;
@@ -13,9 +13,20 @@ import java.util.function.Function;
 
 public enum Buildings {
 
-    ARMURERIE((l) -> {
-        return new Armurerie(l);
-    }, "armurerie");
+    ARMURERIE(Armurerie::new, "armurerie"),
+    ARRET_BUS(ArretBus::new, "arret_bus"),
+    AUBERGE(Auberge::new, "auberge"),
+    BANQUE(Banque::new, "banque"),
+    BAR(Bar::new, "bar"),
+    BIBLIOTHEQUE(Bibliotheque::new, "bibliotheque"),
+    BOULANGERIE(Boulangerie::new, "boulangerie"),
+    BOUTIQUE(Boutique::new, "boutique"),
+    CASINO(Casino::new, "casino"),
+    HOPITAL(Hopital::new, "hopital"),
+    JOURNAL(Journal::new, "journal"),
+    MAIRIE(Mairie::new, "mairie"),
+    MAISON(Maison::new, "maison"),
+    PHARMACIE(Pharmacie::new, "pharmacie");
 
     public static final JSONObject jsonObject;
 
