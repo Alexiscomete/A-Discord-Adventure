@@ -89,7 +89,7 @@
       }
     ]
   },
-  "bibliothèque": {
+  "bibliotheque": {
     "cost": 30000,
     "évolution": [],
     "build": true,
@@ -132,7 +132,7 @@
       }
     ]
   },
-  "arrêt_bus": {
+  "arret_bus": {
     "cost": 30000,
     "évolution": [],
     "build": true,
