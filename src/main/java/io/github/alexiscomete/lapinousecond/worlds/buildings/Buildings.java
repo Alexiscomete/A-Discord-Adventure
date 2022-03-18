@@ -31,7 +31,7 @@ public enum Buildings {
     public static final JSONObject jsonObject;
 
     static {
-        InputStream inputStream = Buildings.class.getResourceAsStream("buildings-config.json");
+        InputStream inputStream = Buildings.class.getClassLoader().getResourceAsStream("buildings-config.json");
         System.out.println(inputStream);
         if (inputStream == null) {
             System.out.println("eeee");
