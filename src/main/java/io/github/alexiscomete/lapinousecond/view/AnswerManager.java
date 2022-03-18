@@ -9,11 +9,15 @@ public class AnswerManager {
     private final JSONObject jsonObject;
 
     public AnswerManager(InputStream input) {
-        Scanner sc = new Scanner(input);
-        StringBuilder builder = new StringBuilder();
-        sc.forEachRemaining(builder::append);
-        jsonObject = new JSONObject(builder.toString());
-        sc.close();
+        if (input != null) {
+            Scanner sc = new Scanner(input);
+            StringBuilder builder = new StringBuilder();
+            sc.forEachRemaining(builder::append);
+            jsonObject = new JSONObject(builder.toString());
+            sc.close();
+        } else {
+            jsonObject = new JSONObject("{}");
+        }
     }
 
     public String getAnswer(LangageEnum langageEnum, AnswerEnum answerEnum) {

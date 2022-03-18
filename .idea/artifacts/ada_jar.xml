@@ -6,6 +6,8 @@
       <element id="extracted-dir" path="$USER_HOME$/jars/json-20211205.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$USER_HOME$/IdeaProjects/javacord-3.3.2-shaded.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$USER_HOME$/jars/sqlite-jdbc-3.36.0.3.jar" path-in-jar="/" />
+      <element id="file-copy" path="$PROJECT_DIR$/src/main/java/io/github/alexiscomete/lapinousecond/view/answers.json" />
+      <element id="file-copy" path="$PROJECT_DIR$/src/main/java/io/github/alexiscomete/lapinousecond/worlds/buildings/buildings-config.json" />
     </root>
   </artifact>
 </component>
