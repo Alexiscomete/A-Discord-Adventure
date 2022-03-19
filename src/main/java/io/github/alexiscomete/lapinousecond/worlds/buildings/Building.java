@@ -14,13 +14,32 @@ import org.javacord.api.entity.message.component.ActionRow;
 import org.javacord.api.entity.message.component.Button;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.interaction.MessageComponentInteraction;
+import org.json.JSONObject;
 
 import java.awt.*;
+import java.io.InputStream;
 import java.util.AbstractMap;
 import java.util.HashMap;
 import java.util.Objects;
+import java.util.Scanner;
 
 public class Building extends CacheGetSet implements BuildMethods {
+
+    public static final JSONObject jsonObject;
+
+    static {
+        InputStream inputStream = Building.class.getClassLoader().getResourceAsStream("buildings-config.json");
+        System.out.println(inputStream);
+        if (inputStream == null) {
+            System.out.println("eeee");
+            jsonObject = new JSONObject("{}");
+        } else {
+            Scanner sc = new Scanner(inputStream);
+            StringBuilder stringBuilder = new StringBuilder();
+            sc.forEachRemaining(stringBuilder::append);
+            jsonObject = new JSONObject(stringBuilder);
+        }
+    }
 
     private BuildingInteraction buildingInteraction;
     private final ProgressionBar progressionBar;

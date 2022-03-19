@@ -6,9 +6,7 @@ import io.github.alexiscomete.lapinousecond.worlds.buildings.evolution.Evolution
 import io.github.alexiscomete.lapinousecond.worlds.buildings.interactions.*;
 import org.json.JSONObject;
 
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Scanner;
 import java.util.function.Function;
 
 public enum Buildings {
@@ -27,22 +25,6 @@ public enum Buildings {
     MAIRIE(Mairie::new, "mairie"),
     MAISON(Maison::new, "maison"),
     PHARMACIE(Pharmacie::new, "pharmacie");
-
-    public static final JSONObject jsonObject;
-
-    static {
-        InputStream inputStream = Buildings.class.getClassLoader().getResourceAsStream("buildings-config.json");
-        System.out.println(inputStream);
-        if (inputStream == null) {
-            System.out.println("eeee");
-            jsonObject = new JSONObject("{}");
-        } else {
-            Scanner sc = new Scanner(inputStream);
-            StringBuilder stringBuilder = new StringBuilder();
-            sc.forEachRemaining(stringBuilder::append);
-            jsonObject = new JSONObject(stringBuilder);
-        }
-    }
 
     public static Building load(String save) {
         if (save == null || !save.contains(":")) {
@@ -87,6 +69,7 @@ public enum Buildings {
     Buildings(Function<Long, BuildingInteraction> getBuildingM, String name) {
         this.getBuildingM = getBuildingM;
         this.name = name;
+        setModelWithJson(Building.jsonObject.getJSONObject(name));
     }
 
     public void setModelWithJson(JSONObject jsonObject) {
