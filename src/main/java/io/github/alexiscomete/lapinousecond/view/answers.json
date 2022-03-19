@@ -50,7 +50,7 @@
     "french": "valeur trop élevée, valeur maximale : replace1"
   },
   "imp_sit": {
-    "french": "action impossible dans la situation actuelle ❌"
+    "french": "action impossible dans la situation actuelle :x:"
   },
   "no_enough_args": {
     "french": "pas assez d' arguments pour cette action"
