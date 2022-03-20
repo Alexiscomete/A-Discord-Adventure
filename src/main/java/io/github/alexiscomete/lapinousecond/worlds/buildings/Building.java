@@ -28,7 +28,7 @@ public class Building extends CacheGetSet implements BuildMethods {
     public static final JSONObject jsonObject;
 
     static {
-        InputStream inputStream = Building.class.getClassLoader().getResourceAsStream("buildings-config.json");
+        InputStream inputStream = Building.class.getClassLoader().getResourceAsStream("buildings_config.json");
         System.out.println(inputStream);
         if (inputStream == null) {
             System.out.println("eeee");
