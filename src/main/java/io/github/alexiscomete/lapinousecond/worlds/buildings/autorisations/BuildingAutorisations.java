@@ -38,4 +38,19 @@ public class BuildingAutorisations extends AutList {
                 return new AllAutorisation();
         }
     }
+
+    public static BuildingAutorisation toAutorisation(String string) {
+        switch (string) {
+            case "joueurs":
+                return new TypeAutorisation<>(Player.class);
+            case "entreprise":
+                return new TypeAutorisation<>(Company.class);
+            case "ville":
+                return new TypeAutorisation<>(Place.class);
+            case "habitants":
+                return new Inhabitants();
+            default: // and "all"
+                return new AllAutorisation();
+        }
+    }
 }
