@@ -33,7 +33,7 @@ public class BuildingAutorisations extends AutList {
             case "habitants":
                 return new Inhabitants();
             case "choix_ville":
-                return new ChoicePlaceAutorisation(jsonObject.getJSONArray("possibilités"));
+                return new ChoicePlaceAutorisation(jsonObject.getJSONArray("possibilites"));
             default: // and "all"
                 return new AllAutorisation();
         }

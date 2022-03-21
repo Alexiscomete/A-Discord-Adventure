@@ -16,7 +16,7 @@ public class Evolution {
     }
 
     public Evolution(JSONObject jsonObject) {
-        this.evolutionTarget = Buildings.valueOf(jsonObject.getString("évolution").toUpperCase());
+        this.evolutionTarget = Buildings.valueOf(jsonObject.getString("name").toUpperCase());
         this.cost = jsonObject.getDouble("cost");
     }
 
