@@ -36,6 +36,7 @@ public class ProgressionBar {
     }
 
     private String before(int n) {
+        System.out.println(n);
         return fill.repeat(n);
     }
 
@@ -44,7 +45,7 @@ public class ProgressionBar {
     }
 
     private int getPartMin() {
-        return (int) ((max / value) * numberChars);
+        return (int) ((value / max) * numberChars);
     }
 
     public String getIndicator() {
