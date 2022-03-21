@@ -37,7 +37,7 @@ public class Building extends CacheGetSet implements BuildMethods {
             Scanner sc = new Scanner(inputStream);
             StringBuilder stringBuilder = new StringBuilder();
             sc.forEachRemaining(stringBuilder::append);
-            jsonObject = new JSONObject(stringBuilder);
+            jsonObject = new JSONObject(stringBuilder.toString());
         }
     }
 
