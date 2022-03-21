@@ -29,6 +29,7 @@ public class AnswerManager {
         if (answer == null || answer.equals("")) {
             return langageEnum.getInvalidAnswer();
         }
+        System.out.println(answer);
         return answer;
     }
 
@@ -37,6 +38,7 @@ public class AnswerManager {
         for (Object form :
                 format) {
             answer = answer.replace("replace" + i, form.toString());
+            i++;
         }
         return answer;
     }
