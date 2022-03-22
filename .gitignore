@@ -1,6 +1,5 @@
 
 out/artifacts/la2_jar/la2.jar
-out/artifacts/la2_jar/la2.jar
 target/classes/io/github/alexiscomete/lapinousecond/ItemsEnum$1.class
 target/classes/io/github/alexiscomete/lapinousecond/Main.class
 target/classes/io/github/alexiscomete/lapinousecond/Player.class
@@ -15,8 +14,8 @@ target/classes/io/github/alexiscomete/lapinousecond/save/RowValue.class
 target/classes/io/github/alexiscomete/lapinousecond/save/Table.class
 target/classes/io/github/alexiscomete/lapinousecond/save/TableRow.class
 target/classes/io/github/alexiscomete/lapinousecond/save/Tables.class
-out/artifacts/la2_jar/la2.jar
 out/artifacts/ada_jar/A-Discord-Adventure.jar
 target/classes/io/github/alexiscomete/lapinousecond/resources/ResourceManager.class
 target/classes/io/github/alexiscomete/lapinousecond/resources/Resource.class
 target/classes/io/github/alexiscomete/lapinousecond/resources/WorkEnum.class
+out/artifacts/ada_jar/

@@ -46,7 +46,7 @@ public class Building extends CacheGetSet implements BuildMethods {
 
     public Building(long id, BuildingInteraction buildingInteraction) {
         super(id, Tables.BUILDINGS.getTable());
-        progressionBar = new ProgressionBar("💰", 3, "🧱", 3, " ", 1, Double.parseDouble(getString("collect_target")), Double.parseDouble(getString("collect_value")), 60);
+        progressionBar = new ProgressionBar("💰", 3, "🧱", 3, " ", 1, Double.parseDouble(getString("collect_target")), Double.parseDouble(getString("collect_value")), 20);
         this.buildingInteraction = buildingInteraction;
     }
 
@@ -66,7 +66,7 @@ public class Building extends CacheGetSet implements BuildMethods {
                 specialInfos) {
             set(special.getKey(), special.getValue());
         }
-        progressionBar = new ProgressionBar("💰", 3, "🧱", 3, " ", 1, buildings.getBasePrice(), 0.0, 60);
+        progressionBar = new ProgressionBar("💰", 3, "🧱", 3, " ", 1, buildings.getBasePrice(), 0.0, 20);
     }
 
     @Override

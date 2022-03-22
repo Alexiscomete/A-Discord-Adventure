@@ -21,18 +21,17 @@ public class ProgressionBar {
         this.nSize = nSize;
         this.max = max;
         this.value = value;
-        this.numberChars = numberChars;
+        this.numberChars = numberChars - size;
     }
 
     public String getBar() {
         int min = getPartMin();
         int minChars = min/fillSize;
-        min = minChars * fillSize;
-        int max = numberChars - min - size;
-        int maxChars = (int) Math.ceil(((double)max) / ((double)nSize));
-        return before(minChars) +
-                indicator +
-                after(maxChars);
+        int max = numberChars - min;
+        int maxChars = max / nSize;
+        String r = "`" + before(minChars) + indicator + after(maxChars) + "`";
+        System.out.println(r);
+        return r;
     }
 
     private String before(int n) {
