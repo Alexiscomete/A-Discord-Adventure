@@ -105,7 +105,7 @@ public class Building extends CacheGetSet implements BuildMethods {
         return new EmbedBuilder()
                 .setColor(Color.CYAN)
                 .setTitle(p.getAnswer(AnswerEnum.BUILDING_BA, true))
-                .setDescription("Type : " + getString("type"))
+                .setDescription("Type : " + getString("type") + "\n ID :" + id)
                 .addInlineField(p.getAnswer(AnswerEnum.OWNER, true), "Type : " + getString("type") + "\nIdentification : " + getString("owner"))
                 .addInlineField(p.getAnswer(AnswerEnum.PROGRESSION, true), progressionBar.getBar() + "\n" + getString("collect_value") + "/" + getString("collect_target"));
     }
