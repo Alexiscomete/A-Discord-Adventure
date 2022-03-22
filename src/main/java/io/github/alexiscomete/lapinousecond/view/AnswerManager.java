@@ -13,6 +13,7 @@ public class AnswerManager {
             Scanner sc = new Scanner(input);
             StringBuilder builder = new StringBuilder();
             sc.forEachRemaining(builder::append);
+            System.out.println(builder);
             jsonObject = new JSONObject(builder.toString());
             sc.close();
         } else {
