@@ -3,6 +3,7 @@ package io.github.alexiscomete.lapinousecond.view;
 import org.json.JSONObject;
 
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
 public class AnswerManager {
@@ -10,9 +11,9 @@ public class AnswerManager {
 
     public AnswerManager(InputStream input) {
         if (input != null) {
-            Scanner sc = new Scanner(input);
+            Scanner sc = new Scanner(input, StandardCharsets.UTF_8);
             StringBuilder builder = new StringBuilder();
-            sc.forEachRemaining(builder::append);
+            sc.forEachRemaining((s) -> builder.append(s).append(" "));
             System.out.println(builder);
             jsonObject = new JSONObject(builder.toString());
             sc.close();
