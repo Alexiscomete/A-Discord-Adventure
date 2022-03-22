@@ -1,7 +1,6 @@
 package io.github.alexiscomete.lapinousecond.view;
 
 import org.json.JSONObject;
-
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
