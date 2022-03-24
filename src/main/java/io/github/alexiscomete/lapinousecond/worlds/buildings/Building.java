@@ -9,6 +9,7 @@ import io.github.alexiscomete.lapinousecond.save.Tables;
 import io.github.alexiscomete.lapinousecond.useful.FullTransaction;
 import io.github.alexiscomete.lapinousecond.useful.ProgressionBar;
 import io.github.alexiscomete.lapinousecond.view.AnswerEnum;
+import io.github.alexiscomete.lapinousecond.worlds.Place;
 import org.javacord.api.entity.message.MessageBuilder;
 import org.javacord.api.entity.message.component.ActionRow;
 import org.javacord.api.entity.message.component.Button;
@@ -51,11 +52,12 @@ public class Building extends CacheGetSet implements BuildMethods {
     }
 
     @SafeVarargs
-    public Building(Buildings buildings, Owner owner, AbstractMap.SimpleEntry<String, String>... specialInfos) {
+    public Building(Buildings buildings, Owner owner, Place place, AbstractMap.SimpleEntry<String, String>... specialInfos) {
         super(SaveLocation.generateUniqueID(), Tables.BUILDINGS.getTable());
-        HashMap<String, String> hashMap = new HashMap<>();
-        hashMap.put("id", String.valueOf(id));
-        Main.getSaveManager().insert(Tables.BUILDINGS.getTable().getName(), hashMap);
+        Main.getSaveManager().buildings.add(id);
+        String buildingsString = place.getString("buildings");
+        buildingsString += ";" + buildings.getName() + ":" + id;
+        place.set("buildings", buildingsString);
         set("collect_target", String.valueOf(buildings.getBasePrice()));
         set("type", buildings.getName());
         set("build_status", "building");

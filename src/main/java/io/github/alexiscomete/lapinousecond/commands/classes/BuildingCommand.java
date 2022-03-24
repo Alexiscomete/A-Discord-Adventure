@@ -1,8 +1,10 @@
 package io.github.alexiscomete.lapinousecond.commands.classes;
 
+import io.github.alexiscomete.lapinousecond.Main;
 import io.github.alexiscomete.lapinousecond.commands.CommandInServer;
 import io.github.alexiscomete.lapinousecond.entity.Player;
 import io.github.alexiscomete.lapinousecond.message_event.ListButtons;
+import io.github.alexiscomete.lapinousecond.save.SaveManager;
 import io.github.alexiscomete.lapinousecond.view.AnswerEnum;
 import io.github.alexiscomete.lapinousecond.worlds.Place;
 import io.github.alexiscomete.lapinousecond.worlds.buildings.Building;
@@ -83,7 +85,8 @@ public class BuildingCommand extends CommandInServer {
                             try {
                                 Buildings b = Buildings.valueOf(args[2].toUpperCase());
                                 if (b.isBuild() && b.getBuildingAutorisations().isAutorise(p)) {
-                                    Building building2 = new Building(b, p);
+                                    Place place = p.getPlace();
+                                    Building building2 = new Building(b, p, place);
                                     EmbedBuilder embedBuilder = building2.infos(p);
                                     messageCreateEvent.getMessage().reply(embedBuilder);
                                 } else {
