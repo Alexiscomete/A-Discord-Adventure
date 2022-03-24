@@ -46,7 +46,7 @@ public class BuildingCommand extends CommandInServer {
                                     }
                                 }
                                 if (b == null) {
-                                    //TODO : message
+                                    sendImpossible(messageCreateEvent, p);
                                     return;
                                 } else {
                                     p.set("building", String.valueOf(i));
