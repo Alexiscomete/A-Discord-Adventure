@@ -48,9 +48,9 @@ public class SaveManager {
 
     public String getBuildingType(long id) {
         try {
-            ResultSet resultSet = st.executeQuery("SELECT * FROM " + Tables.BUILDINGS.getTable().getName() + " WHERE id = " + id);
+            ResultSet resultSet = st.executeQuery("SELECT type FROM " + Tables.BUILDINGS.getTable().getName() + " WHERE id = " + id);
             if (resultSet.next()) {
-                return new CacheGetSet(id, Tables.BUILDINGS.getTable()).getString("type");
+                return resultSet.getString("type");
             }
             resultSet.close();
         } catch (SQLException throwables) {

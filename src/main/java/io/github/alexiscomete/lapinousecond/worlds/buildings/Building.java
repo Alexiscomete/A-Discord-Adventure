@@ -56,7 +56,7 @@ public class Building extends CacheGetSet implements BuildMethods {
         super(SaveLocation.generateUniqueID(), Tables.BUILDINGS.getTable());
         Main.getSaveManager().buildings.add(id);
         String buildingsString = place.getString("buildings");
-        buildingsString += ";" + buildings.getName() + ":" + id;
+        buildingsString += ";" + id;
         place.set("buildings", buildingsString);
         set("collect_target", String.valueOf(buildings.getBasePrice()));
         set("type", buildings.getName());

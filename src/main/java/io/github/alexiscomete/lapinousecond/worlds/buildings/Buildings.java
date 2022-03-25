@@ -27,20 +27,21 @@ public enum Buildings {
     PHARMACIE(Pharmacie::new, "pharmacie");
 
     public static Building load(String save) {
-        if (save == null || !save.contains(":")) {
+        if (save == null) {
             return null;
         }
-        String[] strings = save.split(":");
+        if (save.contains(":")) {
+            save = save.split(":")[1];
+        }
         try {
-            String type = Main.getSaveManager().getBuildingType(Long.parseLong(strings[1]));
+            String type = Main.getSaveManager().getBuildingType(Long.parseLong(save));
             if (type == null) {
                 System.out.println("null");
                 return null;
             }
-            Buildings buildings = valueOf(type);
-            return new Building(Long.parseLong(strings[1]), buildings.get(Long.parseLong(strings[1])));
+            Buildings buildings = valueOf(type.toUpperCase());
+            return new Building(Long.parseLong(save), buildings.get(Long.parseLong(save)));
         } catch (IllegalArgumentException e) {
-            System.out.println("err");
             return null;
         }
     }
