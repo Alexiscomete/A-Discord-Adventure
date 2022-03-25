@@ -1,10 +1,8 @@
 package io.github.alexiscomete.lapinousecond.commands.classes;
 
-import io.github.alexiscomete.lapinousecond.Main;
 import io.github.alexiscomete.lapinousecond.commands.CommandInServer;
 import io.github.alexiscomete.lapinousecond.entity.Player;
 import io.github.alexiscomete.lapinousecond.message_event.ListButtons;
-import io.github.alexiscomete.lapinousecond.save.SaveManager;
 import io.github.alexiscomete.lapinousecond.view.AnswerEnum;
 import io.github.alexiscomete.lapinousecond.worlds.Place;
 import io.github.alexiscomete.lapinousecond.worlds.buildings.Building;
@@ -40,6 +38,8 @@ public class BuildingCommand extends CommandInServer {
                                 Place place = p.getPlace();
                                 String buildingsString = place.getString("buildings");
                                 ArrayList<Building> buildings = Buildings.loadBuildings(buildingsString);
+                                System.out.println(buildingsString);
+                                System.out.println(buildings.size());
                                 Building b = null;
                                 for (Building bu :
                                      buildings) {

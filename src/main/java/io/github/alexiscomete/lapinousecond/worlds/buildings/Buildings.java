@@ -32,13 +32,15 @@ public enum Buildings {
         }
         String[] strings = save.split(":");
         try {
-            String type = Main.getSaveManager().getBuildingType(Long.parseLong(strings[0]));
+            String type = Main.getSaveManager().getBuildingType(Long.parseLong(strings[1]));
             if (type == null) {
+                System.out.println("null");
                 return null;
             }
             Buildings buildings = valueOf(type);
             return new Building(Long.parseLong(strings[1]), buildings.get(Long.parseLong(strings[1])));
         } catch (IllegalArgumentException e) {
+            System.out.println("err");
             return null;
         }
     }
