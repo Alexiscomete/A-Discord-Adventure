@@ -29,7 +29,7 @@ public class Evolution {
     }
 
     public void evolute(Building building) {
-        BuildingInteraction buildMethods = evolutionTarget.get(building.getId());
+        BuildingInteraction buildMethods = evolutionTarget.get(building);
         building.evolute(buildMethods);
         building.set("build_status", "evolute");
         building.set("collect_value", "0.0");

@@ -40,7 +40,7 @@ public enum Buildings {
                 return null;
             }
             Buildings buildings = valueOf(type.toUpperCase());
-            return new Building(Long.parseLong(save), buildings.get(Long.parseLong(save)));
+            return new Building(Long.parseLong(save), buildings);
         } catch (IllegalArgumentException e) {
             return null;
         }
@@ -61,7 +61,7 @@ public enum Buildings {
         return buildings;
     }
 
-    private final Function<Long, BuildingInteraction> getBuildingM;
+    private final Function<Building, BuildingInteraction> getBuildingM;
     private final String name;
 
     private double basePrice = 0.0;
@@ -69,7 +69,7 @@ public enum Buildings {
     private boolean build = true;
     private BuildingAutorisations buildingAutorisations;
 
-    Buildings(Function<Long, BuildingInteraction> getBuildingM, String name) {
+    Buildings(Function<Building, BuildingInteraction> getBuildingM, String name) {
         this.getBuildingM = getBuildingM;
         this.name = name;
         setModelWithJson(Building.jsonObject.getJSONObject(name));
@@ -81,8 +81,8 @@ public enum Buildings {
         build = jsonObject.getBoolean("build");
     }
 
-    public BuildingInteraction get(long id) {
-        return getBuildingM.apply(id);
+    public BuildingInteraction get(Building building) {
+        return getBuildingM.apply(building);
     }
 
     public double getBasePrice() {

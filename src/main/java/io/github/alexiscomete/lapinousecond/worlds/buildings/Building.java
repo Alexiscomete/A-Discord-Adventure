@@ -45,10 +45,10 @@ public class Building extends CacheGetSet implements BuildMethods {
     private BuildingInteraction buildingInteraction;
     private final ProgressionBar progressionBar;
 
-    public Building(long id, BuildingInteraction buildingInteraction) {
+    public Building(long id, Buildings buildings) {
         super(id, Tables.BUILDINGS.getTable());
         progressionBar = new ProgressionBar("💰", 3, "🧱", 3, " ", 1, Double.parseDouble(getString("collect_target")), Double.parseDouble(getString("collect_value")), 20);
-        this.buildingInteraction = buildingInteraction;
+        this.buildingInteraction = buildings.get(this);
     }
 
     @SafeVarargs
