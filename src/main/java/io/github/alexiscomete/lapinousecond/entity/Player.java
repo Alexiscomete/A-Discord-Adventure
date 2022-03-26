@@ -162,7 +162,7 @@ public class Player extends CacheGetSet implements Owner {
     }
 
     public void updateResources() {
-        saveManager.setValue(Tables.PLAYERS.getTable(), id, "resources", ResourceManager.toString(resourceManagers.values()));
+        saveManager.setValue(Tables.PLAYERS.getTable(), id, "ressources", ResourceManager.toString(resourceManagers.values()));
     }
 
     @Override
