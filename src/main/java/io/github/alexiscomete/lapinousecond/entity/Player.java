@@ -38,8 +38,8 @@ public class Player extends CacheGetSet implements Owner {
         this.bal = Double.parseDouble(getString("bal"));
         this.server = Long.parseLong(getString("serv"));
         this.tuto = Short.parseShort(getString("tuto"));
-        this.isVerify = Boolean.parseBoolean(getString("is_verify"));
-        this.hasAccount = Boolean.parseBoolean(getString("has_account"));
+        this.isVerify = Objects.equals(getString("is_verify"), "1");
+        this.hasAccount = Objects.equals(getString("has_account"), "1");
         this.x = Integer.parseInt(getString("x"));
         this.y = Integer.parseInt(getString("y"));
         this.workTime = 0;
