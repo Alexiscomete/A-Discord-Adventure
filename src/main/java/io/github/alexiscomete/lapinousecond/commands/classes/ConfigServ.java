@@ -132,10 +132,10 @@ public class ConfigServ extends CommandWithAccount {
                     }
                 }
             } else {
-                System.out.println("Bien essayé, mais vous ne pouvez pas configurer un serveur qui n'est pas le votre");
+                messageCreateEvent.getMessage().reply("Bien essayé, mais vous ne pouvez pas configurer un serveur qui n'est pas le votre");
             }
         } else {
-            System.out.println("Comment voulez vous configurer un serveur sans être dans un serveur ?");
+            messageCreateEvent.getMessage().reply("Comment voulez vous configurer un serveur sans être dans un serveur ?");
         }
     }
 
