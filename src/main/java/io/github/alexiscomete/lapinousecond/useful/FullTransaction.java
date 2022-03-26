@@ -28,7 +28,7 @@ public class FullTransaction extends VerifTransaction {
     }
 
     public void askQuantity(Consumer<Double> after, MessageComponentInteraction messageComponentInteraction) {
-        messageComponentInteraction.createImmediateResponder().setContent(p.getAnswer(AnswerEnum.ASK_MONTANT, true));
+        messageComponentInteraction.createImmediateResponder().setContent(p.getAnswer(AnswerEnum.ASK_MONTANT, true)).respond();
         addL(messageComponentInteraction.getChannel().get(), after);
     }
 

@@ -23,9 +23,10 @@ public class BuildingCommand extends CommandInServer {
     public void executeC(MessageCreateEvent messageCreateEvent, String content, String[] args, Player p) {
         String building = p.getString("building");
         Building building1;
-        if (!(building.equals("") || building.equals("exit"))) {
+        if (building.equals("") || building.equals("exit")) {
             building1 = null;
         } else {
+            System.out.println("ll");
             building1 = Buildings.load(building);
         }
         if (args.length > 1) {
@@ -51,7 +52,8 @@ public class BuildingCommand extends CommandInServer {
                                     sendImpossible(messageCreateEvent, p);
                                     return;
                                 } else {
-                                    p.set("building", String.valueOf(i));
+                                    p.set("building", args[2]);
+                                    System.out.println(args[2]);
                                     messageCreateEvent.getMessage().reply(p.getAnswer(AnswerEnum.ENTREE_BUILD, true));
                                 }
                             } catch (IllegalArgumentException e) {
