@@ -12,6 +12,21 @@ public class Banque extends BuildingInteraction {
     }
 
     @Override
+    public void interpret(String[] args) {
+
+    }
+
+    @Override
+    public String getHelp() {
+        return null;
+    }
+
+    @Override
+    public String getUsage() {
+        return null;
+    }
+
+    @Override
     public EmbedBuilder getInfos(Player p) {
         return null;
     }
