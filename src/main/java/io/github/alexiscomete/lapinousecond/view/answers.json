@@ -60,5 +60,8 @@
   },
   "entree_build":{
     "french": "vous entrez dans le bâtiment"
+  },
+  "list_buildings": {
+    "french": "Liste des bâtiments dans le lieu"
   }
 }

@@ -18,7 +18,8 @@ public enum AnswerEnum {
     IMP_SIT("imp_sit"),
     NO_ENOUGH_ARGS("no_enough_args"),
     ILLEGAL_ARGUMENT_NUMBER("illegal_argument_number"),
-    ENTREE_BUILD("entree_build");
+    ENTREE_BUILD("entree_build"),
+    LIST_BUILDINGS("list_buildings");
 
     private final String name;
 

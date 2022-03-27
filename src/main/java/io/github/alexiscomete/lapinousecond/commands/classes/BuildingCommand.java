@@ -3,6 +3,7 @@ package io.github.alexiscomete.lapinousecond.commands.classes;
 import io.github.alexiscomete.lapinousecond.commands.CommandInServer;
 import io.github.alexiscomete.lapinousecond.entity.Player;
 import io.github.alexiscomete.lapinousecond.message_event.ListButtons;
+import io.github.alexiscomete.lapinousecond.save.CacheGetSet;
 import io.github.alexiscomete.lapinousecond.view.AnswerEnum;
 import io.github.alexiscomete.lapinousecond.worlds.Place;
 import io.github.alexiscomete.lapinousecond.worlds.buildings.Building;
@@ -11,7 +12,9 @@ import org.javacord.api.entity.message.MessageBuilder;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.event.message.MessageCreateEvent;
 
+import java.awt.*;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class BuildingCommand extends CommandInServer {
 
@@ -110,7 +113,7 @@ public class BuildingCommand extends CommandInServer {
                     if (building1 == null) {
                         sendImpossible(messageCreateEvent, p);
                     } else {
-                        //TODO
+
                     }
                     break;
             }
