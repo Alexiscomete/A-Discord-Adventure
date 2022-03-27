@@ -9,4 +9,7 @@ public interface BuildMethods {
     EmbedBuilder getInfos(Player p);
     MessageBuilder getCompleteInfos(Player p);
     void configBuilding();
+    void interpret(String[] args);
+    String getHelp();
+    String getUsage();
 }

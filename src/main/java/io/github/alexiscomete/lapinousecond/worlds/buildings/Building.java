@@ -77,6 +77,21 @@ public class Building extends CacheGetSet implements BuildMethods {
     }
 
     @Override
+    public void interpret(String[] args) {
+        buildingInteraction.interpret(args);
+    }
+
+    @Override
+    public String getHelp() {
+        return buildingInteraction.getHelp();
+    }
+
+    @Override
+    public String getUsage() {
+        return buildingInteraction.getUsage();
+    }
+
+    @Override
     public EmbedBuilder getInfos(Player p) {
         return buildingInteraction.getInfos(p);
     }

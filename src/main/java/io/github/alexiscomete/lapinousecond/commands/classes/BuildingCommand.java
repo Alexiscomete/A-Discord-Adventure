@@ -3,7 +3,6 @@ package io.github.alexiscomete.lapinousecond.commands.classes;
 import io.github.alexiscomete.lapinousecond.commands.CommandInServer;
 import io.github.alexiscomete.lapinousecond.entity.Player;
 import io.github.alexiscomete.lapinousecond.message_event.ListButtons;
-import io.github.alexiscomete.lapinousecond.save.CacheGetSet;
 import io.github.alexiscomete.lapinousecond.view.AnswerEnum;
 import io.github.alexiscomete.lapinousecond.worlds.Place;
 import io.github.alexiscomete.lapinousecond.worlds.buildings.Building;
@@ -12,9 +11,8 @@ import org.javacord.api.entity.message.MessageBuilder;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.event.message.MessageCreateEvent;
 
-import java.awt.*;
 import java.util.ArrayList;
-import java.util.stream.Collectors;
+import java.util.Arrays;
 
 public class BuildingCommand extends CommandInServer {
 
@@ -46,7 +44,7 @@ public class BuildingCommand extends CommandInServer {
                                 System.out.println(buildings.size());
                                 Building b = null;
                                 for (Building bu :
-                                     buildings) {
+                                        buildings) {
                                     if (bu.getId() == i) {
                                         b = bu;
                                     }
@@ -109,11 +107,24 @@ public class BuildingCommand extends CommandInServer {
                         sendImpossible(messageCreateEvent, p);
                     }
                     break;
+                case "usage":
+                    if (building1 == null) {
+                        sendImpossible(messageCreateEvent, p);
+                    } else {
+                        messageCreateEvent.getMessage().reply(building1.getUsage());
+                    }
+                    break;
+                case "help":
+                    if (building1 == null) {
+                        sendImpossible(messageCreateEvent, p);
+                    } else {
+                        messageCreateEvent.getMessage().reply(building1.getHelp());
+                    }
                 default:
                     if (building1 == null) {
                         sendImpossible(messageCreateEvent, p);
                     } else {
-
+                        building1.interpret(args);
                     }
                     break;
             }
@@ -127,7 +138,20 @@ public class BuildingCommand extends CommandInServer {
     }
 
     public void sendBuildTypeList(MessageCreateEvent messageCreateEvent, Player p) {
-        //TODO
+        MessageBuilder messageBuilder = new MessageBuilder();
+        EmbedBuilder embedBuilder = new EmbedBuilder();
+        messageBuilder.setEmbed(embedBuilder);
+        ArrayList<Buildings> buildings = new ArrayList<>(Arrays.asList(Buildings.values()));
+        ListButtons<Buildings> buildingListButtons = new ListButtons<>(embedBuilder, buildings, this::addListTypeBuild);
+        buildingListButtons.register();
+        messageBuilder.send(messageCreateEvent.getChannel());
+    }
+
+    public void addListTypeBuild(EmbedBuilder embedBuilder, int min, int num, ArrayList<Buildings> list) {
+        for (int i = min; i < num; i++) {
+            Buildings b = list.get(i);
+            embedBuilder.addField(b.getName(), "Peut être construit : " + b.isBuild() + "\nPrix : " + b.getBasePrice(), false);
+        }
     }
 
     public void sendList(MessageCreateEvent messageCreateEvent, Player p) {
