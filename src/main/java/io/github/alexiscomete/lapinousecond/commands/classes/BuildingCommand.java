@@ -14,6 +14,9 @@ import org.javacord.api.event.message.MessageCreateEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ * Command to build a building, manage buildings, and use them
+ */
 public class BuildingCommand extends CommandInServer {
 
     public BuildingCommand() {
@@ -31,7 +34,9 @@ public class BuildingCommand extends CommandInServer {
             building1 = Buildings.load(building);
         }
         if (args.length > 1) {
+            // all sub commands
             switch (args[1]) {
+                // entering in a building
                 case "enter":
                     if (building1 == null) {
                         if (args.length > 2) {
@@ -67,6 +72,7 @@ public class BuildingCommand extends CommandInServer {
                         sendImpossible(messageCreateEvent, p);
                     }
                     break;
+                // exiting from a building and send the list of buildings
                 case "exit":
                     if (building1 == null) {
                         sendImpossible(messageCreateEvent, p);
@@ -75,6 +81,7 @@ public class BuildingCommand extends CommandInServer {
                         sendList(messageCreateEvent, p);
                     }
                     break;
+                // send information of the building
                 case "infos":
                     if (building1 == null) {
                         sendImpossible(messageCreateEvent, p);
@@ -82,6 +89,7 @@ public class BuildingCommand extends CommandInServer {
                         building1.completeInfos(p).send(messageCreateEvent.getChannel());
                     }
                     break;
+                // send the list of buildings types or build a new building
                 case "build":
                     if (building1 == null) {
                         if (args.length > 2) {
