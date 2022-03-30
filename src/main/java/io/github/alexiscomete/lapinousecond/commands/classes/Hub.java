@@ -6,6 +6,9 @@ import io.github.alexiscomete.lapinousecond.commands.CommandBot;
 import io.github.alexiscomete.lapinousecond.worlds.ServerBot;
 import org.javacord.api.event.message.MessageCreateEvent;
 
+/**
+ * Hub command, used to teleport to the hub the player who sent the command
+ */
 public class Hub extends CommandBot {
 
     public Hub() {

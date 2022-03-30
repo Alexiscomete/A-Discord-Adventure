@@ -20,14 +20,15 @@ import org.json.JSONObject;
 import java.awt.*;
 import java.io.InputStream;
 import java.util.AbstractMap;
-import java.util.HashMap;
 import java.util.Objects;
 import java.util.Scanner;
 
 public class Building extends CacheGetSet implements BuildMethods {
 
+    // the json file who contains buildings type information
     public static final JSONObject jsonObject;
 
+    // load the json file
     static {
         InputStream inputStream = Building.class.getClassLoader().getResourceAsStream("buildings_config.json");
         System.out.println(inputStream);
@@ -45,12 +46,14 @@ public class Building extends CacheGetSet implements BuildMethods {
     private BuildingInteraction buildingInteraction;
     private final ProgressionBar progressionBar;
 
+    // constructor for the building if it's already exist
     public Building(long id, Buildings buildings) {
         super(id, Tables.BUILDINGS.getTable());
         progressionBar = new ProgressionBar("💰", 3, "🧱", 3, " ", 1, Double.parseDouble(getString("collect_target")), Double.parseDouble(getString("collect_value")), 20);
         this.buildingInteraction = buildings.get(this);
     }
 
+    // constructor for the building if it's not exist yet
     @SafeVarargs
     public Building(Buildings buildings, Owner owner, Place place, AbstractMap.SimpleEntry<String, String>... specialInfos) {
         super(SaveLocation.generateUniqueID(), Tables.BUILDINGS.getTable());
@@ -70,37 +73,6 @@ public class Building extends CacheGetSet implements BuildMethods {
         }
         progressionBar = new ProgressionBar("💰", 3, "🧱", 3, " ", 1, buildings.getBasePrice(), 0.0, 20);
     }
-
-    @Override
-    public void configBuilding() {
-        buildingInteraction.configBuilding();
-    }
-
-    @Override
-    public void interpret(String[] args) {
-        buildingInteraction.interpret(args);
-    }
-
-    @Override
-    public String getHelp() {
-        return buildingInteraction.getHelp();
-    }
-
-    @Override
-    public String getUsage() {
-        return buildingInteraction.getUsage();
-    }
-
-    @Override
-    public EmbedBuilder getInfos(Player p) {
-        return buildingInteraction.getInfos(p);
-    }
-
-    @Override
-    public MessageBuilder getCompleteInfos(Player p) {
-        return buildingInteraction.getCompleteInfos(p);
-    }
-
 
     public EmbedBuilder infos(Player p) {
         if (getString("build_status").equals("building")) {
@@ -158,5 +130,39 @@ public class Building extends CacheGetSet implements BuildMethods {
 
     public void evolute(BuildingInteraction buildingInteraction) {
         this.buildingInteraction = buildingInteraction;
+    }
+
+    // --------------------------------------------------
+    // --------------- BUILDING INTERACTION -------------
+    // --------------------------------------------------
+
+    @Override
+    public void configBuilding() {
+        buildingInteraction.configBuilding();
+    }
+
+    @Override
+    public void interpret(String[] args) {
+        buildingInteraction.interpret(args);
+    }
+
+    @Override
+    public String getHelp() {
+        return buildingInteraction.getHelp();
+    }
+
+    @Override
+    public String getUsage() {
+        return buildingInteraction.getUsage();
+    }
+
+    @Override
+    public EmbedBuilder getInfos(Player p) {
+        return buildingInteraction.getInfos(p);
+    }
+
+    @Override
+    public MessageBuilder getCompleteInfos(Player p) {
+        return buildingInteraction.getCompleteInfos(p);
     }
 }

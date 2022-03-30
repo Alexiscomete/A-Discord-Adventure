@@ -3,6 +3,9 @@ package io.github.alexiscomete.lapinousecond.commands.classes;
 import io.github.alexiscomete.lapinousecond.commands.CommandBot;
 import org.javacord.api.event.message.MessageCreateEvent;
 
+/**
+ * Hello command, used to nothing.
+ */
 public class Hello extends CommandBot {
 
     public Hello() {
