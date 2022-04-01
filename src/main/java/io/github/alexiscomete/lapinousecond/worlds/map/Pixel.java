@@ -18,10 +18,6 @@ public class Pixel {
         this.yImage = y * image.getHeight(null) / yMax;
         // permet de récupérer la couleur du pixel sur l'image
         this.color = new Color(image.getRGB(xImage, yImage));
-        if (color.getBlue() > color.getRed() + color.getGreen()) {
-            this.isDirt = false;
-        } else {
-            this.isDirt = true;
-        }
+        this.isDirt = color.getBlue() <= color.getRed() + color.getGreen();
     }
 }
