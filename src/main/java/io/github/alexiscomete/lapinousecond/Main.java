@@ -91,6 +91,7 @@ public class Main {
         saveManager = new SaveManager(config.getContent().get(1));
         Tables.testTables();
 
+        // Ajout des commandes
         addCommand(new Help());
         addCommand(new Hello());
         addCommand(new Work());
