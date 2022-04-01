@@ -20,4 +20,12 @@ public class Pixel {
         this.color = new Color(image.getRGB(xImage, yImage));
         this.isDirt = color.getBlue() <= color.getRed() + color.getGreen();
     }
+
+    public boolean isDirt() {
+        return isDirt;
+    }
+
+    public Color getColor() {
+        return color;
+    }
 }
