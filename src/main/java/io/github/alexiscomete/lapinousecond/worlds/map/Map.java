@@ -32,4 +32,14 @@ public class Map {
     public static boolean isDirt(int x, int y) {
         return getPixel(x, y).isDirt();
     }
+
+    // zoom and return a BufferedImage
+    public static BufferedImage zoom(int x, int y, int width, int height) {
+        return map.getSubimage(x * map.getWidth(null) / MAP_WIDTH, y * map.getHeight(null) / MAP_HEIGHT, width, height);
+    }
+
+    // zoom on coordinates (x, y) and return a BufferedImage
+    public static BufferedImage zoom(int x, int y, int zoom) {
+        return zoom(x-zoom*2, y-zoom, zoom*4, zoom*2);
+    }
 }

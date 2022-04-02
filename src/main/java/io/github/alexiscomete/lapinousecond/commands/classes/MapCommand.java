@@ -51,17 +51,60 @@ public class MapCommand extends CommandWithAccount {
                     // check if the pixel is dirt
                     if (Map.isDirt(Integer.parseInt(args[2]), Integer.parseInt(args[3]))) {
                         messageCreateEvent.getMessage().reply("The pixel is dirt");
-                        // color
-                        messageCreateEvent.getMessage().reply(Map.getPixel(Integer.parseInt(args[2]), Integer.parseInt(args[3])).getColor().toString());
                     } else {
                         messageCreateEvent.getMessage().reply("The pixel is not dirt");
                     }
-            }
-            // check if the player is in the world DIBIMAP
-            String world = p.getString("current_world");
-            if (!world.equals("DIBIMAP")) {
-                messageCreateEvent.getMessage().reply("Vous n'êtes pas dans le monde DIBIMAP"); // TODO: add dibi message
-                return;
+                    break;
+                case "zoom_p":
+                    // check if the player is in the world DIBIMAP
+                    String world = p.getString("current_world");
+                    if (!world.equals("DIBIMAP")) {
+                        messageCreateEvent.getMessage().reply("Vous n'êtes pas dans le monde DIBIMAP"); // TODO: add dibi message
+                        return;
+                    }
+                    break;
+                case "zoom":
+                    // check if enough arguments
+                    if (args.length < 5) {
+                        sendArgs(messageCreateEvent, p);
+                        return;
+                    }
+                    // check if the arguments are numbers
+                    if (!isNumeric(args[2])) {
+                        sendNumberEx(messageCreateEvent, p, 2);
+                        return;
+                    }
+                    if (!isNumeric(args[3])) {
+                        sendNumberEx(messageCreateEvent, p, 3);
+                        return;
+                    }
+                    if (!isNumeric(args[4])) {
+                        sendNumberEx(messageCreateEvent, p, 4);
+                        return;
+                    }
+                    // check if the arguments are in the right range
+                    if (Integer.parseInt(args[2]) < 0 || Integer.parseInt(args[2]) > Map.MAP_WIDTH) {
+                        messageCreateEvent.getMessage().reply("The first argument must be between 0 and " + Map.MAP_WIDTH);
+                        return;
+                    }
+                    if (Integer.parseInt(args[3]) < 0 || Integer.parseInt(args[3]) > Map.MAP_HEIGHT) {
+                        messageCreateEvent.getMessage().reply("The second argument must be between 0 and " + Map.MAP_HEIGHT);
+                        return;
+                    }
+                    // check if arg 4 is < 40
+                    if (Integer.parseInt(args[4]) > 40) {
+                        messageCreateEvent.getMessage().reply("The fourth argument must be between 0 and 40");
+                        return;
+                    }
+                    // send the zoom on the map
+                    MessageBuilder messageBuilder = new MessageBuilder();
+                    messageBuilder.append(":zoom:");
+                    messageBuilder.addAttachment(Map.zoom(Integer.parseInt(args[2]), Integer.parseInt(args[3]), Integer.parseInt(args[4])), "zoommap.png");
+                    messageBuilder.send(messageCreateEvent.getChannel());
+                    break;
+                default:
+                    sendImpossible(messageCreateEvent, p);
+                    break;
             }
         }
     }
