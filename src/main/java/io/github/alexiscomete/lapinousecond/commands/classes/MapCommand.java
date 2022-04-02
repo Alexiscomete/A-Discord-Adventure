@@ -51,6 +51,8 @@ public class MapCommand extends CommandWithAccount {
                     // check if the pixel is dirt
                     if (Map.isDirt(Integer.parseInt(args[2]), Integer.parseInt(args[3]))) {
                         messageCreateEvent.getMessage().reply("The pixel is dirt");
+                        // color
+                        messageCreateEvent.getMessage().reply(Map.getPixel(Integer.parseInt(args[2]), Integer.parseInt(args[3])).getColor().toString());
                     } else {
                         messageCreateEvent.getMessage().reply("The pixel is not dirt");
                     }
