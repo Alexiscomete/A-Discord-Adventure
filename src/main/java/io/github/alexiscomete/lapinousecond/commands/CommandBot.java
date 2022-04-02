@@ -87,4 +87,13 @@ public abstract class CommandBot {
     public void sendNumberEx(MessageCreateEvent messageCreateEvent, Player p, int i) {
         messageCreateEvent.getMessage().reply(p.getAnswer(AnswerEnum.ILLEGAL_ARGUMENT_NUMBER, true, i));
     }
+
+    public boolean isNumeric(String str) {
+        try {
+            Integer.parseInt(str);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
 }
