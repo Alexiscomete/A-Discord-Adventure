@@ -40,8 +40,20 @@ public class MapCommand extends CommandWithAccount {
                         return;
                     }
                     // check if the arguments are in the right range
-
+                    if (Integer.parseInt(args[2]) < 0 || Integer.parseInt(args[2]) > Map.MAP_WIDTH) {
+                        messageCreateEvent.getMessage().reply("The first argument must be between 0 and " + Map.MAP_WIDTH);
+                        return;
+                    }
+                    if (Integer.parseInt(args[3]) < 0 || Integer.parseInt(args[3]) > Map.MAP_HEIGHT) {
+                        messageCreateEvent.getMessage().reply("The second argument must be between 0 and " + Map.MAP_HEIGHT);
+                        return;
+                    }
                     // check if the pixel is dirt
+                    if (Map.isDirt(Integer.parseInt(args[2]), Integer.parseInt(args[3]))) {
+                        messageCreateEvent.getMessage().reply("The pixel is dirt");
+                    } else {
+                        messageCreateEvent.getMessage().reply("The pixel is not dirt");
+                    }
             }
             // check if the player is in the world DIBIMAP
             String world = p.getString("current_world");
