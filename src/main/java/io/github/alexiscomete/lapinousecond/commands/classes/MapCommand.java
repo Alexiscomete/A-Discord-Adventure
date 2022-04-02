@@ -91,15 +91,15 @@ public class MapCommand extends CommandWithAccount {
                         messageCreateEvent.getMessage().reply("The second argument must be between 0 and " + Map.MAP_HEIGHT);
                         return;
                     }
-                    // check if arg 4 is < 40
-                    if (Integer.parseInt(args[4]) > 40) {
-                        messageCreateEvent.getMessage().reply("The fourth argument must be between 0 and 40");
+                    // check if arg 4 is < 60
+                    if (Integer.parseInt(args[4]) > 60) {
+                        messageCreateEvent.getMessage().reply("The fourth argument must be between 0 and 60");
                         return;
                     }
                     // send the zoom on the map
                     MessageBuilder messageBuilder = new MessageBuilder();
                     messageBuilder.append(":zoom:");
-                    messageBuilder.addAttachment(Map.zoom(Integer.parseInt(args[2]), Integer.parseInt(args[3]), Integer.parseInt(args[4])), "zoommap.png");
+                    messageBuilder.addAttachment(Map.bigger(Map.zoom(Integer.parseInt(args[2]), Integer.parseInt(args[3]), Integer.parseInt(args[4])), 10), "zoommap.png");
                     messageBuilder.send(messageCreateEvent.getChannel());
                     break;
                 default:
