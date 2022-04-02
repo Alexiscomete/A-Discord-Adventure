@@ -110,6 +110,7 @@ public class Main {
         addCommand(new RoleCommand());
         addCommand(new PlaceCommand());
         addCommand(new BuildingCommand());
+        addCommand(new MapCommand());
     }
 
     /**

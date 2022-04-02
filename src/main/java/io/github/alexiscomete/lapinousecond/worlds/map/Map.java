@@ -16,4 +16,18 @@ public class Map {
             e.printStackTrace();
         }
     }
+
+    public static BufferedImage getMap() {
+        return map;
+    }
+
+    // pixel at (x, y) with Pixel
+    public static Pixel getPixel(int x, int y) {
+        return new Pixel(x, y, map.getWidth(), map.getHeight(), map);
+    }
+
+    // if pixel is Dirt
+    public static boolean isDirt(int x, int y) {
+        return getPixel(x, y).isDirt();
+    }
 }
