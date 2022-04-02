@@ -62,6 +62,17 @@ public class MapCommand extends CommandWithAccount {
                         messageCreateEvent.getMessage().reply("Vous n'êtes pas dans le monde DIBIMAP"); // TODO: add dibi message
                         return;
                     }
+                    // get the player's position (x, y) in the world DIBIMAP (x/y_DIBIMAP), x and y are strings
+                    String x = p.getString("x_DIBIMAP");
+                    String y = p.getString("y_DIBIMAP");
+                    // convert the strings to int
+                    int x_int = Integer.parseInt(x);
+                    int y_int = Integer.parseInt(y);
+                    // zoom on the player's position and send the map bigger
+                    MessageBuilder messageBuilder2 = new MessageBuilder();
+                    messageBuilder2.addAttachment(Map.bigger(Map.zoom(x_int, y_int, 30), 10), "map.png");
+                    messageBuilder2.send(messageCreateEvent.getChannel());
+
                     break;
                 case "zoom":
                     // check if enough arguments
@@ -98,7 +109,6 @@ public class MapCommand extends CommandWithAccount {
                     }
                     // send the zoom on the map
                     MessageBuilder messageBuilder = new MessageBuilder();
-                    messageBuilder.append(":zoom:");
                     messageBuilder.addAttachment(Map.bigger(Map.zoom(Integer.parseInt(args[2]), Integer.parseInt(args[3]), Integer.parseInt(args[4])), 10), "zoommap.png");
                     messageBuilder.send(messageCreateEvent.getChannel());
                     break;
