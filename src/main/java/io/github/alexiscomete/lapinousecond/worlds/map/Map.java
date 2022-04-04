@@ -41,10 +41,10 @@ public class Map {
 
     // zoom on coordinates (x, y) and return a BufferedImage
     public static BufferedImage zoom(int x, int y, int zoom) {
-        return zoom(x-zoom*2, y-zoom, zoom*4, zoom*2);
+        return zoom(x-zoom*2, y-zoom, zoom*2, zoom);
     }
 
-    // return a bigger BufferedImage and ask size
+    //return a bigger BufferedImage and ask size
     public static BufferedImage bigger(BufferedImage image, int sizeMultiplier) {
         return toBufferedImage(image.getScaledInstance(image.getWidth() * sizeMultiplier, image.getHeight() * sizeMultiplier, BufferedImage.SCALE_SMOOTH));
     }
