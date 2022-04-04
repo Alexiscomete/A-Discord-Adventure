@@ -8,8 +8,8 @@ import java.util.Objects;
 
 public class Map {
     private static BufferedImage map;
-    public static final int MAP_WIDTH = 510;
-    public static final int MAP_HEIGHT = 350;
+    public static final int MAP_WIDTH = 528;
+    public static final int MAP_HEIGHT = 272;
 
     static {
         // charge la map à partir du fichier base.png inclu dans le jar
