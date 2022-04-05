@@ -36,7 +36,7 @@ public class Map {
 
     // zoom and return a BufferedImage
     public static BufferedImage zoom(int x, int y, int width, int height) {
-        return map.getSubimage(x * map.getWidth(null) / MAP_WIDTH, y * map.getHeight(null) / MAP_HEIGHT, width, height);
+        return map.getSubimage(x * map.getWidth(null) / MAP_WIDTH, y * map.getHeight(null) / MAP_HEIGHT, width * map.getWidth(null) / MAP_WIDTH, height * map.getHeight(null) / MAP_HEIGHT);
     }
 
     // zoom on coordinates (x, y) and return a BufferedImage
