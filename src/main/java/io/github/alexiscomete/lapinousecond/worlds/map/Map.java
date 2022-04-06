@@ -41,7 +41,7 @@ public class Map {
 
     // zoom on coordinates (x, y) and return a BufferedImage
     public static BufferedImage zoom(int x, int y, int zoom) {
-        return zoom(x-zoom*2, y-zoom, zoom*2, zoom);
+        return zoom(x-zoom*2, y-zoom, zoom*4, zoom*2);
     }
 
     //return a bigger BufferedImage and ask size
