@@ -27,7 +27,20 @@ public class WorldCommand extends CommandWithAccount {
                     try {
                         WorldEnum worldEnum = WorldEnum.valueOf(args[2].toUpperCase());
                         World world = worldEnum.getWorld();
-
+                        // récupération du monde du joueur : si c'est le même monde, on le lui dit
+                        if (p.getString("world").equals(world.getProgName())) {
+                            messageCreateEvent.getChannel().sendMessage("Vous êtes déjà dans le monde " + world.getProgName());
+                            return;
+                        }
+                        // on regarde si il a assez d'argent
+                        if (p.getBal() < world.getTravelPrice()) {
+                            messageCreateEvent.getChannel().sendMessage("Vous n'avez pas assez d'argent pour changer de monde");
+                            return;
+                        }
+                        // on retire l'argent
+                        p.setBal(p.getBal() - world.getTravelPrice());
+                        // on change le monde
+                        p.set("world", world.getProgName());
                     } catch (IllegalArgumentException e) {
                         EmbedBuilder eb = new EmbedBuilder();
                         eb.setTitle("Monde inconnu");
