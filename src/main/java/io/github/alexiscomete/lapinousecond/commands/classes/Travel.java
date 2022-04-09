@@ -74,7 +74,6 @@ public class  Travel extends CommandInServer {
         }
 
         // on recupère les lieux dans lesquels le joueur peut se rendre depuis le lieu actuel
-        // TODO : monde avec coordonnées : déplacement libre
         ArrayList<Place> places = Place.toPlaces(place.getString("connections"));
 
         // On récupère le serveur dans lequel le joueur veut se rendre
@@ -92,7 +91,7 @@ public class  Travel extends CommandInServer {
             return;
         }
 
-        // On regarde si le joueur a assez d'argent pour se rendre à la destination TODO : monde avec coordonnées
+        // On regarde si le joueur a assez d'argent pour se rendre à la destination
         double bal = p.getBal();
         if (bal < 100) {
             messageCreateEvent.getMessage().reply("Il vous faut 100 rb pour voyager dans le monde normal");
