@@ -93,7 +93,6 @@ public class Main {
 
         // Ajout des commandes
         addCommand(new Help());
-        addCommand(new Hello());
         addCommand(new Work());
         addCommand(new Shop());
         addCommand(new Give());

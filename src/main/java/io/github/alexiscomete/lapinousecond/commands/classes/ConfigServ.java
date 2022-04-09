@@ -108,19 +108,6 @@ public class ConfigServ extends CommandWithAccount {
                             messageCreateEvent.getMessage().reply("Description modifiée");
                         } else if (args[1].equalsIgnoreCase("travel")) {
                             messageCreateEvent.getMessage().reply("impossible pour le moment");
-                            /*if (server.getTravel().size() < 5) {
-                                ArrayList<Long> longs = saveManager.getTravels();
-                                for (Long l : longs) {
-                                    if (l == server.getId()) {
-                                        longs.remove(l);
-                                        break;
-                                    }
-                                }
-                                server.setTravel(longs);
-                                messageCreateEvent.getMessage().reply("fait ...");
-                            } else {
-                                messageCreateEvent.getMessage().reply("Vous avez déjà atteint le nombre de serveurs autorisés");
-                            }*/
                         } else if (args[1].equalsIgnoreCase("in") && args.length > 2) {
                             setValue(messageCreateEvent, "welcome", "Message d' arrivé modifiée", 1500, server, args);
                             StringBuilder name = getStr(args);
