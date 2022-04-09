@@ -39,8 +39,24 @@ public class  Travel extends CommandInServer {
             world = "NORMAL";
             p.set("current_world", "NORMAL");
         }
+
+        if (Objects.equals(world, "NORMAL")) {
+            travelWorldNormal(messageCreateEvent,args, p);
+        } else if (Objects.equals(world, "DIBIMAP")) {
+            travelWorldDibimap(messageCreateEvent,args, p);
+        }
+    }
+
+    // --------------------------------------------------
+    // --------- EN FONCTION DU MONDE -------------------
+    // --------------------------------------------------
+
+    /**
+     * Si le monde est le monde est le monde normal
+     */
+    private void travelWorldNormal(MessageCreateEvent messageCreateEvent, String[] args, Player p) {
         // On récupère le lieu du joueur dans le monde
-        String placeID = p.getString("place_" + world);
+        String placeID = p.getString("place_NORMAL");
         // TODO : monde avec coordonnées
         if (Objects.equals(placeID, "")) { // si le lieu est vide alors on l'initialise au lieu de départ : le serveur A Discord Adventure
             placeID = new ServerBot(854288660147994634L).getString("places");
@@ -130,7 +146,7 @@ public class  Travel extends CommandInServer {
             // on set les valeurs dans la base de données
             p.setServer(nextServer.getId());
             p.setBal(bal - 100);
-            p.set("place_" + world, String.valueOf(dest.getID()));
+            p.set("place_NORMAL", String.valueOf(dest.getID()));
 
             // on envoie un message de confirmation
             messageCreateEvent.getMessage().reply("Dans le monde NORMAL le voyage est instantané, au revoir !");
@@ -140,4 +156,8 @@ public class  Travel extends CommandInServer {
             e.printStackTrace();
         }
     }
+
+    private void travelWorldDibimap(MessageCreateEvent messageCreateEvent, String[] args, Player p) {
+    }
+
 }
