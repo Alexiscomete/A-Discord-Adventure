@@ -111,6 +111,7 @@ public class Main {
         addCommand(new PlaceCommand());
         addCommand(new BuildingCommand());
         addCommand(new MapCommand());
+        addCommand(new WorldCommand());
     }
 
     /**
