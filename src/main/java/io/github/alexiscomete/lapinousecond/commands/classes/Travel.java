@@ -57,7 +57,6 @@ public class  Travel extends CommandInServer {
     private void travelWorldNormal(MessageCreateEvent messageCreateEvent, String[] args, Player p) {
         // On récupère le lieu du joueur dans le monde
         String placeID = p.getString("place_NORMAL");
-        // TODO : monde avec coordonnées
         if (Objects.equals(placeID, "")) { // si le lieu est vide alors on l'initialise au lieu de départ : le serveur A Discord Adventure
             placeID = new ServerBot(854288660147994634L).getString("places");
             p.set("place_NORMAL", new ServerBot(854288660147994634L).getString("places"));
@@ -156,7 +155,38 @@ public class  Travel extends CommandInServer {
         }
     }
 
+    // si le joueur est dans le monde Dibimap
     private void travelWorldDibimap(MessageCreateEvent messageCreateEvent, String[] args, Player p) {
+        // on récupère le lieu dans le monde Dibimap
+        String placeType = p.getString("place_DIBIMAP_type");
+        if (placeType == null) {
+            placeType = "coos";
+            setCoos(p);
+        }
+        // je sépare en 2 cas : si le type est coos ou si le type est un lieu
+        if (placeType.equals("coos")) {
+            // on récupère les coordonnées
+            int x = Integer.parseInt(p.getString("place_DIBIMAP_x"));
+            int y = Integer.parseInt(p.getString("place_DIBIMAP_y"));
+            // on ne récupère pas le lieu, car on ne connait pas le lieu
+        } else if (placeType.equals("place")) {
+            // on récupère le lieu
+            String place = p.getString("place_DIBIMAP_place");
+
+        } else {
+            // on envoie un message d'erreur
+            messageCreateEvent.getMessage().reply("Etrange, ce type de lieu n'existe pas. Je vais donc vous téléporter. Retentez votre commande.");
+            setCoos(p);
+        }
+    }
+
+    // set coordonnées par défaut
+    private void setCoos(Player p) {
+        // on met les coordonnées par défaut
+        p.set("place_DIBIMAP_x", "400");
+        p.set("place_DIBIMAP_y", "250");
+        // et le type de lieu par défaut
+        p.set("place_DIBIMAP_type", "coos");
     }
 
 }
