@@ -169,10 +169,13 @@ public class  Travel extends CommandInServer {
             int x = Integer.parseInt(p.getString("place_DIBIMAP_x"));
             int y = Integer.parseInt(p.getString("place_DIBIMAP_y"));
             // on ne récupère pas le lieu, car on ne connait pas le lieu
+            // on sépare le cas où le joueur veut aller dans un lieu et celui où il veut aller sur des coos
         } else if (placeType.equals("place")) {
             // on récupère le lieu
             String place = p.getString("place_DIBIMAP_place");
-
+            // on récupère le lieu dans la base de données
+            Place place1 = Main.getSaveManager().places.get(Long.parseLong(place));
+            // on sépare le cas où le joueur veut aller dans un lieu et celui où il veut aller sur des coos
         } else {
             // on envoie un message d'erreur
             messageCreateEvent.getMessage().reply("Etrange, ce type de lieu n'existe pas. Je vais donc vous téléporter. Retentez votre commande.");
