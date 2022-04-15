@@ -163,6 +163,12 @@ public class  Travel extends CommandInServer {
             placeType = "coos";
             setCoos(p);
         }
+        // je regarde si les arguments sont bien présents
+        if (args.length < 2) {
+            // si non on envoie un message d'erreur car il n'a pas donné le type de voyage
+            sendArgs(messageCreateEvent, p);
+            return;
+        }
         // je sépare en 2 cas : si le type est coos ou si le type est un lieu
         if (placeType.equals("coos")) {
             // on récupère les coordonnées
@@ -170,6 +176,32 @@ public class  Travel extends CommandInServer {
             int y = Integer.parseInt(p.getString("place_DIBIMAP_y"));
             // on ne récupère pas le lieu, car on ne connait pas le lieu
             // on sépare le cas où le joueur veut aller dans un lieu et celui où il veut aller sur des coos
+            if (args[1].equals("coos")) {
+                // on regarde si les arguments sont bien présents
+                if (args.length < 4) {
+                    // si non on envoie un message d'erreur car il n'a pas donné les coordonnées
+                    sendArgs(messageCreateEvent, p);
+                    return;
+                }
+                // on tente de récupérer les coordonnées
+                int x2, y2;
+                // d'abord les coordonnées x
+                try {
+                    x2 = Integer.parseInt(args[2]);
+                } catch (NumberFormatException e) {
+                    // si il y a une erreur on envoie un message d'erreur
+                    sendNumberEx(messageCreateEvent, p, 2);
+                    return;
+                }
+                // puis les coordonnées y
+                try {
+                    y2 = Integer.parseInt(args[3]);
+                } catch (NumberFormatException e) {
+                    // si il y a une erreur on envoie un message d'erreur
+                    sendNumberEx(messageCreateEvent, p, 3);
+                    return;
+                }
+            }
         } else if (placeType.equals("place")) {
             // on récupère le lieu
             String place = p.getString("place_DIBIMAP_place");
