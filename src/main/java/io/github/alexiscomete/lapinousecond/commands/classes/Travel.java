@@ -223,5 +223,4 @@ public class  Travel extends CommandInServer {
         // et le type de lieu par défaut
         p.set("place_DIBIMAP_type", "coos");
     }
-
 }
