@@ -6,7 +6,6 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
-import java.util.PriorityQueue;
 
 public class Map {
     private static BufferedImage map;
@@ -82,42 +81,6 @@ public class Map {
 
     // return the path from one pixel to another
     public static ArrayList<Pixel> findPath(Pixel start, Pixel end) {
-        if (start.isDirt() != end.isDirt()) {
-            return null;
-        }
-        ArrayList<Pixel> path = new ArrayList<>();
-        PriorityQueue<RouteNode> open = new PriorityQueue<>();
-
-        // add the start node
-        open.add(new RouteNode(start, null, 0d, distance(start, end)));
-
-        // while there is still nodes to explore
-        while (!open.isEmpty()) {
-            RouteNode<T> next = open.poll();
-            if (next.getCurrent().equals(end)) {
-                List<T> route = new ArrayList<>();
-                RouteNode<T> current = next;
-                do {
-                    route.add(0, current.getCurrent());
-                    current = allNodes.get(current.getPrevious());
-                } while (current != null);
-                return route;
-            }
-
-            graph.getConnections(next.getCurrent()).forEach(connection -> {
-                RouteNode<T> nextNode = allNodes.getOrDefault(connection, new RouteNode<>(connection));
-                allNodes.put(connection, nextNode);
-
-                double newScore = next.getRouteScore() + nextNodeScorer.computeCost(next.getCurrent(), connection);
-                if (newScore < nextNode.getRouteScore()) {
-                    nextNode.setPrevious(next.getCurrent());
-                    nextNode.setRouteScore(newScore);
-                    nextNode.setEstimatedScore(newScore + targetScorer.computeCost(connection, to));
-                    openSet.add(nextNode);
-                }
-            });
-
-        }
         return null;
     }
 
