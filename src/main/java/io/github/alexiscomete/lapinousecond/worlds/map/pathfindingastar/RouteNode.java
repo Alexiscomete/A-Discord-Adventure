@@ -1,29 +1,31 @@
 package io.github.alexiscomete.lapinousecond.worlds.map.pathfindingastar;
 
+import io.github.alexiscomete.lapinousecond.worlds.map.Pixel;
+
 import java.util.StringJoiner;
 
-class RouteNode<T extends Pixel> implements Comparable<RouteNode> {
-    private final T current;
-    private T previous;
+class RouteNode implements Comparable<RouteNode> {
+    private final Pixel current;
+    private Pixel previous;
     private double routeScore;
     private double estimatedScore;
 
-    RouteNode(T current) {
+    RouteNode(Pixel current) {
         this(current, null, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
     }
 
-    RouteNode(T current, T previous, double routeScore, double estimatedScore) {
+    RouteNode(Pixel current, Pixel previous, double routeScore, double estimatedScore) {
         this.current = current;
         this.previous = previous;
         this.routeScore = routeScore;
         this.estimatedScore = estimatedScore;
     }
 
-    T getCurrent() {
+    Pixel getCurrent() {
         return current;
     }
 
-    T getPrevious() {
+    Pixel getPrevious() {
         return previous;
     }
 
@@ -35,7 +37,7 @@ class RouteNode<T extends Pixel> implements Comparable<RouteNode> {
         return estimatedScore;
     }
 
-    void setPrevious(T previous) {
+    void setPrevious(Pixel previous) {
         this.previous = previous;
     }
 

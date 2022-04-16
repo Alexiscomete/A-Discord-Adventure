@@ -1,5 +1,7 @@
 package io.github.alexiscomete.lapinousecond.worlds.map.pathfindingastar;
 
-public interface Scorer<T extends Pixel> {
-    double computeCost(T from, T to);
+import io.github.alexiscomete.lapinousecond.worlds.map.Pixel;
+
+public interface Scorer {
+    double computeCost(Pixel from, Pixel to);
 }
