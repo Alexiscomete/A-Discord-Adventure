@@ -4,6 +4,7 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class Map {
@@ -78,36 +79,28 @@ public class Map {
     // PATH FINDING with A*
     // ------------------
 
-    // return the path from (x1, y1) to (x2, y2)
-    public static Path findPath(int x1, int y1, int x2, int y2) {
-        return new Path(x1, y1, x2, y2);
+    // return the path from one pixel to another
+    public static ArrayList<Pixel> findPath(Pixel start, Pixel end) {
+        if (start.isDirt() != end.isDirt()) {
+            return null;
+        }
+        ArrayList<Pixel> path = new ArrayList<>();
+
     }
 
-    static class Path {
-        private final int x1,y1;
-        private final int x2,y2;
-
-        Path(int x1, int y1, int x2, int y2) {
-            this.x1 = x1;
-            this.y1 = y1;
-            this.x2 = x2;
-            this.y2 = y2;
+    // return connected pixels
+    public static ArrayList<Pixel> getConnectedPixels(Pixel pixel) {
+        ArrayList<Pixel> pixels = new ArrayList<>();
+        for (int x = pixel.getX() - 1; x <= pixel.getX() + 1; x++) {
+            for (int y = pixel.getY() - 1; y <= pixel.getY() + 1; y++) {
+                if (x >= 0 && x < MAP_WIDTH && y >= 0 && y < MAP_HEIGHT) {
+                    Pixel p = getPixel(x, y);
+                    if (p.isDirt() == pixel.isDirt()) {
+                        pixels.add(p);
+                    }
+                }
+            }
         }
-
-        public int getX1() {
-            return x1;
-        }
-
-        public int getY1() {
-            return y1;
-        }
-
-        public int getX2() {
-            return x2;
-        }
-
-        public int getY2() {
-            return y2;
-        }
+        return pixels;
     }
 }

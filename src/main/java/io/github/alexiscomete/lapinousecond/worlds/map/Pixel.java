@@ -29,4 +29,28 @@ public class Pixel {
     public Color getColor() {
         return color;
     }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public int getXImage() {
+        return xImage;
+    }
+
+    public int getYImage() {
+        return yImage;
+    }
+
+    public int getXMax() {
+        return xMax;
+    }
+
+    public int getYMax() {
+        return yMax;
+    }
 }
