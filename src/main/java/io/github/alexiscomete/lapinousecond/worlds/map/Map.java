@@ -87,6 +87,7 @@ public class Map {
         openList.add(start);
 
         while (!openList.isEmpty()) {
+            openList.sort(Node::compareTo);
             Node current = openList.get(0);
             if (current.equals(end)) {
                 ArrayList<Pixel> path = new ArrayList<>();
@@ -98,15 +99,16 @@ public class Map {
                 return path;
             }
             openList.remove(current);
-            for (Node n : getConnectedNodes(current)) {
-                if (closedList.contains(n)) {
-                    continue;
-                }
+            getConnectedNodes(current);
+            for (Node n :
+                    getConnectedNodes(current)) {
                 if (!openList.contains(n)) {
                     n.setParent(current);
-                } else if (openList.get(openList.indexOf(n)).heuristic < current.heuristic) {
+                }
+                if (!((openList.contains(n) && openList.get(openList.indexOf(n)).heuristic < current.heuristic) || closedList.contains(n))) {
                     n.cost = current.cost + 1;
                     n.heuristic = n.cost + distance(n, end);
+                    n.setParent(current);
                     openList.add(n);
                 }
             }

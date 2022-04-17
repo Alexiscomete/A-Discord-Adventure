@@ -2,11 +2,12 @@ package io.github.alexiscomete.lapinousecond.commands.classes;
 
 import io.github.alexiscomete.lapinousecond.commands.CommandWithAccount;
 import io.github.alexiscomete.lapinousecond.entity.Player;
+import io.github.alexiscomete.lapinousecond.worlds.map.Map;
+import io.github.alexiscomete.lapinousecond.worlds.map.Pixel;
 import org.javacord.api.entity.message.MessageBuilder;
 import org.javacord.api.event.message.MessageCreateEvent;
-import io.github.alexiscomete.lapinousecond.worlds.map.Map;
 
-import java.util.Objects;
+import java.util.ArrayList;
 
 public class MapCommand extends CommandWithAccount {
     public MapCommand() {
@@ -145,7 +146,19 @@ public class MapCommand extends CommandWithAccount {
                         return;
                     }
                     // send the path
-                    messageCreateEvent.getMessage().reply(Objects.requireNonNull(Map.findPath(Map.getNode(Integer.parseInt(args[2]), Integer.parseInt(args[3])), Map.getNode(Integer.parseInt(args[4]), Integer.parseInt(args[5])))).toString());
+                    ArrayList<Pixel> path = Map.findPath(Map.getNode(Integer.parseInt(args[2]), Integer.parseInt(args[3])), Map.getNode(Integer.parseInt(args[4]), Integer.parseInt(args[5])));
+                    if (path == null) {
+                        messageCreateEvent.getMessage().reply("No path found");
+                    } else {
+                        messageCreateEvent.getMessage().reply("Path found : " + path.size() + " steps");
+                        //messageCreateEvent.getMessage().reply(Map.drawPath(path));
+                        StringBuilder sb = new StringBuilder();
+                        for (Pixel pixel : path) {
+                            sb.append(pixel);
+                        }
+                        messageCreateEvent.getMessage().reply(sb.toString());
+                    }
+                    break;
                 default:
                     sendImpossible(messageCreateEvent, p);
                     break;
