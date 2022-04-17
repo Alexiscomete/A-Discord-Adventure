@@ -151,12 +151,14 @@ public class MapCommand extends CommandWithAccount {
                         messageCreateEvent.getMessage().reply("No path found");
                     } else {
                         messageCreateEvent.getMessage().reply("Path found : " + path.size() + " steps");
-                        //messageCreateEvent.getMessage().reply(Map.drawPath(path));
                         StringBuilder sb = new StringBuilder();
                         for (Pixel pixel : path) {
                             sb.append(pixel);
                         }
                         messageCreateEvent.getMessage().reply(sb.toString());
+                        MessageBuilder messageBuilder3 = new MessageBuilder();
+                        messageBuilder3.addAttachment(Map.drawPath(path), "path.png");
+                        messageBuilder3.send(messageCreateEvent.getChannel());
                     }
                     break;
                 default:

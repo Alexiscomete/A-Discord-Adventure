@@ -141,4 +141,14 @@ public class Map {
     public static double distance(Pixel a, Pixel b) {
         return Math.sqrt(Math.pow(a.getX() - b.getX(), 2) + Math.pow(a.getY() - b.getY(), 2));
     }
+
+    public static BufferedImage drawPath(ArrayList<Pixel> path) {
+        BufferedImage img = new BufferedImage(map.getWidth(), map.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        img.setData(map.getData());
+        for (Pixel p :
+                path) {
+            img.setRGB(p.getXImage(), p.getYImage(), Color.RED.getRGB());
+        }
+        return img;
+    }
 }
