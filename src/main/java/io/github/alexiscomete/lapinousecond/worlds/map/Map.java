@@ -98,13 +98,20 @@ public class Map {
                 return path;
             }
             openList.remove(current);
-            for (:
-                 ) {
-
+            for (Node n : getConnectedNodes(current)) {
+                if (closedList.contains(n)) {
+                    continue;
+                }
+                if (!openList.contains(n)) {
+                    n.setParent(current);
+                } else if (openList.get(openList.indexOf(n)).heuristic < current.heuristic) {
+                    n.cost = current.cost + 1;
+                    n.heuristic = n.cost + distance(n, end);
+                    openList.add(n);
+                }
             }
+            closedList.add(current);
         }
-
-
         return null;
     }
 
