@@ -2,6 +2,7 @@ package io.github.alexiscomete.lapinousecond.worlds.map;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.Objects;
 
 public class Pixel {
     private final int x, xImage, y, yImage;
@@ -52,5 +53,18 @@ public class Pixel {
 
     public int getYMax() {
         return yMax;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Pixel pixel = (Pixel) o;
+        return x == pixel.x && y == pixel.y;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y);
     }
 }

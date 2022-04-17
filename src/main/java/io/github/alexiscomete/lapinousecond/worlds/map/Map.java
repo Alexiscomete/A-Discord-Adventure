@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Objects;
 
 public class Map {
@@ -80,24 +81,51 @@ public class Map {
     // ------------------
 
     // return the path from one pixel to another
-    public static ArrayList<Pixel> findPath(Pixel start, Pixel end) {
+    public static ArrayList<Pixel> findPath(Node start, Node end) {
+        ArrayList<Node> closedList = new ArrayList<>();
+        ArrayList<Node> openList = new ArrayList<>();
+        openList.add(start);
+
+        while (!openList.isEmpty()) {
+            Node current = openList.get(0);
+            if (current.equals(end)) {
+                ArrayList<Pixel> path = new ArrayList<>();
+                while (current.getParent() != null) {
+                    path.add(current);
+                    current = current.getParent();
+                }
+                Collections.reverse(path);
+                return path;
+            }
+            openList.remove(current);
+            for (:
+                 ) {
+
+            }
+        }
+
+
         return null;
     }
 
     // return connected pixels
-    public static ArrayList<Pixel> getConnectedPixels(Pixel pixel) {
-        ArrayList<Pixel> pixels = new ArrayList<>();
+    public static ArrayList<Node> getConnectedNodes(Node pixel) {
+        ArrayList<Node> nodes = new ArrayList<>();
         for (int x = pixel.getX() - 1; x <= pixel.getX() + 1; x++) {
             for (int y = pixel.getY() - 1; y <= pixel.getY() + 1; y++) {
                 if (x >= 0 && x < MAP_WIDTH && y >= 0 && y < MAP_HEIGHT) {
-                    Pixel p = getPixel(x, y);
+                    Node p = getNode(x, y);
                     if (p.isDirt() == pixel.isDirt()) {
-                        pixels.add(p);
+                        nodes.add(p);
                     }
                 }
             }
         }
-        return pixels;
+        return nodes;
+    }
+
+    private static Node getNode(int x, int y) {
+        return new Node(x, y, MAP_WIDTH, MAP_HEIGHT, map, 0, 0);
     }
 
     // distance between two pixels
