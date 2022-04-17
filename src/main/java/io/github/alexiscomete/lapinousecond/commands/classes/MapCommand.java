@@ -6,6 +6,8 @@ import org.javacord.api.entity.message.MessageBuilder;
 import org.javacord.api.event.message.MessageCreateEvent;
 import io.github.alexiscomete.lapinousecond.worlds.map.Map;
 
+import java.util.Objects;
+
 public class MapCommand extends CommandWithAccount {
     public MapCommand() {
         super("description", "map", "totalDescription");
@@ -112,6 +114,38 @@ public class MapCommand extends CommandWithAccount {
                     messageBuilder.addAttachment(Map.bigger(Map.zoom(Integer.parseInt(args[2]), Integer.parseInt(args[3]), Integer.parseInt(args[4])), 10), "zoommap.png");
                     messageBuilder.send(messageCreateEvent.getChannel());
                     break;
+                case "findpath": // find path between two points : x1 y1 x2 y2
+                    // check if enough arguments
+                    if (args.length < 6) {
+                        sendArgs(messageCreateEvent, p);
+                        return;
+                    }
+                    // check if the arguments are numbers
+                    for (int i = 2; i < 6; i++) {
+                        if (!isNumeric(args[i])) {
+                            sendNumberEx(messageCreateEvent, p, i);
+                            return;
+                        }
+                    }
+                    // check if the arguments are in the right range
+                    if (Integer.parseInt(args[2]) < 0 || Integer.parseInt(args[2]) > Map.MAP_WIDTH) {
+                        messageCreateEvent.getMessage().reply("The first argument must be between 0 and " + Map.MAP_WIDTH);
+                        return;
+                    }
+                    if (Integer.parseInt(args[3]) < 0 || Integer.parseInt(args[3]) > Map.MAP_HEIGHT) {
+                        messageCreateEvent.getMessage().reply("The second argument must be between 0 and " + Map.MAP_HEIGHT);
+                        return;
+                    }
+                    if (Integer.parseInt(args[4]) < 0 || Integer.parseInt(args[4]) > Map.MAP_WIDTH) {
+                        messageCreateEvent.getMessage().reply("The third argument must be between 0 and " + Map.MAP_WIDTH);
+                        return;
+                    }
+                    if (Integer.parseInt(args[5]) < 0 || Integer.parseInt(args[5]) > Map.MAP_HEIGHT) {
+                        messageCreateEvent.getMessage().reply("The fourth argument must be between 0 and " + Map.MAP_HEIGHT);
+                        return;
+                    }
+                    // send the path
+                    messageCreateEvent.getMessage().reply(Objects.requireNonNull(Map.findPath(Map.getNode(Integer.parseInt(args[2]), Integer.parseInt(args[3])), Map.getNode(Integer.parseInt(args[4]), Integer.parseInt(args[5])))).toString());
                 default:
                     sendImpossible(messageCreateEvent, p);
                     break;

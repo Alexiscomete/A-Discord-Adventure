@@ -131,7 +131,7 @@ public class Map {
         return nodes;
     }
 
-    private static Node getNode(int x, int y) {
+    public static Node getNode(int x, int y) {
         return new Node(x, y, MAP_WIDTH, MAP_HEIGHT, map, 0, 0);
     }
 
