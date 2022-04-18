@@ -43,7 +43,7 @@ public abstract class CommandBot {
             Optional<Server> serverOptional = messageCreateEvent.getServer();
             if (serverOptional.isPresent()) {
                 Server s = serverOptional.get();
-                if (s.getId() == 904736069080186981L && messageCreateEvent.getChannel().getId() != 914268153796771950L) {
+                if (s.getId() == 904736069080186981L && (messageCreateEvent.getChannel().getId() != 914268153796771950L)) {
                     return;
                 } else {
                     Optional<ServerTextChannel> serverTextChannelOp = messageCreateEvent.getServerTextChannel();

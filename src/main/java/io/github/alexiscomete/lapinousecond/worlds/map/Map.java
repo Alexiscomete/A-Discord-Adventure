@@ -135,17 +135,22 @@ public class Map {
     public static ArrayList<Node> getConnectedNodes(Node pixel, ArrayList<Node> nodes) {
         ArrayList<Node> nodes2 = new ArrayList<>();
         // ajout des pixels voisins un par un
-        nodes2.add(getNode(pixel.getX() - 1, pixel.getY() - 1, nodes));
-        nodes2.add(getNode(pixel.getX(), pixel.getY() - 1, nodes));
-        nodes2.add(getNode(pixel.getX() + 1, pixel.getY() - 1, nodes));
-        nodes2.add(getNode(pixel.getX() - 1, pixel.getY(), nodes));
-        nodes2.add(getNode(pixel.getX() + 1, pixel.getY(), nodes));
-        nodes2.add(getNode(pixel.getX() - 1, pixel.getY() + 1, nodes));
-        nodes2.add(getNode(pixel.getX(), pixel.getY() + 1, nodes));
-        nodes2.add(getNode(pixel.getX() + 1, pixel.getY() + 1, nodes));
+        if (isInMap(pixel.getX() -1, pixel.getY() -1)) nodes2.add(getNode(pixel.getX() - 1, pixel.getY() - 1, nodes));
+        if (isInMap(pixel.getX(), pixel.getY() -1)) nodes2.add(getNode(pixel.getX(), pixel.getY() - 1, nodes));
+        if (isInMap(pixel.getX() +1, pixel.getY() -1)) nodes2.add(getNode(pixel.getX() + 1, pixel.getY() - 1, nodes));
+        if (isInMap(pixel.getX() -1, pixel.getY())) nodes2.add(getNode(pixel.getX() - 1, pixel.getY(), nodes));
+        if (isInMap(pixel.getX() +1, pixel.getY())) nodes2.add(getNode(pixel.getX() + 1, pixel.getY(), nodes));
+        if (isInMap(pixel.getX() -1, pixel.getY() +1)) nodes2.add(getNode(pixel.getX() - 1, pixel.getY() + 1, nodes));
+        if (isInMap(pixel.getX(), pixel.getY() +1)) nodes2.add(getNode(pixel.getX(), pixel.getY() + 1, nodes));
+        if (isInMap(pixel.getX() +1, pixel.getY() +1)) nodes2.add(getNode(pixel.getX() + 1, pixel.getY() + 1, nodes));
         // pour chaque pixel on l'enlève si ce n'est pas de le même type que le pixel courant
         nodes2.removeIf(n -> n.isDirt() != pixel.isDirt());
         return nodes2;
+    }
+
+    // vérifie si le pixel est dans la map
+    public static boolean isInMap(int x, int y) {
+        return x >= 0 && x < MAP_WIDTH && y >= 0 && y < MAP_HEIGHT;
     }
 
     public static Node getNode(int x, int y, ArrayList<Node> nodes) {
