@@ -118,7 +118,9 @@ public class Map {
                     n.cost = current.cost + 1;
                     n.heuristic = n.cost + distance(n, end);
                     n.setParent(current);
-                    openList.add(n);
+                    if (!openList.contains(n)) {
+                        openList.add(n);
+                    }
                 }
             }
             closedList.add(current);
