@@ -73,7 +73,8 @@ public class Shop extends CommandInServer {
                         quantity = Integer.parseInt(args[3]);
                         if (quantity <= 0) {
                             messageCreateEvent.getMessage().reply("Evitez ce genre de transactions ... petite pénalité");
-                            quantity++;
+                            price -= 10;
+                            quantity *= -1;
                         }
                     }
                     price += quantity * resource.getPrice() * sellCoef;

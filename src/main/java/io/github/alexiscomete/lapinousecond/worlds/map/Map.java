@@ -82,13 +82,23 @@ public class Map {
 
     // return the path from one pixel to another
     public static ArrayList<Pixel> findPath(Node start, Node end) {
+
+        if (start.isDirt() != end.isDirt()) {
+            throw new IllegalArgumentException("start and end must be on the same type of tile");
+        }
+
         ArrayList<Node> closedList = new ArrayList<>();
         ArrayList<Node> openList = new ArrayList<>();
         openList.add(start);
 
         while (!openList.isEmpty()) {
-            openList.sort(Node::compareTo);
             Node current = openList.get(0);
+            // je cherche le nœud avec la plus petite heuristique
+            for (Node node : openList) {
+                if (node.heuristic < current.heuristic) {
+                    current = node;
+                }
+            }
             if (current.equals(end)) {
                 ArrayList<Pixel> path = new ArrayList<>();
                 while (current.getParent() != null) {
@@ -99,9 +109,8 @@ public class Map {
                 return path;
             }
             openList.remove(current);
-            getConnectedNodes(current);
             for (Node n :
-                    getConnectedNodes(current)) {
+                    getConnectedNodes(current, openList)) {
                 if (!openList.contains(n)) {
                     n.setParent(current);
                 }
@@ -113,28 +122,36 @@ public class Map {
                 }
             }
             closedList.add(current);
+            if (openList.size() > 10000) {
+                throw new IllegalArgumentException("Le chemin met trop de puissance à calculer, essayez en plusieurs fois");
+            }
         }
         return null;
     }
 
     // return connected pixels
-    public static ArrayList<Node> getConnectedNodes(Node pixel) {
-        ArrayList<Node> nodes = new ArrayList<>();
-        for (int x = pixel.getX() - 1; x <= pixel.getX() + 1; x++) {
-            for (int y = pixel.getY() - 1; y <= pixel.getY() + 1; y++) {
-                if (x >= 0 && x < MAP_WIDTH && y >= 0 && y < MAP_HEIGHT) {
-                    Node p = getNode(x, y);
-                    if (p.isDirt() == pixel.isDirt()) {
-                        nodes.add(p);
-                    }
-                }
-            }
-        }
-        return nodes;
+    public static ArrayList<Node> getConnectedNodes(Node pixel, ArrayList<Node> nodes) {
+        ArrayList<Node> nodes2 = new ArrayList<>();
+        // ajout des pixels voisins un par un
+        nodes2.add(getNode(pixel.getX() - 1, pixel.getY() - 1, nodes));
+        nodes2.add(getNode(pixel.getX(), pixel.getY() - 1, nodes));
+        nodes2.add(getNode(pixel.getX() + 1, pixel.getY() - 1, nodes));
+        nodes2.add(getNode(pixel.getX() - 1, pixel.getY(), nodes));
+        nodes2.add(getNode(pixel.getX() + 1, pixel.getY(), nodes));
+        nodes2.add(getNode(pixel.getX() - 1, pixel.getY() + 1, nodes));
+        nodes2.add(getNode(pixel.getX(), pixel.getY() + 1, nodes));
+        nodes2.add(getNode(pixel.getX() + 1, pixel.getY() + 1, nodes));
+        // pour chaque pixel on l'enlève si ce n'est pas de le même type que le pixel courant
+        nodes2.removeIf(n -> n.isDirt() != pixel.isDirt());
+        return nodes2;
     }
 
-    public static Node getNode(int x, int y) {
-        return new Node(x, y, MAP_WIDTH, MAP_HEIGHT, map, 0, 0);
+    public static Node getNode(int x, int y, ArrayList<Node> nodes) {
+        Node n = new Node(x, y, MAP_WIDTH, MAP_HEIGHT, map, 0, 0);
+        if (nodes.contains(n)) {
+            return nodes.get(nodes.indexOf(n));
+        }
+        return n;
     }
 
     // distance between two pixels

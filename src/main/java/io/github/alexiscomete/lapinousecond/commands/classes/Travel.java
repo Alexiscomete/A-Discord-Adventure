@@ -59,7 +59,7 @@ public class  Travel extends CommandInServer {
         String placeID = p.getString("place_NORMAL");
         if (Objects.equals(placeID, "")) { // si le lieu est vide alors on l'initialise au lieu de départ : le serveur A Discord Adventure
             placeID = new ServerBot(854288660147994634L).getString("places");
-            p.set("place_NORMAL", new ServerBot(854288660147994634L).getString("places"));
+            p.set("place_NORMAL", placeID);
         }
 
         // On récupère le lieu du joueur sous forme d'objet avec l'id

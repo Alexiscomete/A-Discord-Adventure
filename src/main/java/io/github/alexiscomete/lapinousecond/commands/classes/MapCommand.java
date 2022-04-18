@@ -146,7 +146,7 @@ public class MapCommand extends CommandWithAccount {
                         return;
                     }
                     // send the path
-                    ArrayList<Pixel> path = Map.findPath(Map.getNode(Integer.parseInt(args[2]), Integer.parseInt(args[3])), Map.getNode(Integer.parseInt(args[4]), Integer.parseInt(args[5])));
+                    ArrayList<Pixel> path = Map.findPath(Map.getNode(Integer.parseInt(args[2]), Integer.parseInt(args[3]), new ArrayList<>()), Map.getNode(Integer.parseInt(args[4]), Integer.parseInt(args[5]), new ArrayList<>()));
                     if (path == null) {
                         messageCreateEvent.getMessage().reply("No path found");
                     } else {
