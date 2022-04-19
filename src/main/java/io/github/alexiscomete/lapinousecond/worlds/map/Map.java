@@ -14,7 +14,7 @@ public class Map {
     public static final int MAP_HEIGHT = 272;
 
     static {
-        // charge la map à partir du fichier base.png inclu dans le jar
+        // charge la map à partir du fichier base.png inclus dans le jar
         try {
             map = ImageIO.read(Objects.requireNonNull(Map.class.getClassLoader().getResourceAsStream("base.png")));
         } catch (IOException e) {
@@ -114,7 +114,9 @@ public class Map {
                 if (!openList.contains(n)) {
                     n.setParent(current);
                 }
-                if (!((openList.contains(n) && openList.get(openList.indexOf(n)).heuristic < current.heuristic) || closedList.contains(n))) {
+                if (!(
+                        (openList.contains(n) && n.heuristic < current.heuristic)
+                        || closedList.contains(n))) {
                     n.cost = current.cost + 1;
                     n.heuristic = n.cost + distance(n, end);
                     n.setParent(current);
@@ -128,7 +130,7 @@ public class Map {
                 throw new IllegalArgumentException("Le chemin met trop de puissance à calculer, essayez en plusieurs fois");
             }
         }
-        return null;
+        throw new IllegalArgumentException("Aucun chemin trouvé");
     }
 
     // return connected pixels
