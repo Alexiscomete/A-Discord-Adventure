@@ -1,53 +1,25 @@
 package io.github.alexiscomete.lapinousecond.roles_update;
 
 import java.util.ArrayList;
-import java.util.Objects;
-import java.util.function.Function;
 
 public enum RolesEnum {
-    SERVER_OWNER((id) -> new DefaultRole(10, 10000000, "Propriétaire de serveur", "Le rôle pour toute personne créant un serveur (il doit y avoir le bot dessus)", id, "SERVER_OWNER")),
-    PROJECT_ADMIN((id) -> new DefaultRole(50, 10000000, "Administrateur de projet", "Uniquement pour ceux qui sont admin sur un serveur de projet", id, "PROJECT_ADMIN")),
-    SERVER_ADMIN((id) -> new DefaultRole(2, 10000000, "Administrateur de serveur", "Pour tout admin sur un serveur, à donner à toute personne qui doit gérer les permissions des rôles", id, "SERVER_ADMIN")),
-    GOUV((id) -> new DefaultRole(50, 1000000, "Membre de l'assemblée", "Les membres de l'assemblé de la RPDB peuvent demander à avoir ce rôle", id, "GOUV")),
-    REPRESENTANT((id) -> new DefaultRole(50, 10000000, "Représentant de région / département", "Chaque région peut définir ses conditions", id, "REPRESENTANT")),
-    VERIFIE((id) -> new DefaultRole(10, 10000000, "Membre vérifié", "Vérifié par le bot de l'ORU", id, "VERIFIE")),
-    MODO((id) -> new DefaultRole(50, 10000000, "Modérateur", "Pour toute personne ayant un rôle intermédiaire sur un serveur", id, "MODO")),
-    PARTICIPANT((id) -> new DefaultRole(50, 10000000, "Participant projet", "Pour toute personne participant à un projet (un peu plus qu'avec sa simple précense sur le serveur). A chaque projet de décider", id, "PARTICIPANT"));
 
-    private final Function<Long, Role> supplier;
+    ADMIN("admin", "Administrateur du serveur Discord", new String[]{"admin", "orgna", "orga"}), // pas besoin de mettre le nom complet du role car le contain ignore les espaces
+    MODO("modo", "Modérateur du serveur Discord", new String[]{"modo", "modé"}),
+    MEMBER("member", "Membre du serveur Discord", new String[]{"memb"}),
+    PARTICIPANT("participant", "Participant du serveur Discord", new String[]{"part", "commu"}),
+    VISITOR("visitor", "Visiteur du serveur Discord", new String[]{"visit"}),
+    CITOYEN("citoyen", "Citoyen du Dibistan / de la région / du département", new String[]{"citoy"});
 
-    public Role getInstance(Long serverID) {
-        return supplier.apply(serverID);
-    }
+    public final String name;
+    public final String description;
+    // les alias
+    public final String[] aliases;
 
-    RolesEnum(Function<Long, Role> supplier) {
-        this.supplier = supplier;
-    }
-
-    public static ArrayList<Role> getRoles(String rolesString) {
-        if (rolesString == null || rolesString.equals("")) {
-            return new ArrayList<>();
-        }
-        String[] strings = rolesString.split(";");
-        ArrayList<Role> roles = new ArrayList<>();
-        for (String str : strings) {
-            if (!Objects.equals(str, "")) {
-                String[] serverAndRole = str.split(":");
-                roles.add(valueOf(serverAndRole[1]).getInstance(Long.parseLong(serverAndRole[0])));
-            }
-        }
-        return roles;
-    }
-
-    public static String rolesToString(ArrayList<Role> arrayList) {
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < arrayList.size(); i++) {
-            stringBuilder.append(arrayList.get(i).getServerID()).append(":").append(arrayList.get(i).getProgName());
-            if (i != arrayList.size() - 1) {
-                stringBuilder.append(";");
-            }
-        }
-        return stringBuilder.toString();
+    RolesEnum(String name, String description, String[] aliases) {
+        this.name = name;
+        this.description = description;
+        this.aliases = aliases;
     }
 
     public static boolean check(String[] strings, ArrayList<Role> roles, long serverID) {
