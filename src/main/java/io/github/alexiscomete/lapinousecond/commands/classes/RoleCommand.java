@@ -3,8 +3,8 @@ package io.github.alexiscomete.lapinousecond.commands.classes;
 import io.github.alexiscomete.lapinousecond.entity.Player;
 import io.github.alexiscomete.lapinousecond.UserPerms;
 import io.github.alexiscomete.lapinousecond.commands.CommandBot;
-import io.github.alexiscomete.lapinousecond.roles.Role;
-import io.github.alexiscomete.lapinousecond.roles.RolesEnum;
+import io.github.alexiscomete.lapinousecond.roles_update.Role;
+import io.github.alexiscomete.lapinousecond.roles_update.RolesEnum;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.event.message.MessageCreateEvent;
 

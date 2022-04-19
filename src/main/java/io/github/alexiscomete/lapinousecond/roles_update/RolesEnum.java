@@ -1,4 +1,4 @@
-package io.github.alexiscomete.lapinousecond.roles;
+package io.github.alexiscomete.lapinousecond.roles_update;
 
 import java.util.ArrayList;
 import java.util.Objects;

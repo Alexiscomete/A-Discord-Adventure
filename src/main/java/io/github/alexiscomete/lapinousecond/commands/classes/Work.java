@@ -4,7 +4,7 @@ import io.github.alexiscomete.lapinousecond.entity.Player;
 import io.github.alexiscomete.lapinousecond.resources.ResourceManager;
 import io.github.alexiscomete.lapinousecond.resources.WorkEnum;
 import io.github.alexiscomete.lapinousecond.commands.CommandInServer;
-import io.github.alexiscomete.lapinousecond.roles.Role;
+import io.github.alexiscomete.lapinousecond.roles_update.Role;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.event.message.MessageCreateEvent;
 
@@ -24,7 +24,7 @@ public class Work extends CommandInServer {
                 .setColor(Color.ORANGE)
                 .setAuthor(messageCreateEvent.getMessageAuthor())
                 .setTitle("Récompenses de work")
-                .setDescription("Les rôles représentent votre implication dans la RPBD (-role), le work est pour tout le monde");
+                .setDescription("Les rôles représentent votre implication dans le Dibistan (-role), le work est pour tout le monde");
 
 
         StringBuilder roles = new StringBuilder();

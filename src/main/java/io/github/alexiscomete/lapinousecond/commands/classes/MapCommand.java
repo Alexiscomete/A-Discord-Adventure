@@ -146,20 +146,16 @@ public class MapCommand extends CommandWithAccount {
                         return;
                     }
                     // send the path
-                    ArrayList<Pixel> path = Map.findPath(Map.getNode(Integer.parseInt(args[2]), Integer.parseInt(args[3]), new ArrayList<>()), Map.getNode(Integer.parseInt(args[4]), Integer.parseInt(args[5]), new ArrayList<>()));
-                    if (path == null) {
-                        messageCreateEvent.getMessage().reply("No path found");
-                    } else {
-                        messageCreateEvent.getMessage().reply("Path found : " + path.size() + " steps");
-                        StringBuilder sb = new StringBuilder();
-                        for (Pixel pixel : path) {
-                            sb.append(pixel);
-                        }
-                        messageCreateEvent.getMessage().reply(sb.toString());
-                        MessageBuilder messageBuilder3 = new MessageBuilder();
-                        messageBuilder3.addAttachment(Map.drawPath(path), "path.png");
-                        messageBuilder3.send(messageCreateEvent.getChannel());
+                    ArrayList<Pixel> path = Map.findPath(Map.getNode(Integer.parseInt(args[2]), Integer.parseInt(args[3]), new ArrayList<>()), Map.getNode(Integer.parseInt(args[4]), Integer.parseInt(args[5]), new ArrayList<>()), messageCreateEvent.getChannel());
+                    messageCreateEvent.getMessage().reply("Path found : " + path.size() + " steps");
+                    StringBuilder sb = new StringBuilder();
+                    for (Pixel pixel : path) {
+                        sb.append(pixel);
                     }
+                    messageCreateEvent.getMessage().reply(sb.toString());
+                    MessageBuilder messageBuilder3 = new MessageBuilder();
+                    messageBuilder3.addAttachment(Map.drawPath(path), "path.png");
+                    messageBuilder3.send(messageCreateEvent.getChannel());
                     break;
                 default:
                     sendImpossible(messageCreateEvent, p);
