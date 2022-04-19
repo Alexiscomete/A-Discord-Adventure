@@ -1,5 +1,7 @@
 package io.github.alexiscomete.lapinousecond.worlds.map;
 
+import org.javacord.api.entity.channel.TextChannel;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -81,7 +83,10 @@ public class Map {
     // ------------------
 
     // return the path from one pixel to another
-    public static ArrayList<Pixel> findPath(Node start, Node end) {
+    public static ArrayList<Pixel> findPath(Node start, Node end, TextChannel channel) {
+
+        // envoie un message d'attente
+        channel.sendMessage("Calcul en cours...");
 
         if (start.isDirt() != end.isDirt()) {
             throw new IllegalArgumentException("start and end must be on the same type of tile");
@@ -126,7 +131,7 @@ public class Map {
                 }
             }
             closedList.add(current);
-            if (openList.size() > 10000) {
+            if (openList.size() > 5000) {
                 throw new IllegalArgumentException("Le chemin met trop de puissance à calculer, essayez en plusieurs fois");
             }
         }
