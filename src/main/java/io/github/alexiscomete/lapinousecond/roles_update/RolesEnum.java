@@ -1,6 +1,12 @@
 package io.github.alexiscomete.lapinousecond.roles_update;
 
+import io.github.alexiscomete.lapinousecond.entity.Player;
+import org.javacord.api.entity.permission.Role;
+import org.javacord.api.entity.server.Server;
+import org.javacord.api.entity.user.User;
+
 import java.util.ArrayList;
+import java.util.List;
 
 public enum RolesEnum {
 
@@ -28,13 +34,13 @@ public enum RolesEnum {
         this.coolDownSize = coolDownSize;
     }
 
-    public static boolean check(String[] strings, ArrayList<Role> roles, long serverID) {
+    public static boolean check(String[] strings, ArrayList<RolesEnum> roles, long serverID) {
         for (String string : strings) {
             boolean perm;
             switch (string) {
                 case "MANAGE_ADMIN":
                     perm = false;
-                    for (Role role : roles) {
+                    for (RolesEnum role : roles) {
                         if (role.getServerID() == serverID && role.getProgName().equals("SERVER_OWNER")) {
                             perm = true;
                             break;
@@ -46,7 +52,7 @@ public enum RolesEnum {
                     break;
                 case "MANAGE_ROLES_SERVER":
                     perm = false;
-                    for (Role role : roles) {
+                    for (RolesEnum role : roles) {
                         if (role.getServerID() == serverID && (role.getProgName().equals("SERVER_OWNER") || role.getProgName().equals("PROJECT_ADMIN") || role.getProgName().equals("SERVER_ADMIN"))) {
                             perm = true;
                             break;
@@ -59,5 +65,17 @@ public enum RolesEnum {
             }
         }
         return true;
+    }
+
+    public boolean check(User user, Server server) {
+        List<Role> roles = user.getRoles(server);
+        for (String alias : aliases) {
+            for (Role role : roles) {
+                if (role.getName().toLowerCase().contains(alias)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }
