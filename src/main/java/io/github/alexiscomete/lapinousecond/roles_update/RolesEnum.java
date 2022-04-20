@@ -4,22 +4,28 @@ import java.util.ArrayList;
 
 public enum RolesEnum {
 
-    ADMIN("admin", "Administrateur du serveur Discord", new String[]{"admin", "orgna", "orga"}), // pas besoin de mettre le nom complet du role car le contain ignore les espaces
-    MODO("modo", "Modérateur du serveur Discord", new String[]{"modo", "modé"}),
-    MEMBER("member", "Membre du serveur Discord", new String[]{"memb"}),
-    PARTICIPANT("participant", "Participant du serveur Discord", new String[]{"part", "commu"}),
-    VISITOR("visitor", "Visiteur du serveur Discord", new String[]{"visit"}),
-    CITOYEN("citoyen", "Citoyen du Dibistan / de la région / du département", new String[]{"citoy"});
+    ADMIN("admin", "Administrateur du serveur Discord", new String[]{"admin", "orgna", "orga"}, 80, /* 5 heures */ 43_200), // pas besoin de mettre le nom complet du role car le contain ignore les espaces
+    MODO("modo", "Modérateur du serveur Discord", new String[]{"modo", "modé"}, 60, 43_200),
+    MEMBER("member", "Membre du serveur Discord", new String[]{"memb"}, 10, /* 1h */3_600),
+    PARTICIPANT("participant", "Participant du serveur Discord", new String[]{"part", "commu"}, 50, /* 3 heures */ 10_800),
+    VISITOR("visitor", "Visiteur du serveur Discord", new String[]{"visit"}, 5, /* 1h */3_600),
+    CITOYEN("citoyen", "Citoyen du Dibistan / de la région / du département", new String[]{"citoy"}, 10, /* 3 heures */ 10_800),
+    AMBASSADOR("ambassadeur", "Ambassadeur", new String[]{"ambassad"}, 10, /* 3 heures */ 10_800),
+    DELEGATE("delegate", "Représentant", new String[]{"delag", "repr"}, 10, /* 3 heures */ 10_800);
 
     public final String name;
     public final String description;
     // les alias
     public final String[] aliases;
+    public final int salary;
+    public final int coolDownSize; // en secondes
 
-    RolesEnum(String name, String description, String[] aliases) {
+    RolesEnum(String name, String description, String[] aliases, int salary, int coolDownSize) {
         this.name = name;
         this.description = description;
         this.aliases = aliases;
+        this.salary = salary;
+        this.coolDownSize = coolDownSize;
     }
 
     public static boolean check(String[] strings, ArrayList<Role> roles, long serverID) {
