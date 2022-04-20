@@ -88,12 +88,12 @@ public abstract class CommandBot {
         messageCreateEvent.getMessage().reply(p.getAnswer(AnswerEnum.ILLEGAL_ARGUMENT_NUMBER, true, i));
     }
 
-    public boolean isNumeric(String str) {
+    public boolean isNotNumeric(String str) {
         try {
             Integer.parseInt(str);
-            return true;
-        } catch (NumberFormatException e) {
             return false;
+        } catch (NumberFormatException e) {
+            return true;
         }
     }
 }

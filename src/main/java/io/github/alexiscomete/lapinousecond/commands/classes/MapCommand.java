@@ -34,11 +34,11 @@ public class MapCommand extends CommandWithAccount {
                         return;
                     }
                     // check if the arguments are numbers
-                    if (!isNumeric(args[2])) {
+                    if (isNotNumeric(args[2])) {
                         sendNumberEx(messageCreateEvent, p, 2);
                         return;
                     }
-                    if (!isNumeric(args[3])) {
+                    if (isNotNumeric(args[3])) {
                         sendNumberEx(messageCreateEvent, p, 3);
                         return;
                     }
@@ -84,15 +84,15 @@ public class MapCommand extends CommandWithAccount {
                         return;
                     }
                     // check if the arguments are numbers
-                    if (!isNumeric(args[2])) {
+                    if (isNotNumeric(args[2])) {
                         sendNumberEx(messageCreateEvent, p, 2);
                         return;
                     }
-                    if (!isNumeric(args[3])) {
+                    if (isNotNumeric(args[3])) {
                         sendNumberEx(messageCreateEvent, p, 3);
                         return;
                     }
-                    if (!isNumeric(args[4])) {
+                    if (isNotNumeric(args[4])) {
                         sendNumberEx(messageCreateEvent, p, 4);
                         return;
                     }
@@ -123,7 +123,7 @@ public class MapCommand extends CommandWithAccount {
                     }
                     // check if the arguments are numbers
                     for (int i = 2; i < 6; i++) {
-                        if (!isNumeric(args[i])) {
+                        if (isNotNumeric(args[i])) {
                             sendNumberEx(messageCreateEvent, p, i);
                             return;
                         }

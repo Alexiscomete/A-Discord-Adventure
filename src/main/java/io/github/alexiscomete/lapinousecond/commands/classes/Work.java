@@ -4,7 +4,7 @@ import io.github.alexiscomete.lapinousecond.entity.Player;
 import io.github.alexiscomete.lapinousecond.resources.ResourceManager;
 import io.github.alexiscomete.lapinousecond.resources.WorkEnum;
 import io.github.alexiscomete.lapinousecond.commands.CommandInServer;
-import io.github.alexiscomete.lapinousecond.roles_update.Role;
+import io.github.alexiscomete.lapinousecond.roles.Role;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.event.message.MessageCreateEvent;
 
