@@ -35,7 +35,7 @@ public class AnswerManager {
     }
 
     public String formatAnswer(String answer, Object... format) {
-        int i = 0;
+        int i = 1;
         for (Object form :
                 format) {
             answer = answer.replace("replace" + i, form.toString());
