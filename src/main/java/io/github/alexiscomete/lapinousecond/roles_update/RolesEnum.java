@@ -1,11 +1,9 @@
 package io.github.alexiscomete.lapinousecond.roles_update;
 
-import io.github.alexiscomete.lapinousecond.entity.Player;
 import org.javacord.api.entity.permission.Role;
 import org.javacord.api.entity.server.Server;
 import org.javacord.api.entity.user.User;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public enum RolesEnum {
@@ -34,34 +32,16 @@ public enum RolesEnum {
         this.coolDownSize = coolDownSize;
     }
 
-    public static boolean check(String[] strings, ArrayList<RolesEnum> roles, long serverID) {
+    public static boolean check(String[] strings, User user, Server server) {
         for (String string : strings) {
-            boolean perm;
             switch (string) {
                 case "MANAGE_ADMIN":
-                    perm = false;
-                    for (RolesEnum role : roles) {
-                        if (role.getServerID() == serverID && role.getProgName().equals("SERVER_OWNER")) {
-                            perm = true;
-                            break;
-                        }
-                    }
-                    if (!perm) {
-                        return false;
-                    }
-                    break;
+                    return server.getOwner().get().equals(user);
                 case "MANAGE_ROLES_SERVER":
-                    perm = false;
-                    for (RolesEnum role : roles) {
-                        if (role.getServerID() == serverID && (role.getProgName().equals("SERVER_OWNER") || role.getProgName().equals("PROJECT_ADMIN") || role.getProgName().equals("SERVER_ADMIN"))) {
-                            perm = true;
-                            break;
-                        }
-                    }
-                    if (!perm) {
-                        return false;
-                    }
-                    break;
+                    return ADMIN.check(user, server);
+                default:
+                    System.out.println("WARNING : " + string + " n'est pas une permission");
+                    return true;
             }
         }
         return true;
