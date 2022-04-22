@@ -1,85 +1,70 @@
 package io.github.alexiscomete.lapinousecond.roles;
 
+import org.javacord.api.entity.permission.Role;
+import org.javacord.api.entity.server.Server;
+import org.javacord.api.entity.user.User;
+
 import java.util.ArrayList;
-import java.util.Objects;
-import java.util.function.Function;
+import java.util.List;
 
 public enum RolesEnum {
-    SERVER_OWNER((id) -> new DefaultRole(10, 10000000, "Propriétaire de serveur", "Le rôle pour toute personne créant un serveur (il doit y avoir le bot dessus)", id, "SERVER_OWNER")),
-    PROJECT_ADMIN((id) -> new DefaultRole(50, 10000000, "Administrateur de projet", "Uniquement pour ceux qui sont admin sur un serveur de projet", id, "PROJECT_ADMIN")),
-    SERVER_ADMIN((id) -> new DefaultRole(2, 10000000, "Administrateur de serveur", "Pour tout admin sur un serveur, à donner à toute personne qui doit gérer les permissions des rôles", id, "SERVER_ADMIN")),
-    GOUV((id) -> new DefaultRole(50, 1000000, "Membre de l'assemblée", "Les membres de l'assemblé de la RPDB peuvent demander à avoir ce rôle", id, "GOUV")),
-    REPRESENTANT((id) -> new DefaultRole(50, 10000000, "Représentant de région / département", "Chaque région peut définir ses conditions", id, "REPRESENTANT")),
-    VERIFIE((id) -> new DefaultRole(10, 10000000, "Membre vérifié", "Vérifié par le bot de l'ORU", id, "VERIFIE")),
-    MODO((id) -> new DefaultRole(50, 10000000, "Modérateur", "Pour toute personne ayant un rôle intermédiaire sur un serveur", id, "MODO")),
-    PARTICIPANT((id) -> new DefaultRole(50, 10000000, "Participant projet", "Pour toute personne participant à un projet (un peu plus qu'avec sa simple précense sur le serveur). A chaque projet de décider", id, "PARTICIPANT"));
 
-    private final Function<Long, Role> supplier;
+    ADMIN("admin", "Administrateur du serveur Discord", new String[]{"admin", "orgna", "orga"}, 80, /* 5 heures */ 43_200), // pas besoin de mettre le nom complet du role car le contain ignore les espaces
+    MODO("modo", "Modérateur du serveur Discord", new String[]{"modo", "modé"}, 60, 43_200),
+    MEMBER("member", "Membre du serveur Discord", new String[]{"memb"}, 10, /* 1h */3_600),
+    PARTICIPANT("participant", "Participant du serveur Discord", new String[]{"part", "commu"}, 50, /* 3 heures */ 10_800),
+    VISITOR("visitor", "Visiteur du serveur Discord", new String[]{"visit"}, 5, /* 1h */3_600),
+    CITOYEN("citoyen", "Citoyen du Dibistan / de la région / du département", new String[]{"citoy"}, 10, /* 3 heures */ 10_800),
+    AMBASSADOR("ambassadeur", "Ambassadeur", new String[]{"ambassad"}, 10, /* 3 heures */ 10_800),
+    DELEGATE("delegate", "Représentant", new String[]{"delag", "repr"}, 10, /* 3 heures */ 10_800);
 
-    public Role getInstance(Long serverID) {
-        return supplier.apply(serverID);
+    public final String name;
+    public final String description;
+    // les alias
+    public final String[] aliases;
+    public final int salary;
+    public final int coolDownSize; // en secondes
+
+    RolesEnum(String name, String description, String[] aliases, int salary, int coolDownSize) {
+        this.name = name;
+        this.description = description;
+        this.aliases = aliases;
+        this.salary = salary;
+        this.coolDownSize = coolDownSize;
     }
 
-    RolesEnum(Function<Long, Role> supplier) {
-        this.supplier = supplier;
-    }
-
-    public static ArrayList<Role> getRoles(String rolesString) {
-        if (rolesString == null || rolesString.equals("")) {
-            return new ArrayList<>();
-        }
-        String[] strings = rolesString.split(";");
-        ArrayList<Role> roles = new ArrayList<>();
-        for (String str : strings) {
-            if (!Objects.equals(str, "")) {
-                String[] serverAndRole = str.split(":");
-                roles.add(valueOf(serverAndRole[1]).getInstance(Long.parseLong(serverAndRole[0])));
-            }
-        }
-        return roles;
-    }
-
-    public static String rolesToString(ArrayList<Role> arrayList) {
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < arrayList.size(); i++) {
-            stringBuilder.append(arrayList.get(i).getServerID()).append(":").append(arrayList.get(i).getProgName());
-            if (i != arrayList.size() - 1) {
-                stringBuilder.append(";");
-            }
-        }
-        return stringBuilder.toString();
-    }
-
-    public static boolean check(String[] strings, ArrayList<Role> roles, long serverID) {
+    public static boolean check(String[] strings, User user, Server server) {
         for (String string : strings) {
-            boolean perm;
             switch (string) {
                 case "MANAGE_ADMIN":
-                    perm = false;
-                    for (Role role : roles) {
-                        if (role.getServerID() == serverID && role.getProgName().equals("SERVER_OWNER")) {
-                            perm = true;
-                            break;
-                        }
-                    }
-                    if (!perm) {
-                        return false;
-                    }
-                    break;
+                    return server.getOwner().get().equals(user);
                 case "MANAGE_ROLES_SERVER":
-                    perm = false;
-                    for (Role role : roles) {
-                        if (role.getServerID() == serverID && (role.getProgName().equals("SERVER_OWNER") || role.getProgName().equals("PROJECT_ADMIN") || role.getProgName().equals("SERVER_ADMIN"))) {
-                            perm = true;
-                            break;
-                        }
-                    }
-                    if (!perm) {
-                        return false;
-                    }
-                    break;
+                    return ADMIN.check(user, server);
+                default:
+                    System.out.println("WARNING : " + string + " n'est pas une permission");
+                    return true;
             }
         }
         return true;
+    }
+
+    public boolean check(User user, Server server) {
+        List<Role> roles = user.getRoles(server);
+        for (String alias : aliases) {
+            for (Role role : roles) {
+                if (role.getName().toLowerCase().contains(alias)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public static ArrayList<RolesEnum> getRoles(User user, Server server) {
+        ArrayList<RolesEnum> roles = new ArrayList<>();
+        for (RolesEnum role : RolesEnum.values()) {
+            role.check(user, server);
+        }
+        return roles;
     }
 }
