@@ -56,7 +56,7 @@ public class Work extends CommandInServer {
                         find.setCurrentCooldown(System.currentTimeMillis() / 1000);
                         totalRoles += role.salary;
                     } else {
-                        roles.append(role.name).append(" : ").append("Cooldown -> <t:").append(find.getCurrentCooldown() + role.coolDownSize).append(":R>\n");
+                        roles.append(role.name).append(" : ").append("Cooldown -> <t:").append((int) find.getCurrentCooldown() + role.coolDownSize).append(":R>\n");
                     }
                 } else {
                     roles.append(role.name).append(" : ").append(role.salary).append("\n");
