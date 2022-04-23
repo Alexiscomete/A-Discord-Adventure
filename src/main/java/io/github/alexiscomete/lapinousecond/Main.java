@@ -106,7 +106,6 @@ public class Main {
         addCommand(new PermsManager());
         addCommand(new Invite());
         addCommand(new Verify());
-        addCommand(new RoleCommand());
         addCommand(new PlaceCommand());
         addCommand(new BuildingCommand());
         addCommand(new MapCommand());

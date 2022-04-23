@@ -5,11 +5,16 @@ import io.github.alexiscomete.lapinousecond.resources.ResourceManager;
 import io.github.alexiscomete.lapinousecond.resources.WorkEnum;
 import io.github.alexiscomete.lapinousecond.commands.CommandInServer;
 import io.github.alexiscomete.lapinousecond.roles.Role;
+import io.github.alexiscomete.lapinousecond.roles.RolesEnum;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
+import org.javacord.api.entity.server.Server;
+import org.javacord.api.entity.user.User;
 import org.javacord.api.event.message.MessageCreateEvent;
 
 import java.awt.*;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Optional;
 import java.util.Random;
 
 public class Work extends CommandInServer {
@@ -28,18 +33,37 @@ public class Work extends CommandInServer {
 
 
         StringBuilder roles = new StringBuilder();
-        roles.append("Nom (serveur id) salaire ou cooldown\n");
-        for (Role role : p.getRoles()) {
-            roles.append(role.getName()).append(" (").append(role.getServerID()).append(") ");
-            if (System.currentTimeMillis() - role.getCoolDown() > role.getCoolDownSize()) {
-                roles.append(role.getSalary());
-                p.setBal(p.getBal() + role.getSalary());
-                role.updateCoolDown();
-            } else {
-                roles.append("<t:").append((Instant.now().getEpochSecond() + role.getCoolDownSize() / 1000 - (System.currentTimeMillis() - role.getCoolDown()) / 1000)).append(":R>");
+        roles.append("Nom salaire ou cooldown\n");
+
+        Optional<User> optionalUser = messageCreateEvent.getMessageAuthor().asUser();
+        Optional<Server> optionalServer = messageCreateEvent.getServer();
+
+        if (optionalUser.isPresent() && optionalServer.isPresent()) {
+            User user = optionalUser.get();
+            Server server = optionalServer.get();
+
+            ArrayList<RolesEnum> rolesArrayList = RolesEnum.getRoles(user, server);
+            for (RolesEnum role : rolesArrayList) {
+                Role find = null;
+                for (Role r : p.getRoles()) {
+                    if (r.getRole().equals(role)) {
+                        find = r;
+                        break;
+                    }
+                }
+                if (find != null) {
+                    if (find.isReady()) {
+                        roles.append(find.getRole().name).append(" : ").append(find.getRole().salary).append("\n");
+                        find.setCurrentCooldown(System.currentTimeMillis() / 1000);
+                    } else {
+                        roles.append(find.getRole().name).append(" : ").append("Cooldown -> <t:").append(find.getCurrentCooldown() + role.coolDownSize).append(":R>\n");
+                    }
+                }
             }
-            roles.append("\n");
         }
+
+
+
         embedBuilder.addField("Roles", roles.toString());
 
         if (System.currentTimeMillis() - p.getWorkTime() > 200000) {
