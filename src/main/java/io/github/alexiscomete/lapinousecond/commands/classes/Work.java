@@ -20,7 +20,7 @@ import java.util.Random;
 public class Work extends CommandInServer {
 
     public Work() {
-        super("Gagnez de l'argent et/ou des ressources", "work", "Utilisable régulièrement pour gagner un peut d'argent ou des ressources, c'est le moyen le plus simple d'en gagner.", "PLAY");
+        super("Gagnez de l'argent et/ou des ressources", "work", "Utilisable régulièrement pour gagner un peut d'argent ou des ressources, c'est le moyen le plus simple d'en gagner. Les rôles représentent votre implication dans le Dibistan (-role), le work est pour tout le monde", "PLAY");
     }
 
     @Override
@@ -28,17 +28,17 @@ public class Work extends CommandInServer {
         EmbedBuilder embedBuilder = new EmbedBuilder()
                 .setColor(Color.ORANGE)
                 .setAuthor(messageCreateEvent.getMessageAuthor())
-                .setTitle("Récompenses de work")
-                .setDescription("Les rôles représentent votre implication dans le Dibistan (-role), le work est pour tout le monde");
-
+                .setTitle("WORK");
 
         StringBuilder roles = new StringBuilder();
-        roles.append("Nom salaire ou cooldown\n");
 
         Optional<User> optionalUser = messageCreateEvent.getMessageAuthor().asUser();
         Optional<Server> optionalServer = messageCreateEvent.getServer();
 
+
         if (optionalUser.isPresent() && optionalServer.isPresent()) {
+            double totalRoles = 0;
+
             User user = optionalUser.get();
             Server server = optionalServer.get();
 
@@ -53,16 +53,24 @@ public class Work extends CommandInServer {
                 }
                 if (find != null) {
                     if (find.isReady()) {
-                        roles.append(find.getRole().name).append(" : ").append(find.getRole().salary).append("\n");
+                        roles.append(role.name).append(" : ").append(role.salary).append("\n");
                         find.setCurrentCooldown(System.currentTimeMillis() / 1000);
+                        totalRoles += role.salary;
                     } else {
-                        roles.append(find.getRole().name).append(" : ").append("Cooldown -> <t:").append(find.getCurrentCooldown() + role.coolDownSize).append(":R>\n");
+                        roles.append(role.name).append(" : ").append("Cooldown -> <t:").append(find.getCurrentCooldown() + role.coolDownSize).append(":R>\n");
                     }
+                } else {
+                    roles.append(role.name).append(" : ").append(role.salary).append("\n");
+                    totalRoles += role.salary;
+                    Role r = new Role(role);
+                    r.setCurrentCooldown(System.currentTimeMillis() / 1000);
+                    p.addRole(r);
                 }
             }
+            p.setBal(p.getBal() + totalRoles);
+        } else {
+            roles.append("Vous n'êtes pas sur un serveur");
         }
-
-
 
         embedBuilder.addField("Roles", roles.toString());
 

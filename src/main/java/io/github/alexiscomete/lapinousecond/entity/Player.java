@@ -43,7 +43,7 @@ public class Player extends CacheGetSet implements Owner {
         this.x = Integer.parseInt(getString("x"));
         this.y = Integer.parseInt(getString("y"));
         this.workTime = 0;
-        this.roles = RolesEnum.getRoles(getString("roles"));
+        this.roles = new ArrayList<>();
         this.resourceManagers = ResourceManager.stringToArray(getString("ressources"));
     }
 
@@ -144,7 +144,7 @@ public class Player extends CacheGetSet implements Owner {
         this.x = x;
         this.y = y;
         this.workTime = 0;
-        this.roles = RolesEnum.getRoles(roles);
+        this.roles = new ArrayList<>();
         this.resourceManagers = ResourceManager.stringToArray(resources);
     }
 
@@ -154,7 +154,6 @@ public class Player extends CacheGetSet implements Owner {
 
     public void addRole(Role role) {
         roles.add(role);
-        saveManager.setValue(Tables.PLAYERS.getTable(), id, "roles", RolesEnum.rolesToString(roles));
     }
 
     public HashMap<Resource, ResourceManager> getResourceManagers() {
