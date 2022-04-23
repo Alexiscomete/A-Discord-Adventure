@@ -63,7 +63,9 @@ public enum RolesEnum {
     public static ArrayList<RolesEnum> getRoles(User user, Server server) {
         ArrayList<RolesEnum> roles = new ArrayList<>();
         for (RolesEnum role : RolesEnum.values()) {
-            role.check(user, server);
+            if (role.check(user, server)) {
+                roles.add(role);
+            }
         }
         return roles;
     }

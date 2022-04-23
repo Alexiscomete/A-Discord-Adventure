@@ -27,8 +27,7 @@ public class Work extends CommandInServer {
     public void executeC(MessageCreateEvent messageCreateEvent, String content, String[] args, Player p) {
         EmbedBuilder embedBuilder = new EmbedBuilder()
                 .setColor(Color.ORANGE)
-                .setAuthor(messageCreateEvent.getMessageAuthor())
-                .setTitle("WORK");
+                .setAuthor(messageCreateEvent.getMessageAuthor());
 
         StringBuilder roles = new StringBuilder();
 
@@ -72,7 +71,7 @@ public class Work extends CommandInServer {
             roles.append("Vous n'êtes pas sur un serveur");
         }
 
-        embedBuilder.addField("Roles", roles.toString());
+        if (roles.length() > 0) embedBuilder.addField("Roles", roles.toString());
 
         if (System.currentTimeMillis() - p.getWorkTime() > 200000) {
 
