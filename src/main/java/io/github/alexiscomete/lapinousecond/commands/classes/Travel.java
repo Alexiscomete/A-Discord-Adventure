@@ -6,6 +6,7 @@ import io.github.alexiscomete.lapinousecond.commands.CommandInServer;
 import io.github.alexiscomete.lapinousecond.worlds.Place;
 import io.github.alexiscomete.lapinousecond.worlds.ServerBot;
 import org.javacord.api.entity.channel.ServerChannel;
+import org.javacord.api.entity.message.MessageBuilder;
 import org.javacord.api.entity.server.Server;
 import org.javacord.api.entity.server.invite.InviteBuilder;
 import org.javacord.api.entity.user.User;
@@ -176,6 +177,9 @@ public class  Travel extends CommandInServer {
             int y = Integer.parseInt(p.getString("place_DIBIMAP_y"));
             // on ne récupère pas le lieu, car on ne connait pas le lieu
             // on sépare le cas où le joueur veut aller dans un lieu et celui où il veut aller sur des coos
+            // création du menu
+            MessageBuilder mb = new MessageBuilder();
+            mb.append("Vous êtes dans le monde Dibimap et vous n'êtes pas dans une ville\n");
             if (args[1].equals("coos")) {
                 // on regarde si les arguments sont bien présents
                 if (args.length < 4) {
