@@ -7,11 +7,13 @@ import io.github.alexiscomete.lapinousecond.worlds.Place;
 import io.github.alexiscomete.lapinousecond.worlds.ServerBot;
 import org.javacord.api.entity.channel.ServerChannel;
 import org.javacord.api.entity.message.MessageBuilder;
+import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.entity.server.Server;
 import org.javacord.api.entity.server.invite.InviteBuilder;
 import org.javacord.api.entity.user.User;
 import org.javacord.api.event.message.MessageCreateEvent;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -177,9 +179,16 @@ public class  Travel extends CommandInServer {
             int y = Integer.parseInt(p.getString("place_DIBIMAP_y"));
             // on ne récupère pas le lieu, car on ne connait pas le lieu
             // on sépare le cas où le joueur veut aller dans un lieu et celui où il veut aller sur des coos
+
             // création du menu
             MessageBuilder mb = new MessageBuilder();
-            mb.append("Vous êtes dans le monde Dibimap et vous n'êtes pas dans une ville\n");
+            EmbedBuilder eb = new EmbedBuilder();
+            eb.setTitle("Voyage dans le monde Dibimap");
+            eb.setDescription("Vous êtes dans le monde Dibimap en dehors d'une ville, vous pouvez choisir entre aller dans un lieu ou sur des coos.");
+            eb.setColor(Color.BLUE);
+            mb.append(eb);
+            // ajout des choix
+
             if (args[1].equals("coos")) {
                 // on regarde si les arguments sont bien présents
                 if (args.length < 4) {
