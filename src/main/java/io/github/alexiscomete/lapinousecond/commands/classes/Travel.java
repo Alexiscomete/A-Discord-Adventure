@@ -3,14 +3,18 @@ package io.github.alexiscomete.lapinousecond.commands.classes;
 import io.github.alexiscomete.lapinousecond.Main;
 import io.github.alexiscomete.lapinousecond.entity.Player;
 import io.github.alexiscomete.lapinousecond.commands.CommandInServer;
+import io.github.alexiscomete.lapinousecond.save.SaveLocation;
 import io.github.alexiscomete.lapinousecond.worlds.Place;
 import io.github.alexiscomete.lapinousecond.worlds.ServerBot;
 import org.javacord.api.entity.channel.ServerChannel;
 import org.javacord.api.entity.message.MessageBuilder;
+import org.javacord.api.entity.message.component.ActionRow;
+import org.javacord.api.entity.message.component.Button;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.entity.server.Server;
 import org.javacord.api.entity.server.invite.InviteBuilder;
 import org.javacord.api.entity.user.User;
+import org.javacord.api.event.interaction.MessageComponentCreateEvent;
 import org.javacord.api.event.message.MessageCreateEvent;
 
 import java.awt.*;
@@ -19,6 +23,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class  Travel extends CommandInServer {
@@ -187,7 +192,24 @@ public class  Travel extends CommandInServer {
             eb.setDescription("Vous êtes dans le monde Dibimap en dehors d'une ville, vous pouvez choisir entre aller dans un lieu ou sur des coos.");
             eb.setColor(Color.BLUE);
             mb.append(eb);
+
+            long id1 = SaveLocation.generateUniqueID();
+            long id2 = SaveLocation.generateUniqueID();
+
             // ajout des choix
+            mb.addComponents(ActionRow.of(
+                    Button.success(String.valueOf(id1), "Aller dans un lieu"),
+                    Button.success(String.valueOf(id2), "Aller sur des coos")
+            ));
+
+            // ajout des actions
+            Main.getButtonsManager().addButton(id1, messageComponentCreateEvent -> {
+
+            });
+            Main.getButtonsManager().addButton(id2, messageComponentCreateEvent -> {
+
+            });
+
 
             if (args[1].equals("coos")) {
                 // on regarde si les arguments sont bien présents
