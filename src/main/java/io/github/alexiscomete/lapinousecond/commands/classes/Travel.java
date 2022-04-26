@@ -3,10 +3,13 @@ package io.github.alexiscomete.lapinousecond.commands.classes;
 import io.github.alexiscomete.lapinousecond.Main;
 import io.github.alexiscomete.lapinousecond.entity.Player;
 import io.github.alexiscomete.lapinousecond.commands.CommandInServer;
+import io.github.alexiscomete.lapinousecond.message_event.MessagesManager;
 import io.github.alexiscomete.lapinousecond.save.SaveLocation;
+import io.github.alexiscomete.lapinousecond.save.SaveManager;
 import io.github.alexiscomete.lapinousecond.worlds.Place;
 import io.github.alexiscomete.lapinousecond.worlds.ServerBot;
 import org.javacord.api.entity.channel.ServerChannel;
+import org.javacord.api.entity.channel.TextChannel;
 import org.javacord.api.entity.message.MessageBuilder;
 import org.javacord.api.entity.message.component.ActionRow;
 import org.javacord.api.entity.message.component.Button;
@@ -204,7 +207,22 @@ public class  Travel extends CommandInServer {
 
             // ajout des actions
             Main.getButtonsManager().addButton(id1, messageComponentCreateEvent -> {
+                // on récupère le lieu en demandant à l'utilisateur de le rentrer
+                TextChannel tc = messageCreateEvent.getMessage().getChannel();
+                long userId = messageCreateEvent.getMessage().getAuthor().getId();
+                tc.sendMessage("Entrez le nom du lieu :");
+                Main.getMessagesManager().addListener(tc, userId, (messageCreateEvent1) -> {
+                    // on récupère le lieu
+                    String place = messageCreateEvent1.getMessage().getContent();
+                    // on récupère le lieu
+                    try {
+                        Main.getSaveManager().places.get(Long.parseLong(String.valueOf(id1)));
 
+                    } catch (Exception e) {
+                        // on envoie un message d'erreur
+                        sendNumberEx(messageCreateEvent1, p, -1);
+                    }
+                });
             });
             Main.getButtonsManager().addButton(id2, messageComponentCreateEvent -> {
 
