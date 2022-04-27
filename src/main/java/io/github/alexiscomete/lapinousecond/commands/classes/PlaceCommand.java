@@ -1,8 +1,8 @@
 package io.github.alexiscomete.lapinousecond.commands.classes;
 
 import io.github.alexiscomete.lapinousecond.Main;
-import io.github.alexiscomete.lapinousecond.entity.Player;
 import io.github.alexiscomete.lapinousecond.commands.CommandWithAccount;
+import io.github.alexiscomete.lapinousecond.entity.Player;
 import io.github.alexiscomete.lapinousecond.worlds.Place;
 import io.github.alexiscomete.lapinousecond.worlds.ServerBot;
 import org.javacord.api.entity.message.MessageBuilder;
@@ -13,8 +13,6 @@ import org.javacord.api.event.interaction.MessageComponentCreateEvent;
 import org.javacord.api.event.message.MessageCreateEvent;
 
 import java.awt.*;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
@@ -57,7 +55,7 @@ public class PlaceCommand extends CommandWithAccount {
                             }
                             break;
                         case "list":
-                            ArrayList<Place> places = getPlacesWithWorld(serverBot.getString("world"));
+                            ArrayList<Place> places = Place.getPlacesWithWorld(serverBot.getString("world"));
                             MessageBuilder messageBuilder = new MessageBuilder();
                             EmbedBuilder builder = new EmbedBuilder();
                             setPlaceEmbed(builder, 0, Math.min(places.size(), 11), places);
@@ -154,22 +152,6 @@ public class PlaceCommand extends CommandWithAccount {
 
     public void createWorldPlace(MessageCreateEvent messageCreateEvent, ServerBot serverBot, Player p) {
 
-    }
-
-    public ArrayList<Place> getPlacesWithWorld(String world) {
-        ResultSet resultSet = saveManager.executeQuery("SELECT * FROM places WHERE world = '" + world + "'", true);
-        ArrayList<Place> places = new ArrayList<>();
-        try {
-
-            //long id = resultSet.getLong("id"); places.add(new Place(id));
-
-            while (resultSet.next()) {
-                places.add(new Place(resultSet.getLong("id")));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return places;
     }
 
     public String placesToString(ArrayList<Place> places) {

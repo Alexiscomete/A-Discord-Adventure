@@ -6,6 +6,8 @@ import io.github.alexiscomete.lapinousecond.save.*;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 
 import java.awt.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Optional;
@@ -118,5 +120,21 @@ public class Place extends CacheGetSet implements Owner {
     @Override
     public String getOwnerString() {
         return null;
+    }
+
+    public static ArrayList<Place> getPlacesWithWorld(String world) {
+        ResultSet resultSet = Main.getSaveManager().executeQuery("SELECT * FROM places WHERE world = '" + world + "'", true);
+        ArrayList<Place> places = new ArrayList<>();
+        try {
+
+            //long id = resultSet.getLong("id"); places.add(new Place(id));
+
+            while (resultSet.next()) {
+                places.add(new Place(resultSet.getLong("id")));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return places;
     }
 }
