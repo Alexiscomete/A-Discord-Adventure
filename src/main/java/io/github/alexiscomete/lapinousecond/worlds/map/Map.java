@@ -1,5 +1,6 @@
 package io.github.alexiscomete.lapinousecond.worlds.map;
 
+import io.github.alexiscomete.lapinousecond.worlds.Place;
 import org.javacord.api.entity.channel.TextChannel;
 
 import javax.imageio.ImageIO;
@@ -55,7 +56,7 @@ public class Map {
 
     /**
      * Converts a given Image into a BufferedImage
-     * thanks to https://stackoverflow.com/questions/13605248/java-converting-image-to-bufferedimage
+     * thanks to <a href="https://stackoverflow.com/questions/13605248/java-converting-image-to-bufferedimage">https://stackoverflow.com/questions/13605248/java-converting-image-to-bufferedimage</a>
      * @param img The Image to be converted
      * @return The converted BufferedImage
      */
@@ -76,6 +77,36 @@ public class Map {
 
         // Return the buffered image
         return bimage;
+    }
+
+    // return an image with the places' names on it
+    public static BufferedImage getMapWithNames(ArrayList<Place> places, int xStart, int yStart, int width, int height, BufferedImage image) {
+        BufferedImage mapWithNames = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        Graphics2D g = mapWithNames.createGraphics();
+        g.drawImage(image, 0, 0, null);
+        g.setColor(Color.BLACK);
+        for (Place place : places) {
+            if (place.getX().isPresent() && place.getY().isPresent()) {
+                // coos on image (x, y) after resizing (x and y are not the same as the image's coos)
+                int x = (place.getX().get() - xStart) * image.getWidth() / width;
+                int y = (place.getY().get() - yStart) * image.getHeight() / height;
+                // draw a point
+                g.fillOval(x, y, 5, 5);
+                // draw the name
+                try {
+                    g.drawString(place.getString("name"), x + 10, y + 10);
+                } catch (Exception ignored) {
+
+                }
+                // draw the id
+                try {
+                    g.drawString(String.valueOf(place.getID()), x + 10, y + 20);
+                } catch (Exception ignored) {
+
+                }
+            }
+        }
+        return mapWithNames;
     }
 
     // ------------------

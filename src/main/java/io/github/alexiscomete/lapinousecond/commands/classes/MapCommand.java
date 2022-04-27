@@ -2,11 +2,13 @@ package io.github.alexiscomete.lapinousecond.commands.classes;
 
 import io.github.alexiscomete.lapinousecond.commands.CommandWithAccount;
 import io.github.alexiscomete.lapinousecond.entity.Player;
+import io.github.alexiscomete.lapinousecond.worlds.Place;
 import io.github.alexiscomete.lapinousecond.worlds.map.Map;
 import io.github.alexiscomete.lapinousecond.worlds.map.Pixel;
 import org.javacord.api.entity.message.MessageBuilder;
 import org.javacord.api.event.message.MessageCreateEvent;
 
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 public class MapCommand extends CommandWithAccount {
@@ -112,7 +114,16 @@ public class MapCommand extends CommandWithAccount {
                     }
                     // send the zoom on the map
                     MessageBuilder messageBuilder = new MessageBuilder();
-                    messageBuilder.addAttachment(Map.bigger(Map.zoom(Integer.parseInt(args[2]), Integer.parseInt(args[3]), Integer.parseInt(args[4])), 10), "zoommap.png");
+                    messageCreateEvent.getMessage().reply("Création de la carte en cours et ajout des villes proches ...");
+
+                    BufferedImage image = Map.bigger(Map.zoom(Integer.parseInt(args[2]), Integer.parseInt(args[3]), Integer.parseInt(args[4])), 10);
+
+                    ArrayList<Place> places = Place.getPlacesWithWorld("DIBIMAP");
+                    places.removeIf(place -> place.getX().isEmpty() || place.getY().isEmpty() || place.getX().get() < Integer.parseInt(args[2]) - Integer.parseInt(args[4]) * 2 || place.getX().get() > Integer.parseInt(args[2]) + Integer.parseInt(args[4]) * 2 || place.getY().get() < Integer.parseInt(args[3]) - Integer.parseInt(args[4]) || place.getY().get() > Integer.parseInt(args[3]) + Integer.parseInt(args[4]));
+
+
+                    messageBuilder.addAttachment(image, "zoommap.png");
+
                     messageBuilder.send(messageCreateEvent.getChannel());
                     break;
                 case "findpath": // find path between two points : x1 y1 x2 y2
