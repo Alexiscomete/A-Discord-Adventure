@@ -81,32 +81,33 @@ public class Map {
 
     // return an image with the places' names on it
     public static BufferedImage getMapWithNames(ArrayList<Place> places, int xStart, int yStart, int width, int height, BufferedImage image) {
-        BufferedImage mapWithNames = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-        Graphics2D g = mapWithNames.createGraphics();
-        g.drawImage(image, 0, 0, null);
-        g.setColor(Color.BLACK);
+        Graphics2D g = image.createGraphics();
+        g.setColor(new Color(0, 255, 0));
+        // set the text size
+        g.setFont(new Font("Arial", Font.BOLD, image.getWidth() / 80));
+        int size = image.getWidth() / 80;
         for (Place place : places) {
             if (place.getX().isPresent() && place.getY().isPresent()) {
                 // coos on image (x, y) after resizing (x and y are not the same as the image's coos)
                 int x = (place.getX().get() - xStart) * image.getWidth() / width;
                 int y = (place.getY().get() - yStart) * image.getHeight() / height;
                 // draw a point
-                g.fillOval(x, y, 5, 5);
+                g.fillOval(x, y, (int) (size * 0.7), (int) (size * 0.7));
                 // draw the name
                 try {
-                    g.drawString(place.getString("name"), x + 10, y + 10);
+                    g.drawString(place.getString("name"), (int) (x + 1.1 * size), y);
                 } catch (Exception ignored) {
 
                 }
                 // draw the id
                 try {
-                    g.drawString(String.valueOf(place.getID()), x + 10, y + 20);
+                    g.drawString(String.valueOf(place.getID()), (int) (x + 1.1 * size), (int) (y + 1.1 * size));
                 } catch (Exception ignored) {
 
                 }
             }
         }
-        return mapWithNames;
+        return image;
     }
 
     // ------------------

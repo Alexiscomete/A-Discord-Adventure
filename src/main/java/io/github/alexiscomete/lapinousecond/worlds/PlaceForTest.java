@@ -62,7 +62,7 @@ public class PlaceForTest extends Place {
 
         // génération du nom aléatoire
         StringBuilder name = new StringBuilder();
-        int nb = (int) (Math.random() * 10);
+        int nb = Math.max((int) (Math.random() * 10), 3);
         for (int i = 0; i < nb; i++) {
             name.append((char) (Math.random() * 26 + 'a'));
         }
