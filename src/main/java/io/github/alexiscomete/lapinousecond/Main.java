@@ -110,6 +110,7 @@ public class Main {
         addCommand(new BuildingCommand());
         addCommand(new MapCommand());
         addCommand(new WorldCommand());
+        addCommand(new TestCommand());
     }
 
     /**

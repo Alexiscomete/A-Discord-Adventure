@@ -3,8 +3,9 @@ package io.github.alexiscomete.lapinousecond.worlds;
 import io.github.alexiscomete.lapinousecond.worlds.map.Map;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
-public class PlaceForTest extends Place{
+public class PlaceForTest extends Place {
 
     String name;
     int x, y;
@@ -36,6 +37,22 @@ public class PlaceForTest extends Place{
         }
     }
 
+    public Optional<Integer> getX() {
+        return Optional.ofNullable(x);
+    }
+
+    public void setX(Integer x) {
+        this.x = x;
+    }
+
+    public Optional<Integer> getY() {
+        return Optional.ofNullable(y);
+    }
+
+    public void setY(Integer y) {
+        this.y = y;
+    }
+
     // génère aléatoirement une place pour les tests, minx = 0, maxx = voir dans Map.java, miny = 0, maxy = voir dans Map.java
     public static PlaceForTest generateRandomPlace() {
 
@@ -57,8 +74,8 @@ public class PlaceForTest extends Place{
     }
 
     // génération de n places aléatoires
-    public static ArrayList<PlaceForTest> generateRandomPlaces(int n) {
-        ArrayList<PlaceForTest> places = new ArrayList<>();
+    public static ArrayList<Place> generateRandomPlaces(int n) {
+        ArrayList<Place> places = new ArrayList<>();
         for (int i = 0; i < n; i++) {
             places.add(generateRandomPlace());
         }
