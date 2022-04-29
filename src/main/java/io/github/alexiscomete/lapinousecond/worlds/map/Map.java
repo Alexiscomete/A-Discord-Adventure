@@ -80,7 +80,7 @@ public class Map {
     }
 
     // return an image with the places' names on it
-    public static BufferedImage getMapWithNames(ArrayList<Place> places, int xStart, int yStart, int width, int height, BufferedImage image) {
+    public static void getMapWithNames(ArrayList<Place> places, int xStart, int yStart, int width, int height, BufferedImage image) {
         Graphics2D g = image.createGraphics();
         g.setColor(new Color(0, 255, 0));
         // set the text size
@@ -107,7 +107,6 @@ public class Map {
                 }
             }
         }
-        return image;
     }
 
     // ------------------
