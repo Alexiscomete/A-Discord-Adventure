@@ -119,7 +119,6 @@ public class MapCommand extends CommandWithAccount {
                     BufferedImage image = Map.bigger(Map.zoom(Integer.parseInt(args[2]), Integer.parseInt(args[3]), Integer.parseInt(args[4])), 10);
 
                     ArrayList<Place> places = Place.getPlacesWithWorld("DIBIMAP");
-                    places.add(new Place());
                     places.removeIf(place -> place.getX().isEmpty() || place.getY().isEmpty() || place.getX().get() < Integer.parseInt(args[2]) - Integer.parseInt(args[4]) * 2 || place.getX().get() > Integer.parseInt(args[2]) + Integer.parseInt(args[4]) * 2 || place.getY().get() < Integer.parseInt(args[3]) - Integer.parseInt(args[4]) || place.getY().get() > Integer.parseInt(args[3]) + Integer.parseInt(args[4]));
                     Map.getMapWithNames(places, Integer.parseInt(args[2]) - Integer.parseInt(args[4]) * 2, Integer.parseInt(args[3]) - Integer.parseInt(args[4]), Integer.parseInt(args[4]) * 4, Integer.parseInt(args[4]) * 2, image);
 
