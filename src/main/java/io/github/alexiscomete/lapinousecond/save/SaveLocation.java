@@ -19,11 +19,11 @@ public class SaveLocation<E> {
         return new File("").getAbsolutePath();
     }
 
-    String sep;
+    final String sep;
     ArrayList<E> content = new ArrayList<>();
-    String path;
-    File file;
-    Function<String, E> a;
+    final String path;
+    final File file;
+    final Function<String, E> a;
 
     public SaveLocation(String separator, String path, Function<String, E> a) throws IOException {
         this.sep = separator;

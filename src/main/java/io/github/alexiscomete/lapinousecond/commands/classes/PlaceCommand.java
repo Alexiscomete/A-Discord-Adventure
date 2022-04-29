@@ -151,7 +151,7 @@ public class PlaceCommand extends CommandWithAccount {
     }
 
     public void createWorldPlace(MessageCreateEvent messageCreateEvent, ServerBot serverBot, Player p) {
-
+        messageCreateEvent.getMessage().reply("ATTENTION : la création d'un lieu dans ce monde est long");
     }
 
     public String placesToString(ArrayList<Place> places) {

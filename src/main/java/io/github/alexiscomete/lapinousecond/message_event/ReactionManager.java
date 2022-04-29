@@ -8,7 +8,7 @@ import java.util.function.Function;
 
 public class ReactionManager implements ReactionAddListener {
 
-    HashMap<Long, Function<ReactionAddEvent, Boolean>> hashMap = new HashMap<>();
+    final HashMap<Long, Function<ReactionAddEvent, Boolean>> hashMap = new HashMap<>();
 
 
     @Override

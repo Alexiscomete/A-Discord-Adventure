@@ -7,9 +7,9 @@ import java.util.Optional;
 
 public class PlaceForTest extends Place {
 
-    String name;
+    final String name;
     int x, y;
-    long id;
+    final long id;
 
     public PlaceForTest(String name, long id, int x, int y) {
         this.name = name;

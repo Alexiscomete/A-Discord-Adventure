@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.function.Consumer;
 
 public class MessagesManager implements MessageCreateListener {
-    HashMap<TextChannel, HashMap<Long, Consumer<MessageCreateEvent>>> consumers = new HashMap<>();
+    final HashMap<TextChannel, HashMap<Long, Consumer<MessageCreateEvent>>> consumers = new HashMap<>();
 
     @Override
     public void onMessageCreate(MessageCreateEvent messageCreateEvent) {
@@ -36,7 +36,7 @@ public class MessagesManager implements MessageCreateListener {
     }
 
     public void setValueAndRetry(TextChannel textChannel, Long id, String prog_name, String message, int len, ServerBot serverBot, Runnable ex) {
-        Main.getMessagesManager().addListener(textChannel, id, new Consumer<MessageCreateEvent>() {
+        Main.getMessagesManager().addListener(textChannel, id, new Consumer<>() {
             @Override
             public void accept(MessageCreateEvent msgE) {
                 if (msgE.getMessageContent().length() <= len) {
@@ -51,13 +51,13 @@ public class MessagesManager implements MessageCreateListener {
         });
     }
 
-    public void setValueAndRetry(TextChannel textChannel, Long id, String prog_name, EmbedBuilder message, int len, ServerBot serverBot, Runnable ex) {
-        Main.getMessagesManager().addListener(textChannel, id, new Consumer<MessageCreateEvent>() {
+    public void setValueAndRetry(TextChannel textChannel, Long id, String prog_name, EmbedBuilder embedBuilder, int len, ServerBot serverBot, Runnable ex) {
+        Main.getMessagesManager().addListener(textChannel, id, new Consumer<>() {
             @Override
             public void accept(MessageCreateEvent msgE) {
                 if (msgE.getMessageContent().length() <= len) {
                     serverBot.set(prog_name, msgE.getMessageContent());
-                    msgE.getMessage().reply(message);
+                    msgE.getMessage().reply(embedBuilder);
                     ex.run();
                 } else {
                     textChannel.sendMessage("Taille maximale : " + len + ". Votre taille : " + msgE.getMessageContent().length());

@@ -4,7 +4,7 @@ import io.github.alexiscomete.lapinousecond.entity.Owner;
 
 public class TypeAutorisation<U> implements BuildingAutorisation {
 
-    Class<U> uClass;
+    final Class<U> uClass;
 
     public TypeAutorisation(Class<U> uClass) {
         this.uClass = uClass;

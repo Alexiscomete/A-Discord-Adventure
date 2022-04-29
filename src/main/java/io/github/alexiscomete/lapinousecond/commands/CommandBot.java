@@ -13,7 +13,7 @@ import java.util.Optional;
 
 public abstract class CommandBot {
 
-    protected SaveManager saveManager = Main.getSaveManager();
+    protected final SaveManager saveManager = Main.getSaveManager();
 
     public String getDescription() {
         return description;
@@ -29,7 +29,7 @@ public abstract class CommandBot {
     }
 
     private final String description, name, totalDescription;
-    String[] perms;
+    final String[] perms;
 
     public CommandBot(String description, String name, String totalDescription, String... perms) {
         this.description = description;

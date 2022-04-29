@@ -7,8 +7,8 @@ import java.util.HashMap;
 import java.util.function.Consumer;
 
 public class ButtonsManager implements MessageComponentCreateListener {
-    HashMap<Long, HashMap<String, Consumer<MessageComponentCreateEvent>>> hashMap = new HashMap<>();
-    HashMap<Long, Consumer<MessageComponentCreateEvent>> hashButton = new HashMap<>();
+    final HashMap<Long, HashMap<String, Consumer<MessageComponentCreateEvent>>> hashMap = new HashMap<>();
+    final HashMap<Long, Consumer<MessageComponentCreateEvent>> hashButton = new HashMap<>();
 
     @Override
     public void onComponentCreate(MessageComponentCreateEvent messageComponentCreateEvent) {

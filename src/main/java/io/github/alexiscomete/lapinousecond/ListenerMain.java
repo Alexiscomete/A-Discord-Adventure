@@ -11,7 +11,7 @@ public class ListenerMain implements MessageCreateListener {
     /**
      * Dictionnaire de toutes le commandes du bot
      */
-    public static HashMap<String, CommandBot> commands = new HashMap<>();
+    public static final HashMap<String, CommandBot> commands = new HashMap<>();
 
     /**
      * Quand une personne envoie un message sur un salon visible par le bot

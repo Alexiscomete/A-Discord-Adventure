@@ -16,7 +16,7 @@ import java.util.function.Supplier;
 
 public class VerifTransaction extends Transaction {
 
-    Player p;
+    final Player p;
 
     public VerifTransaction(Consumer<Double> addMoney, Consumer<Double> removeMoney, Supplier<Double> getMoney, Player p) {
         super(addMoney, removeMoney, getMoney);
