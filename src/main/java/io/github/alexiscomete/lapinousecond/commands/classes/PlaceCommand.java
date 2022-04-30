@@ -3,8 +3,10 @@ package io.github.alexiscomete.lapinousecond.commands.classes;
 import io.github.alexiscomete.lapinousecond.Main;
 import io.github.alexiscomete.lapinousecond.commands.CommandWithAccount;
 import io.github.alexiscomete.lapinousecond.entity.Player;
+import io.github.alexiscomete.lapinousecond.save.SaveLocation;
 import io.github.alexiscomete.lapinousecond.worlds.Place;
 import io.github.alexiscomete.lapinousecond.worlds.ServerBot;
+import org.javacord.api.entity.message.Message;
 import org.javacord.api.entity.message.MessageBuilder;
 import org.javacord.api.entity.message.component.ActionRow;
 import org.javacord.api.entity.message.component.Button;
@@ -151,7 +153,18 @@ public class PlaceCommand extends CommandWithAccount {
     }
 
     public void createWorldPlace(MessageCreateEvent messageCreateEvent, ServerBot serverBot, Player p) {
-        messageCreateEvent.getMessage().reply("ATTENTION : la création d'un lieu dans ce monde est long");
+        messageCreateEvent.getMessage().reply("ATTENTION : la création d'un lieu dans ce monde est long\nContinuer ?");
+        long yes = SaveLocation.generateUniqueID();
+        long no = SaveLocation.generateUniqueID();
+        Main.getButtonsManager().addButton(yes, messageComponentCreateEvent -> {
+
+        });
+        Main.getButtonsManager().addButton(no, messageComponentCreateEvent -> {
+            if (messageComponentCreateEvent.getMessageComponentInteraction().getUser().getId() == p.getId()) {
+                messageComponentCreateEvent.getMessageComponentInteraction().getMessage().ifPresent(Message::delete);
+            }
+        });
+
     }
 
     public String placesToString(ArrayList<Place> places) {
