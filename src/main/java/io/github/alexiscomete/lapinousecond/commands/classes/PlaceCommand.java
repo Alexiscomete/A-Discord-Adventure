@@ -157,14 +157,19 @@ public class PlaceCommand extends CommandWithAccount {
         long yes = SaveLocation.generateUniqueID();
         long no = SaveLocation.generateUniqueID();
         Main.getButtonsManager().addButton(yes, messageComponentCreateEvent -> {
-
+            messageComponentCreateEvent.getMessageComponentInteraction().createImmediateResponder().setContent("1ère étape : voulez-vous ajouter un lieu de serveur (= région / département) ou une ville ?").respond();
         });
         Main.getButtonsManager().addButton(no, messageComponentCreateEvent -> {
             if (messageComponentCreateEvent.getMessageComponentInteraction().getUser().getId() == p.getId()) {
                 messageComponentCreateEvent.getMessageComponentInteraction().getMessage().ifPresent(Message::delete);
             }
         });
-
+        MessageBuilder messageBuilder = new MessageBuilder();
+        messageBuilder.setContent("Réponse :");
+        messageBuilder.addComponents(ActionRow.of(
+                Button.success(String.valueOf(yes), "Oui"),
+                Button.danger(String.valueOf(no), "Non")
+        ));
     }
 
     public String placesToString(ArrayList<Place> places) {
