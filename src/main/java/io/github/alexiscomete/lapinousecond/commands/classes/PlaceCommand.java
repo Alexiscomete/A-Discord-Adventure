@@ -135,21 +135,25 @@ public class PlaceCommand extends CommandWithAccount {
 
     public void createNormalPlace(MessageCreateEvent messageCreateEvent, ServerBot serverBot, Player p) {
         if (serverBot.getArray("places").length == 1 && Objects.equals(serverBot.getArray("places")[0], "")) {
-            Place place = new Place()
-                    .setAndGet("name", serverBot.getString("namerp"))
-                    .setAndGet("world", serverBot.getString("world"))
-                    .setAndGet("serv", String.valueOf(serverBot.getId()))
-                    .setAndGet("type", "server")
-                    .setAndGet("train", serverBot.getString("welcome"))
-                    .setAndGet("descr", serverBot.getString("descr"));
-            messageCreateEvent.getMessage().reply(place.getPlaceEmbed());
-            serverBot.set("places", String.valueOf(place.getID()));
-            messageCreateEvent.getMessage().reply("Message de départ du lieu :");
-            Main.getMessagesManager().setValueAndRetry(messageCreateEvent.getChannel(), p.getId(), "traout", "Message de sortie mit à jour, configuration terminée. Comment voyager vers d' autres lieux dans ce monde ? Dans ce monde les joueurs dans un serveur peuvent payer pour créer une connection (nom RP à trouver) entre 2 lieux", 1500, serverBot, () -> {
-            });
+            serverPlace(messageCreateEvent, serverBot, p);
         } else {
             messageCreateEvent.getMessage().reply("Impossible : un serveur du monde normal ne peut avoir qu' un seul lieu");
         }
+    }
+
+    private void serverPlace(MessageCreateEvent messageCreateEvent, ServerBot serverBot, Player p) {
+        Place place = new Place()
+                .setAndGet("name", serverBot.getString("namerp"))
+                .setAndGet("world", serverBot.getString("world"))
+                .setAndGet("serv", String.valueOf(serverBot.getId()))
+                .setAndGet("type", "server")
+                .setAndGet("train", serverBot.getString("welcome"))
+                .setAndGet("descr", serverBot.getString("descr"));
+        messageCreateEvent.getMessage().reply(place.getPlaceEmbed());
+        serverBot.set("places", String.valueOf(place.getID()));
+        messageCreateEvent.getMessage().reply("Message de départ du lieu :");
+        Main.getMessagesManager().setValueAndRetry(messageCreateEvent.getChannel(), p.getId(), "traout", "Message de sortie mit à jour, configuration terminée. Comment voyager vers d' autres lieux dans ce monde ? Dans ce monde les joueurs dans un serveur peuvent payer pour créer une connection (nom RP à trouver) entre 2 lieux", 1500, serverBot, () -> {
+        });
     }
 
     public void createWorldPlace(MessageCreateEvent messageCreateEvent, ServerBot serverBot, Player p) {
@@ -157,33 +161,29 @@ public class PlaceCommand extends CommandWithAccount {
         long yes = SaveLocation.generateUniqueID();
         long no = SaveLocation.generateUniqueID();
         Main.getButtonsManager().addButton(yes, messageComponentCreateEvent -> {
-            long ville = SaveLocation.generateUniqueID(), serveur = SaveLocation.generateUniqueID();
-            // TODO : possibilité de simplifier car les conditions sont inversées
-            Main.getButtonsManager().addButton(ville, messageComponentCreateEvent1 -> {
-
-            });
-            Main.getButtonsManager().addButton(serveur, messageComponentCreateEvent1 -> {
+            if (messageComponentCreateEvent.getMessageComponentInteraction().getUser().getId() == p.getId()) {
                 if (serverBot.getArray("places").length == 1 && Objects.equals(serverBot.getArray("places")[0], "")) {
+                    serverPlace(messageCreateEvent, serverBot, p);
+                } else {
                     Place place = new Place()
-                            .setAndGet("name", serverBot.getString("namerp"))
                             .setAndGet("world", serverBot.getString("world"))
                             .setAndGet("serv", String.valueOf(serverBot.getId()))
-                            .setAndGet("type", "server")
-                            .setAndGet("train", serverBot.getString("welcome"))
-                            .setAndGet("descr", serverBot.getString("descr"));
+                            .setAndGet("type", "city");
                     messageCreateEvent.getMessage().reply(place.getPlaceEmbed());
                     serverBot.set("places", String.valueOf(place.getID()));
                     messageCreateEvent.getMessage().reply("Message de départ du lieu :");
-                    Main.getMessagesManager().setValueAndRetry(messageCreateEvent.getChannel(), p.getId(), "traout", "Message de sortie mit à jour, configuration terminée. Comment voyager vers d' autres lieux dans ce monde ? Dans ce monde les joueurs dans un serveur peuvent payer pour créer une connection (nom RP à trouver) entre 2 lieux", 1500, serverBot, () -> {
+                    Main.getMessagesManager().setValueAndRetry(messageCreateEvent.getChannel(), p.getId(), "traout", "Message de sortie mit à jour. Message d'arrivée du lieu :", 1500, serverBot, () -> {
+                        Main.getMessagesManager().setValueAndRetry(messageCreateEvent.getChannel(), p.getId(), "train", "Message d'arrivée du lieu mit à jour. Nom du lieu :", 1500, serverBot, () -> {
+                            Main.getMessagesManager().setValueAndRetry(messageCreateEvent.getChannel(), p.getId(), "name", "Nom du lieu mit à jour. Description du lieu :", 1500, serverBot, () -> {
+                                //TODO : condition spéciale car le x et le y doivent être dans la région
+                                Main.getMessagesManager().setValueAndRetry(messageCreateEvent.getChannel(), p.getId(), "descr", "Description du lieu mit à jour. Coordonnée x du lieu :", 1500, serverBot, () -> {
+
+                                });
+                            });
+                        });
                     });
-                } else {
-                    throw new IllegalStateException("Impossible : il ne peut y avoir qu'un seul lieu de serveur, créez un lieu de ville");
                 }
-            });
-            messageComponentCreateEvent.getMessageComponentInteraction().createImmediateResponder().setContent("1ère étape : voulez-vous ajouter un lieu de serveur (= région / département) ou une ville ?").addComponents(ActionRow.of(
-                    Button.success(String.valueOf(ville), "Ville"),
-                    Button.success(String.valueOf(serveur), "Serveur")
-            )).respond();
+            }
         });
         Main.getButtonsManager().addButton(no, messageComponentCreateEvent -> {
             if (messageComponentCreateEvent.getMessageComponentInteraction().getUser().getId() == p.getId()) {
