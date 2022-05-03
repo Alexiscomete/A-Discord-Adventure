@@ -36,7 +36,7 @@ public class PlaceCommand extends CommandWithAccount {
                 if (args.length > 1) {
                     switch (args[1]) {
                         case "create_new_place":
-                            if (messageCreateEvent.getMessageAuthor().canManageRolesOnServer()) {
+                            if (messageCreateEvent.getMessageAuthor().canManageRolesOnServer() && messageCreateEvent.getMessageAuthor().canManageServer() && messageCreateEvent.getMessageAuthor().canCreateChannelsOnServer()) {
                                 if (messageCreateEvent.getMessage().getContent().endsWith(String.valueOf(p.getId() - 42))) {
                                     switch (serverBot.getString("world")) {
                                         case "NORMAL":
@@ -53,7 +53,7 @@ public class PlaceCommand extends CommandWithAccount {
                                     messageCreateEvent.getMessage().delete();
                                 }
                             } else {
-                                messageCreateEvent.getMessage().reply("Vous devez avoir la permission de gérer les rôles pour utiliser cette commande");
+                                messageCreateEvent.getMessage().reply("Vous devez avoir la permission de gérer les rôles, le serveur et les salons pour utiliser cette commande");
                             }
                             break;
                         case "list":
@@ -158,11 +158,27 @@ public class PlaceCommand extends CommandWithAccount {
         long no = SaveLocation.generateUniqueID();
         Main.getButtonsManager().addButton(yes, messageComponentCreateEvent -> {
             long ville = SaveLocation.generateUniqueID(), serveur = SaveLocation.generateUniqueID();
+            // TODO : possibilité de simplifier car les conditions sont inversées
             Main.getButtonsManager().addButton(ville, messageComponentCreateEvent1 -> {
 
             });
             Main.getButtonsManager().addButton(serveur, messageComponentCreateEvent1 -> {
-
+                if (serverBot.getArray("places").length == 1 && Objects.equals(serverBot.getArray("places")[0], "")) {
+                    Place place = new Place()
+                            .setAndGet("name", serverBot.getString("namerp"))
+                            .setAndGet("world", serverBot.getString("world"))
+                            .setAndGet("serv", String.valueOf(serverBot.getId()))
+                            .setAndGet("type", "server")
+                            .setAndGet("train", serverBot.getString("welcome"))
+                            .setAndGet("descr", serverBot.getString("descr"));
+                    messageCreateEvent.getMessage().reply(place.getPlaceEmbed());
+                    serverBot.set("places", String.valueOf(place.getID()));
+                    messageCreateEvent.getMessage().reply("Message de départ du lieu :");
+                    Main.getMessagesManager().setValueAndRetry(messageCreateEvent.getChannel(), p.getId(), "traout", "Message de sortie mit à jour, configuration terminée. Comment voyager vers d' autres lieux dans ce monde ? Dans ce monde les joueurs dans un serveur peuvent payer pour créer une connection (nom RP à trouver) entre 2 lieux", 1500, serverBot, () -> {
+                    });
+                } else {
+                    throw new IllegalStateException("Impossible : il ne peut y avoir qu'un seul lieu de serveur, créez un lieu de ville");
+                }
             });
             messageComponentCreateEvent.getMessageComponentInteraction().createImmediateResponder().setContent("1ère étape : voulez-vous ajouter un lieu de serveur (= région / département) ou une ville ?").addComponents(ActionRow.of(
                     Button.success(String.valueOf(ville), "Ville"),
