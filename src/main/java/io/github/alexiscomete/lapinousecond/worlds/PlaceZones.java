@@ -11,5 +11,14 @@ public class PlaceZones extends Place {
 
     public PlaceZones(long id) {
         super(id);
+        String zonesBDD = getString("zones");
+        if (zonesBDD != null && !zonesBDD.equals("")) {
+            String[] zonesTab = zonesBDD.split(";");
+            for (String zone : zonesTab) {
+                if (!zone.equals("")) {
+                    zones.add(Zone.fromString(zone));
+                }
+            }
+        }
     }
 }
