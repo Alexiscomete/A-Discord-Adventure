@@ -21,4 +21,25 @@ public class PlaceZones extends Place {
             }
         }
     }
+
+    public void addZone(Zone zone) {
+        zones.add(zone);
+        updateBDD();
+    }
+
+    public String toString() {
+        StringBuilder zonesString = new StringBuilder();
+        for (Zone zone : zones) {
+            zonesString.append(zone.toString()).append(";");
+        }
+        return zonesString.toString();
+    }
+
+    public ArrayList<Zone> getZones() {
+        return zones;
+    }
+
+    public void updateBDD() {
+        set("zones", toString());
+    }
 }
