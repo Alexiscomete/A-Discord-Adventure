@@ -43,7 +43,7 @@ public class PlaceCommand extends CommandWithAccount {
                                             createNormalPlace(messageCreateEvent, serverBot, p);
                                             break;
                                         case "DIBIMAP":
-                                            createWorldPlace(messageCreateEvent, serverBot, p);
+                                            createWorldPlace(messageCreateEvent, serverBot, p, args);
                                             break;
                                         default:
                                             messageCreateEvent.getMessage().reply("Impossible de créer un lieu officiel pour ce monde");
@@ -156,7 +156,7 @@ public class PlaceCommand extends CommandWithAccount {
         });
     }
 
-    public void createWorldPlace(MessageCreateEvent messageCreateEvent, ServerBot serverBot, Player p) {
+    public void createWorldPlace(MessageCreateEvent messageCreateEvent, ServerBot serverBot, Player p, String[] args) {
         messageCreateEvent.getMessage().reply("ATTENTION : la création d'un lieu dans ce monde est long\nContinuer ?");
         long yes = SaveLocation.generateUniqueID();
         long no = SaveLocation.generateUniqueID();
@@ -165,6 +165,21 @@ public class PlaceCommand extends CommandWithAccount {
                 if (serverBot.getArray("places").length == 1 && Objects.equals(serverBot.getArray("places")[0], "")) {
                     serverPlace(messageCreateEvent, serverBot, p);
                 } else {
+                    // récupération du lieu parent
+                    Place placeParent = null;
+                    for (String placeID : serverBot.getArray("places")) {
+                        try {
+                            Place place = Main.getSaveManager().places.get(Long.parseLong(placeID));
+                            if (place != null && place.getString("type").equals("server")) {
+                                placeParent = place;
+                            }
+                        } catch (Exception ignored) {
+
+                        }
+                    }
+                    if (placeParent == null) {
+                        throw new RuntimeException("Impossible de trouver le lieu parent. Configuration impossible -> contactez un administrateur car c'est un bug qui ne devrait pas se produire");
+                    }
                     Place place = new Place()
                             .setAndGet("world", serverBot.getString("world"))
                             .setAndGet("serv", String.valueOf(serverBot.getId()))

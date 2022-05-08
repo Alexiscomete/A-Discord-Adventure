@@ -42,4 +42,13 @@ public class PlaceZones extends Place {
     public void updateBDD() {
         set("zones", toString());
     }
+
+    public boolean isInZones(int x, int y) {
+        for (Zone zone : zones) {
+            if (zone.contains(x, y)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
