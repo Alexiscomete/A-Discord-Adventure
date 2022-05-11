@@ -5,6 +5,7 @@ import io.github.alexiscomete.lapinousecond.commands.CommandWithAccount;
 import io.github.alexiscomete.lapinousecond.entity.Player;
 import io.github.alexiscomete.lapinousecond.save.SaveLocation;
 import io.github.alexiscomete.lapinousecond.worlds.Place;
+import io.github.alexiscomete.lapinousecond.worlds.PlaceZones;
 import io.github.alexiscomete.lapinousecond.worlds.ServerBot;
 import org.javacord.api.entity.message.Message;
 import org.javacord.api.entity.message.MessageBuilder;
@@ -180,23 +181,41 @@ public class PlaceCommand extends CommandWithAccount {
                     if (placeParent == null) {
                         throw new RuntimeException("Impossible de trouver le lieu parent. Configuration impossible -> contactez un administrateur car c'est un bug qui ne devrait pas se produire");
                     }
+                    PlaceZones placeZones = new PlaceZones(placeParent.getID());
+                    if (args.length < 4) {
+                        sendArgs(messageCreateEvent, p);
+                    }
+                    if (isNotNumeric(args[2])) {
+                        sendNumberEx(messageCreateEvent, p, 2);
+                        return;
+                    }
+                    if (isNotNumeric(args[3])) {
+                        sendNumberEx(messageCreateEvent, p, 3);
+                        return;
+                    }
+
+                    int x = Integer.parseInt(args[2]);
+                    int y = Integer.parseInt(args[3]);
+
+                    if (!placeZones.isInZones(x, y)) {
+                        throw new RuntimeException("Impossible de créer un lieu dans cet emplacement : votre serveur n'a pas de zone à cet emplacement");
+                    }
+
                     Place place = new Place()
                             .setAndGet("world", serverBot.getString("world"))
                             .setAndGet("serv", String.valueOf(serverBot.getId()))
-                            .setAndGet("type", "city");
+                            .setAndGet("type", "city")
+                            .setAndGet("city_size", "1")
+                            .setAndGet("x", args[2])
+                            .setAndGet("y", args[3]);
                     messageCreateEvent.getMessage().reply(place.getPlaceEmbed());
                     serverBot.set("places", String.valueOf(place.getID()));
                     messageCreateEvent.getMessage().reply("Message de départ du lieu :");
-                    Main.getMessagesManager().setValueAndRetry(messageCreateEvent.getChannel(), p.getId(), "traout", "Message de sortie mit à jour. Message d'arrivée du lieu :", 1500, serverBot, () -> {
-                        Main.getMessagesManager().setValueAndRetry(messageCreateEvent.getChannel(), p.getId(), "train", "Message d'arrivée du lieu mit à jour. Nom du lieu :", 1500, serverBot, () -> {
-                            Main.getMessagesManager().setValueAndRetry(messageCreateEvent.getChannel(), p.getId(), "name", "Nom du lieu mit à jour. Description du lieu :", 1500, serverBot, () -> {
-                                //TODO : condition spéciale car le x et le y doivent être dans la région
-                                Main.getMessagesManager().setValueAndRetry(messageCreateEvent.getChannel(), p.getId(), "descr", "Description du lieu mit à jour. Coordonnée x du lieu :", 1500, serverBot, () -> {
-
-                                });
-                            });
-                        });
-                    });
+                    Main.getMessagesManager().setValueAndRetry(messageCreateEvent.getChannel(), p.getId(), "traout", "Message de sortie mit à jour. Message d'arrivée du lieu :", 1500, serverBot,
+                            () -> Main.getMessagesManager().setValueAndRetry(messageCreateEvent.getChannel(), p.getId(), "train", "Message d'arrivée du lieu mit à jour. Nom du lieu :", 1500, serverBot,
+                                    () -> Main.getMessagesManager().setValueAndRetry(messageCreateEvent.getChannel(), p.getId(), "name", "Nom du lieu mit à jour. Description du lieu :", 1500, serverBot,
+                                            () -> Main.getMessagesManager().setValueAndRetry(messageCreateEvent.getChannel(), p.getId(), "descr", "Description du lieu mit à jour. Configuration terminée pour cette ville.", 1500, serverBot, () -> {}))));
+                    // fin de la configuration des villes
                 }
             }
         });
