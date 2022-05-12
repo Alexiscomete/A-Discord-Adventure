@@ -13,6 +13,8 @@ import org.javacord.api.entity.message.Message;
 import org.javacord.api.entity.message.MessageBuilder;
 import org.javacord.api.entity.message.component.ActionRow;
 import org.javacord.api.entity.message.component.Button;
+import org.javacord.api.entity.message.component.SelectMenu;
+import org.javacord.api.entity.message.component.SelectMenuOption;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.event.interaction.MessageComponentCreateEvent;
 import org.javacord.api.event.message.MessageCreateEvent;
@@ -164,6 +166,28 @@ public class PlaceCommand extends CommandWithAccount {
                             placeZones.addZone(zone);
 
                             messageCreateEvent.getMessage().reply("Zone ajoutée");
+                            break;
+                        case "del_zone":
+                            Place placeParentDel = getPlaceParent(serverBot);
+                            if (!placeParentDel.getString("world").equals("DIBIMAP")) {
+                                throw new IllegalArgumentException("Ce monde ne prend pas en charge les zones");
+                            }
+
+                            PlaceZones placeZonesDel = new PlaceZones(placeParentDel.getID());
+
+                            ArrayList<SelectMenuOption> options = new ArrayList<>();
+                            int i = 0;
+                            for (Zone zoneDel : placeZonesDel.getZones()) {
+                                options.add(SelectMenuOption.create(String.valueOf(i), zoneDel.toString()));
+                                i++;
+                            }
+                            long id = SaveLocation.generateUniqueID();
+                            ActionRow actionRow = ActionRow.of(SelectMenu.create(String.valueOf(id), "Zone à supprimer", options));
+                            new MessageBuilder()
+                                    .setContent("Zone à supprimer")
+                                    .addComponents(actionRow)
+                                    .send(messageCreateEvent.getChannel());
+                            // TODO: Add a listener to the message
                             break;
                         default:
                             messageCreateEvent.getMessage().reply("Action inconnue");
