@@ -123,6 +123,9 @@ public class PlaceCommand extends CommandWithAccount {
                                 messageCreateEvent.getMessage().reply("Action impossible : précisez l'id du lieu pour créer un lien");
                             }
                             break;
+                            // zones
+                        case "add_zone":
+
                         default:
                             messageCreateEvent.getMessage().reply("Action inconnue");
                             break;
@@ -167,20 +170,7 @@ public class PlaceCommand extends CommandWithAccount {
                     serverPlace(messageCreateEvent, serverBot, p);
                 } else {
                     // récupération du lieu parent
-                    Place placeParent = null;
-                    for (String placeID : serverBot.getArray("places")) {
-                        try {
-                            Place place = Main.getSaveManager().places.get(Long.parseLong(placeID));
-                            if (place != null && place.getString("type").equals("server")) {
-                                placeParent = place;
-                            }
-                        } catch (Exception ignored) {
-
-                        }
-                    }
-                    if (placeParent == null) {
-                        throw new RuntimeException("Impossible de trouver le lieu parent. Configuration impossible -> contactez un administrateur car c'est un bug qui ne devrait pas se produire");
-                    }
+                    Place placeParent = getPlaceParent(serverBot);
                     PlaceZones placeZones = new PlaceZones(placeParent.getID());
                     if (args.length < 4) {
                         sendArgs(messageCreateEvent, p);
@@ -311,5 +301,23 @@ public class PlaceCommand extends CommandWithAccount {
             builder = embedBuilder;
             this.places = places;
         }
+    }
+
+    public Place getPlaceParent(ServerBot serverBot) {
+        Place placeParent = null;
+        for (String placeID : serverBot.getArray("places")) {
+            try {
+                Place place = Main.getSaveManager().places.get(Long.parseLong(placeID));
+                if (place != null && place.getString("type").equals("server")) {
+                    placeParent = place;
+                }
+            } catch (Exception ignored) {
+
+            }
+        }
+        if (placeParent == null) {
+            throw new RuntimeException("Impossible de trouver le lieu parent.");
+        }
+        return placeParent;
     }
 }
