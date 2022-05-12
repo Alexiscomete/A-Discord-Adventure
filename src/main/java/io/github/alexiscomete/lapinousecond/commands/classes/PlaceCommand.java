@@ -7,6 +7,8 @@ import io.github.alexiscomete.lapinousecond.save.SaveLocation;
 import io.github.alexiscomete.lapinousecond.worlds.Place;
 import io.github.alexiscomete.lapinousecond.worlds.PlaceZones;
 import io.github.alexiscomete.lapinousecond.worlds.ServerBot;
+import io.github.alexiscomete.lapinousecond.worlds.Zone;
+import io.github.alexiscomete.lapinousecond.worlds.map.Map;
 import org.javacord.api.entity.message.Message;
 import org.javacord.api.entity.message.MessageBuilder;
 import org.javacord.api.entity.message.component.ActionRow;
@@ -125,7 +127,44 @@ public class PlaceCommand extends CommandWithAccount {
                             break;
                             // zones
                         case "add_zone":
+                            Place placeParent = getPlaceParent(serverBot);
+                            if (!placeParent.getString("world").equals("DIBIMAP")) {
+                                throw new IllegalArgumentException("Ce monde ne prend pas en charge les zones");
+                            }
+                            if (args.length < 6) {
+                                throw new IllegalArgumentException("Il manque des arguments pour créer une zone : x1 y1 x2 y2");
+                            }
+                            if (isNotNumeric(args[2]) || isNotNumeric(args[3]) || isNotNumeric(args[4]) || isNotNumeric(args[5])) {
+                                throw new IllegalArgumentException("Les coordonnées doivent être des nombres");
+                            }
+                            int x1 = Integer.parseInt(args[2]);
+                            int y1 = Integer.parseInt(args[3]);
+                            int x2 = Integer.parseInt(args[4]);
+                            int y2 = Integer.parseInt(args[5]);
+                            if (x1 > x2) {
+                                int tmp = x1;
+                                x1 = x2;
+                                x2 = tmp;
+                            }
+                            if (y1 > y2) {
+                                int tmp = y1;
+                                y1 = y2;
+                                y2 = tmp;
+                            }
+                            if (x1 < 0 || y1 < 0) {
+                                throw new IllegalArgumentException("Les coordonnées doivent être positives");
+                            }
+                            if (Map.MAP_HEIGHT < y2 || Map.MAP_WIDTH < x2) {
+                                throw new IllegalArgumentException("Les coordonnées sont en dehors de la carte");
+                            }
 
+                            PlaceZones placeZones = new PlaceZones(placeParent.getID());
+
+                            Zone zone = new Zone(x1, y1, x2, y2);
+                            placeZones.addZone(zone);
+
+                            messageCreateEvent.getMessage().reply("Zone ajoutée");
+                            break;
                         default:
                             messageCreateEvent.getMessage().reply("Action inconnue");
                             break;
