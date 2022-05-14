@@ -18,11 +18,14 @@ import org.javacord.api.entity.message.component.SelectMenuOption;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.event.interaction.MessageComponentCreateEvent;
 import org.javacord.api.event.message.MessageCreateEvent;
+import org.javacord.api.interaction.MessageComponentInteraction;
+import org.javacord.api.interaction.SelectMenuInteraction;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 
@@ -127,7 +130,7 @@ public class PlaceCommand extends CommandWithAccount {
                                 messageCreateEvent.getMessage().reply("Action impossible : précisez l'id du lieu pour créer un lien");
                             }
                             break;
-                            // zones
+                        // zones
                         case "add_zone":
                             Place placeParent = getPlaceParent(serverBot);
                             if (!placeParent.getString("world").equals("DIBIMAP")) {
@@ -187,6 +190,18 @@ public class PlaceCommand extends CommandWithAccount {
                                     .setContent("Zone à supprimer")
                                     .addComponents(actionRow)
                                     .send(messageCreateEvent.getChannel());
+                            Main.getButtonsManager().addButton(id, new Consumer<MessageComponentCreateEvent>() {
+                                @Override
+                                public void accept(MessageComponentCreateEvent messageComponentCreateEvent) {
+                                    MessageComponentInteraction mci = messageComponentCreateEvent.getMessageComponentInteraction();
+                                    Optional<SelectMenuInteraction> selectMenuInteraction = mci.asSelectMenuInteraction();
+                                    if (selectMenuInteraction.isPresent()) {
+                                        SelectMenuInteraction interaction = selectMenuInteraction.get();
+                                        int index = Integer.parseInt(interaction.getChosenOptions().get(0).getLabel());
+
+                                    }
+                                }
+                            });
                             // TODO: Add a listener to the message
                             break;
                         default:
@@ -267,7 +282,8 @@ public class PlaceCommand extends CommandWithAccount {
                     Main.getMessagesManager().setValueAndRetry(messageCreateEvent.getChannel(), p.getId(), "traout", "Message de sortie mit à jour. Message d'arrivée du lieu :", 1500, serverBot,
                             () -> Main.getMessagesManager().setValueAndRetry(messageCreateEvent.getChannel(), p.getId(), "train", "Message d'arrivée du lieu mit à jour. Nom du lieu :", 1500, serverBot,
                                     () -> Main.getMessagesManager().setValueAndRetry(messageCreateEvent.getChannel(), p.getId(), "name", "Nom du lieu mit à jour. Description du lieu :", 1500, serverBot,
-                                            () -> Main.getMessagesManager().setValueAndRetry(messageCreateEvent.getChannel(), p.getId(), "descr", "Description du lieu mit à jour. Configuration terminée pour cette ville.", 1500, serverBot, () -> {}))));
+                                            () -> Main.getMessagesManager().setValueAndRetry(messageCreateEvent.getChannel(), p.getId(), "descr", "Description du lieu mit à jour. Configuration terminée pour cette ville.", 1500, serverBot, () -> {
+                                            }))));
                     // fin de la configuration des villes
                 }
             }
