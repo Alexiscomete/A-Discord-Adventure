@@ -190,20 +190,52 @@ public class PlaceCommand extends CommandWithAccount {
                                     .setContent("Zone à supprimer")
                                     .addComponents(actionRow)
                                     .send(messageCreateEvent.getChannel());
-                            Main.getButtonsManager().addButton(id, new Consumer<MessageComponentCreateEvent>() {
-                                @Override
-                                public void accept(MessageComponentCreateEvent messageComponentCreateEvent) {
-                                    MessageComponentInteraction mci = messageComponentCreateEvent.getMessageComponentInteraction();
-                                    Optional<SelectMenuInteraction> selectMenuInteraction = mci.asSelectMenuInteraction();
-                                    if (selectMenuInteraction.isPresent()) {
-                                        SelectMenuInteraction interaction = selectMenuInteraction.get();
-                                        int index = Integer.parseInt(interaction.getChosenOptions().get(0).getLabel());
-
-                                    }
+                            Main.getButtonsManager().addButton(id, messageComponentCreateEvent -> {
+                                MessageComponentInteraction mci = messageComponentCreateEvent.getMessageComponentInteraction();
+                                Optional<SelectMenuInteraction> selectMenuInteraction = mci.asSelectMenuInteraction();
+                                if (selectMenuInteraction.isPresent() && mci.getUser().getId() == messageCreateEvent..getId()) {
+                                    SelectMenuInteraction interaction = selectMenuInteraction.get();
+                                    int index = Integer.parseInt(interaction.getChosenOptions().get(0).getLabel());
+                                    placeZonesDel.removeZone(index);
+                                    messageCreateEvent.getMessage().reply("Zone supprimée");
                                 }
                             });
-                            // TODO: Add a listener to the message
                             break;
+                        case "modify_zone":
+                            Place placeParentModify = getPlaceParent(serverBot);
+                            if (!placeParentModify.getString("world").equals("DIBIMAP")) {
+                                throw new IllegalArgumentException("Ce monde ne prend pas en charge les zones");
+                            }
+
+                            PlaceZones placeZonesModify = new PlaceZones(placeParentModify.getID());
+
+                            ArrayList<SelectMenuOption> optionsModify = new ArrayList<>();
+                            int iModify = 0;
+                            for (Zone zoneModify : placeZonesModify.getZones()) {
+                                optionsModify.add(SelectMenuOption.create(String.valueOf(iModify), zoneModify.toString()));
+                                iModify++;
+                            }
+
+                            long idModify = SaveLocation.generateUniqueID();
+                            ActionRow actionRowModify = ActionRow.of(SelectMenu.create(String.valueOf(idModify), "Zone à modifier", optionsModify));
+                            new MessageBuilder()
+                                    .setContent("Zone à modifier")
+                                    .addComponents(actionRowModify)
+                                    .send(messageCreateEvent.getChannel());
+
+                            Main.getButtonsManager().addButton(idModify, messageComponentCreateEvent -> {
+                                MessageComponentInteraction mci = messageComponentCreateEvent.getMessageComponentInteraction();
+                                Optional<SelectMenuInteraction> selectMenuInteraction = mci.asSelectMenuInteraction();
+                                if (selectMenuInteraction.isPresent() && mci.getUser().getId() == messageCreateEvent.getAuthor().getId()) {
+                                    SelectMenuInteraction interaction = selectMenuInteraction.get();
+                                    int index = Integer.parseInt(interaction.getChosenOptions().get(0).getLabel());
+                                    Zone zoneModify = placeZonesModify.getZones().get(index);
+                                    messageCreateEvent.getMessage().reply("Zone à modifier : " + zoneModify.toString());
+                                    // changement des coordonnées
+                                    messageCreateEvent.getMessage().reply("Nouvelles coordonnées : ");
+
+                                }
+                            });
                         default:
                             messageCreateEvent.getMessage().reply("Action inconnue");
                             break;

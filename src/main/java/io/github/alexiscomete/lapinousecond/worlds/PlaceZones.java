@@ -51,4 +51,9 @@ public class PlaceZones extends Place {
         }
         return false;
     }
+
+    public void removeZone(int index) {
+        zones.remove(index);
+        updateBDD();
+    }
 }
