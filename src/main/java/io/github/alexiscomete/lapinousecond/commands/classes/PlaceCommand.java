@@ -193,7 +193,7 @@ public class PlaceCommand extends CommandWithAccount {
                             Main.getButtonsManager().addButton(id, messageComponentCreateEvent -> {
                                 MessageComponentInteraction mci = messageComponentCreateEvent.getMessageComponentInteraction();
                                 Optional<SelectMenuInteraction> selectMenuInteraction = mci.asSelectMenuInteraction();
-                                if (selectMenuInteraction.isPresent() && mci.getUser().getId() == messageCreateEvent..getId()) {
+                                if (selectMenuInteraction.isPresent() && mci.getUser().getId() == messageCreateEvent.getMessageAuthor().getId()) {
                                     SelectMenuInteraction interaction = selectMenuInteraction.get();
                                     int index = Integer.parseInt(interaction.getChosenOptions().get(0).getLabel());
                                     placeZonesDel.removeZone(index);
@@ -226,7 +226,7 @@ public class PlaceCommand extends CommandWithAccount {
                             Main.getButtonsManager().addButton(idModify, messageComponentCreateEvent -> {
                                 MessageComponentInteraction mci = messageComponentCreateEvent.getMessageComponentInteraction();
                                 Optional<SelectMenuInteraction> selectMenuInteraction = mci.asSelectMenuInteraction();
-                                if (selectMenuInteraction.isPresent() && mci.getUser().getId() == messageCreateEvent.getAuthor().getId()) {
+                                if (selectMenuInteraction.isPresent() && mci.getUser().getId() == messageCreateEvent.getMessageAuthor().getId()) {
                                     SelectMenuInteraction interaction = selectMenuInteraction.get();
                                     int index = Integer.parseInt(interaction.getChosenOptions().get(0).getLabel());
                                     Zone zoneModify = placeZonesModify.getZones().get(index);
