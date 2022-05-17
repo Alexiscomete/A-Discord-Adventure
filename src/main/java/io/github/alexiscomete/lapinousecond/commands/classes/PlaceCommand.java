@@ -231,9 +231,24 @@ public class PlaceCommand extends CommandWithAccount {
                                     int index = Integer.parseInt(interaction.getChosenOptions().get(0).getLabel());
                                     Zone zoneModify = placeZonesModify.getZones().get(index);
                                     messageCreateEvent.getMessage().reply("Zone à modifier : " + zoneModify.toString());
-                                    // changement des coordonnées
+                                    // changement des coordonnées de la zone x1, y1, x2, y2
                                     messageCreateEvent.getMessage().reply("Nouvelles coordonnées : ");
+                                    Main.getMessagesManager().addListener(messageCreateEvent.getChannel(), messageCreateEvent.getMessageAuthor().getId(), messageCreateEvent1 -> {
+                                        String[] split = messageCreateEvent1.getMessage().getContent().split(" ");
+                                        if (split.length < 4) {
+                                            throw new IllegalArgumentException("Vous devez fournir 4 coordonnées : x1, y1, x2, y2");
+                                        }
+                                        int x1_ = Integer.parseInt(split[0]);
+                                        int y1_ = Integer.parseInt(split[1]);
+                                        int x2_ = Integer.parseInt(split[2]);
+                                        int y2_ = Integer.parseInt(split[3]);
+                                        zoneModify.setX1(x1_);
+                                        zoneModify.setY1(y1_);
+                                        zoneModify.setX2(x2_);
+                                        zoneModify.setY2(y2_);
+                                        placeZonesModify.updateBDD();
 
+                                    });
                                 }
                             });
                         default:

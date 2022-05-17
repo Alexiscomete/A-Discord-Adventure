@@ -20,7 +20,11 @@ public class MessagesManager implements MessageCreateListener {
             if (messageCreateEvent.getMessageAuthor().isUser() && hashMap.containsKey(messageCreateEvent.getMessageAuthor().getId())) {
                 Consumer<MessageCreateEvent> messageCreateEventConsumer = hashMap.get(messageCreateEvent.getMessageAuthor().getId());
                 hashMap.remove(messageCreateEvent.getMessageAuthor().getId());
-                messageCreateEventConsumer.accept(messageCreateEvent);
+                try {
+                    messageCreateEventConsumer.accept(messageCreateEvent);
+                } catch (Exception e) {
+                    messageCreateEvent.getMessage().reply("Une erreur est survenue : " + e.getMessage());
+                }
             }
         }
     }
