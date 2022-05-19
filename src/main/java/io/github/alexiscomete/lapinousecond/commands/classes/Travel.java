@@ -1,11 +1,9 @@
 package io.github.alexiscomete.lapinousecond.commands.classes;
 
 import io.github.alexiscomete.lapinousecond.Main;
-import io.github.alexiscomete.lapinousecond.entity.Player;
 import io.github.alexiscomete.lapinousecond.commands.CommandInServer;
-import io.github.alexiscomete.lapinousecond.message_event.MessagesManager;
+import io.github.alexiscomete.lapinousecond.entity.Player;
 import io.github.alexiscomete.lapinousecond.save.SaveLocation;
-import io.github.alexiscomete.lapinousecond.save.SaveManager;
 import io.github.alexiscomete.lapinousecond.worlds.Place;
 import io.github.alexiscomete.lapinousecond.worlds.ServerBot;
 import io.github.alexiscomete.lapinousecond.worlds.map.Map;
@@ -19,7 +17,6 @@ import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.entity.server.Server;
 import org.javacord.api.entity.server.invite.InviteBuilder;
 import org.javacord.api.entity.user.User;
-import org.javacord.api.event.interaction.MessageComponentCreateEvent;
 import org.javacord.api.event.message.MessageCreateEvent;
 
 import java.awt.*;
@@ -28,7 +25,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class  Travel extends CommandInServer {

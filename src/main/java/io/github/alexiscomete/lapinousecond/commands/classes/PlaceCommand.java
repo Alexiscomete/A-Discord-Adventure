@@ -3,6 +3,7 @@ package io.github.alexiscomete.lapinousecond.commands.classes;
 import io.github.alexiscomete.lapinousecond.Main;
 import io.github.alexiscomete.lapinousecond.commands.CommandWithAccount;
 import io.github.alexiscomete.lapinousecond.entity.Player;
+import io.github.alexiscomete.lapinousecond.message_event.ListButtons;
 import io.github.alexiscomete.lapinousecond.save.SaveLocation;
 import io.github.alexiscomete.lapinousecond.worlds.Place;
 import io.github.alexiscomete.lapinousecond.worlds.PlaceZones;
@@ -69,14 +70,11 @@ public class PlaceCommand extends CommandWithAccount {
                             MessageBuilder messageBuilder = new MessageBuilder();
                             EmbedBuilder builder = new EmbedBuilder();
                             setPlaceEmbed(builder, 0, Math.min(places.size(), 11), places);
-                            EventAnswer eventAnswer = new EventAnswer(builder, places);
-                            messageBuilder.addComponents(eventAnswer.getComponents());
+                            ListButtons<Place> listButtons1 = new ListButtons<>(builder, places, this::setPlaceEmbed);
+                            messageBuilder.addComponents(listButtons1.getComponents());
                             messageBuilder.setEmbed(builder);
-                            try {
-                                eventAnswer.register(messageBuilder.send(messageCreateEvent.getChannel()).get().getId());
-                            } catch (InterruptedException | ExecutionException e) {
-                                e.printStackTrace();
-                            }
+                            listButtons1.register();
+                            messageBuilder.send(messageCreateEvent.getChannel());
                             break;
                         case "links":
                             messageCreateEvent.getMessage().reply("Tout les lieux qui ont un lien de voyage avec le lieu de votre serveur");
@@ -85,14 +83,11 @@ public class PlaceCommand extends CommandWithAccount {
                             MessageBuilder messageBuilder1 = new MessageBuilder();
                             EmbedBuilder builder1 = new EmbedBuilder();
                             setPlaceEmbed(builder1, 0, Math.min(places1.size(), 11), places1);
-                            EventAnswer eventAnswer1 = new EventAnswer(builder1, places1);
-                            messageBuilder1.addComponents(eventAnswer1.getComponents());
+                            ListButtons<Place> listButtons2 = new ListButtons<>(builder1, places1, this::setPlaceEmbed);
+                            messageBuilder1.addComponents(listButtons2.getComponents());
                             messageBuilder1.setEmbed(builder1);
-                            try {
-                                eventAnswer1.register(messageBuilder1.send(messageCreateEvent.getChannel()).get().getId());
-                            } catch (InterruptedException | ExecutionException e) {
-                                e.printStackTrace();
-                            }
+                            listButtons2.register();
+                            messageBuilder1.send(messageCreateEvent.getChannel());
                             break;
                         case "add_link":
                             if (args.length > 2) {
@@ -370,62 +365,6 @@ public class PlaceCommand extends CommandWithAccount {
         for (int i = min; i < max; i++) {
             Place place = places.get(i);
             embedBuilder.addField(Objects.equals(place.getString("name"), "") ? "Nom invalide" : place.getString("name"), place.getID() + " -> " + place.getString("descr"));
-        }
-    }
-
-    public class EventAnswer {
-
-        private int level = 0;
-        private final EmbedBuilder builder;
-        private final ArrayList<Place> places;
-
-        public void next(MessageComponentCreateEvent messageComponentCreateEvent) {
-            if (level + 10 < places.size()) {
-                level += 10;
-                builder.removeAllFields();
-                setPlaceEmbed(builder, level, Math.min(places.size(), level + 11), places);
-                messageComponentCreateEvent.getMessageComponentInteraction().createOriginalMessageUpdater().removeAllEmbeds().addEmbed(builder).addComponents(getComponents()).update();
-            }
-        }
-
-        public void last(MessageComponentCreateEvent messageComponentCreateEvent) {
-            if (level > 9) {
-                level -= 10;
-                builder.removeAllFields();
-                setPlaceEmbed(builder, level, Math.min(places.size(), level + 11), places);
-                messageComponentCreateEvent.getMessageComponentInteraction().createOriginalMessageUpdater().removeAllEmbeds().addEmbed(builder).addComponents(getComponents()).update();
-            }
-        }
-
-        public ActionRow getComponents() {
-            if (level > 0 && level + 10 < places.size()) {
-                return ActionRow.of(
-                        org.javacord.api.entity.message.component.Button.success("last_page", "Page précédente"),
-                        org.javacord.api.entity.message.component.Button.success("next_page", "Page suivante")
-                );
-            } else if (level > 0) {
-                return ActionRow.of(
-                        org.javacord.api.entity.message.component.Button.success("last_page", "Page précédente")
-                );
-            } else if (level + 10 < places.size()) {
-                return ActionRow.of(
-                        Button.success("next_page", "Page suivante")
-                );
-            } else {
-                return ActionRow.of(Button.success("null_page", "Aucune autre page"));
-            }
-        }
-
-        public void register(long id) {
-            HashMap<String, Consumer<MessageComponentCreateEvent>> hashMap = new HashMap<>();
-            hashMap.put("next_page", this::next);
-            hashMap.put("last_page", this::last);
-            Main.getButtonsManager().addMessage(id, hashMap);
-        }
-
-        public EventAnswer(EmbedBuilder embedBuilder, ArrayList<Place> places) {
-            builder = embedBuilder;
-            this.places = places;
         }
     }
 
