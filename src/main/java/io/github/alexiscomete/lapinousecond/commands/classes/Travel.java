@@ -8,6 +8,8 @@ import io.github.alexiscomete.lapinousecond.save.SaveLocation;
 import io.github.alexiscomete.lapinousecond.save.SaveManager;
 import io.github.alexiscomete.lapinousecond.worlds.Place;
 import io.github.alexiscomete.lapinousecond.worlds.ServerBot;
+import io.github.alexiscomete.lapinousecond.worlds.map.Map;
+import io.github.alexiscomete.lapinousecond.worlds.map.Pixel;
 import org.javacord.api.entity.channel.ServerChannel;
 import org.javacord.api.entity.channel.TextChannel;
 import org.javacord.api.entity.message.MessageBuilder;
@@ -210,15 +212,28 @@ public class  Travel extends CommandInServer {
                 // on récupère le lieu en demandant à l'utilisateur de le rentrer
                 TextChannel tc = messageCreateEvent.getMessage().getChannel();
                 long userId = messageCreateEvent.getMessage().getAuthor().getId();
-                tc.sendMessage("Entrez le nom du lieu :");
+                messageComponentCreateEvent.getMessageComponentInteraction().createImmediateResponder().setContent("Entrez le nom du lieu :").respond();
                 Main.getMessagesManager().addListener(tc, userId, (messageCreateEvent1) -> {
                     // on récupère le lieu
                     String place = messageCreateEvent1.getMessage().getContent();
                     // on récupère le lieu
                     try {
-                        Main.getSaveManager().places.get(Long.parseLong(String.valueOf(id1)));
-
-                    } catch (Exception e) {
+                        Place placeO = Main.getSaveManager().places.get(Long.parseLong(String.valueOf(id1)));
+                        if (placeO == null) {
+                            throw new IllegalArgumentException("Lieu introuvable");
+                        }
+                        messageCreateEvent1.getMessage().reply("Calcul du trajet en cours ....");
+                        ArrayList<Pixel> path = Map.findPath(Map.getNode(x, y, new ArrayList<>()), Map.getNode(Integer.parseInt(placeO.getString("x")), Integer.parseInt(placeO.getString("y")), new ArrayList<>()), messageCreateEvent.getChannel());
+                        messageCreateEvent.getMessage().reply("Path found : " + path.size() + " steps");
+                        StringBuilder sb = new StringBuilder();
+                        for (Pixel pixel : path) {
+                            sb.append(pixel);
+                        }
+                        messageCreateEvent.getMessage().reply(sb.toString());
+                        MessageBuilder messageBuilder3 = new MessageBuilder();
+                        messageBuilder3.addAttachment(Map.drawPath(path), "path.png");
+                        messageBuilder3.send(messageCreateEvent.getChannel());
+                    } catch (NumberFormatException e) {
                         // on envoie un message d'erreur
                         sendNumberEx(messageCreateEvent1, p, -1);
                     }
