@@ -17,18 +17,14 @@ import org.javacord.api.entity.message.component.Button;
 import org.javacord.api.entity.message.component.SelectMenu;
 import org.javacord.api.entity.message.component.SelectMenuOption;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
-import org.javacord.api.event.interaction.MessageComponentCreateEvent;
 import org.javacord.api.event.message.MessageCreateEvent;
 import org.javacord.api.interaction.MessageComponentInteraction;
 import org.javacord.api.interaction.SelectMenuInteraction;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.concurrent.ExecutionException;
-import java.util.function.Consumer;
 
 public class PlaceCommand extends CommandWithAccount {
     public PlaceCommand() {

@@ -162,7 +162,7 @@ public class Map {
                 }
             }
             closedList.add(current);
-            if (openList.size() > 5000) {
+            if (openList.size() > 4000) {
                 throw new IllegalArgumentException("Le chemin met trop de puissance à calculer, essayez en plusieurs fois");
             }
         }

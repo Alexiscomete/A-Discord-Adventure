@@ -214,13 +214,12 @@ public class  Travel extends CommandInServer {
                     String place = messageCreateEvent1.getMessage().getContent();
                     // on récupère le lieu
                     try {
-                        Place placeO = Main.getSaveManager().places.get(Long.parseLong(String.valueOf(id1)));
+                        Place placeO = Main.getSaveManager().places.get(Long.parseLong(place));
                         if (placeO == null) {
                             throw new IllegalArgumentException("Lieu introuvable");
                         }
                         messageCreateEvent1.getMessage().reply("Calcul du trajet en cours ....");
                         ArrayList<Pixel> path = Map.findPath(Map.getNode(x, y, new ArrayList<>()), Map.getNode(Integer.parseInt(placeO.getString("x")), Integer.parseInt(placeO.getString("y")), new ArrayList<>()), messageCreateEvent.getChannel());
-                        messageCreateEvent.getMessage().reply("Path found : " + path.size() + " steps");
                         StringBuilder sb = new StringBuilder();
                         for (Pixel pixel : path) {
                             sb.append(pixel);
@@ -229,6 +228,23 @@ public class  Travel extends CommandInServer {
                         MessageBuilder messageBuilder3 = new MessageBuilder();
                         messageBuilder3.addAttachment(Map.drawPath(path), "path.png");
                         messageBuilder3.send(messageCreateEvent.getChannel());
+                        long timeMillisToTravel = path.size() * 10000L;
+                        double priceToTravel = path.size() * 0.5;
+                        // on indique le temps de trajet ou le prix que cela peut lui couter en fonction du nombre de pixels de trajet
+                        messageCreateEvent.getMessage().reply("Vous allez à " + placeO.getString("name") + " en " + timeMillisToTravel + " millisecondes ou " + priceToTravel + " rb.");
+                        long id3 = SaveLocation.generateUniqueID(), id4 = SaveLocation.generateUniqueID();
+                        new MessageBuilder()
+                                .setEmbed(new EmbedBuilder()
+                                        .setTitle("Vous allez à " + placeO.getString("name"))
+                                        // ne pas répéter le titre
+                                        .setDescription("Avec " + path.size() + " pixels de trajet en " + timeMillisToTravel + " millisecondes ou " + priceToTravel + " rb.")
+                                        .setImage(Map.drawPath(path), "path.png")
+                                        .setColor(Color.GREEN))
+                                .addComponents(ActionRow.of(
+                                        Button.success(String.valueOf(id3), "Temps de trajet"),
+                                        Button.success(String.valueOf(id4), "Prix de trajet")))
+                                .send(messageCreateEvent.getChannel());
+
                     } catch (NumberFormatException e) {
                         // on envoie un message d'erreur
                         sendNumberEx(messageCreateEvent1, p, -1);
