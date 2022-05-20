@@ -18,6 +18,7 @@ import org.javacord.api.entity.server.Server;
 import org.javacord.api.entity.server.invite.InviteBuilder;
 import org.javacord.api.entity.user.User;
 import org.javacord.api.event.message.MessageCreateEvent;
+import org.javacord.api.interaction.MessageComponentInteraction;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -244,7 +245,22 @@ public class  Travel extends CommandInServer {
                                         Button.success(String.valueOf(id3), "Temps de trajet"),
                                         Button.success(String.valueOf(id4), "Prix de trajet")))
                                 .send(messageCreateEvent.getChannel());
+                        int state = p.state;
+                        Main.getButtonsManager().addButton(id3, (messageButtonEvent) -> {
+                            MessageComponentInteraction messageComponentInteraction = messageButtonEvent.getMessageComponentInteraction();
+                            if (messageComponentInteraction.getMessage().isPresent()) {
+                                messageComponentInteraction.getMessage().get().delete();
+                            }
+                            if (p.state != state) {
+                                throw new IllegalStateException("Ce bouton n'est plus valide");
+                            }
+                            if (messageComponentInteraction.getUser().getId() != p.getId()) {
+                                throw new IllegalStateException("Ce bouton n'est pas pour vous");
+                            }
+                            p.state++;
 
+                            // TODO : temps de trajet
+                        });
                     } catch (NumberFormatException e) {
                         // on envoie un message d'erreur
                         sendNumberEx(messageCreateEvent1, p, -1);

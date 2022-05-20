@@ -32,6 +32,7 @@ public class Player extends CacheGetSet implements Owner {
     private final ArrayList<Item> items = new ArrayList<>();
     private final HashMap<Resource, ResourceManager> resourceManagers;
     private final SaveManager saveManager = Main.getSaveManager();
+    public int state = 0;
 
     public Player(Long id) {
         super(id, Tables.PLAYERS.getTable());
