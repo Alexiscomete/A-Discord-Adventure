@@ -17,6 +17,7 @@ import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.entity.server.Server;
 import org.javacord.api.entity.server.invite.InviteBuilder;
 import org.javacord.api.entity.user.User;
+import org.javacord.api.event.interaction.MessageComponentCreateEvent;
 import org.javacord.api.event.message.MessageCreateEvent;
 import org.javacord.api.interaction.MessageComponentInteraction;
 
@@ -247,19 +248,25 @@ public class  Travel extends CommandInServer {
                                 .send(messageCreateEvent.getChannel());
                         int state = p.state;
                         Main.getButtonsManager().addButton(id3, (messageButtonEvent) -> {
-                            MessageComponentInteraction messageComponentInteraction = messageButtonEvent.getMessageComponentInteraction();
-                            if (messageComponentInteraction.getMessage().isPresent()) {
-                                messageComponentInteraction.getMessage().get().delete();
-                            }
-                            if (p.state != state) {
-                                throw new IllegalStateException("Ce bouton n'est plus valide");
-                            }
-                            if (messageComponentInteraction.getUser().getId() != p.getId()) {
-                                throw new IllegalStateException("Ce bouton n'est pas pour vous");
-                            }
-                            p.state++;
+                            verifButton(p, state, messageButtonEvent);
 
                             // TODO : temps de trajet
+                        });
+                        Main.getButtonsManager().addButton(id4, (messageButtonEvent) -> {
+                            verifButton(p, state, messageButtonEvent);
+
+                            // TODO : prix de trajet
+
+                            double bal = p.getBal();
+                            if (bal < priceToTravel) {
+                                throw new IllegalStateException("Vous n'avez pas assez de rb pour ce trajet");
+                            }
+                            p.setBal(bal - priceToTravel);
+                            // il a payé donc on téléporte le joueur
+                            p.set("place_DIBIMAP_type", "place");
+                            p.set("place_DIBIMAP_id", String.valueOf(id2));
+                            p.set("place_DIBIMAP_x", placeO.getString("x"));
+                            p.set("place_DIBIMAP_y", placeO.getString("y"));
                         });
                     } catch (NumberFormatException e) {
                         // on envoie un message d'erreur
@@ -268,36 +275,36 @@ public class  Travel extends CommandInServer {
                 });
             });
             Main.getButtonsManager().addButton(id2, messageComponentCreateEvent -> {
-
+                if (args[1].equals("coos")) {
+                    // on regarde si les arguments sont bien présents
+                    if (args.length < 4) {
+                        // si non on envoie un message d'erreur car il n'a pas donné les coordonnées
+                        sendArgs(messageCreateEvent, p);
+                        return;
+                    }
+                    // on tente de récupérer les coordonnées
+                    int x2, y2;
+                    // d'abord les coordonnées x
+                    try {
+                        x2 = Integer.parseInt(args[2]);
+                    } catch (NumberFormatException e) {
+                        // si il y a une erreur on envoie un message d'erreur
+                        sendNumberEx(messageCreateEvent, p, 2);
+                        return;
+                    }
+                    // puis les coordonnées y
+                    try {
+                        y2 = Integer.parseInt(args[3]);
+                    } catch (NumberFormatException e) {
+                        // si il y a une erreur on envoie un message d'erreur
+                        sendNumberEx(messageCreateEvent, p, 3);
+                        return;
+                    }
+                }
             });
 
 
-            if (args[1].equals("coos")) {
-                // on regarde si les arguments sont bien présents
-                if (args.length < 4) {
-                    // si non on envoie un message d'erreur car il n'a pas donné les coordonnées
-                    sendArgs(messageCreateEvent, p);
-                    return;
-                }
-                // on tente de récupérer les coordonnées
-                int x2, y2;
-                // d'abord les coordonnées x
-                try {
-                    x2 = Integer.parseInt(args[2]);
-                } catch (NumberFormatException e) {
-                    // si il y a une erreur on envoie un message d'erreur
-                    sendNumberEx(messageCreateEvent, p, 2);
-                    return;
-                }
-                // puis les coordonnées y
-                try {
-                    y2 = Integer.parseInt(args[3]);
-                } catch (NumberFormatException e) {
-                    // si il y a une erreur on envoie un message d'erreur
-                    sendNumberEx(messageCreateEvent, p, 3);
-                    return;
-                }
-            }
+
         } else if (placeType.equals("place")) {
             // on récupère le lieu
             String place = p.getString("place_DIBIMAP_place");
@@ -309,6 +316,20 @@ public class  Travel extends CommandInServer {
             messageCreateEvent.getMessage().reply("Etrange, ce type de lieu n'existe pas. Je vais donc vous téléporter. Retentez votre commande.");
             setCoos(p);
         }
+    }
+
+    private void verifButton(Player p, int state, MessageComponentCreateEvent messageButtonEvent) {
+        MessageComponentInteraction messageComponentInteraction = messageButtonEvent.getMessageComponentInteraction();
+        if (messageComponentInteraction.getUser().getId() != p.getId()) {
+            throw new IllegalStateException("Ce bouton n'est pas pour vous");
+        }
+        if (messageComponentInteraction.getMessage().isPresent()) {
+            messageComponentInteraction.getMessage().get().delete();
+        }
+        if (p.state != state) {
+            throw new IllegalStateException("Ce bouton n'est plus valide");
+        }
+        p.state++;
     }
 
     // set coordonnées par défaut

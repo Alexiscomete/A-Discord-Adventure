@@ -15,7 +15,15 @@ public class ButtonsManager implements MessageComponentCreateListener {
         if (hashMap.containsKey(messageComponentCreateEvent.getMessageComponentInteraction().getMessageId())) {
             HashMap<String, Consumer<MessageComponentCreateEvent>> h = hashMap.get(messageComponentCreateEvent.getMessageComponentInteraction().getMessageId());
             if (h.containsKey(messageComponentCreateEvent.getMessageComponentInteraction().getCustomId())) {
-                h.get(messageComponentCreateEvent.getMessageComponentInteraction().getCustomId()).accept(messageComponentCreateEvent);
+                try {
+                    h.get(messageComponentCreateEvent.getMessageComponentInteraction().getCustomId()).accept(messageComponentCreateEvent);
+                } catch (Exception e) {
+                    if (messageComponentCreateEvent.getMessageComponentInteraction().getChannel().isPresent()) {
+                        messageComponentCreateEvent.getMessageComponentInteraction().getChannel().get().sendMessage("Une erreur est survenue : " + e.getMessage());
+                    } else {
+                        messageComponentCreateEvent.getMessageComponentInteraction().getUser().sendMessage("Une erreur est survenue : " + e.getMessage() + "\n Impossible de répondre à votre message dans le channel donc ce message est envoyé en DM.");
+                    }
+                }
             } else {
                 messageComponentCreateEvent.getMessageComponentInteraction().createOriginalMessageUpdater()
                         .removeAllComponents()
