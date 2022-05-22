@@ -250,23 +250,29 @@ public class  Travel extends CommandInServer {
                         Main.getButtonsManager().addButton(id3, (messageButtonEvent) -> {
                             verifButton(p, state, messageButtonEvent);
 
-                            // TODO : temps de trajet
+                            // on ajoute le chemin au joueur avec pour type "default_time"
+                            p.setPath(path, "default_time");
+
+                            // on envoie le message de confirmation
+                            messageButtonEvent.getMessageComponentInteraction().createImmediateResponder().setContent("Vous avez commencé votre trajet pour aller à " + placeO.getString("name") + " en " + timeMillisToTravel / 1000 + " secondes.").respond();
                         });
                         Main.getButtonsManager().addButton(id4, (messageButtonEvent) -> {
                             verifButton(p, state, messageButtonEvent);
-
-                            // TODO : prix de trajet
 
                             double bal = p.getBal();
                             if (bal < priceToTravel) {
                                 throw new IllegalStateException("Vous n'avez pas assez de rb pour ce trajet");
                             }
                             p.setBal(bal - priceToTravel);
+
                             // il a payé donc on téléporte le joueur
                             p.set("place_DIBIMAP_type", "place");
                             p.set("place_DIBIMAP_id", String.valueOf(id2));
                             p.set("place_DIBIMAP_x", placeO.getString("x"));
                             p.set("place_DIBIMAP_y", placeO.getString("y"));
+
+                            // on dit au joueur qu'il est téléporté
+                            messageButtonEvent.getMessageComponentInteraction().createImmediateResponder().setContent("Vous avez été téléporté à " + placeO.getString("name") + " car vous avez payé " + priceToTravel + " rb.").respond();
                         });
                     } catch (NumberFormatException e) {
                         // on envoie un message d'erreur

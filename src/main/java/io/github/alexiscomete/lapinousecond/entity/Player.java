@@ -13,6 +13,7 @@ import io.github.alexiscomete.lapinousecond.view.AnswerEnum;
 import io.github.alexiscomete.lapinousecond.view.LangageEnum;
 import io.github.alexiscomete.lapinousecond.worlds.Place;
 import io.github.alexiscomete.lapinousecond.worlds.ServerBot;
+import io.github.alexiscomete.lapinousecond.worlds.map.Pixel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -208,5 +209,9 @@ public class Player extends CacheGetSet implements Owner {
         }
 
         return saveManager.places.get(Long.parseLong(placeID));
+    }
+
+    public void setPath(ArrayList<Pixel> path, String type) {
+        // TODO: Gérer les chemins
     }
 }
