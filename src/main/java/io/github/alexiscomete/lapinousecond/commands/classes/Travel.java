@@ -29,7 +29,7 @@ import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
-public class  Travel extends CommandInServer {
+public class Travel extends CommandInServer {
 
     public Travel() {
         super("Vous permet de voyager vers un serveur", "travel", "travel [server id]");
@@ -52,9 +52,9 @@ public class  Travel extends CommandInServer {
         }
 
         if (Objects.equals(world, "NORMAL")) {
-            travelWorldNormal(messageCreateEvent,args, p);
+            travelWorldNormal(messageCreateEvent, args, p);
         } else if (Objects.equals(world, "DIBIMAP")) {
-            travelWorldDibimap(messageCreateEvent,args, p);
+            travelWorldDibimap(messageCreateEvent, args, p);
         }
     }
 
@@ -238,7 +238,6 @@ public class  Travel extends CommandInServer {
                         new MessageBuilder()
                                 .setEmbed(new EmbedBuilder()
                                         .setTitle("Vous allez à " + placeO.getString("name"))
-                                        // ne pas répéter le titre
                                         .setDescription("Avec " + path.size() + " pixels de trajet en " + timeMillisToTravel + " millisecondes ou " + priceToTravel + " rb.")
                                         .setImage(Map.drawPath(path), "path.png")
                                         .setColor(Color.GREEN))
@@ -281,34 +280,92 @@ public class  Travel extends CommandInServer {
                 });
             });
             Main.getButtonsManager().addButton(id2, messageComponentCreateEvent -> {
-                if (args[1].equals("coos")) {
-                    // on regarde si les arguments sont bien présents
-                    if (args.length < 4) {
-                        // si non on envoie un message d'erreur car il n'a pas donné les coordonnées
-                        sendArgs(messageCreateEvent, p);
-                        return;
-                    }
-                    // on tente de récupérer les coordonnées
-                    int x2, y2;
-                    // d'abord les coordonnées x
-                    try {
-                        x2 = Integer.parseInt(args[2]);
-                    } catch (NumberFormatException e) {
-                        // si il y a une erreur on envoie un message d'erreur
-                        sendNumberEx(messageCreateEvent, p, 2);
-                        return;
-                    }
-                    // puis les coordonnées y
-                    try {
-                        y2 = Integer.parseInt(args[3]);
-                    } catch (NumberFormatException e) {
-                        // si il y a une erreur on envoie un message d'erreur
-                        sendNumberEx(messageCreateEvent, p, 3);
-                        return;
-                    }
-                }
-            });
+                // on récupère les coordonnées où le joueur souhaite aller
+                TextChannel tc = messageCreateEvent.getMessage().getChannel();
+                long userId = messageCreateEvent.getMessage().getAuthor().getId();
+                messageComponentCreateEvent.getMessageComponentInteraction().createImmediateResponder().setContent("Entrez les coordonnées de la destination :").respond();
+                Main.getMessagesManager().addListener(tc, userId, (messageCreateEvent1) -> {
+                    // on récupère le message
+                    String message = messageCreateEvent1.getMessage().getContent();
 
+                    // les coordonnées sont séparées par un espace
+                    String[] coords = message.split(" ");
+                    if (coords.length != 2) {
+                        // on envoie un message d'erreur
+                        throw new IllegalStateException("Vous devez entrer les coordonnées de la destination séparées par un espace.");
+                    }
+
+                    // on vérifie que les coordonnées sont bien des nombres
+                    if (isNotNumeric(coords[0]) || isNotNumeric(coords[1])) {
+                        // on envoie un message d'erreur
+                        throw new IllegalStateException("Les coordonnées doivent être des nombres.");
+                    }
+
+                    // on récupère les coordonnées
+                    int xDest = Integer.parseInt(coords[0]);
+                    int yDest = Integer.parseInt(coords[1]);
+
+                    // on vérifie les bornes
+                    if (xDest < 0 || xDest >= Map.MAP_WIDTH || yDest < 0 || yDest >= Map.MAP_HEIGHT) {
+                        // on envoie un message d'erreur
+                        throw new IllegalStateException("Les coordonnées doivent être comprises entre 0 et " + (Map.MAP_WIDTH - 1) + " et " + (Map.MAP_HEIGHT - 1) + ".");
+                    }
+
+                    messageCreateEvent1.getMessage().reply("Calcul du trajet en cours ....");
+                    ArrayList<Pixel> path = Map.findPath(Map.getNode(x, y, new ArrayList<>()), Map.getNode(xDest, yDest, new ArrayList<>()), messageCreateEvent.getChannel());
+                    StringBuilder sb = new StringBuilder();
+                    for (Pixel pixel : path) {
+                        sb.append(pixel);
+                    }
+                    messageCreateEvent.getMessage().reply(sb.toString());
+                    MessageBuilder messageBuilder3 = new MessageBuilder();
+                    messageBuilder3.addAttachment(Map.drawPath(path), "path.png");
+                    messageBuilder3.send(messageCreateEvent.getChannel());
+                    long timeMillisToTravel = path.size() * 10000L;
+                    double priceToTravel = path.size() * 0.5;
+                    // on indique le temps de trajet ou le prix que cela peut lui couter en fonction du nombre de pixels de trajet
+                    messageCreateEvent.getMessage().reply("Vous allez en [" + x + ":" + y + "] en " + timeMillisToTravel + " millisecondes ou " + priceToTravel + " rb.");
+                    long id3 = SaveLocation.generateUniqueID(), id4 = SaveLocation.generateUniqueID();
+                    new MessageBuilder()
+                            .setEmbed(new EmbedBuilder()
+                                    .setTitle("Vous allez en [" + x + ":" + y + "]")
+                                    .setDescription("Avec " + path.size() + " pixels de trajet en " + timeMillisToTravel + " millisecondes ou " + priceToTravel + " rb.")
+                                    .setImage(Map.drawPath(path), "path.png")
+                                    .setColor(Color.GREEN))
+                            .addComponents(ActionRow.of(
+                                    Button.success(String.valueOf(id3), "Temps de trajet"),
+                                    Button.success(String.valueOf(id4), "Prix de trajet")))
+                            .send(messageCreateEvent.getChannel());
+                    int state = p.state;
+                    Main.getButtonsManager().addButton(id3, (messageButtonEvent) -> {
+                        verifButton(p, state, messageButtonEvent);
+
+                        // on ajoute le chemin au joueur avec pour type "default_time"
+                        p.setPath(path, "default_time");
+
+                        // on envoie le message de confirmation
+                        messageButtonEvent.getMessageComponentInteraction().createImmediateResponder().setContent("Vous avez commencé votre trajet pour aller en [" + x + ":" + y + "] en " + timeMillisToTravel / 1000 + " secondes.").respond();
+                    });
+                    Main.getButtonsManager().addButton(id4, (messageButtonEvent) -> {
+                        verifButton(p, state, messageButtonEvent);
+
+                        double bal = p.getBal();
+                        if (bal < priceToTravel) {
+                            throw new IllegalStateException("Vous n'avez pas assez de rb pour ce trajet");
+                        }
+                        p.setBal(bal - priceToTravel);
+
+                        // il a payé donc on téléporte le joueur
+                        p.set("place_DIBIMAP_id", String.valueOf(id2));
+                        p.set("place_DIBIMAP_x", String.valueOf(x));
+                        p.set("place_DIBIMAP_y", String.valueOf(y));
+
+                        // on dit au joueur qu'il est téléporté
+                        messageButtonEvent.getMessageComponentInteraction().createImmediateResponder().setContent("Vous avez été téléporté en [" + x + ":" + y + "] car vous avez payé " + priceToTravel + " rb.").respond();
+                    });
+
+                });
+            });
 
 
         } else if (placeType.equals("place")) {
