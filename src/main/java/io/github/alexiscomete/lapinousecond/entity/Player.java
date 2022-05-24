@@ -5,7 +5,6 @@ import io.github.alexiscomete.lapinousecond.Main;
 import io.github.alexiscomete.lapinousecond.resources.Resource;
 import io.github.alexiscomete.lapinousecond.resources.ResourceManager;
 import io.github.alexiscomete.lapinousecond.roles.Role;
-import io.github.alexiscomete.lapinousecond.roles.RolesEnum;
 import io.github.alexiscomete.lapinousecond.save.CacheGetSet;
 import io.github.alexiscomete.lapinousecond.save.SaveManager;
 import io.github.alexiscomete.lapinousecond.save.Tables;

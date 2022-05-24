@@ -38,7 +38,7 @@ public class PlaceForTest extends Place {
     }
 
     public Optional<Integer> getX() {
-        return Optional.ofNullable(x);
+        return Optional.of(x);
     }
 
     public void setX(Integer x) {
@@ -46,7 +46,7 @@ public class PlaceForTest extends Place {
     }
 
     public Optional<Integer> getY() {
-        return Optional.ofNullable(y);
+        return Optional.of(y);
     }
 
     public void setY(Integer y) {

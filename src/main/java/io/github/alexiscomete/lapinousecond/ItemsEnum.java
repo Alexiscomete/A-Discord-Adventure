@@ -50,8 +50,8 @@ public enum ItemsEnum {
         }
     }, "ROB");
 
-    public GetItem getItem;
-    public String jname;
+    public final GetItem getItem;
+    public final String jname;
 
     ItemsEnum(GetItem getItem, String str) {
         this.getItem = getItem;
