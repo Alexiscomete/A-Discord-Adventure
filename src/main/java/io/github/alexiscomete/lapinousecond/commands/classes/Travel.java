@@ -188,32 +188,31 @@ public class Travel extends CommandInServer {
             int y = Integer.parseInt(p.getString("place_DIBIMAP_y"));
             // on ne récupère pas le lieu, car on ne connait pas le lieu
             // on sépare le cas où le joueur veut aller dans un lieu et celui où il veut aller sur des coos
-            String type = "coos";
 
-            Consumer<MessageComponentCreateEvent> c1 = messageComponentCreateEvent -> {
+            // création du menu
+            extracted("coos", messageComponentCreateEvent1 -> {
                 // on récupère le lieu en demandant à l'utilisateur de le rentrer
-                TextChannel tc = messageCreateEvent.getMessage().getChannel();
-                long userId = messageCreateEvent.getMessage().getAuthor().getId();
-                messageComponentCreateEvent.getMessageComponentInteraction().createImmediateResponder().setContent("Entrez le nom du lieu :").respond();
-                Main.getMessagesManager().addListener(tc, userId, (messageCreateEvent1) -> {
+                TextChannel tc1 = messageCreateEvent.getMessage().getChannel();
+                long userId1 = messageCreateEvent.getMessage().getAuthor().getId();
+                messageComponentCreateEvent1.getMessageComponentInteraction().createImmediateResponder().setContent("Entrez le nom du lieu :").respond();
+                Main.getMessagesManager().addListener(tc1, userId1, (messageCreateEvent11) -> {
                     // on récupère le lieu
-                    String place = messageCreateEvent1.getMessage().getContent();
+                    String place = messageCreateEvent11.getMessage().getContent();
                     // on récupère le lieu
                     try {
                         Place placeO = Main.getSaveManager().places.get(Long.parseLong(place));
                         if (placeO == null) {
                             throw new IllegalArgumentException("Lieu introuvable");
                         }
-                        messageCreateEvent1.getMessage().reply("Calcul du trajet en cours ....");
-                        ArrayList<Pixel> path = Map.findPath(Map.getNode(x, y, new ArrayList<>()), Map.getNode(Integer.parseInt(placeO.getString("x")), Integer.parseInt(placeO.getString("y")), new ArrayList<>()), messageCreateEvent.getChannel());
-                        askHow2(messageCreateEvent, p, path, placeO);
+                        messageCreateEvent11.getMessage().reply("Calcul du trajet en cours ....");
+                        ArrayList<Pixel> path1 = Map.findPath(Map.getNode(x, y, new ArrayList<>()), Map.getNode(Integer.parseInt(placeO.getString("x")), Integer.parseInt(placeO.getString("y")), new ArrayList<>()), messageCreateEvent.getChannel());
+                        askHow2(messageCreateEvent, p, path1, placeO);
                     } catch (NumberFormatException e) {
                         // on envoie un message d'erreur
-                        sendNumberEx(messageCreateEvent1, p, -1);
+                        sendNumberEx(messageCreateEvent11, p, -1);
                     }
                 });
-            };
-            Consumer<MessageComponentCreateEvent> c2 = messageComponentCreateEvent -> {
+            }, messageComponentCreateEvent -> {
                 // on récupère les coordonnées où le joueur souhaite aller
                 TextChannel tc = messageCreateEvent.getMessage().getChannel();
                 long userId = messageCreateEvent.getMessage().getAuthor().getId();
@@ -227,10 +226,7 @@ public class Travel extends CommandInServer {
                     ArrayList<Pixel> path = Map.findPath(Map.getNode(x, y, new ArrayList<>()), Map.getNode(xDest, yDest, new ArrayList<>()), messageCreateEvent.getChannel());
                     askHow1(messageCreateEvent1, p, path, xDest, yDest);
                 });
-            };
-
-            // création du menu
-            extracted(type, c1, c2);
+            });
 
 
         } else if (placeType.equals("place")) {
@@ -238,31 +234,32 @@ public class Travel extends CommandInServer {
             String place0 = p.getString("place_DIBIMAP_place");
             // on récupère le lieu dans la base de données
             Place place1 = Main.getSaveManager().places.get(Long.parseLong(place0));
-            String type = "city";
-            Consumer<MessageComponentCreateEvent> c1 = (messageComponentCreateEvent) -> {
+
+            // on sépare le cas où le joueur veut aller dans un lieu et celui où il veut aller sur des coos
+            // création du menu
+            extracted("city", (messageComponentCreateEvent1) -> {
                 // on récupère le lieu en demandant à l'utilisateur de le rentrer
-                TextChannel tc = messageCreateEvent.getMessage().getChannel();
-                long userId = messageCreateEvent.getMessage().getAuthor().getId();
-                messageComponentCreateEvent.getMessageComponentInteraction().createImmediateResponder().setContent("Entrez le nom du lieu :").respond();
-                Main.getMessagesManager().addListener(tc, userId, (messageCreateEvent1) -> {
+                TextChannel tc1 = messageCreateEvent.getMessage().getChannel();
+                long userId1 = messageCreateEvent.getMessage().getAuthor().getId();
+                messageComponentCreateEvent1.getMessageComponentInteraction().createImmediateResponder().setContent("Entrez le nom du lieu :").respond();
+                Main.getMessagesManager().addListener(tc1, userId1, (messageCreateEvent11) -> {
                     // on récupère le lieu
-                    String place = messageCreateEvent1.getMessage().getContent();
+                    String place = messageCreateEvent11.getMessage().getContent();
                     // on récupère le lieu
                     try {
                         Place placeO = Main.getSaveManager().places.get(Long.parseLong(place));
                         if (placeO == null) {
                             throw new IllegalArgumentException("Lieu introuvable");
                         }
-                        messageCreateEvent1.getMessage().reply("Calcul du trajet en cours ....");
-                        ArrayList<Pixel> path = Map.findPath(Map.getNode(Integer.parseInt(place1.getString("x")), Integer.parseInt(place1.getString("y")), new ArrayList<>()), Map.getNode(Integer.parseInt(placeO.getString("x")), Integer.parseInt(placeO.getString("y")), new ArrayList<>()), messageCreateEvent.getChannel());
-                        askHow2(messageCreateEvent1, p, path, placeO);
+                        messageCreateEvent11.getMessage().reply("Calcul du trajet en cours ....");
+                        ArrayList<Pixel> path1 = Map.findPath(Map.getNode(Integer.parseInt(place1.getString("x")), Integer.parseInt(place1.getString("y")), new ArrayList<>()), Map.getNode(Integer.parseInt(placeO.getString("x")), Integer.parseInt(placeO.getString("y")), new ArrayList<>()), messageCreateEvent.getChannel());
+                        askHow2(messageCreateEvent11, p, path1, placeO);
                     } catch (NumberFormatException e) {
                         // on envoie un message d'erreur
-                        sendNumberEx(messageCreateEvent1, p, -1);
+                        sendNumberEx(messageCreateEvent11, p, -1);
                     }
                 });
-            };
-            Consumer<MessageComponentCreateEvent> c2 = (messageComponentCreateEvent) -> {
+            }, (messageComponentCreateEvent) -> {
                 // on récupère les coordonnées où le joueur souhaite aller
                 TextChannel tc = messageCreateEvent.getMessage().getChannel();
                 long userId = messageCreateEvent.getMessage().getAuthor().getId();
@@ -276,11 +273,7 @@ public class Travel extends CommandInServer {
                     ArrayList<Pixel> path = Map.findPath(Map.getNode(Integer.parseInt(place1.getString("x")), Integer.parseInt(place1.getString("y")), new ArrayList<>()), Map.getNode(xDest, yDest, new ArrayList<>()), messageCreateEvent.getChannel());
                     askHow1(messageCreateEvent1, p, path, xDest, yDest);
                 });
-            };
-
-            // on sépare le cas où le joueur veut aller dans un lieu et celui où il veut aller sur des coos
-            // création du menu
-            extracted(type, c1, c2);
+            });
         } else {
             // on envoie un message d'erreur
             messageCreateEvent.getMessage().reply("Etrange, ce type de lieu n'existe pas. Je vais donc vous téléporter. Retentez votre commande.");
@@ -292,7 +285,7 @@ public class Travel extends CommandInServer {
         MessageBuilder mb = new MessageBuilder();
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("Voyage dans le monde Dibimap");
-        eb.setDescription("Vous êtes " + (type.equals("city") ?"dans une ville":"en dehors d'une ville") + ", vous pouvez choisir entre aller dans un lieu ou sur des coos.");
+        eb.setDescription("Vous êtes " + (type.equals("city") ? "dans une ville" : "en dehors d'une ville") + ", vous pouvez choisir entre aller dans un lieu ou sur des coos.");
         eb.setColor(Color.BLUE);
         mb.append(eb);
 
@@ -300,10 +293,7 @@ public class Travel extends CommandInServer {
         long id2 = SaveLocation.generateUniqueID();
 
         // ajout des choix
-        mb.addComponents(ActionRow.of(
-                Button.success(String.valueOf(id1), "Aller dans un lieu"),
-                Button.success(String.valueOf(id2), "Aller sur des coos")
-        ));
+        mb.addComponents(ActionRow.of(Button.success(String.valueOf(id1), "Aller dans un lieu"), Button.success(String.valueOf(id2), "Aller sur des coos")));
 
         // ajout des actions
         Main.getButtonsManager().addButton(id1, c1);
@@ -371,16 +361,7 @@ public class Travel extends CommandInServer {
         // on indique le temps de trajet ou le prix que cela peut lui couter en fonction du nombre de pixels de trajet
         messageCreateEvent.getMessage().reply("Vous allez en [" + xDest + ":" + yDest + "] en " + timeMillisToTravel + " millisecondes ou " + priceToTravel + " rb.");
         long id3 = SaveLocation.generateUniqueID(), id4 = SaveLocation.generateUniqueID();
-        new MessageBuilder()
-                .setEmbed(new EmbedBuilder()
-                        .setTitle("Vous allez en [" + xDest + ":" + yDest + "]")
-                        .setDescription("Avec " + path.size() + " pixels de trajet en " + timeMillisToTravel + " millisecondes ou " + priceToTravel + " rb.")
-                        .setImage(Map.drawPath(path), "path.png")
-                        .setColor(Color.GREEN))
-                .addComponents(ActionRow.of(
-                        Button.success(String.valueOf(id3), "Temps de trajet"),
-                        Button.success(String.valueOf(id4), "Prix de trajet")))
-                .send(messageCreateEvent.getChannel());
+        new MessageBuilder().setEmbed(new EmbedBuilder().setTitle("Vous allez en [" + xDest + ":" + yDest + "]").setDescription("Avec " + path.size() + " pixels de trajet en " + timeMillisToTravel + " millisecondes ou " + priceToTravel + " rb.").setImage(Map.drawPath(path), "path.png").setColor(Color.GREEN)).addComponents(ActionRow.of(Button.success(String.valueOf(id3), "Temps de trajet"), Button.success(String.valueOf(id4), "Prix de trajet"))).send(messageCreateEvent.getChannel());
         int state = p.state;
         Main.getButtonsManager().addButton(id3, (messageButtonEvent) -> {
             verifButton(p, state, messageButtonEvent);
@@ -417,16 +398,7 @@ public class Travel extends CommandInServer {
         // on indique le temps de trajet ou le prix que cela peut lui couter en fonction du nombre de pixels de trajet
         messageCreateEvent.getMessage().reply("Vous allez à " + placeO.getString("name") + " en " + timeMillisToTravel + " millisecondes ou " + priceToTravel + " rb.");
         long id3 = SaveLocation.generateUniqueID(), id4 = SaveLocation.generateUniqueID();
-        new MessageBuilder()
-                .setEmbed(new EmbedBuilder()
-                        .setTitle("Vous allez à " + placeO.getString("name"))
-                        .setDescription("Avec " + path.size() + " pixels de trajet en " + timeMillisToTravel + " millisecondes ou " + priceToTravel + " rb.")
-                        .setImage(Map.drawPath(path), "path.png")
-                        .setColor(Color.GREEN))
-                .addComponents(ActionRow.of(
-                        Button.success(String.valueOf(id3), "Temps de trajet"),
-                        Button.success(String.valueOf(id4), "Prix de trajet")))
-                .send(messageCreateEvent.getChannel());
+        new MessageBuilder().setEmbed(new EmbedBuilder().setTitle("Vous allez à " + placeO.getString("name")).setDescription("Avec " + path.size() + " pixels de trajet en " + timeMillisToTravel + " millisecondes ou " + priceToTravel + " rb.").setImage(Map.drawPath(path), "path.png").setColor(Color.GREEN)).addComponents(ActionRow.of(Button.success(String.valueOf(id3), "Temps de trajet"), Button.success(String.valueOf(id4), "Prix de trajet"))).send(messageCreateEvent.getChannel());
         int state = p.state;
         Main.getButtonsManager().addButton(id3, (messageButtonEvent) -> {
             verifButton(p, state, messageButtonEvent);
