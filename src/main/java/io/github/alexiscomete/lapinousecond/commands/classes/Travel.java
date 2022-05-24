@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class Travel extends CommandInServer {
@@ -187,26 +188,9 @@ public class Travel extends CommandInServer {
             int y = Integer.parseInt(p.getString("place_DIBIMAP_y"));
             // on ne récupère pas le lieu, car on ne connait pas le lieu
             // on sépare le cas où le joueur veut aller dans un lieu et celui où il veut aller sur des coos
+            String type = "coos";
 
-            // création du menu
-            MessageBuilder mb = new MessageBuilder();
-            EmbedBuilder eb = new EmbedBuilder();
-            eb.setTitle("Voyage dans le monde Dibimap");
-            eb.setDescription("Vous êtes dans le monde Dibimap en dehors d'une ville, vous pouvez choisir entre aller dans un lieu ou sur des coos.");
-            eb.setColor(Color.BLUE);
-            mb.append(eb);
-
-            long id1 = SaveLocation.generateUniqueID();
-            long id2 = SaveLocation.generateUniqueID();
-
-            // ajout des choix
-            mb.addComponents(ActionRow.of(
-                    Button.success(String.valueOf(id1), "Aller dans un lieu"),
-                    Button.success(String.valueOf(id2), "Aller sur des coos")
-            ));
-
-            // ajout des actions
-            Main.getButtonsManager().addButton(id1, messageComponentCreateEvent -> {
+            Consumer<MessageComponentCreateEvent> c1 = messageComponentCreateEvent -> {
                 // on récupère le lieu en demandant à l'utilisateur de le rentrer
                 TextChannel tc = messageCreateEvent.getMessage().getChannel();
                 long userId = messageCreateEvent.getMessage().getAuthor().getId();
@@ -222,14 +206,14 @@ public class Travel extends CommandInServer {
                         }
                         messageCreateEvent1.getMessage().reply("Calcul du trajet en cours ....");
                         ArrayList<Pixel> path = Map.findPath(Map.getNode(x, y, new ArrayList<>()), Map.getNode(Integer.parseInt(placeO.getString("x")), Integer.parseInt(placeO.getString("y")), new ArrayList<>()), messageCreateEvent.getChannel());
-                        askHow2(messageCreateEvent, p, path, placeO, id2);
+                        askHow2(messageCreateEvent, p, path, placeO);
                     } catch (NumberFormatException e) {
                         // on envoie un message d'erreur
                         sendNumberEx(messageCreateEvent1, p, -1);
                     }
                 });
-            });
-            Main.getButtonsManager().addButton(id2, messageComponentCreateEvent -> {
+            };
+            Consumer<MessageComponentCreateEvent> c2 = messageComponentCreateEvent -> {
                 // on récupère les coordonnées où le joueur souhaite aller
                 TextChannel tc = messageCreateEvent.getMessage().getChannel();
                 long userId = messageCreateEvent.getMessage().getAuthor().getId();
@@ -241,9 +225,12 @@ public class Travel extends CommandInServer {
 
                     messageCreateEvent1.getMessage().reply("Calcul du trajet en cours ....");
                     ArrayList<Pixel> path = Map.findPath(Map.getNode(x, y, new ArrayList<>()), Map.getNode(xDest, yDest, new ArrayList<>()), messageCreateEvent.getChannel());
-                    askHow1(messageCreateEvent1, p, path, xDest, yDest, id2);
+                    askHow1(messageCreateEvent1, p, path, xDest, yDest);
                 });
-            });
+            };
+
+            // création du menu
+            extracted(type, c1, c2);
 
 
         } else if (placeType.equals("place")) {
@@ -251,27 +238,8 @@ public class Travel extends CommandInServer {
             String place0 = p.getString("place_DIBIMAP_place");
             // on récupère le lieu dans la base de données
             Place place1 = Main.getSaveManager().places.get(Long.parseLong(place0));
-
-            // on sépare le cas où le joueur veut aller dans un lieu et celui où il veut aller sur des coos
-            // création du menu
-            MessageBuilder mb = new MessageBuilder();
-            EmbedBuilder eb = new EmbedBuilder();
-            eb.setTitle("Voyage dans le monde Dibimap");
-            eb.setDescription("Vous êtes dans une ville du monde Dibimap, vous pouvez choisir entre aller dans un lieu ou sur des coos.");
-            eb.setColor(Color.BLUE);
-            mb.append(eb);
-
-            long id1 = SaveLocation.generateUniqueID();
-            long id2 = SaveLocation.generateUniqueID();
-
-            // ajout des choix
-            mb.addComponents(ActionRow.of(
-                    Button.success(String.valueOf(id1), "Aller dans un lieu"),
-                    Button.success(String.valueOf(id2), "Aller sur des coos")
-            ));
-
-            // ajout des actions
-            Main.getButtonsManager().addButton(id1, messageComponentCreateEvent -> {
+            String type = "city";
+            Consumer<MessageComponentCreateEvent> c1 = (messageComponentCreateEvent) -> {
                 // on récupère le lieu en demandant à l'utilisateur de le rentrer
                 TextChannel tc = messageCreateEvent.getMessage().getChannel();
                 long userId = messageCreateEvent.getMessage().getAuthor().getId();
@@ -287,14 +255,14 @@ public class Travel extends CommandInServer {
                         }
                         messageCreateEvent1.getMessage().reply("Calcul du trajet en cours ....");
                         ArrayList<Pixel> path = Map.findPath(Map.getNode(Integer.parseInt(place1.getString("x")), Integer.parseInt(place1.getString("y")), new ArrayList<>()), Map.getNode(Integer.parseInt(placeO.getString("x")), Integer.parseInt(placeO.getString("y")), new ArrayList<>()), messageCreateEvent.getChannel());
-                        askHow2(messageCreateEvent1, p, path, placeO, id1);
+                        askHow2(messageCreateEvent1, p, path, placeO);
                     } catch (NumberFormatException e) {
                         // on envoie un message d'erreur
                         sendNumberEx(messageCreateEvent1, p, -1);
                     }
                 });
-            });
-            Main.getButtonsManager().addButton(id2, messageComponentCreateEvent -> {
+            };
+            Consumer<MessageComponentCreateEvent> c2 = (messageComponentCreateEvent) -> {
                 // on récupère les coordonnées où le joueur souhaite aller
                 TextChannel tc = messageCreateEvent.getMessage().getChannel();
                 long userId = messageCreateEvent.getMessage().getAuthor().getId();
@@ -306,14 +274,40 @@ public class Travel extends CommandInServer {
 
                     messageCreateEvent1.getMessage().reply("Calcul du trajet en cours ....");
                     ArrayList<Pixel> path = Map.findPath(Map.getNode(Integer.parseInt(place1.getString("x")), Integer.parseInt(place1.getString("y")), new ArrayList<>()), Map.getNode(xDest, yDest, new ArrayList<>()), messageCreateEvent.getChannel());
-                    askHow1(messageCreateEvent1, p, path, xDest, yDest, id2);
+                    askHow1(messageCreateEvent1, p, path, xDest, yDest);
                 });
-            });
+            };
+
+            // on sépare le cas où le joueur veut aller dans un lieu et celui où il veut aller sur des coos
+            // création du menu
+            extracted(type, c1, c2);
         } else {
             // on envoie un message d'erreur
             messageCreateEvent.getMessage().reply("Etrange, ce type de lieu n'existe pas. Je vais donc vous téléporter. Retentez votre commande.");
             setCoos(p);
         }
+    }
+
+    private void extracted(String type, Consumer<MessageComponentCreateEvent> c1, Consumer<MessageComponentCreateEvent> c2) {
+        MessageBuilder mb = new MessageBuilder();
+        EmbedBuilder eb = new EmbedBuilder();
+        eb.setTitle("Voyage dans le monde Dibimap");
+        eb.setDescription("Vous êtes " + (type.equals("city") ?"dans une ville":"en dehors d'une ville") + ", vous pouvez choisir entre aller dans un lieu ou sur des coos.");
+        eb.setColor(Color.BLUE);
+        mb.append(eb);
+
+        long id1 = SaveLocation.generateUniqueID();
+        long id2 = SaveLocation.generateUniqueID();
+
+        // ajout des choix
+        mb.addComponents(ActionRow.of(
+                Button.success(String.valueOf(id1), "Aller dans un lieu"),
+                Button.success(String.valueOf(id2), "Aller sur des coos")
+        ));
+
+        // ajout des actions
+        Main.getButtonsManager().addButton(id1, c1);
+        Main.getButtonsManager().addButton(id2, c2);
     }
 
     private void sendPath(MessageCreateEvent messageCreateEvent, ArrayList<Pixel> path) {
@@ -370,7 +364,7 @@ public class Travel extends CommandInServer {
         return new int[]{xDest, yDest};
     }
 
-    private void askHow1(MessageCreateEvent messageCreateEvent, Player p, ArrayList<Pixel> path, int xDest, int yDest, long id2) {
+    private void askHow1(MessageCreateEvent messageCreateEvent, Player p, ArrayList<Pixel> path, int xDest, int yDest) {
         sendPath(messageCreateEvent, path);
         long timeMillisToTravel = path.size() * 10000L;
         double priceToTravel = path.size() * 0.5;
@@ -407,7 +401,7 @@ public class Travel extends CommandInServer {
             p.setBal(bal - priceToTravel);
 
             // il a payé donc on téléporte le joueur
-            p.set("place_DIBIMAP_id", String.valueOf(id2));
+            p.set("place_DIBIMAP_type", "coos");
             p.set("place_DIBIMAP_x", String.valueOf(xDest));
             p.set("place_DIBIMAP_y", String.valueOf(yDest));
 
@@ -416,7 +410,7 @@ public class Travel extends CommandInServer {
         });
     }
 
-    private void askHow2(MessageCreateEvent messageCreateEvent, Player p, ArrayList<Pixel> path, Place placeO, long id2) {
+    private void askHow2(MessageCreateEvent messageCreateEvent, Player p, ArrayList<Pixel> path, Place placeO) {
         sendPath(messageCreateEvent, path);
         long timeMillisToTravel = path.size() * 10000L;
         double priceToTravel = path.size() * 0.5;
@@ -454,7 +448,7 @@ public class Travel extends CommandInServer {
 
             // il a payé donc on téléporte le joueur
             p.set("place_DIBIMAP_type", "place");
-            p.set("place_DIBIMAP_id", String.valueOf(id2));
+            p.set("place_DIBIMAP_id", String.valueOf(placeO.getId()));
             p.set("place_DIBIMAP_x", placeO.getString("x"));
             p.set("place_DIBIMAP_y", placeO.getString("y"));
 
