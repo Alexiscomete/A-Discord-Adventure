@@ -1,48 +1,31 @@
-package io.github.alexiscomete.lapinousecond.save;
+package io.github.alexiscomete.lapinousecond.save
 
-import io.github.alexiscomete.lapinousecond.Main;
+import io.github.alexiscomete.lapinousecond.Main
+import java.sql.SQLException
+import java.util.function.Function
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.function.Function;
-
-public class CacheCustom<U> {
-
-    private final HashMap<Long, U> hashMap = new HashMap<>();
-    private final Table table;
-    private final Function<Long, U> function;
-
-
-    public CacheCustom(Table table, Function<Long, U> function) {
-        this.table = table;
-        this.function = function;
-    }
-
-    public HashMap<Long, U> getHashMap() {
-        return hashMap;
-    }
-
-    public U get(long l) {
-        U u = hashMap.get(l);
+class CacheCustom<U>(private val table: Table, private val function: Function<Long, U>) {
+    val hashMap = HashMap<Long, U?>()
+    operator fun get(l: Long): U? {
+        var u = hashMap[l]
         if (u == null) {
             try {
-                ResultSet resultSet = Main.getSaveManager().executeQuery("SELECT * FROM " + table.getName() + " WHERE id = " + l, true);
+                val resultSet = Main.getSaveManager().executeQuery("SELECT * FROM " + table.name + " WHERE id = " + l, true)
                 if (resultSet.next()) {
-                    u = function.apply(l);
-                    hashMap.put(l, u);
+                    u = function.apply(l)
+                    hashMap[l] = u
                 }
-                resultSet.close();
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
+                resultSet.close()
+            } catch (throwables: SQLException) {
+                throwables.printStackTrace()
             }
         }
-        return u;
+        return u
     }
 
-    public void add(long id) {
-        HashMap<String, String> hashMap = new HashMap<>();
-        hashMap.put("id", String.valueOf(id));
-        Main.getSaveManager().insert(table.getName(), hashMap);
+    fun add(id: Long) {
+        val hashMap = HashMap<String, String>()
+        hashMap["id"] = id.toString()
+        Main.getSaveManager().insert(table.name, hashMap)
     }
 }

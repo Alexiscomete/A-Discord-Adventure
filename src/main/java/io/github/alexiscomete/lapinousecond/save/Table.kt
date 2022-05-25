@@ -1,38 +1,23 @@
-package io.github.alexiscomete.lapinousecond.save;
+package io.github.alexiscomete.lapinousecond.save
 
-import io.github.alexiscomete.lapinousecond.Main;
+import io.github.alexiscomete.lapinousecond.Main
 
-public class Table {
-    private final String name;
-    private final TableRow[] rows;
+class Table(val name: String, private val rows: Array<TableRow>) {
 
-    public Table(String name, TableRow[] rows) {
-        this.name = name;
-        this.rows = rows;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public TableRow[] getRows() {
-        return rows;
-    }
-
-    public void configTable() {
-        StringBuilder createTable = new StringBuilder("\n(\n");
-        for (int i = 0; i < rows.length; i++) {
-            TableRow row = rows[i];
-            createTable.append(row.getName()).append(" ").append(row.getType());
-            if (i != rows.length - 1) {
-                createTable.append(",");
+    fun configTable() {
+        val createTable = StringBuilder("\n(\n")
+        for (i in rows.indices) {
+            val row = rows[i]
+            createTable.append(row.name).append(" ").append(row.type)
+            if (i != rows.size - 1) {
+                createTable.append(",")
             }
-            createTable.append("\n");
+            createTable.append("\n")
         }
-        createTable.append(")");
-        Main.getSaveManager().execute("CREATE TABLE IF NOT EXISTS " + name + createTable, false);
-        for (TableRow tableRow : rows) {
-            Main.getSaveManager().execute("ALTER TABLE " + name + " ADD COLUMN " + tableRow.getName() + " " + tableRow.getType(), false);
+        createTable.append(")")
+        Main.getSaveManager().execute("CREATE TABLE IF NOT EXISTS $name$createTable", false)
+        for (tableRow in rows) {
+            Main.getSaveManager().execute("ALTER TABLE $name ADD COLUMN ${tableRow.name} ${tableRow.type}", false)
         }
     }
 }

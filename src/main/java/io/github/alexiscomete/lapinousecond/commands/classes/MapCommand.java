@@ -62,7 +62,7 @@ public class MapCommand extends CommandWithAccount {
                     break;
                 case "zoom_p":
                     // check if the player is in the world DIBIMAP
-                    String world = p.getString("current_world");
+                    String world = p.getString("world");
                     if (!world.equals("DIBIMAP")) {
                         messageCreateEvent.getMessage().reply("Vous n'êtes pas dans le monde DIBIMAP"); // TODO: add dibi message
                         return;

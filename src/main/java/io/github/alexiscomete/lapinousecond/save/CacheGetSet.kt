@@ -1,64 +1,48 @@
-package io.github.alexiscomete.lapinousecond.save;
+package io.github.alexiscomete.lapinousecond.save
 
-import io.github.alexiscomete.lapinousecond.Main;
+import io.github.alexiscomete.lapinousecond.Main
+import java.util.*
 
-import java.util.HashMap;
-import java.util.Objects;
-
-public class CacheGetSet {
-    private final HashMap<String, CacheValue> cache = new HashMap<>();
-    protected final long id;
-    private final Table table;
-
-    public CacheGetSet(long id, Table table) {
-        this.id = id;
-        this.table = table;
-    }
-
-    public String getString(String row) {
-        if (cache.containsKey(row)) {
-            return cache.get(row).getString();
+open class CacheGetSet(val id: Long, private val table: Table) {
+    private val cache = HashMap<String, CacheValue>()
+    open fun getString(row: String): String? {
+        return if (cache.containsKey(row)) {
+            cache[row]!!.string
         } else {
-            String str = Main.getSaveManager().getString(table, row, "TEXT", id);
+            var str = Main.getSaveManager().getString(table, row, "TEXT", id)
             if (str == null) {
-                str = "";
+                str = ""
             }
-            cache.put(row, new CacheValue(str));
-            return str;
+            cache[row] = CacheValue(str)
+            str
         }
     }
 
-    public void set(String row, String value) {
+    operator fun set(row: String, value: String?) {
         if (cache.containsKey(row)) {
-            cache.get(row).set(value);
+            cache[row]!!.set(value!!)
         } else {
-            cache.put(row, new CacheValue(value));
+            cache[row] = CacheValue(value!!)
         }
-        Main.getSaveManager().setValue(table, id, row, value, "TEXT");
+        Main.getSaveManager().setValue(table, id, row, value, "TEXT")
     }
 
-    public String[] getArray(String row) {
-        String str = getString(row);
+    fun getArray(row: String): Array<String> {
+        var str = getString(row)
         if (str == null) {
-            str = "";
+            str = ""
         }
-        return str.split(";");
+        return str.split(";".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        CacheGetSet that = (CacheGetSet) o;
-        return id == that.id;
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other == null || javaClass != other.javaClass) return false
+        val that = other as CacheGetSet
+        return id == that.id
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
-
-    public long getId() {
-        return id;
+    override fun hashCode(): Int {
+        return Objects.hash(id)
     }
 }
