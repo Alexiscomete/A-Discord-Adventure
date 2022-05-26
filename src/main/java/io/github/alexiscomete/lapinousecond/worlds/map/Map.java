@@ -131,7 +131,7 @@ public class Map {
             Node current = openList.get(0);
             // je cherche le nœud avec la plus petite heuristique
             for (Node node : openList) {
-                if (node.heuristic < current.heuristic) {
+                if (node.getHeuristic() < current.getHeuristic()) {
                     current = node;
                 }
             }
@@ -151,10 +151,10 @@ public class Map {
                     n.setParent(current);
                 }
                 if (!(
-                        (openList.contains(n) && n.heuristic < current.heuristic)
+                        (openList.contains(n) && n.getHeuristic() < current.getHeuristic())
                         || closedList.contains(n))) {
-                    n.cost = current.cost + 1;
-                    n.heuristic = n.cost + distance(n, end);
+                    n.setCost(current.getCost() + 1);
+                    n.setHeuristic(n.getCost() + distance(n, end));
                     n.setParent(current);
                     if (!openList.contains(n)) {
                         openList.add(n);
