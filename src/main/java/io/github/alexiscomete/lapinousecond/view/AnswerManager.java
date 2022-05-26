@@ -22,7 +22,7 @@ public class AnswerManager {
     }
 
     public String getAnswer(LangageEnum langageEnum, AnswerEnum answerEnum) {
-        JSONObject object = jsonObject.getJSONObject(answerEnum.getName());
+        JSONObject object = jsonObject.getJSONObject(answerEnum.getValue());
         if (object == null) {
             return langageEnum.getInvalidAnswer();
         }

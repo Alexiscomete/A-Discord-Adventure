@@ -1,7 +1,6 @@
-package io.github.alexiscomete.lapinousecond.view;
+package io.github.alexiscomete.lapinousecond.view
 
-public enum AnswerEnum {
-
+enum class AnswerEnum(val value: String) {
     NAME("name"),
     DESCR("description"),
     PROGRESSION("progression"),
@@ -21,19 +20,8 @@ public enum AnswerEnum {
     ENTREE_BUILD("entree_build"),
     LIST_BUILDINGS("list_buildings");
 
-    private final String name;
-
-    AnswerEnum(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    private static final AnswerManager answerManager = new AnswerManager(AnswerEnum.class.getClassLoader().getResourceAsStream("answers.json"));
-
-    public static AnswerManager getAnswerManager() {
-        return answerManager;
+    companion object {
+        @JvmStatic
+        val answerManager = AnswerManager(AnswerEnum::class.java.classLoader.getResourceAsStream("answers.json"))
     }
 }

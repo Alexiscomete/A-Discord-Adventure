@@ -1,121 +1,41 @@
-package io.github.alexiscomete.lapinousecond.useful;
+package io.github.alexiscomete.lapinousecond.useful
 
-public class ProgressionBar {
+class ProgressionBar(
+    private var indicator: String,
+    var size: Int,
+    private var fill: String,
+    private var fillSize: Int,
+    private var nFill: String,
+    private var nSize: Int,
+    private var max: Double,
+    private var value: Double,
+    numberChars: Int
+) {
+    private var numberChars: Int
 
-    private String indicator;
-    private int size;
-    private String fill;
-    private int fillSize;
-    private String nFill;
-    private int nSize;
-    private double max;
-    private double value;
-    private int numberChars;
-
-    public ProgressionBar(String indicator, int size, String fill, int fillSize, String nFill, int nSize, double max, double value, int numberChars) {
-        this.indicator = indicator;
-        this.size = size;
-        this.fill = fill;
-        this.fillSize = fillSize;
-        this.nFill = nFill;
-        this.nSize = nSize;
-        this.max = max;
-        this.value = value;
-        this.numberChars = numberChars - size;
+    init {
+        this.numberChars = numberChars - size
     }
 
-    public String getBar() {
-        int min = getPartMin();
-        int minChars = min/fillSize;
-        int max = numberChars - min;
-        int maxChars = max / nSize;
-        String r = "`" + before(minChars) + indicator + after(maxChars) + "`";
-        System.out.println(r);
-        return r;
+    val bar: String
+        get() {
+            val min = partMin
+            val minChars = min / fillSize
+            val max = numberChars - min
+            val maxChars = max / nSize
+            val r = "`" + before(minChars) + indicator + after(maxChars) + "`"
+            println(r)
+            return r
+        }
+
+    private fun before(n: Int): String {
+        return fill.repeat(n)
     }
 
-    private String before(int n) {
-        System.out.println(n);
-        return fill.repeat(n);
+    private fun after(n: Int): String {
+        return nFill.repeat(n)
     }
 
-    private String after(int n) {
-        return nFill.repeat(n);
-    }
-
-    private int getPartMin() {
-        return (int) ((value / max) * numberChars);
-    }
-
-    public String getIndicator() {
-        return indicator;
-    }
-
-    public int getSize() {
-        return size;
-    }
-
-    public String getFill() {
-        return fill;
-    }
-
-    public int getFillSize() {
-        return fillSize;
-    }
-
-    public String getnFill() {
-        return nFill;
-    }
-
-    public int getnSize() {
-        return nSize;
-    }
-
-    public double getMax() {
-        return max;
-    }
-
-    public double getValue() {
-        return value;
-    }
-
-    public int getNumberChars() {
-        return numberChars;
-    }
-
-    public void setIndicator(String indicator) {
-        this.indicator = indicator;
-    }
-
-    public void setSize(int size) {
-        this.size = size;
-    }
-
-    public void setFill(String fill) {
-        this.fill = fill;
-    }
-
-    public void setFillSize(int fillSize) {
-        this.fillSize = fillSize;
-    }
-
-    public void setnFill(String nFill) {
-        this.nFill = nFill;
-    }
-
-    public void setnSize(int nSize) {
-        this.nSize = nSize;
-    }
-
-    public void setMax(double max) {
-        this.max = max;
-    }
-
-    public void setValue(double value) {
-        this.value = value;
-    }
-
-    public void setNumberChars(int numberChars) {
-        this.numberChars = numberChars;
-    }
+    private val partMin: Int
+        get() = (value / max * numberChars).toInt()
 }

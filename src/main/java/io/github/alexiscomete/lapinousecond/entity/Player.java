@@ -69,7 +69,7 @@ public class Player extends CacheGetSet implements Owner {
                 itemsList.append(";");
             }
         }
-        saveManager.setValue(Tables.PLAYERS.getTable(), this.id, "items", itemsList.toString());
+        saveManager.setValue(Tables.PLAYERS.getTable(), getId(), "items", itemsList.toString());
     }
 
     public double getBal() {
@@ -78,7 +78,7 @@ public class Player extends CacheGetSet implements Owner {
 
     public void setBal(double bal) {
         this.bal = bal;
-        saveManager.setValue(Tables.PLAYERS.getTable(), id, "bal", String.valueOf(bal));
+        saveManager.setValue(Tables.PLAYERS.getTable(), getId(), "bal", String.valueOf(bal));
     }
 
     public long getServer() {
@@ -87,7 +87,7 @@ public class Player extends CacheGetSet implements Owner {
 
     public void setServer(long server) {
         this.server = server;
-        saveManager.setValue(Tables.PLAYERS.getTable(), id, "serv", String.valueOf(server));
+        saveManager.setValue(Tables.PLAYERS.getTable(), getId(), "serv", String.valueOf(server));
     }
 
     public short getTuto() {
@@ -96,7 +96,7 @@ public class Player extends CacheGetSet implements Owner {
 
     public void setTuto(short tuto) {
         this.tuto = tuto;
-        saveManager.setValue(Tables.PLAYERS.getTable(), id, "tuto", String.valueOf(tuto));
+        saveManager.setValue(Tables.PLAYERS.getTable(), getId(), "tuto", String.valueOf(tuto));
     }
 
     public boolean isVerify() {
@@ -117,22 +117,22 @@ public class Player extends CacheGetSet implements Owner {
 
     public void setVerify(boolean verify) {
         isVerify = verify;
-        saveManager.setValue(Tables.PLAYERS.getTable(), id, "is_verify", SaveManager.toBooleanString(verify));
+        saveManager.setValue(Tables.PLAYERS.getTable(), getId(), "is_verify", SaveManager.toBooleanString(verify));
     }
 
     public void setHasAccount(boolean hasAccount) {
         this.hasAccount = hasAccount;
-        saveManager.setValue(Tables.PLAYERS.getTable(), id, "has_account", SaveManager.toBooleanString(hasAccount));
+        saveManager.setValue(Tables.PLAYERS.getTable(), getId(), "has_account", SaveManager.toBooleanString(hasAccount));
     }
 
     public void setX(int x) {
         this.x = x;
-        saveManager.setValue(Tables.PLAYERS.getTable(), id, "x", String.valueOf(x));
+        saveManager.setValue(Tables.PLAYERS.getTable(), getId(), "x", String.valueOf(x));
     }
 
     public void setY(int y) {
         this.y = y;
-        saveManager.setValue(Tables.PLAYERS.getTable(), id, "y", String.valueOf(y));
+        saveManager.setValue(Tables.PLAYERS.getTable(), getId(), "y", String.valueOf(y));
     }
 
     public Player(long id, double bal, long server, short tuto, boolean isVerify, boolean hasAccount, int x, int y, String roles, String resources) {
@@ -162,7 +162,7 @@ public class Player extends CacheGetSet implements Owner {
     }
 
     public void updateResources() {
-        saveManager.setValue(Tables.PLAYERS.getTable(), id, "ressources", ResourceManager.toString(resourceManagers.values()));
+        saveManager.setValue(Tables.PLAYERS.getTable(), getId(), "ressources", ResourceManager.toString(resourceManagers.values()));
     }
 
     @Override
@@ -172,7 +172,7 @@ public class Player extends CacheGetSet implements Owner {
 
     @Override
     public String getOwnerString() {
-        return String.valueOf(id);
+        return String.valueOf(getId());
     }
 
     public String getAnswer(AnswerEnum answerEnum, boolean maj, Object... format) {
