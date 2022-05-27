@@ -171,10 +171,6 @@ public class Travel extends CommandInServer {
     private void travelWorldDibimap(MessageCreateEvent messageCreateEvent, String[] args, Player p) {
         // on récupère le lieu dans le monde Dibimap
         String placeType = p.getString("place_DIBIMAP_type");
-        if (placeType == null) {
-            placeType = "coos";
-            setCoos(p);
-        }
         // je regarde si les arguments sont bien présents
         if (args.length < 2) {
             // si non on envoie un message d'erreur car il n'a pas donné le type de voyage
@@ -316,9 +312,7 @@ public class Travel extends CommandInServer {
         if (messageComponentInteraction.getUser().getId() != p.getId()) {
             throw new IllegalStateException("Ce bouton n'est pas pour vous");
         }
-        if (messageComponentInteraction.getMessage().isPresent()) {
-            messageComponentInteraction.getMessage().get().delete();
-        }
+        messageComponentInteraction.getMessage().delete();
         if (p.state != state) {
             throw new IllegalStateException("Ce bouton n'est plus valide");
         }

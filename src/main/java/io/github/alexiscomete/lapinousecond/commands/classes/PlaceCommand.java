@@ -328,7 +328,7 @@ public class PlaceCommand extends CommandWithAccount {
         });
         Main.getButtonsManager().addButton(no, messageComponentCreateEvent -> {
             if (messageComponentCreateEvent.getMessageComponentInteraction().getUser().getId() == p.getId()) {
-                messageComponentCreateEvent.getMessageComponentInteraction().getMessage().ifPresent(Message::delete);
+                messageComponentCreateEvent.getMessageComponentInteraction().getMessage().delete();
             }
         });
         MessageBuilder messageBuilder = new MessageBuilder();

@@ -12,8 +12,8 @@ public class ButtonsManager implements MessageComponentCreateListener {
 
     @Override
     public void onComponentCreate(MessageComponentCreateEvent messageComponentCreateEvent) {
-        if (hashMap.containsKey(messageComponentCreateEvent.getMessageComponentInteraction().getMessageId())) {
-            HashMap<String, Consumer<MessageComponentCreateEvent>> h = hashMap.get(messageComponentCreateEvent.getMessageComponentInteraction().getMessageId());
+        if (hashMap.containsKey(messageComponentCreateEvent.getMessageComponentInteraction().getMessage().getId())) {
+            HashMap<String, Consumer<MessageComponentCreateEvent>> h = hashMap.get(messageComponentCreateEvent.getMessageComponentInteraction().getMessage().getId());
             if (h.containsKey(messageComponentCreateEvent.getMessageComponentInteraction().getCustomId())) {
                 try {
                     h.get(messageComponentCreateEvent.getMessageComponentInteraction().getCustomId()).accept(messageComponentCreateEvent);
