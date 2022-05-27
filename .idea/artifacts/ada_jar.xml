@@ -10,8 +10,6 @@
       <element id="file-copy" path="$PROJECT_DIR$/src/main/java/io/github/alexiscomete/lapinousecond/worlds/buildings/buildings_config.json" />
       <element id="file-copy" path="$PROJECT_DIR$/src/main/java/io/github/alexiscomete/lapinousecond/worlds/map/base.png" />
       <element id="library" level="project" name="Maven: org.jetbrains.kotlin:kotlin-stdlib:1.7.0-RC" />
-      <element id="library" level="project" name="Maven: org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.7.0-RC" />
-      <element id="library" level="project" name="Maven: org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.7.0-RC" />
       <element id="library" level="project" name="Maven: org.jetbrains.kotlin:kotlin-stdlib-common:1.7.0-RC" />
     </root>
   </artifact>
