@@ -23,7 +23,7 @@ public class Place extends CacheGetSet implements Owner {
     public Place() {
         super(SaveLocation.generateUniqueID(), Tables.PLACES.getTable());
         HashMap<String, String> h = new HashMap<>();
-        h.put("id", String.valueOf(getID()));
+        h.put("id", String.valueOf(getId()));
         Main.getSaveManager().insert("places", h);
     }
 
@@ -71,10 +71,6 @@ public class Place extends CacheGetSet implements Owner {
         this.y = y;
     }
 
-    public long getID() {
-        return id;
-    }
-
     public long[] getConnections() {
         return connections;
     }
@@ -90,7 +86,7 @@ public class Place extends CacheGetSet implements Owner {
 
     public EmbedBuilder getPlaceEmbed() {
         return new EmbedBuilder()
-                .setAuthor(String.valueOf(id))
+                .setAuthor(String.valueOf(getId()))
                 .setTitle(getString("name"))
                 .setColor(Color.green)
                 .setDescription(getString("descr"))

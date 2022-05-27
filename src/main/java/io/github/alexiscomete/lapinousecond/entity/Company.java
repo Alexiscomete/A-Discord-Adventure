@@ -16,6 +16,6 @@ public class Company extends CacheGetSet implements Owner {
 
     @Override
     public String getOwnerString() {
-        return String.valueOf(id);
+        return String.valueOf(getId());
     }
 }

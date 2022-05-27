@@ -156,7 +156,7 @@ public class Travel extends CommandInServer {
             // on set les valeurs dans la base de données
             p.setServer(nextServer.getId());
             p.setBal(bal - 100);
-            p.set("place_NORMAL", String.valueOf(dest.getID()));
+            p.set("place_NORMAL", String.valueOf(dest.getId()));
 
             // on envoie un message de confirmation
             messageCreateEvent.getMessage().reply("Dans le monde NORMAL le voyage est instantané, au revoir !");

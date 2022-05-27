@@ -5,7 +5,7 @@ import java.util.*
 
 open class CacheGetSet(val id: Long, private val table: Table) {
     private val cache = HashMap<String, CacheValue>()
-    open fun getString(row: String): String? {
+    open fun getString(row: String): String {
         return if (cache.containsKey(row)) {
             cache[row]!!.string
         } else {
@@ -18,21 +18,17 @@ open class CacheGetSet(val id: Long, private val table: Table) {
         }
     }
 
-    operator fun set(row: String, value: String?) {
+    operator fun set(row: String, value: String) {
         if (cache.containsKey(row)) {
-            cache[row]!!.set(value!!)
+            cache[row]!!.set(value)
         } else {
-            cache[row] = CacheValue(value!!)
+            cache[row] = CacheValue(value)
         }
         Main.getSaveManager().setValue(table, id, row, value, "TEXT")
     }
 
     fun getArray(row: String): Array<String> {
-        var str = getString(row)
-        if (str == null) {
-            str = ""
-        }
-        return str.split(";".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+        return getString(row).split(";".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
     }
 
     override fun equals(other: Any?): Boolean {

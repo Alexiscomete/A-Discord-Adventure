@@ -57,9 +57,9 @@ public class Building extends CacheGetSet implements BuildMethods {
     @SafeVarargs
     public Building(Buildings buildings, Owner owner, Place place, AbstractMap.SimpleEntry<String, String>... specialInfos) {
         super(SaveLocation.generateUniqueID(), Tables.BUILDINGS.getTable());
-        Main.getSaveManager().buildings.add(id);
+        Main.getSaveManager().buildings.add(getId());
         String buildingsString = place.getString("buildings");
-        buildingsString += ";" + id;
+        buildingsString += ";" + getId();
         place.set("buildings", buildingsString);
         set("collect_target", String.valueOf(buildings.getBasePrice()));
         set("type", buildings.getName());
@@ -94,7 +94,7 @@ public class Building extends CacheGetSet implements BuildMethods {
         return new EmbedBuilder()
                 .setColor(Color.CYAN)
                 .setTitle(p.getAnswer(AnswerEnum.BUILDING_BA, true))
-                .setDescription("Type : " + getString("type") + "\n ID : " + id)
+                .setDescription("Type : " + getString("type") + "\n ID : " + getId())
                 .addInlineField(p.getAnswer(AnswerEnum.OWNER, true), "Type : " + getString("type") + "\nIdentification : " + getString("owner"))
                 .addInlineField(p.getAnswer(AnswerEnum.PROGRESSION, true), progressionBar.getBar() + "\n" + getString("collect_value") + "/" + getString("collect_target"));
     }

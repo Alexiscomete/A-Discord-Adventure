@@ -154,7 +154,7 @@ public class PlaceCommand extends CommandWithAccount {
                                 throw new IllegalArgumentException("Les coordonnées sont en dehors de la carte");
                             }
 
-                            PlaceZones placeZones = new PlaceZones(placeParent.getID());
+                            PlaceZones placeZones = new PlaceZones(placeParent.getId());
 
                             Zone zone = new Zone(x1, y1, x2, y2);
                             placeZones.addZone(zone);
@@ -167,7 +167,7 @@ public class PlaceCommand extends CommandWithAccount {
                                 throw new IllegalArgumentException("Ce monde ne prend pas en charge les zones");
                             }
 
-                            PlaceZones placeZonesDel = new PlaceZones(placeParentDel.getID());
+                            PlaceZones placeZonesDel = new PlaceZones(placeParentDel.getId());
 
                             ArrayList<SelectMenuOption> options = new ArrayList<>();
                             int i = 0;
@@ -198,7 +198,7 @@ public class PlaceCommand extends CommandWithAccount {
                                 throw new IllegalArgumentException("Ce monde ne prend pas en charge les zones");
                             }
 
-                            PlaceZones placeZonesModify = new PlaceZones(placeParentModify.getID());
+                            PlaceZones placeZonesModify = new PlaceZones(placeParentModify.getId());
 
                             ArrayList<SelectMenuOption> optionsModify = new ArrayList<>();
                             int iModify = 0;
@@ -270,7 +270,7 @@ public class PlaceCommand extends CommandWithAccount {
                 .setAndGet("train", serverBot.getString("welcome"))
                 .setAndGet("descr", serverBot.getString("descr"));
         messageCreateEvent.getMessage().reply(place.getPlaceEmbed());
-        serverBot.set("places", String.valueOf(place.getID()));
+        serverBot.set("places", String.valueOf(place.getId()));
         messageCreateEvent.getMessage().reply("Message de départ du lieu :");
         Main.getMessagesManager().setValueAndRetry(messageCreateEvent.getChannel(), p.getId(), "traout", "Message de sortie mit à jour, configuration terminée. Comment voyager vers d' autres lieux dans ce monde ? Dans ce monde les joueurs dans un serveur peuvent payer pour créer une connection (nom RP à trouver) entre 2 lieux", 1500, serverBot, () -> {
         });
@@ -287,7 +287,7 @@ public class PlaceCommand extends CommandWithAccount {
                 } else {
                     // récupération du lieu parent
                     Place placeParent = getPlaceParent(serverBot);
-                    PlaceZones placeZones = new PlaceZones(placeParent.getID());
+                    PlaceZones placeZones = new PlaceZones(placeParent.getId());
                     if (args.length < 4) {
                         sendArgs(messageCreateEvent, p);
                     }
@@ -315,7 +315,7 @@ public class PlaceCommand extends CommandWithAccount {
                             .setAndGet("x", args[2])
                             .setAndGet("y", args[3]);
                     messageCreateEvent.getMessage().reply(place.getPlaceEmbed());
-                    serverBot.set("places", String.valueOf(place.getID()));
+                    serverBot.set("places", String.valueOf(place.getId()));
                     messageCreateEvent.getMessage().reply("Message de départ du lieu :");
                     Main.getMessagesManager().setValueAndRetry(messageCreateEvent.getChannel(), p.getId(), "traout", "Message de sortie mit à jour. Message d'arrivée du lieu :", 1500, serverBot,
                             () -> Main.getMessagesManager().setValueAndRetry(messageCreateEvent.getChannel(), p.getId(), "train", "Message d'arrivée du lieu mit à jour. Nom du lieu :", 1500, serverBot,
@@ -344,7 +344,7 @@ public class PlaceCommand extends CommandWithAccount {
             return "";
         }
         StringBuilder builder = new StringBuilder()
-                .append(places.get(0).getID());
+                .append(places.get(0).getId());
         for (int i = 1; i < places.size(); i++) {
             builder.append(";")
                     .append(places.get(i));
@@ -360,7 +360,7 @@ public class PlaceCommand extends CommandWithAccount {
 
         for (int i = min; i < max; i++) {
             Place place = places.get(i);
-            embedBuilder.addField(Objects.equals(place.getString("name"), "") ? "Nom invalide" : place.getString("name"), place.getID() + " -> " + place.getString("descr"));
+            embedBuilder.addField(Objects.equals(place.getString("name"), "") ? "Nom invalide" : place.getString("name"), place.getId() + " -> " + place.getString("descr"));
         }
     }
 

@@ -101,7 +101,7 @@ public class Map {
                 }
                 // draw the id
                 try {
-                    g.drawString(String.valueOf(place.getID()), (int) (x + 1.1 * size), (int) (y + 1.1 * size));
+                    g.drawString(String.valueOf(place.getId()), (int) (x + 1.1 * size), (int) (y + 1.1 * size));
                 } catch (Exception ignored) {
 
                 }
