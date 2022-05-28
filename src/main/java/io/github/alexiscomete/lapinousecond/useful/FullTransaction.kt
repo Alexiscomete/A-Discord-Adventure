@@ -1,58 +1,71 @@
-package io.github.alexiscomete.lapinousecond.useful;
+package io.github.alexiscomete.lapinousecond.useful
 
-import io.github.alexiscomete.lapinousecond.Main;
-import io.github.alexiscomete.lapinousecond.entity.Player;
-import io.github.alexiscomete.lapinousecond.view.AnswerEnum;
-import org.javacord.api.entity.channel.TextChannel;
-import org.javacord.api.interaction.MessageComponentInteraction;
+import io.github.alexiscomete.lapinousecond.Main
+import io.github.alexiscomete.lapinousecond.entity.Player
+import io.github.alexiscomete.lapinousecond.view.AnswerEnum
+import org.javacord.api.entity.channel.TextChannel
+import org.javacord.api.event.message.MessageCreateEvent
+import org.javacord.api.interaction.MessageComponentInteraction
+import java.util.function.Consumer
+import java.util.function.Supplier
 
-import java.util.function.Consumer;
-import java.util.function.Supplier;
+class FullTransaction : VerifTransaction {
+    private val max: Supplier<Double>?
 
-public class FullTransaction extends VerifTransaction {
-    private final Supplier<Double> max;
-
-    public FullTransaction(Consumer<Double> addMoney, Consumer<Double> removeMoney, Supplier<Double> getMoney, Player p, Supplier<Double> max) {
-        super(addMoney, removeMoney, getMoney, p);
-        this.max = max;
+    constructor(
+        addMoney: Consumer<Double>,
+        removeMoney: Consumer<Double>,
+        getMoney: Supplier<Double>,
+        p: Player,
+        max: Supplier<Double>
+    ) : super(addMoney, removeMoney, getMoney, p) {
+        this.max = max
     }
 
-    public FullTransaction(Consumer<Double> addMoney, Consumer<Double> removeMoney, Supplier<Double> getMoney, Player p) {
-        super(addMoney, removeMoney, getMoney, p);
-        this.max = null;
+    constructor(
+        addMoney: Consumer<Double>,
+        removeMoney: Consumer<Double>,
+        getMoney: Supplier<Double>,
+        p: Player
+    ) : super(addMoney, removeMoney, getMoney, p) {
+        max = null
     }
 
-    public void askQuantity(Consumer<Double> after, TextChannel textChannel) {
-        textChannel.sendMessage(p.getAnswer(AnswerEnum.ASK_MONTANT, true));
-        addL(textChannel, after);
+    private fun askQuantity(after: Consumer<Double>, textChannel: TextChannel) {
+        textChannel.sendMessage(p.getAnswer(AnswerEnum.ASK_MONTANT, true))
+        addL(textChannel, after)
     }
 
-    public void askQuantity(Consumer<Double> after, MessageComponentInteraction messageComponentInteraction) {
-        messageComponentInteraction.createImmediateResponder().setContent(p.getAnswer(AnswerEnum.ASK_MONTANT, true)).respond();
-        addL(messageComponentInteraction.getChannel().get(), after);
+    private fun askQuantity(after: Consumer<Double>, messageComponentInteraction: MessageComponentInteraction) {
+        messageComponentInteraction.createImmediateResponder().setContent(p.getAnswer(AnswerEnum.ASK_MONTANT, true))
+            .respond()
+        addL(messageComponentInteraction.channel.get(), after)
     }
 
-    private void addL(TextChannel textChannel, Consumer<Double> after) {
-        Main.getMessagesManager().addListener(textChannel, p.getId(), (messageCreateEvent) -> {
+    private fun addL(textChannel: TextChannel, after: Consumer<Double>) {
+        Main.getMessagesManager().addListener(textChannel, p.id) { messageCreateEvent: MessageCreateEvent ->
             try {
-                double d = Double.parseDouble(messageCreateEvent.getMessage().getContent());
+                val d = messageCreateEvent.message.content.toDouble()
                 if (max != null && d > max.get()) {
-                    messageCreateEvent.getMessage().reply(p.getAnswer(AnswerEnum.VALUE_TOO_HIGH, true, max));
-                    addL(textChannel, after);
+                    messageCreateEvent.message.reply(p.getAnswer(AnswerEnum.VALUE_TOO_HIGH, true, max))
+                    addL(textChannel, after)
                 }
-                after.accept(d);
-            } catch (IllegalArgumentException e) {
-                messageCreateEvent.getMessage().reply(p.getAnswer(AnswerEnum.FORM_INVALID, true));
-                addL(textChannel, after);
+                after.accept(d)
+            } catch (e: IllegalArgumentException) {
+                messageCreateEvent.message.reply(p.getAnswer(AnswerEnum.FORM_INVALID, true))
+                addL(textChannel, after)
             }
-        });
+        }
     }
 
-    public void full(TextChannel textChannel) {
-        askQuantity(aDouble -> askVerif(aDouble, textChannel), textChannel);
+    fun full(textChannel: TextChannel) {
+        askQuantity({ aDouble: Double? -> askVerif(aDouble!!, textChannel) }, textChannel)
     }
 
-    public void full(MessageComponentInteraction messageComponentInteraction) {
-        askQuantity(aDouble -> askVerif(aDouble, messageComponentInteraction.getChannel().get()), messageComponentInteraction);
+    fun full(messageComponentInteraction: MessageComponentInteraction) {
+        askQuantity(
+            { aDouble: Double? -> askVerif(aDouble!!, messageComponentInteraction.channel.get()) },
+            messageComponentInteraction
+        )
     }
 }
