@@ -4,11 +4,12 @@ import io.github.alexiscomete.lapinousecond.entity.Player
 import io.github.alexiscomete.lapinousecond.view.AnswerEnum
 import org.javacord.api.entity.channel.TextChannel
 import java.util.function.Consumer
+import java.util.function.Supplier
 
 open class Transaction(
-    private val addMoney: (Double) -> Unit,
-    private val removeMoney: (Double) -> Unit,
-    private val getMoney: () -> Double
+    private val addMoney: Consumer<Double>,
+    private val removeMoney: Consumer<Double>,
+    private val getMoney: Supplier<Double>
 ) {
     fun make(textChannel: TextChannel, quantity: Double, player: Player) {
         make(quantity, player, { content: String? -> textChannel.sendMessage(content) }) { content: String? ->
