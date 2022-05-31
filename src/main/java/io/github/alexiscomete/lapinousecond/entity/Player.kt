@@ -1,216 +1,178 @@
-package io.github.alexiscomete.lapinousecond.entity;
+package io.github.alexiscomete.lapinousecond.entity
 
-import io.github.alexiscomete.lapinousecond.Item;
-import io.github.alexiscomete.lapinousecond.Main;
-import io.github.alexiscomete.lapinousecond.resources.Resource;
-import io.github.alexiscomete.lapinousecond.resources.ResourceManager;
-import io.github.alexiscomete.lapinousecond.roles.Role;
-import io.github.alexiscomete.lapinousecond.save.CacheGetSet;
-import io.github.alexiscomete.lapinousecond.save.SaveManager;
-import io.github.alexiscomete.lapinousecond.save.Tables;
-import io.github.alexiscomete.lapinousecond.view.AnswerEnum;
-import io.github.alexiscomete.lapinousecond.view.LangageEnum;
-import io.github.alexiscomete.lapinousecond.worlds.Place;
-import io.github.alexiscomete.lapinousecond.worlds.ServerBot;
-import io.github.alexiscomete.lapinousecond.worlds.map.Pixel;
+import io.github.alexiscomete.lapinousecond.Item
+import io.github.alexiscomete.lapinousecond.Main
+import io.github.alexiscomete.lapinousecond.resources.Resource
+import io.github.alexiscomete.lapinousecond.resources.ResourceManager
+import io.github.alexiscomete.lapinousecond.roles.Role
+import io.github.alexiscomete.lapinousecond.save.CacheGetSet
+import io.github.alexiscomete.lapinousecond.save.SaveManager
+import io.github.alexiscomete.lapinousecond.save.Tables
+import io.github.alexiscomete.lapinousecond.view.AnswerEnum
+import io.github.alexiscomete.lapinousecond.view.AnswerEnum.Companion.answerManager
+import io.github.alexiscomete.lapinousecond.view.LangageEnum
+import io.github.alexiscomete.lapinousecond.worlds.Place
+import io.github.alexiscomete.lapinousecond.worlds.ServerBot
+import io.github.alexiscomete.lapinousecond.worlds.map.Pixel
+import java.util.*
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Objects;
+class Player : CacheGetSet, Owner {
+    private var bal: Double
+    private var server: Long
+    private var tuto: Short
+    private var isVerify: Boolean
+    private var hasAccount: Boolean
+    var workTime: Long
+        private set
+    val roles: ArrayList<Role>
+    val items = ArrayList<Item>()
+    val resourceManagers: HashMap<Resource, ResourceManager>
+    private val saveManager = Main.getSaveManager()
+    var state = 0
 
-public class Player extends CacheGetSet implements Owner {
-
-    private double bal;
-    private long server;
-    private short tuto;
-    private boolean isVerify;
-    private boolean hasAccount;
-    private int x;
-    private int y;
-    private long workTime;
-    private final ArrayList<Role> roles;
-    private final ArrayList<Item> items = new ArrayList<>();
-    private final HashMap<Resource, ResourceManager> resourceManagers;
-    private final SaveManager saveManager = Main.getSaveManager();
-    public int state = 0;
-
-    public Player(Long id) {
-        super(id, Tables.PLAYERS.getTable());
-        this.bal = Double.parseDouble(getString("bal"));
-        this.server = Long.parseLong(getString("serv"));
-        this.tuto = Short.parseShort(getString("tuto"));
-        this.isVerify = Objects.equals(getString("is_verify"), "1");
-        this.hasAccount = Objects.equals(getString("has_account"), "1");
-        this.x = Integer.parseInt(getString("x"));
-        this.y = Integer.parseInt(getString("y"));
-        this.workTime = 0;
-        this.roles = new ArrayList<>();
-        this.resourceManagers = ResourceManager.stringToArray(getString("ressources"));
+    constructor(id: Long?) : super(id!!, Tables.PLAYERS.table) {
+        bal = getString("bal").toDouble()
+        server = getString("serv").toLong()
+        tuto = getString("tuto").toShort()
+        isVerify = getString("is_verify") == "1"
+        hasAccount = getString("has_account") == "1"
+        workTime = 0
+        roles = ArrayList()
+        resourceManagers = ResourceManager.stringToArray(getString("ressources"))
     }
 
-    public long getWorkTime() {
-        return workTime;
+    fun updateWorkTime() {
+        workTime = System.currentTimeMillis()
     }
 
-    public void updateWorkTime() {
-        this.workTime = System.currentTimeMillis();
-    }
-
-    public ArrayList<Item> getItems() {
-        return items;
-    }
-
-    public void updateItems() {
-        StringBuilder itemsList = new StringBuilder();
-        for (int i = 0; i < items.size(); i++) {
-            Item item = items.get(i);
-            itemsList.append(item.jname);
-            if (i != items.size()-1) {
-                itemsList.append(";");
+    fun updateItems() {
+        val itemsList = StringBuilder()
+        for (i in items.indices) {
+            val item = items[i]
+            itemsList.append(item.jname)
+            if (i != items.size - 1) {
+                itemsList.append(";")
             }
         }
-        saveManager.setValue(Tables.PLAYERS.getTable(), getId(), "items", itemsList.toString());
+        saveManager.setValue(Tables.PLAYERS.table, id, "items", itemsList.toString())
     }
 
-    public double getBal() {
-        return bal;
+    fun getBal(): Double {
+        return bal
     }
 
-    public void setBal(double bal) {
-        this.bal = bal;
-        saveManager.setValue(Tables.PLAYERS.getTable(), getId(), "bal", String.valueOf(bal));
+    fun setBal(bal: Double) {
+        this.bal = bal
+        saveManager.setValue(Tables.PLAYERS.table, id, "bal", bal.toString())
     }
 
-    public long getServer() {
-        return server;
+    fun getServer(): Long {
+        return server
     }
 
-    public void setServer(long server) {
-        this.server = server;
-        saveManager.setValue(Tables.PLAYERS.getTable(), getId(), "serv", String.valueOf(server));
+    fun setServer(server: Long) {
+        this.server = server
+        saveManager.setValue(Tables.PLAYERS.table, id, "serv", server.toString())
     }
 
-    public short getTuto() {
-        return tuto;
+    fun getTuto(): Short {
+        return tuto
     }
 
-    public void setTuto(short tuto) {
-        this.tuto = tuto;
-        saveManager.setValue(Tables.PLAYERS.getTable(), getId(), "tuto", String.valueOf(tuto));
+    fun setTuto(tuto: Short) {
+        this.tuto = tuto
+        saveManager.setValue(Tables.PLAYERS.table, id, "tuto", tuto.toString())
     }
 
-    public boolean isVerify() {
-        return isVerify;
+    fun isVerify(): Boolean {
+        return isVerify
     }
 
-    public boolean hasAccount() {
-        return hasAccount;
+    fun hasAccount(): Boolean {
+        return hasAccount
     }
 
-    public int getX() {
-        return x;
+    fun setVerify(verify: Boolean) {
+        isVerify = verify
+        saveManager.setValue(Tables.PLAYERS.table, id, "is_verify", SaveManager.toBooleanString(verify))
     }
 
-    public int getY() {
-        return y;
+    fun setHasAccount(hasAccount: Boolean) {
+        this.hasAccount = hasAccount
+        saveManager.setValue(Tables.PLAYERS.table, id, "has_account", SaveManager.toBooleanString(hasAccount))
     }
 
-    public void setVerify(boolean verify) {
-        isVerify = verify;
-        saveManager.setValue(Tables.PLAYERS.getTable(), getId(), "is_verify", SaveManager.toBooleanString(verify));
+    constructor(
+        id: Long,
+        bal: Double,
+        server: Long,
+        tuto: Short,
+        isVerify: Boolean,
+        hasAccount: Boolean,
+        roles: String?,
+        resources: String?
+    ) : super(id, Tables.PLAYERS.table) {
+        this.bal = bal
+        this.server = server
+        this.tuto = tuto
+        this.isVerify = isVerify
+        this.hasAccount = hasAccount
+        workTime = 0
+        this.roles = ArrayList()
+        resourceManagers = ResourceManager.stringToArray(resources)
     }
 
-    public void setHasAccount(boolean hasAccount) {
-        this.hasAccount = hasAccount;
-        saveManager.setValue(Tables.PLAYERS.getTable(), getId(), "has_account", SaveManager.toBooleanString(hasAccount));
+    fun addRole(role: Role) {
+        roles.add(role)
     }
 
-    public void setX(int x) {
-        this.x = x;
-        saveManager.setValue(Tables.PLAYERS.getTable(), getId(), "x", String.valueOf(x));
+    fun updateResources() {
+        saveManager.setValue(Tables.PLAYERS.table, id, "ressources", ResourceManager.toString(resourceManagers.values))
     }
 
-    public void setY(int y) {
-        this.y = y;
-        saveManager.setValue(Tables.PLAYERS.getTable(), getId(), "y", String.valueOf(y));
+    override fun getOwnerType(): String {
+        return "player"
     }
 
-    public Player(long id, double bal, long server, short tuto, boolean isVerify, boolean hasAccount, int x, int y, String roles, String resources) {
-        super(id, Tables.PLAYERS.getTable());
-        this.bal = bal;
-        this.server = server;
-        this.tuto = tuto;
-        this.isVerify = isVerify;
-        this.hasAccount = hasAccount;
-        this.x = x;
-        this.y = y;
-        this.workTime = 0;
-        this.roles = new ArrayList<>();
-        this.resourceManagers = ResourceManager.stringToArray(resources);
+    override fun getOwnerString(): String {
+        return id.toString()
     }
 
-    public ArrayList<Role> getRoles() {
-        return roles;
-    }
-
-    public void addRole(Role role) {
-        roles.add(role);
-    }
-
-    public HashMap<Resource, ResourceManager> getResourceManagers() {
-        return resourceManagers;
-    }
-
-    public void updateResources() {
-        saveManager.setValue(Tables.PLAYERS.getTable(), getId(), "ressources", ResourceManager.toString(resourceManagers.values()));
-    }
-
-    @Override
-    public String getOwnerType() {
-        return "player";
-    }
-
-    @Override
-    public String getOwnerString() {
-        return String.valueOf(getId());
-    }
-
-    public String getAnswer(AnswerEnum answerEnum, boolean maj, Object... format) {
-        String langage = getString("langage");
-        LangageEnum langageEnum;
-        if (langage == null || langage.equals("")) {
-            langageEnum = LangageEnum.FRENCH;
+    fun getAnswer(answerEnum: AnswerEnum?, maj: Boolean, vararg format: Any?): String {
+        val langage = getString("langage")
+        val langageEnum: LangageEnum = if (langage == "") {
+            LangageEnum.FRENCH
         } else {
             try {
-                langageEnum = LangageEnum.valueOf(langage.toUpperCase());
-            } catch (IllegalArgumentException argumentException) {
-                langageEnum = LangageEnum.FRENCH;
+                LangageEnum.valueOf(langage.uppercase(Locale.getDefault()))
+            } catch (argumentException: IllegalArgumentException) {
+                LangageEnum.FRENCH
             }
         }
-        String answer = AnswerEnum.getAnswerManager().getAnswer(langageEnum, answerEnum);
-        answer = AnswerEnum.getAnswerManager().formatAnswer(answer, format);
+        var answer = answerManager.getAnswer(langageEnum, answerEnum)
+        answer = answerManager.formatAnswer(answer, *format)
         if (maj) {
-            answer = answer.substring(0, 1).toUpperCase() + answer.substring(1);
+            answer = answer.substring(0, 1).uppercase(Locale.getDefault()) + answer.substring(1)
         }
-        return answer;
+        return answer
     }
 
-    public Place getPlace() {
-        String world = getString("current_world");
-        if (Objects.equals(world, "")) {
-            world = "NORMAL";
-            set("current_world", "NORMAL");
-        }
-        String placeID = getString("place_" + world);
-        if (Objects.equals(placeID, "")) {
-            placeID = new ServerBot(854288660147994634L).getString("places");
-            set("place_NORMAL", new ServerBot(854288660147994634L).getString("places"));
+    val place: Place?
+        get() {
+            var world = getString("current_world")
+            if (world == "") {
+                world = "NORMAL"
+                set("current_world", "NORMAL")
+            }
+            var placeID = getString("place_$world")
+            if (placeID == "") {
+                placeID = ServerBot(854288660147994634L).getString("places")
+                set("place_NORMAL", ServerBot(854288660147994634L).getString("places"))
+            }
+            return saveManager.places[placeID.toLong()]
         }
 
-        return saveManager.places.get(Long.parseLong(placeID));
-    }
-
-    public void setPath(ArrayList<Pixel> path, String type) {
+    fun setPath(path: ArrayList<Pixel?>?, type: String?) {
         // TODO: Gérer les chemins
     }
 }

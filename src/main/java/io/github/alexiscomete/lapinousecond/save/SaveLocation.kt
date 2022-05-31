@@ -1,100 +1,88 @@
-package io.github.alexiscomete.lapinousecond.save;
+package io.github.alexiscomete.lapinousecond.save
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Scanner;
-import java.util.function.Function;
+import java.io.File
+import java.io.FileNotFoundException
+import java.io.FileOutputStream
+import java.io.IOException
+import java.util.*
+import java.util.function.Function
 
 /**
  * @param <E> type of content, think to add a toString() method in E!
- */
-public class SaveLocation<E> {
+</E> */
+class SaveLocation<E>(private val sep: String, path: String, a: Function<String, E>) {
+    var content = ArrayList<E>()
+    private val path: String
+    private val file: File
+    val a: Function<String, E>
 
-    public final static String pathStatic = getPathStatic();
-
-    public static String getPathStatic() {
-        return new File("").getAbsolutePath();
-    }
-
-    final String sep;
-    ArrayList<E> content = new ArrayList<>();
-    final String path;
-    final File file;
-    final Function<String, E> a;
-
-    public SaveLocation(String separator, String path, Function<String, E> a) throws IOException {
-        this.sep = separator;
-        this.path = pathStatic + path;
-        this.file = new File(pathStatic + path);
-        this.a = a;
+    init {
+        this.path = pathStatic + path
+        file = File(pathStatic + path)
+        this.a = a
         if (path.endsWith("/")) {
-            System.out.println(file.mkdirs());
+            println(file.mkdirs())
         } else if (!file.exists()) {
-            System.out.println(file.createNewFile());
+            println(file.createNewFile())
         }
     }
 
-    public void saveAll() {
-        StringBuilder save = new StringBuilder();
-        for (E e : content) {
-            save.append(e.toString());
+    fun saveAll() {
+        val save = StringBuilder()
+        for (e in content) {
+            save.append(e.toString())
         }
-        FileOutputStream fos;
+        val fos: FileOutputStream
         try {
-            fos = new FileOutputStream(file);
-            fos.write(String.valueOf(save).getBytes());
-            fos.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+            fos = FileOutputStream(file)
+            fos.write(save.toString().toByteArray())
+            fos.close()
+        } catch (e: IOException) {
+            e.printStackTrace()
         }
     }
 
-    public void loadAll() {
-        Scanner sc;
+    fun loadAll() {
+        val sc: Scanner
         try {
-            sc = new Scanner(file);
-            StringBuilder answer = new StringBuilder();
+            sc = Scanner(file)
+            val answer = StringBuilder()
             while (sc.hasNextLine()) {
-                answer.append(sc.nextLine());
-                if (sc.hasNextLine()) answer.append("\n");
+                answer.append(sc.nextLine())
+                if (sc.hasNextLine()) answer.append("\n")
             }
-            String[] str = String.valueOf(answer).split(sep);
-            for (String s : str) {
-                content.add(a.apply(s));
+            val str = answer.toString().split(sep.toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+            for (s in str) {
+                content.add(a.apply(s))
             }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+        } catch (e: FileNotFoundException) {
+            e.printStackTrace()
         }
     }
 
-    public ArrayList<E> getContent() {
-        return content;
-    }
+    companion object {
+        val pathStatic: String = File("").absolutePath
 
-    public void setContent(ArrayList<E> content) {
-        this.content = content;
-    }
-
-    public static void create(String path) throws IOException {
-        File file = new File(pathStatic + path);
-        if (path.endsWith("/")) {
-            System.out.println(file.mkdirs());
-        } else if (!file.exists()) {
-            System.out.println(file.createNewFile());
+        @Throws(IOException::class)
+        fun create(path: String) {
+            val file = File(pathStatic + path)
+            if (path.endsWith("/")) {
+                println(file.mkdirs())
+            } else if (!file.exists()) {
+                println(file.createNewFile())
+            }
         }
-    }
 
-    public static synchronized long generateUniqueID() {
-        try {
-            Thread.sleep(2);
-            return System.currentTimeMillis();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-            return System.currentTimeMillis();
+        @JvmStatic
+        @Synchronized
+        fun generateUniqueID(): Long {
+            return try {
+                Thread.sleep(2)
+                System.currentTimeMillis()
+            } catch (e: InterruptedException) {
+                e.printStackTrace()
+                System.currentTimeMillis()
+            }
         }
     }
 }
-
