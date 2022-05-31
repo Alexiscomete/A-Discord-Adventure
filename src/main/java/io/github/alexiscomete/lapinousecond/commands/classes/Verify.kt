@@ -16,15 +16,18 @@ class Verify :
             val userData = getUserData(messageCreateEvent.messageAuthor.id)
             if (userData.hasAccount()) {
                 val player = saveManager.players[messageCreateEvent.messageAuthor.id]
-                player!!.x = userData.x
-                player.y = userData.y
-                player.setHasAccount(userData.hasAccount())
-                player.isVerify = userData.isVerify
-                if (userData.isVerify) {
-                    messageCreateEvent.message.reply("Votre compte a été associé à votre pixel. Vous avez la vérification")
-                } else {
-                    messageCreateEvent.message.reply("Votre compte a été associé à votre pixel. Vous n'avez malheuresement pas la vérification 😕")
+                if (player != null) {
+                    player["x"] = userData.x.toString()
+                    player["x"] = userData.y.toString()
+                    player.setHasAccount(userData.hasAccount())
+                    player["is_verify"] = if (userData.isVerify) "1" else "0"
+                    if (userData.isVerify) {
+                        messageCreateEvent.message.reply("Votre compte a été associé à votre pixel. Vous avez la vérification")
+                    } else {
+                        messageCreateEvent.message.reply("Votre compte a été associé à votre pixel. Vous n'avez malheuresement pas la vérification 😕")
+                    }
                 }
+
             } else {
                 messageCreateEvent.message.reply("Vous n'avez pas encore de compte avec l'ORU")
             }

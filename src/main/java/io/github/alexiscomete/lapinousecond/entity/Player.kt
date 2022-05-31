@@ -20,7 +20,6 @@ class Player : CacheGetSet, Owner {
     private var bal: Double
     private var server: Long
     private var tuto: Short
-    private var isVerify: Boolean
     private var hasAccount: Boolean
     var workTime: Long
         private set
@@ -34,7 +33,6 @@ class Player : CacheGetSet, Owner {
         bal = getString("bal").toDouble()
         server = getString("serv").toLong()
         tuto = getString("tuto").toShort()
-        isVerify = getString("is_verify") == "1"
         hasAccount = getString("has_account") == "1"
         workTime = 0
         roles = ArrayList()
@@ -84,17 +82,8 @@ class Player : CacheGetSet, Owner {
         saveManager.setValue(Tables.PLAYERS.table, id, "tuto", tuto.toString())
     }
 
-    fun isVerify(): Boolean {
-        return isVerify
-    }
-
     fun hasAccount(): Boolean {
         return hasAccount
-    }
-
-    fun setVerify(verify: Boolean) {
-        isVerify = verify
-        saveManager.setValue(Tables.PLAYERS.table, id, "is_verify", SaveManager.toBooleanString(verify))
     }
 
     fun setHasAccount(hasAccount: Boolean) {
@@ -107,7 +96,6 @@ class Player : CacheGetSet, Owner {
         bal: Double,
         server: Long,
         tuto: Short,
-        isVerify: Boolean,
         hasAccount: Boolean,
         roles: String?,
         resources: String?
@@ -115,7 +103,6 @@ class Player : CacheGetSet, Owner {
         this.bal = bal
         this.server = server
         this.tuto = tuto
-        this.isVerify = isVerify
         this.hasAccount = hasAccount
         workTime = 0
         this.roles = ArrayList()
