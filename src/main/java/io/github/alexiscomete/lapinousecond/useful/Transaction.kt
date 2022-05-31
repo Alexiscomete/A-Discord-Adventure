@@ -32,10 +32,10 @@ open class Transaction(
     }
 
     private fun basic(quantity: Double): Boolean {
-        val money = getMoney()
+        val money = getMoney.get()
         return if (money > quantity) {
-            addMoney(quantity)
-            removeMoney(quantity)
+            addMoney.accept(quantity)
+            removeMoney.accept(quantity)
             true
         } else {
             false

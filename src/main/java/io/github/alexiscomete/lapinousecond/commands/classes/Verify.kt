@@ -1,112 +1,84 @@
-package io.github.alexiscomete.lapinousecond.commands.classes;
+package io.github.alexiscomete.lapinousecond.commands.classes
 
-import io.github.alexiscomete.lapinousecond.entity.Player;
-import io.github.alexiscomete.lapinousecond.commands.CommandBot;
-import org.javacord.api.event.message.MessageCreateEvent;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import io.github.alexiscomete.lapinousecond.commands.CommandBot
+import org.javacord.api.event.message.MessageCreateEvent
+import org.json.JSONObject
+import java.io.IOException
+import java.net.HttpURLConnection
+import java.net.URL
+import java.util.*
 
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.Scanner;
-
-public class Verify extends CommandBot {
-
-    public Verify() {
-        super("Permet de vérifier votre compte", "verify", "Permet de vérifier votre compte grâce au bot de l'ORU");
-    }
-
-    @Override
-    public void execute(MessageCreateEvent messageCreateEvent, String content, String[] args) {
-        if (saveManager.players.get(messageCreateEvent.getMessageAuthor().getId()) != null) {
-            messageCreateEvent.getMessage().reply("Votre vérification est en cours");
-            UserData userData = getUserData(messageCreateEvent.getMessageAuthor().getId());
+class Verify :
+    CommandBot("Permet de vérifier votre compte", "verify", "Permet de vérifier votre compte grâce au bot de l'ORU") {
+    override fun execute(messageCreateEvent: MessageCreateEvent, content: String, args: Array<String>) {
+        if (saveManager.players[messageCreateEvent.messageAuthor.id] != null) {
+            messageCreateEvent.message.reply("Votre vérification est en cours")
+            val userData = getUserData(messageCreateEvent.messageAuthor.id)
             if (userData.hasAccount()) {
-                Player player = saveManager.players.get(messageCreateEvent.getMessageAuthor().getId());
-                player.setX(userData.getX());
-                player.setY(userData.getY());
-                player.setHasAccount(userData.hasAccount());
-                player.setVerify(userData.isVerify());
-
-                if (userData.isVerify()) {
-                    messageCreateEvent.getMessage().reply("Votre compte a été associé à votre pixel. Vous avez la vérification");
+                val player = saveManager.players[messageCreateEvent.messageAuthor.id]
+                player!!.x = userData.x
+                player.y = userData.y
+                player.setHasAccount(userData.hasAccount())
+                player.isVerify = userData.isVerify
+                if (userData.isVerify) {
+                    messageCreateEvent.message.reply("Votre compte a été associé à votre pixel. Vous avez la vérification")
                 } else {
-                    messageCreateEvent.getMessage().reply("Votre compte a été associé à votre pixel. Vous n'avez malheuresement pas la vérification 😕");
+                    messageCreateEvent.message.reply("Votre compte a été associé à votre pixel. Vous n'avez malheuresement pas la vérification 😕")
                 }
             } else {
-                messageCreateEvent.getMessage().reply("Vous n'avez pas encore de compte avec l'ORU");
+                messageCreateEvent.message.reply("Vous n'avez pas encore de compte avec l'ORU")
             }
         } else {
-            messageCreateEvent.getMessage().reply("Utilisez -start");
+            messageCreateEvent.message.reply("Utilisez -start")
         }
     }
 
-    public static String getUser(long id) {
-        try {
-            HttpURLConnection connection = (HttpURLConnection) new URL("https://dirtybiology.captaincommand.repl.co/api/?authorization=mXpn9frxWJh0RPjZYSPMilfnK5ooxjhL&request=getInfosByDiscordId&datas=%7B%22discordId%22:%22" + id + "%22%7D").openConnection();
-            connection.setRequestMethod("GET");
-            String response = "";
-            Scanner scanner = new Scanner(connection.getInputStream());
-            if (scanner.hasNextLine()) {
-                response += scanner.nextLine();
+    class UserData(val x: Int, val y: Int, val isVerify: Boolean, private val hasAccount: Boolean) {
+        fun hasAccount(): Boolean {
+            return hasAccount
+        }
+    }
+
+    companion object {
+        private fun getUser(id: Long): String? {
+            try {
+                val connection =
+                    URL("https://dirtybiology.captaincommand.repl.co/api/?authorization=mXpn9frxWJh0RPjZYSPMilfnK5ooxjhL&request=getInfosByDiscordId&datas=%7B%22discordId%22:%22$id%22%7D").openConnection() as HttpURLConnection
+                connection.requestMethod = "GET"
+                var response = ""
+                val scanner = Scanner(connection.inputStream)
+                if (scanner.hasNextLine()) {
+                    response += scanner.nextLine()
+                }
+                scanner.close()
+                return response
+            } catch (e: IOException) {
+                e.printStackTrace()
             }
-            scanner.close();
-            return response;
-        } catch (IOException e) {
-            e.printStackTrace();
+            return null
         }
-        return null;
-    }
 
-    public static UserData getUserData(long id) {
-        String userData = Verify.getUser(id);
-        System.out.println("Data :");
-        System.out.println(userData);
-        if (userData != null) {
-            JSONObject jsonObject = new JSONObject(userData);
-            JSONObject back = jsonObject.getJSONObject("back");
-            if (!back.isEmpty()) {
-                JSONObject member = back.getJSONObject("member");
-                boolean verified = member.getBoolean("verified");
-                if (verified) {
-                    JSONArray jsonArray = member.getJSONArray("coordinatesVerified");
-                    return new UserData(jsonArray.getInt(0), jsonArray.getInt(1), true, true);
-                } else {
-                    JSONArray jsonArray = member.getJSONArray("coordinatesUnverified");
-                    return new UserData(jsonArray.getInt(0), jsonArray.getInt(1), false, true);
+        @JvmStatic
+        fun getUserData(id: Long): UserData {
+            val userData = getUser(id)
+            println("Data :")
+            println(userData)
+            if (userData != null) {
+                val jsonObject = JSONObject(userData)
+                val back = jsonObject.getJSONObject("back")
+                if (!back.isEmpty) {
+                    val member = back.getJSONObject("member")
+                    val verified = member.getBoolean("verified")
+                    return if (verified) {
+                        val jsonArray = member.getJSONArray("coordinatesVerified")
+                        UserData(jsonArray.getInt(0), jsonArray.getInt(1), true, true)
+                    } else {
+                        val jsonArray = member.getJSONArray("coordinatesUnverified")
+                        UserData(jsonArray.getInt(0), jsonArray.getInt(1), false, true)
+                    }
                 }
             }
-        }
-        return new UserData(-1, -1, false, false);
-    }
-
-    public static class UserData {
-        private final int x, y;
-        private final boolean isVerify, hasAccount;
-
-
-        public UserData(int x, int y, boolean isVerify, boolean hasAccount) {
-            this.x = x;
-            this.y = y;
-            this.isVerify = isVerify;
-            this.hasAccount = hasAccount;
-        }
-
-        public boolean isVerify() {
-            return isVerify;
-        }
-
-        public int getX() {
-            return x;
-        }
-
-        public int getY() {
-            return y;
-        }
-
-        public boolean hasAccount() {
-            return hasAccount;
+            return UserData(-1, -1, false, false)
         }
     }
 }
