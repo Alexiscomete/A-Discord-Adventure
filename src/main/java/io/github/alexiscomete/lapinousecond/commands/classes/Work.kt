@@ -1,132 +1,113 @@
-package io.github.alexiscomete.lapinousecond.commands.classes;
+package io.github.alexiscomete.lapinousecond.commands.classes
 
-import io.github.alexiscomete.lapinousecond.entity.Player;
-import io.github.alexiscomete.lapinousecond.resources.ResourceManager;
-import io.github.alexiscomete.lapinousecond.resources.WorkEnum;
-import io.github.alexiscomete.lapinousecond.commands.CommandInServer;
-import io.github.alexiscomete.lapinousecond.roles.Role;
-import io.github.alexiscomete.lapinousecond.roles.RolesEnum;
-import org.javacord.api.entity.message.embed.EmbedBuilder;
-import org.javacord.api.entity.server.Server;
-import org.javacord.api.entity.user.User;
-import org.javacord.api.event.message.MessageCreateEvent;
+import io.github.alexiscomete.lapinousecond.commands.CommandInServer
+import io.github.alexiscomete.lapinousecond.entity.Player
+import io.github.alexiscomete.lapinousecond.resources.ResourceManager
+import io.github.alexiscomete.lapinousecond.resources.WorkEnum
+import io.github.alexiscomete.lapinousecond.roles.Role
+import io.github.alexiscomete.lapinousecond.roles.RolesEnum
+import org.javacord.api.entity.message.embed.EmbedBuilder
+import org.javacord.api.event.message.MessageCreateEvent
+import java.awt.Color
+import java.time.Instant
+import java.util.*
 
-import java.awt.*;
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Optional;
-import java.util.Random;
-
-public class Work extends CommandInServer {
-
-    public Work() {
-        super("Gagnez de l'argent et/ou des ressources", "work", "Utilisable régulièrement pour gagner un peut d'argent ou des ressources, c'est le moyen le plus simple d'en gagner. Les rôles représentent votre implication dans le Dibistan (-role), le work est pour tout le monde", "PLAY");
-    }
-
-    @Override
-    public void executeC(MessageCreateEvent messageCreateEvent, String content, String[] args, Player p) {
-        EmbedBuilder embedBuilder = new EmbedBuilder()
-                .setColor(Color.ORANGE)
-                .setAuthor(messageCreateEvent.getMessageAuthor());
-
-        StringBuilder roles = new StringBuilder();
-
-        Optional<User> optionalUser = messageCreateEvent.getMessageAuthor().asUser();
-        Optional<Server> optionalServer = messageCreateEvent.getServer();
-
-
-        if (optionalUser.isPresent() && optionalServer.isPresent()) {
-            double totalRoles = 0;
-
-            User user = optionalUser.get();
-            Server server = optionalServer.get();
-
-            ArrayList<RolesEnum> rolesArrayList = RolesEnum.getRoles(user, server);
-            for (RolesEnum role : rolesArrayList) {
-                Role find = null;
-                for (Role r : p.getRoles()) {
-                    if (r.getRole().equals(role)) {
-                        find = r;
-                        break;
+class Work : CommandInServer(
+    "Gagnez de l'argent et/ou des ressources",
+    "work",
+    "Utilisable régulièrement pour gagner un peut d'argent ou des ressources, c'est le moyen le plus simple d'en gagner. Les rôles représentent votre implication dans le Dibistan (-role), le work est pour tout le monde",
+    "PLAY"
+) {
+    override fun executeC(messageCreateEvent: MessageCreateEvent, content: String, args: Array<String>, p: Player) {
+        val embedBuilder = EmbedBuilder()
+            .setColor(Color.ORANGE)
+            .setAuthor(messageCreateEvent.messageAuthor)
+        val roles = StringBuilder()
+        val optionalUser = messageCreateEvent.messageAuthor.asUser()
+        val optionalServer = messageCreateEvent.server
+        if (optionalUser.isPresent && optionalServer.isPresent) {
+            var totalRoles = 0.0
+            val user = optionalUser.get()
+            val server = optionalServer.get()
+            val rolesArrayList = RolesEnum.getRoles(user, server)
+            for (role in rolesArrayList) {
+                var find: Role? = null
+                for (r in p.roles) {
+                    if (r.role == role) {
+                        find = r
+                        break
                     }
                 }
                 if (find != null) {
-                    if (find.isReady()) {
-                        roles.append(role.name).append(" : ").append(role.salary).append("\n");
-                        find.setCurrentCooldown(System.currentTimeMillis() / 1000);
-                        totalRoles += role.salary;
+                    if (find.isReady) {
+                        roles.append(role.name).append(" : ").append(role.salary).append("\n")
+                        find.setCurrentCooldown(System.currentTimeMillis() / 1000)
+                        totalRoles += role.salary.toDouble()
                     } else {
-                        roles.append(role.name).append(" : ").append("Cooldown -> <t:").append((int) find.getCurrentCooldown() + role.coolDownSize).append(":R>\n");
+                        roles.append(role.name).append(" : ").append("Cooldown -> <t:")
+                            .append(find.currentCooldown.toInt() + role.coolDownSize).append(":R>\n")
                     }
                 } else {
-                    roles.append(role.name).append(" : ").append(role.salary).append("\n");
-                    totalRoles += role.salary;
-                    Role r = new Role(role);
-                    r.setCurrentCooldown(System.currentTimeMillis() / 1000);
-                    p.addRole(r);
+                    roles.append(role.name).append(" : ").append(role.salary).append("\n")
+                    totalRoles += role.salary.toDouble()
+                    val r = Role(role)
+                    r.setCurrentCooldown(System.currentTimeMillis() / 1000)
+                    p.addRole(r)
                 }
             }
-            p.setBal(p.getBal() + totalRoles);
+            p.setBal(p.getBal() + totalRoles)
         } else {
-            roles.append("Vous n'êtes pas sur un serveur");
+            roles.append("Vous n'êtes pas sur un serveur")
         }
-
-        if (roles.length() > 0) embedBuilder.addField("Roles", roles.toString());
-
-        if (System.currentTimeMillis() - p.getWorkTime() > 200000) {
-
-            WorkEnum[] wo = WorkEnum.values();
-            Random random = new Random();
-
-            int total = 0;
-            for (WorkEnum w :
-                    wo) {
-                total += w.getCoef();
+        if (roles.length > 0) embedBuilder.addField("Roles", roles.toString())
+        if (System.currentTimeMillis() - p.workTime > 200000) {
+            val wo = WorkEnum.values()
+            val random = Random()
+            var total = 0
+            for (w in wo) {
+                total += w.coef
             }
-
-            WorkEnum woAnswer = wo[0];
-            int ran = random.nextInt(total);
-            for (WorkEnum w :
-                    wo) {
-                ran -= w.getCoef();
+            var woAnswer = wo[0]
+            var ran = random.nextInt(total)
+            for (w in wo) {
+                ran -= w.coef
                 if (ran <= 0) {
-                    woAnswer = w;
-                    break;
+                    woAnswer = w
+                    break
                 }
             }
-
-            String[] strings = woAnswer.getAnswer().split(" rc ");
-            int r = new Random().nextInt(woAnswer.getMax() - woAnswer.getMin()) + woAnswer.getMin();
-            String answer;
-            if (strings.length > 1) {
-                answer = strings[0] + " " + r + " " + strings[1];
+            val strings = woAnswer.answer.split(" rc ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+            val r = Random().nextInt(woAnswer.max - woAnswer.min) + woAnswer.min
+            val answer: String
+            answer = if (strings.size > 1) {
+                strings[0] + " " + r + " " + strings[1]
             } else {
-                answer = strings[0];
+                strings[0]
             }
-            embedBuilder.addField("Work", answer);
-
-            if (woAnswer.getResource() == null) {
-                p.setBal(p.getBal() + r);
+            embedBuilder.addField("Work", answer)
+            if (woAnswer.resource == null) {
+                p.setBal(p.getBal() + r)
             } else {
-                ResourceManager resourceManager = p.getResourceManagers().get(woAnswer.getResource());
-                if (resourceManager == null)  {
-                    resourceManager = new ResourceManager(woAnswer.getResource(), r);
-                    p.getResourceManagers().put(woAnswer.getResource(), resourceManager);
+                var resourceManager = p.resourceManagers[woAnswer.resource]
+                if (resourceManager == null) {
+                    resourceManager = ResourceManager(woAnswer.resource, r)
+                    p.resourceManagers[woAnswer.resource] = resourceManager
                 } else {
-                    resourceManager.setQuantity(resourceManager.getQuantity() + r);
+                    resourceManager.quantity = resourceManager.quantity + r
                 }
-                p.updateResources();
+                p.updateResources()
             }
-
-            p.updateWorkTime();
-            if (p.getTuto() == 3) {
-                messageCreateEvent.getMessage().reply("La récompense peut varier d'un work à un autre. Utilisez inv ...");
-                p.setTuto((short) 4);
+            p.updateWorkTime()
+            if (p.getTuto().toInt() == 3) {
+                messageCreateEvent.message.reply("La récompense peut varier d'un work à un autre. Utilisez inv ...")
+                p.setTuto(4.toShort())
             }
         } else {
-            embedBuilder.addField("Work", "Cooldown ! Temps entre 2 work : 200s, temps écoulé : " + (System.currentTimeMillis() - p.getWorkTime()) / 1000 + "s. Temps avant le prochain : <t:" + (Instant.now().getEpochSecond() + 200 - (System.currentTimeMillis() - p.getWorkTime()) / 1000) + ":R>");
+            embedBuilder.addField(
+                "Work",
+                "Cooldown ! Temps entre 2 work : 200s, temps écoulé : " + (System.currentTimeMillis() - p.workTime) / 1000 + "s. Temps avant le prochain : <t:" + (Instant.now().epochSecond + 200 - (System.currentTimeMillis() - p.workTime) / 1000) + ":R>"
+            )
         }
-
-        messageCreateEvent.getMessage().reply(embedBuilder);
+        messageCreateEvent.message.reply(embedBuilder)
     }
 }

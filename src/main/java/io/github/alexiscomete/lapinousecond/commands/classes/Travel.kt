@@ -388,7 +388,7 @@ class Travel : CommandInServer("Vous permet de voyager vers un serveur", "travel
 
             // on envoie le message de confirmation
             messageButtonEvent.messageComponentInteraction.createImmediateResponder()
-                .setContent("Vous avez commencé votre trajet pour aller en [$xDest:$yDest] en $timeMillisToTravel" / 1000 + " secondes.")
+                .setContent("Vous avez commencé votre trajet pour aller en [$xDest:$yDest] en ${timeMillisToTravel / 1000} secondes.")
                 .respond()
         }
         Main.getButtonsManager().addButton(id4) { messageButtonEvent: MessageComponentCreateEvent ->

@@ -1,22 +1,21 @@
-package io.github.alexiscomete.lapinousecond.commands;
+package io.github.alexiscomete.lapinousecond.commands
 
-import io.github.alexiscomete.lapinousecond.entity.Player;
-import org.javacord.api.event.message.MessageCreateEvent;
+import io.github.alexiscomete.lapinousecond.entity.Player
+import org.javacord.api.event.message.MessageCreateEvent
 
-public abstract class CommandWithAccount extends CommandBot {
-    public CommandWithAccount(String description, String name, String totalDescription, String... perms) {
-        super(description, name, totalDescription, perms);
+abstract class CommandWithAccount(
+    description: String,
+    name: String,
+    totalDescription: String,
+    vararg perms: String
+) : CommandBot(
+    description, name, totalDescription, *perms
+) {
+    override fun execute(messageCreateEvent: MessageCreateEvent, content: String, args: Array<String>) {
+        val p = saveManager.players[messageCreateEvent.messageAuthor.id]
+        p?.let { execute(messageCreateEvent, content, args, it) }
+            ?: messageCreateEvent.message.reply("Vous devez d'abord vous créer un compte avec -start")
     }
 
-    @Override
-    public void execute(MessageCreateEvent messageCreateEvent, String content, String[] args) {
-        Player p = saveManager.players.get(messageCreateEvent.getMessageAuthor().getId());
-        if (p == null) {
-            messageCreateEvent.getMessage().reply("Vous devez d'abord vous créer un compte avec -start");
-        } else {
-            execute(messageCreateEvent, content, args, p);
-        }
-    }
-
-    public abstract void execute(MessageCreateEvent messageCreateEvent, String content, String[] args, Player p);
+    abstract fun execute(messageCreateEvent: MessageCreateEvent, content: String, args: Array<String>, p: Player)
 }

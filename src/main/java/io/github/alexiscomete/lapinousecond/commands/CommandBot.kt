@@ -1,99 +1,92 @@
-package io.github.alexiscomete.lapinousecond.commands;
+package io.github.alexiscomete.lapinousecond.commands
 
-import io.github.alexiscomete.lapinousecond.Main;
-import io.github.alexiscomete.lapinousecond.entity.Player;
-import io.github.alexiscomete.lapinousecond.save.SaveManager;
-import io.github.alexiscomete.lapinousecond.UserPerms;
-import io.github.alexiscomete.lapinousecond.view.AnswerEnum;
-import org.javacord.api.entity.channel.ServerTextChannel;
-import org.javacord.api.entity.server.Server;
-import org.javacord.api.event.message.MessageCreateEvent;
+import io.github.alexiscomete.lapinousecond.Main
+import io.github.alexiscomete.lapinousecond.UserPerms
+import io.github.alexiscomete.lapinousecond.entity.Player
+import io.github.alexiscomete.lapinousecond.save.SaveManager
+import io.github.alexiscomete.lapinousecond.view.AnswerEnum
+import org.javacord.api.event.message.MessageCreateEvent
 
-import java.util.Optional;
+abstract class CommandBot(
+    val description: String,
+    val name: String,
+    val totalDescription: String,
+    vararg perms: String
+) {
+    @JvmField
+    protected val saveManager: SaveManager = Main.getSaveManager()
+    val perms: Array<out String>
 
-public abstract class CommandBot {
-
-    protected final SaveManager saveManager = Main.getSaveManager();
-
-    public String getDescription() {
-        return description;
+    init {
+        this.perms = perms
     }
 
-
-    public String getName() {
-        return name;
-    }
-
-    public String getTotalDescription() {
-        return totalDescription;
-    }
-
-    private final String description, name, totalDescription;
-    final String[] perms;
-
-    public CommandBot(String description, String name, String totalDescription, String... perms) {
-        this.description = description;
-        this.name = name;
-        this.totalDescription = totalDescription;
-        this.perms = perms;
-    }
-
-    public void checkAndExecute(MessageCreateEvent messageCreateEvent, String content, String[] args) {
-        if (messageCreateEvent.isServerMessage()) {
-            Optional<Server> serverOptional = messageCreateEvent.getServer();
-            if (serverOptional.isPresent()) {
-                Server s = serverOptional.get();
-                if (s.getId() == 904736069080186981L && (messageCreateEvent.getChannel().getId() != 914268153796771950L)) {
-                    return;
+    fun checkAndExecute(messageCreateEvent: MessageCreateEvent, content: String, args: Array<String>) {
+        if (messageCreateEvent.isServerMessage) {
+            val serverOptional = messageCreateEvent.server
+            if (serverOptional.isPresent) {
+                val s = serverOptional.get()
+                if (s.id == 904736069080186981L && messageCreateEvent.channel.id != 914268153796771950L) {
+                    return
                 } else {
-                    Optional<ServerTextChannel> serverTextChannelOp = messageCreateEvent.getServerTextChannel();
-                    if (serverTextChannelOp.isPresent()) {
-                        ServerTextChannel sC = serverTextChannelOp.get();
-                        String name = sC.getName();
+                    val serverTextChannelOp = messageCreateEvent.serverTextChannel
+                    if (serverTextChannelOp.isPresent) {
+                        val sC = serverTextChannelOp.get()
+                        val name = sC.name
                         // je pense que limiter les salons est important, venture permet d'inclure adventure et aventure
-                        if (! (name.contains("bot") || name.contains("command") || name.contains("spam") || name.contains("🤖") || name.contains("venture"))) {
-                            return;
+                        if (!(name.contains("bot") || name.contains("command") || name.contains("spam") || name.contains(
+                                "🤖"
+                            ) || name.contains("venture"))
+                        ) {
+                            return
                         }
                     }
                 }
             }
         }
         try {
-            if (perms == null || perms.length == 0) {
-                execute(messageCreateEvent, content, args);
-                return;
+            if (perms.isEmpty()) {
+                execute(messageCreateEvent, content, args)
+                return
             }
-            if (UserPerms.check(messageCreateEvent.getMessageAuthor().getId(), perms)) {
-                execute(messageCreateEvent, content, args);
+            if (UserPerms.check(messageCreateEvent.messageAuthor.id, perms)) {
+                execute(messageCreateEvent, content, args)
             } else {
-                messageCreateEvent.getMessage().reply("Vous n'avez pas le droit d'exécuter cette commande");
+                messageCreateEvent.message.reply("Vous n'avez pas le droit d'exécuter cette commande")
             }
-        } catch (Exception e) {
-            messageCreateEvent.getMessage().reply("Erreur : \n```\n" + e.getLocalizedMessage() + "\n```");
-            e.printStackTrace();
+        } catch (e: Exception) {
+            messageCreateEvent.message.reply(
+                """
+    Erreur : 
+    ```
+    ${e.localizedMessage}
+    ```
+    """.trimIndent()
+            )
+            e.printStackTrace()
         }
     }
 
-    public abstract void execute(MessageCreateEvent messageCreateEvent, String content, String[] args);
+    abstract fun execute(messageCreateEvent: MessageCreateEvent, content: String, args: Array<String>)
 
-    public void sendImpossible(MessageCreateEvent messageCreateEvent, Player p) {
-        messageCreateEvent.getMessage().reply(p.getAnswer(AnswerEnum.IMP_SIT, true));
+    fun sendImpossible(messageCreateEvent: MessageCreateEvent, p: Player) {
+        messageCreateEvent.message.reply(p.getAnswer(AnswerEnum.IMP_SIT, true))
     }
 
-    public void sendArgs(MessageCreateEvent messageCreateEvent, Player p) {
-        messageCreateEvent.getMessage().reply(p.getAnswer(AnswerEnum.NO_ENOUGH_ARGS, true));
+    fun sendArgs(messageCreateEvent: MessageCreateEvent, p: Player) {
+        messageCreateEvent.message.reply(p.getAnswer(AnswerEnum.NO_ENOUGH_ARGS, true))
     }
 
-    public void sendNumberEx(MessageCreateEvent messageCreateEvent, Player p, int i) {
-        messageCreateEvent.getMessage().reply(p.getAnswer(AnswerEnum.ILLEGAL_ARGUMENT_NUMBER, true, i));
+    fun sendNumberEx(messageCreateEvent: MessageCreateEvent, p: Player, i: Int) {
+        messageCreateEvent.message.reply(p.getAnswer(AnswerEnum.ILLEGAL_ARGUMENT_NUMBER, true, i))
     }
 
-    public boolean isNotNumeric(String str) {
-        try {
-            Integer.parseInt(str);
-            return false;
-        } catch (NumberFormatException e) {
-            return true;
+    fun isNotNumeric(str: String): Boolean {
+        return try {
+            str.toInt()
+            false
+        } catch (e: NumberFormatException) {
+            true
         }
     }
 }
