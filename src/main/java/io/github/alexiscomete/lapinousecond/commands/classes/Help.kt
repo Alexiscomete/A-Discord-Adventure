@@ -1,115 +1,116 @@
-package io.github.alexiscomete.lapinousecond.commands.classes;
+package io.github.alexiscomete.lapinousecond.commands.classes
 
-import io.github.alexiscomete.lapinousecond.ListenerMain;
-import io.github.alexiscomete.lapinousecond.Main;
-import io.github.alexiscomete.lapinousecond.commands.CommandBot;
-import org.javacord.api.entity.message.MessageBuilder;
-import org.javacord.api.entity.message.component.ActionRow;
-import org.javacord.api.entity.message.component.Button;
-import org.javacord.api.entity.message.embed.EmbedBuilder;
-import org.javacord.api.event.interaction.MessageComponentCreateEvent;
-import org.javacord.api.event.message.MessageCreateEvent;
+import io.github.alexiscomete.lapinousecond.ListenerMain
+import io.github.alexiscomete.lapinousecond.Main
+import io.github.alexiscomete.lapinousecond.commands.CommandBot
+import org.javacord.api.entity.message.MessageBuilder
+import org.javacord.api.entity.message.component.ActionRow
+import org.javacord.api.entity.message.component.Button
+import org.javacord.api.entity.message.embed.EmbedBuilder
+import org.javacord.api.event.interaction.MessageComponentCreateEvent
+import org.javacord.api.event.message.MessageCreateEvent
+import java.awt.Color
+import java.util.concurrent.ExecutionException
+import java.util.function.Consumer
 
-import java.awt.*;
-import java.util.HashMap;
-import java.util.concurrent.ExecutionException;
-import java.util.function.Consumer;
-
-public class Help extends CommandBot {
-
-    public Help() {
-        super("Vous affiche l'aide du bot. (help [commande] pour plus d'informations)", "help", "Vous affiche l'aide du bot. (help [commande] pour plus d'informations)");
-    }
-
-    @Override
-    public void execute(MessageCreateEvent messageCreateEvent, String content, String[] args) {
-        EmbedBuilder builder = new EmbedBuilder();
-        builder.setDescription("Pensez au préfixe !").setTitle("Aide").setColor(Color.blue);
-        if (args.length < 2) {
-            MessageBuilder messageBuilder = new MessageBuilder();
-            addCommands(builder, 0);
-            EventAnswer eventAnswer = new EventAnswer(builder);
-            messageBuilder.addComponents(eventAnswer.getComponents());
-            messageBuilder.setEmbed(builder);
+class Help : CommandBot(
+    "Vous affiche l'aide du bot. (help [commande] pour plus d'informations)",
+    "help",
+    "Vous affiche l'aide du bot. (help [commande] pour plus d'informations)"
+) {
+    override fun execute(messageCreateEvent: MessageCreateEvent, content: String, args: Array<String>) {
+        val builder = EmbedBuilder()
+        builder.setDescription("Pensez au préfixe !").setTitle("Aide").setColor(Color.blue)
+        if (args.size < 2) {
+            val messageBuilder = MessageBuilder()
+            addCommands(builder, 0)
+            val eventAnswer = EventAnswer(builder)
+            messageBuilder.addComponents(eventAnswer.components)
+            messageBuilder.setEmbed(builder)
             try {
-                eventAnswer.register(messageBuilder.send(messageCreateEvent.getChannel()).get().getId());
-            } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
+                eventAnswer.register(messageBuilder.send(messageCreateEvent.channel).get().id)
+            } catch (e: InterruptedException) {
+                e.printStackTrace()
+            } catch (e: ExecutionException) {
+                e.printStackTrace()
             }
         } else {
-            CommandBot commandBot = ListenerMain.commands.get(args[1]);
+            val commandBot = ListenerMain.commands[args[1]]
             if (commandBot == null) {
-                builder.addField("👀", "Commande inconnue");
+                builder.addField("👀", "Commande inconnue")
             } else {
-                builder.addField(commandBot.getName(), commandBot.getTotalDescription());
+                builder.addField(commandBot.name, commandBot.totalDescription)
             }
-            messageCreateEvent.getMessage().reply(builder);
+            messageCreateEvent.message.reply(builder)
         }
     }
 
-    public void addCommands(EmbedBuilder embedBuilder, int min) {
-        CommandBot[] commandBots = ListenerMain.commands.values().toArray(new CommandBot[0]);
-        if (commandBots.length > min) {
-            for (int i = min; i < commandBots.length && i < min + 10; i++) {
-                CommandBot commandBot = commandBots[i];
-                embedBuilder.addField(commandBot.getName(), commandBot.getDescription());
+    fun addCommands(embedBuilder: EmbedBuilder, min: Int) {
+        val commandBots = ListenerMain.commands.values.toTypedArray()
+        if (commandBots.size > min) {
+            var i = min
+            while (i < commandBots.size && i < min + 10) {
+                val commandBot = commandBots[i]
+                embedBuilder.addField(commandBot.name, commandBot.description)
+                i++
             }
         } else {
-            embedBuilder.addField("Erreur", "Impossible de trouver la commande n°" + min);
+            embedBuilder.addField("Erreur", "Impossible de trouver la commande n°$min")
         }
     }
 
-    public class EventAnswer {
-
-        private int level = 0;
-        private final EmbedBuilder builder;
-
-        public void next(MessageComponentCreateEvent messageComponentCreateEvent) {
-            if (level + 10 < ListenerMain.commands.size()) {
-                level += 10;
-                builder.removeAllFields();
-                addCommands(builder, level);
-                messageComponentCreateEvent.getMessageComponentInteraction().createOriginalMessageUpdater().removeAllEmbeds().addEmbed(builder).addComponents(getComponents()).update();
+    inner class EventAnswer(private val builder: EmbedBuilder) {
+        private var level = 0
+        fun next(messageComponentCreateEvent: MessageComponentCreateEvent) {
+            if (level + 10 < ListenerMain.commands.size) {
+                level += 10
+                builder.removeAllFields()
+                addCommands(builder, level)
+                messageComponentCreateEvent.messageComponentInteraction.createOriginalMessageUpdater().removeAllEmbeds()
+                    .addEmbed(builder).addComponents(
+                    components
+                ).update()
             }
         }
 
-        public void last(MessageComponentCreateEvent messageComponentCreateEvent) {
+        fun last(messageComponentCreateEvent: MessageComponentCreateEvent) {
             if (level > 9) {
-                level -= 10;
-                builder.removeAllFields();
-                addCommands(builder, level);
-                messageComponentCreateEvent.getMessageComponentInteraction().createOriginalMessageUpdater().removeAllEmbeds().addEmbed(builder).addComponents(getComponents()).update();
+                level -= 10
+                builder.removeAllFields()
+                addCommands(builder, level)
+                messageComponentCreateEvent.messageComponentInteraction.createOriginalMessageUpdater().removeAllEmbeds()
+                    .addEmbed(builder).addComponents(
+                    components
+                ).update()
             }
         }
 
-        public ActionRow getComponents() {
-            if (level > 0 && level + 10 < ListenerMain.commands.size()) {
-                return ActionRow.of(
-                        Button.success("last_page", "Page précédente"),
-                        Button.success("next_page", "Page suivante")
-                );
+        val components: ActionRow
+            get() = if (level > 0 && level + 10 < ListenerMain.commands.size) {
+                ActionRow.of(
+                    Button.success("last_page", "Page précédente"),
+                    Button.success("next_page", "Page suivante")
+                )
             } else if (level > 0) {
-                return ActionRow.of(
-                        Button.success("last_page", "Page précédente")
-                );
-            } else if (level + 10 < ListenerMain.commands.size()) {
-                return ActionRow.of(
-                        Button.success("next_page", "Page suivante")
-                );
+                ActionRow.of(
+                    Button.success("last_page", "Page précédente")
+                )
+            } else if (level + 10 < ListenerMain.commands.size) {
+                ActionRow.of(
+                    Button.success("next_page", "Page suivante")
+                )
             } else {
-                return ActionRow.of();
+                ActionRow.of()
             }
-        }
 
-        public void register(long id) {
-            HashMap<String, Consumer<MessageComponentCreateEvent>> hashMap = new HashMap<>();
-            hashMap.put("next_page", this::next);
-            hashMap.put("last_page", this::last);
-            Main.getButtonsManager().addMessage(id, hashMap);
-        }
-
-        public EventAnswer(EmbedBuilder embedBuilder) {
-            builder = embedBuilder;
+        fun register(id: Long) {
+            val hashMap = HashMap<String, Consumer<MessageComponentCreateEvent>>()
+            hashMap["next_page"] =
+                Consumer { messageComponentCreateEvent: MessageComponentCreateEvent -> next(messageComponentCreateEvent) }
+            hashMap["last_page"] = Consumer { messageComponentCreateEvent: MessageComponentCreateEvent ->
+                this.last(messageComponentCreateEvent)
+            }
+            Main.getButtonsManager().addMessage(id, hashMap)
         }
     }
 }

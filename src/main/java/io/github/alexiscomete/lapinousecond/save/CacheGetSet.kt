@@ -41,4 +41,8 @@ open class CacheGetSet(val id: Long, private val table: Table) {
     override fun hashCode(): Int {
         return Objects.hash(id)
     }
+
+    operator fun get(s: String): String {
+        return getString(s)
+    }
 }

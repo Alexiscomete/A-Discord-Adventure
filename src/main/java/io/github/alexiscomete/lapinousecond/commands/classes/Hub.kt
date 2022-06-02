@@ -21,7 +21,7 @@ class Hub : CommandBot(
         }
         if (content.endsWith("yes do it")) {
             messageCreateEvent.message.reply("✔ Flavinou vient de vous téléporter au hub <https://discord.gg/q4hVQ6gwyx>")
-            p.server = 854288660147994634L
+            p.setServer(854288660147994634L)
             p["world"] = "NORMAL"
             p["place_NORMAL"] = ServerBot(854288660147994634L).getString("places")
         } else {
