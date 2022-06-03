@@ -1,26 +1,20 @@
-package io.github.alexiscomete.lapinousecond.message_event;
+package io.github.alexiscomete.lapinousecond.message_event
 
-import org.javacord.api.event.message.reaction.ReactionAddEvent;
-import org.javacord.api.listener.message.reaction.ReactionAddListener;
+import org.javacord.api.event.message.reaction.ReactionAddEvent
+import org.javacord.api.listener.message.reaction.ReactionAddListener
+import java.util.function.Function
 
-import java.util.HashMap;
-import java.util.function.Function;
-
-public class ReactionManager implements ReactionAddListener {
-
-    final HashMap<Long, Function<ReactionAddEvent, Boolean>> hashMap = new HashMap<>();
-
-
-    @Override
-    public void onReactionAdd(ReactionAddEvent reactionAddEvent) {
-        if (hashMap.containsKey(reactionAddEvent.getMessageId())) {
-            if (hashMap.get(reactionAddEvent.getMessageId()).apply(reactionAddEvent)) {
-                hashMap.remove(reactionAddEvent.getMessageId());
+class ReactionManager : ReactionAddListener {
+    private val hashMap = HashMap<Long, Function<ReactionAddEvent, Boolean>>()
+    override fun onReactionAdd(reactionAddEvent: ReactionAddEvent) {
+        if (hashMap.containsKey(reactionAddEvent.messageId)) {
+            if (hashMap[reactionAddEvent.messageId]!!.apply(reactionAddEvent)) {
+                hashMap.remove(reactionAddEvent.messageId)
             }
         }
     }
 
-    public void addListener(long id, Function<ReactionAddEvent, Boolean> eventBot) {
-        hashMap.put(id, eventBot);
+    fun addListener(id: Long, eventBot: Function<ReactionAddEvent, Boolean>) {
+        hashMap[id] = eventBot
     }
 }

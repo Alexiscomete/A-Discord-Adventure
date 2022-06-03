@@ -179,12 +179,12 @@ class Travel : CommandInServer("Vous permet de voyager vers un serveur", "travel
                 val userId1 = messageCreateEvent.message.author.id
                 messageComponentCreateEvent1.messageComponentInteraction.createImmediateResponder()
                     .setContent("Entrez le nom du lieu :").respond()
-                Main.getMessagesManager().addListener(tc1, userId1) { messageCreateEvent11: MessageCreateEvent ->
+                Main.messagesManager.addListener(tc1, userId1) { messageCreateEvent11: MessageCreateEvent ->
                     // on récupère le lieu
                     val place = messageCreateEvent11.message.content
                     // on récupère le lieu
                     try {
-                        val placeO = Main.getSaveManager().places[place.toLong()]
+                        val placeO = Main.saveManager.places[place.toLong()]
                             ?: throw IllegalArgumentException("Lieu introuvable")
                         messageCreateEvent11.message.reply("Calcul du trajet en cours ....")
                         val path1 = Map.findPath(
@@ -204,7 +204,7 @@ class Travel : CommandInServer("Vous permet de voyager vers un serveur", "travel
                 val userId = messageCreateEvent.message.author.id
                 messageComponentCreateEvent.messageComponentInteraction.createImmediateResponder()
                     .setContent("Entrez les coordonnées de la destination :").respond()
-                Main.getMessagesManager().addListener(tc, userId) { messageCreateEvent1: MessageCreateEvent ->
+                Main.messagesManager.addListener(tc, userId) { messageCreateEvent1: MessageCreateEvent ->
                     val coords = getCoosDest(messageCreateEvent1)
                     val xDest = coords[0]
                     val yDest = coords[1]
@@ -221,7 +221,7 @@ class Travel : CommandInServer("Vous permet de voyager vers un serveur", "travel
             // on récupère le lieu
             val place0 = p.getString("place_DIBIMAP_place")
             // on récupère le lieu dans la base de données
-            val place1 = Main.getSaveManager().places[place0.toLong()]
+            val place1 = Main.saveManager.places[place0.toLong()]
 
             // on sépare le cas où le joueur veut aller dans un lieu et celui où il veut aller sur des coos
             // création du menu
@@ -231,12 +231,12 @@ class Travel : CommandInServer("Vous permet de voyager vers un serveur", "travel
                 val userId1 = messageCreateEvent.message.author.id
                 messageComponentCreateEvent1.messageComponentInteraction.createImmediateResponder()
                     .setContent("Entrez le nom du lieu :").respond()
-                Main.getMessagesManager().addListener(tc1, userId1) { messageCreateEvent11: MessageCreateEvent ->
+                Main.messagesManager.addListener(tc1, userId1) { messageCreateEvent11: MessageCreateEvent ->
                     // on récupère le lieu
                     val place = messageCreateEvent11.message.content
                     // on récupère le lieu
                     try {
-                        val placeO = Main.getSaveManager().places[place.toLong()]
+                        val placeO = Main.saveManager.places[place.toLong()]
                             ?: throw IllegalArgumentException("Lieu introuvable")
                         messageCreateEvent11.message.reply("Calcul du trajet en cours ....")
                         val path1 = Map.findPath(
@@ -258,7 +258,7 @@ class Travel : CommandInServer("Vous permet de voyager vers un serveur", "travel
                 val userId = messageCreateEvent.message.author.id
                 messageComponentCreateEvent.messageComponentInteraction.createImmediateResponder()
                     .setContent("Entrez les coordonnées de la destination :").respond()
-                Main.getMessagesManager().addListener(tc, userId) { messageCreateEvent1: MessageCreateEvent ->
+                Main.messagesManager.addListener(tc, userId) { messageCreateEvent1: MessageCreateEvent ->
                     val coords = getCoosDest(messageCreateEvent1)
                     val xDest = coords[0]
                     val yDest = coords[1]
@@ -301,8 +301,8 @@ class Travel : CommandInServer("Vous permet de voyager vers un serveur", "travel
         )
 
         // ajout des actions
-        Main.getButtonsManager().addButton(id1, c1)
-        Main.getButtonsManager().addButton(id2, c2)
+        Main.buttonsManager.addButton(id1, c1)
+        Main.buttonsManager.addButton(id2, c2)
     }
 
     private fun sendPath(messageCreateEvent: MessageCreateEvent, path: ArrayList<Pixel?>) {
@@ -380,7 +380,7 @@ class Travel : CommandInServer("Vous permet de voyager vers un serveur", "travel
             )
         ).send(messageCreateEvent.channel)
         val state = p.state
-        Main.getButtonsManager().addButton(id3) { messageButtonEvent: MessageComponentCreateEvent ->
+        Main.buttonsManager.addButton(id3) { messageButtonEvent: MessageComponentCreateEvent ->
             verifButton(p, state, messageButtonEvent)
 
             // on ajoute le chemin au joueur avec pour type "default_time"
@@ -391,7 +391,7 @@ class Travel : CommandInServer("Vous permet de voyager vers un serveur", "travel
                 .setContent("Vous avez commencé votre trajet pour aller en [$xDest:$yDest] en ${timeMillisToTravel / 1000} secondes.")
                 .respond()
         }
-        Main.getButtonsManager().addButton(id4) { messageButtonEvent: MessageComponentCreateEvent ->
+        Main.buttonsManager.addButton(id4) { messageButtonEvent: MessageComponentCreateEvent ->
             verifButton(p, state, messageButtonEvent)
             val bal = p.getBal()
             check(bal >= priceToTravel) { "Vous n'avez pas assez de rb pour ce trajet" }
@@ -430,7 +430,7 @@ class Travel : CommandInServer("Vous permet de voyager vers un serveur", "travel
             )
         ).send(messageCreateEvent.channel)
         val state = p.state
-        Main.getButtonsManager().addButton(id3) { messageButtonEvent: MessageComponentCreateEvent ->
+        Main.buttonsManager.addButton(id3) { messageButtonEvent: MessageComponentCreateEvent ->
             verifButton(p, state, messageButtonEvent)
 
             // on ajoute le chemin au joueur avec pour type "default_time"
@@ -441,7 +441,7 @@ class Travel : CommandInServer("Vous permet de voyager vers un serveur", "travel
                 .setContent("Vous avez commencé votre trajet pour aller à " + placeO.getString("name") + " en " + timeMillisToTravel / 1000 + " secondes.")
                 .respond()
         }
-        Main.getButtonsManager().addButton(id4) { messageButtonEvent: MessageComponentCreateEvent ->
+        Main.buttonsManager.addButton(id4) { messageButtonEvent: MessageComponentCreateEvent ->
             verifButton(p, state, messageButtonEvent)
             val bal = p.getBal()
             check(bal >= priceToTravel) { "Vous n'avez pas assez de rb pour ce trajet" }

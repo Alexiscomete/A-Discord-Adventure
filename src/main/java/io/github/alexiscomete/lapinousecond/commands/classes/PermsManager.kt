@@ -17,7 +17,7 @@ class PermsManager : CommandBot(
     "MANAGE_PERMS"
 ) {
     override fun execute(messageCreateEvent: MessageCreateEvent, content: String, args: Array<String>) {
-        val saveManager = Main.getSaveManager()
+        val saveManager = Main.saveManager
         if (args.size < 4) {
             messageCreateEvent.message.reply("pm [user] [perm name] [true/false]")
             return

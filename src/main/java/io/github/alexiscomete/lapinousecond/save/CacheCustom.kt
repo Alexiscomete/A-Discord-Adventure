@@ -10,7 +10,7 @@ class CacheCustom<U>(private val table: Table, private val function: Function<Lo
         var u = hashMap[l]
         if (u == null) {
             try {
-                val resultSet = Main.getSaveManager().executeQuery("SELECT * FROM " + table.name + " WHERE id = " + l, true)
+                val resultSet = Main.saveManager.executeQuery("SELECT * FROM " + table.name + " WHERE id = " + l, true)
                 if (resultSet.next()) {
                     u = function.apply(l)
                     hashMap[l] = u
@@ -26,6 +26,6 @@ class CacheCustom<U>(private val table: Table, private val function: Function<Lo
     fun add(id: Long) {
         val hashMap = HashMap<String, String>()
         hashMap["id"] = id.toString()
-        Main.getSaveManager().insert(table.name, hashMap)
+        Main.saveManager.insert(table.name, hashMap)
     }
 }

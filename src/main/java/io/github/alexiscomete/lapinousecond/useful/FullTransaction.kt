@@ -43,7 +43,7 @@ class FullTransaction : VerifTransaction {
     }
 
     private fun addL(textChannel: TextChannel, after: Consumer<Double>) {
-        Main.getMessagesManager().addListener(textChannel, p.id) { messageCreateEvent: MessageCreateEvent ->
+        Main.messagesManager.addListener(textChannel, p.id) { messageCreateEvent: MessageCreateEvent ->
             try {
                 val d = messageCreateEvent.message.content.toDouble()
                 if (max != null && d > max.get()) {

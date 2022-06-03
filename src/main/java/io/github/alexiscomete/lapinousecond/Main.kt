@@ -1,73 +1,65 @@
-package io.github.alexiscomete.lapinousecond;
+package io.github.alexiscomete.lapinousecond
 
+import io.github.alexiscomete.lapinousecond.commands.CommandBot
+import io.github.alexiscomete.lapinousecond.commands.classes.*
+import io.github.alexiscomete.lapinousecond.message_event.ButtonsManager
+import io.github.alexiscomete.lapinousecond.message_event.MessagesManager
+import io.github.alexiscomete.lapinousecond.message_event.ReactionManager
+import io.github.alexiscomete.lapinousecond.save.SaveLocation
+import io.github.alexiscomete.lapinousecond.save.SaveManager
+import io.github.alexiscomete.lapinousecond.save.Tables
+import org.javacord.api.DiscordApi
+import org.javacord.api.DiscordApiBuilder
+import java.io.IOException
+import java.util.function.Function
 
-import io.github.alexiscomete.lapinousecond.commands.CommandBot;
-import io.github.alexiscomete.lapinousecond.commands.classes.*;
-import io.github.alexiscomete.lapinousecond.message_event.ButtonsManager;
-import io.github.alexiscomete.lapinousecond.message_event.MessagesManager;
-import io.github.alexiscomete.lapinousecond.message_event.ReactionManager;
-import io.github.alexiscomete.lapinousecond.save.SaveLocation;
-import io.github.alexiscomete.lapinousecond.save.SaveManager;
-import io.github.alexiscomete.lapinousecond.save.Tables;
-import org.javacord.api.DiscordApi;
-import org.javacord.api.DiscordApiBuilder;
-
-import java.io.IOException;
-
-public class Main {
-
+object Main {
     /**
      * Instance de l'API Javacord
      */
-    public static DiscordApi api;
+    var api: DiscordApi? = null
+
     /**
      * Configuration du bot
      */
-    public static SaveLocation<String> config;
+    var config: SaveLocation<String>? = null
 
     /**
      *
      * @return le gestionnaire de la base de données
      */
-    public static SaveManager getSaveManager() {
-        return saveManager;
-    }
+    @JvmStatic
+    var saveManager: SaveManager? = null
+        private set
 
     /**
      *
      * @return le gestionnaire des actions par réaction à un message
      */
-    public static ReactionManager getReactionManager() {
-        return reactionManager;
-    }
+    var reactionManager: ReactionManager? = null
+        private set
 
     /**
      *
      * @return le gestionnaire des actions par utilisation d'un bouton sur un message
      */
-    public static ButtonsManager getButtonsManager() {
-        return buttonsManager;
-    }
+    @JvmStatic
+    var buttonsManager: ButtonsManager? = null
+        private set
 
     /**
      *
      * @return le gestionnaire qui attend qu'une personne précise envoie un message dans un salon donné pour exécuter une action
      */
-    public static MessagesManager getMessagesManager() {
-        return messagesManager;
-    }
-
-    private static SaveManager saveManager;
-    private static ReactionManager reactionManager;
-    private static ButtonsManager buttonsManager;
-    private static MessagesManager messagesManager;
+    var messagesManager: MessagesManager? = null
+        private set
 
     //Ouverture du fichier de configuration
-    static {
+    init {
         try {
-            config = new SaveLocation<>(";", "/config.txt", a -> a);
-        } catch (IOException e) {
-            e.printStackTrace();
+            config = SaveLocation(";", "/config.txt", Function { a: String? -> io.github.alexiscomete.lapinousecond.a })
+        } catch (e: IOException) {
+            e.printStackTrace()
         }
     }
 
@@ -75,49 +67,49 @@ public class Main {
      * Initialisation du bot discord, des gestionnaires et des commandes
      * @param args habituel
      */
-    public static void main(String[] args) {
-        System.out.println("RIP Lapinou premier");
-        config.loadAll();
-        api = new DiscordApiBuilder().setToken(config.getContent().get(0)).login().join();
-        api.updateActivity("Prefix : -");
-        api.addListener(new ListenerMain());
-        reactionManager = new ReactionManager();
-        buttonsManager = new ButtonsManager();
-        messagesManager = new MessagesManager();
-        api.addListener(reactionManager);
-        api.addListener(buttonsManager);
-        api.addListener(messagesManager);
-
-        saveManager = new SaveManager(config.getContent().get(1));
-        Tables.testTables();
+    @JvmStatic
+    fun main(args: Array<String>) {
+        println("RIP Lapinou premier")
+        config!!.loadAll()
+        api = DiscordApiBuilder().setToken(config!!.content[0]).login().join()
+        api.updateActivity("Prefix : -")
+        api.addListener(ListenerMain())
+        reactionManager = ReactionManager()
+        buttonsManager = ButtonsManager()
+        messagesManager = MessagesManager()
+        api.addListener(reactionManager)
+        api.addListener(buttonsManager)
+        api.addListener(messagesManager)
+        saveManager = SaveManager(config!!.content[1])
+        Tables.testTables()
 
         // Ajout des commandes
-        addCommand(new Help());
-        addCommand(new Work());
-        addCommand(new Shop());
-        addCommand(new Give());
-        addCommand(new PlayerShop());
-        addCommand(new InventoryC());
-        addCommand(new ConfigServ());
-        addCommand(new Travel());
-        addCommand(new Hub());
-        addCommand(new StartAdventure());
-        addCommand(new UseCommand());
-        addCommand(new PermsManager());
-        addCommand(new Invite());
-        addCommand(new Verify());
-        addCommand(new PlaceCommand());
-        addCommand(new BuildingCommand());
-        addCommand(new MapCommand());
-        addCommand(new WorldCommand());
-        addCommand(new TestCommand());
+        addCommand(Help())
+        addCommand(Work())
+        addCommand(Shop())
+        addCommand(Give())
+        addCommand(PlayerShop())
+        addCommand(InventoryC())
+        addCommand(ConfigServ())
+        addCommand(Travel())
+        addCommand(Hub())
+        addCommand(StartAdventure())
+        addCommand(UseCommand())
+        addCommand(PermsManager())
+        addCommand(Invite())
+        addCommand(Verify())
+        addCommand(PlaceCommand())
+        addCommand(BuildingCommand())
+        addCommand(MapCommand())
+        addCommand(WorldCommand())
+        addCommand(TestCommand())
     }
 
     /**
      * Permet d'ajouter une commande à la liste pour qu'elle puisse être appelée
      * @param commandBot la commande
      */
-    public static void addCommand(CommandBot commandBot) {
-        ListenerMain.commands.put(commandBot.getName(), commandBot);
+    fun addCommand(commandBot: CommandBot) {
+        ListenerMain.commands[commandBot.name] = commandBot
     }
 }

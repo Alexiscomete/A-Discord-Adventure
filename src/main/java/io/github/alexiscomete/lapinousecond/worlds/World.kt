@@ -1,41 +1,13 @@
-package io.github.alexiscomete.lapinousecond.worlds;
+package io.github.alexiscomete.lapinousecond.worlds
 
-public abstract class World {
-    private int travelPrice;
-    private final String name, nameRP, progName, desc;
+abstract class World(
+    var travelPrice: Int,
+    val name: String,
+    val nameRP: String,
+    val progName: String,
+    val desc: String
+) {
 
-    public World(int travelPrice, String name, String nameRP, String progName, String desc) {
-        this.travelPrice = travelPrice;
-        this.name = name;
-        this.nameRP = nameRP;
-        this.progName = progName;
-        this.desc = desc;
-    }
-
-    public abstract double getPriceForDistance(double distance, boolean place);
-    public abstract double getDistance(Place place1, Place place2);
-
-    public int getTravelPrice() {
-        return travelPrice;
-    }
-
-    public void setTravelPrice(int travelPrice) {
-        this.travelPrice = travelPrice;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getNameRP() {
-        return nameRP;
-    }
-
-    public String getProgName() {
-        return progName;
-    }
-
-    public String getDesc() {
-        return desc;
-    }
+    abstract fun getPriceForDistance(distance: Double, place: Boolean): Double
+    abstract fun getDistance(place1: Place?, place2: Place?): Double
 }

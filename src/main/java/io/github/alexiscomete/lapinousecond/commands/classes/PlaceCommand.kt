@@ -171,7 +171,7 @@ class PlaceCommand : CommandWithAccount(
                                 .setContent("Zone à supprimer")
                                 .addComponents(actionRow)
                                 .send(messageCreateEvent.channel)
-                            Main.getButtonsManager()
+                            Main.buttonsManager
                                 .addButton(id) { messageComponentCreateEvent: MessageComponentCreateEvent ->
                                     val mci = messageComponentCreateEvent.messageComponentInteraction
                                     val selectMenuInteraction = mci.asSelectMenuInteraction()
@@ -200,7 +200,7 @@ class PlaceCommand : CommandWithAccount(
                                 .setContent("Zone à modifier")
                                 .addComponents(actionRowModify)
                                 .send(messageCreateEvent.channel)
-                            Main.getButtonsManager()
+                            Main.buttonsManager
                                 .addButton(idModify) { messageComponentCreateEvent: MessageComponentCreateEvent ->
                                     val mci = messageComponentCreateEvent.messageComponentInteraction
                                     val selectMenuInteraction = mci.asSelectMenuInteraction()
@@ -211,7 +211,7 @@ class PlaceCommand : CommandWithAccount(
                                         messageCreateEvent.message.reply("Zone à modifier : $zoneModify")
                                         // changement des coordonnées de la zone x1, y1, x2, y2
                                         messageCreateEvent.message.reply("Nouvelles coordonnées : ")
-                                        Main.getMessagesManager().addListener(
+                                        Main.messagesManager.addListener(
                                             messageCreateEvent.channel,
                                             messageCreateEvent.messageAuthor.id
                                         ) { messageCreateEvent1: MessageCreateEvent ->
@@ -261,7 +261,7 @@ class PlaceCommand : CommandWithAccount(
         messageCreateEvent.message.reply(place.placeEmbed)
         serverBot["places"] = place.id.toString()
         messageCreateEvent.message.reply("Message de départ du lieu :")
-        Main.getMessagesManager().setValueAndRetry(
+        Main.messagesManager.setValueAndRetry(
             messageCreateEvent.channel,
             p.id,
             "traout",
@@ -275,7 +275,7 @@ class PlaceCommand : CommandWithAccount(
         messageCreateEvent.message.reply("ATTENTION : la création d'un lieu dans ce monde est long\nContinuer ?")
         val yes = generateUniqueID()
         val no = generateUniqueID()
-        Main.getButtonsManager().addButton(yes) { messageComponentCreateEvent: MessageComponentCreateEvent ->
+        Main.buttonsManager.addButton(yes) { messageComponentCreateEvent: MessageComponentCreateEvent ->
             if (messageComponentCreateEvent.messageComponentInteraction.user.id == p.id) {
                 if (serverBot.getArray("places").size == 1 && serverBot.getArray("places")[0] == "") {
                     serverPlace(messageCreateEvent, serverBot, p)
@@ -309,7 +309,7 @@ class PlaceCommand : CommandWithAccount(
                     messageCreateEvent.message.reply(place.placeEmbed)
                     serverBot["places"] = place.id.toString()
                     messageCreateEvent.message.reply("Message de départ du lieu :")
-                    Main.getMessagesManager().setValueAndRetry(
+                    Main.messagesManager.setValueAndRetry(
                         messageCreateEvent.channel,
                         p.id,
                         "traout",
@@ -317,7 +317,7 @@ class PlaceCommand : CommandWithAccount(
                         1500,
                         serverBot
                     ) {
-                        Main.getMessagesManager().setValueAndRetry(
+                        Main.messagesManager.setValueAndRetry(
                             messageCreateEvent.channel,
                             p.id,
                             "train",
@@ -325,7 +325,7 @@ class PlaceCommand : CommandWithAccount(
                             1500,
                             serverBot
                         ) {
-                            Main.getMessagesManager().setValueAndRetry(
+                            Main.messagesManager.setValueAndRetry(
                                 messageCreateEvent.channel,
                                 p.id,
                                 "name",
@@ -333,7 +333,7 @@ class PlaceCommand : CommandWithAccount(
                                 1500,
                                 serverBot
                             ) {
-                                Main.getMessagesManager().setValueAndRetry(
+                                Main.messagesManager.setValueAndRetry(
                                     messageCreateEvent.channel,
                                     p.id,
                                     "descr",
@@ -348,7 +348,7 @@ class PlaceCommand : CommandWithAccount(
                 }
             }
         }
-        Main.getButtonsManager().addButton(no) { messageComponentCreateEvent: MessageComponentCreateEvent ->
+        Main.buttonsManager.addButton(no) { messageComponentCreateEvent: MessageComponentCreateEvent ->
             if (messageComponentCreateEvent.messageComponentInteraction.user.id == p.id) {
                 messageComponentCreateEvent.messageComponentInteraction.message.delete()
             }
@@ -394,7 +394,7 @@ class PlaceCommand : CommandWithAccount(
         var placeParent: Place? = null
         for (placeID in serverBot.getArray("places")) {
             try {
-                val place = Main.getSaveManager().places[placeID.toLong()]
+                val place = Main.saveManager.places[placeID.toLong()]
                 if (place != null && place.getString("type") == "server") {
                     placeParent = place
                 }

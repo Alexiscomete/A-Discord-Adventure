@@ -1,73 +1,79 @@
-package io.github.alexiscomete.lapinousecond.message_event;
+package io.github.alexiscomete.lapinousecond.message_event
 
-import io.github.alexiscomete.lapinousecond.ListenerMain;
-import io.github.alexiscomete.lapinousecond.Main;
-import io.github.alexiscomete.lapinousecond.save.SaveLocation;
-import org.javacord.api.entity.message.component.ActionRow;
-import org.javacord.api.entity.message.component.Button;
-import org.javacord.api.entity.message.embed.EmbedBuilder;
-import org.javacord.api.event.interaction.MessageComponentCreateEvent;
+import io.github.alexiscomete.lapinousecond.ListenerMain
+import io.github.alexiscomete.lapinousecond.Main
+import io.github.alexiscomete.lapinousecond.save.SaveLocation.Companion.generateUniqueID
+import org.javacord.api.entity.message.component.ActionRow
+import org.javacord.api.entity.message.component.Button
+import org.javacord.api.entity.message.embed.EmbedBuilder
+import org.javacord.api.event.interaction.MessageComponentCreateEvent
 
-import java.util.ArrayList;
-
-public class ListButtons<U> {
-    private int level = 0;
-    private final EmbedBuilder builder;
-    private final ArrayList<U> uArrayList;
-    private final AddContent<U> uAddContent;
-    private final String idLast = String.valueOf(SaveLocation.generateUniqueID()), idNext = String.valueOf(SaveLocation.generateUniqueID());
-
-    public void next(MessageComponentCreateEvent messageComponentCreateEvent) {
-        if (level + 10 < uArrayList.size()) {
-            level += 10;
-            builder.removeAllFields();
-            uAddContent.add(builder, level, Math.min(10, uArrayList.size()-level), uArrayList);
-            messageComponentCreateEvent.getMessageComponentInteraction().createOriginalMessageUpdater().removeAllEmbeds().addEmbed(builder).addComponents(getComponents()).update();
+class ListButtons<U>(
+    private val builder: EmbedBuilder,
+    private val uArrayList: ArrayList<U>,
+    private val uAddContent: AddContent<U>
+) {
+    private var level = 0
+    private val idLast = generateUniqueID().toString()
+    private val idNext = generateUniqueID().toString()
+    fun next(messageComponentCreateEvent: MessageComponentCreateEvent) {
+        if (level + 10 < uArrayList.size) {
+            level += 10
+            builder.removeAllFields()
+            uAddContent.add(builder, level, Math.min(10, uArrayList.size - level), uArrayList)
+            messageComponentCreateEvent.messageComponentInteraction.createOriginalMessageUpdater().removeAllEmbeds()
+                .addEmbed(builder).addComponents(
+                components
+            ).update()
         }
     }
 
-    public void last(MessageComponentCreateEvent messageComponentCreateEvent) {
+    fun last(messageComponentCreateEvent: MessageComponentCreateEvent) {
         if (level > 9) {
-            level -= 10;
-            builder.removeAllFields();
-            uAddContent.add(builder, level, Math.min(10, uArrayList.size()-level), uArrayList);
-            messageComponentCreateEvent.getMessageComponentInteraction().createOriginalMessageUpdater().removeAllEmbeds().addEmbed(builder).addComponents(getComponents()).update();
+            level -= 10
+            builder.removeAllFields()
+            uAddContent.add(builder, level, Math.min(10, uArrayList.size - level), uArrayList)
+            messageComponentCreateEvent.messageComponentInteraction.createOriginalMessageUpdater().removeAllEmbeds()
+                .addEmbed(builder).addComponents(
+                components
+            ).update()
         }
     }
 
-    public ActionRow getComponents() {
-        if (level > 0 && level + 10 < ListenerMain.commands.size()) {
-            return ActionRow.of(
-                    Button.success(idLast, "Page précédente"),
-                    Button.success(idNext, "Page suivante")
-            );
+    val components: ActionRow
+        get() = if (level > 0 && level + 10 < ListenerMain.commands.size) {
+            ActionRow.of(
+                Button.success(idLast, "Page précédente"),
+                Button.success(idNext, "Page suivante")
+            )
         } else if (level > 0) {
-            return ActionRow.of(
-                    Button.success(idLast, "Page précédente")
-            );
-        } else if (level + 10 < ListenerMain.commands.size()) {
-            return ActionRow.of(
-                    Button.success(idNext, "Page suivante")
-            );
+            ActionRow.of(
+                Button.success(idLast, "Page précédente")
+            )
+        } else if (level + 10 < ListenerMain.commands.size) {
+            ActionRow.of(
+                Button.success(idNext, "Page suivante")
+            )
         } else {
-            return ActionRow.of();
+            ActionRow.of()
         }
+
+    fun register() {
+        Main.buttonsManager
+            .addButton(idLast.toLong()) { messageComponentCreateEvent: MessageComponentCreateEvent ->
+                this.last(messageComponentCreateEvent)
+            }
+        Main.buttonsManager
+            .addButton(idNext.toLong()) { messageComponentCreateEvent: MessageComponentCreateEvent ->
+                next(messageComponentCreateEvent)
+            }
     }
 
-    public void register() {
-        Main.getButtonsManager().addButton(Long.parseLong(idLast), this::last);
-        Main.getButtonsManager().addButton(Long.parseLong(idNext), this::next);
+    init {
+        uAddContent.add(builder, 0, Math.min(10, uArrayList.size - level), uArrayList)
     }
 
-    public ListButtons(EmbedBuilder embedBuilder, ArrayList<U> uArrayList, AddContent<U> uAddContent) {
-        this.builder = embedBuilder;
-        this.uArrayList = uArrayList;
-        this.uAddContent = uAddContent;
-        uAddContent.add(embedBuilder, 0, Math.min(10, uArrayList.size()-level), uArrayList);
-    }
-
-    @FunctionalInterface
-    public interface AddContent<U> {
-        void add(EmbedBuilder embedBuilder, int min, int num, ArrayList<U> uArrayList);
+    fun interface AddContent<U> {
+        fun add(embedBuilder: EmbedBuilder?, min: Int, num: Int, uArrayList: ArrayList<U>?)
     }
 }

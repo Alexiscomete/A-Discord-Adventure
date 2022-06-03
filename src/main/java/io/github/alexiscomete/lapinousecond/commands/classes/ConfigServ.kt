@@ -51,10 +51,10 @@ class ConfigServ : CommandWithAccount(
                         val finalServer: ServerBot = server
                         val id = messageCreateEvent.messageAuthor.id
                         val textChannel = messageCreateEvent.channel
-                        Main.getMessagesManager().setValueAndRetry(
+                        Main.messagesManager.setValueAndRetry(
                             textChannel, id, "namerp", "Maintenant la description :", 50, finalServer
                         ) {
-                            Main.getMessagesManager().setValueAndRetry(
+                            Main.messagesManager.setValueAndRetry(
                                 textChannel,
                                 id,
                                 "descr",
@@ -75,9 +75,9 @@ class ConfigServ : CommandWithAccount(
      """.trimIndent()
                                     )
                                 }
-                                Main.getMessagesManager()
+                                Main.messagesManager
                                     .setValueAndRetry(textChannel, id, "welcome", embedBuilder, 1500, finalServer) {
-                                        Main.getMessagesManager()
+                                        Main.messagesManager
                                             .addListener(textChannel, id, object : Consumer<MessageCreateEvent> {
                                                 override fun accept(messageCreateEvent: MessageCreateEvent) {
                                                     try {
@@ -101,7 +101,7 @@ class ConfigServ : CommandWithAccount(
                                                             )
                                                         }
                                                         messageCreateEvent.message.reply(embedBuilder)
-                                                        Main.getMessagesManager()
+                                                        Main.messagesManager
                                                             .addListener(messageCreateEvent.channel, id, this)
                                                     }
                                                 }

@@ -26,7 +26,7 @@ class Player : CacheGetSet, Owner {
     val roles: ArrayList<Role>
     val items = ArrayList<Item>()
     val resourceManagers: HashMap<Resource, ResourceManager>
-    private val saveManager = Main.getSaveManager()
+    private val saveManager = Main.saveManager
     var state = 0
 
     constructor(id: Long?) : super(id!!, Tables.PLAYERS.table) {
@@ -117,14 +117,6 @@ class Player : CacheGetSet, Owner {
         saveManager.setValue(Tables.PLAYERS.table, id, "ressources", ResourceManager.toString(resourceManagers.values))
     }
 
-    override fun getOwnerType(): String {
-        return "player"
-    }
-
-    override fun getOwnerString(): String {
-        return id.toString()
-    }
-
     fun getAnswer(answerEnum: AnswerEnum?, maj: Boolean, vararg format: Any?): String {
         val langage = getString("langage")
         val langageEnum: LangageEnum = if (langage == "") {
@@ -162,4 +154,9 @@ class Player : CacheGetSet, Owner {
     fun setPath(path: ArrayList<Pixel?>?, type: String?) {
         // TODO: Gérer les chemins
     }
+
+    override val ownerType: String
+        get() = "player"
+    override val ownerString: String
+        get() = id.toString()
 }

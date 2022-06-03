@@ -1,136 +1,107 @@
-package io.github.alexiscomete.lapinousecond.worlds;
+package io.github.alexiscomete.lapinousecond.worlds
 
-import io.github.alexiscomete.lapinousecond.Main;
-import io.github.alexiscomete.lapinousecond.entity.Owner;
-import io.github.alexiscomete.lapinousecond.save.*;
-import org.javacord.api.entity.message.embed.EmbedBuilder;
+import io.github.alexiscomete.lapinousecond.Main
+import io.github.alexiscomete.lapinousecond.entity.Owner
+import io.github.alexiscomete.lapinousecond.save.CacheGetSet
+import io.github.alexiscomete.lapinousecond.save.SaveLocation.Companion.generateUniqueID
+import io.github.alexiscomete.lapinousecond.save.Tables
+import org.javacord.api.entity.message.embed.EmbedBuilder
+import java.awt.Color
+import java.sql.SQLException
+import java.util.*
 
-import java.awt.*;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Optional;
+open class Place : CacheGetSet, Owner {
+    private var serverID: Long? = null
+    private var serverBot: ServerBot? = null
+    var world: World? = null
+    private var x: Int? = null
+    private var y: Int? = null
+    var connections: LongArray
 
-public class Place extends CacheGetSet implements Owner {
-    private Long serverID;
-    private ServerBot serverBot;
-    private World world;
-    private Integer x;
-    private Integer y;
-    private long[] connections;
-
-    public Place() {
-        super(SaveLocation.generateUniqueID(), Tables.PLACES.getTable());
-        HashMap<String, String> h = new HashMap<>();
-        h.put("id", String.valueOf(getId()));
-        Main.getSaveManager().insert("places", h);
+    constructor() : super(generateUniqueID(), Tables.PLACES.table) {
+        val h = HashMap<String?, String?>()
+        h["id"] = id.toString()
+        Main.saveManager.insert("places", h)
     }
 
-    public Place(long id) {
-        super(id, Tables.PLACES.getTable());
+    constructor(id: Long) : super(id, Tables.PLACES.table) {}
+
+    fun getServerBot(): Optional<ServerBot> {
+        return Optional.ofNullable(serverBot)
     }
 
-    public Optional<ServerBot> getServerBot() {
-        return Optional.ofNullable(serverBot);
+    fun getServerID(): Optional<Long> {
+        return Optional.ofNullable(serverID)
     }
 
-    public Optional<Long> getServerID() {
-        return Optional.ofNullable(serverID);
+    fun setServerBot(serverBot: ServerBot?) {
+        this.serverBot = serverBot
     }
 
-    public void setServerBot(ServerBot serverBot) {
-        this.serverBot = serverBot;
+    fun setServerID(serverID: Long?) {
+        this.serverID = serverID
     }
 
-    public void setServerID(Long serverID) {
-        this.serverID = serverID;
+    open fun getX(): Optional<Int?>? {
+        return Optional.ofNullable(x)
     }
 
-    public World getWorld() {
-        return world;
+    open fun setX(x: Int?) {
+        this.x = x
     }
 
-    public void setWorld(World world) {
-        this.world = world;
+    open fun getY(): Optional<Int?>? {
+        return Optional.ofNullable(y)
     }
 
-    public Optional<Integer> getX() {
-        return Optional.ofNullable(x);
+    open fun setY(y: Int?) {
+        this.y = y
     }
 
-    public void setX(Integer x) {
-        this.x = x;
+    fun setAndGet(row: String?, value: String?): Place {
+        super.set(row!!, value!!)
+        return this
     }
 
-    public Optional<Integer> getY() {
-        return Optional.ofNullable(y);
-    }
+    val placeEmbed: EmbedBuilder
+        get() = EmbedBuilder()
+            .setAuthor(id.toString())
+            .setTitle(getString("name"))
+            .setColor(Color.green)
+            .setDescription(getString("descr"))
+            .addField("World", getString("world"), true)
+            .addField("Type", getString("type"), true)
+    override val ownerType: String?
+        get() = null
+    override val ownerString: String?
+        get() = null
 
-    public void setY(Integer y) {
-        this.y = y;
-    }
+    companion object {
+        fun toPlaces(places: String): ArrayList<Place> {
+            val str = places.split(";".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+            val places1 = ArrayList<Place>()
+            for (s in str) {
+                try {
+                    places1.add(Place(s.toLong()))
+                } catch (ignore: NumberFormatException) {
+                }
+            }
+            return places1
+        }
 
-    public long[] getConnections() {
-        return connections;
-    }
-
-    public void setConnections(long[] connections) {
-        this.connections = connections;
-    }
-
-    public Place setAndGet(String row, String value) {
-        super.set(row, value);
-        return this;
-    }
-
-    public EmbedBuilder getPlaceEmbed() {
-        return new EmbedBuilder()
-                .setAuthor(String.valueOf(getId()))
-                .setTitle(getString("name"))
-                .setColor(Color.green)
-                .setDescription(getString("descr"))
-                .addField("World", getString("world"), true)
-                .addField("Type", getString("type"), true);
-    }
-
-    public static ArrayList<Place> toPlaces(String places) {
-        String[] str = places.split(";");
-        ArrayList<Place> places1 = new ArrayList<>();
-        for (String s :
-                str) {
+        fun getPlacesWithWorld(world: String): ArrayList<Place> {
+            val resultSet = Main.saveManager.executeQuery("SELECT * FROM places WHERE world = '$world'", true)
+            val places = ArrayList<Place>()
             try {
-                places1.add(new Place(Long.parseLong(s)));
-            } catch (NumberFormatException ignore) {
 
+                //long id = resultSet.getLong("id"); places.add(new Place(id));
+                while (resultSet!!.next()) {
+                    places.add(Place(resultSet.getLong("id")))
+                }
+            } catch (e: SQLException) {
+                e.printStackTrace()
             }
+            return places
         }
-        return places1;
-    }
-
-    @Override
-    public String getOwnerType() {
-        return null;
-    }
-
-    @Override
-    public String getOwnerString() {
-        return null;
-    }
-
-    public static ArrayList<Place> getPlacesWithWorld(String world) {
-        ResultSet resultSet = Main.getSaveManager().executeQuery("SELECT * FROM places WHERE world = '" + world + "'", true);
-        ArrayList<Place> places = new ArrayList<>();
-        try {
-
-            //long id = resultSet.getLong("id"); places.add(new Place(id));
-
-            while (resultSet.next()) {
-                places.add(new Place(resultSet.getLong("id")));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return places;
     }
 }

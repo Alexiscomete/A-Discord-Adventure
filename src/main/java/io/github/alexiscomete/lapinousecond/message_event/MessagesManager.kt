@@ -1,73 +1,83 @@
-package io.github.alexiscomete.lapinousecond.message_event;
+package io.github.alexiscomete.lapinousecond.message_event
 
-import io.github.alexiscomete.lapinousecond.Main;
-import io.github.alexiscomete.lapinousecond.worlds.ServerBot;
-import org.javacord.api.entity.channel.TextChannel;
-import org.javacord.api.entity.message.embed.EmbedBuilder;
-import org.javacord.api.event.message.MessageCreateEvent;
-import org.javacord.api.listener.message.MessageCreateListener;
+import io.github.alexiscomete.lapinousecond.Main
+import io.github.alexiscomete.lapinousecond.worlds.ServerBot
+import org.javacord.api.entity.channel.TextChannel
+import org.javacord.api.entity.message.embed.EmbedBuilder
+import org.javacord.api.event.message.MessageCreateEvent
+import org.javacord.api.listener.message.MessageCreateListener
+import java.util.function.Consumer
 
-import java.util.HashMap;
-import java.util.function.Consumer;
-
-public class MessagesManager implements MessageCreateListener {
-    final HashMap<TextChannel, HashMap<Long, Consumer<MessageCreateEvent>>> consumers = new HashMap<>();
-
-    @Override
-    public void onMessageCreate(MessageCreateEvent messageCreateEvent) {
-        if (consumers.containsKey(messageCreateEvent.getChannel()) && !messageCreateEvent.getMessage().getContent().startsWith("-")) {
-            HashMap<Long, Consumer<MessageCreateEvent>> hashMap = consumers.get(messageCreateEvent.getChannel());
-            if (messageCreateEvent.getMessageAuthor().isUser() && hashMap.containsKey(messageCreateEvent.getMessageAuthor().getId())) {
-                Consumer<MessageCreateEvent> messageCreateEventConsumer = hashMap.get(messageCreateEvent.getMessageAuthor().getId());
-                hashMap.remove(messageCreateEvent.getMessageAuthor().getId());
+class MessagesManager : MessageCreateListener {
+    private val consumers = HashMap<TextChannel, HashMap<Long, Consumer<MessageCreateEvent>>>()
+    override fun onMessageCreate(messageCreateEvent: MessageCreateEvent) {
+        if (consumers.containsKey(messageCreateEvent.channel) && !messageCreateEvent.message.content.startsWith("-")) {
+            val hashMap = consumers[messageCreateEvent.channel]!!
+            if (messageCreateEvent.messageAuthor.isUser && hashMap.containsKey(messageCreateEvent.messageAuthor.id)) {
+                val messageCreateEventConsumer = hashMap[messageCreateEvent.messageAuthor.id]!!
+                hashMap.remove(messageCreateEvent.messageAuthor.id)
                 try {
-                    messageCreateEventConsumer.accept(messageCreateEvent);
-                } catch (Exception e) {
-                    messageCreateEvent.getMessage().reply("Une erreur est survenue : " + e.getMessage());
+                    messageCreateEventConsumer.accept(messageCreateEvent)
+                } catch (e: Exception) {
+                    messageCreateEvent.message.reply("Une erreur est survenue : " + e.message)
                 }
             }
         }
     }
 
-    public void addListener(TextChannel textChannel, Long id, Consumer<MessageCreateEvent> messageCreateEventConsumer) {
+    fun addListener(textChannel: TextChannel, id: Long, messageCreateEventConsumer: Consumer<MessageCreateEvent>) {
         if (consumers.containsKey(textChannel)) {
-            consumers.get(textChannel).put(id, messageCreateEventConsumer);
+            consumers[textChannel]!![id] = messageCreateEventConsumer
         } else {
-            HashMap<Long, Consumer<MessageCreateEvent>> hashMap = new HashMap<>();
-            hashMap.put(id, messageCreateEventConsumer);
-            consumers.put(textChannel, hashMap);
+            val hashMap = HashMap<Long, Consumer<MessageCreateEvent>>()
+            hashMap[id] = messageCreateEventConsumer
+            consumers[textChannel] = hashMap
         }
     }
 
-    public void setValueAndRetry(TextChannel textChannel, Long id, String prog_name, String message, int len, ServerBot serverBot, Runnable ex) {
-        Main.getMessagesManager().addListener(textChannel, id, new Consumer<>() {
-            @Override
-            public void accept(MessageCreateEvent msgE) {
-                if (msgE.getMessageContent().length() <= len) {
-                    serverBot.set(prog_name, msgE.getMessageContent());
-                    msgE.getMessage().reply(message);
-                    ex.run();
+    fun setValueAndRetry(
+        textChannel: TextChannel,
+        id: Long,
+        prog_name: String,
+        message: String,
+        len: Int,
+        serverBot: ServerBot,
+        ex: Runnable
+    ) {
+        Main.messagesManager.addListener(textChannel, id, object : Consumer<MessageCreateEvent> {
+            override fun accept(msgE: MessageCreateEvent) {
+                if (msgE.messageContent.length <= len) {
+                    serverBot[prog_name] = msgE.messageContent
+                    msgE.message.reply(message)
+                    ex.run()
                 } else {
-                    textChannel.sendMessage("Taille maximale : " + len + ". Votre taille : " + msgE.getMessageContent().length());
-                    Main.getMessagesManager().addListener(textChannel, id, this);
+                    textChannel.sendMessage("Taille maximale : " + len + ". Votre taille : " + msgE.messageContent.length)
+                    Main.messagesManager.addListener(textChannel, id, this)
                 }
             }
-        });
+        })
     }
 
-    public void setValueAndRetry(TextChannel textChannel, Long id, String prog_name, EmbedBuilder embedBuilder, int len, ServerBot serverBot, Runnable ex) {
-        Main.getMessagesManager().addListener(textChannel, id, new Consumer<>() {
-            @Override
-            public void accept(MessageCreateEvent msgE) {
-                if (msgE.getMessageContent().length() <= len) {
-                    serverBot.set(prog_name, msgE.getMessageContent());
-                    msgE.getMessage().reply(embedBuilder);
-                    ex.run();
+    fun setValueAndRetry(
+        textChannel: TextChannel,
+        id: Long,
+        prog_name: String,
+        embedBuilder: EmbedBuilder,
+        len: Int,
+        serverBot: ServerBot,
+        ex: Runnable
+    ) {
+        Main.messagesManager.addListener(textChannel, id, object : Consumer<MessageCreateEvent> {
+            override fun accept(msgE: MessageCreateEvent) {
+                if (msgE.messageContent.length <= len) {
+                    serverBot[prog_name] = msgE.messageContent
+                    msgE.message.reply(embedBuilder)
+                    ex.run()
                 } else {
-                    textChannel.sendMessage("Taille maximale : " + len + ". Votre taille : " + msgE.getMessageContent().length());
-                    Main.getMessagesManager().addListener(textChannel, id, this);
+                    textChannel.sendMessage("Taille maximale : " + len + ". Votre taille : " + msgE.messageContent.length)
+                    Main.messagesManager.addListener(textChannel, id, this)
                 }
             }
-        });
+        })
     }
 }

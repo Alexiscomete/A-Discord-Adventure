@@ -15,9 +15,9 @@ class Table(val name: String, private val rows: Array<TableRow>) {
             createTable.append("\n")
         }
         createTable.append(")")
-        Main.getSaveManager().execute("CREATE TABLE IF NOT EXISTS $name$createTable", false)
+        Main.saveManager.execute("CREATE TABLE IF NOT EXISTS $name$createTable", false)
         for (tableRow in rows) {
-            Main.getSaveManager().execute("ALTER TABLE $name ADD COLUMN ${tableRow.name} ${tableRow.type}", false)
+            Main.saveManager.execute("ALTER TABLE $name ADD COLUMN ${tableRow.name} ${tableRow.type}", false)
         }
     }
 }

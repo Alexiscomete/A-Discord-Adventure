@@ -1,28 +1,17 @@
-package io.github.alexiscomete.lapinousecond.roles;
+package io.github.alexiscomete.lapinousecond.roles
 
-public class Role {
-    private final RolesEnum role;
-    private long currentCooldown;
-
-    public Role(RolesEnum role) {
-        this.role = role;
-        this.currentCooldown = 0;
+class Role(val role: RolesEnum) {
+    private var currentCooldown: Long = 0
+    fun getCurrentCooldown(): Double {
+        return currentCooldown.toDouble()
     }
 
-    public RolesEnum getRole() {
-        return role;
+    fun setCurrentCooldown(time: Long) {
+        currentCooldown = time
     }
 
-    public double getCurrentCooldown() {
-        return currentCooldown;
-    }
-
-    public void setCurrentCooldown(long time) {
-        this.currentCooldown = time;
-    }
-
-    public boolean isReady() {
-        // si le cooldown + le temps de recharge est inférieur au temps actuel
-        return currentCooldown + role.coolDownSize < System.currentTimeMillis() / 1000;
-    }
+    // si le cooldown + le temps de recharge est inférieur au temps actuel
+    val isReady: Boolean
+        get() =// si le cooldown + le temps de recharge est inférieur au temps actuel
+            currentCooldown + role.coolDownSize < System.currentTimeMillis() / 1000
 }

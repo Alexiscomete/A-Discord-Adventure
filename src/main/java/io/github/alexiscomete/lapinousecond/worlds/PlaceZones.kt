@@ -1,59 +1,51 @@
-package io.github.alexiscomete.lapinousecond.worlds;
+package io.github.alexiscomete.lapinousecond.worlds
 
-import java.util.ArrayList;
+import io.github.alexiscomete.lapinousecond.worlds.Zone.Companion.fromString
 
-public class PlaceZones extends Place {
-    ArrayList<Zone> zones = new ArrayList<>();
+class PlaceZones : Place {
+    var zones = ArrayList<Zone>()
 
-    public PlaceZones() {
-        super();
-    }
-
-    public PlaceZones(long id) {
-        super(id);
-        String zonesBDD = getString("zones");
-        if (zonesBDD != null && !zonesBDD.equals("")) {
-            String[] zonesTab = zonesBDD.split(";");
-            for (String zone : zonesTab) {
-                if (!zone.equals("")) {
-                    zones.add(Zone.fromString(zone));
+    constructor() : super() {}
+    constructor(id: Long) : super(id) {
+        val zonesBDD = getString("zones")
+        if (zonesBDD != null && zonesBDD != "") {
+            val zonesTab = zonesBDD.split(";".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+            for (zone in zonesTab) {
+                if (zone != "") {
+                    zones.add(fromString(zone))
                 }
             }
         }
     }
 
-    public void addZone(Zone zone) {
-        zones.add(zone);
-        updateBDD();
+    fun addZone(zone: Zone) {
+        zones.add(zone)
+        updateBDD()
     }
 
-    public String toString() {
-        StringBuilder zonesString = new StringBuilder();
-        for (Zone zone : zones) {
-            zonesString.append(zone.toString()).append(";");
+    override fun toString(): String {
+        val zonesString = StringBuilder()
+        for (zone in zones) {
+            zonesString.append(zone.toString()).append(";")
         }
-        return zonesString.toString();
+        return zonesString.toString()
     }
 
-    public ArrayList<Zone> getZones() {
-        return zones;
+    fun updateBDD() {
+        set("zones", toString())
     }
 
-    public void updateBDD() {
-        set("zones", toString());
-    }
-
-    public boolean isInZones(int x, int y) {
-        for (Zone zone : zones) {
+    fun isInZones(x: Int, y: Int): Boolean {
+        for (zone in zones) {
             if (zone.contains(x, y)) {
-                return true;
+                return true
             }
         }
-        return false;
+        return false
     }
 
-    public void removeZone(int index) {
-        zones.remove(index);
-        updateBDD();
+    fun removeZone(index: Int) {
+        zones.removeAt(index)
+        updateBDD()
     }
 }

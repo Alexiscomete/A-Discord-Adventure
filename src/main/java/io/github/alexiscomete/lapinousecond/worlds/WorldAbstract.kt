@@ -1,25 +1,18 @@
-package io.github.alexiscomete.lapinousecond.worlds;
+package io.github.alexiscomete.lapinousecond.worlds
 
-import java.util.Optional;
-
-public class WorldAbstract extends World {
-
-    public WorldAbstract(int travelPrice, String name, String nameRP, String progName, String desc) {
-        super(travelPrice, name, nameRP, progName, desc);
+class WorldAbstract(travelPrice: Int, name: String?, nameRP: String?, progName: String?, desc: String?) :
+    World(travelPrice, name!!, nameRP!!, progName!!, desc!!) {
+    override fun getPriceForDistance(distance: Double, place: Boolean): Double {
+        return distance * travelPrice / 100
     }
 
-    @Override
-    public double getPriceForDistance(double distance, boolean place) {
-        return distance*getTravelPrice()/100;
-    }
-
-    @Override
-    public double getDistance(Place place1, Place place2) {
-        Optional<Long> idPl1 = place1.getServerID(), idPl2 = place2.getServerID();
-        if (idPl1.isPresent() && idPl2.isPresent()) {
-            return Math.sqrt(Math.abs(idPl1.get()-idPl2.get())) / 100000;
+    override fun getDistance(place1: Place?, place2: Place?): Double {
+        val idPl1 = place1!!.getServerID()
+        val idPl2 = place2!!.getServerID()
+        return if (idPl1.isPresent && idPl2.isPresent) {
+            Math.sqrt(Math.abs(idPl1.get() - idPl2.get()).toDouble()) / 100000
         } else {
-            return 500;
+            500
         }
     }
 }

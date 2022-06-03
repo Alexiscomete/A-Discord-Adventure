@@ -1,18 +1,12 @@
-package io.github.alexiscomete.lapinousecond.worlds;
+package io.github.alexiscomete.lapinousecond.worlds
 
-public class WorldWithCoos extends World {
-
-    public WorldWithCoos(int travelPrice, String name, String nameRP, String progName, String desc) {
-        super(travelPrice, name, nameRP, progName, desc);
+class WorldWithCoos(travelPrice: Int, name: String?, nameRP: String?, progName: String?, desc: String?) :
+    World(travelPrice, name!!, nameRP!!, progName!!, desc!!) {
+    override fun getPriceForDistance(distance: Double, place: Boolean): Double {
+        return 0
     }
 
-    @Override
-    public double getPriceForDistance(double distance, boolean place) {
-        return 0;
-    }
-
-    @Override
-    public double getDistance(Place place1, Place place2) {
-        return 0;
+    override fun getDistance(place1: Place?, place2: Place?): Double {
+        return 0
     }
 }

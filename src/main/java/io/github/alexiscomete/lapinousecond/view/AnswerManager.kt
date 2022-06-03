@@ -1,46 +1,43 @@
-package io.github.alexiscomete.lapinousecond.view;
+package io.github.alexiscomete.lapinousecond.view
 
-import org.json.JSONObject;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-import java.util.Scanner;
+import org.json.JSONObject
+import java.io.InputStream
+import java.nio.charset.StandardCharsets
+import java.util.*
 
-public class AnswerManager {
-    private final JSONObject jsonObject;
+class AnswerManager(input: InputStream?) {
+    private var jsonObject: JSONObject? = null
 
-    public AnswerManager(InputStream input) {
+    init {
         if (input != null) {
-            Scanner sc = new Scanner(input, StandardCharsets.UTF_8);
-            StringBuilder builder = new StringBuilder();
-            sc.forEachRemaining((s) -> builder.append(s).append(" "));
-            System.out.println(builder);
-            jsonObject = new JSONObject(builder.toString());
-            sc.close();
+            val sc = Scanner(input, StandardCharsets.UTF_8)
+            val builder = StringBuilder()
+            sc.forEachRemaining { s: String? -> builder.append(s).append(" ") }
+            println(builder)
+            jsonObject = JSONObject(builder.toString())
+            sc.close()
         } else {
-            jsonObject = new JSONObject("{}");
+            jsonObject = JSONObject("{}")
         }
     }
 
-    public String getAnswer(LangageEnum langageEnum, AnswerEnum answerEnum) {
-        JSONObject object = jsonObject.getJSONObject(answerEnum.getValue());
-        if (object == null) {
-            return langageEnum.getInvalidAnswer();
+    fun getAnswer(langageEnum: LangageEnum, answerEnum: AnswerEnum): String {
+        val `object` = jsonObject!!.getJSONObject(answerEnum.value) ?: return langageEnum.invalidAnswer
+        val answer = `object`.getString(langageEnum.getName())
+        if (answer == null || answer == "") {
+            return langageEnum.invalidAnswer
         }
-        String answer = object.getString(langageEnum.getName());
-        if (answer == null || answer.equals("")) {
-            return langageEnum.getInvalidAnswer();
-        }
-        System.out.println(answer);
-        return answer;
+        println(answer)
+        return answer
     }
 
-    public String formatAnswer(String answer, Object... format) {
-        int i = 1;
-        for (Object form :
-                format) {
-            answer = answer.replace("replace" + i, form.toString());
-            i++;
+    fun formatAnswer(answer: String, vararg format: Any): String {
+        var answer = answer
+        var i = 1
+        for (form in format) {
+            answer = answer.replace("replace$i", form.toString())
+            i++
         }
-        return answer;
+        return answer
     }
 }

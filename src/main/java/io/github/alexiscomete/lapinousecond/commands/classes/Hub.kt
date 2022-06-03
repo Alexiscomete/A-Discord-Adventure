@@ -14,7 +14,7 @@ class Hub : CommandBot(
     "Permet de retourner gratuitement au hub si vous êtes bloqué dans un serveur, par exemple si il n'y a pas de salon textuel"
 ) {
     override fun execute(messageCreateEvent: MessageCreateEvent, content: String, args: Array<String>) {
-        val p = Main.getSaveManager().players[messageCreateEvent.messageAuthor.id]
+        val p = Main.saveManager.players[messageCreateEvent.messageAuthor.id]
         if (p == null) {
             messageCreateEvent.message.reply("Voici le serveur principal : <https://discord.gg/q4hVQ6gwyx>")
             return

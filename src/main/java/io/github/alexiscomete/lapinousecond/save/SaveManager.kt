@@ -1,172 +1,190 @@
-package io.github.alexiscomete.lapinousecond.save;
+package io.github.alexiscomete.lapinousecond.save
 
-import io.github.alexiscomete.lapinousecond.UserPerms;
-import io.github.alexiscomete.lapinousecond.entity.Company;
-import io.github.alexiscomete.lapinousecond.entity.Player;
-import io.github.alexiscomete.lapinousecond.worlds.Place;
-import io.github.alexiscomete.lapinousecond.worlds.ServerBot;
-import io.github.alexiscomete.lapinousecond.worlds.buildings.Building;
-import io.github.alexiscomete.lapinousecond.worlds.buildings.Buildings;
+import io.github.alexiscomete.lapinousecond.UserPerms
+import io.github.alexiscomete.lapinousecond.entity.Company
+import io.github.alexiscomete.lapinousecond.entity.Player
+import io.github.alexiscomete.lapinousecond.worlds.Place
+import io.github.alexiscomete.lapinousecond.worlds.ServerBot
+import io.github.alexiscomete.lapinousecond.worlds.buildings.Buildings
+import java.sql.*
 
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.HashMap;
+class SaveManager(private val path: String) {
+    @JvmField
+    val players = CacheCustom(Tables.PLAYERS.table) { id: Long? -> Player(id) }
+    val servers = CacheCustom(Tables.SERVERS.table) { id: Long? ->
+        ServerBot(
+            id!!
+        )
+    }
+    val places = CacheCustom(Tables.PLACES.table) { id: Long? ->
+        Place(
+            id!!
+        )
+    }
+    @JvmField
+    val buildings = CacheCustom(Tables.BUILDINGS.table) { aLong: Long -> Buildings.load(aLong.toString()) }
+    val companies = CacheCustom(Tables.COMPANY.table) { id: Long? ->
+        Company(
+            id!!
+        )
+    }
+    private var co: Connection? = null
+    private var st: Statement? = null
 
-public class SaveManager {
-
-    public final CacheCustom<Player> players = new CacheCustom<>(Tables.PLAYERS.getTable(), Player::new);
-    public final CacheCustom<ServerBot> servers = new CacheCustom<>(Tables.SERVERS.getTable(), ServerBot::new);
-    public final CacheCustom<Place> places = new CacheCustom<>(Tables.PLACES.getTable(), Place::new);
-    public final CacheCustom<Building> buildings = new CacheCustom<>(Tables.BUILDINGS.getTable(), aLong -> Buildings.load(String.valueOf(aLong)));
-    public final CacheCustom<Company> companies = new CacheCustom<>(Tables.COMPANY.getTable(), Company::new);
-
-    private final String path;
-
-    private Connection co = null;
-    private Statement st = null;
-
-    public SaveManager(String path) {
-        this.path = path;
-        connection();
+    init {
+        connection()
     }
 
-    public void connection() {
+    fun connection() {
         try {
-            Class.forName("org.sqlite.JDBC");
-            co = DriverManager.getConnection(path);
-            st = co.createStatement();
-        } catch (SQLException | ClassNotFoundException throwable) {
-            throwable.printStackTrace();
+            Class.forName("org.sqlite.JDBC")
+            co = DriverManager.getConnection(path)
+            st = co.createStatement()
+        } catch (throwable: SQLException) {
+            throwable.printStackTrace()
             if (co != null) {
                 try {
-                    co.close();
-                } catch (SQLException ignore) {
+                    co!!.close()
+                } catch (ignore: SQLException) {
+                }
+            }
+        } catch (throwable: ClassNotFoundException) {
+            throwable.printStackTrace()
+            if (co != null) {
+                try {
+                    co!!.close()
+                } catch (ignore: SQLException) {
                 }
             }
         }
     }
 
-    public String getBuildingType(long id) {
+    fun getBuildingType(id: Long): String? {
         try {
-            ResultSet resultSet = st.executeQuery("SELECT type FROM " + Tables.BUILDINGS.getTable().getName() + " WHERE id = " + id);
+            val resultSet = st!!.executeQuery("SELECT type FROM " + Tables.BUILDINGS.table.name + " WHERE id = " + id)
             if (resultSet.next()) {
-                return resultSet.getString("type");
+                return resultSet.getString("type")
             }
-            resultSet.close();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+            resultSet.close()
+        } catch (throwables: SQLException) {
+            throwables.printStackTrace()
         }
-        return null;
+        return null
     }
 
-    public ArrayList<Long> getTravels() {
-        try {
-            ResultSet resultSet = st.executeQuery("SELECT id FROM guilds ORDER BY RAND() LIMIT 6");
-            ArrayList<Long> longs = new ArrayList<>();
+    val travels: ArrayList<Long>
+        get() = try {
+            val resultSet = st!!.executeQuery("SELECT id FROM guilds ORDER BY RAND() LIMIT 6")
+            val longs = ArrayList<Long>()
             while (resultSet.next()) {
-                longs.add(Long.valueOf(resultSet.getString("id")));
+                longs.add(java.lang.Long.valueOf(resultSet.getString("id")))
             }
-            resultSet.close();
-            return longs;
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-            return new ArrayList<>();
+            resultSet.close()
+            longs
+        } catch (throwables: SQLException) {
+            throwables.printStackTrace()
+            ArrayList()
         }
-    }
 
-    public UserPerms getPlayerPerms(long id) {
+    fun getPlayerPerms(id: Long): UserPerms {
         try {
-            ResultSet resultSet = st.executeQuery("SELECT * FROM perms WHERE id = " + id);
+            val resultSet = st!!.executeQuery("SELECT * FROM perms WHERE id = $id")
             if (resultSet.next()) {
-                return new UserPerms(toBoolean(resultSet.getInt("play")), toBoolean(resultSet.getInt("create_server")), toBoolean(resultSet.getInt("manage_perms")), toBoolean(resultSet.getInt("manage_roles")), false);
+                return UserPerms(
+                    toBoolean(resultSet.getInt("play")),
+                    toBoolean(resultSet.getInt("create_server")),
+                    toBoolean(resultSet.getInt("manage_perms")),
+                    toBoolean(resultSet.getInt("manage_roles")),
+                    false
+                )
             }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        } catch (throwables: SQLException) {
+            throwables.printStackTrace()
         }
-        return new UserPerms(true, false, false, false, true);
+        return UserPerms(true, false, false, false, true)
     }
 
-    public static boolean toBoolean(int s) {
-        return s == 1;
-    }
-
-    public static String toBooleanString(boolean b) {
-        return b ? "1" : "0";
-    }
-
-    public void setValue(String where, String which, String whichValue, String valueName, String value) {
+    fun setValue(where: String, which: String, whichValue: String, valueName: String, value: String) {
         try {
-            st.executeUpdate("UPDATE " + where + " SET " + valueName + " = '" + value + "' WHERE " + which + " = " + whichValue);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+            st!!.executeUpdate("UPDATE $where SET $valueName = '$value' WHERE $which = $whichValue")
+        } catch (throwables: SQLException) {
+            throwables.printStackTrace()
         }
     }
 
-    public void setValue(Table table, long id, String row, String value) {
-        setValue(table.getName(), "id", String.valueOf(id), row, value);
+    fun setValue(table: Table, id: Long, row: String, value: String) {
+        setValue(table.name, "id", id.toString(), row, value)
     }
 
-    public void setValue(Table table, long id, String row, String value, String type) {
-        execute("ALTER TABLE " + table.getName() + " ADD COLUMN " + row + " " + type, false);
-        setValue(table, id, row, value);
+    fun setValue(table: Table, id: Long, row: String, value: String, type: String) {
+        execute("ALTER TABLE " + table.name + " ADD COLUMN " + row + " " + type, false)
+        setValue(table, id, row, value)
     }
 
-    public void insert(String where, HashMap<String, String> what) {
-        StringBuilder values = new StringBuilder("("), keys = new StringBuilder("(");
-        for (int i = 0; i < what.size(); i++) {
-            String key = (String) what.keySet().toArray()[i];
-            keys.append(key);
-            values.append(what.get(key));
-            if (i != what.size() - 1) {
-                keys.append(", ");
-                values.append(", ");
+    fun insert(where: String, what: HashMap<String?, String?>) {
+        val values = StringBuilder("(")
+        val keys = StringBuilder("(")
+        for (i in 0 until what.size) {
+            val key = what.keys.toTypedArray()[i] as String
+            keys.append(key)
+            values.append(what[key])
+            if (i != what.size - 1) {
+                keys.append(", ")
+                values.append(", ")
             }
         }
-        values.append(")");
-        keys.append(")");
+        values.append(")")
+        keys.append(")")
         try {
-            st.executeUpdate("INSERT INTO " + where + " " + keys + " VALUES " + values);
-        } catch (SQLException e) {
-            e.printStackTrace();
+            st!!.executeUpdate("INSERT INTO $where $keys VALUES $values")
+        } catch (e: SQLException) {
+            e.printStackTrace()
         }
     }
 
-    public void execute(String ex) {
-        execute(ex, true);
-    }
-
-    public void execute(String ex, boolean bo) {
+    @JvmOverloads
+    fun execute(ex: String?, bo: Boolean = true) {
         try {
-            st.executeUpdate(ex);
-        } catch (SQLException e) {
+            st!!.executeUpdate(ex)
+        } catch (e: SQLException) {
             if (bo) {
-                e.printStackTrace();
+                e.printStackTrace()
             }
         }
     }
 
-    public ResultSet executeQuery(String ex, boolean bo) {
-        try {
-            return st.executeQuery(ex);
-        } catch (SQLException e) {
+    fun executeQuery(ex: String?, bo: Boolean): ResultSet? {
+        return try {
+            st!!.executeQuery(ex)
+        } catch (e: SQLException) {
             if (bo) {
-                e.printStackTrace();
+                e.printStackTrace()
             }
-            return null;
+            null
         }
     }
 
-    public String getString(Table table, String row, String type, long id) {
-        execute("ALTER TABLE " + table.getName() + " ADD COLUMN " + row + " " + type, false);
-        ResultSet resultSet;
-        String str = "";
+    fun getString(table: Table, row: String, type: String, id: Long): String {
+        execute("ALTER TABLE " + table.name + " ADD COLUMN " + row + " " + type, false)
+        val resultSet: ResultSet
+        var str = ""
         try {
-            resultSet = st.executeQuery("SELECT " + row + " FROM " + table.getName() + " WHERE id=" + id);
-            str = resultSet.getString(row);
-            resultSet.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
+            resultSet = st!!.executeQuery("SELECT " + row + " FROM " + table.name + " WHERE id=" + id)
+            str = resultSet.getString(row)
+            resultSet.close()
+        } catch (e: SQLException) {
+            e.printStackTrace()
         }
-        return str;
+        return str
+    }
+
+    companion object {
+        fun toBoolean(s: Int): Boolean {
+            return s == 1
+        }
+
+        fun toBooleanString(b: Boolean): String {
+            return if (b) "1" else "0"
+        }
     }
 }

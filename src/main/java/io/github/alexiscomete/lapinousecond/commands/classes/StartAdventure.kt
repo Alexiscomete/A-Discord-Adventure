@@ -14,7 +14,7 @@ class StartAdventure : CommandBot(
     "PLAY"
 ) {
     override fun execute(messageCreateEvent: MessageCreateEvent, content: String, args: Array<String>) {
-        val saveManager = Main.getSaveManager()
+        val saveManager = Main.saveManager
         var p = saveManager.players[messageCreateEvent.messageAuthor.id]
         if (p == null) {
             if (messageCreateEvent.isPrivateMessage || messageCreateEvent.server.get().id != 854288660147994634L) {

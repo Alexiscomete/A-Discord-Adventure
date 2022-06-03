@@ -30,7 +30,7 @@ open class VerifTransaction(
             .addEmbed(embedBuilder)
             .addComponents(ActionRow.of(Button.success(id.toString(), "Valider")))
         messageBuilder.send(textChannel)
-        Main.getButtonsManager().addButton(id) { messageComponentCreateEvent: MessageComponentCreateEvent ->
+        Main.buttonsManager.addButton(id) { messageComponentCreateEvent: MessageComponentCreateEvent ->
             if (messageComponentCreateEvent.messageComponentInteraction.user.id == p.id) {
                 make(
                     quantity,

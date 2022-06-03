@@ -11,7 +11,7 @@ class MapCommand : CommandWithAccount("description", "map", "totalDescription") 
     override fun execute(messageCreateEvent: MessageCreateEvent, content: String, args: Array<String>, p: Player) {
         if (args.size == 1) {
             val messageBuilder = MessageBuilder()
-            messageBuilder.addAttachment(Map.getMap(), "map.png")
+            messageBuilder.addAttachment(Map.map, "map.png")
             messageBuilder.send(messageCreateEvent.channel)
             return
         }

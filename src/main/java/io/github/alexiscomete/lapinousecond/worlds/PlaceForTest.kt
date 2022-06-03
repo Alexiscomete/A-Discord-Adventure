@@ -1,80 +1,61 @@
-package io.github.alexiscomete.lapinousecond.worlds;
+package io.github.alexiscomete.lapinousecond.worlds
 
-import io.github.alexiscomete.lapinousecond.worlds.map.Map;
+import io.github.alexiscomete.lapinousecond.worlds.map.Map
+import java.util.*
 
-import java.util.ArrayList;
-import java.util.Optional;
-
-public class PlaceForTest extends Place {
-
-    final String name;
-    int x, y;
-    final long id;
-
-    public PlaceForTest(String name, long id, int x, int y) {
-        this.name = name;
-        this.id = id;
-        this.x = x;
-        this.y = y;
-    }
-
-    @Override
-    public String getString(String key) {
-        switch (key) {
-            case "name":
-                return name;
-            case "x":
-                return String.valueOf(x);
-            case "y":
-                return String.valueOf(y);
-            default:
-                return "";
+class PlaceForTest(val name: String, override val id: Long, var x: Int, var y: Int) : Place() {
+    override fun getString(key: String): String {
+        return when (key) {
+            "name" -> name
+            "x" -> x.toString()
+            "y" -> y.toString()
+            else -> ""
         }
     }
 
-    public Optional<Integer> getX() {
-        return Optional.of(x);
+    override fun getX(): Optional<Int?>? {
+        return Optional.of(x)
     }
 
-    public void setX(Integer x) {
-        this.x = x;
+    override fun setX(x: Int?) {
+        this.x = x!!
     }
 
-    public Optional<Integer> getY() {
-        return Optional.of(y);
+    override fun getY(): Optional<Int?>? {
+        return Optional.of(y)
     }
 
-    public void setY(Integer y) {
-        this.y = y;
+    override fun setY(y: Int?) {
+        this.y = y!!
     }
 
-    // génère aléatoirement une place pour les tests, minx = 0, maxx = voir dans Map.java, miny = 0, maxy = voir dans Map.java
-    public static PlaceForTest generateRandomPlace() {
+    companion object {
+        // génère aléatoirement une place pour les tests, minx = 0, maxx = voir dans Map.java, miny = 0, maxy = voir dans Map.java
+        fun generateRandomPlace(): PlaceForTest {
 
-        // génération des coordonnées aléatoires
-        int x = (int) (Math.random() * Map.MAP_HEIGHT);
-        int y = (int) (Math.random() * Map.MAP_HEIGHT);
+            // génération des coordonnées aléatoires
+            val x = (Math.random() * Map.MAP_HEIGHT).toInt()
+            val y = (Math.random() * Map.MAP_HEIGHT).toInt()
 
-        // génération du nom aléatoire
-        StringBuilder name = new StringBuilder();
-        int nb = Math.max((int) (Math.random() * 10), 3);
-        for (int i = 0; i < nb; i++) {
-            name.append((char) (Math.random() * 26 + 'a'));
+            // génération du nom aléatoire
+            val name = StringBuilder()
+            val nb = Math.max((Math.random() * 10).toInt(), 3)
+            for (i in 0 until nb) {
+                name.append((Math.random() * 26 + 'a'.code.toDouble()).toInt().toChar())
+            }
+
+            // génération de l'id aléatoire
+            val id = (Math.random() * Long.MAX_VALUE).toLong()
+            return PlaceForTest(name.toString(), id, x, y)
         }
 
-        // génération de l'id aléatoire
-        long id = (long) (Math.random() * Long.MAX_VALUE);
-
-        return new PlaceForTest(name.toString(), id, x, y);
-    }
-
-    // génération de n places aléatoires
-    public static ArrayList<Place> generateRandomPlaces(int n) {
-        ArrayList<Place> places = new ArrayList<>();
-        for (int i = 0; i < n; i++) {
-            places.add(generateRandomPlace());
+        // génération de n places aléatoires
+        fun generateRandomPlaces(n: Int): ArrayList<Place> {
+            val places = ArrayList<Place>()
+            for (i in 0 until n) {
+                places.add(generateRandomPlace())
+            }
+            return places
         }
-        return places;
     }
-
 }

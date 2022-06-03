@@ -14,7 +14,7 @@ abstract class CommandBot(
     vararg perms: String
 ) {
     @JvmField
-    protected val saveManager: SaveManager = Main.getSaveManager()
+    protected val saveManager: SaveManager = Main.saveManager
     val perms: Array<out String>
 
     init {

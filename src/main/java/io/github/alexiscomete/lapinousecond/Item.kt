@@ -1,24 +1,20 @@
-package io.github.alexiscomete.lapinousecond;
+package io.github.alexiscomete.lapinousecond
 
-import io.github.alexiscomete.lapinousecond.entity.Player;
-import org.javacord.api.event.message.MessageCreateEvent;
+import io.github.alexiscomete.lapinousecond.entity.Player
+import org.javacord.api.event.message.MessageCreateEvent
 
-public abstract class Item {
-
-    public String name, description, jname;
-    public int price;
-
-    Item(String name, String description, int price, String jname, String[] args) {
-        this.name = name;
-        this.description = description;
-        this.price = price;
-        this.jname = jname;
-        setArgs(args);
+abstract class Item internal constructor(
+    var name: String,
+    var description: String,
+    var price: Int,
+    var jname: String,
+    args: Array<String?>?
+) {
+    init {
+        setArgs(args)
     }
 
-    public abstract void setArgs(String[] args);
-
-    public abstract boolean use(MessageCreateEvent event, String content, String[] args, Player ownerOfItem);
-
-    public abstract String getArgs();
+    abstract fun setArgs(args: Array<String?>?)
+    abstract fun use(event: MessageCreateEvent?, content: String?, args: Array<String?>?, ownerOfItem: Player?): Boolean
+    abstract val args: String?
 }

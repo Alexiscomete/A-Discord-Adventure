@@ -1,48 +1,55 @@
-package io.github.alexiscomete.lapinousecond.message_event;
+package io.github.alexiscomete.lapinousecond.message_event
 
-import org.javacord.api.event.interaction.MessageComponentCreateEvent;
-import org.javacord.api.listener.interaction.MessageComponentCreateListener;
+import org.javacord.api.event.interaction.MessageComponentCreateEvent
+import org.javacord.api.listener.interaction.MessageComponentCreateListener
+import java.util.function.Consumer
 
-import java.util.HashMap;
-import java.util.function.Consumer;
-
-public class ButtonsManager implements MessageComponentCreateListener {
-    final HashMap<Long, HashMap<String, Consumer<MessageComponentCreateEvent>>> hashMap = new HashMap<>();
-    final HashMap<Long, Consumer<MessageComponentCreateEvent>> hashButton = new HashMap<>();
-
-    @Override
-    public void onComponentCreate(MessageComponentCreateEvent messageComponentCreateEvent) {
-        if (hashMap.containsKey(messageComponentCreateEvent.getMessageComponentInteraction().getMessage().getId())) {
-            HashMap<String, Consumer<MessageComponentCreateEvent>> h = hashMap.get(messageComponentCreateEvent.getMessageComponentInteraction().getMessage().getId());
-            if (h.containsKey(messageComponentCreateEvent.getMessageComponentInteraction().getCustomId())) {
+class ButtonsManager : MessageComponentCreateListener {
+    private val hashMap = HashMap<Long, HashMap<String, Consumer<MessageComponentCreateEvent>>>()
+    private val hashButton = HashMap<Long, Consumer<MessageComponentCreateEvent>>()
+    override fun onComponentCreate(messageComponentCreateEvent: MessageComponentCreateEvent) {
+        if (hashMap.containsKey(messageComponentCreateEvent.messageComponentInteraction.message.id)) {
+            val h = hashMap[messageComponentCreateEvent.messageComponentInteraction.message.id]!!
+            if (h.containsKey(messageComponentCreateEvent.messageComponentInteraction.customId)) {
                 try {
-                    h.get(messageComponentCreateEvent.getMessageComponentInteraction().getCustomId()).accept(messageComponentCreateEvent);
-                } catch (Exception e) {
-                    if (messageComponentCreateEvent.getMessageComponentInteraction().getChannel().isPresent()) {
-                        messageComponentCreateEvent.getMessageComponentInteraction().getChannel().get().sendMessage("Une erreur est survenue : " + e.getMessage());
+                    h[messageComponentCreateEvent.messageComponentInteraction.customId]!!.accept(
+                        messageComponentCreateEvent
+                    )
+                } catch (e: Exception) {
+                    if (messageComponentCreateEvent.messageComponentInteraction.channel.isPresent) {
+                        messageComponentCreateEvent.messageComponentInteraction.channel.get()
+                            .sendMessage("Une erreur est survenue : " + e.message)
                     } else {
-                        messageComponentCreateEvent.getMessageComponentInteraction().getUser().sendMessage("Une erreur est survenue : " + e.getMessage() + "\n Impossible de répondre à votre message dans le channel donc ce message est envoyé en DM.");
+                        messageComponentCreateEvent.messageComponentInteraction.user.sendMessage(
+                            """Une erreur est survenue : ${e.message}
+ Impossible de répondre à votre message dans le channel donc ce message est envoyé en DM."""
+                        )
                     }
                 }
             } else {
-                messageComponentCreateEvent.getMessageComponentInteraction().createOriginalMessageUpdater()
-                        .removeAllComponents()
-                        .removeAllEmbeds()
-                        .setContent("Hum ... étrange, ce bouton semble ne pas exister")
-                        .update();
+                messageComponentCreateEvent.messageComponentInteraction.createOriginalMessageUpdater()
+                    .removeAllComponents()
+                    .removeAllEmbeds()
+                    .setContent("Hum ... étrange, ce bouton semble ne pas exister")
+                    .update()
             }
-        } else if (hashButton.containsKey(Long.parseLong(messageComponentCreateEvent.getMessageComponentInteraction().getCustomId()))) {
-            hashButton.get(Long.parseLong(messageComponentCreateEvent.getMessageComponentInteraction().getCustomId())).accept(messageComponentCreateEvent);
+        } else if (hashButton.containsKey(messageComponentCreateEvent.messageComponentInteraction.customId.toLong())) {
+            hashButton[messageComponentCreateEvent.messageComponentInteraction.customId.toLong()]!!.accept(
+                messageComponentCreateEvent
+            )
         } else {
-            messageComponentCreateEvent.getMessageComponentInteraction().createOriginalMessageUpdater().removeAllEmbeds().removeAllComponents().setContent("Il est impossible de répondre à cette demande, soit le bouton est invalide soit le bot a été redémarré (pas de mémoire à long terme pour les boutons)").update();
+            messageComponentCreateEvent.messageComponentInteraction.createOriginalMessageUpdater().removeAllEmbeds()
+                .removeAllComponents()
+                .setContent("Il est impossible de répondre à cette demande, soit le bouton est invalide soit le bot a été redémarré (pas de mémoire à long terme pour les boutons)")
+                .update()
         }
     }
 
-    public void addMessage(long id, HashMap<String, Consumer<MessageComponentCreateEvent>> hash) {
-        hashMap.put(id, hash);
+    fun addMessage(id: Long, hash: HashMap<String, Consumer<MessageComponentCreateEvent>>) {
+        hashMap[id] = hash
     }
 
-    public void addButton(long id, Consumer<MessageComponentCreateEvent> eventConsumer) {
-        hashButton.put(id, eventConsumer);
+    fun addButton(id: Long, eventConsumer: Consumer<MessageComponentCreateEvent>) {
+        hashButton[id] = eventConsumer
     }
 }
