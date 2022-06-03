@@ -4,8 +4,8 @@ import io.github.alexiscomete.lapinousecond.worlds.map.Map
 import java.util.*
 
 class PlaceForTest(val name: String, override val id: Long, var x: Int, var y: Int) : Place() {
-    override fun getString(key: String): String {
-        return when (key) {
+    override fun getString(row: String): String {
+        return when (row) {
             "name" -> name
             "x" -> x.toString()
             "y" -> y.toString()
@@ -13,7 +13,7 @@ class PlaceForTest(val name: String, override val id: Long, var x: Int, var y: I
         }
     }
 
-    override fun getX(): Optional<Int?>? {
+    override fun getX(): Optional<Int> {
         return Optional.of(x)
     }
 
@@ -21,7 +21,7 @@ class PlaceForTest(val name: String, override val id: Long, var x: Int, var y: I
         this.x = x!!
     }
 
-    override fun getY(): Optional<Int?>? {
+    override fun getY(): Optional<Int> {
         return Optional.of(y)
     }
 
@@ -31,7 +31,7 @@ class PlaceForTest(val name: String, override val id: Long, var x: Int, var y: I
 
     companion object {
         // génère aléatoirement une place pour les tests, minx = 0, maxx = voir dans Map.java, miny = 0, maxy = voir dans Map.java
-        fun generateRandomPlace(): PlaceForTest {
+        private fun generateRandomPlace(): PlaceForTest {
 
             // génération des coordonnées aléatoires
             val x = (Math.random() * Map.MAP_HEIGHT).toInt()

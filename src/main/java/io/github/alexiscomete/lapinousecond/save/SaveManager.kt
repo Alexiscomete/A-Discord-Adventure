@@ -8,8 +8,7 @@ import io.github.alexiscomete.lapinousecond.worlds.ServerBot
 import io.github.alexiscomete.lapinousecond.worlds.buildings.Buildings
 import java.sql.*
 
-class SaveManager(private val path: String) {
-    @JvmField
+class SaveManager(path: String) {
     val players = CacheCustom(Tables.PLAYERS.table) { id: Long? -> Player(id) }
     val servers = CacheCustom(Tables.SERVERS.table) { id: Long? ->
         ServerBot(
@@ -21,7 +20,6 @@ class SaveManager(private val path: String) {
             id!!
         )
     }
-    @JvmField
     val buildings = CacheCustom(Tables.BUILDINGS.table) { aLong: Long -> Buildings.load(aLong.toString()) }
     val companies = CacheCustom(Tables.COMPANY.table) { id: Long? ->
         Company(
@@ -32,14 +30,10 @@ class SaveManager(private val path: String) {
     private var st: Statement? = null
 
     init {
-        connection()
-    }
-
-    fun connection() {
         try {
             Class.forName("org.sqlite.JDBC")
             co = DriverManager.getConnection(path)
-            st = co.createStatement()
+            st = co!!.createStatement()
         } catch (throwable: SQLException) {
             throwable.printStackTrace()
             if (co != null) {
@@ -101,7 +95,7 @@ class SaveManager(private val path: String) {
         } catch (throwables: SQLException) {
             throwables.printStackTrace()
         }
-        return UserPerms(true, false, false, false, true)
+        return UserPerms(PLAY = true, CREATE_SERVER = false, MANAGE_PERMS = false, MANAGE_ROLES = false, isDefault = true)
     }
 
     fun setValue(where: String, which: String, whichValue: String, valueName: String, value: String) {

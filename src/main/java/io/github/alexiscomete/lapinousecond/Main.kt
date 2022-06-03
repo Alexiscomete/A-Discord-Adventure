@@ -11,76 +11,45 @@ import io.github.alexiscomete.lapinousecond.save.Tables
 import org.javacord.api.DiscordApi
 import org.javacord.api.DiscordApiBuilder
 import java.io.IOException
-import java.util.function.Function
 
-object Main {
-    /**
-     * Instance de l'API Javacord
-     */
-    var api: DiscordApi? = null
+var saveManager: SaveManager? = null
+    private set
 
-    /**
-     * Configuration du bot
-     */
-    var config: SaveLocation<String>? = null
+val reactionManager: ReactionManager = ReactionManager()
 
-    /**
-     *
-     * @return le gestionnaire de la base de données
-     */
-    @JvmStatic
-    var saveManager: SaveManager? = null
-        private set
+val buttonsManager: ButtonsManager = ButtonsManager()
 
-    /**
-     *
-     * @return le gestionnaire des actions par réaction à un message
-     */
-    var reactionManager: ReactionManager? = null
-        private set
+val messagesManager: MessagesManager = MessagesManager()
 
-    /**
-     *
-     * @return le gestionnaire des actions par utilisation d'un bouton sur un message
-     */
-    @JvmStatic
-    var buttonsManager: ButtonsManager? = null
-        private set
+/**
+ * Permet d'ajouter une commande à la liste pour qu'elle puisse être appelée
+ * @param commandBot la commande
+ */
+private fun addCommand(commandBot: CommandBot) {
+    ListenerMain.commands[commandBot.name] = commandBot
+}
 
-    /**
-     *
-     * @return le gestionnaire qui attend qu'une personne précise envoie un message dans un salon donné pour exécuter une action
-     */
-    var messagesManager: MessagesManager? = null
-        private set
+fun main() {
 
-    //Ouverture du fichier de configuration
-    init {
-        try {
-            config = SaveLocation(";", "/config.txt", Function { a: String? -> io.github.alexiscomete.lapinousecond.a })
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-    }
+    try {
 
-    /**
-     * Initialisation du bot discord, des gestionnaires et des commandes
-     * @param args habituel
-     */
-    @JvmStatic
-    fun main(args: Array<String>) {
+        /**
+         * Configuration du bot
+         */
+        val config: SaveLocation<String> = SaveLocation(";", "/config.txt") { a: String -> a }
+
         println("RIP Lapinou premier")
-        config!!.loadAll()
-        api = DiscordApiBuilder().setToken(config!!.content[0]).login().join()
+        config.loadAll()
+        /**
+         * Instance de l'API Javacord
+         */
+        val api: DiscordApi = DiscordApiBuilder().setToken(config.content[0]).login().join()
         api.updateActivity("Prefix : -")
         api.addListener(ListenerMain())
-        reactionManager = ReactionManager()
-        buttonsManager = ButtonsManager()
-        messagesManager = MessagesManager()
         api.addListener(reactionManager)
         api.addListener(buttonsManager)
         api.addListener(messagesManager)
-        saveManager = SaveManager(config!!.content[1])
+        saveManager = SaveManager(config.content[1])
         Tables.testTables()
 
         // Ajout des commandes
@@ -103,13 +72,7 @@ object Main {
         addCommand(MapCommand())
         addCommand(WorldCommand())
         addCommand(TestCommand())
-    }
-
-    /**
-     * Permet d'ajouter une commande à la liste pour qu'elle puisse être appelée
-     * @param commandBot la commande
-     */
-    fun addCommand(commandBot: CommandBot) {
-        ListenerMain.commands[commandBot.name] = commandBot
+    } catch (e: IOException) {
+        e.printStackTrace()
     }
 }

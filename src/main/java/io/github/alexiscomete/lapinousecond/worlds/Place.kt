@@ -1,10 +1,10 @@
 package io.github.alexiscomete.lapinousecond.worlds
 
-import io.github.alexiscomete.lapinousecond.Main
 import io.github.alexiscomete.lapinousecond.entity.Owner
 import io.github.alexiscomete.lapinousecond.save.CacheGetSet
 import io.github.alexiscomete.lapinousecond.save.SaveLocation.Companion.generateUniqueID
 import io.github.alexiscomete.lapinousecond.save.Tables
+import io.github.alexiscomete.lapinousecond.saveManager
 import org.javacord.api.entity.message.embed.EmbedBuilder
 import java.awt.Color
 import java.sql.SQLException
@@ -16,15 +16,15 @@ open class Place : CacheGetSet, Owner {
     var world: World? = null
     private var x: Int? = null
     private var y: Int? = null
-    var connections: LongArray
+    lateinit var connections: LongArray
 
     constructor() : super(generateUniqueID(), Tables.PLACES.table) {
         val h = HashMap<String?, String?>()
         h["id"] = id.toString()
-        Main.saveManager.insert("places", h)
+        saveManager?.insert("places", h)
     }
 
-    constructor(id: Long) : super(id, Tables.PLACES.table) {}
+    constructor(id: Long) : super(id, Tables.PLACES.table)
 
     fun getServerBot(): Optional<ServerBot> {
         return Optional.ofNullable(serverBot)
@@ -34,28 +34,12 @@ open class Place : CacheGetSet, Owner {
         return Optional.ofNullable(serverID)
     }
 
-    fun setServerBot(serverBot: ServerBot?) {
-        this.serverBot = serverBot
-    }
-
-    fun setServerID(serverID: Long?) {
-        this.serverID = serverID
-    }
-
-    open fun getX(): Optional<Int?>? {
+    open fun getX(): Optional<Int> {
         return Optional.ofNullable(x)
     }
 
-    open fun setX(x: Int?) {
-        this.x = x
-    }
-
-    open fun getY(): Optional<Int?>? {
+    open fun getY(): Optional<Int> {
         return Optional.ofNullable(y)
-    }
-
-    open fun setY(y: Int?) {
-        this.y = y
     }
 
     fun setAndGet(row: String?, value: String?): Place {
@@ -71,10 +55,8 @@ open class Place : CacheGetSet, Owner {
             .setDescription(getString("descr"))
             .addField("World", getString("world"), true)
             .addField("Type", getString("type"), true)
-    override val ownerType: String?
-        get() = null
-    override val ownerString: String?
-        get() = null
+    override val ownerType: String = ""
+    override val ownerString: String = ""
 
     companion object {
         fun toPlaces(places: String): ArrayList<Place> {
@@ -90,7 +72,7 @@ open class Place : CacheGetSet, Owner {
         }
 
         fun getPlacesWithWorld(world: String): ArrayList<Place> {
-            val resultSet = Main.saveManager.executeQuery("SELECT * FROM places WHERE world = '$world'", true)
+            val resultSet = saveManager?.executeQuery("SELECT * FROM places WHERE world = '$world'", true)
             val places = ArrayList<Place>()
             try {
 

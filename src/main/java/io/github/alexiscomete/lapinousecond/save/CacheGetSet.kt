@@ -1,15 +1,15 @@
 package io.github.alexiscomete.lapinousecond.save
 
-import io.github.alexiscomete.lapinousecond.Main
+import io.github.alexiscomete.lapinousecond.saveManager
 import java.util.*
 
-open class CacheGetSet(val id: Long, private val table: Table) {
+open class CacheGetSet(open val id: Long, private val table: Table) {
     private val cache = HashMap<String, CacheValue>()
     open fun getString(row: String): String {
         return if (cache.containsKey(row)) {
             cache[row]!!.string
         } else {
-            var str = Main.saveManager.getString(table, row, "TEXT", id)
+            var str = saveManager?.getString(table, row, "TEXT", id)
             if (str == null) {
                 str = ""
             }
@@ -24,7 +24,7 @@ open class CacheGetSet(val id: Long, private val table: Table) {
         } else {
             cache[row] = CacheValue(value)
         }
-        Main.saveManager.setValue(table, id, row, value, "TEXT")
+        saveManager?.setValue(table, id, row, value, "TEXT")
     }
 
     fun getArray(row: String): Array<String> {

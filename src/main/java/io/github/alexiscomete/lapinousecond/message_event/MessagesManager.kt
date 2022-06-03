@@ -1,6 +1,6 @@
 package io.github.alexiscomete.lapinousecond.message_event
 
-import io.github.alexiscomete.lapinousecond.Main
+import io.github.alexiscomete.lapinousecond.*
 import io.github.alexiscomete.lapinousecond.worlds.ServerBot
 import org.javacord.api.entity.channel.TextChannel
 import org.javacord.api.entity.message.embed.EmbedBuilder
@@ -44,7 +44,7 @@ class MessagesManager : MessageCreateListener {
         serverBot: ServerBot,
         ex: Runnable
     ) {
-        Main.messagesManager.addListener(textChannel, id, object : Consumer<MessageCreateEvent> {
+        messagesManager.addListener(textChannel, id, object : Consumer<MessageCreateEvent> {
             override fun accept(msgE: MessageCreateEvent) {
                 if (msgE.messageContent.length <= len) {
                     serverBot[prog_name] = msgE.messageContent
@@ -52,7 +52,7 @@ class MessagesManager : MessageCreateListener {
                     ex.run()
                 } else {
                     textChannel.sendMessage("Taille maximale : " + len + ". Votre taille : " + msgE.messageContent.length)
-                    Main.messagesManager.addListener(textChannel, id, this)
+                    messagesManager.addListener(textChannel, id, this)
                 }
             }
         })
@@ -67,7 +67,7 @@ class MessagesManager : MessageCreateListener {
         serverBot: ServerBot,
         ex: Runnable
     ) {
-        Main.messagesManager.addListener(textChannel, id, object : Consumer<MessageCreateEvent> {
+        messagesManager.addListener(textChannel, id, object : Consumer<MessageCreateEvent> {
             override fun accept(msgE: MessageCreateEvent) {
                 if (msgE.messageContent.length <= len) {
                     serverBot[prog_name] = msgE.messageContent
@@ -75,7 +75,7 @@ class MessagesManager : MessageCreateListener {
                     ex.run()
                 } else {
                     textChannel.sendMessage("Taille maximale : " + len + ". Votre taille : " + msgE.messageContent.length)
-                    Main.messagesManager.addListener(textChannel, id, this)
+                    messagesManager.addListener(textChannel, id, this)
                 }
             }
         })
