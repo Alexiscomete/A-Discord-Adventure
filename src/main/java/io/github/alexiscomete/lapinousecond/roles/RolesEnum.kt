@@ -1,72 +1,85 @@
-package io.github.alexiscomete.lapinousecond.roles;
+package io.github.alexiscomete.lapinousecond.roles
 
-import org.javacord.api.entity.permission.Role;
-import org.javacord.api.entity.server.Server;
-import org.javacord.api.entity.user.User;
+import org.javacord.api.entity.server.Server
+import org.javacord.api.entity.user.User
+import java.util.*
 
-import java.util.ArrayList;
-import java.util.List;
+enum class RolesEnum(
+    val name_: String, val description: String, // les alias
+    val aliases: Array<String>, val salary: Int, // en secondes
+    val coolDownSize: Int
+) {
+    ADMIN(
+        "admin",
+        "Administrateur du serveur Discord",
+        arrayOf("admin", "orgna", "orga"),
+        80,  /* 5 heures */
+        43200
+    ),  // pas besoin de mettre le nom complet du role car le contain ignore les espaces
+    MODO("modo", "Modérateur du serveur Discord", arrayOf("modo", "modé"), 60, 43200), MEMBER(
+        "member",
+        "Membre du serveur Discord",
+        arrayOf("memb"),
+        10,  /* 1h */
+        3600
+    ),
+    PARTICIPANT(
+        "participant",
+        "Participant du serveur Discord",
+        arrayOf("part", "commu"),
+        50,  /* 3 heures */
+        10800
+    ),
+    VISITOR("visitor", "Visiteur du serveur Discord", arrayOf("visit"), 5,  /* 1h */3600), CITOYEN(
+        "citoyen",
+        "Citoyen du Dibistan / de la région / du département",
+        arrayOf("citoy"),
+        10,  /* 3 heures */
+        10800
+    ),
+    AMBASSADOR("ambassadeur", "Ambassadeur", arrayOf("ambassad"), 10,  /* 3 heures */10800), DELEGATE(
+        "delegate",
+        "Représentant",
+        arrayOf("delag", "repr"),
+        10,  /* 3 heures */
+        10800
+    );
 
-public enum RolesEnum {
-
-    ADMIN("admin", "Administrateur du serveur Discord", new String[]{"admin", "orgna", "orga"}, 80, /* 5 heures */ 43_200), // pas besoin de mettre le nom complet du role car le contain ignore les espaces
-    MODO("modo", "Modérateur du serveur Discord", new String[]{"modo", "modé"}, 60, 43_200),
-    MEMBER("member", "Membre du serveur Discord", new String[]{"memb"}, 10, /* 1h */3_600),
-    PARTICIPANT("participant", "Participant du serveur Discord", new String[]{"part", "commu"}, 50, /* 3 heures */ 10_800),
-    VISITOR("visitor", "Visiteur du serveur Discord", new String[]{"visit"}, 5, /* 1h */3_600),
-    CITOYEN("citoyen", "Citoyen du Dibistan / de la région / du département", new String[]{"citoy"}, 10, /* 3 heures */ 10_800),
-    AMBASSADOR("ambassadeur", "Ambassadeur", new String[]{"ambassad"}, 10, /* 3 heures */ 10_800),
-    DELEGATE("delegate", "Représentant", new String[]{"delag", "repr"}, 10, /* 3 heures */ 10_800);
-
-    public final String name;
-    public final String description;
-    // les alias
-    public final String[] aliases;
-    public final int salary;
-    public final int coolDownSize; // en secondes
-
-    RolesEnum(String name, String description, String[] aliases, int salary, int coolDownSize) {
-        this.name = name;
-        this.description = description;
-        this.aliases = aliases;
-        this.salary = salary;
-        this.coolDownSize = coolDownSize;
-    }
-
-    public static boolean check(String[] strings, User user, Server server) {
-        for (String string : strings) {
-            switch (string) {
-                case "MANAGE_ADMIN":
-                    return server.getOwner().get().equals(user);
-                case "MANAGE_ROLES_SERVER":
-                    return ADMIN.check(user, server);
-                default:
-                    System.out.println("WARNING : " + string + " n'est pas une permission");
-                    return true;
-            }
-        }
-        return true;
-    }
-
-    public boolean check(User user, Server server) {
-        List<Role> roles = user.getRoles(server);
-        for (String alias : aliases) {
-            for (Role role : roles) {
-                if (role.getName().toLowerCase().contains(alias)) {
-                    return true;
+    fun check(user: User, server: Server?): Boolean {
+        val roles = user.getRoles(server)
+        for (alias in aliases) {
+            for (role in roles) {
+                if (role.name.lowercase(Locale.getDefault()).contains(alias)) {
+                    return true
                 }
             }
         }
-        return false;
+        return false
     }
 
-    public static ArrayList<RolesEnum> getRoles(User user, Server server) {
-        ArrayList<RolesEnum> roles = new ArrayList<>();
-        for (RolesEnum role : RolesEnum.values()) {
-            if (role.check(user, server)) {
-                roles.add(role);
+    companion object {
+        fun check(strings: Array<String>, user: User, server: Server): Boolean {
+            for (string in strings) {
+                return when (string) {
+                    "MANAGE_ADMIN" -> server.owner.get() == user
+                    "MANAGE_ROLES_SERVER" -> ADMIN.check(user, server)
+                    else -> {
+                        println("WARNING : $string n'est pas une permission")
+                        true
+                    }
+                }
             }
+            return true
         }
-        return roles;
+
+        fun getRoles(user: User, server: Server?): ArrayList<RolesEnum> {
+            val roles = ArrayList<RolesEnum>()
+            for (role in values()) {
+                if (role.check(user, server)) {
+                    roles.add(role)
+                }
+            }
+            return roles
+        }
     }
 }

@@ -1,5 +1,7 @@
 package io.github.alexiscomete.lapinousecond.view
 
+val answerManager = AnswerManager(AnswerEnum::class.java.classLoader.getResourceAsStream("answers.json"))
+
 enum class AnswerEnum(val value: String) {
     NAME("name"),
     DESCR("description"),
@@ -19,9 +21,4 @@ enum class AnswerEnum(val value: String) {
     ILLEGAL_ARGUMENT_NUMBER("illegal_argument_number"),
     ENTREE_BUILD("entree_build"),
     LIST_BUILDINGS("list_buildings");
-
-    companion object {
-        @JvmStatic
-        val answerManager = AnswerManager(AnswerEnum::class.java.classLoader.getResourceAsStream("answers.json"))
-    }
 }

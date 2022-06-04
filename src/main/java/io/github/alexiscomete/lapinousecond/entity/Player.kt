@@ -1,7 +1,7 @@
 package io.github.alexiscomete.lapinousecond.entity
 
 import io.github.alexiscomete.lapinousecond.Item
-import io.github.alexiscomete.lapinousecond.Main
+import io.github.alexiscomete.lapinousecond.*
 import io.github.alexiscomete.lapinousecond.resources.Resource
 import io.github.alexiscomete.lapinousecond.resources.ResourceManager
 import io.github.alexiscomete.lapinousecond.roles.Role
@@ -9,7 +9,7 @@ import io.github.alexiscomete.lapinousecond.save.CacheGetSet
 import io.github.alexiscomete.lapinousecond.save.SaveManager
 import io.github.alexiscomete.lapinousecond.save.Tables
 import io.github.alexiscomete.lapinousecond.view.AnswerEnum
-import io.github.alexiscomete.lapinousecond.view.AnswerEnum.Companion.answerManager
+import io.github.alexiscomete.lapinousecond.view.answerManager
 import io.github.alexiscomete.lapinousecond.view.LangageEnum
 import io.github.alexiscomete.lapinousecond.worlds.Place
 import io.github.alexiscomete.lapinousecond.worlds.ServerBot
@@ -26,7 +26,6 @@ class Player : CacheGetSet, Owner {
     val roles: ArrayList<Role>
     val items = ArrayList<Item>()
     val resourceManagers: HashMap<Resource, ResourceManager>
-    private val saveManager = Main.saveManager
     var state = 0
 
     constructor(id: Long?) : super(id!!, Tables.PLAYERS.table) {
@@ -52,7 +51,7 @@ class Player : CacheGetSet, Owner {
                 itemsList.append(";")
             }
         }
-        saveManager.setValue(Tables.PLAYERS.table, id, "items", itemsList.toString())
+        saveManager?.setValue(Tables.PLAYERS.table, id, "items", itemsList.toString())
     }
 
     fun getBal(): Double {
@@ -61,7 +60,7 @@ class Player : CacheGetSet, Owner {
 
     fun setBal(bal: Double) {
         this.bal = bal
-        saveManager.setValue(Tables.PLAYERS.table, id, "bal", bal.toString())
+        saveManager?.setValue(Tables.PLAYERS.table, id, "bal", bal.toString())
     }
 
     fun getServer(): Long {
@@ -70,7 +69,7 @@ class Player : CacheGetSet, Owner {
 
     fun setServer(server: Long) {
         this.server = server
-        saveManager.setValue(Tables.PLAYERS.table, id, "serv", server.toString())
+        saveManager?.setValue(Tables.PLAYERS.table, id, "serv", server.toString())
     }
 
     fun getTuto(): Short {
@@ -79,7 +78,7 @@ class Player : CacheGetSet, Owner {
 
     fun setTuto(tuto: Short) {
         this.tuto = tuto
-        saveManager.setValue(Tables.PLAYERS.table, id, "tuto", tuto.toString())
+        saveManager?.setValue(Tables.PLAYERS.table, id, "tuto", tuto.toString())
     }
 
     fun hasAccount(): Boolean {
@@ -88,7 +87,7 @@ class Player : CacheGetSet, Owner {
 
     fun setHasAccount(hasAccount: Boolean) {
         this.hasAccount = hasAccount
-        saveManager.setValue(Tables.PLAYERS.table, id, "has_account", SaveManager.toBooleanString(hasAccount))
+        saveManager?.setValue(Tables.PLAYERS.table, id, "has_account", SaveManager.toBooleanString(hasAccount))
     }
 
     constructor(
@@ -114,10 +113,10 @@ class Player : CacheGetSet, Owner {
     }
 
     fun updateResources() {
-        saveManager.setValue(Tables.PLAYERS.table, id, "ressources", ResourceManager.toString(resourceManagers.values))
+        saveManager?.setValue(Tables.PLAYERS.table, id, "ressources", ResourceManager.toString(resourceManagers.values))
     }
 
-    fun getAnswer(answerEnum: AnswerEnum?, maj: Boolean, vararg format: Any?): String {
+    fun getAnswer(answerEnum: AnswerEnum?, maj: Boolean, vararg format: Any?): String? {
         val langage = getString("langage")
         val langageEnum: LangageEnum = if (langage == "") {
             LangageEnum.FRENCH
@@ -128,10 +127,10 @@ class Player : CacheGetSet, Owner {
                 LangageEnum.FRENCH
             }
         }
-        var answer = answerManager.getAnswer(langageEnum, answerEnum)
-        answer = answerManager.formatAnswer(answer, *format)
+        var answer = answerEnum?.let { answerManager.getAnswer(langageEnum, it) }
+        answer = answer?.let { answerManager.formatAnswer(it, format) }
         if (maj) {
-            answer = answer.substring(0, 1).uppercase(Locale.getDefault()) + answer.substring(1)
+            answer = answer?.substring(0, 1)?.uppercase(Locale.getDefault()) + answer?.substring(1)
         }
         return answer
     }
@@ -148,7 +147,7 @@ class Player : CacheGetSet, Owner {
                 placeID = ServerBot(854288660147994634L).getString("places")
                 set("place_NORMAL", ServerBot(854288660147994634L).getString("places"))
             }
-            return saveManager.places[placeID.toLong()]
+            return saveManager?.places?.get(placeID.toLong())
         }
 
     fun setPath(path: ArrayList<Pixel?>?, type: String?) {

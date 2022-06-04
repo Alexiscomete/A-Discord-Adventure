@@ -1,23 +1,6 @@
-package io.github.alexiscomete.lapinousecond.view;
+package io.github.alexiscomete.lapinousecond.view
 
-public enum LangageEnum {
+enum class LangageEnum(val invalidAnswer: String, val name_: String) {
+    FRENCH("Réponse invalide", "french"), DIBI("Arto kroleksi livalidial", "dibi");
 
-    FRENCH("Réponse invalide", "french"),
-    DIBI("Arto kroleksi livalidial", "dibi");
-
-    private final String invalidAnswer, name;
-
-
-    LangageEnum(String invalidAnswer, String name) {
-        this.invalidAnswer = invalidAnswer;
-        this.name = name;
-    }
-
-    public String getInvalidAnswer() {
-        return invalidAnswer;
-    }
-
-    public String getName() {
-        return name;
-    }
 }

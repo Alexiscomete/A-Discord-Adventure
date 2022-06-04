@@ -20,7 +20,7 @@ class Shop : CommandInServer(
             val stringBuilder = StringBuilder()
                 .append("Resource -> prix d'achat; prix de vente; prix réel; nom à entrer")
             for (r in Resource.values()) {
-                stringBuilder.append("\n").append(r.getName()).append(" -> ").append(r.price * buyCoef).append("; ")
+                stringBuilder.append("\n").append(r.name_).append(" -> ").append(r.price * buyCoef).append("; ")
                     .append(r.price * sellCoef).append("; ").append(r.price).append("; ").append(r.progName)
             }
             val embedBuilder = EmbedBuilder()
@@ -58,7 +58,7 @@ class Shop : CommandInServer(
                         p.updateResources()
                         messageCreateEvent.message.reply("Transaction effectuée")
                     } else {
-                        messageCreateEvent.message.reply("La transaction de " + price + " rc pour " + quantity + " " + resource.getName() + " n'a pas pu être effectuée car vous n'aviez pas assez de rc")
+                        messageCreateEvent.message.reply("La transaction de " + price + " rc pour " + quantity + " " + resource.name_ + " n'a pas pu être effectuée car vous n'aviez pas assez de rc")
                     }
                 } catch (e: IllegalArgumentException) {
                     messageCreateEvent.message.reply("Cette resource n'existe pas ou la quantité entrée est invalide")
@@ -90,7 +90,7 @@ class Shop : CommandInServer(
                             p.updateResources()
                             messageCreateEvent.message.reply("Transaction effectuée")
                         } else {
-                            messageCreateEvent.message.reply("La transaction de " + quantity + " " + resource.getName() + " pour " + price + " rc n'a pas pu être effectuée car vous n'aviez pas assez de " + resource.getName())
+                            messageCreateEvent.message.reply("La transaction de " + quantity + " " + resource.name_ + " pour " + price + " rc n'a pas pu être effectuée car vous n'aviez pas assez de " + resource.name_)
                         }
                     }
                 } catch (e: IllegalArgumentException) {

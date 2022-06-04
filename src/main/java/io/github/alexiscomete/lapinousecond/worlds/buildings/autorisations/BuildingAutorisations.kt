@@ -7,12 +7,12 @@ import org.json.JSONArray
 import org.json.JSONObject
 
 class BuildingAutorisations : AutList {
-    constructor(buildingAutorisationArrayList: ArrayList<BuildingAutorisation?>?) {
+    constructor(buildingAutorisationArrayList: ArrayList<BuildingAutorisation>) {
         buildingAutorisations = buildingAutorisationArrayList
     }
 
     constructor(jsonArray: JSONArray) {
-        val buildingAutorisations = ArrayList<BuildingAutorisation?>()
+        val buildingAutorisations = ArrayList<BuildingAutorisation>()
         for (i in 0 until jsonArray.length()) {
             buildingAutorisations.add(toAutorisation(jsonArray.getJSONObject(i)))
         }

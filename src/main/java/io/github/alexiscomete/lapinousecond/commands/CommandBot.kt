@@ -1,9 +1,7 @@
 package io.github.alexiscomete.lapinousecond.commands
 
-import io.github.alexiscomete.lapinousecond.Main
 import io.github.alexiscomete.lapinousecond.UserPerms
 import io.github.alexiscomete.lapinousecond.entity.Player
-import io.github.alexiscomete.lapinousecond.save.SaveManager
 import io.github.alexiscomete.lapinousecond.view.AnswerEnum
 import org.javacord.api.event.message.MessageCreateEvent
 
@@ -14,7 +12,6 @@ abstract class CommandBot(
     vararg perms: String
 ) {
     @JvmField
-    protected val saveManager: SaveManager = Main.saveManager
     val perms: Array<out String>
 
     init {
@@ -49,7 +46,7 @@ abstract class CommandBot(
                 execute(messageCreateEvent, content, args)
                 return
             }
-            if (UserPerms.check(messageCreateEvent.messageAuthor.id, perms)) {
+            if (UserPerms.check(messageCreateEvent.messageAuthor.id, perms as Array<String>)) {
                 execute(messageCreateEvent, content, args)
             } else {
                 messageCreateEvent.message.reply("Vous n'avez pas le droit d'exécuter cette commande")

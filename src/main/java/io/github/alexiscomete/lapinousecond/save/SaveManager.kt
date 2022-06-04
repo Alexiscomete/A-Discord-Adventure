@@ -115,7 +115,7 @@ class SaveManager(path: String) {
         setValue(table, id, row, value)
     }
 
-    fun insert(where: String, what: HashMap<String?, String?>) {
+    fun insert(where: String, what: HashMap<String, String>) {
         val values = StringBuilder("(")
         val keys = StringBuilder("(")
         for (i in 0 until what.size) {

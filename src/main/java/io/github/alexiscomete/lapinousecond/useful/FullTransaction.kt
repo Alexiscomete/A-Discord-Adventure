@@ -1,6 +1,6 @@
 package io.github.alexiscomete.lapinousecond.useful
 
-import io.github.alexiscomete.lapinousecond.Main
+import io.github.alexiscomete.lapinousecond.*
 import io.github.alexiscomete.lapinousecond.entity.Player
 import io.github.alexiscomete.lapinousecond.view.AnswerEnum
 import org.javacord.api.entity.channel.TextChannel
@@ -43,7 +43,7 @@ class FullTransaction : VerifTransaction {
     }
 
     private fun addL(textChannel: TextChannel, after: Consumer<Double>) {
-        Main.messagesManager.addListener(textChannel, p.id) { messageCreateEvent: MessageCreateEvent ->
+        messagesManager.addListener(textChannel, p.id) { messageCreateEvent: MessageCreateEvent ->
             try {
                 val d = messageCreateEvent.message.content.toDouble()
                 if (max != null && d > max.get()) {

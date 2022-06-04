@@ -105,7 +105,7 @@ ${top[0]}"""
         val re = StringBuilder()
             .append("Nom -> quantité\n")
         for (reM in p.resourceManagers.values) {
-            re.append(reM.resource.getName()).append(" -> ").append(reM.quantity).append("\n")
+            re.append(reM.resource.name_).append(" -> ").append(reM.quantity).append("\n")
         }
         val builder2 = EmbedBuilder()
             .setTitle("Inventaire : ressources, items, argent")

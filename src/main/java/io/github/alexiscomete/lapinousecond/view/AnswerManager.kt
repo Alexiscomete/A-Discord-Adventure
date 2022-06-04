@@ -23,7 +23,7 @@ class AnswerManager(input: InputStream?) {
 
     fun getAnswer(langageEnum: LangageEnum, answerEnum: AnswerEnum): String {
         val `object` = jsonObject!!.getJSONObject(answerEnum.value) ?: return langageEnum.invalidAnswer
-        val answer = `object`.getString(langageEnum.getName())
+        val answer = `object`.getString(langageEnum.name_)
         if (answer == null || answer == "") {
             return langageEnum.invalidAnswer
         }

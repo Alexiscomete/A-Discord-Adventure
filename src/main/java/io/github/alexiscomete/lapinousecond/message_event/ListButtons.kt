@@ -1,7 +1,7 @@
 package io.github.alexiscomete.lapinousecond.message_event
 
 import io.github.alexiscomete.lapinousecond.ListenerMain
-import io.github.alexiscomete.lapinousecond.Main
+import io.github.alexiscomete.lapinousecond.*
 import io.github.alexiscomete.lapinousecond.save.SaveLocation.Companion.generateUniqueID
 import org.javacord.api.entity.message.component.ActionRow
 import org.javacord.api.entity.message.component.Button
@@ -59,11 +59,11 @@ class ListButtons<U>(
         }
 
     fun register() {
-        Main.buttonsManager
+        buttonsManager
             .addButton(idLast.toLong()) { messageComponentCreateEvent: MessageComponentCreateEvent ->
                 this.last(messageComponentCreateEvent)
             }
-        Main.buttonsManager
+        buttonsManager
             .addButton(idNext.toLong()) { messageComponentCreateEvent: MessageComponentCreateEvent ->
                 next(messageComponentCreateEvent)
             }

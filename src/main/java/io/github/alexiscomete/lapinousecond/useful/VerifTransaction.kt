@@ -1,6 +1,6 @@
 package io.github.alexiscomete.lapinousecond.useful
 
-import io.github.alexiscomete.lapinousecond.Main
+import io.github.alexiscomete.lapinousecond.*
 import io.github.alexiscomete.lapinousecond.entity.Player
 import io.github.alexiscomete.lapinousecond.save.SaveLocation
 import io.github.alexiscomete.lapinousecond.view.AnswerEnum
@@ -30,7 +30,7 @@ open class VerifTransaction(
             .addEmbed(embedBuilder)
             .addComponents(ActionRow.of(Button.success(id.toString(), "Valider")))
         messageBuilder.send(textChannel)
-        Main.buttonsManager.addButton(id) { messageComponentCreateEvent: MessageComponentCreateEvent ->
+        buttonsManager.addButton(id) { messageComponentCreateEvent: MessageComponentCreateEvent ->
             if (messageComponentCreateEvent.messageComponentInteraction.user.id == p.id) {
                 make(
                     quantity,

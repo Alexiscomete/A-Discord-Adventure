@@ -40,15 +40,15 @@ class Work : CommandInServer(
                 }
                 if (find != null) {
                     if (find.isReady) {
-                        roles.append(role.name).append(" : ").append(role.salary).append("\n")
+                        roles.append(role.name_).append(" : ").append(role.salary).append("\n")
                         find.setCurrentCooldown(System.currentTimeMillis() / 1000)
                         totalRoles += role.salary.toDouble()
                     } else {
-                        roles.append(role.name).append(" : ").append("Cooldown -> <t:")
+                        roles.append(role.name_).append(" : ").append("Cooldown -> <t:")
                             .append(find.currentCooldown.toInt() + role.coolDownSize).append(":R>\n")
                     }
                 } else {
-                    roles.append(role.name).append(" : ").append(role.salary).append("\n")
+                    roles.append(role.name_).append(" : ").append(role.salary).append("\n")
                     totalRoles += role.salary.toDouble()
                     val r = Role(role)
                     r.setCurrentCooldown(System.currentTimeMillis() / 1000)
