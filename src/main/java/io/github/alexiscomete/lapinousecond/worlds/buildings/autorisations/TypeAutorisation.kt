@@ -1,17 +1,9 @@
-package io.github.alexiscomete.lapinousecond.worlds.buildings.autorisations;
+package io.github.alexiscomete.lapinousecond.worlds.buildings.autorisations
 
-import io.github.alexiscomete.lapinousecond.entity.Owner;
+import io.github.alexiscomete.lapinousecond.entity.Owner
 
-public class TypeAutorisation<U> implements BuildingAutorisation {
-
-    final Class<U> uClass;
-
-    public TypeAutorisation(Class<U> uClass) {
-        this.uClass = uClass;
-    }
-
-    @Override
-    public boolean isAutorise(Owner owner) {
-        return uClass.isInstance(owner);
+class TypeAutorisation<U>(val uClass: Class<U>) : BuildingAutorisation {
+    override fun isAutorise(owner: Owner?): Boolean {
+        return uClass.isInstance(owner)
     }
 }

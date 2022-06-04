@@ -153,7 +153,7 @@ class BuildingCommand : CommandInServer(
         for (i in min until num) {
             val b = list[i]
             embedBuilder.addField(
-                b.getName(), """
+                b.name_, """
      Peut être construit : ${b.isBuild}
      Prix : ${b.basePrice}
      """.trimIndent(), false

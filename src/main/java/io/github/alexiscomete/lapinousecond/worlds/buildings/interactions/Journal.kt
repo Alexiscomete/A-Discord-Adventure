@@ -1,43 +1,25 @@
-package io.github.alexiscomete.lapinousecond.worlds.buildings.interactions;
+package io.github.alexiscomete.lapinousecond.worlds.buildings.interactions
 
-import io.github.alexiscomete.lapinousecond.entity.Player;
-import io.github.alexiscomete.lapinousecond.worlds.buildings.Building;
-import io.github.alexiscomete.lapinousecond.worlds.buildings.BuildingInteraction;
-import org.javacord.api.entity.message.MessageBuilder;
-import org.javacord.api.entity.message.embed.EmbedBuilder;
+import io.github.alexiscomete.lapinousecond.entity.Player
+import io.github.alexiscomete.lapinousecond.worlds.buildings.Building
+import io.github.alexiscomete.lapinousecond.worlds.buildings.BuildingInteraction
+import org.javacord.api.entity.message.MessageBuilder
+import org.javacord.api.entity.message.embed.EmbedBuilder
 
-public class Journal extends BuildingInteraction {
-    public Journal(Building building) {
-        super(building);
+class Journal(building: Building?) : BuildingInteraction(building!!) {
+    override fun interpret(args: Array<String?>?) {}
+    override val help: String?
+        get() = null
+    override val usage: String?
+        get() = null
+
+    override fun getInfos(p: Player?): EmbedBuilder? {
+        return null
     }
 
-    @Override
-    public void interpret(String[] args) {
-
+    override fun getCompleteInfos(p: Player?): MessageBuilder? {
+        return null
     }
 
-    @Override
-    public String getHelp() {
-        return null;
-    }
-
-    @Override
-    public String getUsage() {
-        return null;
-    }
-
-    @Override
-    public EmbedBuilder getInfos(Player p) {
-        return null;
-    }
-
-    @Override
-    public MessageBuilder getCompleteInfos(Player p) {
-        return null;
-    }
-
-    @Override
-    public void configBuilding() {
-
-    }
+    override fun configBuilding() {}
 }

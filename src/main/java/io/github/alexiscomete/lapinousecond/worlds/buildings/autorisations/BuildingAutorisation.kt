@@ -1,8 +1,7 @@
-package io.github.alexiscomete.lapinousecond.worlds.buildings.autorisations;
+package io.github.alexiscomete.lapinousecond.worlds.buildings.autorisations
 
-import io.github.alexiscomete.lapinousecond.entity.Owner;
+import io.github.alexiscomete.lapinousecond.entity.Owner
 
-@FunctionalInterface
-public interface BuildingAutorisation {
-    boolean isAutorise(Owner owner);
+fun interface BuildingAutorisation {
+    fun isAutorise(owner: Owner?): Boolean
 }

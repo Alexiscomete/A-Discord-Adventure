@@ -1,107 +1,114 @@
-package io.github.alexiscomete.lapinousecond.worlds.buildings;
+package io.github.alexiscomete.lapinousecond.worlds.buildings
 
-import io.github.alexiscomete.lapinousecond.Main;
-import io.github.alexiscomete.lapinousecond.worlds.buildings.autorisations.BuildingAutorisations;
-import io.github.alexiscomete.lapinousecond.worlds.buildings.evolution.Evolution;
-import io.github.alexiscomete.lapinousecond.worlds.buildings.interactions.*;
-import org.json.JSONObject;
+import io.github.alexiscomete.lapinousecond.*
+import io.github.alexiscomete.lapinousecond.worlds.buildings.autorisations.BuildingAutorisations
+import io.github.alexiscomete.lapinousecond.worlds.buildings.evolution.Evolution
+import java.util.function.Function
+import io.github.alexiscomete.lapinousecond.worlds.buildings.interactions.*
+import org.json.JSONObject
 
-import java.util.ArrayList;
-import java.util.function.Function;
+enum class Buildings(private val getBuildingM: Function<Building, BuildingInteraction>, val name_: String) {
+    ARMURERIE(
+        Function<Building, BuildingInteraction> { building: Building? ->
+            Armurerie(
+                building
+            )
+        }, "armurerie"
+    ),
+    ARRET_BUS(
+        Function<Building, BuildingInteraction> { building: Building? -> ArretBus(building) }, "arret_bus"
+    ),
+    AUBERGE(
+        Function<Building, BuildingInteraction> { building: Building? -> Auberge(building) }, "auberge"
+    ),
+    BANQUE(
+        Function<Building, BuildingInteraction> { building: Building? -> Banque(building) }, "banque"
+    ),
+    BAR(
+        Function<Building, BuildingInteraction> { building: Building? -> Bar(building) }, "bar"
+    ),
+    BIBLIOTHEQUE(
+        Function<Building, BuildingInteraction> { building: Building? -> Bibliotheque(building) }, "bibliotheque"
+    ),
+    BOULANGERIE(
+        Function<Building, BuildingInteraction> { building: Building? -> Boulangerie(building) }, "boulangerie"
+    ),
+    BOUTIQUE(
+        Function<Building, BuildingInteraction> { building: Building? -> Boutique(building) }, "boutique"
+    ),
+    CASINO(
+        Function<Building, BuildingInteraction> { building: Building? -> Casino(building) }, "casino"
+    ),
+    HOPITAL(
+        Function<Building, BuildingInteraction> { building: Building? -> Hopital(building) }, "hopital"
+    ),
+    JOURNAL(
+        Function<Building, BuildingInteraction> { building: Building? -> Journal(building) }, "journal"
+    ),
+    MAIRIE(
+        Function<Building, BuildingInteraction> { building: Building? -> Mairie(building) }, "mairie"
+    ),
+    MAISON(
+        Function<Building, BuildingInteraction> { building: Building? -> Maison(building) }, "maison"
+    ),
+    PHARMACIE(
+        Function<Building, BuildingInteraction> { building: Building? -> Pharmacie(building) }, "pharmacie"
+    );
 
-public enum Buildings {
+    var basePrice = 0.0
+        private set
+    val evol: ArrayList<Evolution> = ArrayList()
+    var isBuild = true
+        private set
+    private var buildingAutorisations: BuildingAutorisations? = null
 
-    ARMURERIE(Armurerie::new, "armurerie"),
-    ARRET_BUS(ArretBus::new, "arret_bus"),
-    AUBERGE(Auberge::new, "auberge"),
-    BANQUE(Banque::new, "banque"),
-    BAR(Bar::new, "bar"),
-    BIBLIOTHEQUE(Bibliotheque::new, "bibliotheque"),
-    BOULANGERIE(Boulangerie::new, "boulangerie"),
-    BOUTIQUE(Boutique::new, "boutique"),
-    CASINO(Casino::new, "casino"),
-    HOPITAL(Hopital::new, "hopital"),
-    JOURNAL(Journal::new, "journal"),
-    MAIRIE(Mairie::new, "mairie"),
-    MAISON(Maison::new, "maison"),
-    PHARMACIE(Pharmacie::new, "pharmacie");
+    init {
+        setModelWithJson(Building.jsonObject.getJSONObject(name_))
+    }
 
-    public static Building load(String save) {
-        if (save == null) {
-            return null;
-        }
-        if (save.contains(":")) {
-            save = save.split(":")[1];
-        }
-        try {
-            String type = Main.getSaveManager().getBuildingType(Long.parseLong(save));
-            if (type == null) {
-                System.out.println("null");
-                return null;
+    private fun setModelWithJson(jsonObject: JSONObject) {
+        buildingAutorisations = BuildingAutorisations(jsonObject.getJSONArray("autorisation"))
+        basePrice = jsonObject.getDouble("cost")
+        isBuild = jsonObject.getBoolean("build")
+    }
+
+    operator fun get(building: Building): BuildingInteraction {
+        return getBuildingM.apply(building)
+    }
+
+    fun getBuildingAutorisations(): BuildingAutorisations? {
+        return buildingAutorisations
+    }
+
+    companion object {
+        fun load(save: String?): Building? {
+            var save = save ?: return null
+            if (save.contains(":")) {
+                save = save.split(":".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[1]
             }
-            Buildings buildings = valueOf(type.toUpperCase());
-            return new Building(Long.parseLong(save), buildings);
-        } catch (IllegalArgumentException e) {
-            return null;
-        }
-    }
-
-    public static ArrayList<Building> loadBuildings(String str) {
-        ArrayList<Building> buildings = new ArrayList<>();
-        String[] strings = str.split(";");
-
-        for (String s :
-                strings) {
-            Building b = load(s);
-            if (b != null) {
-                buildings.add(b);
+            return try {
+                val type: String? = saveManager?.getBuildingType(save.toLong())
+                if (type == null) {
+                    println("null")
+                    return null
+                }
+                val buildings = valueOf(type.uppercase())
+                Building(save.toLong(), buildings)
+            } catch (e: IllegalArgumentException) {
+                null
             }
         }
 
-        return buildings;
-    }
-
-    private final Function<Building, BuildingInteraction> getBuildingM;
-    private final String name;
-
-    private double basePrice = 0.0;
-    private final ArrayList<Evolution> evol = new ArrayList<>();
-    private boolean build = true;
-    private BuildingAutorisations buildingAutorisations;
-
-    Buildings(Function<Building, BuildingInteraction> getBuildingM, String name) {
-        this.getBuildingM = getBuildingM;
-        this.name = name;
-        setModelWithJson(Building.jsonObject.getJSONObject(name));
-    }
-
-    public void setModelWithJson(JSONObject jsonObject) {
-        buildingAutorisations = new BuildingAutorisations(jsonObject.getJSONArray("autorisation"));
-        basePrice = jsonObject.getDouble("cost");
-        build = jsonObject.getBoolean("build");
-    }
-
-    public BuildingInteraction get(Building building) {
-        return getBuildingM.apply(building);
-    }
-
-    public double getBasePrice() {
-        return basePrice;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public ArrayList<Evolution> getEvol() {
-        return evol;
-    }
-
-    public BuildingAutorisations getBuildingAutorisations() {
-        return buildingAutorisations;
-    }
-
-    public boolean isBuild() {
-        return build;
+        fun loadBuildings(str: String): ArrayList<Building> {
+            val buildings = ArrayList<Building>()
+            val strings = str.split(";".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+            for (s in strings) {
+                val b = load(s)
+                if (b != null) {
+                    buildings.add(b)
+                }
+            }
+            return buildings
+        }
     }
 }

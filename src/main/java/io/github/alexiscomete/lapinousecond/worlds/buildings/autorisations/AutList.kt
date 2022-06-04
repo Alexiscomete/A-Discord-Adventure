@@ -1,20 +1,15 @@
-package io.github.alexiscomete.lapinousecond.worlds.buildings.autorisations;
+package io.github.alexiscomete.lapinousecond.worlds.buildings.autorisations
 
-import io.github.alexiscomete.lapinousecond.entity.Owner;
+import io.github.alexiscomete.lapinousecond.entity.Owner
 
-import java.util.ArrayList;
-
-public class AutList implements BuildingAutorisation {
-
-    protected ArrayList<BuildingAutorisation> buildingAutorisations = new ArrayList<>();
-
-    @Override
-    public boolean isAutorise(Owner owner) {
-        for (BuildingAutorisation buildingAutorisation : buildingAutorisations) {
+open class AutList : BuildingAutorisation {
+    protected var buildingAutorisations = ArrayList<BuildingAutorisation>()
+    override fun isAutorise(owner: Owner?): Boolean {
+        for (buildingAutorisation in buildingAutorisations) {
             if (buildingAutorisation.isAutorise(owner)) {
-                return true;
+                return true
             }
         }
-        return false;
+        return false
     }
 }

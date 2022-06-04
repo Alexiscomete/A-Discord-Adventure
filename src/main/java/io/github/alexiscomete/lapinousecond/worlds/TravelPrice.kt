@@ -43,10 +43,10 @@ class TravelPrice(
             var distanceID: Long? = null
             if (place1.world === place2.world) {
                 if (place1.world is WorldWithCoos) {
-                    val x1 = if (place1.getX()!!.isPresent) place1.getX()!!.get() else 0
-                    val x2 = if (place2.getX()!!.isPresent) place2.getX()!!.get() else 0
-                    val y1 = if (place1.getY()!!.isPresent) place1.getY()!!.get() else 0
-                    val y2 = if (place2.getY()!!.isPresent) place2.getY()!!.get() else 0
+                    val x1 = if (place1.getX().isPresent) place1.getX().get() else 0
+                    val x2 = if (place2.getX().isPresent) place2.getX().get() else 0
+                    val y1 = if (place1.getY().isPresent) place1.getY().get() else 0
+                    val y2 = if (place2.getY().isPresent) place2.getY().get() else 0
                     distanceCoos = Math.sqrt(Math.pow((x1 - x2).toDouble(), 2.0) + Math.pow((y1 - y2).toDouble(), 2.0))
                 } else {
                     val id1 = if (place1.getServerID().isPresent) place1.getServerID().get() else 854288660147994634L

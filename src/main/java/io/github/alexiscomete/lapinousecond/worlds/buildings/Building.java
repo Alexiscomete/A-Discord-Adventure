@@ -62,7 +62,7 @@ public class Building extends CacheGetSet implements BuildMethods {
         buildingsString += ";" + getId();
         place.set("buildings", buildingsString);
         set("collect_target", String.valueOf(buildings.getBasePrice()));
-        set("type", buildings.getName());
+        set("type", buildings.getName_());
         set("build_status", "building");
         set("owner_type", owner.getOwnerType());
         set("owner", owner.getOwnerString());

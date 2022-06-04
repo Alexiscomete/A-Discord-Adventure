@@ -1,15 +1,14 @@
-package io.github.alexiscomete.lapinousecond.worlds.buildings;
+package io.github.alexiscomete.lapinousecond.worlds.buildings
 
-import io.github.alexiscomete.lapinousecond.entity.Player;
-import org.javacord.api.entity.message.MessageBuilder;
-import org.javacord.api.entity.message.embed.EmbedBuilder;
+import io.github.alexiscomete.lapinousecond.entity.Player
+import org.javacord.api.entity.message.MessageBuilder
+import org.javacord.api.entity.message.embed.EmbedBuilder
 
-public interface BuildMethods {
-
-    EmbedBuilder getInfos(Player p);
-    MessageBuilder getCompleteInfos(Player p);
-    void configBuilding();
-    void interpret(String[] args);
-    String getHelp();
-    String getUsage();
+interface BuildMethods {
+    fun getInfos(p: Player?): EmbedBuilder?
+    fun getCompleteInfos(p: Player?): MessageBuilder?
+    fun configBuilding()
+    fun interpret(args: Array<String?>?)
+    val help: String?
+    val usage: String?
 }
