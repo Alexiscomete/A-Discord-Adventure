@@ -1,168 +1,187 @@
-package io.github.alexiscomete.lapinousecond.worlds.buildings;
+package io.github.alexiscomete.lapinousecond.worlds.buildings
 
-import io.github.alexiscomete.lapinousecond.Main;
-import io.github.alexiscomete.lapinousecond.entity.Owner;
-import io.github.alexiscomete.lapinousecond.entity.Player;
-import io.github.alexiscomete.lapinousecond.save.CacheGetSet;
-import io.github.alexiscomete.lapinousecond.save.SaveLocation;
-import io.github.alexiscomete.lapinousecond.save.Tables;
-import io.github.alexiscomete.lapinousecond.useful.FullTransaction;
-import io.github.alexiscomete.lapinousecond.useful.ProgressionBar;
-import io.github.alexiscomete.lapinousecond.view.AnswerEnum;
-import io.github.alexiscomete.lapinousecond.worlds.Place;
-import org.javacord.api.entity.message.MessageBuilder;
-import org.javacord.api.entity.message.component.ActionRow;
-import org.javacord.api.entity.message.component.Button;
-import org.javacord.api.entity.message.embed.EmbedBuilder;
-import org.javacord.api.interaction.MessageComponentInteraction;
-import org.json.JSONObject;
+import io.github.alexiscomete.lapinousecond.buttonsManager
+import io.github.alexiscomete.lapinousecond.entity.Owner
+import io.github.alexiscomete.lapinousecond.entity.Player
+import io.github.alexiscomete.lapinousecond.save.CacheGetSet
+import io.github.alexiscomete.lapinousecond.save.SaveLocation
+import io.github.alexiscomete.lapinousecond.save.Tables
+import io.github.alexiscomete.lapinousecond.saveManager
+import io.github.alexiscomete.lapinousecond.useful.FullTransaction
+import io.github.alexiscomete.lapinousecond.useful.ProgressionBar
+import io.github.alexiscomete.lapinousecond.view.AnswerEnum
+import io.github.alexiscomete.lapinousecond.worlds.Place
+import org.javacord.api.entity.message.MessageBuilder
+import org.javacord.api.entity.message.component.ActionRow
+import org.javacord.api.entity.message.component.Button
+import org.javacord.api.entity.message.embed.EmbedBuilder
+import org.javacord.api.interaction.MessageComponentInteraction
+import org.json.JSONObject
+import java.awt.Color
+import java.util.*
 
-import java.awt.*;
-import java.io.InputStream;
-import java.util.AbstractMap;
-import java.util.Objects;
-import java.util.Scanner;
-
-public class Building extends CacheGetSet implements BuildMethods {
-
-    // the json file who contains buildings type information
-    public static final JSONObject jsonObject;
-
-    // load the json file
-    static {
-        InputStream inputStream = Building.class.getClassLoader().getResourceAsStream("buildings_config.json");
-        System.out.println(inputStream);
-        if (inputStream == null) {
-            System.out.println("eeee");
-            jsonObject = new JSONObject("{}");
-        } else {
-            Scanner sc = new Scanner(inputStream);
-            StringBuilder stringBuilder = new StringBuilder();
-            sc.forEachRemaining(stringBuilder::append);
-            jsonObject = new JSONObject(stringBuilder.toString());
-        }
-    }
-
-    private BuildingInteraction buildingInteraction;
-    private final ProgressionBar progressionBar;
+class Building : CacheGetSet, BuildMethods {
+    private var buildingInteraction: BuildingInteraction? = null
+    private val progressionBar: ProgressionBar
 
     // constructor for the building if it's already exist
-    public Building(long id, Buildings buildings) {
-        super(id, Tables.BUILDINGS.getTable());
-        progressionBar = new ProgressionBar("💰", 3, "🧱", 3, " ", 1, Double.parseDouble(getString("collect_target")), Double.parseDouble(getString("collect_value")), 20);
-        this.buildingInteraction = buildings.get(this);
+    constructor(id: Long, buildings: Buildings) : super(id, Tables.BUILDINGS.table) {
+        progressionBar = ProgressionBar(
+            "💰",
+            3,
+            "🧱",
+            3,
+            " ",
+            1,
+            getString("collect_target").toDouble(),
+            getString("collect_value").toDouble(),
+            20
+        )
+        buildingInteraction = buildings[this]
     }
 
     // constructor for the building if it's not exist yet
     @SafeVarargs
-    public Building(Buildings buildings, Owner owner, Place place, AbstractMap.SimpleEntry<String, String>... specialInfos) {
-        super(SaveLocation.generateUniqueID(), Tables.BUILDINGS.getTable());
-        Main.getSaveManager().buildings.add(getId());
-        String buildingsString = place.getString("buildings");
-        buildingsString += ";" + getId();
-        place.set("buildings", buildingsString);
-        set("collect_target", String.valueOf(buildings.getBasePrice()));
-        set("type", buildings.getName_());
-        set("build_status", "building");
-        set("owner_type", owner.getOwnerType());
-        set("owner", owner.getOwnerString());
-        set("collect_value", "0.0");
-        for (AbstractMap.SimpleEntry<String, String> special :
-                specialInfos) {
-            set(special.getKey(), special.getValue());
+    constructor(
+        buildings: Buildings,
+        owner: Owner,
+        place: Place,
+        vararg specialInfos: AbstractMap.SimpleEntry<String?, String?>?
+    ) : super(SaveLocation.generateUniqueID(), Tables.BUILDINGS.table) {
+        saveManager?.buildings?.add(id)
+        var buildingsString: String = place.getString("buildings")
+        buildingsString += ";$id"
+        place["buildings"] = buildingsString
+        set("collect_target", buildings.basePrice.toString())
+        set("type", buildings.name_)
+        set("build_status", "building")
+        set("owner_type", owner.ownerType)
+        set("owner", owner.ownerString)
+        set("collect_value", "0.0")
+        for (special in specialInfos) {
+            if (special != null) {
+                special.key?.let { special.value?.let { it1 -> set(it, it1) } }
+            }
         }
-        progressionBar = new ProgressionBar("💰", 3, "🧱", 3, " ", 1, buildings.getBasePrice(), 0.0, 20);
+        progressionBar = ProgressionBar("💰", 3, "🧱", 3, " ", 1, buildings.basePrice, 0.0, 20)
     }
 
-    public EmbedBuilder infos(Player p) {
-        if (getString("build_status").equals("building")) {
-            return inBuildInfos(p);
+    fun infos(p: Player): EmbedBuilder? {
+        return if (getString("build_status") == "building") {
+            inBuildInfos(p)
         } else {
-            return getInfos(p);
+            getInfos(p)
         }
     }
 
-    public MessageBuilder completeInfos(Player p) {
-        if (getString("build_status").equals("building")) {
-            return inBuildCompleteInfos(p);
+    fun completeInfos(p: Player): MessageBuilder? {
+        return if (getString("build_status") == "building") {
+            inBuildCompleteInfos(p)
         } else {
-            return getCompleteInfos(p);
+            getCompleteInfos(p)
         }
     }
 
-    private EmbedBuilder inBuildInfos(Player p) {
-        return new EmbedBuilder()
-                .setColor(Color.CYAN)
-                .setTitle(p.getAnswer(AnswerEnum.BUILDING_BA, true))
-                .setDescription("Type : " + getString("type") + "\n ID : " + getId())
-                .addInlineField(p.getAnswer(AnswerEnum.OWNER, true), "Type : " + getString("type") + "\nIdentification : " + getString("owner"))
-                .addInlineField(p.getAnswer(AnswerEnum.PROGRESSION, true), progressionBar.getBar() + "\n" + getString("collect_value") + "/" + getString("collect_target"));
+    private fun inBuildInfos(p: Player): EmbedBuilder {
+        return EmbedBuilder()
+            .setColor(Color.CYAN)
+            .setTitle(p.getAnswer(AnswerEnum.BUILDING_BA, true))
+            .setDescription(
+                """Type : ${getString("type")}
+ ID : $id"""
+            )
+            .addInlineField(
+                p.getAnswer(AnswerEnum.OWNER, true), """
+     Type : ${getString("type")}
+     Identification : ${getString("owner")}
+     """.trimIndent()
+            )
+            .addInlineField(
+                p.getAnswer(AnswerEnum.PROGRESSION, true),
+                progressionBar.bar + "\n" + getString("collect_value") + "/" + getString("collect_target")
+            )
     }
 
-    MessageBuilder inBuildCompleteInfos(Player p) {
-        long id = SaveLocation.generateUniqueID();
-        MessageBuilder messageBuilder = new MessageBuilder()
-                .addEmbed(inBuildInfos(p))
-                .addComponents(ActionRow.of(
-                        Button.success(String.valueOf(id), "Donner de l'argent")
-                ));
-
-
-        Main.getButtonsManager().addButton(id, (messageComponentCreateEvent -> {
-            MessageComponentInteraction msg = messageComponentCreateEvent.getMessageComponentInteraction();
-
-
-            FullTransaction transaction = new FullTransaction(aDouble -> {
-                set("collect_value", String.valueOf(Double.parseDouble(getString("collect_value")) + aDouble));
-                if (Objects.equals(getString("collect_value"), getString("collect_target"))) {
-                    msg.getChannel().get().sendMessage("Build terminé");
-                    set("build_status", "finish");
-                    configBuilding();
-                } else {
-                    msg.getChannel().get().sendMessage(inBuildInfos(p));
-                }
-            }, aDouble -> p.setBal(p.getBal() - aDouble), p::getBal, p, () -> Double.parseDouble(getString("collect_target")) - Double.parseDouble(getString("collect_value")));
-            transaction.full(msg);
-        }));
-
-        return messageBuilder;
+    private fun inBuildCompleteInfos(p: Player): MessageBuilder {
+        val id: Long = SaveLocation.generateUniqueID()
+        val messageBuilder: MessageBuilder = MessageBuilder()
+            .addEmbed(inBuildInfos(p))
+            .addComponents(
+                ActionRow.of(
+                    Button.success(id.toString(), "Donner de l'argent")
+                )
+            )
+        buttonsManager.addButton(id) { messageComponentCreateEvent ->
+            val msg: MessageComponentInteraction = messageComponentCreateEvent.messageComponentInteraction
+            val transaction = FullTransaction(
+                { aDouble: Double ->
+                    set("collect_value", (getString("collect_value").toDouble() + aDouble).toString())
+                    if (Objects.equals(getString("collect_value"), getString("collect_target"))) {
+                        msg.channel.get().sendMessage("Build terminé")
+                        set("build_status", "finish")
+                        configBuilding()
+                    } else {
+                        msg.channel.get().sendMessage(inBuildInfos(p))
+                    }
+                },
+                { aDouble: Double -> p.setBal(p.getBal() - aDouble) },
+                { p.getBal() },
+                p,
+                { getString("collect_target").toDouble() - getString("collect_value").toDouble() })
+            transaction.full(msg)
+        }
+        return messageBuilder
     }
 
-    public void evolute(BuildingInteraction buildingInteraction) {
-        this.buildingInteraction = buildingInteraction;
+    fun evolute(buildingInteraction: BuildingInteraction?) {
+        this.buildingInteraction = buildingInteraction
     }
 
     // --------------------------------------------------
     // --------------- BUILDING INTERACTION -------------
     // --------------------------------------------------
-
-    @Override
-    public void configBuilding() {
-        buildingInteraction.configBuilding();
+    override fun configBuilding() {
+        buildingInteraction!!.configBuilding()
     }
 
-    @Override
-    public void interpret(String[] args) {
-        buildingInteraction.interpret(args);
+    override fun interpret(args: Array<String?>?) {
+        buildingInteraction!!.interpret(args)
     }
 
-    @Override
-    public String getHelp() {
-        return buildingInteraction.getHelp();
+    override val help: String?
+        get() = buildingInteraction!!.help
+    override val usage: String?
+        get() = buildingInteraction!!.usage
+
+    override fun getInfos(p: Player?): EmbedBuilder? {
+        return buildingInteraction!!.getInfos(p)
     }
 
-    @Override
-    public String getUsage() {
-        return buildingInteraction.getUsage();
+    override fun getCompleteInfos(p: Player?): MessageBuilder? {
+        return buildingInteraction!!.getCompleteInfos(p)
     }
 
-    @Override
-    public EmbedBuilder getInfos(Player p) {
-        return buildingInteraction.getInfos(p);
-    }
+    companion object {
+        // the json file who contains buildings type information
+        var jsonObject: JSONObject? = null
 
-    @Override
-    public MessageBuilder getCompleteInfos(Player p) {
-        return buildingInteraction.getCompleteInfos(p);
+        // load the json file
+        init {
+            val inputStream = Building::class.java.classLoader.getResourceAsStream("buildings_config.json")
+            println(inputStream)
+            jsonObject = if (inputStream == null) {
+                println("eeee")
+                JSONObject("{}")
+            } else {
+                val sc = Scanner(inputStream)
+                val stringBuilder = StringBuilder()
+                sc.forEachRemaining { str: String? ->
+                    stringBuilder.append(
+                        str
+                    )
+                }
+                JSONObject(stringBuilder.toString())
+            }
+        }
     }
 }

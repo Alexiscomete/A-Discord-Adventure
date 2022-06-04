@@ -8,7 +8,7 @@ class PlaceZones : Place {
     constructor() : super()
     constructor(id: Long) : super(id) {
         val zonesBDD = getString("zones")
-        if (zonesBDD != null && zonesBDD != "") {
+        if (zonesBDD != "") {
             val zonesTab = zonesBDD.split(";".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
             for (zone in zonesTab) {
                 if (zone != "") {

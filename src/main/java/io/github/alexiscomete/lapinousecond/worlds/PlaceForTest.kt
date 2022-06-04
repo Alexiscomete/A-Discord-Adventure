@@ -17,16 +17,8 @@ class PlaceForTest(val name: String, override val id: Long, var x: Int, var y: I
         return Optional.of(x)
     }
 
-    override fun setX(x: Int?) {
-        this.x = x!!
-    }
-
     override fun getY(): Optional<Int> {
         return Optional.of(y)
-    }
-
-    override fun setY(y: Int?) {
-        this.y = y!!
     }
 
     companion object {
@@ -39,7 +31,7 @@ class PlaceForTest(val name: String, override val id: Long, var x: Int, var y: I
 
             // génération du nom aléatoire
             val name = StringBuilder()
-            val nb = Math.max((Math.random() * 10).toInt(), 3)
+            val nb = (Math.random() * 10).toInt().coerceAtLeast(3)
             for (i in 0 until nb) {
                 name.append((Math.random() * 26 + 'a'.code.toDouble()).toInt().toChar())
             }

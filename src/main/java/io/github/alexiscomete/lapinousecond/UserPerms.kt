@@ -1,7 +1,5 @@
 package io.github.alexiscomete.lapinousecond
 
-import io.github.alexiscomete.lapinousecond.Main.saveManager
-
 /**
  * Permissions globales sur le bot
  */

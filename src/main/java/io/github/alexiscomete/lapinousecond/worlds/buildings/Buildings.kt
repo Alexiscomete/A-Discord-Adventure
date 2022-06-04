@@ -82,18 +82,18 @@ enum class Buildings(private val getBuildingM: Function<Building, BuildingIntera
 
     companion object {
         fun load(save: String?): Building? {
-            var save = save ?: return null
-            if (save.contains(":")) {
-                save = save.split(":".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[1]
+            var save1 = save ?: return null
+            if (save1.contains(":")) {
+                save1 = save1.split(":".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[1]
             }
             return try {
-                val type: String? = saveManager?.getBuildingType(save.toLong())
+                val type: String? = saveManager?.getBuildingType(save1.toLong())
                 if (type == null) {
                     println("null")
                     return null
                 }
                 val buildings = valueOf(type.uppercase())
-                Building(save.toLong(), buildings)
+                Building(save1.toLong(), buildings)
             } catch (e: IllegalArgumentException) {
                 null
             }

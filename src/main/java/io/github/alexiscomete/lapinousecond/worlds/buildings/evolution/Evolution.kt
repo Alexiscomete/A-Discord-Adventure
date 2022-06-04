@@ -6,8 +6,8 @@ import org.json.JSONObject
 import java.util.*
 
 class Evolution {
-    val evolutionTarget: Buildings
-    val cost: Double
+    private val evolutionTarget: Buildings
+    private val cost: Double
 
     constructor(evolutionTarget: Buildings, cost: Double) {
         this.evolutionTarget = evolutionTarget

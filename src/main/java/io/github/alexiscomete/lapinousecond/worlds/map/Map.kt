@@ -9,6 +9,8 @@ import java.awt.image.BufferedImage
 import java.io.IOException
 import java.util.*
 import javax.imageio.ImageIO
+import kotlin.math.pow
+import kotlin.math.sqrt
 
 object Map {
     var map: BufferedImage? = null
@@ -30,7 +32,7 @@ object Map {
     }
 
     // pixel at (x, y) with Pixel
-    fun getPixel(x: Int, y: Int): Pixel {
+    private fun getPixel(x: Int, y: Int): Pixel {
         return Pixel(x, y, MAP_WIDTH, MAP_HEIGHT, map!!)
     }
 
@@ -40,7 +42,7 @@ object Map {
     }
 
     // zoom and return a BufferedImage
-    fun zoom(x: Int, y: Int, width: Int, height: Int): BufferedImage {
+    private fun zoom(x: Int, y: Int, width: Int, height: Int): BufferedImage {
         return map!!.getSubimage(
             x * map!!.getWidth(null) / MAP_WIDTH,
             y * map!!.getHeight(null) / MAP_HEIGHT,
@@ -71,7 +73,7 @@ object Map {
      * @param img The Image to be converted
      * @return The converted BufferedImage
      */
-    fun toBufferedImage(img: Image): BufferedImage {
+    private fun toBufferedImage(img: Image): BufferedImage {
         if (img is BufferedImage) {
             return img
         }
@@ -103,10 +105,10 @@ object Map {
         g.font = Font("Arial", Font.BOLD, image.width / 80)
         val size = image.width / 80
         for (place in places) {
-            if (place.x.isPresent && place.y.isPresent) {
+            if (place.getX().isPresent && place.getY().isPresent) {
                 // coos on image (x, y) after resizing (x and y are not the same as the image's coos)
-                val x = (place.x.get() - xStart) * image.width / width
-                val y = (place.y.get() - yStart) * image.height / height
+                val x = (place.getX().get() - xStart) * image.width / width
+                val y = (place.getY().get() - yStart) * image.height / height
                 // draw a point
                 g.fillOval(x, y, (size * 0.7).toInt(), (size * 0.7).toInt())
                 // draw the name
@@ -136,7 +138,7 @@ object Map {
         val closedList = ArrayList<Node?>()
         val openList = ArrayList<Node?>()
         openList.add(start)
-        while (!openList.isEmpty()) {
+        while (openList.isNotEmpty()) {
             var current = openList[0]
             // je cherche le nœud avec la plus petite heuristique
             for (node in openList) {
@@ -144,13 +146,13 @@ object Map {
                     current = node
                 }
             }
-            if (current!!.equals(end)) {
+            if (current!! == end) {
                 val path = ArrayList<Pixel?>()
                 while (current!!.parent != null) {
                     path.add(current)
                     current = current.parent
                 }
-                Collections.reverse(path)
+                path.reverse()
                 return path
             }
             openList.remove(current)
@@ -225,8 +227,8 @@ object Map {
     }
 
     // vérifie si le pixel est dans la map
-    fun isInMap(x: Int, y: Int): Boolean {
-        return x >= 0 && x < MAP_WIDTH && y >= 0 && y < MAP_HEIGHT
+    private fun isInMap(x: Int, y: Int): Boolean {
+        return x in 0 until MAP_WIDTH && y >= 0 && y < MAP_HEIGHT
     }
 
     fun getNode(x: Int, y: Int, nodes: ArrayList<Node?>): Node? {
@@ -237,8 +239,8 @@ object Map {
     }
 
     // distance between two pixels
-    fun distance(a: Pixel?, b: Pixel): Double {
-        return Math.sqrt(Math.pow((a!!.x - b.x).toDouble(), 2.0) + Math.pow((a.y - b.y).toDouble(), 2.0))
+    private fun distance(a: Pixel?, b: Pixel): Double {
+        return sqrt((a!!.x - b.x).toDouble().pow(2.0) + (a.y - b.y).toDouble().pow(2.0))
     }
 
     fun drawPath(path: ArrayList<Pixel>): BufferedImage {
