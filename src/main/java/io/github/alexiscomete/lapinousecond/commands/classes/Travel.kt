@@ -1,6 +1,6 @@
 package io.github.alexiscomete.lapinousecond.commands.classes
 
-import io.github.alexiscomete.lapinousecond.Main
+import io.github.alexiscomete.lapinousecond.*
 import io.github.alexiscomete.lapinousecond.commands.CommandInServer
 import io.github.alexiscomete.lapinousecond.entity.Player
 import io.github.alexiscomete.lapinousecond.save.SaveLocation.Companion.generateUniqueID
@@ -20,6 +20,7 @@ import java.awt.Color
 import java.util.concurrent.ExecutionException
 import java.util.function.Consumer
 import java.util.stream.Collectors
+import io.github.alexiscomete.lapinousecond.*
 
 class Travel : CommandInServer("Vous permet de voyager vers un serveur", "travel", "travel [server id]") {
     override fun executeC(messageCreateEvent: MessageCreateEvent, content: String, args: Array<String>, p: Player) {
@@ -57,7 +58,7 @@ class Travel : CommandInServer("Vous permet de voyager vers un serveur", "travel
         }
 
         // On récupère le lieu du joueur sous forme d'objet avec l'id
-        val place = saveManager.places[placeID.toLong()]
+        val place = saveManager?.places?.get(placeID.toLong())
 
         // si le lieu n'existe pas on l'indique au joueur et on propose d'utiliser -hub
         if (place == null) {
@@ -70,8 +71,7 @@ class Travel : CommandInServer("Vous permet de voyager vers un serveur", "travel
         val places = Place.toPlaces(place.getString("connections"))
 
         // On récupère le serveur dans lequel le joueur veut se rendre
-        val dest: Place
-        dest = try {
+        val dest: Place = try {
             Place(args[1].toLong())
         } catch (e: IllegalArgumentException) {
             messageCreateEvent.message.reply("SVP ne jouez pas à entrer autre chose que des nombres")

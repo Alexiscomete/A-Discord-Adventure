@@ -6,6 +6,7 @@ import io.github.alexiscomete.lapinousecond.worlds.Place
 import io.github.alexiscomete.lapinousecond.worlds.map.Map
 import org.javacord.api.entity.message.MessageBuilder
 import org.javacord.api.event.message.MessageCreateEvent
+import io.github.alexiscomete.lapinousecond.*
 
 class MapCommand : CommandWithAccount("description", "map", "totalDescription") {
     override fun execute(messageCreateEvent: MessageCreateEvent, content: String, args: Array<String>, p: Player) {

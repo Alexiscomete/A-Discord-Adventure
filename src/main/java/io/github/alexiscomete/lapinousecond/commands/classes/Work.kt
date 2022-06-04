@@ -59,7 +59,7 @@ class Work : CommandInServer(
         } else {
             roles.append("Vous n'êtes pas sur un serveur")
         }
-        if (roles.length > 0) embedBuilder.addField("Roles", roles.toString())
+        if (roles.isNotEmpty()) embedBuilder.addField("Roles", roles.toString())
         if (System.currentTimeMillis() - p.workTime > 200000) {
             val wo = WorkEnum.values()
             val random = Random()
@@ -78,8 +78,7 @@ class Work : CommandInServer(
             }
             val strings = woAnswer.answer.split(" rc ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
             val r = Random().nextInt(woAnswer.max - woAnswer.min) + woAnswer.min
-            val answer: String
-            answer = if (strings.size > 1) {
+            val answer: String = if (strings.size > 1) {
                 strings[0] + " " + r + " " + strings[1]
             } else {
                 strings[0]
@@ -90,8 +89,8 @@ class Work : CommandInServer(
             } else {
                 var resourceManager = p.resourceManagers[woAnswer.resource]
                 if (resourceManager == null) {
-                    resourceManager = ResourceManager(woAnswer.resource, r)
-                    p.resourceManagers[woAnswer.resource] = resourceManager
+                    resourceManager = ResourceManager(woAnswer.resource!!, r)
+                    p.resourceManagers[woAnswer.resource!!] = resourceManager
                 } else {
                     resourceManager.quantity = resourceManager.quantity + r
                 }

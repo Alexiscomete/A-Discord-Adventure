@@ -1,6 +1,6 @@
 package io.github.alexiscomete.lapinousecond.commands.classes
 
-import io.github.alexiscomete.lapinousecond.Main
+import io.github.alexiscomete.lapinousecond.*
 import io.github.alexiscomete.lapinousecond.commands.CommandBot
 import io.github.alexiscomete.lapinousecond.save.SaveManager
 import io.github.alexiscomete.lapinousecond.save.Tables
@@ -17,7 +17,6 @@ class PermsManager : CommandBot(
     "MANAGE_PERMS"
 ) {
     override fun execute(messageCreateEvent: MessageCreateEvent, content: String, args: Array<String>) {
-        val saveManager = Main.saveManager
         if (args.size < 4) {
             messageCreateEvent.message.reply("pm [user] [perm name] [true/false]")
             return
@@ -25,20 +24,22 @@ class PermsManager : CommandBot(
         val value = Boolean.parseBoolean(args[3])
         val perm = args[2]
         try {
-            val userPerms = saveManager.getPlayerPerms(args[1].toLong())
-            if (userPerms.isDefault) {
-                val what = HashMap<String, String>()
-                what["ID"] = messageCreateEvent.messageAuthor.id.toString()
-                what["PLAY"] = SaveManager.toBooleanString(userPerms.PLAY)
-                what["CREATE_SERVER"] = SaveManager.toBooleanString(userPerms.CREATE_SERVER)
-                what["MANAGE_PERMS"] = SaveManager.toBooleanString(userPerms.MANAGE_PERMS)
-                saveManager.insert("perms", what)
+            val userPerms = saveManager?.getPlayerPerms(args[1].toLong())
+            if (userPerms != null) {
+                if (userPerms.isDefault) {
+                    val what = HashMap<String, String>()
+                    what["ID"] = messageCreateEvent.messageAuthor.id.toString()
+                    what["PLAY"] = SaveManager.toBooleanString(userPerms.PLAY)
+                    what["CREATE_SERVER"] = SaveManager.toBooleanString(userPerms.CREATE_SERVER)
+                    what["MANAGE_PERMS"] = SaveManager.toBooleanString(userPerms.MANAGE_PERMS)
+                    saveManager?.insert("perms", what)
+                }
             }
             if (perm.equals("MANAGE_PERMS", ignoreCase = true) && !messageCreateEvent.messageAuthor.isBotOwner) {
                 messageCreateEvent.message.reply("Impossible .... vous devez être l'owner du bot pour modifier cette permission")
                 return
             }
-            saveManager.setValue(
+            saveManager?.setValue(
                 Tables.PERMS.table,
                 messageCreateEvent.messageAuthor.id,
                 perm,

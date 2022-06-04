@@ -1,6 +1,6 @@
 package io.github.alexiscomete.lapinousecond.commands.classes
 
-import io.github.alexiscomete.lapinousecond.Main
+import io.github.alexiscomete.lapinousecond.*
 import io.github.alexiscomete.lapinousecond.commands.CommandBot
 import io.github.alexiscomete.lapinousecond.entity.Player
 import org.javacord.api.entity.message.embed.EmbedBuilder

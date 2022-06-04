@@ -1,7 +1,7 @@
 package io.github.alexiscomete.lapinousecond.roles
 
 class Role(val role: RolesEnum) {
-    private var currentCooldown: Long = 0
+    var currentCooldown: Long = 0
     fun getCurrentCooldown(): Double {
         return currentCooldown.toDouble()
     }

@@ -15,6 +15,6 @@ abstract class Item internal constructor(
     }
 
     abstract fun setArgs(args: Array<String?>?)
-    abstract fun use(event: MessageCreateEvent?, content: String?, args: Array<String?>?, ownerOfItem: Player?): Boolean
+    abstract fun use(event: MessageCreateEvent?, content: String?, args: Array<String>, ownerOfItem: Player?): Boolean
     abstract val args: String?
 }

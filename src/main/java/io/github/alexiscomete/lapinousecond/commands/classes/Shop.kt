@@ -13,8 +13,8 @@ class Shop : CommandInServer(
     "shop",
     "Vous permet d'acheter ou de vendre des items / ressources classiques :\n- 'list' pour voir la liste des items\n- 'buy [name] <quantité>' pour acheter et 'sell [name] <quantité>' pour vendre\n- 'info [name]' pour avoir les informations sur un item\n"
 ) {
-    val buyCoef = 1.1
-    val sellCoef = 0.9
+    private val buyCoef = 1.1
+    private val sellCoef = 0.9
     override fun executeC(messageCreateEvent: MessageCreateEvent, content: String, args: Array<String>, p: Player) {
         if (args.size < 2 || args[1] == "list") {
             val stringBuilder = StringBuilder()

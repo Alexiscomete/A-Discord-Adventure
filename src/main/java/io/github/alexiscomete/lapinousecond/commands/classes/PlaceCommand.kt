@@ -1,6 +1,6 @@
 package io.github.alexiscomete.lapinousecond.commands.classes
 
-import io.github.alexiscomete.lapinousecond.Main
+import io.github.alexiscomete.lapinousecond.*
 import io.github.alexiscomete.lapinousecond.commands.CommandWithAccount
 import io.github.alexiscomete.lapinousecond.entity.Player
 import io.github.alexiscomete.lapinousecond.message_event.ListButtons
@@ -27,7 +27,7 @@ class PlaceCommand : CommandWithAccount(
 ) {
     override fun execute(messageCreateEvent: MessageCreateEvent, content: String, args: Array<String>, p: Player) {
         if (messageCreateEvent.message.isServerMessage) {
-            val serverBot = saveManager.servers[messageCreateEvent.server.get().id]
+            val serverBot = saveManager?.servers?.get(messageCreateEvent.server.get().id)
             if (serverBot == null) {
                 messageCreateEvent.message.reply("Utilisez d'abord le -config")
             } else {
