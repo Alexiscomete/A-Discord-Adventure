@@ -61,11 +61,11 @@ class MapCommand : CommandWithAccount("description", "map", "totalDescription") 
                     val x = p.getString("x_DIBIMAP")
                     val y = p.getString("y_DIBIMAP")
                     // convert the strings to int
-                    val x_int = x.toInt()
-                    val y_int = y.toInt()
+                    val xInt = x.toInt()
+                    val yInt = y.toInt()
                     // zoom on the player's position and send the map bigger
                     val messageBuilder2 = MessageBuilder()
-                    messageBuilder2.addAttachment(Map.bigger(Map.zoom(x_int, y_int, 30), 10), "map.png")
+                    messageBuilder2.addAttachment(Map.bigger(Map.zoom(xInt, yInt, 30), 10), "map.png")
                     messageBuilder2.send(messageCreateEvent.channel)
                 }
                 "zoom" -> {
@@ -110,7 +110,7 @@ class MapCommand : CommandWithAccount("description", "map", "totalDescription") 
                         ), 10
                     )
                     val places = Place.getPlacesWithWorld("DIBIMAP")
-                    places.removeIf { place: Place -> place.x.isEmpty || place.y.isEmpty || place.x.get() < args[2].toInt() - args[4].toInt() * 2 || place.x.get() > args[2].toInt() + args[4].toInt() * 2 || place.y.get() < args[3].toInt() - args[4].toInt() || place.y.get() > args[3].toInt() + args[4].toInt() }
+                    places.removeIf { place: Place -> place.getX().isEmpty || place.getY().isEmpty || place.getX().get() < args[2].toInt() - args[4].toInt() * 2 || place.getX().get() > args[2].toInt() + args[4].toInt() * 2 || place.getY().get() < args[3].toInt() - args[4].toInt() || place.getY().get() > args[3].toInt() + args[4].toInt() }
                     Map.getMapWithNames(
                         places,
                         args[2].toInt() - args[4].toInt() * 2,

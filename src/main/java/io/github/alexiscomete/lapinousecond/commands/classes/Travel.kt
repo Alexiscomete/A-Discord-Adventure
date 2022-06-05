@@ -186,9 +186,9 @@ class Travel : CommandInServer("Vous permet de voyager vers un serveur", "travel
                         val placeO = saveManager.places[place.toLong()]
                             ?: throw IllegalArgumentException("Lieu introuvable")
                         messageCreateEvent11.message.reply("Calcul du trajet en cours ....")
-                        val path1 = Map.getNode(x, y, ArrayList())?.let {
+                        val path1 = Map.getNode(x, y, ArrayList()).let {
                             Map.getNode(placeO.getString("x").toInt(), placeO.getString("y").toInt(), ArrayList())
-                                ?.let { it1 ->
+                                .let { it1 ->
                                     Map.findPath(
                                         it,
                                         it1,
@@ -196,9 +196,7 @@ class Travel : CommandInServer("Vous permet de voyager vers un serveur", "travel
                                     )
                                 }
                         }
-                        if (path1 != null) {
-                            askHow2(messageCreateEvent, p, path1, placeO)
-                        }
+                        askHow2(messageCreateEvent, p, path1, placeO)
                     } catch (e: NumberFormatException) {
                         // on envoie un message d'erreur
                         sendNumberEx(messageCreateEvent11, p, -1)
@@ -215,8 +213,8 @@ class Travel : CommandInServer("Vous permet de voyager vers un serveur", "travel
                     val xDest = coords[0]
                     val yDest = coords[1]
                     messageCreateEvent1.message.reply("Calcul du trajet en cours ....")
-                    val path = Map.getNode(x, y, ArrayList())?.let {
-                        Map.getNode(xDest, yDest, ArrayList())?.let { it1 ->
+                    val path = Map.getNode(x, y, ArrayList()).let {
+                        Map.getNode(xDest, yDest, ArrayList()).let { it1 ->
                             Map.findPath(
                                 it,
                                 it1,
@@ -224,9 +222,7 @@ class Travel : CommandInServer("Vous permet de voyager vers un serveur", "travel
                             )
                         }
                     }
-                    if (path != null) {
-                        askHow1(messageCreateEvent1, p, path, xDest, yDest)
-                    }
+                    askHow1(messageCreateEvent1, p, path, xDest, yDest)
                 }
             }
         } else if (placeType == "place") {
@@ -253,9 +249,9 @@ class Travel : CommandInServer("Vous permet de voyager vers un serveur", "travel
                         messageCreateEvent11.message.reply("Calcul du trajet en cours ....")
                         val path1 = Map.getNode(
                             place1!!.getString("x").toInt(), place1.getString("y").toInt(), ArrayList()
-                        )?.let {
+                        ).let {
                             Map.getNode(placeO.getString("x").toInt(), placeO.getString("y").toInt(), ArrayList())
-                                ?.let { it1 ->
+                                .let { it1 ->
                                     Map.findPath(
                                         it,
                                         it1,
@@ -263,9 +259,7 @@ class Travel : CommandInServer("Vous permet de voyager vers un serveur", "travel
                                     )
                                 }
                         }
-                        if (path1 != null) {
-                            askHow2(messageCreateEvent11, p, path1, placeO)
-                        }
+                        askHow2(messageCreateEvent11, p, path1, placeO)
                     } catch (e: NumberFormatException) {
                         // on envoie un message d'erreur
                         sendNumberEx(messageCreateEvent11, p, -1)
@@ -284,16 +278,14 @@ class Travel : CommandInServer("Vous permet de voyager vers un serveur", "travel
                     messageCreateEvent1.message.reply("Calcul du trajet en cours ....")
                     val path = Map.getNode(
                         place1!!.getString("x").toInt(), place1.getString("y").toInt(), ArrayList()
-                    )?.let {
-                        Map.getNode(xDest, yDest, ArrayList())?.let { it1 ->
+                    ).let {
+                        Map.getNode(xDest, yDest, ArrayList()).let { it1 ->
                             Map.findPath(
                                 it, it1, messageCreateEvent.channel
                             )
                         }
                     }
-                    if (path != null) {
-                        askHow1(messageCreateEvent1, p, path, xDest, yDest)
-                    }
+                    askHow1(messageCreateEvent1, p, path, xDest, yDest)
                 }
             }
         } else {

@@ -24,7 +24,7 @@ class PermsManager : CommandBot(
         val value = Boolean.parseBoolean(args[3])
         val perm = args[2]
         try {
-            val userPerms = saveManager?.getPlayerPerms(args[1].toLong())
+            val userPerms = saveManager.getPlayerPerms(args[1].toLong())
             if (userPerms != null) {
                 if (userPerms.isDefault) {
                     val what = HashMap<String, String>()
@@ -32,14 +32,14 @@ class PermsManager : CommandBot(
                     what["PLAY"] = SaveManager.toBooleanString(userPerms.PLAY)
                     what["CREATE_SERVER"] = SaveManager.toBooleanString(userPerms.CREATE_SERVER)
                     what["MANAGE_PERMS"] = SaveManager.toBooleanString(userPerms.MANAGE_PERMS)
-                    saveManager?.insert("perms", what)
+                    saveManager.insert("perms", what)
                 }
             }
             if (perm.equals("MANAGE_PERMS", ignoreCase = true) && !messageCreateEvent.messageAuthor.isBotOwner) {
                 messageCreateEvent.message.reply("Impossible .... vous devez être l'owner du bot pour modifier cette permission")
                 return
             }
-            saveManager?.setValue(
+            saveManager.setValue(
                 Tables.PERMS.table,
                 messageCreateEvent.messageAuthor.id,
                 perm,

@@ -19,6 +19,7 @@ import org.javacord.api.entity.message.embed.EmbedBuilder
 import org.javacord.api.event.interaction.MessageComponentCreateEvent
 import org.javacord.api.event.message.MessageCreateEvent
 import java.awt.Color
+import kotlin.math.min
 
 class PlaceCommand : CommandWithAccount(
     "Commande des lieux, configuration + description",
@@ -27,7 +28,7 @@ class PlaceCommand : CommandWithAccount(
 ) {
     override fun execute(messageCreateEvent: MessageCreateEvent, content: String, args: Array<String>, p: Player) {
         if (messageCreateEvent.message.isServerMessage) {
-            val serverBot = saveManager?.servers?.get(messageCreateEvent.server.get().id)
+            val serverBot = saveManager.servers[messageCreateEvent.server.get().id]
             if (serverBot == null) {
                 messageCreateEvent.message.reply("Utilisez d'abord le -config")
             } else {
@@ -51,7 +52,7 @@ class PlaceCommand : CommandWithAccount(
                             val places = Place.getPlacesWithWorld(serverBot.getString("world"))
                             val messageBuilder = MessageBuilder()
                             val builder = EmbedBuilder()
-                            setPlaceEmbed(builder, 0, Math.min(places.size, 11), places)
+                            setPlaceEmbed(builder, 0, 11, places)
                             val listButtons1 = ListButtons(
                                 builder,
                                 places
@@ -74,7 +75,7 @@ class PlaceCommand : CommandWithAccount(
                             val places1 = Place.toPlaces(place!!.getString("connections"))
                             val messageBuilder1 = MessageBuilder()
                             val builder1 = EmbedBuilder()
-                            setPlaceEmbed(builder1, 0, Math.min(places1.size, 11), places1)
+                            setPlaceEmbed(builder1, 0, min(places1.size, 11), places1)
                             val listButtons2 = ListButtons(
                                 builder1,
                                 places1
@@ -160,10 +161,8 @@ class PlaceCommand : CommandWithAccount(
                             require(placeParentDel.getString("world") == "DIBIMAP") { "Ce monde ne prend pas en charge les zones" }
                             val placeZonesDel = PlaceZones(placeParentDel.id)
                             val options = ArrayList<SelectMenuOption>()
-                            var i = 0
-                            for (zoneDel in placeZonesDel.zones) {
+                            for ((i, zoneDel) in placeZonesDel.zones.withIndex()) {
                                 options.add(SelectMenuOption.create(i.toString(), zoneDel.toString()))
-                                i++
                             }
                             val id = generateUniqueID()
                             val actionRow = ActionRow.of(SelectMenu.create(id.toString(), "Zone à supprimer", options))
@@ -171,7 +170,7 @@ class PlaceCommand : CommandWithAccount(
                                 .setContent("Zone à supprimer")
                                 .addComponents(actionRow)
                                 .send(messageCreateEvent.channel)
-                            Main.buttonsManager
+                            buttonsManager
                                 .addButton(id) { messageComponentCreateEvent: MessageComponentCreateEvent ->
                                     val mci = messageComponentCreateEvent.messageComponentInteraction
                                     val selectMenuInteraction = mci.asSelectMenuInteraction()
@@ -188,10 +187,8 @@ class PlaceCommand : CommandWithAccount(
                             require(placeParentModify.getString("world") == "DIBIMAP") { "Ce monde ne prend pas en charge les zones" }
                             val placeZonesModify = PlaceZones(placeParentModify.id)
                             val optionsModify = ArrayList<SelectMenuOption>()
-                            var iModify = 0
-                            for (zoneModify in placeZonesModify.zones) {
+                            for ((iModify, zoneModify) in placeZonesModify.zones.withIndex()) {
                                 optionsModify.add(SelectMenuOption.create(iModify.toString(), zoneModify.toString()))
-                                iModify++
                             }
                             val idModify = generateUniqueID()
                             val actionRowModify =
@@ -200,7 +197,7 @@ class PlaceCommand : CommandWithAccount(
                                 .setContent("Zone à modifier")
                                 .addComponents(actionRowModify)
                                 .send(messageCreateEvent.channel)
-                            Main.buttonsManager
+                            buttonsManager
                                 .addButton(idModify) { messageComponentCreateEvent: MessageComponentCreateEvent ->
                                     val mci = messageComponentCreateEvent.messageComponentInteraction
                                     val selectMenuInteraction = mci.asSelectMenuInteraction()
@@ -211,7 +208,7 @@ class PlaceCommand : CommandWithAccount(
                                         messageCreateEvent.message.reply("Zone à modifier : $zoneModify")
                                         // changement des coordonnées de la zone x1, y1, x2, y2
                                         messageCreateEvent.message.reply("Nouvelles coordonnées : ")
-                                        Main.messagesManager.addListener(
+                                        messagesManager.addListener(
                                             messageCreateEvent.channel,
                                             messageCreateEvent.messageAuthor.id
                                         ) { messageCreateEvent1: MessageCreateEvent ->
@@ -242,7 +239,7 @@ class PlaceCommand : CommandWithAccount(
         }
     }
 
-    fun createNormalPlace(messageCreateEvent: MessageCreateEvent, serverBot: ServerBot, p: Player) {
+    private fun createNormalPlace(messageCreateEvent: MessageCreateEvent, serverBot: ServerBot, p: Player) {
         if (serverBot.getArray("places").size == 1 && serverBot.getArray("places")[0] == "") {
             serverPlace(messageCreateEvent, serverBot, p)
         } else {
@@ -261,7 +258,7 @@ class PlaceCommand : CommandWithAccount(
         messageCreateEvent.message.reply(place.placeEmbed)
         serverBot["places"] = place.id.toString()
         messageCreateEvent.message.reply("Message de départ du lieu :")
-        Main.messagesManager.setValueAndRetry(
+        messagesManager.setValueAndRetry(
             messageCreateEvent.channel,
             p.id,
             "traout",
@@ -271,11 +268,11 @@ class PlaceCommand : CommandWithAccount(
         ) {}
     }
 
-    fun createWorldPlace(messageCreateEvent: MessageCreateEvent, serverBot: ServerBot, p: Player, args: Array<String>) {
+    private fun createWorldPlace(messageCreateEvent: MessageCreateEvent, serverBot: ServerBot, p: Player, args: Array<String>) {
         messageCreateEvent.message.reply("ATTENTION : la création d'un lieu dans ce monde est long\nContinuer ?")
         val yes = generateUniqueID()
         val no = generateUniqueID()
-        Main.buttonsManager.addButton(yes) { messageComponentCreateEvent: MessageComponentCreateEvent ->
+        buttonsManager.addButton(yes) { messageComponentCreateEvent: MessageComponentCreateEvent ->
             if (messageComponentCreateEvent.messageComponentInteraction.user.id == p.id) {
                 if (serverBot.getArray("places").size == 1 && serverBot.getArray("places")[0] == "") {
                     serverPlace(messageCreateEvent, serverBot, p)
@@ -309,7 +306,7 @@ class PlaceCommand : CommandWithAccount(
                     messageCreateEvent.message.reply(place.placeEmbed)
                     serverBot["places"] = place.id.toString()
                     messageCreateEvent.message.reply("Message de départ du lieu :")
-                    Main.messagesManager.setValueAndRetry(
+                    messagesManager.setValueAndRetry(
                         messageCreateEvent.channel,
                         p.id,
                         "traout",
@@ -317,7 +314,7 @@ class PlaceCommand : CommandWithAccount(
                         1500,
                         serverBot
                     ) {
-                        Main.messagesManager.setValueAndRetry(
+                        messagesManager.setValueAndRetry(
                             messageCreateEvent.channel,
                             p.id,
                             "train",
@@ -325,7 +322,7 @@ class PlaceCommand : CommandWithAccount(
                             1500,
                             serverBot
                         ) {
-                            Main.messagesManager.setValueAndRetry(
+                            messagesManager.setValueAndRetry(
                                 messageCreateEvent.channel,
                                 p.id,
                                 "name",
@@ -333,7 +330,7 @@ class PlaceCommand : CommandWithAccount(
                                 1500,
                                 serverBot
                             ) {
-                                Main.messagesManager.setValueAndRetry(
+                                messagesManager.setValueAndRetry(
                                     messageCreateEvent.channel,
                                     p.id,
                                     "descr",
@@ -348,7 +345,7 @@ class PlaceCommand : CommandWithAccount(
                 }
             }
         }
-        Main.buttonsManager.addButton(no) { messageComponentCreateEvent: MessageComponentCreateEvent ->
+        buttonsManager.addButton(no) { messageComponentCreateEvent: MessageComponentCreateEvent ->
             if (messageComponentCreateEvent.messageComponentInteraction.user.id == p.id) {
                 messageComponentCreateEvent.messageComponentInteraction.message.delete()
             }
@@ -363,12 +360,12 @@ class PlaceCommand : CommandWithAccount(
         )
     }
 
-    fun placesToString(places: ArrayList<Place?>): String {
+    private fun placesToString(places: ArrayList<Place>): String {
         if (places.size == 0) {
             return ""
         }
         val builder = StringBuilder()
-            .append(places[0]!!.id)
+            .append(places[0].id)
         for (i in 1 until places.size) {
             builder.append(";")
                 .append(places[i])
@@ -376,7 +373,7 @@ class PlaceCommand : CommandWithAccount(
         return builder.toString()
     }
 
-    fun setPlaceEmbed(embedBuilder: EmbedBuilder, min: Int, max: Int, places: ArrayList<Place>) {
+    private fun setPlaceEmbed(embedBuilder: EmbedBuilder, min: Int, max: Int, places: ArrayList<Place>) {
         embedBuilder
             .setTitle("Liste des lieux de $min à $max")
             .setColor(Color.ORANGE)
@@ -390,11 +387,11 @@ class PlaceCommand : CommandWithAccount(
         }
     }
 
-    fun getPlaceParent(serverBot: ServerBot): Place {
+    private fun getPlaceParent(serverBot: ServerBot): Place {
         var placeParent: Place? = null
         for (placeID in serverBot.getArray("places")) {
             try {
-                val place = Main.saveManager.places[placeID.toLong()]
+                val place = saveManager.places[placeID.toLong()]
                 if (place != null && place.getString("type") == "server") {
                     placeParent = place
                 }

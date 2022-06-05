@@ -134,22 +134,22 @@ object Map {
         // envoie un message d'attente
         channel.sendMessage("Calcul en cours...")
         require(start.isDirt == end.isDirt) { "start and end must be on the same type of tile" }
-        val closedList = ArrayList<Node?>()
-        val openList = ArrayList<Node?>()
+        val closedList = ArrayList<Node>()
+        val openList = ArrayList<Node>()
         openList.add(start)
         while (openList.isNotEmpty()) {
             var current = openList[0]
             // je cherche le nœud avec la plus petite heuristique
             for (node in openList) {
-                if (node!!.heuristic < current!!.heuristic) {
+                if (node.heuristic < current.heuristic) {
                     current = node
                 }
             }
-            if (current!! == end) {
+            if (current == end) {
                 val path = ArrayList<Pixel>()
-                while (current!!.parent != null) {
+                while (current.parent != null) {
                     path.add(current)
-                    current = current.parent
+                    current = current.parent!!
                 }
                 path.reverse()
                 return path
@@ -157,12 +157,12 @@ object Map {
             openList.remove(current)
             for (n in getConnectedNodes(current, openList)) {
                 if (!openList.contains(n)) {
-                    n!!.parent = current
+                    n.parent = current
                 }
-                if (!(openList.contains(n) && n!!.heuristic < current.heuristic
+                if (!(openList.contains(n) && n.heuristic < current.heuristic
                             || closedList.contains(n))
                 ) {
-                    n!!.cost = current.cost + 1
+                    n.cost = current.cost + 1
                     n.heuristic = n.cost + distance(n, end)
                     n.parent = current
                     if (!openList.contains(n)) {
@@ -230,7 +230,7 @@ object Map {
         return x in 0 until MAP_WIDTH && y >= 0 && y < MAP_HEIGHT
     }
 
-    fun getNode(x: Int, y: Int, nodes: ArrayList<Node?>): Node? {
+    fun getNode(x: Int, y: Int, nodes: ArrayList<Node>): Node {
         val n = Node(x, y, MAP_WIDTH, MAP_HEIGHT, map!!, 0.0, 0.0)
         return if (nodes.contains(n)) {
             nodes[nodes.indexOf(n)]

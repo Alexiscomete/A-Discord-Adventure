@@ -8,7 +8,9 @@ import io.github.alexiscomete.lapinousecond.saveManager
 import org.javacord.api.entity.message.embed.EmbedBuilder
 import java.awt.Color
 import java.sql.SQLException
-import java.util.*
+import java.util.Optional
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 open class Place : CacheGetSet, Owner {
     private var serverID: Long? = null

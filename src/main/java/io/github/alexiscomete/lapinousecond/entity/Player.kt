@@ -14,7 +14,6 @@ import io.github.alexiscomete.lapinousecond.view.LangageEnum
 import io.github.alexiscomete.lapinousecond.worlds.Place
 import io.github.alexiscomete.lapinousecond.worlds.ServerBot
 import io.github.alexiscomete.lapinousecond.worlds.map.Pixel
-import java.util.*
 
 class Player : CacheGetSet, Owner {
     private var bal: Double
@@ -122,7 +121,7 @@ class Player : CacheGetSet, Owner {
             LangageEnum.FRENCH
         } else {
             try {
-                LangageEnum.valueOf(langage.uppercase(Locale.getDefault()))
+                LangageEnum.valueOf(langage.uppercase())
             } catch (argumentException: IllegalArgumentException) {
                 LangageEnum.FRENCH
             }
@@ -130,7 +129,7 @@ class Player : CacheGetSet, Owner {
         var answer = answerEnum?.let { answerManager.getAnswer(langageEnum, it) }
         answer = answer?.let { answerManager.formatAnswer(it, format) }
         if (maj) {
-            answer = answer?.substring(0, 1)?.uppercase(Locale.getDefault()) + answer?.substring(1)
+            answer = answer?.substring(0, 1)?.uppercase() + answer?.substring(1)
         }
         return answer
     }
@@ -150,7 +149,7 @@ class Player : CacheGetSet, Owner {
             return saveManager.places.get(placeID.toLong())
         }
 
-    fun setPath(path: ArrayList<Pixel?>?, type: String?) {
+    fun setPath(path: ArrayList<Pixel>, type: String) {
         // TODO: Gérer les chemins
     }
 

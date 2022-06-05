@@ -133,7 +133,7 @@ class BuildingCommand : CommandInServer(
         val messageBuilder = MessageBuilder()
         val embedBuilder = EmbedBuilder()
         messageBuilder.setEmbed(embedBuilder)
-        val buildings = ArrayList(Arrays.asList(*Buildings.values()))
+        val buildings = ArrayList(listOf(*Buildings.values()))
         val buildingListButtons = ListButtons(
             embedBuilder,
             buildings

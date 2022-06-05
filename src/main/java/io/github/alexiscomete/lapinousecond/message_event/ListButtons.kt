@@ -74,6 +74,6 @@ class ListButtons<U>(
     }
 
     fun interface AddContent<U> {
-        fun add(embedBuilder: EmbedBuilder?, min: Int, num: Int, uArrayList: ArrayList<U>?)
+        fun add(embedBuilder: EmbedBuilder, min: Int, num: Int, uArrayList: ArrayList<U>)
     }
 }

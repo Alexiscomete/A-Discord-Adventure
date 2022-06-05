@@ -28,6 +28,6 @@ class CacheCustom<U>(private val table: Table, private val function: Function<Lo
     fun add(id: Long) {
         val hashMap = HashMap<String, String>()
         hashMap["id"] = id.toString()
-        saveManager?.insert(table.name, hashMap)
+        saveManager.insert(table.name, hashMap)
     }
 }
