@@ -110,7 +110,7 @@ class Help : CommandBot(
             hashMap["last_page"] = Consumer { messageComponentCreateEvent: MessageComponentCreateEvent ->
                 this.last(messageComponentCreateEvent)
             }
-            Main.buttonsManager.addMessage(id, hashMap)
+            buttonsManager.addMessage(id, hashMap)
         }
     }
 }

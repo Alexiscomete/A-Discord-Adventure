@@ -7,7 +7,7 @@ import org.javacord.api.entity.message.MessageBuilder
 import org.javacord.api.entity.message.embed.EmbedBuilder
 
 class Marche(building: Building?) : BuildingInteraction(building!!) {
-    override fun interpret(args: Array<String?>?) {}
+    override fun interpret(args: Array<String>) {}
     override val help: String?
         get() = null
     override val usage: String?

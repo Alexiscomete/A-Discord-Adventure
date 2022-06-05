@@ -60,7 +60,7 @@ enum class Buildings(private val getBuildingM: Function<Building, BuildingIntera
     val evol: ArrayList<Evolution> = ArrayList()
     var isBuild = true
         private set
-    private var buildingAutorisations: BuildingAutorisations? = null
+    var buildingAutorisations: BuildingAutorisations? = null
 
     init {
         Building.jsonObject?.let { setModelWithJson(it.getJSONObject(name_)) }
@@ -74,10 +74,6 @@ enum class Buildings(private val getBuildingM: Function<Building, BuildingIntera
 
     operator fun get(building: Building): BuildingInteraction {
         return getBuildingM.apply(building)
-    }
-
-    fun getBuildingAutorisations(): BuildingAutorisations? {
-        return buildingAutorisations
     }
 
     companion object {

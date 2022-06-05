@@ -1,6 +1,5 @@
 package io.github.alexiscomete.lapinousecond.commands.classes
 
-import io.github.alexiscomete.lapinousecond.*
 import io.github.alexiscomete.lapinousecond.commands.CommandInServer
 import io.github.alexiscomete.lapinousecond.entity.Player
 import io.github.alexiscomete.lapinousecond.message_event.ListButtons
@@ -72,19 +71,19 @@ class BuildingCommand : CommandInServer(
                 "infos" -> if (building1 == null) {
                     sendImpossible(messageCreateEvent, p)
                 } else {
-                    building1.completeInfos(p).send(messageCreateEvent.channel)
+                    building1.completeInfos(p)?.send(messageCreateEvent.channel)
                 }
                 "build" -> if (building1 == null) {
                     if (args.size > 2) {
                         try {
                             val b = Buildings.valueOf(args[2].uppercase(Locale.getDefault()))
-                            if (b.isBuild && b.buildingAutorisations.isAutorise(p)) {
+                            if (b.isBuild && b.buildingAutorisations?.isAutorise(p) == true) {
                                 val place = p.place
-                                val building2 = Building(b, p, place)
-                                val embedBuilder = building2.infos(p)
+                                val building2 = place?.let { Building(b, p, it) }
+                                val embedBuilder = building2?.infos(p)
                                 messageCreateEvent.message.reply(embedBuilder)
                             } else {
-                                println(b.buildingAutorisations.isAutorise(p))
+                                b.buildingAutorisations?.let { println(it.isAutorise(p)) }
                                 println(b.isBuild)
                                 sendImpossible(messageCreateEvent, p)
                             }
@@ -92,7 +91,7 @@ class BuildingCommand : CommandInServer(
                             sendImpossible(messageCreateEvent, p)
                         }
                     } else {
-                        sendBuildTypeList(messageCreateEvent, p)
+                        sendBuildTypeList(messageCreateEvent)
                     }
                 } else {
                     sendImpossible(messageCreateEvent, p)
@@ -129,7 +128,7 @@ class BuildingCommand : CommandInServer(
         }
     }
 
-    fun sendBuildTypeList(messageCreateEvent: MessageCreateEvent, p: Player?) {
+    private fun sendBuildTypeList(messageCreateEvent: MessageCreateEvent) {
         val messageBuilder = MessageBuilder()
         val embedBuilder = EmbedBuilder()
         messageBuilder.setEmbed(embedBuilder)
@@ -149,7 +148,7 @@ class BuildingCommand : CommandInServer(
         messageBuilder.send(messageCreateEvent.channel)
     }
 
-    fun addListTypeBuild(embedBuilder: EmbedBuilder, min: Int, num: Int, list: ArrayList<Buildings>) {
+    private fun addListTypeBuild(embedBuilder: EmbedBuilder, min: Int, num: Int, list: ArrayList<Buildings>) {
         for (i in min until num) {
             val b = list[i]
             embedBuilder.addField(
@@ -161,7 +160,7 @@ class BuildingCommand : CommandInServer(
         }
     }
 
-    fun sendList(messageCreateEvent: MessageCreateEvent, p: Player) {
+    private fun sendList(messageCreateEvent: MessageCreateEvent, p: Player) {
         val place = p.place
         val buildingsString = place!!.getString("buildings")
         val buildings = Buildings.loadBuildings(buildingsString)
@@ -183,7 +182,7 @@ class BuildingCommand : CommandInServer(
         messageBuilder.send(messageCreateEvent.channel)
     }
 
-    fun addListBuild(embedBuilder: EmbedBuilder, min: Int, num: Int, uArrayList: ArrayList<Building>) {
+    private fun addListBuild(embedBuilder: EmbedBuilder, min: Int, num: Int, uArrayList: ArrayList<Building>) {
         for (i in min until min + num) {
             val u = uArrayList[i]
             embedBuilder.addField(

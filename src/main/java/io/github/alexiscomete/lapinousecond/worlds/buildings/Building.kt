@@ -144,7 +144,7 @@ class Building : CacheGetSet, BuildMethods {
         buildingInteraction!!.configBuilding()
     }
 
-    override fun interpret(args: Array<String?>?) {
+    override fun interpret(args: Array<String>) {
         buildingInteraction!!.interpret(args)
     }
 

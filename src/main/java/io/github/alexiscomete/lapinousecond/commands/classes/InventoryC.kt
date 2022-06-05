@@ -21,18 +21,20 @@ class InventoryC : CommandBot(
                     val resultSet = saveManager.executeQuery("SELECT * FROM players ORDER BY bal LIMIT 10", true)
                     val players = ArrayList<Player>()
                     try {
-                        while (resultSet.next()) {
-                            players.add(
-                                Player(
-                                    resultSet.getLong("id"),
-                                    resultSet.getDouble("bal"),
-                                    resultSet.getLong("serv"),
-                                    resultSet.getShort("tuto"),
-                                    resultSet.getBoolean("has_account"),
-                                    resultSet.getString("roles"),
-                                    resultSet.getString("resources")
-                                )
-                            )
+                        if (resultSet != null) {
+                            while (resultSet.next()) {
+                                players.add(
+                                            Player(
+                                                resultSet.getLong("id"),
+                                                resultSet.getDouble("bal"),
+                                                resultSet.getLong("serv"),
+                                                resultSet.getShort("tuto"),
+                                                resultSet.getBoolean("has_account"),
+                                                resultSet.getString("roles"),
+                                                resultSet.getString("resources")
+                                            )
+                                        )
+                            }
                         }
                     } catch (e: SQLException) {
                         e.printStackTrace()
@@ -43,7 +45,7 @@ class InventoryC : CommandBot(
                     val top = arrayOf("")
                     val ints = intArrayOf(players.size)
                     for (player in players) {
-                        Main.api.getUserById(player.id).thenAccept { user: User ->
+                        api.getUserById(player.id).thenAccept { user: User ->
                             println("...")
                             ints[0]--
                             top[0] = """${user.name} -> ${player.getBal()}
@@ -86,7 +88,7 @@ ${top[0]}"""
         }
     }
 
-    fun invOf(p: Player, messageCreateEvent: MessageCreateEvent) {
+    private fun invOf(p: Player, messageCreateEvent: MessageCreateEvent) {
         val builder = EmbedBuilder()
             .setDescription("Serveur actuel : " + p.getServer())
             .setTitle("Infos joueur")

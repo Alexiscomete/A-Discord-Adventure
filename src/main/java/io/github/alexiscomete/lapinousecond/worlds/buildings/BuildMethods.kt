@@ -8,7 +8,7 @@ interface BuildMethods {
     fun getInfos(p: Player?): EmbedBuilder?
     fun getCompleteInfos(p: Player?): MessageBuilder?
     fun configBuilding()
-    fun interpret(args: Array<String?>?)
+    fun interpret(args: Array<String>)
     val help: String?
     val usage: String?
 }
