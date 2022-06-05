@@ -119,7 +119,7 @@ class SaveManager(path: String) {
         val values = StringBuilder("(")
         val keys = StringBuilder("(")
         for (i in 0 until what.size) {
-            val key = what.keys.toTypedArray()[i] as String
+            val key = what.keys.toTypedArray()[i]
             keys.append(key)
             values.append(what[key])
             if (i != what.size - 1) {

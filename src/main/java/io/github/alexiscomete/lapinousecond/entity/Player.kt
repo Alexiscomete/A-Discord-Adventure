@@ -51,7 +51,7 @@ class Player : CacheGetSet, Owner {
                 itemsList.append(";")
             }
         }
-        saveManager?.setValue(Tables.PLAYERS.table, id, "items", itemsList.toString())
+        saveManager.setValue(Tables.PLAYERS.table, id, "items", itemsList.toString())
     }
 
     fun getBal(): Double {
@@ -60,7 +60,7 @@ class Player : CacheGetSet, Owner {
 
     fun setBal(bal: Double) {
         this.bal = bal
-        saveManager?.setValue(Tables.PLAYERS.table, id, "bal", bal.toString())
+        saveManager.setValue(Tables.PLAYERS.table, id, "bal", bal.toString())
     }
 
     fun getServer(): Long {
@@ -69,7 +69,7 @@ class Player : CacheGetSet, Owner {
 
     fun setServer(server: Long) {
         this.server = server
-        saveManager?.setValue(Tables.PLAYERS.table, id, "serv", server.toString())
+        saveManager.setValue(Tables.PLAYERS.table, id, "serv", server.toString())
     }
 
     fun getTuto(): Short {
@@ -78,7 +78,7 @@ class Player : CacheGetSet, Owner {
 
     fun setTuto(tuto: Short) {
         this.tuto = tuto
-        saveManager?.setValue(Tables.PLAYERS.table, id, "tuto", tuto.toString())
+        saveManager.setValue(Tables.PLAYERS.table, id, "tuto", tuto.toString())
     }
 
     fun hasAccount(): Boolean {
@@ -87,7 +87,7 @@ class Player : CacheGetSet, Owner {
 
     fun setHasAccount(hasAccount: Boolean) {
         this.hasAccount = hasAccount
-        saveManager?.setValue(Tables.PLAYERS.table, id, "has_account", SaveManager.toBooleanString(hasAccount))
+        saveManager.setValue(Tables.PLAYERS.table, id, "has_account", SaveManager.toBooleanString(hasAccount))
     }
 
     constructor(
@@ -113,7 +113,7 @@ class Player : CacheGetSet, Owner {
     }
 
     fun updateResources() {
-        saveManager?.setValue(Tables.PLAYERS.table, id, "ressources", ResourceManager.toString(resourceManagers.values))
+        saveManager.setValue(Tables.PLAYERS.table, id, "ressources", ResourceManager.toString(resourceManagers.values))
     }
 
     fun getAnswer(answerEnum: AnswerEnum?, maj: Boolean, vararg format: Any?): String? {
@@ -147,7 +147,7 @@ class Player : CacheGetSet, Owner {
                 placeID = ServerBot(854288660147994634L).getString("places")
                 set("place_NORMAL", ServerBot(854288660147994634L).getString("places"))
             }
-            return saveManager?.places?.get(placeID.toLong())
+            return saveManager.places.get(placeID.toLong())
         }
 
     fun setPath(path: ArrayList<Pixel?>?, type: String?) {

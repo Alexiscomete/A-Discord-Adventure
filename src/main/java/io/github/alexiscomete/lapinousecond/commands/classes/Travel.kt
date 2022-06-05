@@ -20,7 +20,6 @@ import java.awt.Color
 import java.util.concurrent.ExecutionException
 import java.util.function.Consumer
 import java.util.stream.Collectors
-import io.github.alexiscomete.lapinousecond.*
 
 class Travel : CommandInServer("Vous permet de voyager vers un serveur", "travel", "travel [server id]") {
     override fun executeC(messageCreateEvent: MessageCreateEvent, content: String, args: Array<String>, p: Player) {
@@ -58,7 +57,7 @@ class Travel : CommandInServer("Vous permet de voyager vers un serveur", "travel
         }
 
         // On récupère le lieu du joueur sous forme d'objet avec l'id
-        val place = saveManager?.places?.get(placeID.toLong())
+        val place = saveManager.places[placeID.toLong()]
 
         // si le lieu n'existe pas on l'indique au joueur et on propose d'utiliser -hub
         if (place == null) {
@@ -92,7 +91,7 @@ class Travel : CommandInServer("Vous permet de voyager vers un serveur", "travel
         }
 
         // on récupère le serveur discord de destinatione en optionnel
-        val serverOp = Main.api.getServerById(dest.getString("serv").toLong())
+        val serverOp = api.getServerById(dest.getString("serv").toLong())
         if (serverOp.isEmpty) { // si le serveur n'existe pas (ou que le bot n'a pas l'accès) on l'indique au joueur
             messageCreateEvent.message.reply("Voyage vers cette destination impossible : le serveur discord est inconnu. Possibilités : bot kick, serveur supprimé, corruption du lieu")
             return
@@ -179,20 +178,27 @@ class Travel : CommandInServer("Vous permet de voyager vers un serveur", "travel
                 val userId1 = messageCreateEvent.message.author.id
                 messageComponentCreateEvent1.messageComponentInteraction.createImmediateResponder()
                     .setContent("Entrez le nom du lieu :").respond()
-                Main.messagesManager.addListener(tc1, userId1) { messageCreateEvent11: MessageCreateEvent ->
+                messagesManager.addListener(tc1, userId1) { messageCreateEvent11: MessageCreateEvent ->
                     // on récupère le lieu
                     val place = messageCreateEvent11.message.content
                     // on récupère le lieu
                     try {
-                        val placeO = Main.saveManager.places[place.toLong()]
+                        val placeO = saveManager.places[place.toLong()]
                             ?: throw IllegalArgumentException("Lieu introuvable")
                         messageCreateEvent11.message.reply("Calcul du trajet en cours ....")
-                        val path1 = Map.findPath(
-                            Map.getNode(x, y, ArrayList()),
-                            Map.getNode(placeO.getString("x").toInt(), placeO.getString("y").toInt(), ArrayList()),
-                            messageCreateEvent.channel
-                        )
-                        askHow2(messageCreateEvent, p, path1, placeO)
+                        val path1 = Map.getNode(x, y, ArrayList())?.let {
+                            Map.getNode(placeO.getString("x").toInt(), placeO.getString("y").toInt(), ArrayList())
+                                ?.let { it1 ->
+                                    Map.findPath(
+                                        it,
+                                        it1,
+                                        messageCreateEvent.channel
+                                    )
+                                }
+                        }
+                        if (path1 != null) {
+                            askHow2(messageCreateEvent, p, path1, placeO)
+                        }
                     } catch (e: NumberFormatException) {
                         // on envoie un message d'erreur
                         sendNumberEx(messageCreateEvent11, p, -1)
@@ -204,24 +210,30 @@ class Travel : CommandInServer("Vous permet de voyager vers un serveur", "travel
                 val userId = messageCreateEvent.message.author.id
                 messageComponentCreateEvent.messageComponentInteraction.createImmediateResponder()
                     .setContent("Entrez les coordonnées de la destination :").respond()
-                Main.messagesManager.addListener(tc, userId) { messageCreateEvent1: MessageCreateEvent ->
+                messagesManager.addListener(tc, userId) { messageCreateEvent1: MessageCreateEvent ->
                     val coords = getCoosDest(messageCreateEvent1)
                     val xDest = coords[0]
                     val yDest = coords[1]
                     messageCreateEvent1.message.reply("Calcul du trajet en cours ....")
-                    val path = Map.findPath(
-                        Map.getNode(x, y, ArrayList()),
-                        Map.getNode(xDest, yDest, ArrayList()),
-                        messageCreateEvent.channel
-                    )
-                    askHow1(messageCreateEvent1, p, path, xDest, yDest)
+                    val path = Map.getNode(x, y, ArrayList())?.let {
+                        Map.getNode(xDest, yDest, ArrayList())?.let { it1 ->
+                            Map.findPath(
+                                it,
+                                it1,
+                                messageCreateEvent.channel
+                            )
+                        }
+                    }
+                    if (path != null) {
+                        askHow1(messageCreateEvent1, p, path, xDest, yDest)
+                    }
                 }
             }
         } else if (placeType == "place") {
             // on récupère le lieu
             val place0 = p.getString("place_DIBIMAP_place")
             // on récupère le lieu dans la base de données
-            val place1 = Main.saveManager.places[place0.toLong()]
+            val place1 = saveManager.places[place0.toLong()]
 
             // on sépare le cas où le joueur veut aller dans un lieu et celui où il veut aller sur des coos
             // création du menu
@@ -231,22 +243,29 @@ class Travel : CommandInServer("Vous permet de voyager vers un serveur", "travel
                 val userId1 = messageCreateEvent.message.author.id
                 messageComponentCreateEvent1.messageComponentInteraction.createImmediateResponder()
                     .setContent("Entrez le nom du lieu :").respond()
-                Main.messagesManager.addListener(tc1, userId1) { messageCreateEvent11: MessageCreateEvent ->
+                messagesManager.addListener(tc1, userId1) { messageCreateEvent11: MessageCreateEvent ->
                     // on récupère le lieu
                     val place = messageCreateEvent11.message.content
                     // on récupère le lieu
                     try {
-                        val placeO = Main.saveManager.places[place.toLong()]
+                        val placeO = saveManager.places[place.toLong()]
                             ?: throw IllegalArgumentException("Lieu introuvable")
                         messageCreateEvent11.message.reply("Calcul du trajet en cours ....")
-                        val path1 = Map.findPath(
-                            Map.getNode(
-                                place1!!.getString("x").toInt(), place1.getString("y").toInt(), ArrayList()
-                            ),
-                            Map.getNode(placeO.getString("x").toInt(), placeO.getString("y").toInt(), ArrayList()),
-                            messageCreateEvent.channel
-                        )
-                        askHow2(messageCreateEvent11, p, path1, placeO)
+                        val path1 = Map.getNode(
+                            place1!!.getString("x").toInt(), place1.getString("y").toInt(), ArrayList()
+                        )?.let {
+                            Map.getNode(placeO.getString("x").toInt(), placeO.getString("y").toInt(), ArrayList())
+                                ?.let { it1 ->
+                                    Map.findPath(
+                                        it,
+                                        it1,
+                                        messageCreateEvent.channel
+                                    )
+                                }
+                        }
+                        if (path1 != null) {
+                            askHow2(messageCreateEvent11, p, path1, placeO)
+                        }
                     } catch (e: NumberFormatException) {
                         // on envoie un message d'erreur
                         sendNumberEx(messageCreateEvent11, p, -1)
@@ -258,17 +277,23 @@ class Travel : CommandInServer("Vous permet de voyager vers un serveur", "travel
                 val userId = messageCreateEvent.message.author.id
                 messageComponentCreateEvent.messageComponentInteraction.createImmediateResponder()
                     .setContent("Entrez les coordonnées de la destination :").respond()
-                Main.messagesManager.addListener(tc, userId) { messageCreateEvent1: MessageCreateEvent ->
+                messagesManager.addListener(tc, userId) { messageCreateEvent1: MessageCreateEvent ->
                     val coords = getCoosDest(messageCreateEvent1)
                     val xDest = coords[0]
                     val yDest = coords[1]
                     messageCreateEvent1.message.reply("Calcul du trajet en cours ....")
-                    val path = Map.findPath(
-                        Map.getNode(
-                            place1!!.getString("x").toInt(), place1.getString("y").toInt(), ArrayList()
-                        ), Map.getNode(xDest, yDest, ArrayList()), messageCreateEvent.channel
-                    )
-                    askHow1(messageCreateEvent1, p, path, xDest, yDest)
+                    val path = Map.getNode(
+                        place1!!.getString("x").toInt(), place1.getString("y").toInt(), ArrayList()
+                    )?.let {
+                        Map.getNode(xDest, yDest, ArrayList())?.let { it1 ->
+                            Map.findPath(
+                                it, it1, messageCreateEvent.channel
+                            )
+                        }
+                    }
+                    if (path != null) {
+                        askHow1(messageCreateEvent1, p, path, xDest, yDest)
+                    }
                 }
             }
         } else {
@@ -301,11 +326,11 @@ class Travel : CommandInServer("Vous permet de voyager vers un serveur", "travel
         )
 
         // ajout des actions
-        Main.buttonsManager.addButton(id1, c1)
-        Main.buttonsManager.addButton(id2, c2)
+        buttonsManager.addButton(id1, c1)
+        buttonsManager.addButton(id2, c2)
     }
 
-    private fun sendPath(messageCreateEvent: MessageCreateEvent, path: ArrayList<Pixel?>) {
+    private fun sendPath(messageCreateEvent: MessageCreateEvent, path: ArrayList<Pixel>) {
         val sb = StringBuilder()
         for (pixel in path) {
             sb.append(pixel)
@@ -356,7 +381,7 @@ class Travel : CommandInServer("Vous permet de voyager vers un serveur", "travel
     private fun askHow1(
         messageCreateEvent: MessageCreateEvent,
         p: Player,
-        path: ArrayList<Pixel?>,
+        path: ArrayList<Pixel>,
         xDest: Int,
         yDest: Int
     ) {
@@ -380,7 +405,7 @@ class Travel : CommandInServer("Vous permet de voyager vers un serveur", "travel
             )
         ).send(messageCreateEvent.channel)
         val state = p.state
-        Main.buttonsManager.addButton(id3) { messageButtonEvent: MessageComponentCreateEvent ->
+        buttonsManager.addButton(id3) { messageButtonEvent: MessageComponentCreateEvent ->
             verifButton(p, state, messageButtonEvent)
 
             // on ajoute le chemin au joueur avec pour type "default_time"
@@ -391,7 +416,7 @@ class Travel : CommandInServer("Vous permet de voyager vers un serveur", "travel
                 .setContent("Vous avez commencé votre trajet pour aller en [$xDest:$yDest] en ${timeMillisToTravel / 1000} secondes.")
                 .respond()
         }
-        Main.buttonsManager.addButton(id4) { messageButtonEvent: MessageComponentCreateEvent ->
+        buttonsManager.addButton(id4) { messageButtonEvent: MessageComponentCreateEvent ->
             verifButton(p, state, messageButtonEvent)
             val bal = p.getBal()
             check(bal >= priceToTravel) { "Vous n'avez pas assez de rb pour ce trajet" }
@@ -409,7 +434,7 @@ class Travel : CommandInServer("Vous permet de voyager vers un serveur", "travel
         }
     }
 
-    private fun askHow2(messageCreateEvent: MessageCreateEvent, p: Player, path: ArrayList<Pixel?>, placeO: Place) {
+    private fun askHow2(messageCreateEvent: MessageCreateEvent, p: Player, path: ArrayList<Pixel>, placeO: Place) {
         sendPath(messageCreateEvent, path)
         val timeMillisToTravel = path.size * 10000L
         val priceToTravel = path.size * 0.5
@@ -430,7 +455,7 @@ class Travel : CommandInServer("Vous permet de voyager vers un serveur", "travel
             )
         ).send(messageCreateEvent.channel)
         val state = p.state
-        Main.buttonsManager.addButton(id3) { messageButtonEvent: MessageComponentCreateEvent ->
+        buttonsManager.addButton(id3) { messageButtonEvent: MessageComponentCreateEvent ->
             verifButton(p, state, messageButtonEvent)
 
             // on ajoute le chemin au joueur avec pour type "default_time"
@@ -441,7 +466,7 @@ class Travel : CommandInServer("Vous permet de voyager vers un serveur", "travel
                 .setContent("Vous avez commencé votre trajet pour aller à " + placeO.getString("name") + " en " + timeMillisToTravel / 1000 + " secondes.")
                 .respond()
         }
-        Main.buttonsManager.addButton(id4) { messageButtonEvent: MessageComponentCreateEvent ->
+        buttonsManager.addButton(id4) { messageButtonEvent: MessageComponentCreateEvent ->
             verifButton(p, state, messageButtonEvent)
             val bal = p.getBal()
             check(bal >= priceToTravel) { "Vous n'avez pas assez de rb pour ce trajet" }

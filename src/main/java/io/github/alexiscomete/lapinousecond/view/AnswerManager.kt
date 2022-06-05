@@ -32,12 +32,12 @@ class AnswerManager(input: InputStream?) {
     }
 
     fun formatAnswer(answer: String, vararg format: Any): String {
-        var answer = answer
+        var answer1 = answer
         var i = 1
         for (form in format) {
-            answer = answer.replace("replace$i", form.toString())
+            answer1 = answer1.replace("replace$i", form.toString())
             i++
         }
-        return answer
+        return answer1
     }
 }

@@ -48,7 +48,7 @@ class Building : CacheGetSet, BuildMethods {
         place: Place,
         vararg specialInfos: AbstractMap.SimpleEntry<String?, String?>?
     ) : super(SaveLocation.generateUniqueID(), Tables.BUILDINGS.table) {
-        saveManager?.buildings?.add(id)
+        saveManager.buildings?.add(id)
         var buildingsString: String = place.getString("buildings")
         buildingsString += ";$id"
         place["buildings"] = buildingsString

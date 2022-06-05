@@ -7,7 +7,6 @@ import java.awt.Font
 import java.awt.Image
 import java.awt.image.BufferedImage
 import java.io.IOException
-import java.util.*
 import javax.imageio.ImageIO
 import kotlin.math.pow
 import kotlin.math.sqrt
@@ -22,9 +21,9 @@ object Map {
         // charge la map à partir du fichier base.png inclus dans le jar
         try {
             map = ImageIO.read(
-                Objects.requireNonNull(
-                    Map::class.java.classLoader.getResourceAsStream("base.png")
-                )
+
+                Map::class.java.classLoader.getResourceAsStream("base.png")
+
             )
         } catch (e: IOException) {
             e.printStackTrace()
@@ -130,7 +129,7 @@ object Map {
     // --------------------
 
     // return the path from one pixel to another
-    fun findPath(start: Node, end: Node, channel: TextChannel): ArrayList<Pixel?> {
+    fun findPath(start: Node, end: Node, channel: TextChannel): ArrayList<Pixel> {
 
         // envoie un message d'attente
         channel.sendMessage("Calcul en cours...")
@@ -147,7 +146,7 @@ object Map {
                 }
             }
             if (current!! == end) {
-                val path = ArrayList<Pixel?>()
+                val path = ArrayList<Pixel>()
                 while (current!!.parent != null) {
                     path.add(current)
                     current = current.parent
@@ -178,10 +177,10 @@ object Map {
     }
 
     // return connected pixels
-    private fun getConnectedNodes(pixel: Node?, nodes: ArrayList<Node?>): ArrayList<Node?> {
-        val nodes2 = ArrayList<Node?>()
+    private fun getConnectedNodes(pixel: Node, nodes: ArrayList<Node>): ArrayList<Node> {
+        val nodes2 = ArrayList<Node>()
         // ajout des pixels voisins un par un
-        if (isInMap(pixel!!.x - 1, pixel.y - 1)) nodes2.add(
+        if (isInMap(pixel.x - 1, pixel.y - 1)) nodes2.add(
             getNode(
                 pixel.x - 1, pixel.y - 1, nodes
             )

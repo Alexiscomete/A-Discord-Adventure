@@ -9,10 +9,7 @@ open class CacheGetSet(open val id: Long, private val table: Table) {
         return if (cache.containsKey(row)) {
             cache[row]!!.string
         } else {
-            var str = saveManager?.getString(table, row, "TEXT", id)
-            if (str == null) {
-                str = ""
-            }
+            val str = saveManager.getString(table, row, "TEXT", id)
             cache[row] = CacheValue(str)
             str
         }
@@ -24,7 +21,7 @@ open class CacheGetSet(open val id: Long, private val table: Table) {
         } else {
             cache[row] = CacheValue(value)
         }
-        saveManager?.setValue(table, id, row, value, "TEXT")
+        saveManager.setValue(table, id, row, value, "TEXT")
     }
 
     fun getArray(row: String): Array<String> {

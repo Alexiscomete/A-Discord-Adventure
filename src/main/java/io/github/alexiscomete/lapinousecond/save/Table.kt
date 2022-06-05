@@ -1,6 +1,6 @@
 package io.github.alexiscomete.lapinousecond.save
 
-import io.github.alexiscomete.lapinousecond.Main
+import io.github.alexiscomete.lapinousecond.*
 
 class Table(val name: String, private val rows: Array<TableRow>) {
 
@@ -15,9 +15,9 @@ class Table(val name: String, private val rows: Array<TableRow>) {
             createTable.append("\n")
         }
         createTable.append(")")
-        Main.saveManager.execute("CREATE TABLE IF NOT EXISTS $name$createTable", false)
+        saveManager.execute("CREATE TABLE IF NOT EXISTS $name$createTable", false)
         for (tableRow in rows) {
-            Main.saveManager.execute("ALTER TABLE $name ADD COLUMN ${tableRow.name} ${tableRow.type}", false)
+            saveManager.execute("ALTER TABLE $name ADD COLUMN ${tableRow.name} ${tableRow.type}", false)
         }
     }
 }

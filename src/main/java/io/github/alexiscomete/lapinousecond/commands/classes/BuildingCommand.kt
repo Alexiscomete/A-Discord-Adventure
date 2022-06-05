@@ -22,8 +22,7 @@ class BuildingCommand : CommandInServer(
 ) {
     override fun executeC(messageCreateEvent: MessageCreateEvent, content: String, args: Array<String>, p: Player) {
         val building = p.getString("building")
-        val building1: Building?
-        building1 = if (building == "" || building == "exit") {
+        val building1: Building? = if (building == "" || building == "exit") {
             null
         } else {
             println("ll")

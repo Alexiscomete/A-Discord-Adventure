@@ -6,7 +6,7 @@ import java.util.*
 
 enum class RolesEnum(
     val name_: String, val description: String, // les alias
-    val aliases: Array<String>, val salary: Int, // en secondes
+    private val aliases: Array<String>, val salary: Int, // en secondes
     val coolDownSize: Int
 ) {
     ADMIN(

@@ -27,14 +27,14 @@ class TravelPrice(
 
     companion object {
         fun getTravelPrice(serv1: ServerBot, serv2: ServerBot): TravelPrice {
-            val distanceID = Math.abs(serv1.id - serv2.id)
-            val price = Math.sqrt(distanceID.toDouble()) / 1000000
+            val distanceID = abs(serv1.id - serv2.id)
+            val price = sqrt(distanceID.toDouble()) / 1000000
             return TravelPrice(price, price, null, null, distanceID)
         }
 
         fun getTravelPrice(serv1: ServerBot, serv2: ServerBot, world: World): TravelPrice {
-            val distanceID = Math.abs(serv1.id - serv2.id)
-            val price = Math.sqrt(distanceID.toDouble()) / 1000000
+            val distanceID = abs(serv1.id - serv2.id)
+            val price = sqrt(distanceID.toDouble()) / 1000000
             val taxe = world.travelPrice
             return TravelPrice(price, price + taxe, taxe, null, distanceID)
         }

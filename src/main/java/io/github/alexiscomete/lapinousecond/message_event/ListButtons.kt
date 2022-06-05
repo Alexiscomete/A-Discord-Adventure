@@ -20,7 +20,7 @@ class ListButtons<U>(
         if (level + 10 < uArrayList.size) {
             level += 10
             builder.removeAllFields()
-            uAddContent.add(builder, level, Math.min(10, uArrayList.size - level), uArrayList)
+            uAddContent.add(builder, level, 10.coerceAtMost(uArrayList.size - level), uArrayList)
             messageComponentCreateEvent.messageComponentInteraction.createOriginalMessageUpdater().removeAllEmbeds()
                 .addEmbed(builder).addComponents(
                 components
@@ -28,11 +28,11 @@ class ListButtons<U>(
         }
     }
 
-    fun last(messageComponentCreateEvent: MessageComponentCreateEvent) {
+    private fun last(messageComponentCreateEvent: MessageComponentCreateEvent) {
         if (level > 9) {
             level -= 10
             builder.removeAllFields()
-            uAddContent.add(builder, level, Math.min(10, uArrayList.size - level), uArrayList)
+            uAddContent.add(builder, level, 10.coerceAtMost(uArrayList.size - level), uArrayList)
             messageComponentCreateEvent.messageComponentInteraction.createOriginalMessageUpdater().removeAllEmbeds()
                 .addEmbed(builder).addComponents(
                 components
@@ -70,7 +70,7 @@ class ListButtons<U>(
     }
 
     init {
-        uAddContent.add(builder, 0, Math.min(10, uArrayList.size - level), uArrayList)
+        uAddContent.add(builder, 0, 10.coerceAtMost(uArrayList.size - level), uArrayList)
     }
 
     fun interface AddContent<U> {

@@ -19,9 +19,9 @@ open class Place : CacheGetSet, Owner {
     lateinit var connections: LongArray
 
     constructor() : super(generateUniqueID(), Tables.PLACES.table) {
-        val h = HashMap<String?, String?>()
+        val h = HashMap<String, String>()
         h["id"] = id.toString()
-        saveManager?.insert("places", h)
+        saveManager.insert("places", h)
     }
 
     constructor(id: Long) : super(id, Tables.PLACES.table)
@@ -72,7 +72,7 @@ open class Place : CacheGetSet, Owner {
         }
 
         fun getPlacesWithWorld(world: String): ArrayList<Place> {
-            val resultSet = saveManager?.executeQuery("SELECT * FROM places WHERE world = '$world'", true)
+            val resultSet = saveManager.executeQuery("SELECT * FROM places WHERE world = '$world'", true)
             val places = ArrayList<Place>()
             try {
 

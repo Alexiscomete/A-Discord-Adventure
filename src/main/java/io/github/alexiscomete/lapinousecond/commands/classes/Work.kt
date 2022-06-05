@@ -41,7 +41,7 @@ class Work : CommandInServer(
                 if (find != null) {
                     if (find.isReady) {
                         roles.append(role.name_).append(" : ").append(role.salary).append("\n")
-                        find.setCurrentCooldown(System.currentTimeMillis() / 1000)
+                        find.currentCooldown = (System.currentTimeMillis() / 1000)
                         totalRoles += role.salary.toDouble()
                     } else {
                         roles.append(role.name_).append(" : ").append("Cooldown -> <t:")
@@ -51,7 +51,7 @@ class Work : CommandInServer(
                     roles.append(role.name_).append(" : ").append(role.salary).append("\n")
                     totalRoles += role.salary.toDouble()
                     val r = Role(role)
-                    r.setCurrentCooldown(System.currentTimeMillis() / 1000)
+                    r.currentCooldown = (System.currentTimeMillis() / 1000)
                     p.addRole(r)
                 }
             }

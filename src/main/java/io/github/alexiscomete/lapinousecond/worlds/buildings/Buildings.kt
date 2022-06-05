@@ -63,7 +63,7 @@ enum class Buildings(private val getBuildingM: Function<Building, BuildingIntera
     private var buildingAutorisations: BuildingAutorisations? = null
 
     init {
-        setModelWithJson(Building.jsonObject.getJSONObject(name_))
+        Building.jsonObject?.let { setModelWithJson(it.getJSONObject(name_)) }
     }
 
     private fun setModelWithJson(jsonObject: JSONObject) {
@@ -87,7 +87,7 @@ enum class Buildings(private val getBuildingM: Function<Building, BuildingIntera
                 save1 = save1.split(":".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[1]
             }
             return try {
-                val type: String? = saveManager?.getBuildingType(save1.toLong())
+                val type: String? = saveManager.getBuildingType(save1.toLong())
                 if (type == null) {
                     println("null")
                     return null

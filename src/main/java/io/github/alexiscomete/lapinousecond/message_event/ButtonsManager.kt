@@ -45,10 +45,6 @@ class ButtonsManager : MessageComponentCreateListener {
         }
     }
 
-    fun addMessage(id: Long, hash: HashMap<String, Consumer<MessageComponentCreateEvent>>) {
-        hashMap[id] = hash
-    }
-
     fun addButton(id: Long, eventConsumer: Consumer<MessageComponentCreateEvent>) {
         hashButton[id] = eventConsumer
     }

@@ -55,11 +55,11 @@ fun getUserData(id: Long): Verify.UserData {
 class Verify :
     CommandBot("Permet de vérifier votre compte", "verify", "Permet de vérifier votre compte grâce au bot de l'ORU") {
     override fun execute(messageCreateEvent: MessageCreateEvent, content: String, args: Array<String>) {
-        if (saveManager?.players?.get(messageCreateEvent.messageAuthor.id) != null) {
+        if (saveManager.players[messageCreateEvent.messageAuthor.id] != null) {
             messageCreateEvent.message.reply("Votre vérification est en cours")
             val userData = getUserData(messageCreateEvent.messageAuthor.id)
             if (userData.hasAccount()) {
-                val player = saveManager!!.players[messageCreateEvent.messageAuthor.id]
+                val player = saveManager.players[messageCreateEvent.messageAuthor.id]
                 if (player != null) {
                     player["x"] = userData.x.toString()
                     player["x"] = userData.y.toString()

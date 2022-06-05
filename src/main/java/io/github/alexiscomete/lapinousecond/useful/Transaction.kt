@@ -21,13 +21,15 @@ open class Transaction(
 
     fun make(quantity: Double, player: Player, acc: (String) -> Unit, de: (String) -> Unit) {
         if (basic(quantity)) {
-            acc(player.getAnswer(AnswerEnum.TR_END, true))
+            player.getAnswer(AnswerEnum.TR_END, true)?.let { acc(it) }
         } else {
-            de(
-                player.getAnswer(
-                    AnswerEnum.ECHEC_TRANS, true, player.getAnswer(AnswerEnum.NO_ENOUGH_MONEY, false)
+            player.getAnswer(
+                AnswerEnum.ECHEC_TRANS, true, player.getAnswer(AnswerEnum.NO_ENOUGH_MONEY, false)
+            )?.let {
+                de(
+                    it
                 )
-            )
+            }
         }
     }
 

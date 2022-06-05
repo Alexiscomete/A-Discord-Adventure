@@ -12,7 +12,15 @@ import org.javacord.api.DiscordApi
 import org.javacord.api.DiscordApiBuilder
 import java.io.IOException
 
-var saveManager: SaveManager? = null
+/**
+ * Configuration du bot
+ */
+val config: SaveLocation<String> = SaveLocation(";", "/config.txt") { a: String -> a }
+
+var saveManager: SaveManager = run {
+    config.loadAll()
+    SaveManager(config.content[1])
+}
     private set
 
 val reactionManager: ReactionManager = ReactionManager()
@@ -20,6 +28,8 @@ val reactionManager: ReactionManager = ReactionManager()
 val buttonsManager: ButtonsManager = ButtonsManager()
 
 val messagesManager: MessagesManager = MessagesManager()
+
+val api: DiscordApi = DiscordApiBuilder().setToken(config.content[0]).login().join()
 
 /**
  * Permet d'ajouter une commande à la liste pour qu'elle puisse être appelée
@@ -32,24 +42,15 @@ private fun addCommand(commandBot: CommandBot) {
 fun main() {
 
     try {
-
-        /**
-         * Configuration du bot
-         */
-        val config: SaveLocation<String> = SaveLocation(";", "/config.txt") { a: String -> a }
-
         println("RIP Lapinou premier")
-        config.loadAll()
         /**
          * Instance de l'API Javacord
          */
-        val api: DiscordApi = DiscordApiBuilder().setToken(config.content[0]).login().join()
         api.updateActivity("Prefix : -")
         api.addListener(ListenerMain())
         api.addListener(reactionManager)
         api.addListener(buttonsManager)
         api.addListener(messagesManager)
-        saveManager = SaveManager(config.content[1])
         Tables.testTables()
 
         // Ajout des commandes
