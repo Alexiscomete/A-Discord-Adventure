@@ -146,7 +146,7 @@ class Player : CacheGetSet, Owner {
                 placeID = ServerBot(854288660147994634L).getString("places")
                 set("place_NORMAL", ServerBot(854288660147994634L).getString("places"))
             }
-            return saveManager.places.get(placeID.toLong())
+            return saveManager.places[placeID.toLong()]
         }
 
     fun setPath(path: ArrayList<Pixel>, type: String) {
