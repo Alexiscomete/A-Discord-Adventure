@@ -1,18 +1,19 @@
 package io.github.alexiscomete.lapinousecond.entity
 
 import io.github.alexiscomete.lapinousecond.Item
-import io.github.alexiscomete.lapinousecond.*
 import io.github.alexiscomete.lapinousecond.resources.Resource
 import io.github.alexiscomete.lapinousecond.resources.ResourceManager
 import io.github.alexiscomete.lapinousecond.roles.Role
 import io.github.alexiscomete.lapinousecond.save.CacheGetSet
 import io.github.alexiscomete.lapinousecond.save.SaveManager
 import io.github.alexiscomete.lapinousecond.save.Tables
+import io.github.alexiscomete.lapinousecond.saveManager
 import io.github.alexiscomete.lapinousecond.view.AnswerEnum
-import io.github.alexiscomete.lapinousecond.view.answerManager
 import io.github.alexiscomete.lapinousecond.view.LangageEnum
+import io.github.alexiscomete.lapinousecond.view.answerManager
 import io.github.alexiscomete.lapinousecond.worlds.Place
 import io.github.alexiscomete.lapinousecond.worlds.ServerBot
+import io.github.alexiscomete.lapinousecond.worlds.map.Map
 import io.github.alexiscomete.lapinousecond.worlds.map.Pixel
 
 class Player : CacheGetSet, Owner {
@@ -150,7 +151,30 @@ class Player : CacheGetSet, Owner {
         }
 
     fun setPath(path: ArrayList<Pixel>, type: String) {
-        // TODO: Gérer les chemins
+        val pathStr = StringBuilder()
+        for (pixel in path) {
+            pathStr.append(pixel.x)
+            pathStr.append(",")
+            pathStr.append(pixel.y)
+            pathStr.append(";")
+        }
+        this["place_path"] = pathStr.toString()
+        this["place_path_type"] = type
+        this["place_path_start"] = System.currentTimeMillis().toString()
+        this["place_DIBIMAP_type"] = "path"
+    }
+
+    fun getPath(): ArrayList<Pixel> {
+        val pathStr = getString("place_path")
+        val path = ArrayList<Pixel>()
+        if (pathStr != "") {
+            val pathSplit = pathStr.split(";")
+            for (i in pathSplit.indices) {
+                val pixelSplit = pathSplit[i].split(",")
+                path.add(Map.getPixel(pixelSplit[0].toInt(), pixelSplit[1].toInt()))
+            }
+        }
+        return path
     }
 
     override val ownerType: String

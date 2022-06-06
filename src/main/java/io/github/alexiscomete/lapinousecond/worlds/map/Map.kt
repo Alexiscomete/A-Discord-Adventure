@@ -31,7 +31,7 @@ object Map {
     }
 
     // pixel at (x, y) with Pixel
-    private fun getPixel(x: Int, y: Int): Pixel {
+    fun getPixel(x: Int, y: Int): Pixel {
         return Pixel(x, y, MAP_WIDTH, MAP_HEIGHT, map!!)
     }
 
