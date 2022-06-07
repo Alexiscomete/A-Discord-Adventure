@@ -21,6 +21,17 @@ import java.util.concurrent.ExecutionException
 import java.util.function.Consumer
 import java.util.stream.Collectors
 
+fun sendPath(messageCreateEvent: MessageCreateEvent, path: ArrayList<Pixel>) {
+    val sb = StringBuilder()
+    for (pixel in path) {
+        sb.append(pixel)
+    }
+    messageCreateEvent.message.reply(sb.toString())
+    val messageBuilder3 = MessageBuilder()
+    messageBuilder3.addAttachment(Map.drawPath(path), "path.png")
+    messageBuilder3.send(messageCreateEvent.channel)
+}
+
 class Travel : CommandInServer("Vous permet de voyager vers un serveur", "travel", "travel [server id]") {
     override fun executeC(messageCreateEvent: MessageCreateEvent, content: String, args: Array<String>, p: Player) {
 
@@ -320,17 +331,6 @@ class Travel : CommandInServer("Vous permet de voyager vers un serveur", "travel
         // ajout des actions
         buttonsManager.addButton(id1, c1)
         buttonsManager.addButton(id2, c2)
-    }
-
-    private fun sendPath(messageCreateEvent: MessageCreateEvent, path: ArrayList<Pixel>) {
-        val sb = StringBuilder()
-        for (pixel in path) {
-            sb.append(pixel)
-        }
-        messageCreateEvent.message.reply(sb.toString())
-        val messageBuilder3 = MessageBuilder()
-        messageBuilder3.addAttachment(Map.drawPath(path), "path.png")
-        messageBuilder3.send(messageCreateEvent.channel)
     }
 
     private fun verifButton(p: Player, state: Int, messageButtonEvent: MessageComponentCreateEvent) {

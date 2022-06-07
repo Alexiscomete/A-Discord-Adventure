@@ -150,21 +150,46 @@ class Player : CacheGetSet, Owner {
             return saveManager.places[placeID.toLong()]
         }
 
+
     fun setPath(path: ArrayList<Pixel>, type: String) {
-        val pathStr = StringBuilder()
-        for (pixel in path) {
-            pathStr.append(pixel.x)
-            pathStr.append(",")
-            pathStr.append(pixel.y)
-            pathStr.append(";")
-        }
-        this["place_path"] = pathStr.toString()
+        savePath(path)
         this["place_path_type"] = type
         this["place_path_start"] = System.currentTimeMillis().toString()
         this["place_DIBIMAP_type"] = "path"
     }
 
     fun getPath(): ArrayList<Pixel> {
+        val currentPath = stringSaveToPath()
+        if (currentPath.isEmpty()) {
+            this["place_DIBIMAP_type"] = "unknown"
+            return ArrayList()
+        }
+        val startTime = getString("place_path_start").toLong()
+        val currentTime = System.currentTimeMillis()
+        // le temps en ms pour 1 pixel est de 10000, il faut enlever tous les pixels déjà parcourus de la liste puis la sauvegarder
+        val numberOfPixel = (currentTime - startTime) / 10000
+        // les pixels à enlever sont au début de la liste, j'ai besoin que des pixels restants
+        val remainingPath = ArrayList<Pixel>()
+        for (i in numberOfPixel.toInt() until currentPath.size) {
+            remainingPath.add(currentPath[i])
+        }
+        savePath(remainingPath)
+        this["place_path_start"] = System.currentTimeMillis().toString()
+        return remainingPath
+    }
+
+    private fun savePath(remainingPath: ArrayList<Pixel>) {
+        val pathStr = StringBuilder()
+        for (pixel in remainingPath) {
+            pathStr.append(pixel.x)
+            pathStr.append(",")
+            pathStr.append(pixel.y)
+            pathStr.append(";")
+        }
+        this["place_path"] = pathStr.toString()
+    }
+
+    private fun stringSaveToPath(): ArrayList<Pixel> {
         val pathStr = getString("place_path")
         val path = ArrayList<Pixel>()
         if (pathStr != "") {

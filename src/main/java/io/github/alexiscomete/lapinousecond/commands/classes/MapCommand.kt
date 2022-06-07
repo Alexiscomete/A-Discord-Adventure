@@ -6,7 +6,6 @@ import io.github.alexiscomete.lapinousecond.worlds.Place
 import io.github.alexiscomete.lapinousecond.worlds.map.Map
 import org.javacord.api.entity.message.MessageBuilder
 import org.javacord.api.event.message.MessageCreateEvent
-import io.github.alexiscomete.lapinousecond.*
 
 class MapCommand : CommandWithAccount("description", "map", "totalDescription") {
     override fun execute(messageCreateEvent: MessageCreateEvent, content: String, args: Array<String>, p: Player) {
@@ -163,14 +162,7 @@ class MapCommand : CommandWithAccount("description", "map", "totalDescription") 
                         ), messageCreateEvent.channel
                     )
                     messageCreateEvent.message.reply("Path found : " + path.size + " steps")
-                    val sb = StringBuilder()
-                    for (pixel in path) {
-                        sb.append(pixel)
-                    }
-                    messageCreateEvent.message.reply(sb.toString())
-                    val messageBuilder3 = MessageBuilder()
-                    messageBuilder3.addAttachment(Map.drawPath(path), "path.png")
-                    messageBuilder3.send(messageCreateEvent.channel)
+                    sendPath(messageCreateEvent, path)
                 }
                 else -> sendImpossible(messageCreateEvent, p)
             }
