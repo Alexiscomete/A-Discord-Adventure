@@ -33,15 +33,7 @@ class MapCommand : CommandWithAccount("description", "map", "totalDescription") 
                         sendNumberEx(messageCreateEvent, p, 3)
                         return
                     }
-                    // check if the arguments are in the right range
-                    if (args[2].toInt() < 0 || args[2].toInt() > Map.MAP_WIDTH) {
-                        messageCreateEvent.message.reply("The first argument must be between 0 and " + Map.MAP_WIDTH)
-                        return
-                    }
-                    if (args[3].toInt() < 0 || args[3].toInt() > Map.MAP_HEIGHT) {
-                        messageCreateEvent.message.reply("The second argument must be between 0 and " + Map.MAP_HEIGHT)
-                        return
-                    }
+                    if (checkRangeArgsMap(args, messageCreateEvent)) return
                     // check if the pixel is dirt
                     if (Map.isDirt(args[2].toInt(), args[3].toInt())) {
                         messageCreateEvent.message.reply("The pixel is dirt")
@@ -86,15 +78,7 @@ class MapCommand : CommandWithAccount("description", "map", "totalDescription") 
                         sendNumberEx(messageCreateEvent, p, 4)
                         return
                     }
-                    // check if the arguments are in the right range
-                    if (args[2].toInt() < 0 || args[2].toInt() > Map.MAP_WIDTH) {
-                        messageCreateEvent.message.reply("The first argument must be between 0 and " + Map.MAP_WIDTH)
-                        return
-                    }
-                    if (args[3].toInt() < 0 || args[3].toInt() > Map.MAP_HEIGHT) {
-                        messageCreateEvent.message.reply("The second argument must be between 0 and " + Map.MAP_HEIGHT)
-                        return
-                    }
+                    if (checkRangeArgsMap(args, messageCreateEvent)) return
                     // check if arg 4 is < 60
                     if (args[4].toInt() > 60) {
                         messageCreateEvent.message.reply("The fourth argument must be between 0 and 60")
@@ -167,5 +151,21 @@ class MapCommand : CommandWithAccount("description", "map", "totalDescription") 
                 else -> sendImpossible(messageCreateEvent, p)
             }
         }
+    }
+
+    private fun checkRangeArgsMap(
+        args: Array<String>,
+        messageCreateEvent: MessageCreateEvent
+    ): Boolean {
+        // check if the arguments are in the right range
+        if (args[2].toInt() < 0 || args[2].toInt() > Map.MAP_WIDTH) {
+            messageCreateEvent.message.reply("The first argument must be between 0 and " + Map.MAP_WIDTH)
+            return true
+        }
+        if (args[3].toInt() < 0 || args[3].toInt() > Map.MAP_HEIGHT) {
+            messageCreateEvent.message.reply("The second argument must be between 0 and " + Map.MAP_HEIGHT)
+            return true
+        }
+        return false
     }
 }
