@@ -202,6 +202,39 @@ class Player : CacheGetSet, Owner {
         return path
     }
 
+    private fun positionToString(): String {
+        // la première étape est de récupérer le monde
+        val world = this["current_world"]
+        // si le monde est DIBIMAP c'est compliqué, sinon on peut simplement récupérer le serveur
+        if (world == "DIBIMAP") {
+            // on récupère le type de lieu, on sépare encore en plusieurs possibilités
+            return when (this["place_DIBIMAP_type"]) {
+                "coos" -> {
+                    // on récupère les coordonnées
+                    val x = this["place_DIBIMAP_x"]
+                    val y = this["place_DIBIMAP_y"]
+                    // on retourne le résultat
+                    "Vous êtes dans le monde DIBIMAP, sur des coordonnées ($x, $y)"
+                }
+                "place" -> {
+                    ""
+                }
+                "path" -> {
+                    ""
+                }
+                else -> {
+                    "Vous êtes dans le monde DIBIMAP, mais vous ne savez pas où vous êtes"
+                }
+            }
+        } else {
+            // on récupère le lieu
+            val server = this["place_NORMAL"]
+            // on récupère le lieu
+            // TODO
+            return "Vous êtes dans le monde $world, sur le lieu $server"
+        }
+    }
+
     override val ownerType: String
         get() = "player"
     override val ownerString: String
