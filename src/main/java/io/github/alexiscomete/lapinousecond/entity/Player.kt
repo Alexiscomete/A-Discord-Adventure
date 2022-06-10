@@ -202,7 +202,7 @@ class Player : CacheGetSet, Owner {
         return path
     }
 
-    private fun positionToString(): String {
+    fun positionToString(): String {
         // la première étape est de récupérer le monde
         val world = this["current_world"]
         // si le monde est DIBIMAP c'est compliqué, sinon on peut simplement récupérer le serveur

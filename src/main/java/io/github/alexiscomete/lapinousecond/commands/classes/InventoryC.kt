@@ -100,7 +100,8 @@ ${top[0]}"""
      Vérification : ${if (p["is_verify"] == "1") "oui" else "non"}
      Pixel : ${if (p["x"].toInt() == -1) "pixel inconnu" else "[" + p["x"] + ":" + p["y"] + "]"}
      """.trimIndent()
-            )
+            , true)
+            .addField("Position", p.positionToString())
             .setColor(Color.green)
             .setThumbnail("https://cdn.discordapp.com/attachments/854322477152337920/924612939879702588/unknown.png")
         messageCreateEvent.message.reply(builder)
