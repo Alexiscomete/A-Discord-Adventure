@@ -217,10 +217,14 @@ class Player : CacheGetSet, Owner {
                     "Vous êtes dans le monde DIBIMAP, sur des coordonnées ($x, $y)"
                 }
                 "place" -> {
-                    ""
+                    val placeID = this["place_DIBIMAP_id"]
+                    "Vous êtes dans le monde DIBIMAP, dans le lieu $placeID"
                 }
                 "path" -> {
-                    ""
+                    val path = getPath()
+                    val firstPixel = path[0]
+                    val lastPixel = path[path.size - 1]
+                    "Vous êtes dans le monde DIBIMAP, sur un chemin. Le premier pixel est (${firstPixel.x}, ${firstPixel.y}), le dernier pixel est (${lastPixel.x}, ${lastPixel.y})"
                 }
                 else -> {
                     "Vous êtes dans le monde DIBIMAP, mais vous ne savez pas où vous êtes"
