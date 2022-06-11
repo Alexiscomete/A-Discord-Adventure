@@ -5,7 +5,6 @@ import io.github.alexiscomete.lapinousecond.commands.CommandBot
 import io.github.alexiscomete.lapinousecond.save.SaveManager
 import io.github.alexiscomete.lapinousecond.save.Tables
 import org.javacord.api.event.message.MessageCreateEvent
-import java.lang.Boolean
 import kotlin.Array
 import kotlin.NumberFormatException
 import kotlin.String
@@ -21,19 +20,17 @@ class PermsManager : CommandBot(
             messageCreateEvent.message.reply("pm [user] [perm name] [true/false]")
             return
         }
-        val value = Boolean.parseBoolean(args[3])
+        val value = (args[3]).toBoolean()
         val perm = args[2]
         try {
             val userPerms = saveManager.getPlayerPerms(args[1].toLong())
-            if (userPerms != null) {
-                if (userPerms.isDefault) {
-                    val what = HashMap<String, String>()
-                    what["ID"] = messageCreateEvent.messageAuthor.id.toString()
-                    what["PLAY"] = SaveManager.toBooleanString(userPerms.PLAY)
-                    what["CREATE_SERVER"] = SaveManager.toBooleanString(userPerms.CREATE_SERVER)
-                    what["MANAGE_PERMS"] = SaveManager.toBooleanString(userPerms.MANAGE_PERMS)
-                    saveManager.insert("perms", what)
-                }
+            if (userPerms.isDefault) {
+                val what = HashMap<String, String>()
+                what["ID"] = messageCreateEvent.messageAuthor.id.toString()
+                what["PLAY"] = SaveManager.toBooleanString(userPerms.PLAY)
+                what["CREATE_SERVER"] = SaveManager.toBooleanString(userPerms.CREATE_SERVER)
+                what["MANAGE_PERMS"] = SaveManager.toBooleanString(userPerms.MANAGE_PERMS)
+                saveManager.insert("perms", what)
             }
             if (perm.equals("MANAGE_PERMS", ignoreCase = true) && !messageCreateEvent.messageAuthor.isBotOwner) {
                 messageCreateEvent.message.reply("Impossible .... vous devez être l'owner du bot pour modifier cette permission")

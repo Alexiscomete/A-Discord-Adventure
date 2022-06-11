@@ -77,10 +77,11 @@ ${top[0]}"""
                 messageCreateEvent.message.reply("Vous devez d'abord faire la commande start avant de continuer")
             } else {
                 invOf(p, messageCreateEvent)
-                if (p.getTuto().toInt() == 1) {
+                val tuto = p.getTuto().toInt()
+                if (tuto == 1) {
                     messageCreateEvent.message.reply("Bon ... comme vous l'avez vu vous n'avez normalement pas d'argent. Utilisez la commande `work` pour en gagner un peu ...")
                     p.setTuto(3.toShort())
-                } else if (p.getTuto().toInt() == 4) {
+                } else if (tuto == 4) {
                     messageCreateEvent.message.reply("Vous remarquerez quelques changements. Utilisez -shop pour échanger ce que vous avez récupéré")
                     p.setTuto(5.toShort())
                 }
