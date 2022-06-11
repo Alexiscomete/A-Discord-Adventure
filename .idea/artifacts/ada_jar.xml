@@ -1,6 +1,6 @@
 <component name="ArtifactManager">
   <artifact type="jar" name="ada:jar">
-    <output-path>$PROJECT_DIR$/out/artifacts/ada_jar</output-path>
+    <output-path>$USER_HOME$/tests/testada2</output-path>
     <root id="archive" name="A-Discord-Adventure.jar">
       <element id="module-output" name="A-Discord-Adventure" />
       <element id="extracted-dir" path="$USER_HOME$/jars/json-20211205.jar" path-in-jar="/" />
@@ -10,6 +10,9 @@
       <element id="file-copy" path="$PROJECT_DIR$/src/main/java/io/github/alexiscomete/lapinousecond/worlds/buildings/buildings_config.json" />
       <element id="file-copy" path="$PROJECT_DIR$/src/main/java/io/github/alexiscomete/lapinousecond/worlds/map/base.png" />
       <element id="extracted-dir" path="$USER_HOME$/jars/kotlin-stdlib-1.7.0-RC.jar" path-in-jar="/" />
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/src/main/resources/META-INF/MANIFEST.MF" output-file-name="MANIFEST.MF" />
+      </element>
     </root>
   </artifact>
 </component>
