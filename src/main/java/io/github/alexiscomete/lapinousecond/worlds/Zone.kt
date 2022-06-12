@@ -18,7 +18,7 @@ class Zone(var x1: Int, var y1: Int, var x2: Int, var y2: Int) {
      * @return true si le pixel est dans la zone, false sinon
      */
     fun contains(x: Int, y: Int): Boolean {
-        return x in x1..x2 && y >= y1 && y <= y2
+        return x in x1..x2 && y in y1..y2
     }
 
     /**
