@@ -13,7 +13,7 @@ import io.github.alexiscomete.lapinousecond.*
 fun getUser(id: Long): String? {
     try {
         val connection =
-            URL("https://dirtybiology.captaincommand.repl.co/api/?authorization=mXpn9frxWJh0RPjZYSPMilfnK5ooxjhL&request=getInfosByDiscordId&datas=%7B%22discordId%22:%22$id%22%7D").openConnection() as HttpURLConnection
+            URL("https://dirtybiology.captaincommand.repl.co/api/?authorization=${config.content[2]}&request=getInfosByDiscordId&datas=%7B%22discordId%22:%22$id%22%7D").openConnection() as HttpURLConnection
         connection.requestMethod = "GET"
         var response = ""
         val scanner = Scanner(connection.inputStream)
