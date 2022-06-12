@@ -158,7 +158,7 @@ class Player : CacheGetSet, Owner {
         this["place_DIBIMAP_type"] = "path"
     }
 
-    fun getPath(): ArrayList<Pixel> {
+    private fun getPath(): ArrayList<Pixel> {
         val currentPath = stringSaveToPath()
         if (currentPath.isEmpty()) {
             this["place_DIBIMAP_type"] = "unknown"
