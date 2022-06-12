@@ -13,7 +13,6 @@
       <element id="directory" name="META-INF">
         <element id="file-copy" path="$PROJECT_DIR$/src/main/resources/META-INF/MANIFEST.MF" output-file-name="MANIFEST.MF" />
       </element>
-      <element id="file-copy" path="$PROJECT_DIR$/src/main/resources/META-INF/MANIFEST.MF" />
     </root>
   </artifact>
 </component>
