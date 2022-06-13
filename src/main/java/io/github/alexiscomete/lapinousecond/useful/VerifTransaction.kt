@@ -1,6 +1,6 @@
 package io.github.alexiscomete.lapinousecond.useful
 
-import io.github.alexiscomete.lapinousecond.*
+import io.github.alexiscomete.lapinousecond.buttonsManager
 import io.github.alexiscomete.lapinousecond.entity.Player
 import io.github.alexiscomete.lapinousecond.save.SaveLocation
 import io.github.alexiscomete.lapinousecond.view.AnswerEnum
@@ -11,8 +11,6 @@ import org.javacord.api.entity.message.component.Button
 import org.javacord.api.entity.message.embed.EmbedBuilder
 import org.javacord.api.event.interaction.MessageComponentCreateEvent
 import java.awt.Color
-import java.util.function.Consumer
-import java.util.function.Supplier
 
 open class VerifTransaction(
     addMoney: (Double) -> Unit,

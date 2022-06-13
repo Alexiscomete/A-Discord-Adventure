@@ -1,13 +1,11 @@
 package io.github.alexiscomete.lapinousecond.useful
 
-import io.github.alexiscomete.lapinousecond.*
 import io.github.alexiscomete.lapinousecond.entity.Player
+import io.github.alexiscomete.lapinousecond.messagesManager
 import io.github.alexiscomete.lapinousecond.view.AnswerEnum
 import org.javacord.api.entity.channel.TextChannel
 import org.javacord.api.event.message.MessageCreateEvent
 import org.javacord.api.interaction.MessageComponentInteraction
-import java.util.function.Consumer
-import java.util.function.Supplier
 
 open class FullTransaction(
     addMoney: (Double) -> Unit,
@@ -17,18 +15,18 @@ open class FullTransaction(
     private val max: () -> Double,
 ) : VerifTransaction(addMoney, removeMoney, getMoney, p) {
 
-    private fun askQuantity(after: Consumer<Double>, textChannel: TextChannel) {
+    private fun askQuantity(after: (Double) -> Unit, textChannel: TextChannel) {
         textChannel.sendMessage(p.getAnswer(AnswerEnum.ASK_MONTANT, true))
         addL(textChannel, after)
     }
 
-    private fun askQuantity(after: Consumer<Double>, messageComponentInteraction: MessageComponentInteraction) {
+    private fun askQuantity(after: (Double) -> Unit, messageComponentInteraction: MessageComponentInteraction) {
         messageComponentInteraction.createImmediateResponder().setContent(p.getAnswer(AnswerEnum.ASK_MONTANT, true))
             .respond()
         addL(messageComponentInteraction.channel.get(), after)
     }
 
-    private fun addL(textChannel: TextChannel, after: Consumer<Double>) {
+    private fun addL(textChannel: TextChannel, after: (Double) -> Unit) {
         messagesManager.addListener(textChannel, p.id) { messageCreateEvent: MessageCreateEvent ->
             try {
                 val d = messageCreateEvent.message.content.toDouble()
@@ -36,7 +34,7 @@ open class FullTransaction(
                     messageCreateEvent.message.reply(p.getAnswer(AnswerEnum.VALUE_TOO_HIGH, true, max))
                     addL(textChannel, after)
                 }
-                after.accept(d)
+                after(d)
             } catch (e: IllegalArgumentException) {
                 messageCreateEvent.message.reply(p.getAnswer(AnswerEnum.FORM_INVALID, true))
                 addL(textChannel, after)

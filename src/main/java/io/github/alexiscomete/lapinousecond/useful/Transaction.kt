@@ -3,8 +3,6 @@ package io.github.alexiscomete.lapinousecond.useful
 import io.github.alexiscomete.lapinousecond.entity.Player
 import io.github.alexiscomete.lapinousecond.view.AnswerEnum
 import org.javacord.api.entity.channel.TextChannel
-import java.util.function.Consumer
-import java.util.function.Supplier
 
 open class Transaction(
     private val addMoney: (Double) -> Unit,
