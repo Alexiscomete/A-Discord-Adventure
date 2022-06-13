@@ -12,7 +12,7 @@ open class Transaction(
     private val getMoney: Supplier<Double>
 ) {
     fun make(textChannel: TextChannel, quantity: Double, player: Player) {
-        make(quantity, player, { content: String? -> textChannel.sendMessage(content) }) { content: String? ->
+        make(quantity, player, { content: String -> textChannel.sendMessage(content) }) { content: String ->
             textChannel.sendMessage(
                 content
             )
@@ -23,13 +23,7 @@ open class Transaction(
         if (basic(quantity)) {
             player.getAnswer(AnswerEnum.TR_END, true)?.let { acc(it) }
         } else {
-            player.getAnswer(
-                AnswerEnum.ECHEC_TRANS, true, player.getAnswer(AnswerEnum.NO_ENOUGH_MONEY, false)
-            )?.let {
-                de(
-                    it
-                )
-            }
+            player.getAnswer(AnswerEnum.ECHEC_TRANS, true, player.getAnswer(AnswerEnum.NO_ENOUGH_MONEY, false))?.let { de(it) }
         }
     }
 

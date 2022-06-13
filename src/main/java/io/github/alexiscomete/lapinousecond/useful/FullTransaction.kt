@@ -9,7 +9,7 @@ import org.javacord.api.interaction.MessageComponentInteraction
 import java.util.function.Consumer
 import java.util.function.Supplier
 
-class FullTransaction : VerifTransaction {
+open class FullTransaction : VerifTransaction {
     private val max: Supplier<Double>?
 
     constructor(
