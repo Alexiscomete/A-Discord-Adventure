@@ -7,9 +7,9 @@ import java.util.function.Consumer
 import java.util.function.Supplier
 
 open class Transaction(
-    private val addMoney: Consumer<Double>,
-    private val removeMoney: Consumer<Double>,
-    private val getMoney: Supplier<Double>
+    private val addMoney: (Double) -> Unit,
+    private val removeMoney: (Double) -> Unit,
+    private val getMoney: () -> Double,
 ) {
     fun make(textChannel: TextChannel, quantity: Double, player: Player) {
         make(quantity, player, { content: String -> textChannel.sendMessage(content) }) { content: String ->
@@ -28,10 +28,10 @@ open class Transaction(
     }
 
     private fun basic(quantity: Double): Boolean {
-        val money = getMoney.get()
+        val money = getMoney()
         return if (money > quantity) {
-            addMoney.accept(quantity)
-            removeMoney.accept(quantity)
+            addMoney(quantity)
+            removeMoney(quantity)
             true
         } else {
             false

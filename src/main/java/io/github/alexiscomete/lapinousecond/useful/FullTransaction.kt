@@ -10,11 +10,11 @@ import java.util.function.Consumer
 import java.util.function.Supplier
 
 open class FullTransaction(
-    addMoney: Consumer<Double>,
-    removeMoney: Consumer<Double>,
-    getMoney: Supplier<Double>,
+    addMoney: (Double) -> Unit,
+    removeMoney: (Double) -> Unit,
+    getMoney: () -> Double,
     p: Player,
-    private val max: Supplier<Double>
+    private val max: () -> Double,
 ) : VerifTransaction(addMoney, removeMoney, getMoney, p) {
 
     private fun askQuantity(after: Consumer<Double>, textChannel: TextChannel) {
@@ -32,7 +32,7 @@ open class FullTransaction(
         messagesManager.addListener(textChannel, p.id) { messageCreateEvent: MessageCreateEvent ->
             try {
                 val d = messageCreateEvent.message.content.toDouble()
-                if (d > max.get()) {
+                if (d > max()) {
                     messageCreateEvent.message.reply(p.getAnswer(AnswerEnum.VALUE_TOO_HIGH, true, max))
                     addL(textChannel, after)
                 }

@@ -1,14 +1,12 @@
 package io.github.alexiscomete.lapinousecond.useful
 
 import io.github.alexiscomete.lapinousecond.entity.Player
-import java.util.function.Consumer
-import java.util.function.Supplier
 
 class RessourceTransaction(
-    addMoney: Consumer<Double>,
-    removeMoney: Consumer<Double>,
-    getMoney: Supplier<Double>,
+    addMoney: (Double) -> Unit,
+    removeMoney: (Double) -> Unit,
+    getMoney: () -> Double,
     player: Player,
-    max: Supplier<Double>,
+    max: () -> Double,
 ) : FullTransaction(addMoney, removeMoney, getMoney, player, max) {
 }

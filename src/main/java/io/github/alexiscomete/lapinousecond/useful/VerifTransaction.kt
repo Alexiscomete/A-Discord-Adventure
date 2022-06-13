@@ -15,9 +15,9 @@ import java.util.function.Consumer
 import java.util.function.Supplier
 
 open class VerifTransaction(
-    addMoney: Consumer<Double>,
-    removeMoney: Consumer<Double>,
-    getMoney: Supplier<Double>,
+    addMoney: (Double) -> Unit,
+    removeMoney: (Double) -> Unit,
+    getMoney: () -> Double,
     val p: Player
 ) : Transaction(addMoney, removeMoney, getMoney) {
     fun askVerif(quantity: Double, textChannel: TextChannel?) {
