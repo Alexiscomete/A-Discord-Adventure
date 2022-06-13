@@ -9,27 +9,13 @@ import org.javacord.api.interaction.MessageComponentInteraction
 import java.util.function.Consumer
 import java.util.function.Supplier
 
-open class FullTransaction : VerifTransaction {
-    private val max: Supplier<Double>?
-
-    constructor(
-        addMoney: Consumer<Double>,
-        removeMoney: Consumer<Double>,
-        getMoney: Supplier<Double>,
-        p: Player,
-        max: Supplier<Double>
-    ) : super(addMoney, removeMoney, getMoney, p) {
-        this.max = max
-    }
-
-    constructor(
-        addMoney: Consumer<Double>,
-        removeMoney: Consumer<Double>,
-        getMoney: Supplier<Double>,
-        p: Player
-    ) : super(addMoney, removeMoney, getMoney, p) {
-        max = null
-    }
+open class FullTransaction(
+    addMoney: Consumer<Double>,
+    removeMoney: Consumer<Double>,
+    getMoney: Supplier<Double>,
+    p: Player,
+    private val max: Supplier<Double>
+) : VerifTransaction(addMoney, removeMoney, getMoney, p) {
 
     private fun askQuantity(after: Consumer<Double>, textChannel: TextChannel) {
         textChannel.sendMessage(p.getAnswer(AnswerEnum.ASK_MONTANT, true))
@@ -46,7 +32,7 @@ open class FullTransaction : VerifTransaction {
         messagesManager.addListener(textChannel, p.id) { messageCreateEvent: MessageCreateEvent ->
             try {
                 val d = messageCreateEvent.message.content.toDouble()
-                if (max != null && d > max.get()) {
+                if (d > max.get()) {
                     messageCreateEvent.message.reply(p.getAnswer(AnswerEnum.VALUE_TOO_HIGH, true, max))
                     addL(textChannel, after)
                 }
