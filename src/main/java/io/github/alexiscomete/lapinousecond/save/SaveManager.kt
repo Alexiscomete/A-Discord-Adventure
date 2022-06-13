@@ -9,21 +9,21 @@ import io.github.alexiscomete.lapinousecond.worlds.buildings.Buildings
 import java.sql.*
 
 class SaveManager(path: String) {
-    val players = CacheCustom(Tables.PLAYERS.table) { id: Long? -> Player(id) }
-    val servers = CacheCustom(Tables.SERVERS.table) { id: Long? ->
+    val players = CacheCustom(Tables.PLAYERS.table) { id: Long -> Player(id) }
+    val servers = CacheCustom(Tables.SERVERS.table) { id: Long ->
         ServerBot(
-            id!!
+            id
         )
     }
-    val places = CacheCustom(Tables.PLACES.table) { id: Long? ->
+    val places = CacheCustom(Tables.PLACES.table) { id: Long ->
         Place(
-            id!!
+            id
         )
     }
     val buildings = CacheCustom(Tables.BUILDINGS.table) { aLong: Long -> Buildings.load(aLong.toString()) }
-    val companies = CacheCustom(Tables.COMPANY.table) { id: Long? ->
+    val companies = CacheCustom(Tables.COMPANY.table) { id: Long ->
         Company(
-            id!!
+            id
         )
     }
     private var co: Connection? = null
