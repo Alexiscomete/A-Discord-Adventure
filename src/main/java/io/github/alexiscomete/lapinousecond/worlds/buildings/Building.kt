@@ -7,7 +7,7 @@ import io.github.alexiscomete.lapinousecond.save.CacheGetSet
 import io.github.alexiscomete.lapinousecond.save.SaveLocation
 import io.github.alexiscomete.lapinousecond.save.Tables
 import io.github.alexiscomete.lapinousecond.saveManager
-import io.github.alexiscomete.lapinousecond.useful.FullTransaction
+import lapinousecond.transactions.FullTransaction
 import io.github.alexiscomete.lapinousecond.useful.ProgressionBar
 import io.github.alexiscomete.lapinousecond.view.AnswerEnum
 import io.github.alexiscomete.lapinousecond.worlds.Place
