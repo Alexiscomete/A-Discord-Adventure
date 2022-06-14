@@ -7,6 +7,29 @@ import java.io.IOException
 import java.util.*
 import java.util.function.Function
 
+@Synchronized
+fun generateUniqueID(): Long {
+    return try {
+        Thread.sleep(2)
+        System.currentTimeMillis()
+    } catch (e: InterruptedException) {
+        e.printStackTrace()
+        System.currentTimeMillis()
+    }
+}
+
+val pathStatic: String = File("").absolutePath
+
+@Throws(IOException::class)
+fun createPath(path: String) {
+    val file = File(pathStatic + path)
+    if (path.endsWith("/")) {
+        println(file.mkdirs())
+    } else if (!file.exists()) {
+        println(file.createNewFile())
+    }
+}
+
 /**
  * @param <E> type of content, think to add a toString() method in E!
 </E> */
@@ -57,32 +80,6 @@ class SaveLocation<E>(private val sep: String, path: String, a: Function<String,
             }
         } catch (e: FileNotFoundException) {
             e.printStackTrace()
-        }
-    }
-
-    companion object {
-        val pathStatic: String = File("").absolutePath
-
-        @Throws(IOException::class)
-        fun create(path: String) {
-            val file = File(pathStatic + path)
-            if (path.endsWith("/")) {
-                println(file.mkdirs())
-            } else if (!file.exists()) {
-                println(file.createNewFile())
-            }
-        }
-
-        @JvmStatic
-        @Synchronized
-        fun generateUniqueID(): Long {
-            return try {
-                Thread.sleep(2)
-                System.currentTimeMillis()
-            } catch (e: InterruptedException) {
-                e.printStackTrace()
-                System.currentTimeMillis()
-            }
         }
     }
 }

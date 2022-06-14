@@ -4,23 +4,19 @@ import io.github.alexiscomete.lapinousecond.saveManager
 import java.util.*
 
 open class CacheGetSet(open val id: Long, private val table: Table) {
-    private val cache = HashMap<String, CacheValue>()
+    private val cache = HashMap<String, String>()
     open fun getString(row: String): String {
         return if (cache.containsKey(row)) {
-            cache[row]!!.string
+            cache[row]!!
         } else {
             val str = saveManager.getString(table, row, "TEXT", id)
-            cache[row] = CacheValue(str)
+            cache[row] = str
             str
         }
     }
 
     operator fun set(row: String, value: String) {
-        if (cache.containsKey(row)) {
-            cache[row]!!.set(value)
-        } else {
-            cache[row] = CacheValue(value)
-        }
+        cache[row] = value
         saveManager.setValue(table, id, row, value, "TEXT")
     }
 

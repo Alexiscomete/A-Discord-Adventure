@@ -5,7 +5,7 @@ import java.sql.SQLException
 import java.util.function.Function
 
 class CacheCustom<U>(private val table: Table, private val function: Function<Long, U>) {
-    val hashMap = HashMap<Long, U?>()
+    val hashMap = HashMap<Long, U>()
     operator fun get(l: Long): U? {
         var u = hashMap[l]
         if (u == null) {
