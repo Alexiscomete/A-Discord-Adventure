@@ -12,6 +12,9 @@ import java.util.Optional
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
+val PLACES = Table("places")
+val places = CacheCustom(PLACES) { id: Long -> Place(id) }
+
 open class Place : CacheGetSet, Owner {
     private var serverID: Long? = null
     private var serverBot: ServerBot? = null
@@ -20,13 +23,13 @@ open class Place : CacheGetSet, Owner {
     private var y: Int? = null
     lateinit var connections: LongArray
 
-    constructor() : super(generateUniqueID(), Tables.PLACES.table) {
+    constructor() : super(generateUniqueID(), PLACES) {
         val h = HashMap<String, String>()
         h["id"] = id.toString()
         saveManager.insert("places", h)
     }
 
-    constructor(id: Long) : super(id, Tables.PLACES.table)
+    constructor(id: Long) : super(id, PLACES)
 
     fun getServerBot(): Optional<ServerBot> {
         return Optional.ofNullable(serverBot)

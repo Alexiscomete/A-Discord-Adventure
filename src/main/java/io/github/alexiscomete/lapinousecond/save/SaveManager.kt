@@ -2,24 +2,13 @@ package io.github.alexiscomete.lapinousecond.save
 
 import io.github.alexiscomete.lapinousecond.UserPerms
 import io.github.alexiscomete.lapinousecond.entity.Company
-import io.github.alexiscomete.lapinousecond.entity.Player
 import io.github.alexiscomete.lapinousecond.worlds.Place
-import io.github.alexiscomete.lapinousecond.worlds.ServerBot
 import io.github.alexiscomete.lapinousecond.worlds.buildings.Buildings
 import java.sql.*
 
 class SaveManager(path: String) {
-    val players = CacheCustom(Tables.PLAYERS.table) { id: Long -> Player(id) }
-    val servers = CacheCustom(Tables.SERVERS.table) { id: Long ->
-        ServerBot(
-            id
-        )
-    }
-    val places = CacheCustom(Tables.PLACES.table) { id: Long ->
-        Place(
-            id
-        )
-    }
+
+
     val buildings = CacheCustom(Tables.BUILDINGS.table) { aLong: Long -> Buildings.load(aLong.toString()) }
     val companies = CacheCustom(Tables.COMPANY.table) { id: Long ->
         Company(

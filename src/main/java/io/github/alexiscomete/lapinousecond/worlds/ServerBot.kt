@@ -1,17 +1,20 @@
 package io.github.alexiscomete.lapinousecond.worlds
 
+import io.github.alexiscomete.lapinousecond.save.CacheCustom
 import io.github.alexiscomete.lapinousecond.save.CacheGetSet
+import io.github.alexiscomete.lapinousecond.save.Table
 import io.github.alexiscomete.lapinousecond.save.Tables
+
+val SERVERS = Table("guilds")
+
+val servers = CacheCustom(SERVERS) { id: Long -> ServerBot(id) }
 
 /**
  * Représente un serveur discord dans la base de données
- */
-class ServerBot
-/**
  * Créer un nouveau serveur / ! \ passer par SaveManager
  * @param id l'identifiant discord du serveur
  */
-    (id: Long) : CacheGetSet(id, Tables.SERVERS.table) {
+class ServerBot(id: Long) : CacheGetSet(id, SERVERS) {
     /**
      * Permet de tester si le paramètre est valid en nombre de caractères puis de le régler
      * @param len longueur du message
