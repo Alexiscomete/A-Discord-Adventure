@@ -4,7 +4,7 @@ import io.github.alexiscomete.lapinousecond.buttonsManager
 import io.github.alexiscomete.lapinousecond.entity.Owner
 import io.github.alexiscomete.lapinousecond.entity.Player
 import io.github.alexiscomete.lapinousecond.save.CacheGetSet
-import io.github.alexiscomete.lapinousecond.save.SaveLocation
+import io.github.alexiscomete.lapinousecond.save.*
 import io.github.alexiscomete.lapinousecond.save.Tables
 import io.github.alexiscomete.lapinousecond.saveManager
 import lapinousecond.transactions.FullTransaction
@@ -47,7 +47,7 @@ class Building : CacheGetSet, BuildMethods {
         owner: Owner,
         place: Place,
         vararg specialInfos: AbstractMap.SimpleEntry<String?, String?>?
-    ) : super(SaveLocation.generateUniqueID(), Tables.BUILDINGS.table) {
+    ) : super(generateUniqueID(), Tables.BUILDINGS.table) {
         saveManager.buildings.add(id)
         var buildingsString: String = place.getString("buildings")
         buildingsString += ";$id"
@@ -103,7 +103,7 @@ class Building : CacheGetSet, BuildMethods {
     }
 
     private fun inBuildCompleteInfos(p: Player): MessageBuilder {
-        val id: Long = SaveLocation.generateUniqueID()
+        val id: Long = generateUniqueID()
         val messageBuilder: MessageBuilder = MessageBuilder()
             .addEmbed(inBuildInfos(p))
             .addComponents(

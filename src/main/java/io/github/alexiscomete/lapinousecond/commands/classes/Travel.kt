@@ -3,7 +3,7 @@ package io.github.alexiscomete.lapinousecond.commands.classes
 import io.github.alexiscomete.lapinousecond.*
 import io.github.alexiscomete.lapinousecond.commands.CommandInServer
 import io.github.alexiscomete.lapinousecond.entity.Player
-import io.github.alexiscomete.lapinousecond.save.SaveLocation.Companion.generateUniqueID
+import io.github.alexiscomete.lapinousecond.save.*
 import io.github.alexiscomete.lapinousecond.worlds.Place
 import io.github.alexiscomete.lapinousecond.worlds.ServerBot
 import io.github.alexiscomete.lapinousecond.worlds.map.Map

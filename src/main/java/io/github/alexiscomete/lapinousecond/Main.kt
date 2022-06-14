@@ -51,7 +51,6 @@ fun main() {
         api.addListener(reactionManager)
         api.addListener(buttonsManager)
         api.addListener(messagesManager)
-        Tables.testTables()
 
         // Ajout des commandes
         addCommand(Help())
