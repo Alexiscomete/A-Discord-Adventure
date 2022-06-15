@@ -9,13 +9,13 @@ abstract class CommandInServer(description: String, name: String, totalDescripti
         val servOp = messageCreateEvent.server
         if (servOp.isPresent) {
             val serv = servOp.get()
-            if (serv.id == p.getServer()) {
+            if (serv.id == p["serv"].toLong()) {
                 executeC(messageCreateEvent, content, args, p)
             } else {
-                messageCreateEvent.message.reply("Utilisez cette commande dans un salon du serveur actuel : " + p.getServer())
+                messageCreateEvent.message.reply("Utilisez cette commande dans un salon du serveur actuel : " + p["serv"].toLong())
             }
         } else {
-            messageCreateEvent.message.reply("Utilisez cette commande dans un salon du serveur actuel : " + p.getServer())
+            messageCreateEvent.message.reply("Utilisez cette commande dans un salon du serveur actuel : " + p["serv"].toLong())
         }
     }
 

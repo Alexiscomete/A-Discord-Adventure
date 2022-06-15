@@ -5,10 +5,7 @@ import io.github.alexiscomete.lapinousecond.commands.CommandWithAccount
 import io.github.alexiscomete.lapinousecond.entity.Player
 import io.github.alexiscomete.lapinousecond.message_event.ListButtons
 import io.github.alexiscomete.lapinousecond.save.*
-import io.github.alexiscomete.lapinousecond.worlds.Place
-import io.github.alexiscomete.lapinousecond.worlds.PlaceZones
-import io.github.alexiscomete.lapinousecond.worlds.ServerBot
-import io.github.alexiscomete.lapinousecond.worlds.Zone
+import io.github.alexiscomete.lapinousecond.worlds.*
 import io.github.alexiscomete.lapinousecond.worlds.map.Map
 import org.javacord.api.entity.message.MessageBuilder
 import org.javacord.api.entity.message.component.ActionRow
@@ -28,7 +25,7 @@ class PlaceCommand : CommandWithAccount(
 ) {
     override fun execute(messageCreateEvent: MessageCreateEvent, content: String, args: Array<String>, p: Player) {
         if (messageCreateEvent.message.isServerMessage) {
-            val serverBot = saveManager.servers[messageCreateEvent.server.get().id]
+            val serverBot = servers[messageCreateEvent.server.get().id]
             if (serverBot == null) {
                 messageCreateEvent.message.reply("Utilisez d'abord le -config")
             } else {
@@ -71,7 +68,7 @@ class PlaceCommand : CommandWithAccount(
                         }
                         "links" -> {
                             messageCreateEvent.message.reply("Tout les lieux qui ont un lien de voyage avec le lieu de votre serveur")
-                            val place = saveManager.places[serverBot.getString("places").toLong()]
+                            val place = places[serverBot.getString("places").toLong()]
                             val places1 = Place.toPlaces(place!!.getString("connections"))
                             val messageBuilder1 = MessageBuilder()
                             val builder1 = EmbedBuilder()
@@ -94,11 +91,11 @@ class PlaceCommand : CommandWithAccount(
                         }
                         "add_link" -> if (args.size > 2) {
                             try {
-                                val place1 = saveManager.places[serverBot.getString("places").toLong()]
-                                val place2 = saveManager.places[args[2].toLong()]
+                                val place1 = places[serverBot.getString("places").toLong()]
+                                val place2 = places[args[2].toLong()]
                                 if (place1!!.getString("world") == place2!!.getString("world")) {
                                     if (place1.getString("world") == "NORMAL") {
-                                        val bal = p.getBal()
+                                        val bal = p["bal"].toDouble()
                                         if (bal < 500) {
                                             messageCreateEvent.message.reply("Impossible de créer un lien : vous devez avoir au minimum 500 rb")
                                             return
@@ -109,7 +106,7 @@ class PlaceCommand : CommandWithAccount(
                                             messageCreateEvent.message.reply("Cette connection existe déjà")
                                             return
                                         }
-                                        p.setBal(bal - 500)
+                                        p["bal"] = (bal - 500).toString()
                                         connections1.add(place2)
                                         connections2.add(place1)
                                         place1["connections"] = placesToString(connections1)
@@ -391,7 +388,7 @@ class PlaceCommand : CommandWithAccount(
         var placeParent: Place? = null
         for (placeID in serverBot.getArray("places")) {
             try {
-                val place = saveManager.places[placeID.toLong()]
+                val place = places[placeID.toLong()]
                 if (place != null && place.getString("type") == "server") {
                     placeParent = place
                 }

@@ -13,6 +13,7 @@ import io.github.alexiscomete.lapinousecond.worlds.Place
 import io.github.alexiscomete.lapinousecond.worlds.ServerBot
 import io.github.alexiscomete.lapinousecond.worlds.map.Map
 import io.github.alexiscomete.lapinousecond.worlds.map.Pixel
+import io.github.alexiscomete.lapinousecond.worlds.places
 
 val PLAYERS = Table("players")
 val players = CacheCustom(PLAYERS) { id: Long -> Player(id) }
@@ -80,7 +81,7 @@ class Player(id: Long) : CacheGetSet(id, PLAYERS), Owner {
                 placeID = ServerBot(854288660147994634L).getString("places")
                 set("place_NORMAL", ServerBot(854288660147994634L).getString("places"))
             }
-            return saveManager.places[placeID.toLong()]
+            return places[placeID.toLong()]
         }
 
 

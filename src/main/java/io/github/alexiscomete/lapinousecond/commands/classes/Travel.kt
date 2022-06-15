@@ -8,6 +8,8 @@ import io.github.alexiscomete.lapinousecond.worlds.Place
 import io.github.alexiscomete.lapinousecond.worlds.ServerBot
 import io.github.alexiscomete.lapinousecond.worlds.map.Map
 import io.github.alexiscomete.lapinousecond.worlds.map.Pixel
+import io.github.alexiscomete.lapinousecond.worlds.places
+import io.github.alexiscomete.lapinousecond.worlds.servers
 import org.javacord.api.entity.channel.ServerChannel
 import org.javacord.api.entity.message.MessageBuilder
 import org.javacord.api.entity.message.component.ActionRow
@@ -68,7 +70,7 @@ class Travel : CommandInServer("Vous permet de voyager vers un serveur", "travel
         }
 
         // On récupère le lieu du joueur sous forme d'objet avec l'id
-        val place = saveManager.places[placeID.toLong()]
+        val place = places[placeID.toLong()]
 
         // si le lieu n'existe pas on l'indique au joueur et on propose d'utiliser -hub
         if (place == null) {
@@ -95,7 +97,7 @@ class Travel : CommandInServer("Vous permet de voyager vers un serveur", "travel
         }
 
         // On regarde si le joueur a assez d'argent pour se rendre à la destination
-        val bal = p.getBal()
+        val bal = p["bal"].toDouble()
         if (bal < 100) {
             messageCreateEvent.message.reply("Il vous faut 100 rb pour voyager dans le monde normal")
             return
@@ -129,7 +131,7 @@ class Travel : CommandInServer("Vous permet de voyager vers un serveur", "travel
         }
 
         // on récupère le serveur de destination sous forme d'objet personnalisé
-        val nextServer = saveManager.servers[dest.getString("serv").toLong()]
+        val nextServer = servers[dest.getString("serv").toLong()]
 
         // on regarde si le serveur est bien enregistré dans la base de données
         if (nextServer == null) {
@@ -148,8 +150,8 @@ class Travel : CommandInServer("Vous permet de voyager vers un serveur", "travel
             user.sendMessage(dest.getString("train"))
 
             // on set les valeurs dans la base de données
-            p.setServer(nextServer.id)
-            p.setBal(bal - 100)
+            p["serv"] = (nextServer.id).toString()
+            p["bal"] = (bal - 100).toString()
             p["place_NORMAL"] = dest.id.toString()
 
             // on envoie un message de confirmation
@@ -194,7 +196,7 @@ class Travel : CommandInServer("Vous permet de voyager vers un serveur", "travel
                     val place = messageCreateEvent11.message.content
                     // on récupère le lieu
                     try {
-                        val placeO = saveManager.places[place.toLong()]
+                        val placeO = places[place.toLong()]
                             ?: throw IllegalArgumentException("Lieu introuvable")
                         messageCreateEvent11.message.reply("Calcul du trajet en cours ....")
                         val path1 = Map.getNode(x, y, ArrayList()).let {
@@ -240,7 +242,7 @@ class Travel : CommandInServer("Vous permet de voyager vers un serveur", "travel
             // on récupère le lieu
             val place0 = p.getString("place_DIBIMAP_place")
             // on récupère le lieu dans la base de données
-            val place1 = saveManager.places[place0.toLong()]
+            val place1 = places[place0.toLong()]
 
             // on sépare le cas où le joueur veut aller dans un lieu et celui où il veut aller sur des coos
             // création du menu
@@ -255,7 +257,7 @@ class Travel : CommandInServer("Vous permet de voyager vers un serveur", "travel
                     val place = messageCreateEvent11.message.content
                     // on récupère le lieu
                     try {
-                        val placeO = saveManager.places[place.toLong()]
+                        val placeO = places[place.toLong()]
                             ?: throw IllegalArgumentException("Lieu introuvable")
                         messageCreateEvent11.message.reply("Calcul du trajet en cours ....")
                         val path1 = Map.getNode(
@@ -410,9 +412,9 @@ class Travel : CommandInServer("Vous permet de voyager vers un serveur", "travel
         }
         buttonsManager.addButton(id4) { messageButtonEvent: MessageComponentCreateEvent ->
             verifButton(p, state, messageButtonEvent)
-            val bal = p.getBal()
+            val bal = p["bal"].toDouble()
             check(bal >= priceToTravel) { "Vous n'avez pas assez de rb pour ce trajet" }
-            p.setBal(bal - priceToTravel)
+            p["bal"] = (bal - priceToTravel).toString()
 
             // il a payé donc on téléporte le joueur
             p["place_DIBIMAP_type"] = "coos"
@@ -460,9 +462,9 @@ class Travel : CommandInServer("Vous permet de voyager vers un serveur", "travel
         }
         buttonsManager.addButton(id4) { messageButtonEvent: MessageComponentCreateEvent ->
             verifButton(p, state, messageButtonEvent)
-            val bal = p.getBal()
+            val bal = p["bal"].toDouble()
             check(bal >= priceToTravel) { "Vous n'avez pas assez de rb pour ce trajet" }
-            p.setBal(bal - priceToTravel)
+            p["bal"] = (bal - priceToTravel).toString()
 
             // il a payé donc on téléporte le joueur
             p["place_DIBIMAP_type"] = "place"

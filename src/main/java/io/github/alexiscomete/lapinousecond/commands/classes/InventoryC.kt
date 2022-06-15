@@ -3,6 +3,7 @@ package io.github.alexiscomete.lapinousecond.commands.classes
 import io.github.alexiscomete.lapinousecond.*
 import io.github.alexiscomete.lapinousecond.commands.CommandBot
 import io.github.alexiscomete.lapinousecond.entity.Player
+import io.github.alexiscomete.lapinousecond.entity.players
 import org.javacord.api.entity.message.embed.EmbedBuilder
 import org.javacord.api.entity.user.User
 import org.javacord.api.event.message.MessageCreateEvent
@@ -26,12 +27,6 @@ class InventoryC : CommandBot(
                                 players.add(
                                             Player(
                                                 resultSet.getLong("id"),
-                                                resultSet.getDouble("bal"),
-                                                resultSet.getLong("serv"),
-                                                resultSet.getShort("tuto"),
-                                                resultSet.getBoolean("has_account"),
-                                                resultSet.getString("roles"),
-                                                resultSet.getString("resources")
                                             )
                                         )
                             }
@@ -48,7 +43,7 @@ class InventoryC : CommandBot(
                         api.getUserById(player.id).thenAccept { user: User ->
                             println("...")
                             ints[0]--
-                            top[0] = """${user.name} -> ${player.getBal()}
+                            top[0] = """${user.name} -> ${player["bal"]}
 ${top[0]}"""
                             if (ints[0] == 0) {
                                 embedBuilder.setDescription(top[0])
@@ -64,7 +59,7 @@ ${top[0]}"""
                     args[1] = args[1].substring(2, args[1].length - 1)
                 }
                 try {
-                    val p = saveManager.players[args[1].toLong()]
+                    val p = players[args[1].toLong()]
                     p?.let { invOf(it, messageCreateEvent) }
                         ?: messageCreateEvent.message.reply("Cette personne n'a pas encore de compte")
                 } catch (e: NumberFormatException) {
@@ -72,18 +67,18 @@ ${top[0]}"""
                 }
             }
         } else {
-            val p = saveManager.players[messageCreateEvent.messageAuthor.id]
+            val p = players[messageCreateEvent.messageAuthor.id]
             if (p == null) {
                 messageCreateEvent.message.reply("Vous devez d'abord faire la commande start avant de continuer")
             } else {
                 invOf(p, messageCreateEvent)
-                val tuto = p.getTuto().toInt()
+                val tuto = p["tuto"].toInt()
                 if (tuto == 1) {
                     messageCreateEvent.message.reply("Bon ... comme vous l'avez vu vous n'avez normalement pas d'argent. Utilisez la commande `work` pour en gagner un peu ...")
-                    p.setTuto(3.toShort())
+                    p["tuto"] = "3"
                 } else if (tuto == 4) {
                     messageCreateEvent.message.reply("Vous remarquerez quelques changements. Utilisez -shop pour échanger ce que vous avez récupéré")
-                    p.setTuto(5.toShort())
+                    p["tuto"] = "5"
                 }
             }
         }
@@ -91,13 +86,13 @@ ${top[0]}"""
 
     private fun invOf(p: Player, messageCreateEvent: MessageCreateEvent) {
         val builder = EmbedBuilder()
-            .setDescription("Serveur actuel : " + p.getServer())
+            .setDescription("Serveur actuel : " + p["serv"].toLong())
             .setTitle("Infos joueur")
             .setAuthor(messageCreateEvent.messageAuthor)
             .setTimestampToNow()
             .addField(
                 "Pixel", """
-     Compte sur l'ORU : ${if (p.hasAccount()) "oui" else "non"}
+     Compte sur l'ORU : ${if (p["has_account"] == "1") "oui" else "non"}
      Vérification : ${if (p["is_verify"] == "1") "oui" else "non"}
      Pixel : ${if (p["x"].toInt() == -1) "pixel inconnu" else "[" + p["x"] + ":" + p["y"] + "]"}
      """.trimIndent()
@@ -114,7 +109,7 @@ ${top[0]}"""
         val builder2 = EmbedBuilder()
             .setTitle("Inventaire : ressources, items, argent")
             .setColor(Color.ORANGE)
-            .addField("Rabbitcoins", p.getBal().toString())
+            .addField("Rabbitcoins", p["bal"], true)
             .addField("Ressources", re.toString())
         messageCreateEvent.message.reply(builder2)
     }

@@ -5,6 +5,7 @@ import io.github.alexiscomete.lapinousecond.commands.CommandWithAccount
 import io.github.alexiscomete.lapinousecond.entity.Player
 import io.github.alexiscomete.lapinousecond.worlds.ServerBot
 import io.github.alexiscomete.lapinousecond.worlds.WorldEnum
+import io.github.alexiscomete.lapinousecond.worlds.servers
 import org.javacord.api.entity.message.embed.EmbedBuilder
 import org.javacord.api.event.message.MessageCreateEvent
 import java.util.function.Consumer
@@ -16,7 +17,7 @@ class ConfigServ : CommandWithAccount(
 ) {
     override fun execute(messageCreateEvent: MessageCreateEvent, content: String, args: Array<String>, p: Player) {
         if (messageCreateEvent.isServerMessage && messageCreateEvent.server.isPresent && messageCreateEvent.messageAuthor.asUser().isPresent) {
-            var server = saveManager.servers[messageCreateEvent.server.get().id]
+            var server = servers[messageCreateEvent.server.get().id]
             if (args.size > 1 && args[1].equals("info", ignoreCase = true)) {
                 if (server == null) {
                     messageCreateEvent.message.reply("Le serveur n' est pas configuré")
@@ -45,8 +46,8 @@ class ConfigServ : CommandWithAccount(
                     if (content.endsWith("oui")) {
                         messageCreateEvent.message.reply("Création en cours ....")
                         server = ServerBot(messageCreateEvent.server.get().id)
-                        saveManager.servers.hashMap[server.id] = server
-                        saveManager.servers.add(messageCreateEvent.server.get().id)
+                        servers.hashMap[server.id] = server
+                        servers.add(messageCreateEvent.server.get().id)
                         messageCreateEvent.message.reply("Commençons par configurer le nom (entrez un nom) :")
                         val finalServer: ServerBot = server
                         val id = messageCreateEvent.messageAuthor.id

@@ -28,9 +28,9 @@ class Shop : CommandInServer(
                 .setFooter("Ceci est temporaire en attendant que les marchés qui pourront être contruits dans les serveurs ou les villes")
                 .addField("Resources", stringBuilder.toString())
             messageCreateEvent.message.reply(embedBuilder)
-            if (p.getTuto().toInt() == 5) {
+            if (p["tuto"].toInt() == 5) {
                 messageCreateEvent.message.reply("Je vous laisse découvrir la suite tout seul ...")
-                p.setTuto(6.toShort())
+                p["tuto"] = "6"
             }
         } else if (args.size > 2) {
             if (args[1] == "buy") {
@@ -46,8 +46,8 @@ class Shop : CommandInServer(
                         }
                     }
                     price += quantity * resource.price * buyCoef
-                    if (p.getBal() >= price) {
-                        p.setBal(p.getBal() - price)
+                    if (p["bal"].toDouble() >= price) {
+                        p["bal"] = (p["bal"].toDouble() - price).toString()
                         var resourceManager = p.resourceManagers[resource]
                         if (resourceManager == null) {
                             resourceManager = ResourceManager(resource, quantity)
@@ -85,7 +85,7 @@ class Shop : CommandInServer(
                         p.updateResources()
                     } else {
                         if (resourceManager.quantity >= quantity) {
-                            p.setBal(p.getBal() + price)
+                            p["bal"] = (p["bal"].toDouble() + price).toString()
                             resourceManager.quantity = resourceManager.quantity - quantity
                             p.updateResources()
                             messageCreateEvent.message.reply("Transaction effectuée")
