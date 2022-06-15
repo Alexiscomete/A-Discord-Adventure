@@ -1,15 +1,34 @@
 package io.github.alexiscomete.lapinousecond
 
+import io.github.alexiscomete.lapinousecond.save.CacheGetSet
+import io.github.alexiscomete.lapinousecond.save.SaveManager
+import io.github.alexiscomete.lapinousecond.save.Table
+
+val PERMS = Table("perms")
+
 /**
  * Permissions globales sur le bot
  */
 class UserPerms(
-    val PLAY: Boolean,
-    val CREATE_SERVER: Boolean,
-    val MANAGE_PERMS: Boolean,
-    val MANAGE_ROLES: Boolean,
-    val isDefault: Boolean
-) {
+    id: Long
+) : CacheGetSet(id, PERMS) {
+
+    var play: Boolean = true
+    var createServer: Boolean = true
+    var managePerms: Boolean = false
+    var manageRoles: Boolean = false
+    var isDefault: Boolean = true
+
+    init {
+        if (this["play"] != "") {
+            play = SaveManager.toBoolean(this["play"].toInt())
+            createServer = SaveManager.toBoolean(this["create_server"].toInt())
+            managePerms = SaveManager.toBoolean(this["manage_perms"].toInt())
+            manageRoles = SaveManager.toBoolean(this["manage_roles"].toInt())
+            isDefault = false
+        }
+    }
+
     companion object {
         /**
          * Vérification des permissions de l'utilisateur
@@ -23,14 +42,14 @@ class UserPerms(
             }
             val up = saveManager.getPlayerPerms(id)
             for (perm in perms) {
-                if (perm == "PLAY" && !up.PLAY) return false
-                if (perm == "CREATE_SERVER" && !up.CREATE_SERVER) {
+                if (perm == "PLAY" && !up.play) return false
+                if (perm == "CREATE_SERVER" && !up.createServer) {
                     return false
                 }
-                if (perm == "MANAGE_PERMS" && !up.MANAGE_PERMS) {
+                if (perm == "MANAGE_PERMS" && !up.managePerms) {
                     return false
                 }
-                if (perm == "MANAGE_ROLES" && !up.MANAGE_ROLES) {
+                if (perm == "MANAGE_ROLES" && !up.manageRoles) {
                     return false
                 }
             }

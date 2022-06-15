@@ -7,7 +7,6 @@ import io.github.alexiscomete.lapinousecond.message_event.MessagesManager
 import io.github.alexiscomete.lapinousecond.message_event.ReactionManager
 import io.github.alexiscomete.lapinousecond.save.SaveLocation
 import io.github.alexiscomete.lapinousecond.save.SaveManager
-import io.github.alexiscomete.lapinousecond.save.Tables
 import org.javacord.api.DiscordApi
 import org.javacord.api.DiscordApiBuilder
 import java.io.IOException
@@ -17,11 +16,10 @@ import java.io.IOException
  */
 val config: SaveLocation<String> = SaveLocation(";", "/config.txt") { a: String -> a }
 
-var saveManager: SaveManager = run {
+val saveManager: SaveManager = run {
     config.loadAll()
     SaveManager(config.content[1])
 }
-    private set
 
 val reactionManager: ReactionManager = ReactionManager()
 

@@ -3,7 +3,6 @@ package io.github.alexiscomete.lapinousecond.worlds
 import io.github.alexiscomete.lapinousecond.entity.Owner
 import io.github.alexiscomete.lapinousecond.save.CacheGetSet
 import io.github.alexiscomete.lapinousecond.save.*
-import io.github.alexiscomete.lapinousecond.save.Tables
 import io.github.alexiscomete.lapinousecond.saveManager
 import org.javacord.api.entity.message.embed.EmbedBuilder
 import java.awt.Color

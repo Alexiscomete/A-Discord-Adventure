@@ -3,7 +3,6 @@ package io.github.alexiscomete.lapinousecond.commands.classes
 import io.github.alexiscomete.lapinousecond.*
 import io.github.alexiscomete.lapinousecond.commands.CommandBot
 import io.github.alexiscomete.lapinousecond.save.SaveManager
-import io.github.alexiscomete.lapinousecond.save.Tables
 import org.javacord.api.event.message.MessageCreateEvent
 import kotlin.Array
 import kotlin.NumberFormatException
@@ -27,9 +26,9 @@ class PermsManager : CommandBot(
             if (userPerms.isDefault) {
                 val what = HashMap<String, String>()
                 what["ID"] = messageCreateEvent.messageAuthor.id.toString()
-                what["PLAY"] = SaveManager.toBooleanString(userPerms.PLAY)
-                what["CREATE_SERVER"] = SaveManager.toBooleanString(userPerms.CREATE_SERVER)
-                what["MANAGE_PERMS"] = SaveManager.toBooleanString(userPerms.MANAGE_PERMS)
+                what["PLAY"] = SaveManager.toBooleanString(userPerms.play)
+                what["CREATE_SERVER"] = SaveManager.toBooleanString(userPerms.createServer)
+                what["MANAGE_PERMS"] = SaveManager.toBooleanString(userPerms.managePerms)
                 saveManager.insert("perms", what)
             }
             if (perm.equals("MANAGE_PERMS", ignoreCase = true) && !messageCreateEvent.messageAuthor.isBotOwner) {
@@ -37,7 +36,7 @@ class PermsManager : CommandBot(
                 return
             }
             saveManager.setValue(
-                Tables.PERMS.table,
+                PERMS,
                 messageCreateEvent.messageAuthor.id,
                 perm,
                 SaveManager.toBooleanString(value)

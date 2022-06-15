@@ -1,20 +1,9 @@
 package io.github.alexiscomete.lapinousecond.save
 
 import io.github.alexiscomete.lapinousecond.UserPerms
-import io.github.alexiscomete.lapinousecond.entity.Company
-import io.github.alexiscomete.lapinousecond.worlds.Place
-import io.github.alexiscomete.lapinousecond.worlds.buildings.Buildings
 import java.sql.*
 
 class SaveManager(path: String) {
-
-
-    val buildings = CacheCustom(Tables.BUILDINGS.table) { aLong: Long -> Buildings.load(aLong.toString()) }
-    val companies = CacheCustom(Tables.COMPANY.table) { id: Long ->
-        Company(
-            id
-        )
-    }
     private var co: Connection? = null
     private var st: Statement? = null
 
@@ -44,7 +33,7 @@ class SaveManager(path: String) {
 
     fun getBuildingType(id: Long): String? {
         try {
-            val resultSet = st!!.executeQuery("SELECT type FROM " + Tables.BUILDINGS.table.name + " WHERE id = " + id)
+            val resultSet = st!!.executeQuery("SELECT type FROM buildings WHERE id = $id")
             if (resultSet.next()) {
                 return resultSet.getString("type")
             }
@@ -70,21 +59,7 @@ class SaveManager(path: String) {
         }
 
     fun getPlayerPerms(id: Long): UserPerms {
-        try {
-            val resultSet = st!!.executeQuery("SELECT * FROM perms WHERE id = $id")
-            if (resultSet.next()) {
-                return UserPerms(
-                    toBoolean(resultSet.getInt("play")),
-                    toBoolean(resultSet.getInt("create_server")),
-                    toBoolean(resultSet.getInt("manage_perms")),
-                    toBoolean(resultSet.getInt("manage_roles")),
-                    false
-                )
-            }
-        } catch (throwables: SQLException) {
-            throwables.printStackTrace()
-        }
-        return UserPerms(PLAY = true, CREATE_SERVER = false, MANAGE_PERMS = false, MANAGE_ROLES = false, isDefault = true)
+        return UserPerms(id)
     }
 
     fun setValue(where: String, which: String, whichValue: String, valueName: String, value: String) {

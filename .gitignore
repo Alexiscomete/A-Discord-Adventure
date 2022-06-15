@@ -13,7 +13,7 @@ target/classes/io/github/alexiscomete/lapinousecond/worlds/ServerBot.class
 target/classes/io/github/alexiscomete/lapinousecond/save/RowValue.class
 target/classes/io/github/alexiscomete/lapinousecond/save/Table.class
 target/classes/io/github/alexiscomete/lapinousecond/save/TableRow.class
-target/classes/io/github/alexiscomete/lapinousecond/save/Tables.class
+target/classes/io/github/alexiscomete/lapinousecond/save/class
 out/artifacts/ada_jar/A-Discord-Adventure.jar
 target/classes/io/github/alexiscomete/lapinousecond/resources/ResourceManager.class
 target/classes/io/github/alexiscomete/lapinousecond/resources/Resource.class

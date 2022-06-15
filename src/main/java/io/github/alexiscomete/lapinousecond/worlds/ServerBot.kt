@@ -3,10 +3,8 @@ package io.github.alexiscomete.lapinousecond.worlds
 import io.github.alexiscomete.lapinousecond.save.CacheCustom
 import io.github.alexiscomete.lapinousecond.save.CacheGetSet
 import io.github.alexiscomete.lapinousecond.save.Table
-import io.github.alexiscomete.lapinousecond.save.Tables
 
 val SERVERS = Table("guilds")
-
 val servers = CacheCustom(SERVERS) { id: Long -> ServerBot(id) }
 
 /**

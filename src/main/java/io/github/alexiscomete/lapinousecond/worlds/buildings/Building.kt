@@ -5,8 +5,6 @@ import io.github.alexiscomete.lapinousecond.entity.Owner
 import io.github.alexiscomete.lapinousecond.entity.Player
 import io.github.alexiscomete.lapinousecond.save.CacheGetSet
 import io.github.alexiscomete.lapinousecond.save.*
-import io.github.alexiscomete.lapinousecond.save.Tables
-import io.github.alexiscomete.lapinousecond.saveManager
 import lapinousecond.transactions.FullTransaction
 import io.github.alexiscomete.lapinousecond.useful.ProgressionBar
 import io.github.alexiscomete.lapinousecond.view.AnswerEnum
@@ -20,12 +18,15 @@ import org.json.JSONObject
 import java.awt.Color
 import java.util.*
 
+val BUILDINGS = (Table("buildings"))
+val buildings = CacheCustom(BUILDINGS) { aLong: Long -> Buildings.load(aLong.toString()) }
+
 class Building : CacheGetSet, BuildMethods {
     private var buildingInteraction: BuildingInteraction? = null
     private val progressionBar: ProgressionBar
 
     // constructor for the building if it's already exist
-    constructor(id: Long, buildings: Buildings) : super(id, Tables.BUILDINGS.table) {
+    constructor(id: Long, buildings: Buildings) : super(id, BUILDINGS) {
         progressionBar = ProgressionBar(
             "💰",
             3,
@@ -43,17 +44,17 @@ class Building : CacheGetSet, BuildMethods {
     // constructor for the building if it's not exist yet
     @SafeVarargs
     constructor(
-        buildings: Buildings,
+        buildings1: Buildings,
         owner: Owner,
         place: Place,
         vararg specialInfos: AbstractMap.SimpleEntry<String?, String?>?
-    ) : super(generateUniqueID(), Tables.BUILDINGS.table) {
-        saveManager.buildings.add(id)
+    ) : super(generateUniqueID(), BUILDINGS) {
+        buildings.add(id)
         var buildingsString: String = place.getString("buildings")
         buildingsString += ";$id"
         place["buildings"] = buildingsString
-        set("collect_target", buildings.basePrice.toString())
-        set("type", buildings.name_)
+        set("collect_target", buildings1.basePrice.toString())
+        set("type", buildings1.name_)
         set("build_status", "building")
         set("owner_type", owner.ownerType)
         set("owner", owner.ownerString)
@@ -63,7 +64,7 @@ class Building : CacheGetSet, BuildMethods {
                 special.key?.let { special.value?.let { it1 -> set(it, it1) } }
             }
         }
-        progressionBar = ProgressionBar("💰", 3, "🧱", 3, " ", 1, buildings.basePrice, 0.0, 20)
+        progressionBar = ProgressionBar("💰", 3, "🧱", 3, " ", 1, buildings1.basePrice, 0.0, 20)
     }
 
     fun infos(p: Player): EmbedBuilder? {
