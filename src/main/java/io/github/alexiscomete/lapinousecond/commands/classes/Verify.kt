@@ -8,6 +8,7 @@ import java.net.HttpURLConnection
 import java.net.URL
 import java.util.*
 import io.github.alexiscomete.lapinousecond.*
+import io.github.alexiscomete.lapinousecond.entity.players
 
 
 fun getUser(id: Long): String? {
@@ -55,15 +56,15 @@ fun getUserData(id: Long): Verify.UserData {
 class Verify :
     CommandBot("Permet de vérifier votre compte", "verify", "Permet de vérifier votre compte grâce au bot de l'ORU") {
     override fun execute(messageCreateEvent: MessageCreateEvent, content: String, args: Array<String>) {
-        if (saveManager.players[messageCreateEvent.messageAuthor.id] != null) {
+        if (players[messageCreateEvent.messageAuthor.id] != null) {
             messageCreateEvent.message.reply("Votre vérification est en cours")
             val userData = getUserData(messageCreateEvent.messageAuthor.id)
             if (userData.hasAccount()) {
-                val player = saveManager.players[messageCreateEvent.messageAuthor.id]
+                val player = players[messageCreateEvent.messageAuthor.id]
                 if (player != null) {
                     player["x"] = userData.x.toString()
                     player["x"] = userData.y.toString()
-                    player.setHasAccount(userData.hasAccount())
+                    player["has_account"] = userData.hasAccount().toString()
                     player["is_verify"] = if (userData.isVerify) "1" else "0"
                     if (userData.isVerify) {
                         messageCreateEvent.message.reply("Votre compte a été associé à votre pixel. Vous avez la vérification")

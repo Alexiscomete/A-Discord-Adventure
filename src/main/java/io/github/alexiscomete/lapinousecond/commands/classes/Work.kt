@@ -55,7 +55,7 @@ class Work : CommandInServer(
                     p.addRole(r)
                 }
             }
-            p.setBal(p.getBal() + totalRoles)
+            p["bal"] = (p["bal"].toDouble() + totalRoles).toString()
         } else {
             roles.append("Vous n'êtes pas sur un serveur")
         }
@@ -85,7 +85,7 @@ class Work : CommandInServer(
             }
             embedBuilder.addField("Work", answer)
             if (woAnswer.resource == null) {
-                p.setBal(p.getBal() + r)
+                p["bal"] = (p["bal"].toDouble() + r).toString()
             } else {
                 var resourceManager = p.resourceManagers[woAnswer.resource]
                 if (resourceManager == null) {
@@ -97,9 +97,9 @@ class Work : CommandInServer(
                 p.updateResources()
             }
             p.updateWorkTime()
-            if (p.getTuto().toInt() == 3) {
+            if (p["tuto"].toInt() == 3) {
                 messageCreateEvent.message.reply("La récompense peut varier d'un work à un autre. Utilisez inv ...")
-                p.setTuto(4.toShort())
+                p["tuto"] = "4"
             }
         } else {
             embedBuilder.addField(

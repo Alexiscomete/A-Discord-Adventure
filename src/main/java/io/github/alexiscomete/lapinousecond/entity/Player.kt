@@ -22,7 +22,7 @@ class Player(id: Long) : CacheGetSet(id, PLAYERS), Owner {
     var workTime: Long
         private set
     val roles: ArrayList<Role>
-    private val items = ArrayList<Item>()
+    val items = ArrayList<Item>()
     val resourceManagers: HashMap<Resource, ResourceManager>
     var state = 0
 

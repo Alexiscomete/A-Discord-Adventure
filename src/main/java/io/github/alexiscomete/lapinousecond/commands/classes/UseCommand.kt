@@ -1,8 +1,8 @@
 package io.github.alexiscomete.lapinousecond.commands.classes
 
 import io.github.alexiscomete.lapinousecond.commands.CommandBot
+import io.github.alexiscomete.lapinousecond.entity.players
 import org.javacord.api.event.message.MessageCreateEvent
-import io.github.alexiscomete.lapinousecond.*
 
 
 class UseCommand : CommandBot(
@@ -11,7 +11,7 @@ class UseCommand : CommandBot(
     "Utilisez use [name] pour utilisez l'objet nommé name, vous pouvez voir vos objets avec inv"
 ) {
     override fun execute(messageCreateEvent: MessageCreateEvent, content: String, args: Array<String>) {
-        val p = saveManager.players[messageCreateEvent.messageAuthor.id]
+        val p = players[messageCreateEvent.messageAuthor.id]
         if (p == null) {
             messageCreateEvent.message.reply("Vous devez avoir un compte pour continuer")
             return

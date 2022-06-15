@@ -124,8 +124,8 @@ class Building : CacheGetSet, BuildMethods {
                         msg.channel.get().sendMessage(inBuildInfos(p))
                     }
                 },
-                { aDouble: Double -> p.setBal(p.getBal() - aDouble) },
-                { p.getBal() },
+                { aDouble: Double -> p["bal"] = (p["bal"].toDouble() - aDouble).toString() },
+                { p["bal"].toDouble() },
                 p,
                 { getString("collect_target").toDouble() - getString("collect_value").toDouble() })
             transaction.full(msg)

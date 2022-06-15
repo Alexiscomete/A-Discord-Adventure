@@ -30,12 +30,12 @@ class WorldCommand : CommandWithAccount(
                             return
                         }
                         // on regarde si il a assez d'argent
-                        if (p.getBal() < world.travelPrice) {
+                        if (p["bal"].toDouble() < world.travelPrice) {
                             messageCreateEvent.channel.sendMessage("Vous n'avez pas assez d'argent pour changer de monde")
                             return
                         }
                         // on retire l'argent
-                        p.setBal(p.getBal() - world.travelPrice)
+                        p["bal"] = (p["bal"].toDouble() - world.travelPrice).toString()
                         // on change le monde
                         p["world"] = world.progName
                     } catch (e: IllegalArgumentException) {
