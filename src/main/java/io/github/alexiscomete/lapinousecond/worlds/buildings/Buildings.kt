@@ -83,8 +83,8 @@ enum class Buildings(private val getBuildingM: Function<Building, BuildingIntera
                 save1 = save1.split(":".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[1]
             }
             return try {
-                val type: String? = saveManager.getBuildingType(save1.toLong())
-                if (type == null) {
+                val type: String = saveManager.typeOf(save1.toLong(), "buildings")
+                if (type == "") {
                     println("null")
                     return null
                 }

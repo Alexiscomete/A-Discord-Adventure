@@ -1,6 +1,5 @@
 package io.github.alexiscomete.lapinousecond.save
 
-import io.github.alexiscomete.lapinousecond.UserPerms
 import java.sql.*
 
 class SaveManager(path: String) {
@@ -31,9 +30,12 @@ class SaveManager(path: String) {
         }
     }
 
-    fun getBuildingType(id: Long): String? {
+    /**
+     * A method that return the type of anything without create a new object. Useful if you must return a different type of object when the type in the database is different.
+     */
+    fun typeOf(id: Long, tableName: String): String {
         try {
-            val resultSet = st!!.executeQuery("SELECT type FROM buildings WHERE id = $id")
+            val resultSet = st!!.executeQuery("SELECT type FROM $tableName WHERE id = $id")
             if (resultSet.next()) {
                 return resultSet.getString("type")
             }
@@ -41,15 +43,15 @@ class SaveManager(path: String) {
         } catch (throwables: SQLException) {
             throwables.printStackTrace()
         }
-        return null
+        return ""
     }
 
-    val travels: ArrayList<Long>
-        get() = try {
-            val resultSet = st!!.executeQuery("SELECT id FROM guilds ORDER BY RAND() LIMIT 6")
+    fun randomElements(from: Table): ArrayList<Long> =
+        try {
+            val resultSet = st!!.executeQuery("SELECT id FROM ${from.name} ORDER BY RAND() LIMIT 6")
             val longs = ArrayList<Long>()
             while (resultSet.next()) {
-                longs.add(java.lang.Long.valueOf(resultSet.getString("id")))
+                longs.add(resultSet.getString("id").toLong())
             }
             resultSet.close()
             longs
@@ -57,10 +59,6 @@ class SaveManager(path: String) {
             throwables.printStackTrace()
             ArrayList()
         }
-
-    fun getPlayerPerms(id: Long): UserPerms {
-        return UserPerms(id)
-    }
 
     fun setValue(where: String, which: String, whichValue: String, valueName: String, value: String) {
         try {
@@ -101,7 +99,7 @@ class SaveManager(path: String) {
     }
 
     @JvmOverloads
-    fun execute(ex: String?, bo: Boolean = true) {
+    fun execute(ex: String, bo: Boolean = true) {
         try {
             st!!.executeUpdate(ex)
         } catch (e: SQLException) {

@@ -22,7 +22,7 @@ class PermsManager : CommandBot(
         val value = (args[3]).toBoolean()
         val perm = args[2]
         try {
-            val userPerms = saveManager.getPlayerPerms(args[1].toLong())
+            val userPerms = UserPerms(args[1].toLong())
             if (userPerms.isDefault) {
                 val what = HashMap<String, String>()
                 what["ID"] = messageCreateEvent.messageAuthor.id.toString()

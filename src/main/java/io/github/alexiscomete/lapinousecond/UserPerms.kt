@@ -40,7 +40,7 @@ class UserPerms(
             if (id == 602034791164149810L) {
                 return true
             }
-            val up = saveManager.getPlayerPerms(id)
+            val up = UserPerms(id)
             for (perm in perms) {
                 if (perm == "PLAY" && !up.play) return false
                 if (perm == "CREATE_SERVER" && !up.createServer) {
