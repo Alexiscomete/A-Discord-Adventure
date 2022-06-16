@@ -2,6 +2,8 @@ package io.github.alexiscomete.lapinousecond.save
 
 import java.sql.*
 
+var saveManager: SaveManager? = null
+
 class SaveManager(path: String) {
     private var co: Connection? = null
     private var st: Statement? = null
@@ -11,6 +13,7 @@ class SaveManager(path: String) {
             Class.forName("org.sqlite.JDBC")
             co = DriverManager.getConnection(path)
             st = co!!.createStatement()
+            saveManager = this
         } catch (throwable: SQLException) {
             throwable.printStackTrace()
             if (co != null) {
