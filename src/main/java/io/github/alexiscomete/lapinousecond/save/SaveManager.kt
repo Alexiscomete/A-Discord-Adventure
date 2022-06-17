@@ -2,7 +2,16 @@ package io.github.alexiscomete.lapinousecond.save
 
 import java.sql.*
 
-var saveManager: SaveManager? = null
+var save: SaveManager? = null
+var saveManager: SaveManager
+    get() = if (save == null) {
+        throw IllegalStateException("SaveManager is not initialized")
+    } else {
+        save!!
+    }
+    set(value) {
+        save = value
+    }
 
 class SaveManager(path: String) {
     private var co: Connection? = null
@@ -13,7 +22,7 @@ class SaveManager(path: String) {
             Class.forName("org.sqlite.JDBC")
             co = DriverManager.getConnection(path)
             st = co!!.createStatement()
-            saveManager = this
+            save = this
         } catch (throwable: SQLException) {
             throwable.printStackTrace()
             if (co != null) {

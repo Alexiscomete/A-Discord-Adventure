@@ -5,7 +5,7 @@ import io.github.alexiscomete.lapinousecond.resources.Resource
 import io.github.alexiscomete.lapinousecond.resources.ResourceManager
 import io.github.alexiscomete.lapinousecond.roles.Role
 import io.github.alexiscomete.lapinousecond.save.*
-import io.github.alexiscomete.lapinousecond.saveManager
+import io.github.alexiscomete.lapinousecond.save.saveManager
 import io.github.alexiscomete.lapinousecond.view.AnswerEnum
 import io.github.alexiscomete.lapinousecond.view.LangageEnum
 import io.github.alexiscomete.lapinousecond.view.answerManager

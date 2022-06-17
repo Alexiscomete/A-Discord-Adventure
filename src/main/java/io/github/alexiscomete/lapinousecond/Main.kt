@@ -7,6 +7,7 @@ import io.github.alexiscomete.lapinousecond.message_event.MessagesManager
 import io.github.alexiscomete.lapinousecond.message_event.ReactionManager
 import io.github.alexiscomete.lapinousecond.save.SaveLocation
 import io.github.alexiscomete.lapinousecond.save.SaveManager
+import io.github.alexiscomete.lapinousecond.save.saveManager
 import org.javacord.api.DiscordApi
 import org.javacord.api.DiscordApiBuilder
 import java.io.IOException
@@ -16,18 +17,16 @@ import java.io.IOException
  */
 val config: SaveLocation<String> = SaveLocation(";", "/config.txt") { a: String -> a }
 
-val saveManager: SaveManager = run {
-    config.loadAll()
-    SaveManager(config.content[1])
-}
-
 val reactionManager: ReactionManager = ReactionManager()
 
 val buttonsManager: ButtonsManager = ButtonsManager()
 
 val messagesManager: MessagesManager = MessagesManager()
 
-val api: DiscordApi = DiscordApiBuilder().setToken(config.content[0]).login().join()
+val api: DiscordApi = DiscordApiBuilder().setToken(run {
+    config.loadAll()
+    config.content[0]
+}).login().join()
 
 /**
  * Permet d'ajouter une commande à la liste pour qu'elle puisse être appelée
@@ -40,6 +39,8 @@ private fun addCommand(commandBot: CommandBot) {
 fun main() {
 
     try {
+        saveManager = SaveManager(config.content[1])
+
         println("RIP Lapinou premier")
         /**
          * Instance de l'API Javacord
