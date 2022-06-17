@@ -5,7 +5,6 @@ import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.io.IOException
 import java.util.*
-import java.util.function.Function
 
 @Synchronized
 fun generateUniqueID(): Long {
@@ -33,11 +32,11 @@ fun createPath(path: String) {
 /**
  * @param <E> type of content, think to add a toString() method in E!
 </E> */
-class SaveLocation<E>(private val sep: String, path: String, a: Function<String, E>) {
+class SaveLocation<E>(private val sep: String, path: String, a: (String) -> E) {
     var content = ArrayList<E>()
     private val path: String
     private val file: File
-    val a: Function<String, E>
+    val a: (String) -> E
 
     init {
         this.path = pathStatic + path
@@ -76,7 +75,7 @@ class SaveLocation<E>(private val sep: String, path: String, a: Function<String,
             }
             val str = answer.toString().split(sep.toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
             for (s in str) {
-                content.add(a.apply(s))
+                content.add(a(s))
             }
         } catch (e: FileNotFoundException) {
             e.printStackTrace()

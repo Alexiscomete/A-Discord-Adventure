@@ -8,10 +8,7 @@ open class CacheGetSet(open val id: Long, private val table: Table) {
         return if (cache.containsKey(row)) {
             cache[row]!!
         } else {
-            var str = save?.getString(table, row, "TEXT", id)
-            if (str == null) {
-                str = ""
-            }
+            val str = saveManager.getString(table, row, "TEXT", id)
             cache[row] = str
             str
         }

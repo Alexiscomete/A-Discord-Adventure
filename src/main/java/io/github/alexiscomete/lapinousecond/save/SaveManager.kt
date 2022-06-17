@@ -22,7 +22,7 @@ class SaveManager(path: String) {
             Class.forName("org.sqlite.JDBC")
             co = DriverManager.getConnection(path)
             st = co!!.createStatement()
-            save = this
+            saveManager = this
         } catch (throwable: SQLException) {
             throwable.printStackTrace()
             if (co != null) {

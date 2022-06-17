@@ -1,18 +1,17 @@
 package io.github.alexiscomete.lapinousecond.save
 
 import java.sql.SQLException
-import java.util.function.Function
 
-class CacheCustom<U>(private val table: Table, private val function: Function<Long, U>) {
+class CacheCustom<U>(private val table: Table, private val function: (Long) -> U) {
     val hashMap = HashMap<Long, U>()
     operator fun get(l: Long): U? {
         var u = hashMap[l]
         if (u == null) {
             try {
-                val resultSet = save?.executeQuery("SELECT * FROM " + table.name + " WHERE id = " + l, true)
+                val resultSet = saveManager.executeQuery("SELECT * FROM " + table.name + " WHERE id = " + l, true)
                 if (resultSet != null) {
                     if (resultSet.next()) {
-                        u = function.apply(l)
+                        u = function(l)
                         hashMap[l] = u
                     }
                 }
@@ -27,6 +26,6 @@ class CacheCustom<U>(private val table: Table, private val function: Function<Lo
     fun add(id: Long) {
         val hashMap = HashMap<String, String>()
         hashMap["id"] = id.toString()
-        save?.insert(table.name, hashMap)
+        saveManager.insert(table.name, hashMap)
     }
 }
