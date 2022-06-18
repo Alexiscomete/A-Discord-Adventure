@@ -3,56 +3,50 @@ package io.github.alexiscomete.lapinousecond.worlds.buildings
 import alexiscomete.managesave.saveManager
 import io.github.alexiscomete.lapinousecond.worlds.buildings.autorisations.BuildingAutorisations
 import io.github.alexiscomete.lapinousecond.worlds.buildings.evolution.Evolution
-import java.util.function.Function
 import io.github.alexiscomete.lapinousecond.worlds.buildings.interactions.*
 import org.json.JSONObject
 
-enum class Buildings(private val getBuildingM: Function<Building, BuildingInteraction>, val name_: String) {
-    ARMURERIE(
-        Function<Building, BuildingInteraction> { building: Building? ->
-            Armurerie(
-                building
-            )
-        }, "armurerie"
+enum class Buildings(private val getBuildingM: (Building) -> BuildingInteraction, val name_: String) {
+    ARMURERIE({ building: Building -> Armurerie(building) }, "armurerie"
     ),
     ARRET_BUS(
-        Function<Building, BuildingInteraction> { building: Building? -> ArretBus(building) }, "arret_bus"
+        { building: Building -> ArretBus(building) }, "arret_bus"
     ),
     AUBERGE(
-        Function<Building, BuildingInteraction> { building: Building? -> Auberge(building) }, "auberge"
+        { building: Building -> Auberge(building) }, "auberge"
     ),
     BANQUE(
-        Function<Building, BuildingInteraction> { building: Building? -> Banque(building) }, "banque"
+        { building: Building -> Banque(building) }, "banque"
     ),
     BAR(
-        Function<Building, BuildingInteraction> { building: Building? -> Bar(building) }, "bar"
+        { building: Building -> Bar(building) }, "bar"
     ),
     BIBLIOTHEQUE(
-        Function<Building, BuildingInteraction> { building: Building? -> Bibliotheque(building) }, "bibliotheque"
+        { building: Building -> Bibliotheque(building) }, "bibliotheque"
     ),
     BOULANGERIE(
-        Function<Building, BuildingInteraction> { building: Building? -> Boulangerie(building) }, "boulangerie"
+        { building: Building -> Boulangerie(building) }, "boulangerie"
     ),
     BOUTIQUE(
-        Function<Building, BuildingInteraction> { building: Building? -> Boutique(building) }, "boutique"
+        { building: Building -> Boutique(building) }, "boutique"
     ),
     CASINO(
-        Function<Building, BuildingInteraction> { building: Building? -> Casino(building) }, "casino"
+        { building: Building -> Casino(building) }, "casino"
     ),
     HOPITAL(
-        Function<Building, BuildingInteraction> { building: Building? -> Hopital(building) }, "hopital"
+        { building: Building -> Hopital(building) }, "hopital"
     ),
     JOURNAL(
-        Function<Building, BuildingInteraction> { building: Building? -> Journal(building) }, "journal"
+        { building: Building? -> Journal(building) }, "journal"
     ),
     MAIRIE(
-        Function<Building, BuildingInteraction> { building: Building? -> Mairie(building) }, "mairie"
+        { building: Building? -> Mairie(building) }, "mairie"
     ),
     MAISON(
-        Function<Building, BuildingInteraction> { building: Building? -> Maison(building) }, "maison"
+        { building: Building? -> Maison(building) }, "maison"
     ),
     PHARMACIE(
-        Function<Building, BuildingInteraction> { building: Building? -> Pharmacie(building) }, "pharmacie"
+        { building: Building -> Pharmacie(building) }, "pharmacie"
     );
 
     var basePrice = 0.0
@@ -73,7 +67,7 @@ enum class Buildings(private val getBuildingM: Function<Building, BuildingIntera
     }
 
     operator fun get(building: Building): BuildingInteraction {
-        return getBuildingM.apply(building)
+        return getBuildingM(building)
     }
 
     companion object {
