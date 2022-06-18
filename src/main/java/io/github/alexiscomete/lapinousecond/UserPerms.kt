@@ -1,8 +1,8 @@
 package io.github.alexiscomete.lapinousecond
 
-import io.github.alexiscomete.lapinousecond.save.CacheGetSet
-import io.github.alexiscomete.lapinousecond.save.SaveManager
-import io.github.alexiscomete.lapinousecond.save.Table
+import alexiscomete.managesave.CacheGetSet
+import alexiscomete.managesave.SaveManager
+import alexiscomete.managesave.Table
 
 val PERMS = Table("perms")
 

@@ -1,8 +1,8 @@
 package io.github.alexiscomete.lapinousecond.entity
 
-import io.github.alexiscomete.lapinousecond.save.CacheCustom
-import io.github.alexiscomete.lapinousecond.save.CacheGetSet
-import io.github.alexiscomete.lapinousecond.save.Table
+import alexiscomete.managesave.CacheCustom
+import alexiscomete.managesave.CacheGetSet
+import alexiscomete.managesave.Table
 
 val COMPANY = (Table("company"))
 val companies = CacheCustom(COMPANY) { id: Long ->

@@ -49,5 +49,6 @@
     <orderEntry type="library" name="Maven: org.jetbrains:annotations:13.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.jetbrains.kotlin:kotlin-test:1.7.0-RC" level="project" />
     <orderEntry type="module" module-name="Transactions" exported="" />
+    <orderEntry type="module" module-name="ManageSave" exported="" />
   </component>
 </module>
