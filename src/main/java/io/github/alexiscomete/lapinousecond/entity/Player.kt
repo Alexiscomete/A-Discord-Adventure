@@ -193,6 +193,26 @@ class Player(id: Long) : CacheGetSet(id, PLAYERS), Owner {
         this["money"] = (getMoney() - amount).toString()
     }
 
+    override fun addResource(resource: Resource, amount: Double) {
+        TODO("Not yet implemented")
+    }
+
+    override fun getResource(resource: Resource): Double {
+        TODO("Not yet implemented")
+    }
+
+    override fun removeResource(resource: Resource, amount: Double) {
+        TODO("Not yet implemented")
+    }
+
+    override fun hasResource(resource: Resource, amount: Double): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override fun hasMoney(amount: Double): Boolean {
+        TODO("Not yet implemented")
+    }
+
     init {
         workTime = 0
         roles = ArrayList()
