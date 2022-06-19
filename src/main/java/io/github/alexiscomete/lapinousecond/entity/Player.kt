@@ -180,6 +180,19 @@ class Player(id: Long) : CacheGetSet(id, PLAYERS), Owner {
     override val ownerString: String
         get() = id.toString()
 
+
+    override fun getMoney(): Double {
+        return this["money"].toDouble()
+    }
+
+    override fun addMoney(amount: Double) {
+        this["money"] = (getMoney() + amount).toString()
+    }
+
+    override fun removeMoney(amount: Double) {
+        this["money"] = (getMoney() - amount).toString()
+    }
+
     init {
         workTime = 0
         roles = ArrayList()
