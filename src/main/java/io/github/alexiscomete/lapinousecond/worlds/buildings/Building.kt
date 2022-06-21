@@ -7,7 +7,7 @@ import io.github.alexiscomete.lapinousecond.buttonsManager
 import io.github.alexiscomete.lapinousecond.entity.Owner
 import io.github.alexiscomete.lapinousecond.entity.Player
 import alexiscomete.managesave.CacheGetSet
-import lapinousecond.transactions.FullTransaction
+import lapinousecond.transactions.FullTransactionWithVerification
 import io.github.alexiscomete.lapinousecond.useful.ProgressionBar
 import io.github.alexiscomete.lapinousecond.view.AnswerEnum
 import io.github.alexiscomete.lapinousecond.worlds.Place
@@ -116,7 +116,7 @@ class Building : CacheGetSet, BuildMethods {
             )
         buttonsManager.addButton(id) { messageComponentCreateEvent ->
             val msg: MessageComponentInteraction = messageComponentCreateEvent.messageComponentInteraction
-            val transaction = FullTransaction(
+            val transaction = FullTransactionWithVerification(
                 { aDouble: Double ->
                     set("collect_value", (getString("collect_value").toDouble() + aDouble).toString())
                     if (Objects.equals(getString("collect_value"), getString("collect_target"))) {
