@@ -13,4 +13,5 @@ interface Owner {
     fun removeResource(resource: Resource, amount: Double)
     fun hasResource(resource: Resource, amount: Double) : Boolean
     fun hasMoney(amount: Double) : Boolean
+    fun askValidation(owner1: Owner, amount0: Double, ressource0: Resource, amount1: Double, ressource1: Resource, validation: (Boolean) -> Unit)
 }
