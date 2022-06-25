@@ -224,6 +224,14 @@ class Player(id: Long) : CacheGetSet(id, PLAYERS), Owner {
         TODO("Not yet implemented")
     }
 
+    override fun askAmount(owner0: Owner, function: (Double) -> Unit) {
+        TODO("Not yet implemented")
+    }
+
+    override fun askRessource(owner1: Owner, function: (Resource) -> Unit) {
+        TODO("Not yet implemented")
+    }
+
     init {
         workTime = 0
         roles = ArrayList()

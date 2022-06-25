@@ -6,6 +6,7 @@ import alexiscomete.managesave.generateUniqueID
 import io.github.alexiscomete.lapinousecond.entity.Owner
 import alexiscomete.managesave.CacheGetSet
 import alexiscomete.managesave.saveManager
+import io.github.alexiscomete.lapinousecond.resources.Resource
 import org.javacord.api.entity.message.embed.EmbedBuilder
 import java.awt.Color
 import java.sql.SQLException
@@ -63,6 +64,56 @@ open class Place : CacheGetSet, Owner {
             .addField("Type", getString("type"), true)
     override val ownerType: String = ""
     override val ownerString: String = ""
+    override fun addMoney(amount: Double) {
+        TODO("Not yet implemented")
+    }
+
+    override fun getMoney(): Double {
+        TODO("Not yet implemented")
+    }
+
+    override fun removeMoney(amount: Double) {
+        TODO("Not yet implemented")
+    }
+
+    override fun addResource(resource: Resource, amount: Double) {
+        TODO("Not yet implemented")
+    }
+
+    override fun getResource(resource: Resource): Double {
+        TODO("Not yet implemented")
+    }
+
+    override fun removeResource(resource: Resource, amount: Double) {
+        TODO("Not yet implemented")
+    }
+
+    override fun hasResource(resource: Resource, amount: Double): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override fun hasMoney(amount: Double): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override fun askValidation(
+        owner1: Owner,
+        amount0: Double,
+        ressource0: Resource,
+        amount1: Double,
+        ressource1: Resource,
+        validation: (Boolean) -> Unit
+    ) {
+        TODO("Not yet implemented")
+    }
+
+    override fun askAmount(owner0: Owner, function: (Double) -> Unit) {
+        TODO("Not yet implemented")
+    }
+
+    override fun askRessource(owner1: Owner, function: (Resource) -> Unit) {
+        TODO("Not yet implemented")
+    }
 
     companion object {
         fun toPlaces(places: String): ArrayList<Place> {

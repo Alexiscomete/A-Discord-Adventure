@@ -7,6 +7,7 @@ import io.github.alexiscomete.lapinousecond.buttonsManager
 import io.github.alexiscomete.lapinousecond.entity.Owner
 import io.github.alexiscomete.lapinousecond.entity.Player
 import alexiscomete.managesave.CacheGetSet
+import io.github.alexiscomete.lapinousecond.resources.Resource
 import lapinousecond.transactions.FullTransactionWithVerification
 import io.github.alexiscomete.lapinousecond.useful.ProgressionBar
 import io.github.alexiscomete.lapinousecond.view.AnswerEnum
@@ -23,7 +24,7 @@ import java.util.*
 val BUILDINGS = (Table("buildings"))
 val buildings = CacheCustom(BUILDINGS) { aLong: Long -> Buildings.load(aLong.toString()) }
 
-class Building : CacheGetSet, BuildMethods {
+class Building : CacheGetSet, BuildMethods, Owner {
     private var buildingInteraction: BuildingInteraction? = null
     private val progressionBar: ProgressionBar
 
@@ -116,6 +117,7 @@ class Building : CacheGetSet, BuildMethods {
             )
         buttonsManager.addButton(id) { messageComponentCreateEvent ->
             val msg: MessageComponentInteraction = messageComponentCreateEvent.messageComponentInteraction
+            /*
             val transaction = FullTransactionWithVerification(
                 { aDouble: Double ->
                     set("collect_value", (getString("collect_value").toDouble() + aDouble).toString())
@@ -132,6 +134,9 @@ class Building : CacheGetSet, BuildMethods {
                 p,
                 { getString("collect_target").toDouble() - getString("collect_value").toDouble() })
             transaction.full(msg)
+
+             */
+            TODO("todo")
         }
         return messageBuilder
     }
@@ -186,5 +191,61 @@ class Building : CacheGetSet, BuildMethods {
                 JSONObject(stringBuilder.toString())
             }
         }
+    }
+
+    override val ownerType: String
+        get() = TODO("Not yet implemented")
+    override val ownerString: String
+        get() = TODO("Not yet implemented")
+
+    override fun addMoney(amount: Double) {
+        TODO("Not yet implemented")
+    }
+
+    override fun getMoney(): Double {
+        TODO("Not yet implemented")
+    }
+
+    override fun removeMoney(amount: Double) {
+        TODO("Not yet implemented")
+    }
+
+    override fun addResource(resource: Resource, amount: Double) {
+        TODO("Not yet implemented")
+    }
+
+    override fun getResource(resource: Resource): Double {
+        TODO("Not yet implemented")
+    }
+
+    override fun removeResource(resource: Resource, amount: Double) {
+        TODO("Not yet implemented")
+    }
+
+    override fun hasResource(resource: Resource, amount: Double): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override fun hasMoney(amount: Double): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override fun askValidation(
+        owner1: Owner,
+        amount0: Double,
+        ressource0: Resource,
+        amount1: Double,
+        ressource1: Resource,
+        validation: (Boolean) -> Unit
+    ) {
+        TODO("Not yet implemented")
+    }
+
+    override fun askAmount(owner0: Owner, function: (Double) -> Unit) {
+        TODO("Not yet implemented")
+    }
+
+    override fun askRessource(owner1: Owner, function: (Resource) -> Unit) {
+        TODO("Not yet implemented")
     }
 }

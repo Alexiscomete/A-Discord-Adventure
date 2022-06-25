@@ -53,4 +53,12 @@ class OwnerInfinity : Owner {
         TODO("Not yet implemented")
     }
 
+    override fun askAmount(owner0: Owner, function: (Double) -> Unit) {
+        function(0.0)
+    }
+
+    override fun askRessource(owner1: Owner, function: (Resource) -> Unit) {
+        function(Resource.WOOD)
+    }
+
 }
