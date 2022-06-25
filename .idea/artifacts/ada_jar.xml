@@ -4,7 +4,6 @@
     <root id="archive" name="A-Discord-Adventure.jar">
       <element id="module-output" name="A-Discord-Adventure" />
       <element id="extracted-dir" path="$USER_HOME$/jars/json-20211205.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$USER_HOME$/IdeaProjects/javacord-3.3.2-shaded.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$USER_HOME$/jars/sqlite-jdbc-3.36.0.3.jar" path-in-jar="/" />
       <element id="file-copy" path="$PROJECT_DIR$/src/main/java/io/github/alexiscomete/lapinousecond/view/answers.json" />
       <element id="file-copy" path="$PROJECT_DIR$/src/main/java/io/github/alexiscomete/lapinousecond/worlds/buildings/buildings_config.json" />
@@ -13,6 +12,9 @@
       <element id="directory" name="META-INF">
         <element id="file-copy" path="$PROJECT_DIR$/src/main/resources/META-INF/MANIFEST.MF" output-file-name="MANIFEST.MF" />
       </element>
+      <element id="module-output" name="Transactions" />
+      <element id="module-output" name="ManageSave" />
+      <element id="extracted-dir" path="$USER_HOME$/jars/javacord-3.4.0-shaded.jar" path-in-jar="/" />
     </root>
   </artifact>
 </component>
