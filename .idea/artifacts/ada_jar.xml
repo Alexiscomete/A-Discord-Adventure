@@ -14,7 +14,9 @@
       </element>
       <element id="module-output" name="Transactions" />
       <element id="module-output" name="ManageSave" />
-      <element id="extracted-dir" path="$USER_HOME$/jars/javacord-3.4.0-shaded.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/javacord/javacord-api/3.5.0/javacord-api-3.5.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/javacord/javacord-core/3.5.0/javacord-core-3.5.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/apache/logging/log4j/log4j-api/2.17.2/log4j-api-2.17.2.jar" path-in-jar="/" />
     </root>
   </artifact>
 </component>
