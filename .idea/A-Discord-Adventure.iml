@@ -32,6 +32,8 @@
     <orderEntry type="library" name="json-20211205" level="project" />
     <orderEntry type="module" module-name="Transactions" exported="" />
     <orderEntry type="module" module-name="ManageSave" exported="" />
+    <orderEntry type="library" name="Maven: org.javacord:javacord-api:3.5.0" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Maven: org.javacord:javacord-core:3.5.0" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: com.squareup.okhttp3:okhttp:4.9.3" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: com.squareup.okio:okio:2.8.0" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: com.squareup.okhttp3:logging-interceptor:4.9.3" level="project" />
@@ -51,7 +53,5 @@
     <orderEntry type="library" name="Maven: org.jetbrains.kotlin:kotlin-stdlib-common:1.7.0-RC" level="project" />
     <orderEntry type="library" name="Maven: org.jetbrains:annotations:13.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.jetbrains.kotlin:kotlin-test:1.7.0-RC" level="project" />
-    <orderEntry type="library" name="Maven: org.javacord:javacord-api:3.5.0" level="project" />
-    <orderEntry type="library" name="Maven: org.javacord:javacord-core:3.5.0" level="project" />
   </component>
 </module>
