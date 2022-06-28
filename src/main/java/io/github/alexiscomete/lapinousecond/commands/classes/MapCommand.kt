@@ -45,7 +45,7 @@ class MapCommand : CommandWithAccount("description", "map", "totalDescription") 
                     // check if the player is in the world DIBIMAP
                     val world = p.getString("world")
                     if (world != "DIBIMAP") {
-                        messageCreateEvent.message.reply("Vous n'êtes pas dans le monde DIBIMAP") // TODO: add dibi message
+                        messageCreateEvent.message.reply("Vous n'êtes pas dans le monde DIBIMAP")
                         return
                     }
                     // get the player's position (x, y) in the world DIBIMAP (x/y_DIBIMAP), x and y are strings
