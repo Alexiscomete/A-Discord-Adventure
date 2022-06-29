@@ -21,6 +21,16 @@ dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test:1.7.0-RC")
 }
 
+tasks.jar {
+    manifest {
+        attributes["Main-Class"] = "MainKt"
+    }
+    configurations["compileClasspath"].forEach { file: File ->
+        from(zipTree(file.absoluteFile))
+    }
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+}
+
 group = "groupId"
 version = "1.0-SNAPSHOT"
 description = "A-Discord-Adventure"

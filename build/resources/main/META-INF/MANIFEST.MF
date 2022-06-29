@@ -1,0 +1,2 @@
+Main-Class: io.github.alexiscomete.lapinousecond.MainKt
+Manifest-Version: 1.0

@@ -3,3 +3,5 @@
  */
 
 rootProject.name = "A-Discord-Adventure"
+include("alexiscomete.managesave")
+include("lapinousecond.transactions")
