@@ -3,11 +3,15 @@
   <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="FrameworkDetectionExcludesConfiguration">
     <file type="web" url="file://$PROJECT_DIR$" />
+    <file type="web" url="file://$PROJECT_DIR$/../ADA modules/ManageSave" />
+    <file type="web" url="file://$PROJECT_DIR$/../ADA modules/Transactions" />
   </component>
   <component name="MavenProjectsManager">
     <option name="originalFiles">
       <list>
         <option value="$PROJECT_DIR$/pom.xml" />
+        <option value="$PROJECT_DIR$/../ADA modules/ManageSave/pom.xml" />
+        <option value="$PROJECT_DIR$/../ADA modules/Transactions/pom.xml" />
       </list>
     </option>
   </component>
