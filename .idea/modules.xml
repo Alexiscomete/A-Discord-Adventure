@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/A-Discord-Adventure.iml" filepath="$PROJECT_DIR$/.idea/A-Discord-Adventure.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/A-Discord-Adventure.main.iml" filepath="$PROJECT_DIR$/.idea/modules/A-Discord-Adventure.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/A-Discord-Adventure.test.iml" filepath="$PROJECT_DIR$/.idea/modules/A-Discord-Adventure.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../ADA modules/ManageSave/ManageSave.iml" filepath="$PROJECT_DIR$/../ADA modules/ManageSave/ManageSave.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ManageSave.main.iml" filepath="$PROJECT_DIR$/.idea/modules/ManageSave.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ManageSave.test.iml" filepath="$PROJECT_DIR$/.idea/modules/ManageSave.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/groupId.A-Discord-Adventure.iml" filepath="$PROJECT_DIR$/.idea/modules/groupId.A-Discord-Adventure.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/groupId.A-Discord-Adventure.main.iml" filepath="$PROJECT_DIR$/.idea/modules/groupId.A-Discord-Adventure.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/groupId.A-Discord-Adventure.test.iml" filepath="$PROJECT_DIR$/.idea/modules/groupId.A-Discord-Adventure.test.iml" />
+    </modules>
+  </component>
+</project>

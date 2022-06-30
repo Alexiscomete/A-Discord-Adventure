@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="Gradle: org.javacord:javacord-core:3.5.0">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/javacord/javacord-core/3.5.0/javacord-core-3.5.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

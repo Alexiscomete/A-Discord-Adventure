@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="Gradle: com.codahale:xsalsa20poly1305:0.11.0">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/codahale/xsalsa20poly1305/0.11.0/xsalsa20poly1305-0.11.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
