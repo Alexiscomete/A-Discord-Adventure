@@ -12,6 +12,8 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/../ADA modules/ManageSave" />
+            <option value="$PROJECT_DIR$/../ADA modules/Transactions" />
           </set>
         </option>
       </GradleProjectSettings>

@@ -4,7 +4,13 @@
     <bytecodeTargetLevel>
       <module name="A-Discord-Adventure" target="11" />
       <module name="A-Discord-Adventure.main" target="11" />
+      <module name="A-Discord-Adventure.ManageSave" target="1.8" />
+      <module name="A-Discord-Adventure.ManageSave.main" target="1.8" />
+      <module name="A-Discord-Adventure.ManageSave.test" target="1.8" />
       <module name="A-Discord-Adventure.test" target="11" />
+      <module name="A-Discord-Adventure.Transactions" target="1.8" />
+      <module name="A-Discord-Adventure.Transactions.main" target="1.8" />
+      <module name="A-Discord-Adventure.Transactions.test" target="1.8" />
       <module name="groupId.A-Discord-Adventure" target="1.8" />
       <module name="groupId.A-Discord-Adventure.main" target="1.8" />
       <module name="groupId.A-Discord-Adventure.test" target="1.8" />

@@ -3,3 +3,6 @@
  */
 
 rootProject.name = "A-Discord-Adventure"
+include(":ManageSave", ":Transactions")
+project(":ManageSave").projectDir = File("../ADA modules/ManageSave")
+project(":Transactions").projectDir = File("../ADA modules/Transactions")
