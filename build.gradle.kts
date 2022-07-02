@@ -18,6 +18,7 @@ dependencies {
     implementation("org.javacord:javacord:3.5.0")
     implementation("org.xerial:sqlite-jdbc:3.36.0.3")
     implementation("org.jetbrains.kotlin:kotlin-stdlib:1.7.0-RC")
+    implementation("org.json:json:20220320")
     testImplementation("org.jetbrains.kotlin:kotlin-test:1.7.0-RC")
     implementation(project(":Transactions"))
     implementation(project(":ManageSave"))
