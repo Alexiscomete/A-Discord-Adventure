@@ -33,7 +33,7 @@ tasks.jar {
     duplicatesStrategy = DuplicatesStrategy.INCLUDE
 }
 
-group = "groupId"
+group = "io.github.alexiscomete.lapinoudsecond"
 version = "1.0-SNAPSHOT"
 description = "A-Discord-Adventure"
 java.sourceCompatibility = JavaVersion.VERSION_11
