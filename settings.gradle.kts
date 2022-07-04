@@ -3,5 +3,5 @@
  */
 
 rootProject.name = "A-Discord-Adventure"
-include(":ManageSave")
+include(":ManageSave", ":A-Discord-Adventure")
 project(":ManageSave").projectDir = File("../ADA modules/ManageSave")
