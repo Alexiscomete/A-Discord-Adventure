@@ -21,7 +21,6 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib:1.7.0-RC")
     implementation("org.json:json:20220320")
     testImplementation("org.jetbrains.kotlin:kotlin-test:1.7.0-RC")
-    implementation(project(":Transactions"))
     implementation(project(":ManageSave"))
 }
 

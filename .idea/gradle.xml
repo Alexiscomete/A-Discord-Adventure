@@ -13,7 +13,6 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/../ADA modules/ManageSave" />
-            <option value="$PROJECT_DIR$/../ADA modules/Transactions" />
           </set>
         </option>
       </GradleProjectSettings>
@@ -26,18 +25,6 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$/../ADA modules/ManageSave" />
-          </set>
-        </option>
-      </GradleProjectSettings>
-      <GradleProjectSettings>
-        <option name="delegatedBuild" value="true" />
-        <option name="testRunner" value="GRADLE" />
-        <option name="distributionType" value="DEFAULT_WRAPPED" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$/../ADA modules/Transactions" />
-        <option name="gradleHome" value="$PROJECT_DIR$/../../../Gradle/gradle-7.4.2" />
-        <option name="modules">
-          <set>
-            <option value="$PROJECT_DIR$/../ADA modules/Transactions" />
           </set>
         </option>
       </GradleProjectSettings>
