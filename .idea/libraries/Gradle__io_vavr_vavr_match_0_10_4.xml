@@ -1,9 +1,11 @@
 <component name="libraryTable">
   <library name="Gradle: io.vavr:vavr-match:0.10.4">
     <CLASSES>
-      <root url="jar://$MAVEN_REPOSITORY$/io/vavr/vavr-match/0.10.4/vavr-match-0.10.4.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.vavr/vavr-match/0.10.4/64a1405f5846a77ab1c1ef2e86e08b30e3507321/vavr-match-0.10.4.jar!/" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.vavr/vavr-match/0.10.4/9814969b89428935a61bb2d271247aeab83ca0de/vavr-match-0.10.4-sources.jar!/" />
+    </SOURCES>
   </library>
 </component>
