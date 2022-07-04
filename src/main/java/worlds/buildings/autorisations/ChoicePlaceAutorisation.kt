@@ -1,0 +1,11 @@
+package worlds.buildings.autorisations
+
+import org.json.JSONArray
+
+class ChoicePlaceAutorisation(jsonArray: JSONArray) : AutList() {
+    init {
+        for (i in 0 until jsonArray.length()) {
+            buildingAutorisations.add(BuildingAutorisations.toAutorisation(jsonArray.getString(i)))
+        }
+    }
+}

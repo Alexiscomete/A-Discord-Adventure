@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="SqlDialectMappings">
-    <file url="file://$PROJECT_DIR$/../ADA modules/ManageSave/src/main/java/alexiscomete/managesave/SaveManager.kt" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/../ADA modules/ManageSave/src/main/java/SaveManager.kt" dialect="GenericSQL" />
   </component>
 </project>
