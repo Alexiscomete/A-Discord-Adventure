@@ -38,7 +38,7 @@ java.sourceCompatibility = JavaVersion.VERSION_11
 
 tasks.jar {
     manifest {
-        attributes["Main-Class"] = "MainKt"
+        attributes["Main-Class"] = "io.github.alexiscomete.lapinousecond.MainKt"
     }
     configurations["compileClasspath"].forEach { file: File ->
         println(file.name)
