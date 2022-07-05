@@ -19,3 +19,5 @@ target/classes/io/github/alexiscomete/io.github.alexiscomete.lapinousecond/resou
 target/classes/io/github/alexiscomete/io.github.alexiscomete.lapinousecond/resources/Resource.class
 target/classes/io/github/alexiscomete/io.github.alexiscomete.lapinousecond/resources/WorkEnum.class
 out/artifacts/ada_jar/
+build/install/
+.idea/
