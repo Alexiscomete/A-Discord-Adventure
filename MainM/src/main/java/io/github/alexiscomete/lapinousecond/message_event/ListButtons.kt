@@ -1,6 +1,6 @@
 package io.github.alexiscomete.lapinousecond.message_event
 
-import alexiscomete.managesave.generateUniqueID
+import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
 import io.github.alexiscomete.lapinousecond.ListenerMain
 import io.github.alexiscomete.lapinousecond.buttonsManager
 import io.github.alexiscomete.lapinousecond.*

@@ -1,13 +1,13 @@
 package io.github.alexiscomete.lapinousecond.entity
 
-import alexiscomete.managesave.CacheCustom
-import alexiscomete.managesave.CacheGetSet
-import alexiscomete.managesave.Table
+import io.github.alexiscomete.lapinousecond.useful.managesave.CacheCustom
+import io.github.alexiscomete.lapinousecond.useful.managesave.CacheGetSet
+import io.github.alexiscomete.lapinousecond.useful.managesave.Table
 import io.github.alexiscomete.lapinousecond.Item
 import io.github.alexiscomete.lapinousecond.resources.Resource
 import io.github.alexiscomete.lapinousecond.resources.ResourceManager
 import io.github.alexiscomete.lapinousecond.roles.Role
-import alexiscomete.managesave.saveManager
+import io.github.alexiscomete.lapinousecond.useful.managesave.saveManager
 import io.github.alexiscomete.lapinousecond.view.AnswerEnum
 import io.github.alexiscomete.lapinousecond.view.LangageEnum
 import io.github.alexiscomete.lapinousecond.view.answerManager

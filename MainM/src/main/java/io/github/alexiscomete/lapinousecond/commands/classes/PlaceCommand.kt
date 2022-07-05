@@ -1,6 +1,6 @@
 package io.github.alexiscomete.lapinousecond.commands.classes
 
-import alexiscomete.managesave.generateUniqueID
+import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
 import io.github.alexiscomete.lapinousecond.buttonsManager
 import io.github.alexiscomete.lapinousecond.*
 import io.github.alexiscomete.lapinousecond.commands.CommandWithAccount

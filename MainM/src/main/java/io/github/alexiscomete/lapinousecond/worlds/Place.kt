@@ -1,11 +1,11 @@
 package io.github.alexiscomete.lapinousecond.worlds
 
-import alexiscomete.managesave.CacheCustom
-import alexiscomete.managesave.Table
-import alexiscomete.managesave.generateUniqueID
+import io.github.alexiscomete.lapinousecond.useful.managesave.CacheCustom
+import io.github.alexiscomete.lapinousecond.useful.managesave.Table
+import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
 import io.github.alexiscomete.lapinousecond.entity.Owner
-import alexiscomete.managesave.CacheGetSet
-import alexiscomete.managesave.saveManager
+import io.github.alexiscomete.lapinousecond.useful.managesave.CacheGetSet
+import io.github.alexiscomete.lapinousecond.useful.managesave.saveManager
 import io.github.alexiscomete.lapinousecond.resources.Resource
 import org.javacord.api.entity.message.embed.EmbedBuilder
 import java.awt.Color

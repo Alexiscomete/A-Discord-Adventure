@@ -1,8 +1,8 @@
 package io.github.alexiscomete.lapinousecond.worlds
 
-import alexiscomete.managesave.CacheCustom
-import alexiscomete.managesave.CacheGetSet
-import alexiscomete.managesave.Table
+import io.github.alexiscomete.lapinousecond.useful.managesave.CacheCustom
+import io.github.alexiscomete.lapinousecond.useful.managesave.CacheGetSet
+import io.github.alexiscomete.lapinousecond.useful.managesave.Table
 
 val SERVERS = Table("guilds")
 val servers = CacheCustom(SERVERS) { id: Long -> ServerBot(id) }

@@ -2,9 +2,9 @@ package io.github.alexiscomete.lapinousecond.commands.classes
 
 import io.github.alexiscomete.lapinousecond.PERMS
 import io.github.alexiscomete.lapinousecond.*
-import alexiscomete.managesave.saveManager
+import io.github.alexiscomete.lapinousecond.useful.managesave.saveManager
 import io.github.alexiscomete.lapinousecond.commands.CommandBot
-import alexiscomete.managesave.SaveManager
+import io.github.alexiscomete.lapinousecond.useful.managesave.SaveManager
 import org.javacord.api.event.message.MessageCreateEvent
 import kotlin.Array
 import kotlin.String

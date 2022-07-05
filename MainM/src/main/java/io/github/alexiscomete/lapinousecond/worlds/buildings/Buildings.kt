@@ -1,6 +1,6 @@
 package io.github.alexiscomete.lapinousecond.worlds.buildings
 
-import alexiscomete.managesave.saveManager
+import io.github.alexiscomete.lapinousecond.useful.managesave.saveManager
 import worlds.buildings.autorisations.BuildingAutorisations
 import worlds.buildings.evolution.Evolution
 import io.github.alexiscomete.lapinousecond.worlds.buildings.interactions.*

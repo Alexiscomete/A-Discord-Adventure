@@ -1,13 +1,13 @@
 package io.github.alexiscomete.lapinousecond
 
-import alexiscomete.managesave.SaveLocation
-import alexiscomete.managesave.SaveManager
-import alexiscomete.managesave.saveManager
 import io.github.alexiscomete.lapinousecond.commands.CommandBot
 import io.github.alexiscomete.lapinousecond.commands.classes.*
 import io.github.alexiscomete.lapinousecond.message_event.ButtonsManager
 import io.github.alexiscomete.lapinousecond.message_event.MessagesManager
 import io.github.alexiscomete.lapinousecond.message_event.ReactionManager
+import io.github.alexiscomete.lapinousecond.useful.managesave.SaveLocation
+import io.github.alexiscomete.lapinousecond.useful.managesave.SaveManager
+import io.github.alexiscomete.lapinousecond.useful.managesave.saveManager
 import org.javacord.api.DiscordApi
 import org.javacord.api.DiscordApiBuilder
 import java.io.IOException
