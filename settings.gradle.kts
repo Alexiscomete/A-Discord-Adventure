@@ -3,4 +3,3 @@
  */
 
 rootProject.name = "A-Discord-Adventure"
-include("MainM")

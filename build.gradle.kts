@@ -3,26 +3,32 @@
  */
 
 plugins {
-    java
-    `maven-publish`
+    id("org.jetbrains.kotlin.jvm") version "1.7.0"
+    application
 }
+
+/*sourceSets {
+    main {
+        java {
+            setSrcDirs(listOf("src/main/java/io/github/alexiscomete/lapinousecond"))
+        }
+    }
+}*/
 
 repositories {
     mavenLocal()
     mavenCentral()
-    maven {
-        url = uri("https://repo.maven.apache.org/maven2/")
-    }
 }
 
-tasks.jar {
-    manifest {
-        attributes["Main-Class"] = "MainKt"
-    }
-    configurations["compileClasspath"].forEach { file: File ->
-        from(zipTree(file.absoluteFile))
-    }
-    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+dependencies {
+    implementation("org.javacord:javacord:3.5.0")
+    implementation("org.xerial:sqlite-jdbc:3.36.0.3")
+    implementation("org.json:json:20220320")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.7.0-RC")
+}
+
+application {
+    mainClass.set("io.github.alexiscomete.lapinousecond.MainKt")
 }
 
 group = "io.github.alexiscomete.lapinoudsecond"
@@ -30,8 +36,13 @@ version = "1.0-SNAPSHOT"
 description = "A-Discord-Adventure"
 java.sourceCompatibility = JavaVersion.VERSION_11
 
-publishing {
-    publications.create<MavenPublication>("maven") {
-        from(components["java"])
+tasks.jar {
+    manifest {
+        attributes["Main-Class"] = "MainKt"
     }
+    configurations["compileClasspath"].forEach { file: File ->
+        println(file.name)
+        from(zipTree(file.absoluteFile))
+    }
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
 }

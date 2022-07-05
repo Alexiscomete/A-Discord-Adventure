@@ -1,7 +1,7 @@
 <component name="libraryTable">
   <library name="Gradle: com.squareup.okio:okio:2.8.0">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.squareup.okio/okio/2.8.0/49b64e09d81c0cc84b267edd0c2fd7df5a64c78c/okio-jvm-2.8.0.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/squareup/okio/okio/2.8.0/okio-2.8.0.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

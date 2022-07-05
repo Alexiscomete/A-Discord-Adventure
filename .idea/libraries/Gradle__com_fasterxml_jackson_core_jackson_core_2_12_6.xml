@@ -4,7 +4,7 @@
       <root url="jar://$MAVEN_REPOSITORY$/org/jetbrains/externalAnnotations/com/fasterxml/jackson/core/jackson-core/2.9.6-an1/jackson-core-2.9.6-an1-annotations.zip!/" />
     </ANNOTATIONS>
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-core/2.12.6/5bf206c0b5982cfcd868b3d9349dc5190db8bab5/jackson-core-2.12.6.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/fasterxml/jackson/core/jackson-core/2.12.6/jackson-core-2.12.6.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

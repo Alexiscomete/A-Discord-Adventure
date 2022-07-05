@@ -1,7 +1,7 @@
 <component name="libraryTable">
   <library name="Gradle: org.javacord:javacord-core:3.5.0">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.javacord/javacord-core/3.5.0/278d2d2ca6776679aff66310ef4b5a0675b4a5ef/javacord-core-3.5.0.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/javacord/javacord-core/3.5.0/javacord-core-3.5.0.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
