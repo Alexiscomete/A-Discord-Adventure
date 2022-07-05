@@ -5,7 +5,7 @@ import io.github.alexiscomete.lapinousecond.entity.Player
 import io.github.alexiscomete.lapinousecond.message_event.ListButtons
 import io.github.alexiscomete.lapinousecond.view.AnswerEnum
 import io.github.alexiscomete.lapinousecond.worlds.buildings.Building
-import worlds.buildings.Buildings
+import io.github.alexiscomete.lapinousecond.worlds.buildings.Buildings
 import org.javacord.api.entity.message.MessageBuilder
 import org.javacord.api.entity.message.embed.EmbedBuilder
 import org.javacord.api.event.message.MessageCreateEvent

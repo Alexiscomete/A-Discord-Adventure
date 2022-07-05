@@ -5,7 +5,7 @@ import io.github.alexiscomete.lapinousecond.entity.Player
 import io.github.alexiscomete.lapinousecond.resources.ResourceManager
 import io.github.alexiscomete.lapinousecond.resources.WorkEnum
 import io.github.alexiscomete.lapinousecond.roles.Role
-import roles.RolesEnum
+import io.github.alexiscomete.lapinousecond.roles.RolesEnum
 import org.javacord.api.entity.message.embed.EmbedBuilder
 import org.javacord.api.event.message.MessageCreateEvent
 import java.awt.Color

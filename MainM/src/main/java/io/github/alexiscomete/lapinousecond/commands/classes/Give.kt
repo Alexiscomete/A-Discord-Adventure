@@ -4,7 +4,7 @@ import io.github.alexiscomete.lapinousecond.commands.CommandWithAccount
 import io.github.alexiscomete.lapinousecond.entity.Player
 import io.github.alexiscomete.lapinousecond.entity.players
 import io.github.alexiscomete.lapinousecond.resources.Resource
-import lapinousecond.transactions.giveFromTo
+import io.github.alexiscomete.lapinousecond.useful.transactions.giveFromTo
 import org.javacord.api.event.message.MessageCreateEvent
 
 class Give : CommandWithAccount("description", "give", "totalDescription") {

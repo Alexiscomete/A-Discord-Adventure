@@ -1,11 +1,10 @@
 package io.github.alexiscomete.lapinousecond.worlds.buildings
 
 import io.github.alexiscomete.lapinousecond.useful.managesave.saveManager
-import worlds.buildings.autorisations.BuildingAutorisations
-import worlds.buildings.evolution.Evolution
+import io.github.alexiscomete.lapinousecond.worlds.buildings.autorisations.BuildingAutorisations
+import io.github.alexiscomete.lapinousecond.worlds.buildings.evolution.Evolution
 import io.github.alexiscomete.lapinousecond.worlds.buildings.interactions.*
 import org.json.JSONObject
-import worlds.buildings.interactions.*
 
 enum class Buildings(private val getBuildingM: (Building) -> BuildingInteraction, val name_: String) {
     ARMURERIE({ building: Building -> Armurerie(building) }, "armurerie"

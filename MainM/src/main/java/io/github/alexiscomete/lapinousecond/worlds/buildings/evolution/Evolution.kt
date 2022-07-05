@@ -1,7 +1,7 @@
 package io.github.alexiscomete.lapinousecond.worlds.buildings.evolution
 
 import io.github.alexiscomete.lapinousecond.worlds.buildings.Building
-import worlds.buildings.Buildings
+import io.github.alexiscomete.lapinousecond.worlds.buildings.Buildings
 import org.json.JSONObject
 import java.util.*
 
