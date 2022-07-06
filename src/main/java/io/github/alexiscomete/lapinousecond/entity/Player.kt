@@ -234,6 +234,6 @@ class Player(id: Long) : CacheGetSet(id, PLAYERS), Owner {
     init {
         workTime = 0
         roles = ArrayList()
-        resourceManagers = ResourceManager.stringToArray(getString("ressources"))
+        resourceManagers = ResourceManager.stringToArray(this["ressources"])
     }
 }

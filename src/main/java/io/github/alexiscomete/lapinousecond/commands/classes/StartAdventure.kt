@@ -37,7 +37,10 @@ class StartAdventure : CommandBot(
                     val user = msga.get()
                     what["id"] = user.id.toString()
                     saveManager.insert("players", what)
-                    p = Player(user.id)
+                    p = players[user.id]
+                    if (p == null) {
+                        throw IllegalStateException("Player not found")
+                    }
                     p["x"] = userData.x.toString()
                     p["y"] = userData.y.toString()
                     p["has_account"] = SaveManager.toBooleanString(userData.hasAccount())
