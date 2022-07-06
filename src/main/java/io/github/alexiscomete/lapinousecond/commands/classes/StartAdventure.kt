@@ -34,17 +34,17 @@ class StartAdventure : CommandBot(
                     } else {
                         messageCreateEvent.message.reply("Aucun compte de pixel trouvé")
                     }
-                    what["x"] = userData.x.toString()
-                    what["y"] = userData.y.toString()
-                    what["has_account"] = SaveManager.toBooleanString(userData.hasAccount())
-                    what["is_verify"] = SaveManager.toBooleanString(userData.isVerify)
                     val user = msga.get()
                     what["id"] = user.id.toString()
-                    what["bal"] = 0.toString()
-                    what["serv"] = 854288660147994634L.toString()
-                    what["tuto"] = 1.toString()
                     saveManager.insert("players", what)
                     p = Player(user.id)
+                    p["x"] = userData.x.toString()
+                    p["y"] = userData.y.toString()
+                    p["has_account"] = SaveManager.toBooleanString(userData.hasAccount())
+                    p["is_verify"] = SaveManager.toBooleanString(userData.isVerify)
+                    p["bal"] = "0.0"
+                    p["serv"] = "854288660147994634"
+                    p["tuto"] = "1"
                     players.hashMap[user.id] = p
                     val embed = EmbedBuilder()
                         .setColor(Color.CYAN)

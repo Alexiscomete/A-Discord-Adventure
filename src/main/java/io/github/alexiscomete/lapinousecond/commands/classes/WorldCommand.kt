@@ -21,6 +21,9 @@ class WorldCommand : CommandWithAccount(
         if (args.size > 1) {
             if (args[1] == "change") {
                 if (args.size > 2) {
+                    if (p["bal"] == "") {
+                        p["bal"] = "0.0"
+                    }
                     try {
                         val worldEnum = WorldEnum.valueOf(args[2].uppercase(Locale.getDefault()))
                         val world = worldEnum.world

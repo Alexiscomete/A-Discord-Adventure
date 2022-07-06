@@ -28,7 +28,7 @@ class PlaceCommand : CommandWithAccount(
         if (messageCreateEvent.message.isServerMessage) {
             val serverBot = servers[messageCreateEvent.server.get().id]
             if (serverBot == null) {
-                messageCreateEvent.message.reply("Utilisez d'abord le -io.github.alexiscomete.lapinoudsecond.getConfig")
+                messageCreateEvent.message.reply("Utilisez d'abord le -config")
             } else {
                 if (args.size > 1) {
                     when (args[1]) {
@@ -96,6 +96,9 @@ class PlaceCommand : CommandWithAccount(
                                 val place2 = places[args[2].toLong()]
                                 if (place1!!.getString("world") == place2!!.getString("world")) {
                                     if (place1.getString("world") == "NORMAL") {
+                                        if (p["bal"] == "") {
+                                            p["bal"] = "0.0"
+                                        }
                                         val bal = p["bal"].toDouble()
                                         if (bal < 500) {
                                             messageCreateEvent.message.reply("Impossible de créer un lien : vous devez avoir au minimum 500 rb")

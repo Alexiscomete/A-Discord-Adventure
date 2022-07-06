@@ -26,18 +26,16 @@ class InventoryC : CommandBot(
                         if (resultSet != null) {
                             while (resultSet.next()) {
                                 players.add(
-                                            Player(
-                                                resultSet.getLong("id"),
-                                            )
-                                        )
+                                    Player(
+                                        resultSet.getLong("id"),
+                                    )
+                                )
                             }
                         }
                     } catch (e: SQLException) {
                         e.printStackTrace()
                     }
-                    val embedBuilder = EmbedBuilder()
-                        .setTitle("Classement des joueurs par bal")
-                        .setColor(Color.CYAN)
+                    val embedBuilder = EmbedBuilder().setTitle("Classement des joueurs par bal").setColor(Color.CYAN)
                     val top = arrayOf("")
                     val ints = intArrayOf(players.size)
                     for (player in players) {
@@ -86,32 +84,29 @@ ${top[0]}"""
     }
 
     private fun invOf(p: Player, messageCreateEvent: MessageCreateEvent) {
-        val builder = EmbedBuilder()
-            .setDescription("Serveur actuel : " + p["serv"].toLong())
-            .setTitle("Infos joueur")
-            .setAuthor(messageCreateEvent.messageAuthor)
-            .setTimestampToNow()
-            .addField(
-                "Pixel", """
+        val builder =
+            EmbedBuilder()
+                .setDescription("Serveur actuel : ${if (p["serv"] == "") "serveur inconnu, utilisez -hub" else p["serv"]}")
+                .setTitle("Infos joueur")
+                .setAuthor(messageCreateEvent.messageAuthor)
+                .setTimestampToNow()
+                .addField(
+                    "Pixel", """
      Compte sur l'ORU : ${if (p["has_account"] == "1") "oui" else "non"}
      Vérification : ${if (p["is_verify"] == "1") "oui" else "non"}
-     Pixel : ${if (p["x"].toInt() == -1) "pixel inconnu" else "[" + p["x"] + ":" + p["y"] + "]"}
-     """.trimIndent()
-            , true)
-            .addField("Position", p.positionToString())
-            .setColor(Color.green)
-            .setThumbnail("https://cdn.discordapp.com/attachments/854322477152337920/924612939879702588/unknown.png")
+     Pixel : ${if (p["x"] == "" || p["x"].toInt() == -1) "pixel inconnu" else "[" + p["x"] + ":" + p["y"] + "]"}
+     """.trimIndent(), true
+                )
+                .addField("Position", p.positionToString())
+                .setColor(Color.green)
+                .setThumbnail("https://cdn.discordapp.com/attachments/854322477152337920/924612939879702588/unknown.png")
         messageCreateEvent.message.reply(builder)
-        val re = StringBuilder()
-            .append("Nom -> quantité\n")
+        val re = StringBuilder().append("Nom -> quantité\n")
         for (reM in p.resourceManagers.values) {
             re.append(reM.resource.name_).append(" -> ").append(reM.quantity).append("\n")
         }
-        val builder2 = EmbedBuilder()
-            .setTitle("Inventaire : ressources, items, argent")
-            .setColor(Color.ORANGE)
-            .addField("Rabbitcoins", p["bal"], true)
-            .addField("Ressources", re.toString())
+        val builder2 = EmbedBuilder().setTitle("Inventaire : ressources, items, argent").setColor(Color.ORANGE)
+            .addField("Rabbitcoins", p["bal"], true).addField("Ressources", re.toString())
         messageCreateEvent.message.reply(builder2)
     }
 }

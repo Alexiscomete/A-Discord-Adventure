@@ -22,8 +22,17 @@ class UserPerms(
     init {
         if (this["play"] != "") {
             play = SaveManager.toBoolean(this["play"].toInt())
+            isDefault = false
+        }
+        if (this["create_server"] != "") {
             createServer = SaveManager.toBoolean(this["create_server"].toInt())
+            isDefault = false
+        }
+        if (this["manage_perms"] != "") {
             managePerms = SaveManager.toBoolean(this["manage_perms"].toInt())
+            isDefault = false
+        }
+        if (this["manage_roles"] != "") {
             manageRoles = SaveManager.toBoolean(this["manage_roles"].toInt())
             isDefault = false
         }

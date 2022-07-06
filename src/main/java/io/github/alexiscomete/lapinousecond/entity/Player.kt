@@ -181,15 +181,15 @@ class Player(id: Long) : CacheGetSet(id, PLAYERS), Owner {
 
 
     override fun getMoney(): Double {
-        return this["money"].toDouble()
+        return this["bal"].toDouble()
     }
 
     override fun addMoney(amount: Double) {
-        this["money"] = (getMoney() + amount).toString()
+        this["bal"] = (getMoney() + amount).toString()
     }
 
     override fun removeMoney(amount: Double) {
-        this["money"] = (getMoney() - amount).toString()
+        this["bal"] = (getMoney() - amount).toString()
     }
 
     override fun addResource(resource: Resource, amount: Double) {

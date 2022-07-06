@@ -11,9 +11,9 @@ import org.javacord.api.event.message.MessageCreateEvent
 import java.util.function.Consumer
 
 class ConfigServ : CommandWithAccount(
-    "Configuration du serveur, io.github.alexiscomete.lapinoudsecond.getConfig info pour la configuration actuelle",
-    "io.github.alexiscomete.lapinoudsecond.getConfig",
-    "Permet de configurer le serveur actuel si c'est le votre, io.github.alexiscomete.lapinoudsecond.getConfig info permet sinon de voir les infos du serveur (pour tout le monde)"
+    "Configuration du serveur, config info pour la configuration actuelle",
+    "config",
+    "Permet de configurer le serveur actuel si c'est le votre, config info permet sinon de voir les infos du serveur (pour tout le monde)"
 ) {
     override fun execute(messageCreateEvent: MessageCreateEvent, content: String, args: Array<String>, p: Player) {
         if (messageCreateEvent.isServerMessage && messageCreateEvent.server.isPresent && messageCreateEvent.messageAuthor.asUser().isPresent) {
@@ -85,7 +85,7 @@ class ConfigServ : CommandWithAccount(
                                                         val world =
                                                             WorldEnum.valueOf(messageCreateEvent.messageContent).world
                                                         finalServer["world"] = world.progName
-                                                        messageCreateEvent.message.reply("Configuration terminée !! Enfin ! (et moi j' ai fini de coder ça, maintenant c'est les lieux 😑). Faites -help place pour la suite. Vous pouvez modifier tout cela à n' importe quel moment avec io.github.alexiscomete.lapinoudsecond.getConfig [what] [value] et voir la configuration avec -io.github.alexiscomete.lapinoudsecond.getConfig info.")
+                                                        messageCreateEvent.message.reply("Configuration terminée !! Enfin ! (et moi j' ai fini de coder ça, maintenant c'est les lieux 😑). Faites -help place pour la suite. Vous pouvez modifier tout cela à n' importe quel moment avec config [what] [value] et voir la configuration avec -config info.")
                                                     } catch (e: IllegalArgumentException) {
                                                         messageCreateEvent.message.reply("Ceci n' est pas un monde valide")
                                                         val embedBuilder = EmbedBuilder()
@@ -129,7 +129,7 @@ class ConfigServ : CommandWithAccount(
                             server["welcome"] = name.toString()
                             messageCreateEvent.message.reply("Message d' arrivé modifié")
                         } else {
-                            messageCreateEvent.message.reply("Utilisez io.github.alexiscomete.lapinoudsecond.getConfig [what] [value]. Possibilités de what :\n - name, peut être RP\n - desc, description\n - in, message d' arrivé")
+                            messageCreateEvent.message.reply("Utilisez config [what] [value]. Possibilités de what :\n - name, peut être RP\n - desc, description\n - in, message d' arrivé")
                         }
                     }
                 }
