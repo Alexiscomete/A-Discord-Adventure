@@ -104,6 +104,8 @@ class SaveManager(path: String) {
         }
         values.append(")")
         keys.append(")")
+        println(values.toString())
+        println(keys.toString())
         try {
             st!!.executeUpdate("INSERT INTO $where $keys VALUES $values")
         } catch (e: SQLException) {
@@ -136,13 +138,16 @@ class SaveManager(path: String) {
     fun getString(table: Table, row: String, type: String, id: Long): String {
         execute("ALTER TABLE " + table.name + " ADD COLUMN " + row + " " + type, false)
         val resultSet: ResultSet
-        var str = ""
+        var str:String? = ""
         try {
             resultSet = st!!.executeQuery("SELECT " + row + " FROM " + table.name + " WHERE id=" + id)
             str = resultSet.getString(row)
             resultSet.close()
         } catch (e: SQLException) {
             e.printStackTrace()
+        }
+        if (str == null) {
+            str = ""
         }
         return str
     }
