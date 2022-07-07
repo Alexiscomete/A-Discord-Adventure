@@ -15,7 +15,7 @@ import java.io.IOException
 /**
  * Configuration du bot
  */
-val config: SaveLocation<String> = SaveLocation(";", "./config.txt") { a: String -> a }
+val config: SaveLocation<String> = SaveLocation(";", "/config.txt") { a: String -> a }
 
 val reactionManager: ReactionManager = ReactionManager()
 
