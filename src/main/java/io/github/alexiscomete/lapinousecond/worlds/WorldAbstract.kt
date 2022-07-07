@@ -3,8 +3,8 @@ package io.github.alexiscomete.lapinousecond.worlds
 import kotlin.math.abs
 import kotlin.math.sqrt
 
-class WorldAbstract(travelPrice: Int, name: String?, nameRP: String?, progName: String?, desc: String?) :
-    World(travelPrice, name!!, nameRP!!, progName!!, desc!!) {
+class WorldAbstract(travelPrice: Int, name: String, nameRP: String, progName: String, desc: String) :
+    World(travelPrice, name, nameRP, progName, desc) {
     override fun getPriceForDistance(distance: Double, place: Boolean): Double {
         return distance * travelPrice / 100
     }
