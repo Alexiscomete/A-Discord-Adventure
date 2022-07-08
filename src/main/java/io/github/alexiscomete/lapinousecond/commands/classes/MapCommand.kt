@@ -93,7 +93,7 @@ class MapCommand : CommandWithAccount("description", "map", "totalDescription") 
                         ), 10
                     )
                     val places = Place.getPlacesWithWorld("DIBIMAP")
-                    places.removeIf { place: Place -> place.getX().isEmpty || place.getY().isEmpty || place.getX().get() < args[2].toInt() - args[4].toInt() * 2 || place.getX().get() > args[2].toInt() + args[4].toInt() * 2 || place.getY().get() < args[3].toInt() - args[4].toInt() || place.getY().get() > args[3].toInt() + args[4].toInt() }
+                    places.removeIf { place: Place -> !place.getX().isPresent || !place.getY().isPresent || place.getX().get() < args[2].toInt() - args[4].toInt() * 2 || place.getX().get() > args[2].toInt() + args[4].toInt() * 2 || place.getY().get() < args[3].toInt() - args[4].toInt() || place.getY().get() > args[3].toInt() + args[4].toInt() }
                     Map.getMapWithNames(
                         places,
                         args[2].toInt() - args[4].toInt() * 2,
