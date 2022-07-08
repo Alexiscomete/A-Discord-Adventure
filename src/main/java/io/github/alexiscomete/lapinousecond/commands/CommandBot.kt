@@ -75,7 +75,7 @@ abstract class CommandBot(
     }
 
     fun sendNumberEx(messageCreateEvent: MessageCreateEvent, p: Player, i: Int) {
-        messageCreateEvent.message.reply(p.getAnswer(AnswerEnum.ILLEGAL_ARGUMENT_NUMBER, true, i))
+        messageCreateEvent.message.reply(p.getAnswer(AnswerEnum.ILLEGAL_ARGUMENT_NUMBER, true, arrayListOf(i.toString())))
     }
 
     fun isNotNumeric(str: String): Boolean {

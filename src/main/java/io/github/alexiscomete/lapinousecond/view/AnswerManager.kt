@@ -10,7 +10,7 @@ class AnswerManager(input: InputStream?) {
 
     init {
         if (input != null) {
-            val sc = Scanner(input, StandardCharsets.UTF_8)
+            val sc = Scanner(input)
             val builder = StringBuilder()
             sc.forEachRemaining { s: String? -> builder.append(s).append(" ") }
             println(builder)
@@ -31,11 +31,12 @@ class AnswerManager(input: InputStream?) {
         return answer
     }
 
-    fun formatAnswer(answer: String, vararg format: Any): String {
+    fun formatAnswer(answer: String, format: ArrayList<String>): String {
         var answer1 = answer
         var i = 1
         for (form in format) {
-            answer1 = answer1.replace("replace$i", form.toString())
+            println(form.javaClass.name)
+            answer1 = answer1.replace("replace$i", form)
             i++
         }
         return answer1

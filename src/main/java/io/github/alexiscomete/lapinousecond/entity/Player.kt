@@ -51,7 +51,7 @@ class Player(id: Long) : CacheGetSet(id, PLAYERS), Owner {
         this["ressources"] = ResourceManager.toString(resourceManagers.values)
     }
 
-    fun getAnswer(answerEnum: AnswerEnum?, maj: Boolean, vararg format: Any?): String? {
+    fun getAnswer(answerEnum: AnswerEnum, maj: Boolean, format: ArrayList<String> = ArrayList()): String {
         val langage = getString("langage")
         val langageEnum: LangageEnum = if (langage == "") {
             LangageEnum.FRENCH
@@ -62,11 +62,11 @@ class Player(id: Long) : CacheGetSet(id, PLAYERS), Owner {
                 LangageEnum.FRENCH
             }
         }
-        var answer = answerEnum?.let { answerManager.getAnswer(langageEnum, it) }
-        answer = answer?.let { answerManager.formatAnswer(it, format) }
+        var answer = answerManager.formatAnswer(answerManager.getAnswer(langageEnum, answerEnum), format)
         if (maj) {
-            answer = answer?.substring(0, 1)?.uppercase() + answer?.substring(1)
+            answer = answer.substring(0, 1).uppercase() + answer.substring(1)
         }
+        println("answer: $answer")
         return answer
     }
 

@@ -241,14 +241,19 @@ class PlaceCommand : CommandWithAccount(
     }
 
     private fun createNormalPlace(messageCreateEvent: MessageCreateEvent, serverBot: ServerBot, p: Player) {
-        if (serverBot.getArray("places").size == 1 && serverBot.getArray("places")[0] == "") {
+        if (serverBot.getArray("places").isEmpty() || serverBot.getArray("places")[0] == "") {
             serverPlace(messageCreateEvent, serverBot, p)
         } else {
             messageCreateEvent.message.reply("Impossible : un serveur du monde normal ne peut avoir qu' un seul lieu")
         }
     }
 
-    private fun serverPlace(messageCreateEvent: MessageCreateEvent, serverBot: ServerBot, p: Player) {
+    private fun serverPlace(
+        messageCreateEvent: MessageCreateEvent,
+        serverBot: ServerBot,
+        p: Player,
+        doAfter: () -> Unit = {}
+    ) {
         val place = Place()
             .setAndGet("name", serverBot.getString("namerp"))
             .setAndGet("world", serverBot.getString("world"))
@@ -263,102 +268,122 @@ class PlaceCommand : CommandWithAccount(
             messageCreateEvent.channel,
             p.id,
             "traout",
-            "Message de sortie mit à jour, configuration terminée. Comment voyager vers d' autres lieux dans ce monde ? Dans ce monde les joueurs dans un serveur peuvent payer pour créer une connection (nom RP à trouver) entre 2 lieux",
+            "Message de sortie mit à jour, configuration terminée du lieu de serveur. Comment voyager vers d' autres lieux dans le monde NORMAL ? Dans ce monde les joueurs dans un serveur peuvent payer pour créer une connection (nom RP à trouver) entre 2 lieux. Dans le lieu DIBIMAP aucune connection existe, ce sont directement des déplacements.",
             1500,
             serverBot
-        ) {}
+        ) { doAfter() }
     }
 
-    private fun createWorldPlace(messageCreateEvent: MessageCreateEvent, serverBot: ServerBot, p: Player, args: Array<String>) {
-        messageCreateEvent.message.reply("ATTENTION : la création d'un lieu dans ce monde est long\nContinuer ?")
-        val yes = generateUniqueID()
-        val no = generateUniqueID()
-        buttonsManager.addButton(yes) { messageComponentCreateEvent: MessageComponentCreateEvent ->
-            if (messageComponentCreateEvent.messageComponentInteraction.user.id == p.id) {
-                if (serverBot.getArray("places").size == 1 && serverBot.getArray("places")[0] == "") {
-                    serverPlace(messageCreateEvent, serverBot, p)
-                } else {
-                    // récupération du lieu parent
-                    val placeParent = getPlaceParent(serverBot)
-                    val placeZones = PlaceZones(placeParent.id)
-                    if (args.size < 4) {
-                        sendArgs(messageCreateEvent, p)
-                    }
-                    if (isNotNumeric(args[2])) {
-                        sendNumberEx(messageCreateEvent, p, 2)
-                        return@addButton
-                    }
-                    if (isNotNumeric(args[3])) {
-                        sendNumberEx(messageCreateEvent, p, 3)
-                        return@addButton
-                    }
-                    val x = args[2].toInt()
-                    val y = args[3].toInt()
-                    if (!placeZones.isInZones(x, y)) {
-                        throw RuntimeException("Impossible de créer un lieu dans cet emplacement : votre serveur n'a pas de zone à cet emplacement")
-                    }
-                    val place = Place()
-                        .setAndGet("world", serverBot.getString("world"))
-                        .setAndGet("serv", serverBot.id.toString())
-                        .setAndGet("type", "city")
-                        .setAndGet("city_size", "1")
-                        .setAndGet("x", args[2])
-                        .setAndGet("y", args[3])
-                    messageCreateEvent.message.reply(place.placeEmbed)
-                    serverBot["places"] = place.id.toString()
-                    messageCreateEvent.message.reply("Message de départ du lieu :")
-                    messagesManager.setValueAndRetry(
-                        messageCreateEvent.channel,
-                        p.id,
-                        "traout",
-                        "Message de sortie mit à jour. Message d'arrivée du lieu :",
-                        1500,
-                        serverBot
-                    ) {
+    private fun createWorldPlace(
+        messageCreateEvent: MessageCreateEvent,
+        serverBot: ServerBot,
+        p: Player,
+        args: Array<String>
+    ) {
+        val doAfter: () -> Unit = {
+            messageCreateEvent.message.reply("ATTENTION : la création d'un lieu dans ce monde est long. Vous devez indiquer x et y pour le lieu dans la commande, ajouter le code à la fin du message et ajouter bien configurer les zones.\nContinuer ?")
+            val yes = generateUniqueID()
+            val no = generateUniqueID()
+            buttonsManager.addButton(yes) { messageComponentCreateEvent: MessageComponentCreateEvent ->
+                if (messageComponentCreateEvent.messageComponentInteraction.user.id == p.id) {
+                    if (serverBot.getArray("places").size == 1 && serverBot.getArray("places")[0] == "") {
+                        serverPlace(messageCreateEvent, serverBot, p)
+                    } else {
+                        // récupération du lieu parent
+                        val placeParent = getPlaceParent(serverBot)
+                        val placeZones = PlaceZones(placeParent.id)
+                        if (args.size < 4) {
+                            sendArgs(messageCreateEvent, p)
+                            return@addButton
+                        }
+                        if (isNotNumeric(args[2])) {
+                            sendNumberEx(messageCreateEvent, p, 2)
+                            return@addButton
+                        }
+                        if (isNotNumeric(args[3])) {
+                            sendNumberEx(messageCreateEvent, p, 3)
+                            return@addButton
+                        }
+                        val x = args[2].toInt()
+                        val y = args[3].toInt()
+                        if (!placeZones.isInZones(x, y)) {
+                            throw RuntimeException("Impossible de créer un lieu dans cet emplacement : votre serveur n'a pas de zone à cet emplacement")
+                        }
+                        val place = Place()
+                            .setAndGet("world", serverBot.getString("world"))
+                            .setAndGet("serv", serverBot.id.toString())
+                            .setAndGet("type", "city")
+                            .setAndGet("city_size", "1")
+                            .setAndGet("x", args[2])
+                            .setAndGet("y", args[3])
+                        messageCreateEvent.message.reply(place.placeEmbed)
+                        serverBot["places"] = place.id.toString()
+                        messageCreateEvent.message.reply("Message de départ du lieu :")
                         messagesManager.setValueAndRetry(
                             messageCreateEvent.channel,
                             p.id,
-                            "train",
-                            "Message d'arrivée du lieu mit à jour. Nom du lieu :",
+                            "traout",
+                            "Message de sortie mit à jour. Message d'arrivée du lieu :",
                             1500,
                             serverBot
                         ) {
                             messagesManager.setValueAndRetry(
                                 messageCreateEvent.channel,
                                 p.id,
-                                "name",
-                                "Nom du lieu mit à jour. Description du lieu :",
+                                "train",
+                                "Message d'arrivée du lieu mit à jour. Nom du lieu :",
                                 1500,
                                 serverBot
                             ) {
                                 messagesManager.setValueAndRetry(
                                     messageCreateEvent.channel,
                                     p.id,
-                                    "descr",
-                                    "Description du lieu mit à jour. Configuration terminée pour cette ville.",
+                                    "name",
+                                    "Nom du lieu mit à jour. Description du lieu :",
                                     1500,
                                     serverBot
-                                ) {}
+                                ) {
+                                    messagesManager.setValueAndRetry(
+                                        messageCreateEvent.channel,
+                                        p.id,
+                                        "descr",
+                                        "Description du lieu mit à jour. Configuration terminée pour cette ville.",
+                                        1500,
+                                        serverBot
+                                    ) {}
+                                }
                             }
                         }
+                        // fin de la configuration des villes
                     }
-                    // fin de la configuration des villes
                 }
             }
-        }
-        buttonsManager.addButton(no) { messageComponentCreateEvent: MessageComponentCreateEvent ->
-            if (messageComponentCreateEvent.messageComponentInteraction.user.id == p.id) {
-                messageComponentCreateEvent.messageComponentInteraction.message.delete()
+            buttonsManager.addButton(no) { messageComponentCreateEvent: MessageComponentCreateEvent ->
+                if (messageComponentCreateEvent.messageComponentInteraction.user.id == p.id) {
+                    messageComponentCreateEvent.messageComponentInteraction.message.delete()
+                }
             }
-        }
-        val messageBuilder = MessageBuilder()
-        messageBuilder.setContent("Réponse :")
-        messageBuilder.addComponents(
-            ActionRow.of(
-                Button.success(yes.toString(), "Oui"),
-                Button.danger(no.toString(), "Non")
+            val messageBuilder = MessageBuilder()
+            messageBuilder.addEmbed(
+                EmbedBuilder()
+                    .setColor(Color.GREEN)
+                    .setTitle("Oui ou non ?")
             )
-        )
+            messageBuilder.addComponents(
+                ActionRow.of(
+                    Button.success(yes.toString(), "Oui"),
+                    Button.danger(no.toString(), "Non")
+                )
+            )
+            messageBuilder.send(messageCreateEvent.channel)
+        }
+
+        if (serverBot.getArray("places").isEmpty() || serverBot.getArray("places")[0] == "") {
+            serverPlace(messageCreateEvent, serverBot, p, doAfter)
+        } else {
+            doAfter()
+        }
+
     }
 
     private fun placesToString(places: ArrayList<Place>): String {
