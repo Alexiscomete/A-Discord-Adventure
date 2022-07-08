@@ -34,9 +34,21 @@ class ButtonsManager : MessageComponentCreateListener {
                     .update()
             }
         } else if (hashButton.containsKey(messageComponentCreateEvent.messageComponentInteraction.customId.toLong())) {
-            hashButton[messageComponentCreateEvent.messageComponentInteraction.customId.toLong()]!!.accept(
-                messageComponentCreateEvent
-            )
+            try {
+                hashButton[messageComponentCreateEvent.messageComponentInteraction.customId.toLong()]!!.accept(
+                    messageComponentCreateEvent
+                )
+            } catch (e: Exception) {
+                if (messageComponentCreateEvent.messageComponentInteraction.channel.isPresent) {
+                    messageComponentCreateEvent.messageComponentInteraction.channel.get()
+                        .sendMessage("Une erreur est survenue : " + e.message)
+                } else {
+                    messageComponentCreateEvent.messageComponentInteraction.user.sendMessage(
+                        """Une erreur est survenue : ${e.message}
+    Impossible de répondre à votre message dans le channel donc ce message est envoyé en DM."""
+                    )
+                }
+            }
         } else {
             messageComponentCreateEvent.messageComponentInteraction.createOriginalMessageUpdater().removeAllEmbeds()
                 .removeAllComponents()

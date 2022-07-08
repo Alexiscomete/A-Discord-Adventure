@@ -229,7 +229,6 @@ class PlaceCommand : CommandWithAccount(
                                         }
                                     }
                                 }
-                            messageCreateEvent.message.reply("Action inconnue")
                         }
                         else -> messageCreateEvent.message.reply("Action inconnue")
                     }
