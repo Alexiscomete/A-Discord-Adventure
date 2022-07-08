@@ -37,15 +37,15 @@ class Shop : CommandInServer(
                 try {
                     val resource = Resource.valueOf(args[2].uppercase(Locale.getDefault()))
                     var quantity = 1
-                    var price = 0.0
                     if (args.size > 3) {
                         quantity = args[3].toInt()
-                        if (quantity <= 0) {
-                            messageCreateEvent.message.reply("Evitez ce genre de transactions ... petite pénalité")
-                            price = resource.price
-                        }
                     }
-                    price += quantity * resource.price * buyCoef
+                    var price: Double = quantity * resource.price * buyCoef
+                    if (quantity <= 0) {
+                        messageCreateEvent.message.reply("Evitez ce genre de transactions ... petite pénalité")
+                        price *= -1
+                        quantity = -1
+                    }
                     if (p["bal"].toDouble() >= price) {
                         p["bal"] = (p["bal"].toDouble() - price).toString()
                         var resourceManager = p.resourceManagers[resource]
@@ -67,16 +67,15 @@ class Shop : CommandInServer(
                 try {
                     val resource = Resource.valueOf(args[2].uppercase(Locale.getDefault()))
                     var quantity = 1
-                    var price = 0.0
                     if (args.size > 3) {
                         quantity = args[3].toInt()
-                        if (quantity <= 0) {
-                            messageCreateEvent.message.reply("Evitez ce genre de transactions ... petite pénalité")
-                            price -= 10.0
-                            quantity *= -1
-                        }
                     }
-                    price += quantity * resource.price * sellCoef
+                    var price: Double = quantity * resource.price * sellCoef
+                    if (quantity <= 0) {
+                        messageCreateEvent.message.reply("Evitez ce genre de transactions ... petite pénalité")
+                        price = -1.0
+                        quantity *= -1
+                    }
                     var resourceManager = p.resourceManagers[resource]
                     if (resourceManager == null) {
                         resourceManager = ResourceManager(resource, 0)
