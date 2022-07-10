@@ -11,6 +11,9 @@ import org.javacord.api.event.message.MessageCreateEvent
 import java.awt.Color
 import java.util.concurrent.ExecutionException
 import java.util.function.Consumer
+import io.github.alexiscomete.lapinousecond.commands.*
+
+val help = load(Help())
 
 class Help : CommandBot(
     "Vous affiche l'aide du bot. (help [commande] pour plus d'informations)",
@@ -34,7 +37,7 @@ class Help : CommandBot(
                 e.printStackTrace()
             }
         } else {
-            val commandBot = io.github.alexiscomete.lapinousecond.ListenerMain.commands[args[1]]
+            val commandBot = ListenerMain.commands[args[1]]
             if (commandBot == null) {
                 builder.addField("👀", "Commande inconnue")
             } else {
@@ -45,7 +48,7 @@ class Help : CommandBot(
     }
 
     fun addCommands(embedBuilder: EmbedBuilder, min: Int) {
-        val commandBots = io.github.alexiscomete.lapinousecond.ListenerMain.commands.values.toTypedArray()
+        val commandBots = ListenerMain.commands.values.toTypedArray()
         if (commandBots.size > min) {
             var i = min
             while (i < commandBots.size && i < min + 10) {
@@ -61,7 +64,7 @@ class Help : CommandBot(
     inner class EventAnswer(private val builder: EmbedBuilder) {
         private var level = 0
         fun next(messageComponentCreateEvent: MessageComponentCreateEvent) {
-            if (level + 10 < io.github.alexiscomete.lapinousecond.ListenerMain.commands.size) {
+            if (level + 10 < ListenerMain.commands.size) {
                 level += 10
                 builder.removeAllFields()
                 addCommands(builder, level)
@@ -85,7 +88,7 @@ class Help : CommandBot(
         }
 
         val components: ActionRow
-            get() = if (level > 0 && level + 10 < io.github.alexiscomete.lapinousecond.ListenerMain.commands.size) {
+            get() = if (level > 0 && level + 10 < ListenerMain.commands.size) {
                 ActionRow.of(
                     Button.success("last_page", "Page précédente"),
                     Button.success("next_page", "Page suivante")
@@ -94,7 +97,7 @@ class Help : CommandBot(
                 ActionRow.of(
                     Button.success("last_page", "Page précédente")
                 )
-            } else if (level + 10 < io.github.alexiscomete.lapinousecond.ListenerMain.commands.size) {
+            } else if (level + 10 < ListenerMain.commands.size) {
                 ActionRow.of(
                     Button.success("next_page", "Page suivante")
                 )

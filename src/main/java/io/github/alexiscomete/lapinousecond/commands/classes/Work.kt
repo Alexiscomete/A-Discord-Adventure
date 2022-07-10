@@ -11,6 +11,9 @@ import org.javacord.api.event.message.MessageCreateEvent
 import java.awt.Color
 import java.time.Instant
 import java.util.*
+import io.github.alexiscomete.lapinousecond.commands.*
+
+val work = load(Work())
 
 class Work : CommandInServer(
     "Gagnez de l'argent et/ou des ressources",

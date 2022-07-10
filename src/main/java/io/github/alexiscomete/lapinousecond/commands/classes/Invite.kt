@@ -4,6 +4,9 @@ import io.github.alexiscomete.lapinousecond.commands.CommandBot
 import org.javacord.api.entity.message.embed.EmbedBuilder
 import org.javacord.api.event.message.MessageCreateEvent
 import java.awt.Color
+import io.github.alexiscomete.lapinousecond.commands.*
+
+val invite = load(Invite())
 
 class Invite : CommandBot(
     "Recevoir l'invitation du bot",

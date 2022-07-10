@@ -3,7 +3,9 @@ package io.github.alexiscomete.lapinousecond.commands.classes
 import io.github.alexiscomete.lapinousecond.commands.CommandBot
 import io.github.alexiscomete.lapinousecond.entity.players
 import org.javacord.api.event.message.MessageCreateEvent
+import io.github.alexiscomete.lapinousecond.commands.*
 
+val useCommand = load(UseCommand())
 
 class UseCommand : CommandBot(
     "Permet d'utiliser un objet",

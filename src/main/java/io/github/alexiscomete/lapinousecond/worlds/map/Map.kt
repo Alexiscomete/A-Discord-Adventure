@@ -227,7 +227,7 @@ object Map {
 
     // vérifie si le pixel est dans la map
     private fun isInMap(x: Int, y: Int): Boolean {
-        return x in 0 until MAP_WIDTH && y >= 0 && y < MAP_HEIGHT
+        return x in 0 until MAP_WIDTH && y in 0 until MAP_HEIGHT
     }
 
     fun getNode(x: Int, y: Int, nodes: ArrayList<Node>): Node {

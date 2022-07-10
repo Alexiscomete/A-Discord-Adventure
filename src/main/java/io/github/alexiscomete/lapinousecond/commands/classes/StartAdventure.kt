@@ -8,6 +8,9 @@ import io.github.alexiscomete.lapinousecond.useful.managesave.saveManager
 import org.javacord.api.entity.message.embed.EmbedBuilder
 import org.javacord.api.event.message.MessageCreateEvent
 import java.awt.Color
+import io.github.alexiscomete.lapinousecond.commands.*
+
+val startAdventure = load(StartAdventure())
 
 class StartAdventure : CommandBot(
     "Permet de commencer l'aventure",

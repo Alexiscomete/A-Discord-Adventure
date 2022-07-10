@@ -1,6 +1,5 @@
-package io.github.alexiscomete.lapinousecond
+package io.github.alexiscomete.lapinousecond.commands
 
-import io.github.alexiscomete.lapinousecond.commands.CommandBot
 import org.javacord.api.event.message.MessageCreateEvent
 import org.javacord.api.listener.message.MessageCreateListener
 import java.util.*
@@ -29,6 +28,6 @@ class ListenerMain : MessageCreateListener {
          * Dictionnaire de toutes le commandes du bot
          */
         @JvmField
-        val commands = HashMap<String, CommandBot>()
+        val commands = LinkedHashMap<String, CommandBot>()
     }
 }

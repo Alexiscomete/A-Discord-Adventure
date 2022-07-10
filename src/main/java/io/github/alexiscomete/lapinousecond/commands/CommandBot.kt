@@ -4,6 +4,39 @@ import io.github.alexiscomete.lapinousecond.UserPerms
 import io.github.alexiscomete.lapinousecond.entity.Player
 import io.github.alexiscomete.lapinousecond.view.AnswerEnum
 import org.javacord.api.event.message.MessageCreateEvent
+import java.io.BufferedReader
+import java.io.InputStreamReader
+
+fun findAllClassesUsingClassLoader(packageName: String) {
+    val stream = ClassLoader.getSystemClassLoader()
+        .getResourceAsStream(packageName.replace("[.]".toRegex(), "/"))
+    val reader = BufferedReader(InputStreamReader(stream!!))
+    reader.lines()
+        .filter { line: String -> line.endsWith(".class") }
+        .map { line: String ->
+            getClass(
+                line,
+                packageName
+            )
+        }
+}
+
+private fun getClass(className: String, packageName: String): Class<*>? {
+    try {
+        return Class.forName(
+            packageName + "."
+                    + className.substring(0, className.lastIndexOf('.'))
+        )
+    } catch (e: ClassNotFoundException) {
+        // handle the exception
+    }
+    return null
+}
+
+fun load(command: CommandBot): CommandBot {
+    ListenerMain.commands[command.name] = command
+    return command
+}
 
 abstract class CommandBot(
     val description: String,

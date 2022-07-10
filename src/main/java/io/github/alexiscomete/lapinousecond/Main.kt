@@ -1,7 +1,8 @@
 package io.github.alexiscomete.lapinousecond
 
 import io.github.alexiscomete.lapinousecond.commands.CommandBot
-import io.github.alexiscomete.lapinousecond.commands.classes.*
+import io.github.alexiscomete.lapinousecond.commands.ListenerMain
+import io.github.alexiscomete.lapinousecond.commands.findAllClassesUsingClassLoader
 import io.github.alexiscomete.lapinousecond.message_event.ButtonsManager
 import io.github.alexiscomete.lapinousecond.message_event.MessagesManager
 import io.github.alexiscomete.lapinousecond.message_event.ReactionManager
@@ -52,25 +53,7 @@ fun main() {
         api.addListener(messagesManager)
 
         // Ajout des commandes
-        addCommand(Help())
-        addCommand(Work())
-        addCommand(Shop())
-        addCommand(Give())
-        addCommand(PlayerShop())
-        addCommand(InventoryC())
-        addCommand(ConfigServ())
-        addCommand(Travel())
-        addCommand(Hub())
-        addCommand(StartAdventure())
-        addCommand(UseCommand())
-        addCommand(PermsManager())
-        addCommand(Invite())
-        addCommand(Verify())
-        addCommand(PlaceCommand())
-        addCommand(BuildingCommand())
-        addCommand(MapCommand())
-        addCommand(WorldCommand())
-        addCommand(TestCommand())
+        findAllClassesUsingClassLoader("io.github.alexiscomete.commands.classes")
     } catch (e: IOException) {
         e.printStackTrace()
     }
