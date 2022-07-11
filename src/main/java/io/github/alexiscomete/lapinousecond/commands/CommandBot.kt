@@ -5,12 +5,25 @@ import io.github.alexiscomete.lapinousecond.entity.Player
 import io.github.alexiscomete.lapinousecond.view.AnswerEnum
 import org.javacord.api.event.message.MessageCreateEvent
 import java.io.BufferedReader
+import java.io.IOException
 import java.io.InputStreamReader
+import java.lang.reflect.InvocationTargetException
+import java.net.URL
+import java.net.URLClassLoader
+import java.util.jar.JarFile
+
 
 fun findAllClassesUsingClassLoader(packageName: String) {
-    val stream = ClassLoader.getSystemClassLoader()
-        .getResourceAsStream(packageName.replace("[.]".toRegex(), "/"))
-    val reader = BufferedReader(InputStreamReader(stream!!))
+    println(packageName.replace("[.]".toRegex(), "/"))
+    val stream = CommandBot::class
+        .java
+        .classLoader
+        .getResourceAsStream(
+            packageName.replace("[.]".toRegex(), "/"))
+    val reader =
+        BufferedReader(
+            InputStreamReader(
+                stream!!))
     reader.lines()
         .filter { line: String -> line.endsWith(".class") }
         .map { line: String ->
@@ -19,6 +32,34 @@ fun findAllClassesUsingClassLoader(packageName: String) {
                 packageName
             )
         }
+}
+
+@Throws(IOException::class)
+fun loadClasses(basePackage: String) {
+    var basePackage1 = basePackage
+    val jar: JarFile = JarFile(moduleJar)
+    basePackage1 = basePackage1.replace('.', '/') + "/"
+    try {
+        for (e in jar.entries()) {
+            if (e.name.startsWith(basePackage1) && e.name.endsWith(".class")) {
+                val c: String = e.name.replace('/', '.').substring(0, e.name.length - ".class".length)
+                try {
+                    val urls: Array<URL> = arrayOf<URL>(URL("jar:file:" + moduleJar.getAbsolutePath() + "!/"))
+                    val loader = URLClassLoader(urls, CommandBot::class.java.classLoader)
+                    val clazz = Class.forName(c, true, loader)
+                    clazz.getDeclaredMethod("load").invoke(null)
+                } catch (ignored: InvocationTargetException) {
+                } catch (ignored: IllegalAccessException) {
+                } catch (ignored: NoSuchMethodException) {
+                }
+            }
+        }
+    } finally {
+        try {
+            jar.close()
+        } catch (ignored: IOException) {
+        }
+    }
 }
 
 private fun getClass(className: String, packageName: String): Class<*>? {
