@@ -11,9 +11,10 @@ import java.lang.reflect.InvocationTargetException
 import java.net.URL
 import java.net.URLClassLoader
 import java.util.jar.JarFile
+import io.github.alexiscomete.lapinousecond.commands.*
 
 
-fun findAllClassesUsingClassLoader(packageName: String) {
+/*fun findAllClassesUsingClassLoader(packageName: String) {
     println(packageName.replace("[.]".toRegex(), "/"))
     val stream = CommandBot::class
         .java
@@ -72,7 +73,7 @@ private fun getClass(className: String, packageName: String): Class<*>? {
         // handle the exception
     }
     return null
-}
+}*/
 
 fun load(command: CommandBot): CommandBot {
     ListenerMain.commands[command.name] = command
