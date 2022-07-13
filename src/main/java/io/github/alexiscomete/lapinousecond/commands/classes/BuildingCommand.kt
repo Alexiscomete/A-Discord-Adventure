@@ -10,9 +10,6 @@ import org.javacord.api.entity.message.MessageBuilder
 import org.javacord.api.entity.message.embed.EmbedBuilder
 import org.javacord.api.event.message.MessageCreateEvent
 import java.util.*
-import io.github.alexiscomete.lapinousecond.commands.*
-
-val buildingCommand = load(BuildingCommand())
 
 /**
  * Command to build a building, manage buildings, and use them

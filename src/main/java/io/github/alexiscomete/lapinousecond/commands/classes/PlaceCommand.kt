@@ -18,9 +18,6 @@ import org.javacord.api.event.interaction.MessageComponentCreateEvent
 import org.javacord.api.event.message.MessageCreateEvent
 import java.awt.Color
 import kotlin.math.min
-import io.github.alexiscomete.lapinousecond.commands.*
-
-val placeCommand = load(PlaceCommand())
 
 class PlaceCommand : CommandWithAccount(
     "Commande des lieux, configuration + description",

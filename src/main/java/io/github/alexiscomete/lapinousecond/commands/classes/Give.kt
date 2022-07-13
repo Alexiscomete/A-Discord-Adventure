@@ -6,9 +6,6 @@ import io.github.alexiscomete.lapinousecond.entity.players
 import io.github.alexiscomete.lapinousecond.resources.Resource
 import io.github.alexiscomete.lapinousecond.useful.transactions.giveFromTo
 import org.javacord.api.event.message.MessageCreateEvent
-import io.github.alexiscomete.lapinousecond.commands.*
-
-val give = load(Give())
 
 class Give : CommandWithAccount("description", "give", "totalDescription") {
     override fun execute(messageCreateEvent: MessageCreateEvent, content: String, args: Array<String>, p: Player) {

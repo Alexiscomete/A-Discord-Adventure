@@ -24,9 +24,6 @@ import java.awt.Color
 import java.util.concurrent.ExecutionException
 import java.util.function.Consumer
 import java.util.stream.Collectors
-import io.github.alexiscomete.lapinousecond.commands.*
-
-val travel = load(Travel())
 
 fun sendPath(messageCreateEvent: MessageCreateEvent, path: ArrayList<Pixel>) {
     val sb = StringBuilder()

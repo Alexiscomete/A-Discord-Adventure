@@ -10,9 +10,6 @@ import org.javacord.api.entity.user.User
 import org.javacord.api.event.message.MessageCreateEvent
 import java.awt.Color
 import java.sql.SQLException
-import io.github.alexiscomete.lapinousecond.commands.*
-
-val inventoryC = load(InventoryC())
 
 class InventoryC : CommandBot(
     "Ouvre l'inventaire",

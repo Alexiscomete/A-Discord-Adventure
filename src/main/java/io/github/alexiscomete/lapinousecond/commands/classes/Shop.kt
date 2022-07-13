@@ -7,9 +7,6 @@ import io.github.alexiscomete.lapinousecond.resources.ResourceManager
 import org.javacord.api.entity.message.embed.EmbedBuilder
 import org.javacord.api.event.message.MessageCreateEvent
 import java.util.*
-import io.github.alexiscomete.lapinousecond.commands.*
-
-val shop = load(Shop())
 
 class Shop : CommandInServer(
     "Acheter / vendre un item",

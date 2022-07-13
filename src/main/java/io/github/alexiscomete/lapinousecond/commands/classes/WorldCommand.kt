@@ -6,9 +6,6 @@ import io.github.alexiscomete.lapinousecond.worlds.WorldEnum
 import org.javacord.api.entity.message.embed.EmbedBuilder
 import org.javacord.api.event.message.MessageCreateEvent
 import java.util.*
-import io.github.alexiscomete.lapinousecond.commands.*
-
-val worldCommand = load(WorldCommand())
 
 /**
  * @author Alexiscomete

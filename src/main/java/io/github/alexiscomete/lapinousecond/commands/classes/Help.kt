@@ -11,9 +11,6 @@ import org.javacord.api.event.message.MessageCreateEvent
 import java.awt.Color
 import java.util.concurrent.ExecutionException
 import java.util.function.Consumer
-import io.github.alexiscomete.lapinousecond.commands.*
-
-val help = load(Help())
 
 class Help : CommandBot(
     "Vous affiche l'aide du bot. (help [commande] pour plus d'informations)",

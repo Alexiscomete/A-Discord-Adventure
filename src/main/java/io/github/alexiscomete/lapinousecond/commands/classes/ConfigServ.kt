@@ -9,9 +9,6 @@ import io.github.alexiscomete.lapinousecond.worlds.servers
 import org.javacord.api.entity.message.embed.EmbedBuilder
 import org.javacord.api.event.message.MessageCreateEvent
 import java.util.function.Consumer
-import io.github.alexiscomete.lapinousecond.commands.*
-
-val configServ = load(ConfigServ())
 
 class ConfigServ : CommandWithAccount(
     "Configuration du serveur, config info pour la configuration actuelle",

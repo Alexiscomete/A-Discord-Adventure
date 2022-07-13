@@ -1,48 +1,21 @@
 package io.github.alexiscomete.lapinousecond.commands
 
 import io.github.alexiscomete.lapinousecond.UserPerms
+import io.github.alexiscomete.lapinousecond.commands.classes.ConfigServ
+import io.github.alexiscomete.lapinousecond.commands.classes.Help
 import io.github.alexiscomete.lapinousecond.entity.Player
 import io.github.alexiscomete.lapinousecond.view.AnswerEnum
 import org.javacord.api.event.message.MessageCreateEvent
-import java.io.File
-import java.io.IOException
-import java.lang.reflect.InvocationTargetException
-import java.net.URL
-import java.net.URLClassLoader
-import java.util.jar.JarFile
+import io.github.alexiscomete.lapinousecond.commands.classes.*
 
-@Throws(IOException::class)
-fun loadClasses(basePackage: String) {
-    val moduleJar = File(CommandBot::class.java.protectionDomain.codeSource.location.toURI())
-    var basePackage1 = basePackage
-    val jar: JarFile = JarFile(moduleJar)
-    basePackage1 = basePackage1.replace('.', '/') + "/"
-    try {
-        for (e in jar.entries()) {
-            if (e.name.startsWith(basePackage1) && e.name.endsWith(".class")) {
-                val c: String = e.name.replace('/', '.').substring(0, e.name.length - ".class".length)
-                try {
-                    val urls: Array<URL> = arrayOf<URL>(URL("jar:file:" + moduleJar.absolutePath + "!/"))
-                    val loader = URLClassLoader(urls, CommandBot::class.java.classLoader)
-                    val clazz = Class.forName(c, true, loader)
-                    clazz.getDeclaredMethod("load").invoke(null)
-                } catch (ignored: InvocationTargetException) {
-                } catch (ignored: IllegalAccessException) {
-                } catch (ignored: NoSuchMethodException) {
-                }
-            }
-        }
-    } finally {
-        try {
-            jar.close()
-        } catch (ignored: IOException) {
-        }
-    }
+fun loadAll() {
+    load(Help())
+    load(ConfigServ())
+    load(Give())
 }
 
-fun load(command: CommandBot): CommandBot {
+fun load(command: CommandBot) {
     ListenerMain.commands[command.name] = command
-    return command
 }
 
 abstract class CommandBot(

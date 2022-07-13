@@ -2,9 +2,6 @@ package io.github.alexiscomete.lapinousecond.commands.classes
 
 import io.github.alexiscomete.lapinousecond.commands.CommandBot
 import org.javacord.api.event.message.MessageCreateEvent
-import io.github.alexiscomete.lapinousecond.commands.*
-
-val playerShop = load(PlayerShop())
 
 class PlayerShop : CommandBot(
     "Marché des joueurs",

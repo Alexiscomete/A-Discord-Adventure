@@ -9,9 +9,6 @@ import java.net.HttpURLConnection
 import java.net.URL
 import java.util.*
 import io.github.alexiscomete.lapinousecond.entity.players
-import io.github.alexiscomete.lapinousecond.commands.*
-
-val verify = load(Verify())
 
 fun getUser(id: Long): String? {
     try {

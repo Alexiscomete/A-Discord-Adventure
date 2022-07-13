@@ -8,9 +8,6 @@ import io.github.alexiscomete.lapinousecond.useful.managesave.SaveManager
 import org.javacord.api.event.message.MessageCreateEvent
 import kotlin.Array
 import kotlin.String
-import io.github.alexiscomete.lapinousecond.commands.*
-
-val permManager = load(PermsManager())
 
 class PermsManager : CommandBot(
     "Commande permettant de modifier les permissions d'un utilisateur dans le bot",
