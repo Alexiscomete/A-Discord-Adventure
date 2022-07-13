@@ -2,6 +2,7 @@ package io.github.alexiscomete.lapinousecond.commands.classes
 
 import io.github.alexiscomete.lapinousecond.buttonsManager
 import io.github.alexiscomete.lapinousecond.commands.CommandBot
+import io.github.alexiscomete.lapinousecond.commands.ListenerMain
 import org.javacord.api.entity.message.MessageBuilder
 import org.javacord.api.entity.message.component.ActionRow
 import org.javacord.api.entity.message.component.Button

@@ -2,6 +2,7 @@ package io.github.alexiscomete.lapinousecond
 
 import io.github.alexiscomete.lapinousecond.commands.CommandBot
 import io.github.alexiscomete.lapinousecond.commands.ListenerMain
+import io.github.alexiscomete.lapinousecond.commands.loadAll
 import io.github.alexiscomete.lapinousecond.message_event.ButtonsManager
 import io.github.alexiscomete.lapinousecond.message_event.MessagesManager
 import io.github.alexiscomete.lapinousecond.message_event.ReactionManager
@@ -52,7 +53,7 @@ fun main() {
         api.addListener(messagesManager)
 
         // Ajout des commandes
-        //findAllClassesUsingClassLoader("io.github.alexiscomete.commands.classes")
+        loadAll()
     } catch (e: IOException) {
         e.printStackTrace()
     }
