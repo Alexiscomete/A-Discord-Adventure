@@ -12,6 +12,22 @@ fun loadAll() {
     load(Help())
     load(ConfigServ())
     load(Give())
+    load(BuildingCommand())
+    load(Hub())
+    load(InventoryC())
+    load(Invite())
+    load(MapCommand())
+    load(PermsManager())
+    load(PlaceCommand())
+    load(PlayerShop())
+    load(Shop())
+    load(StartAdventure())
+    load(TestCommand())
+    load(Travel())
+    load(UseCommand())
+    load(Verify())
+    load(Work())
+    load(WorldCommand())
 }
 
 fun load(command: CommandBot) {
