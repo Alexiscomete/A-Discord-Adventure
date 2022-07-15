@@ -1,4 +1,4 @@
-package io.github.alexiscomete.lapinousecond.commands
+package io.github.alexiscomete.lapinousecond.commands.withoutslash
 
 import org.javacord.api.event.message.MessageCreateEvent
 import org.javacord.api.listener.message.MessageCreateListener

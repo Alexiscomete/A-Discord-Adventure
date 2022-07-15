@@ -1,12 +1,11 @@
-package io.github.alexiscomete.lapinousecond.commands
+package io.github.alexiscomete.lapinousecond.commands.withoutslash
 
 import io.github.alexiscomete.lapinousecond.UserPerms
-import io.github.alexiscomete.lapinousecond.commands.classes.ConfigServ
-import io.github.alexiscomete.lapinousecond.commands.classes.Help
+import io.github.alexiscomete.lapinousecond.commands.withoutslash.classes.Help
 import io.github.alexiscomete.lapinousecond.entity.Player
 import io.github.alexiscomete.lapinousecond.view.AnswerEnum
 import org.javacord.api.event.message.MessageCreateEvent
-import io.github.alexiscomete.lapinousecond.commands.classes.*
+import io.github.alexiscomete.lapinousecond.commands.withoutslash.classes.*
 
 fun loadAll() {
     load(Help())

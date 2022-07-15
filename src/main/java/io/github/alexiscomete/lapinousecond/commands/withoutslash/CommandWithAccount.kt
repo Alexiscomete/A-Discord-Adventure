@@ -1,4 +1,4 @@
-package io.github.alexiscomete.lapinousecond.commands
+package io.github.alexiscomete.lapinousecond.commands.withoutslash
 
 import io.github.alexiscomete.lapinousecond.entity.Player
 import io.github.alexiscomete.lapinousecond.entity.players

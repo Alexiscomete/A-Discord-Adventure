@@ -1,6 +1,6 @@
-package io.github.alexiscomete.lapinousecond.commands.classes
+package io.github.alexiscomete.lapinousecond.commands.withoutslash.classes
 
-import io.github.alexiscomete.lapinousecond.commands.CommandBot
+import io.github.alexiscomete.lapinousecond.commands.withoutslash.CommandBot
 import org.javacord.api.event.message.MessageCreateEvent
 
 class PlayerShop : CommandBot(

@@ -1,8 +1,8 @@
 package io.github.alexiscomete.lapinousecond
 
-import io.github.alexiscomete.lapinousecond.commands.CommandBot
-import io.github.alexiscomete.lapinousecond.commands.ListenerMain
-import io.github.alexiscomete.lapinousecond.commands.loadAll
+import io.github.alexiscomete.lapinousecond.commands.withoutslash.CommandBot
+import io.github.alexiscomete.lapinousecond.commands.withoutslash.ListenerMain
+import io.github.alexiscomete.lapinousecond.commands.withoutslash.loadAll
 import io.github.alexiscomete.lapinousecond.message_event.ButtonsManager
 import io.github.alexiscomete.lapinousecond.message_event.MessagesManager
 import io.github.alexiscomete.lapinousecond.message_event.ReactionManager

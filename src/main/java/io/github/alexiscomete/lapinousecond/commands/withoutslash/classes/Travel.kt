@@ -1,9 +1,9 @@
-package io.github.alexiscomete.lapinousecond.commands.classes
+package io.github.alexiscomete.lapinousecond.commands.withoutslash.classes
 
 import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
 import io.github.alexiscomete.lapinousecond.api
 import io.github.alexiscomete.lapinousecond.buttonsManager
-import io.github.alexiscomete.lapinousecond.commands.CommandInServer
+import io.github.alexiscomete.lapinousecond.commands.withoutslash.CommandInServer
 import io.github.alexiscomete.lapinousecond.entity.Player
 import io.github.alexiscomete.lapinousecond.worlds.Place
 import io.github.alexiscomete.lapinousecond.worlds.ServerBot

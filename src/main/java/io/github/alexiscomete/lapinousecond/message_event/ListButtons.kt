@@ -2,7 +2,7 @@ package io.github.alexiscomete.lapinousecond.message_event
 
 import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
 import io.github.alexiscomete.lapinousecond.buttonsManager
-import io.github.alexiscomete.lapinousecond.commands.ListenerMain
+import io.github.alexiscomete.lapinousecond.commands.withoutslash.ListenerMain
 import org.javacord.api.entity.message.component.ActionRow
 import org.javacord.api.entity.message.component.Button
 import org.javacord.api.entity.message.embed.EmbedBuilder

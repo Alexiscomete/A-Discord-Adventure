@@ -1,7 +1,6 @@
-package io.github.alexiscomete.lapinousecond.commands.classes
+package io.github.alexiscomete.lapinousecond.commands.withoutslash.classes
 
-import io.github.alexiscomete.lapinousecond.commands.CommandBot
-import io.github.alexiscomete.lapinousecond.entity.Player
+import io.github.alexiscomete.lapinousecond.commands.withoutslash.CommandBot
 import io.github.alexiscomete.lapinousecond.entity.players
 import io.github.alexiscomete.lapinousecond.useful.managesave.SaveManager
 import io.github.alexiscomete.lapinousecond.useful.managesave.saveManager

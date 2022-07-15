@@ -1,5 +1,5 @@
-package io.github.alexiscomete.lapinousecond.commands.classes
-import io.github.alexiscomete.lapinousecond.commands.CommandBot
+package io.github.alexiscomete.lapinousecond.commands.withoutslash.classes
+import io.github.alexiscomete.lapinousecond.commands.withoutslash.CommandBot
 import io.github.alexiscomete.lapinousecond.entity.players
 import io.github.alexiscomete.lapinousecond.worlds.ServerBot
 import org.javacord.api.event.message.MessageCreateEvent

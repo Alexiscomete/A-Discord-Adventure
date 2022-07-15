@@ -1,6 +1,6 @@
-package io.github.alexiscomete.lapinousecond.commands.classes
+package io.github.alexiscomete.lapinousecond.commands.withoutslash.classes
 
-import io.github.alexiscomete.lapinousecond.commands.CommandBot
+import io.github.alexiscomete.lapinousecond.commands.withoutslash.CommandBot
 import org.javacord.api.entity.message.embed.EmbedBuilder
 import org.javacord.api.event.message.MessageCreateEvent
 import java.awt.Color
