@@ -1,5 +1,4 @@
 package io.github.alexiscomete.lapinousecond.commands.withslash
 
-class Command {
-
+interface ExecutableWithArguments {
 }
