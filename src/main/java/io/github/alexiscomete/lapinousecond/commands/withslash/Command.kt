@@ -13,6 +13,7 @@ class Command(
     discordPerms: EnumSet<PermissionType>? = null,
     inDms: Boolean = true,
     subCommands: List<Sub>? = null,
+    arguments: ArrayList<SlashCommandOption> = arrayListOf()
 ) {
     init {
         if (discordPerms == null) {
@@ -22,11 +23,10 @@ class Command(
                     .createGlobal(api)
                     .join()
             } else {
-                val options = ArrayList<SlashCommandOption>()
                 for (sub in subCommands) {
-                    options.add(sub.getS())
+                    arguments.add(sub.getS())
                 }
-                SlashCommand.with(name, description, options)
+                SlashCommand.with(name, description, arguments)
                     .setEnabledInDms(inDms)
                     .createGlobal(api)
                     .join()
@@ -39,11 +39,10 @@ class Command(
                     .createGlobal(api)
                     .join()
             } else {
-                val options = ArrayList<SlashCommandOption>()
                 for (sub in subCommands) {
-                    options.add(sub.getS())
+                    arguments.add(sub.getS())
                 }
-                SlashCommand.with(name, description, options)
+                SlashCommand.with(name, description, arguments)
                     .setEnabledInDms(inDms)
                     .setDefaultEnabledForPermissions(discordPerms)
                     .createGlobal(api)
