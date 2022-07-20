@@ -2,6 +2,7 @@ package io.github.alexiscomete.lapinousecond.commands.withoutslash.classes
 
 import io.github.alexiscomete.lapinousecond.commands.withoutslash.CommandInServer
 import io.github.alexiscomete.lapinousecond.entity.Player
+import io.github.alexiscomete.lapinousecond.resources.Resource
 import io.github.alexiscomete.lapinousecond.resources.ResourceManager
 import io.github.alexiscomete.lapinousecond.resources.WorkEnum
 import io.github.alexiscomete.lapinousecond.roles.Role
@@ -40,7 +41,7 @@ class Work : CommandInServer(
                 }
                 if (find != null) {
                     if (find.isReady) {
-                        roles.append(role.name_).append(" : ").append(role.salary).append("\n")
+                        roles.append(role.name_).append(" : ").append(role.salary).append(" ${Resource.RABBIT_COIN.name_} \n")
                         find.currentCooldown = (System.currentTimeMillis() / 1000)
                         totalRoles += role.salary.toDouble()
                     } else {
@@ -48,7 +49,7 @@ class Work : CommandInServer(
                             .append(find.currentCooldown.toInt() + role.coolDownSize).append(":R>\n")
                     }
                 } else {
-                    roles.append(role.name_).append(" : ").append(role.salary).append("\n")
+                    roles.append(role.name_).append(" : ").append(role.salary).append(" ${Resource.RABBIT_COIN.name_} \n")
                     totalRoles += role.salary.toDouble()
                     val r = Role(role)
                     r.currentCooldown = (System.currentTimeMillis() / 1000)
