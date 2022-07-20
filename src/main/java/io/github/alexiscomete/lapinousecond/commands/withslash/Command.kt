@@ -6,7 +6,7 @@ import org.javacord.api.interaction.SlashCommand
 import org.javacord.api.interaction.SlashCommandOption
 import java.util.EnumSet
 
-class Command(
+open class Command(
     val name: String,
     val description: String,
     val usage: String,
