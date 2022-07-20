@@ -13,7 +13,6 @@ class Command(
     discordPerms: EnumSet<PermissionType>? = null,
     inDms: Boolean = true,
     subCommands: List<Sub>? = null,
-    val botPerms: List<String>? = null
 ) {
     init {
         if (discordPerms == null) {

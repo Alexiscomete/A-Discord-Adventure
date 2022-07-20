@@ -9,6 +9,7 @@ import org.javacord.api.interaction.SlashCommandInteraction
 interface ExecutableWithArguments {
 
     val name: String
+    val botPerms: Array<String>?
 
     fun execute(slashCommand: SlashCommandInteraction)
 

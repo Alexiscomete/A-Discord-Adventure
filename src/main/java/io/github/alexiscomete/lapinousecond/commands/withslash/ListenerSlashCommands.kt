@@ -1,5 +1,6 @@
 package io.github.alexiscomete.lapinousecond.commands.withslash
 
+import io.github.alexiscomete.lapinousecond.UserPerms
 import org.javacord.api.entity.message.MessageFlag
 import org.javacord.api.event.interaction.SlashCommandCreateEvent
 import org.javacord.api.listener.interaction.SlashCommandCreateListener
@@ -31,7 +32,17 @@ class ListenerSlashCommands : SlashCommandCreateListener {
                     }
                 }
             }
-            commands[slashCommand.commandName]?.execute(slashCommand)
+            val executableWithArguments = commands[event.slashCommandInteraction.commandName]
+                ?: throw IllegalStateException("Commande inconnue")
+            if (executableWithArguments.botPerms == null) {
+                executableWithArguments.execute(slashCommand)
+            } else if (executableWithArguments.botPerms!!.isEmpty()) {
+                executableWithArguments.execute(slashCommand)
+            } else if (UserPerms.check(slashCommand.user.id, executableWithArguments.botPerms!!)) {
+                executableWithArguments.execute(slashCommand)
+            } else {
+                throw IllegalStateException("Vous n'avez pas les permissions pour utiliser cette commande")
+            }
         } catch (e: Exception) {
             slashCommand.createImmediateResponder()
                 .setContent("Une erreur est survenue. Vérifiez le contenu de la commande. Erreur = `${e.localizedMessage}`")
