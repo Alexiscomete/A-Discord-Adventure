@@ -25,7 +25,6 @@ fun loadAll() {
     load(Travel())
     load(UseCommand())
     load(Verify())
-    load(Work())
     load(WorldCommand())
 }
 
