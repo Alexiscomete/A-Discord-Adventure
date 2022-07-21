@@ -24,6 +24,9 @@ open class Command(
                     .join()
             } else {
                 for (sub in subCommands) {
+                    if (sub is ExecutableWithArguments) {
+                        commands[sub.name] = sub
+                    }
                     arguments.add(sub.getS())
                 }
                 SlashCommand.with(name, description, arguments)
@@ -40,6 +43,9 @@ open class Command(
                     .join()
             } else {
                 for (sub in subCommands) {
+                    if (sub is ExecutableWithArguments) {
+                        commands[sub.name] = sub
+                    }
                     arguments.add(sub.getS())
                 }
                 SlashCommand.with(name, description, arguments)

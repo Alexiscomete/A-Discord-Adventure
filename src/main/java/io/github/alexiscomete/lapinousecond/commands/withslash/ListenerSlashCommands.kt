@@ -4,8 +4,13 @@ import io.github.alexiscomete.lapinousecond.UserPerms
 import org.javacord.api.entity.message.MessageFlag
 import org.javacord.api.event.interaction.SlashCommandCreateEvent
 import org.javacord.api.listener.interaction.SlashCommandCreateListener
+import io.github.alexiscomete.lapinousecond.commands.withslash.classes.*
 
 val commands = LinkedHashMap<String, ExecutableWithArguments>()
+
+fun loadAllS() {
+    WorkCommandBase()
+}
 
 class ListenerSlashCommands : SlashCommandCreateListener {
     override fun onSlashCommandCreate(event: SlashCommandCreateEvent) {
@@ -32,8 +37,8 @@ class ListenerSlashCommands : SlashCommandCreateListener {
                     }
                 }
             }
-            val executableWithArguments = commands[event.slashCommandInteraction.commandName]
-                ?: throw IllegalStateException("Commande inconnue")
+            val executableWithArguments = commands[slashCommand.getFullCommandName()]
+                ?: throw IllegalStateException("Commande inconnue \"${event.slashCommandInteraction.commandName}\"")
             if (executableWithArguments.botPerms == null) {
                 executableWithArguments.execute(slashCommand)
             } else if (executableWithArguments.botPerms!!.isEmpty()) {

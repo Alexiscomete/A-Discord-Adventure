@@ -119,7 +119,7 @@ private fun setRoles(
 // on défini la classe principale de la commande
 class WorkCommandBase : Command(
     "work",
-    "Permet de récupérer de façon régulière des resources et des ${Resource.RABBIT_COIN.name_}",
+    "Récupérer des resources et des rabbit coins",
     "work [roles/all/resources]",
     inDms = false,
     subCommands = listOf(WorkCommandRoles(), WorkCommandAll(), WorkCommandResources())
@@ -129,7 +129,7 @@ class WorkCommandBase : Command(
 class WorkCommandRoles :
     SubCommand(
         "roles",
-        "Permet de récupérer uniquement les ${Resource.RABBIT_COIN.name_} des roles lié au serveur où vous êtes"
+        "Récupérer les rabbit coins des roles lié au serveur où vous êtes"
     ),
     ExecutableWithArguments {
     override val botPerms: Array<String>?
@@ -153,7 +153,7 @@ class WorkCommandRoles :
 class WorkCommandAll :
     SubCommand(
         "all",
-        "Permet de récupérer toutes les ${Resource.RABBIT_COIN.name_} et resources"
+        "Récupérer les rabbit coins et resources"
     ),
     ExecutableWithArguments {
     override val botPerms: Array<String>?
@@ -178,7 +178,7 @@ class WorkCommandAll :
 class WorkCommandResources :
     SubCommand(
         "resources",
-        "Permet de récupérer uniquement les resources"
+        "Récupérer uniquement les resources"
     ),
     ExecutableWithArguments {
     override val botPerms: Array<String>?

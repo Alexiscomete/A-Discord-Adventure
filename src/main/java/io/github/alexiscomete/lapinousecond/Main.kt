@@ -3,6 +3,8 @@ package io.github.alexiscomete.lapinousecond
 import io.github.alexiscomete.lapinousecond.commands.withoutslash.CommandBot
 import io.github.alexiscomete.lapinousecond.commands.withoutslash.ListenerMain
 import io.github.alexiscomete.lapinousecond.commands.withoutslash.loadAll
+import io.github.alexiscomete.lapinousecond.commands.withslash.ListenerSlashCommands
+import io.github.alexiscomete.lapinousecond.commands.withslash.loadAllS
 import io.github.alexiscomete.lapinousecond.message_event.ButtonsManager
 import io.github.alexiscomete.lapinousecond.message_event.MessagesManager
 import io.github.alexiscomete.lapinousecond.message_event.ReactionManager
@@ -48,12 +50,14 @@ fun main() {
          */
         api.updateActivity("Prefix : -")
         api.addListener(ListenerMain())
+        api.addListener(ListenerSlashCommands())
         api.addListener(reactionManager)
         api.addListener(buttonsManager)
         api.addListener(messagesManager)
 
         // Ajout des commandes
         loadAll()
+        loadAllS()
     } catch (e: IOException) {
         e.printStackTrace()
     }
