@@ -1,10 +1,8 @@
 package io.github.alexiscomete.lapinousecond.commands.withslash.classes
 
-import io.github.alexiscomete.lapinousecond.commands.withoutslash.classes.Verify
 import io.github.alexiscomete.lapinousecond.commands.withslash.Command
 import io.github.alexiscomete.lapinousecond.commands.withslash.ExecutableWithArguments
 import io.github.alexiscomete.lapinousecond.config
-import io.github.alexiscomete.lapinousecond.entity.players
 import org.javacord.api.interaction.SlashCommandInteraction
 import org.json.JSONObject
 import java.io.IOException
@@ -70,24 +68,19 @@ class VerifyCommandBase() : Command(
 
     override fun execute(slashCommand: SlashCommandInteraction) {
         val player = getAccount(slashCommand)
-        slashCommand.createImmediateResponder().setContent("Votre vérification est en cours").respond()
-        val userData = getUserData(messageCreateEvent.messageAuthor.id)
+        val userData = getUserData(slashCommand.user.id)
         if (userData.hasAccount()) {
-            val player = players[messageCreateEvent.messageAuthor.id]
-            if (player != null) {
-                player["x"] = userData.x.toString()
-                player["x"] = userData.y.toString()
-                player["has_account"] = userData.hasAccount().toString()
-                player["is_verify"] = if (userData.isVerify) "1" else "0"
-                if (userData.isVerify) {
-                    messageCreateEvent.message.reply("Votre compte a été associé à votre pixel. Vous avez la vérification")
-                } else {
-                    messageCreateEvent.message.reply("Votre compte a été associé à votre pixel. Vous n'avez malheuresement pas la vérification 😕")
-                }
+            player["x"] = userData.x.toString()
+            player["x"] = userData.y.toString()
+            player["has_account"] = userData.hasAccount().toString()
+            player["is_verify"] = if (userData.isVerify) "1" else "0"
+            if (userData.isVerify) {
+                slashCommand.createImmediateResponder().setContent("Votre compte a été associé à votre pixel. Vous avez la vérification").respond()
+            } else {
+                slashCommand.createImmediateResponder().setContent("Votre compte a été associé à votre pixel. Vous n'avez malheuresement pas la vérification 😕").respond()
             }
-
         } else {
-            messageCreateEvent.message.reply("Vous n'avez pas encore de compte avec l'ORU")
+            slashCommand.createImmediateResponder().setContent("Vous n'avez pas encore de compte de pixel, utilisez le bot de Sylicium").respond()
         }
     }
 
