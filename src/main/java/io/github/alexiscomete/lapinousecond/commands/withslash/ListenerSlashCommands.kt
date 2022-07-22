@@ -37,7 +37,7 @@ class ListenerSlashCommands : SlashCommandCreateListener {
                     }
                 }
             }
-            val executableWithArguments = commands[slashCommand.getFullCommandName()]
+            val executableWithArguments = commands[slashCommand.commandName]
                 ?: throw IllegalStateException("Commande inconnue \"${event.slashCommandInteraction.commandName}\"")
             if (executableWithArguments.botPerms == null) {
                 executableWithArguments.execute(slashCommand)
