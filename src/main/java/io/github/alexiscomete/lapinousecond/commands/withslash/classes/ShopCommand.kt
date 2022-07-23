@@ -13,7 +13,6 @@ private const val sellCoef = 0.9
 
 private fun resource(arguments: MutableList<SlashCommandInteractionOption>): Resource {
     val resourceArgument = arguments.first { it.name == "name" }
-        ?: throw IllegalArgumentException("Missing resource name")
     val opStringResource = resourceArgument.stringValue
     if (!opStringResource.isPresent) {
         throw IllegalArgumentException("Missing resource name")
@@ -58,7 +57,7 @@ class ShopBuyCommand :
                     return@run arrayList
                 }
             ),
-            SlashCommandOption.createLongOption("quantity", "Quantité à acheter", false, 1, Long.MAX_VALUE)
+            SlashCommandOption.createLongOption("quantity", "Quantité à acheter", false, 1, 8007199254740991)
         )
     ),
     ExecutableWithArguments {
@@ -71,15 +70,15 @@ class ShopBuyCommand :
         val resource = resource(arguments)
         var quantity = 1
         val quantityArgument = arguments.first { it.name == "quantity" }
-        if (quantityArgument != null) {
-            val opQuantity = quantityArgument.decimalValue
-            if (opQuantity.isPresent) {
-                quantity = opQuantity.get().toInt()
-                if (quantity < 1) {
-                    throw IllegalArgumentException("Quantity must be greater than 0")
-                }
+
+        val opQuantity = quantityArgument.longValue
+        if (opQuantity.isPresent) {
+            quantity = opQuantity.get().toInt()
+            if (quantity < 1) {
+                throw IllegalArgumentException("Quantity must be greater than 0")
             }
         }
+
         val player = getAccount(slashCommand)
 
         val price: Double = quantity * resource.price * buyCoef
@@ -122,7 +121,7 @@ class ShopSellCommand :
                     return@run arrayList
                 }
             ),
-            SlashCommandOption.createLongOption("quantity", "Quantité à vendre", false, 1, Long.MAX_VALUE)
+            SlashCommandOption.createLongOption("quantity", "Quantité à vendre", false, 1, 8007199254740991)
         )
     ),
     ExecutableWithArguments {
@@ -135,15 +134,15 @@ class ShopSellCommand :
         val resource = resource(arguments)
         var quantity = 1
         val quantityArgument = arguments.first { it.name == "quantity" }
-        if (quantityArgument != null) {
-            val opQuantity = quantityArgument.decimalValue
-            if (opQuantity.isPresent) {
-                quantity = opQuantity.get().toInt()
-                if (quantity < 1) {
-                    throw IllegalArgumentException("Quantity must be greater than 0")
-                }
+
+        val opQuantity = quantityArgument.longValue
+        if (opQuantity.isPresent) {
+            quantity = opQuantity.get().toInt()
+            if (quantity < 1) {
+                throw IllegalArgumentException("Quantity must be greater than 0")
             }
         }
+
         val player = getAccount(slashCommand)
 
         val price: Double = quantity * resource.price * sellCoef
