@@ -16,6 +16,9 @@ open class Command(
     arguments: ArrayList<SlashCommandOption> = arrayListOf()
 ) {
     init {
+        if (this is ExecutableWithArguments) {
+            commands[fullName] = this
+        }
         if (discordPerms == null) {
             if (subCommands == null) {
                 SlashCommand.with(name, description)
@@ -25,7 +28,7 @@ open class Command(
             } else {
                 for (sub in subCommands) {
                     if (sub is ExecutableWithArguments) {
-                        commands[sub.name] = sub
+                        commands[sub.fullName] = sub
                     }
                     arguments.add(sub.getS())
                 }
@@ -44,7 +47,7 @@ open class Command(
             } else {
                 for (sub in subCommands) {
                     if (sub is ExecutableWithArguments) {
-                        commands[sub.name] = sub
+                        commands[sub.fullName] = sub
                     }
                     arguments.add(sub.getS())
                 }

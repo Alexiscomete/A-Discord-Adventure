@@ -52,7 +52,7 @@ class ShopBuyCommand :
                 run {
                     val arrayList = arrayListOf<SlashCommandOptionChoice>()
                     Resource.values().forEach {
-                        arrayList.add(SlashCommandOptionChoice.create(it.name, it.progName))
+                        arrayList.add(SlashCommandOptionChoice.create(it.progName, it.name))
                     }
                     return@run arrayList
                 }
@@ -61,7 +61,8 @@ class ShopBuyCommand :
         )
     ),
     ExecutableWithArguments {
-
+    override val fullName: String
+        get() = "shop buy"
     override val botPerms: Array<String>?
         get() = arrayOf("PLAY")
 
@@ -93,7 +94,7 @@ class ShopBuyCommand :
             }
             player.updateResources()
             slashCommand.createImmediateResponder()
-                .setContent("Achat réussi ! Vous avez payé ${price.toInt()}$")
+                .setContent("Achat réussi ! Vous avez payé ${price.toInt()} ${Resource.RABBIT_COIN.name_}")
                 .respond()
         } else {
             throw IllegalStateException("La transaction de " + price + " ${Resource.RABBIT_COIN.name_} pour " + quantity + " " + resource.name_ + " n'a pas pu être effectuée car vous n'aviez pas assez de ${Resource.RABBIT_COIN.name_}")
@@ -116,7 +117,7 @@ class ShopSellCommand :
                 run {
                     val arrayList = arrayListOf<SlashCommandOptionChoice>()
                     Resource.values().forEach {
-                        arrayList.add(SlashCommandOptionChoice.create(it.name, it.progName))
+                        arrayList.add(SlashCommandOptionChoice.create(it.progName, it.name))
                     }
                     return@run arrayList
                 }
@@ -125,7 +126,8 @@ class ShopSellCommand :
         )
     ),
     ExecutableWithArguments {
-
+    override val fullName: String
+        get() = "shop sell"
     override val botPerms: Array<String>?
         get() = arrayOf("PLAY")
 
@@ -158,7 +160,7 @@ class ShopSellCommand :
                 resourceManager.quantity = resourceManager.quantity - quantity
                 player.updateResources()
                 slashCommand.createImmediateResponder()
-                    .setContent("Vente réussie ! Vous avez gagné ${price.toInt()}$")
+                    .setContent("Vente réussie ! Vous avez gagné ${price.toInt()} ${Resource.RABBIT_COIN.name_}")
                     .respond()
             } else {
                 throw IllegalStateException("La transaction de " + quantity + " " + resource.name_ + " pour " + price + " ${Resource.RABBIT_COIN.name_} n'a pas pu être effectuée car vous n'aviez pas assez de " + resource.name_)
@@ -173,7 +175,8 @@ class ShopListCommand :
         "Lister les items / resources disponibles"
     ),
     ExecutableWithArguments {
-
+    override val fullName: String
+        get() = "shop list"
     override val botPerms: Array<String>?
         get() = null
 
@@ -212,7 +215,7 @@ class ShopInfoCommand :
                 run {
                     val arrayList = arrayListOf<SlashCommandOptionChoice>()
                     Resource.values().forEach {
-                        arrayList.add(SlashCommandOptionChoice.create(it.name, it.progName))
+                        arrayList.add(SlashCommandOptionChoice.create(it.progName, it.name))
                     }
                     return@run arrayList
                 }
@@ -220,7 +223,8 @@ class ShopInfoCommand :
         )
     ),
     ExecutableWithArguments {
-
+    override val fullName: String
+        get() = "shop info"
     override val botPerms: Array<String>?
         get() = null
 
@@ -234,9 +238,9 @@ class ShopInfoCommand :
         val embedBuilder = EmbedBuilder()
             .setTitle("Informations sur " + resource.name_)
             .addField("Quantité sur vous", quantity.toString(), true)
-            .addField("Prix d'achat", (resource.price * buyCoef).toString(), true)
-            .addField("Prix de vente", (resource.price * sellCoef).toString(), true)
-            .addField("Prix réel", resource.price.toString(), true)
+            .addField("Prix d'achat", (resource.price * buyCoef).toString() + Resource.RABBIT_COIN.name_, true)
+            .addField("Prix de vente", (resource.price * sellCoef).toString() + Resource.RABBIT_COIN.name_, true)
+            .addField("Prix réel", resource.price.toString() + Resource.RABBIT_COIN.name_, true)
         val responder = slashCommand.createImmediateResponder()
             .addEmbed(embedBuilder)
         responder.respond()

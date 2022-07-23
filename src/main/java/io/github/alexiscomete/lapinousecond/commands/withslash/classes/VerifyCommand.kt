@@ -62,7 +62,8 @@ class VerifyCommandBase() : Command(
     "verify"
 ),
     ExecutableWithArguments {
-
+    override val fullName: String
+        get() = "verify"
     override val botPerms: Array<String>?
         get() = null
 

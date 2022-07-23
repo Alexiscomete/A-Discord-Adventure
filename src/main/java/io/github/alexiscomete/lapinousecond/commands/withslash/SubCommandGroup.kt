@@ -7,7 +7,7 @@ open class SubCommandGroup(override val name: String, override val description: 
     override fun getS(): SlashCommandOption {
         val options = subCommands.map {
             if (it is ExecutableWithArguments) {
-                commands[it.name] = it
+                commands[it.fullName] = it
             }
             it.getS()
         }.toList()

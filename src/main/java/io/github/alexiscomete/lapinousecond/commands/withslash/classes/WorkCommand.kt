@@ -132,6 +132,9 @@ class WorkCommandRoles :
         "Récupérer les rabbit coins des roles lié au serveur où vous êtes"
     ),
     ExecutableWithArguments {
+
+    override val fullName: String
+        get() = "work roles"
     override val botPerms: Array<String>?
         get() = arrayOf("PLAY")
 
@@ -156,6 +159,8 @@ class WorkCommandAll :
         "Récupérer les rabbit coins et resources"
     ),
     ExecutableWithArguments {
+    override val fullName: String
+        get() = "work all"
     override val botPerms: Array<String>?
         get() = arrayOf("PLAY")
 
@@ -181,6 +186,8 @@ class WorkCommandResources :
         "Récupérer uniquement les resources"
     ),
     ExecutableWithArguments {
+    override val fullName: String
+        get() = "work resources"
     override val botPerms: Array<String>?
         get() = arrayOf("PLAY")
 

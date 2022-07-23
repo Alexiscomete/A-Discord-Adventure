@@ -39,8 +39,22 @@ class ListenerSlashCommands : SlashCommandCreateListener {
                     }
                 }
             }
-            val executableWithArguments = commands[slashCommand.commandName]
-                ?: throw IllegalStateException("Commande inconnue \"${event.slashCommandInteraction.commandName}\"")
+            var commandName = slashCommand.commandName
+            // on prend les arguments pour trouver les sous commandes
+            val arguments = slashCommand.options
+            for (arg in arguments) {
+                if (arg.isSubcommandOrGroup) {
+                    commandName += " " + arg.name
+                    val options = arg.options
+                    for (option in options) {
+                        if (option.isSubcommandOrGroup) {
+                            commandName += " " + option.name
+                        }
+                    }
+                }
+            }
+            val executableWithArguments = commands[commandName]
+                ?: throw IllegalStateException("Commande inconnue \"${commandName}\"")
             if (executableWithArguments.botPerms == null) {
                 executableWithArguments.execute(slashCommand)
             } else if (executableWithArguments.botPerms!!.isEmpty()) {
