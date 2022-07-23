@@ -12,8 +12,8 @@ import org.javacord.api.interaction.SlashCommandOptionChoice
 import org.javacord.api.interaction.SlashCommandOptionType
 import java.util.*
 
-private val buyCoef = 1.1
-private val sellCoef = 0.9
+private const val buyCoef = 1.1
+private const val sellCoef = 0.9
 
 class ShopCommandBase : Command(
     "shop",
@@ -46,7 +46,7 @@ class ShopBuyCommand :
                     return@run arrayList
                 }
             ),
-            SlashCommandOption.createDecimalOption("quantity", "Quantité à acheter", false, 1.0, Double.MAX_VALUE)
+            SlashCommandOption.createLongOption("quantity", "Quantité à acheter", false, 1, Long.MAX_VALUE)
         )
     ),
     ExecutableWithArguments {
@@ -62,35 +62,43 @@ class ShopBuyCommand :
         if (!opStringResource.isPresent) {
             throw IllegalArgumentException("Missing resource name")
         }
-        val resource = opStringResource.get().uppercase()
-        try {
-            var quantity = 1
-            if (args.size > 3) {
-                quantity = args[3].toInt()
-            }
-            var price: Double = quantity * resource.price * buyCoef
-            if (quantity <= 0) {
-                messageCreateEvent.message.reply("Evitez ce genre de transactions ... petite pénalité")
-                price *= -1
-                quantity = -1
-            }
-            if (p["bal"].toDouble() >= price) {
-                p["bal"] = (p["bal"].toDouble() - price).toString()
-                var resourceManager = p.resourceManagers[resource]
-                if (resourceManager == null) {
-                    resourceManager = ResourceManager(resource, quantity)
-                    p.resourceManagers[resource] = resourceManager
-                } else {
-                    resourceManager.quantity = resourceManager.quantity + quantity
-                }
-                p.updateResources()
-                messageCreateEvent.message.reply("Transaction effectuée")
-            } else {
-                messageCreateEvent.message.reply("La transaction de " + price + " rc pour " + quantity + " " + resource.name_ + " n'a pas pu être effectuée car vous n'aviez pas assez de rc")
-            }
+        val resourceStr = opStringResource.get().uppercase()
+        val resource = try {
+            Resource.valueOf(resourceStr)
         } catch (e: IllegalArgumentException) {
-            messageCreateEvent.message.reply("Cette resource n'existe pas ou la quantité entrée est invalide")
+            throw IllegalArgumentException("Unknown resource name")
         }
+        var quantity = 1
+        val quantityArgument = arguments.first { it.name == "quantity" }
+        if (quantityArgument != null) {
+            val opQuantity = quantityArgument.decimalValue
+            if (opQuantity.isPresent) {
+                quantity = opQuantity.get().toInt()
+                if (quantity < 1) {
+                    throw IllegalArgumentException("Quantity must be greater than 0")
+                }
+            }
+        }
+        val player = getAccount(slashCommand)
+
+        val price: Double = quantity * resource.price * buyCoef
+        if (player["bal"].toDouble() >= price) {
+            player["bal"] = (player["bal"].toDouble() - price).toString()
+            var resourceManager = player.resourceManagers[resource]
+            if (resourceManager == null) {
+                resourceManager = ResourceManager(resource, quantity)
+                player.resourceManagers[resource] = resourceManager
+            } else {
+                resourceManager.quantity = resourceManager.quantity + quantity
+            }
+            player.updateResources()
+            slashCommand.createImmediateResponder()
+                .setContent("Achat réussi ! Vous avez payé ${price.toInt()}$")
+                .respond()
+        } else {
+            throw IllegalStateException("La transaction de " + price + " ${Resource.RABBIT_COIN.name_} pour " + quantity + " " + resource.name_ + " n'a pas pu être effectuée car vous n'aviez pas assez de ${Resource.RABBIT_COIN.name_}")
+        }
+
     }
 
 }
@@ -113,7 +121,7 @@ class ShopSellCommand :
                     return@run arrayList
                 }
             ),
-            SlashCommandOption.createDecimalOption("quantity", "Quantité à acheter", false, 1.0, Double.MAX_VALUE)
+            SlashCommandOption.createLongOption("quantity", "Quantité à vendre", false, 1, Long.MAX_VALUE)
         )
     ),
     ExecutableWithArguments {
@@ -122,36 +130,51 @@ class ShopSellCommand :
         get() = arrayOf("PLAY")
 
     override fun execute(slashCommand: SlashCommandInteraction) {
-        try {
-            val resource = Resource.valueOf(args[2].uppercase(Locale.getDefault()))
-            var quantity = 1
-            if (args.size > 3) {
-                quantity = args[3].toInt()
-            }
-            var price: Double = quantity * resource.price * sellCoef
-            if (quantity <= 0) {
-                messageCreateEvent.message.reply("Evitez ce genre de transactions ... petite pénalité")
-                price = -1.0
-                quantity *= -1
-            }
-            var resourceManager = p.resourceManagers[resource]
-            if (resourceManager == null) {
-                resourceManager = ResourceManager(resource, 0)
-                p.resourceManagers[resource] = resourceManager
-                messageCreateEvent.message.reply("Transaction impossible car vous n'avez pas les ressources demandées")
-                p.updateResources()
-            } else {
-                if (resourceManager.quantity >= quantity) {
-                    p["bal"] = (p["bal"].toDouble() + price).toString()
-                    resourceManager.quantity = resourceManager.quantity - quantity
-                    p.updateResources()
-                    messageCreateEvent.message.reply("Transaction effectuée")
-                } else {
-                    messageCreateEvent.message.reply("La transaction de " + quantity + " " + resource.name_ + " pour " + price + " rc n'a pas pu être effectuée car vous n'aviez pas assez de " + resource.name_)
+
+        val arguments = slashCommand.arguments
+        val resourceArgument = arguments.first { it.name == "name" }
+            ?: throw IllegalArgumentException("Missing resource name")
+        val opStringResource = resourceArgument.stringValue
+        if (!opStringResource.isPresent) {
+            throw IllegalArgumentException("Missing resource name")
+        }
+        val resourceStr = opStringResource.get().uppercase()
+        val resource = try {
+            Resource.valueOf(resourceStr)
+        } catch (e: IllegalArgumentException) {
+            throw IllegalArgumentException("Unknown resource name")
+        }
+        var quantity = 1
+        val quantityArgument = arguments.first { it.name == "quantity" }
+        if (quantityArgument != null) {
+            val opQuantity = quantityArgument.decimalValue
+            if (opQuantity.isPresent) {
+                quantity = opQuantity.get().toInt()
+                if (quantity < 1) {
+                    throw IllegalArgumentException("Quantity must be greater than 0")
                 }
             }
-        } catch (e: IllegalArgumentException) {
-            messageCreateEvent.message.reply("Cette resource n'existe pas ou la quantité entrée est invalide")
+        }
+        val player = getAccount(slashCommand)
+
+        val price: Double = quantity * resource.price * sellCoef
+        var resourceManager = player.resourceManagers[resource]
+        if (resourceManager == null) {
+            resourceManager = ResourceManager(resource, 0)
+            player.resourceManagers[resource] = resourceManager
+            player.updateResources()
+            throw IllegalStateException("Transaction impossible car vous n'avez pas les ressources demandées")
+        } else {
+            if (resourceManager.quantity >= quantity) {
+                player["bal"] = (player["bal"].toDouble() + price).toString()
+                resourceManager.quantity = resourceManager.quantity - quantity
+                player.updateResources()
+                slashCommand.createImmediateResponder()
+                    .setContent("Vente réussie ! Vous avez gagné ${price.toInt()}$")
+                    .respond()
+            } else {
+                throw IllegalStateException("La transaction de " + quantity + " " + resource.name_ + " pour " + price + " ${Resource.RABBIT_COIN.name_} n'a pas pu être effectuée car vous n'aviez pas assez de " + resource.name_)
+            }
         }
     }
 }
