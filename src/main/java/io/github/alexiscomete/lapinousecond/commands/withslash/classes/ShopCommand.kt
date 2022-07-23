@@ -6,14 +6,26 @@ import io.github.alexiscomete.lapinousecond.commands.withslash.SubCommand
 import io.github.alexiscomete.lapinousecond.resources.Resource
 import io.github.alexiscomete.lapinousecond.resources.ResourceManager
 import org.javacord.api.entity.message.embed.EmbedBuilder
-import org.javacord.api.interaction.SlashCommandInteraction
-import org.javacord.api.interaction.SlashCommandOption
-import org.javacord.api.interaction.SlashCommandOptionChoice
-import org.javacord.api.interaction.SlashCommandOptionType
-import java.util.*
+import org.javacord.api.interaction.*
 
 private const val buyCoef = 1.1
 private const val sellCoef = 0.9
+
+private fun resource(arguments: MutableList<SlashCommandInteractionOption>): Resource {
+    val resourceArgument = arguments.first { it.name == "name" }
+        ?: throw IllegalArgumentException("Missing resource name")
+    val opStringResource = resourceArgument.stringValue
+    if (!opStringResource.isPresent) {
+        throw IllegalArgumentException("Missing resource name")
+    }
+    val resourceStr = opStringResource.get().uppercase()
+    val resource = try {
+        Resource.valueOf(resourceStr)
+    } catch (e: IllegalArgumentException) {
+        throw IllegalArgumentException("Unknown resource name")
+    }
+    return resource
+}
 
 class ShopCommandBase : Command(
     "shop",
@@ -56,18 +68,7 @@ class ShopBuyCommand :
 
     override fun execute(slashCommand: SlashCommandInteraction) {
         val arguments = slashCommand.arguments
-        val resourceArgument = arguments.first { it.name == "name" }
-            ?: throw IllegalArgumentException("Missing resource name")
-        val opStringResource = resourceArgument.stringValue
-        if (!opStringResource.isPresent) {
-            throw IllegalArgumentException("Missing resource name")
-        }
-        val resourceStr = opStringResource.get().uppercase()
-        val resource = try {
-            Resource.valueOf(resourceStr)
-        } catch (e: IllegalArgumentException) {
-            throw IllegalArgumentException("Unknown resource name")
-        }
+        val resource = resource(arguments)
         var quantity = 1
         val quantityArgument = arguments.first { it.name == "quantity" }
         if (quantityArgument != null) {
@@ -130,20 +131,8 @@ class ShopSellCommand :
         get() = arrayOf("PLAY")
 
     override fun execute(slashCommand: SlashCommandInteraction) {
-
         val arguments = slashCommand.arguments
-        val resourceArgument = arguments.first { it.name == "name" }
-            ?: throw IllegalArgumentException("Missing resource name")
-        val opStringResource = resourceArgument.stringValue
-        if (!opStringResource.isPresent) {
-            throw IllegalArgumentException("Missing resource name")
-        }
-        val resourceStr = opStringResource.get().uppercase()
-        val resource = try {
-            Resource.valueOf(resourceStr)
-        } catch (e: IllegalArgumentException) {
-            throw IllegalArgumentException("Unknown resource name")
-        }
+        val resource = resource(arguments)
         var quantity = 1
         val quantityArgument = arguments.first { it.name == "quantity" }
         if (quantityArgument != null) {
@@ -190,6 +179,7 @@ class ShopListCommand :
         get() = null
 
     override fun execute(slashCommand: SlashCommandInteraction) {
+        val player = getAccount(slashCommand)
         val stringBuilder = StringBuilder()
             .append("Resource -> prix d'achat; prix de vente; prix réel; nom à entrer")
         for (r in Resource.values()) {
@@ -200,11 +190,13 @@ class ShopListCommand :
             .setTitle("Liste du shop")
             .setFooter("Ceci est temporaire en attendant que les marchés qui pourront être contruits dans les serveurs ou les villes")
             .addField("Resources", stringBuilder.toString())
-        messageCreateEvent.message.reply(embedBuilder)
-        if (p["tuto"].toInt() == 5) {
-            messageCreateEvent.message.reply("Je vous laisse découvrir la suite tout seul ...")
-            p["tuto"] = "6"
+        val responder = slashCommand.createImmediateResponder()
+            .addEmbed(embedBuilder)
+        if (player["tuto"].toInt() == 5) {
+            player["tuto"] = "6"
+            responder.setContent("Je vous laisse découvrir la suite tout seul ...")
         }
+        responder.respond()
     }
 }
 
@@ -234,6 +226,20 @@ class ShopInfoCommand :
         get() = null
 
     override fun execute(slashCommand: SlashCommandInteraction) {
-        TODO("Not yet implemented")
+        val arguments = slashCommand.arguments
+        val resource = resource(arguments)
+        val player = getAccount(slashCommand)
+        val resourceManager = player.resourceManagers[resource]
+        // on calcul combien le joueur a de cette resource
+        val quantity = resourceManager?.quantity ?: 0
+        val embedBuilder = EmbedBuilder()
+            .setTitle("Informations sur " + resource.name_)
+            .addField("Quantité sur vous", quantity.toString(), true)
+            .addField("Prix d'achat", (resource.price * buyCoef).toString(), true)
+            .addField("Prix de vente", (resource.price * sellCoef).toString(), true)
+            .addField("Prix réel", resource.price.toString(), true)
+        val responder = slashCommand.createImmediateResponder()
+            .addEmbed(embedBuilder)
+        responder.respond()
     }
 }
