@@ -19,7 +19,6 @@ fun loadAll() {
     load(PermsManager())
     load(PlaceCommand())
     load(PlayerShop())
-    load(Shop())
     load(StartAdventure())
     load(TestCommand())
     load(Travel())
