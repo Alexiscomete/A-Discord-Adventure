@@ -10,8 +10,9 @@ val commands = LinkedHashMap<String, ExecutableWithArguments>()
 
 fun loadAllS() {
     WorkCommandBase()
-    VerifyCommandBase()
     ShopCommandBase()
+    HelpCommandBase()
+    AccountCommandBase()
 }
 
 class ListenerSlashCommands : SlashCommandCreateListener {
