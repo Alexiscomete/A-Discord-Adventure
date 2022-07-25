@@ -17,7 +17,6 @@ fun loadAll() {
     load(MapCommand())
     load(PermsManager())
     load(PlaceCommand())
-    load(StartAdventure())
     load(Travel())
     load(UseCommand())
     load(WorldCommand())
