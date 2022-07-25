@@ -11,6 +11,8 @@ import io.github.alexiscomete.lapinousecond.worlds.ServerBot
 import org.javacord.api.entity.message.embed.EmbedBuilder
 import org.javacord.api.interaction.SlashCommandInteraction
 import org.javacord.api.interaction.SlashCommandOption
+import org.javacord.api.interaction.SlashCommandOptionChoice
+import org.javacord.api.interaction.SlashCommandOptionType
 import org.json.JSONObject
 import java.awt.Color
 import java.io.IOException
@@ -170,7 +172,14 @@ class AccountCommandPerms : SubCommand(
     "perms",
 "Permet de modifier la permission globale d'un utilisateur du bot.",
     arguments = arrayListOf(
-        SlashCommandOption
+        SlashCommandOption.create(SlashCommandOptionType.USER, "user", "L'utilisateur à qui on veut changer la permission", true),
+        SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "permission", "La permission à changer", true, listOf(
+            SlashCommandOptionChoice.create("PLAY", "play"),
+            SlashCommandOptionChoice.create("CREATE_SERVER", "create_server"),
+            SlashCommandOptionChoice.create("MANAGE_PERMS", "manage_perms"),
+            SlashCommandOptionChoice.create("MANAGE_ROLES", "manage_roles"),
+        )),
+        SlashCommandOption.create(SlashCommandOptionType.BOOLEAN, "value", "Il a cette permission ?", true)
     )
 ), ExecutableWithArguments {
     override val fullName: String
