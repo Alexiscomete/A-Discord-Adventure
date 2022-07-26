@@ -204,7 +204,7 @@ class AccountCommandPerms : SubCommand(
     )
 ), ExecutableWithArguments {
     override val fullName: String
-        get() = TODO("Not yet implemented")
+        get() = "account perms"
     override val botPerms: Array<String>?
         get() = arrayOf("MANAGE_ROLES")
 
