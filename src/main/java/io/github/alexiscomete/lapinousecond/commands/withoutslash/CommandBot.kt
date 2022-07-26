@@ -15,7 +15,6 @@ fun loadAll() {
     load(Hub())
     load(InventoryC())
     load(MapCommand())
-    load(PermsManager())
     load(PlaceCommand())
     load(Travel())
     load(UseCommand())

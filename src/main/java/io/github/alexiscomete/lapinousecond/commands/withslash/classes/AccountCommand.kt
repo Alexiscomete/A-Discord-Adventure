@@ -1,5 +1,7 @@
 package io.github.alexiscomete.lapinousecond.commands.withslash.classes
 
+import io.github.alexiscomete.lapinousecond.PERMS
+import io.github.alexiscomete.lapinousecond.UserPerms
 import io.github.alexiscomete.lapinousecond.commands.withslash.Command
 import io.github.alexiscomete.lapinousecond.commands.withslash.ExecutableWithArguments
 import io.github.alexiscomete.lapinousecond.commands.withslash.SubCommand
@@ -94,12 +96,16 @@ class AccountCommandVerify() : SubCommand(
             player["has_account"] = userData.hasAccount().toString()
             player["is_verify"] = if (userData.isVerify) "1" else "0"
             if (userData.isVerify) {
-                slashCommand.createImmediateResponder().setContent("Votre compte a été associé à votre pixel. Vous avez la vérification").respond()
+                slashCommand.createImmediateResponder()
+                    .setContent("Votre compte a été associé à votre pixel. Vous avez la vérification").respond()
             } else {
-                slashCommand.createImmediateResponder().setContent("Votre compte a été associé à votre pixel. Vous n'avez malheuresement pas la vérification 😕").respond()
+                slashCommand.createImmediateResponder()
+                    .setContent("Votre compte a été associé à votre pixel. Vous n'avez malheuresement pas la vérification 😕")
+                    .respond()
             }
         } else {
-            slashCommand.createImmediateResponder().setContent("Vous n'avez pas encore de compte de pixel, utilisez le bot de Sylicium").respond()
+            slashCommand.createImmediateResponder()
+                .setContent("Vous n'avez pas encore de compte de pixel, utilisez le bot de Sylicium").respond()
         }
     }
 }
@@ -154,12 +160,18 @@ class AccountCommandStart() : SubCommand(
             .setColor(Color.CYAN)
             .setTitle("Une nouvelle aventure commence")
             .setFooter("Bonne chance !")
-            .addField("Un rêve entêtant",
-                "*Vous vous réveillez un matin après un rêve sur le Wumpus d'or. Vous décidez de partir à la recherche de cette légende ...*\n")
+            .addField(
+                "Un rêve entêtant",
+                "*Vous vous réveillez un matin après un rêve sur le Wumpus d'or. Vous décidez de partir à la recherche de cette légende ...*\n"
+            )
             .addField(
                 "Bienvenue dans A Discord Adventure !\n",
-                "Prêt vivre une aventure se déroulant sur plusieurs serveurs ? Le principe est simple : il existe une histoire principale commune à tout les serveurs, mais chaque serveur peut aussi avoir sa propre histoire plus ou moins configurable ! De nombreuses autres fonctionnalités sont disponibles. Les textes RP serons le plus souvent en *italique*. Vous pouvez voyager **de serveur en serveur** quand le bot vous envoie une **invitation**, le plus souvent après avoir **acheté** par exemple un **ticket** pour voyager sur un bateau !\n")
-            .addField("Signalement", "Les serveurs sont uniquement sur le thème du **Dibistan**. Si vous voyez malgré tout un abus signalez le sur le **serveur principal du bot**.")
+                "Prêt vivre une aventure se déroulant sur plusieurs serveurs ? Le principe est simple : il existe une histoire principale commune à tout les serveurs, mais chaque serveur peut aussi avoir sa propre histoire plus ou moins configurable ! De nombreuses autres fonctionnalités sont disponibles. Les textes RP serons le plus souvent en *italique*. Vous pouvez voyager **de serveur en serveur** quand le bot vous envoie une **invitation**, le plus souvent après avoir **acheté** par exemple un **ticket** pour voyager sur un bateau !\n"
+            )
+            .addField(
+                "Signalement",
+                "Les serveurs sont uniquement sur le thème du **Dibistan**. Si vous voyez malgré tout un abus signalez le sur le **serveur principal du bot**."
+            )
             .addField("Commençons le tuto", "Tapez la commande `inv`")
         slashCommand.createImmediateResponder()
             .addEmbed(embed)
@@ -170,25 +182,83 @@ class AccountCommandStart() : SubCommand(
 
 class AccountCommandPerms : SubCommand(
     "perms",
-"Permet de modifier la permission globale d'un utilisateur du bot.",
+    "Permet de modifier la permission globale d'un utilisateur du bot.",
     arguments = arrayListOf(
-        SlashCommandOption.create(SlashCommandOptionType.USER, "user", "L'utilisateur à qui on veut changer la permission", true),
-        SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "permission", "La permission à changer", true, listOf(
-            SlashCommandOptionChoice.create("PLAY", "play"),
-            SlashCommandOptionChoice.create("CREATE_SERVER", "create_server"),
-            SlashCommandOptionChoice.create("MANAGE_PERMS", "manage_perms"),
-            SlashCommandOptionChoice.create("MANAGE_ROLES", "manage_roles"),
-        )),
+        SlashCommandOption.create(
+            SlashCommandOptionType.USER,
+            "user",
+            "L'utilisateur à qui on veut changer la permission",
+            true
+        ),
+        SlashCommandOption.createWithChoices(
+            SlashCommandOptionType.STRING, "permission", "La permission à changer", true, listOf(
+                SlashCommandOptionChoice.create("PLAY", "play"),
+                SlashCommandOptionChoice.create("CREATE_SERVER", "create_server"),
+                SlashCommandOptionChoice.create("MANAGE_PERMS", "manage_perms"),
+                SlashCommandOptionChoice.create("MANAGE_ROLES", "manage_roles"),
+            )
+        ),
         SlashCommandOption.create(SlashCommandOptionType.BOOLEAN, "value", "Il a cette permission ?", true)
     )
 ), ExecutableWithArguments {
     override val fullName: String
         get() = TODO("Not yet implemented")
     override val botPerms: Array<String>?
-        get() = TODO("Not yet implemented")
+        get() = arrayOf("MANAGE_ROLES")
 
     override fun execute(slashCommand: SlashCommandInteraction) {
-        TODO("Not yet implemented")
-    }
+        val arguments = slashCommand.arguments
 
+        // user
+        val userArg = arguments.find { it.name == "user" }
+            ?: throw IllegalArgumentException("Missing user argument")
+        val opUser = userArg.userValue
+        if (!opUser.isPresent) {
+            throw IllegalArgumentException("User not found")
+        }
+        val user = opUser.get()
+
+        // permission
+        val permissionArg = arguments.find { it.name == "permission" }
+            ?: throw IllegalArgumentException("Missing permission argument")
+        val opPermission = permissionArg.stringValue
+        if (!opPermission.isPresent) {
+            throw IllegalArgumentException("Permission not found")
+        }
+        val permission = opPermission.get()
+
+        // value
+        val valueArg = arguments.find { it.name == "value" }
+            ?: throw IllegalArgumentException("Missing value argument")
+        val opValue = valueArg.booleanValue
+        if (!opValue.isPresent) {
+            throw IllegalArgumentException("Value not found")
+        }
+        val value: Boolean = opValue.get()
+
+        val userPerms = UserPerms(user.id)
+        if (userPerms.isDefault) {
+            val what = HashMap<String, String>()
+            what["id"] = user.id.toString()
+            what["play"] = SaveManager.toBooleanString(userPerms.play)
+            what["create_server"] = SaveManager.toBooleanString(userPerms.createServer)
+            what["manager_perms"] = SaveManager.toBooleanString(userPerms.managePerms)
+            what["manager_roles"] = SaveManager.toBooleanString(userPerms.manageRoles)
+            saveManager.insert("perms", what)
+        }
+        if (permission.equals("manage_perms", ignoreCase = true) && !slashCommand.user.isBotOwner) {
+            throw IllegalStateException("Impossible .... vous devez être l'owner du bot pour modifier cette permission")
+        }
+
+        saveManager.setValue(
+            PERMS,
+            user.id,
+            permission,
+            SaveManager.toBooleanString(value)
+        )
+
+        slashCommand.createImmediateResponder()
+            .setContent("Permission changée !")
+            .respond()
+    }
 }
