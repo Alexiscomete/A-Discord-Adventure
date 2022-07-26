@@ -27,7 +27,9 @@ class AccountCommandBase : Command(
     "Toutes les commandes liées à votre compte",
     "/account [verify/start/perms]",
     subCommands = listOf(
-        AccountCommandVerify()
+        AccountCommandVerify(),
+        AccountCommandStart(),
+        AccountCommandPerms()
     )
 )
 
