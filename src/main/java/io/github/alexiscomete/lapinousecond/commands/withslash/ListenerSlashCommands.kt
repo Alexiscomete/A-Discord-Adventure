@@ -13,6 +13,7 @@ fun loadAllS() {
     ShopCommandBase()
     HelpCommandBase()
     AccountCommandBase()
+    InvCommandBase()
 }
 
 class ListenerSlashCommands : SlashCommandCreateListener {

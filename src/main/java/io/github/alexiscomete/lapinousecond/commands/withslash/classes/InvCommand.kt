@@ -3,7 +3,10 @@ package io.github.alexiscomete.lapinousecond.commands.withslash.classes
 import io.github.alexiscomete.lapinousecond.commands.withslash.Command
 import io.github.alexiscomete.lapinousecond.commands.withslash.ExecutableWithArguments
 import io.github.alexiscomete.lapinousecond.commands.withslash.SubCommand
+import io.github.alexiscomete.lapinousecond.resources.Resource
+import org.javacord.api.entity.message.embed.EmbedBuilder
 import org.javacord.api.interaction.SlashCommandInteraction
+import java.awt.Color
 
 class InvCommandBase : Command(
     "inv",
@@ -21,12 +24,33 @@ class InvCommandInfos : SubCommand(
     "Permet d'afficher vos informations générales"
 ), ExecutableWithArguments {
     override val fullName: String
-        get() = TODO("Not yet implemented")
+        get() = "inv infos"
     override val botPerms: Array<String>?
-        get() = TODO("Not yet implemented")
+        get() = null
 
     override fun execute(slashCommand: SlashCommandInteraction) {
-        TODO("Not yet implemented")
+        val player = getAccount(slashCommand)
+
+        val builder =
+            EmbedBuilder()
+                .setDescription("Serveur actuel : ${if (player["serv"] == "") "serveur inconnu, utilisez -hub" else player["serv"]}")
+                .setTitle("Infos joueur")
+                .setAuthor(slashCommand.user)
+                .setTimestampToNow()
+                .addField(
+                    "Pixel", """
+     Compte sur l'ORU : ${if (player["has_account"] == "1") "oui" else "non"}
+     Vérification : ${if (player["is_verify"] == "1") "oui" else "non"}
+     Pixel : ${if (player["x"] == "" || player["x"].toInt() == -1) "pixel inconnu" else "[" + player["x"] + ":" + player["y"] + "]"}
+     """.trimIndent(), true
+                )
+                .addField("Position", player.positionToString())
+                .setColor(Color.green)
+                .setThumbnail("https://cdn.discordapp.com/attachments/854322477152337920/924612939879702588/unknown.png")
+
+        slashCommand.createImmediateResponder()
+            .addEmbed(builder)
+            .respond()
     }
 }
 
@@ -35,12 +59,25 @@ class InvCommandItems : SubCommand(
     "Permet d'afficher vos items"
 ), ExecutableWithArguments {
     override val fullName: String
-        get() = TODO("Not yet implemented")
+        get() = "inv items"
     override val botPerms: Array<String>?
-        get() = TODO("Not yet implemented")
+        get() = null
 
     override fun execute(slashCommand: SlashCommandInteraction) {
-        TODO("Not yet implemented")
+        val player = getAccount(slashCommand)
+
+        val embed = EmbedBuilder()
+            .setTitle("Items")
+            .setTimestampToNow()
+            .setFooter("Les items sont utilisables et ne fusionnent pas dans l'inventaire contrairement aux ressources")
+            .setColor(Color.BLUE)
+            .setThumbnail("https://cdn.discordapp.com/attachments/854322477152337920/924612939879702588/unknown.png")
+
+        embed.setDescription("Le système d'items n'est pas encore implémenté")
+
+        slashCommand.createImmediateResponder()
+            .addEmbed(embed)
+            .respond()
     }
 }
 
@@ -49,11 +86,51 @@ class InvCommandResources : SubCommand(
     "Permet d'afficher vos ressources"
 ), ExecutableWithArguments {
     override val fullName: String
-        get() = TODO("Not yet implemented")
+        get() = "inv resources"
     override val botPerms: Array<String>?
-        get() = TODO("Not yet implemented")
+        get() = null
 
     override fun execute(slashCommand: SlashCommandInteraction) {
-        TODO("Not yet implemented")
+        val player = getAccount(slashCommand)
+
+        var content = ""
+
+        val tuto = player["tuto"].toInt()
+        if (tuto == 1) {
+            content += "Bon ... comme vous l'avez vu vous n'avez normalement pas d'argent. Utilisez la commande `work` pour en gagner un peu ...\n"
+            player["tuto"] = "3"
+        } else if (tuto == 4) {
+            content += "Vous remarquerez quelques changements. Utilisez -shop pour échanger ce que vous avez récupéré\n"
+            player["tuto"] = "5"
+        }
+
+        val embed = EmbedBuilder()
+
+        val re = StringBuilder().append("Cliquez sur une resource pour voir son nom\n")
+        for (reM in player.resourceManagers.values) {
+            re
+                .append(reM.quantity)
+                .append(" ")
+                .append(reM.resource.name_)
+                .append("\n")
+        }
+
+        embed
+            .setTitle("Inventaire : ressources, items, argent")
+            .setColor(Color.ORANGE)
+            .addField("Rabbitcoins", player["bal"] + Resource.RABBIT_COIN.name_, true)
+            .addField("Ressources", re.toString())
+            .setThumbnail("https://cdn.discordapp.com/attachments/854322477152337920/924612939879702588/unknown.png")
+
+        if (content == "") {
+            slashCommand.createImmediateResponder()
+                .addEmbed(embed)
+                .respond()
+        } else {
+            slashCommand.createImmediateResponder()
+                .addEmbed(embed)
+                .setContent(content)
+                .respond()
+        }
     }
 }

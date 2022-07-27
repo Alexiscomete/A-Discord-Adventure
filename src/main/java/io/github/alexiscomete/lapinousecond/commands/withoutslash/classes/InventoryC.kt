@@ -68,45 +68,13 @@ ${top[0]}"""
         } else {
             val p = players[messageCreateEvent.messageAuthor.id]
             if (p == null) {
-                messageCreateEvent.message.reply("Vous devez d'abord faire la commande start avant de continuer")
             } else {
                 invOf(p, messageCreateEvent)
-                val tuto = p["tuto"].toInt()
-                if (tuto == 1) {
-                    messageCreateEvent.message.reply("Bon ... comme vous l'avez vu vous n'avez normalement pas d'argent. Utilisez la commande `work` pour en gagner un peu ...")
-                    p["tuto"] = "3"
-                } else if (tuto == 4) {
-                    messageCreateEvent.message.reply("Vous remarquerez quelques changements. Utilisez -shop pour échanger ce que vous avez récupéré")
-                    p["tuto"] = "5"
-                }
             }
         }
     }
 
     private fun invOf(p: Player, messageCreateEvent: MessageCreateEvent) {
-        val builder =
-            EmbedBuilder()
-                .setDescription("Serveur actuel : ${if (p["serv"] == "") "serveur inconnu, utilisez -hub" else p["serv"]}")
-                .setTitle("Infos joueur")
-                .setAuthor(messageCreateEvent.messageAuthor)
-                .setTimestampToNow()
-                .addField(
-                    "Pixel", """
-     Compte sur l'ORU : ${if (p["has_account"] == "1") "oui" else "non"}
-     Vérification : ${if (p["is_verify"] == "1") "oui" else "non"}
-     Pixel : ${if (p["x"] == "" || p["x"].toInt() == -1) "pixel inconnu" else "[" + p["x"] + ":" + p["y"] + "]"}
-     """.trimIndent(), true
-                )
-                .addField("Position", p.positionToString())
-                .setColor(Color.green)
-                .setThumbnail("https://cdn.discordapp.com/attachments/854322477152337920/924612939879702588/unknown.png")
-        messageCreateEvent.message.reply(builder)
-        val re = StringBuilder().append("Nom -> quantité\n")
-        for (reM in p.resourceManagers.values) {
-            re.append(reM.resource.name_).append(" -> ").append(reM.quantity).append("\n")
-        }
-        val builder2 = EmbedBuilder().setTitle("Inventaire : ressources, items, argent").setColor(Color.ORANGE)
-            .addField("Rabbitcoins", p["bal"], true).addField("Ressources", re.toString())
-        messageCreateEvent.message.reply(builder2)
+
     }
 }

@@ -175,10 +175,16 @@ class AccountCommandStart() : SubCommand(
                 "Les serveurs sont uniquement sur le thème du **Dibistan**. Si vous voyez malgré tout un abus signalez le sur le **serveur principal du bot**."
             )
             .addField("Commençons le tuto", "Tapez la commande `inv`")
-        slashCommand.createImmediateResponder()
-            .addEmbed(embed)
-            .setContent(content)
-            .respond()
+        if (content == "") {
+            slashCommand.createImmediateResponder()
+                .addEmbed(embed)
+                .respond()
+        } else {
+            slashCommand.createImmediateResponder()
+                .addEmbed(embed)
+                .setContent(content)
+                .respond()
+        }
     }
 }
 
