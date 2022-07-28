@@ -4,14 +4,41 @@ import io.github.alexiscomete.lapinousecond.api
 import io.github.alexiscomete.lapinousecond.commands.withslash.Command
 import io.github.alexiscomete.lapinousecond.commands.withslash.ExecutableWithArguments
 import io.github.alexiscomete.lapinousecond.commands.withslash.SubCommand
+import io.github.alexiscomete.lapinousecond.commands.withslash.getAccount
 import io.github.alexiscomete.lapinousecond.entity.Player
+import io.github.alexiscomete.lapinousecond.entity.players
 import io.github.alexiscomete.lapinousecond.resources.Resource
 import io.github.alexiscomete.lapinousecond.useful.managesave.saveManager
 import org.javacord.api.entity.message.embed.EmbedBuilder
 import org.javacord.api.entity.user.User
 import org.javacord.api.interaction.SlashCommandInteraction
+import org.javacord.api.interaction.SlashCommandOption
+import org.javacord.api.interaction.SlashCommandOptionType
 import java.awt.Color
 import java.sql.SQLException
+
+fun who(slashCommand: SlashCommandInteraction): Player {
+    val arguments = slashCommand.arguments
+
+    val userArg = arguments.find { it.name == "player" }
+
+    return if (userArg != null) {
+        val userOp = userArg.userValue
+        if (userOp.isPresent) {
+            val user = userOp.get()
+            try {
+                players[user.id]
+                    ?: throw IllegalStateException("Cette personne n'a pas de compte sur le bot")
+            } catch (e: Exception) {
+                throw IllegalStateException("Cette personne n'a pas de compte sur le bot")
+            }
+        } else {
+            getAccount(slashCommand)
+        }
+    } else {
+        getAccount(slashCommand)
+    }
+}
 
 class InvCommandBase : Command(
     "inv",
@@ -27,7 +54,10 @@ class InvCommandBase : Command(
 
 class InvCommandInfos : SubCommand(
     "infos",
-    "Permet d'afficher vos informations générales"
+    "Permet d'afficher vos informations générales",
+    arrayListOf(
+        SlashCommandOption.create(SlashCommandOptionType.USER, "player", "Spécifier un joueur si ce n'est pas vous", false)
+    )
 ), ExecutableWithArguments {
     override val fullName: String
         get() = "inv infos"
@@ -35,7 +65,8 @@ class InvCommandInfos : SubCommand(
         get() = null
 
     override fun execute(slashCommand: SlashCommandInteraction) {
-        val player = getAccount(slashCommand)
+
+        val player = who(slashCommand)
 
         val builder =
             EmbedBuilder()
@@ -62,7 +93,10 @@ class InvCommandInfos : SubCommand(
 
 class InvCommandItems : SubCommand(
     "items",
-    "Permet d'afficher vos items"
+    "Permet d'afficher vos items",
+    arrayListOf(
+        SlashCommandOption.create(SlashCommandOptionType.USER, "player", "Spécifier un joueur si ce n'est pas vous", false)
+    )
 ), ExecutableWithArguments {
     override val fullName: String
         get() = "inv items"
@@ -70,7 +104,8 @@ class InvCommandItems : SubCommand(
         get() = null
 
     override fun execute(slashCommand: SlashCommandInteraction) {
-        val player = getAccount(slashCommand)
+
+        val player = who(slashCommand)
 
         val embed = EmbedBuilder()
             .setTitle("Items")
@@ -89,7 +124,10 @@ class InvCommandItems : SubCommand(
 
 class InvCommandResources : SubCommand(
     "resources",
-    "Permet d'afficher vos ressources"
+    "Permet d'afficher vos ressources",
+    arrayListOf(
+        SlashCommandOption.create(SlashCommandOptionType.USER, "player", "Spécifier un joueur si ce n'est pas vous", false)
+    )
 ), ExecutableWithArguments {
     override val fullName: String
         get() = "inv resources"
@@ -97,7 +135,7 @@ class InvCommandResources : SubCommand(
         get() = null
 
     override fun execute(slashCommand: SlashCommandInteraction) {
-        val player = getAccount(slashCommand)
+        val player: Player = who(slashCommand)
 
         var content = ""
 
@@ -143,7 +181,10 @@ class InvCommandResources : SubCommand(
 
 class InvCommandTop : SubCommand(
     "top",
-    "Permet de voir le top des joueurs"
+    "Permet de voir le top des joueurs",
+    arrayListOf(
+        SlashCommandOption.create(SlashCommandOptionType.USER, "player", "Spécifier un joueur si ce n'est pas vous", false)
+    )
 ), ExecutableWithArguments {
     override val fullName: String
         get() = "inv top"
@@ -151,7 +192,7 @@ class InvCommandTop : SubCommand(
         get() = null
 
     override fun execute(slashCommand: SlashCommandInteraction) {
-        val pl = getAccount(slashCommand)
+        val pl: Player = who(slashCommand)
 
         val embed = EmbedBuilder()
             .setTitle("Classement des joueurs en fonction du nombre de ${Resource.RABBIT_COIN.name_}")
@@ -194,7 +235,7 @@ class InvCommandTop : SubCommand(
         var top = ""
         for (player in players) {
             val user = api.getUserById(player.id).join()
-            top = "${user.name} -> ${player["bal"]}\n${top}"
+            top = "${user.name} ${player["bal"]} ${Resource.RABBIT_COIN.name_}\n${top}"
         }
 
         embed

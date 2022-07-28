@@ -6,6 +6,15 @@ import io.github.alexiscomete.lapinousecond.worlds.ServerBot
 import io.github.alexiscomete.lapinousecond.worlds.servers
 import org.javacord.api.interaction.SlashCommandInteraction
 
+fun getAccount(slashCommandInteraction: SlashCommandInteraction): Player {
+    try {
+        return players[slashCommandInteraction.user.id]
+            ?: throw IllegalStateException("Vous devez avoir un compte pour utiliser cette commande. Utilisez /start")
+    } catch (e: Exception) {
+        throw IllegalStateException("Vous devez avoir un compte pour utiliser cette commande. Utilisez /start")
+    }
+}
+
 interface ExecutableWithArguments {
 
     val fullName: String
@@ -29,15 +38,6 @@ interface ExecutableWithArguments {
             }
         } else {
             throw IllegalStateException("Vous devez être dans un serveur discord pour utiliser cette commande. Voici votre serveur actuel : " + p["serv"].toLong())
-        }
-    }
-
-    fun getAccount(slashCommandInteraction: SlashCommandInteraction): Player {
-        try {
-            return players[slashCommandInteraction.user.id]
-                ?: throw IllegalStateException("Vous devez avoir un compte pour utiliser cette commande. Utilisez /start")
-        } catch (e: Exception) {
-            throw IllegalStateException("Vous devez avoir un compte pour utiliser cette commande. Utilisez /start")
         }
     }
 }
