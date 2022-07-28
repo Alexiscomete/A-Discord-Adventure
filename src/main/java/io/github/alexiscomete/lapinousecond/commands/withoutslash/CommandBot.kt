@@ -1,19 +1,16 @@
 package io.github.alexiscomete.lapinousecond.commands.withoutslash
 
 import io.github.alexiscomete.lapinousecond.UserPerms
-import io.github.alexiscomete.lapinousecond.commands.withoutslash.classes.Help
 import io.github.alexiscomete.lapinousecond.entity.Player
 import io.github.alexiscomete.lapinousecond.view.AnswerEnum
 import org.javacord.api.event.message.MessageCreateEvent
 import io.github.alexiscomete.lapinousecond.commands.withoutslash.classes.*
 
 fun loadAll() {
-    load(Help())
     load(ConfigServ())
     load(Give())
     load(BuildingCommand())
     load(Hub())
-    load(InventoryC())
     load(MapCommand())
     load(PlaceCommand())
     load(Travel())
