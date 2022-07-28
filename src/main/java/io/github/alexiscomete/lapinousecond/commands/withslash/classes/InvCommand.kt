@@ -200,7 +200,7 @@ class InvCommandTop : SubCommand(
             .setTimestampToNow()
 
         // top 10
-        val resultSet = saveManager.executeQuery("SELECT * FROM players ORDER BY bal DESC LIMIT 10", true)
+        val resultSet = saveManager.executeQuery("SELECT * FROM players ORDER BY (bal + 0.0) ASC LIMIT 10", true)
 
         val players = ArrayList<Player>()
         try {
