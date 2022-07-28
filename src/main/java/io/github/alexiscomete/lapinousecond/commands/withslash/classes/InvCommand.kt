@@ -1,21 +1,27 @@
 package io.github.alexiscomete.lapinousecond.commands.withslash.classes
 
+import io.github.alexiscomete.lapinousecond.api
 import io.github.alexiscomete.lapinousecond.commands.withslash.Command
 import io.github.alexiscomete.lapinousecond.commands.withslash.ExecutableWithArguments
 import io.github.alexiscomete.lapinousecond.commands.withslash.SubCommand
+import io.github.alexiscomete.lapinousecond.entity.Player
 import io.github.alexiscomete.lapinousecond.resources.Resource
+import io.github.alexiscomete.lapinousecond.useful.managesave.saveManager
 import org.javacord.api.entity.message.embed.EmbedBuilder
+import org.javacord.api.entity.user.User
 import org.javacord.api.interaction.SlashCommandInteraction
 import java.awt.Color
+import java.sql.SQLException
 
 class InvCommandBase : Command(
     "inv",
     "Permet de voir l'inventaire du joueur de diverses manières",
-    "inv [infos/items/resources]",
+    "inv [infos/items/resources/top]",
     subCommands = listOf(
         InvCommandInfos(),
         InvCommandItems(),
-        InvCommandResources()
+        InvCommandResources(),
+        InvCommandTop()
     )
 )
 
@@ -132,5 +138,71 @@ class InvCommandResources : SubCommand(
                 .setContent(content)
                 .respond()
         }
+    }
+}
+
+class InvCommandTop : SubCommand(
+    "top",
+    "Permet de voir le top des joueurs"
+), ExecutableWithArguments {
+    override val fullName: String
+        get() = "inv top"
+    override val botPerms: Array<String>?
+        get() = null
+
+    override fun execute(slashCommand: SlashCommandInteraction) {
+        val pl = getAccount(slashCommand)
+
+        val embed = EmbedBuilder()
+            .setTitle("Classement des joueurs en fonction du nombre de ${Resource.RABBIT_COIN.name_}")
+            .setColor(Color.ORANGE)
+            .setTimestampToNow()
+
+        // top 10
+        val resultSet = saveManager.executeQuery("SELECT * FROM players ORDER BY bal DESC LIMIT 10", true)
+
+        val players = ArrayList<Player>()
+        try {
+            if (resultSet != null) {
+                while (resultSet.next()) {
+                    players.add(
+                        Player(
+                            resultSet.getLong("id"),
+                        )
+                    )
+                }
+            }
+        } catch (e: SQLException) {
+            e.printStackTrace()
+        }
+
+        // position
+        val resultSet2 = saveManager.executeQuery("SELECT count(*) FROM players WHERE bal > ${pl["bal"]}", true)
+
+        var position = 0
+        try {
+            if (resultSet2 != null) {
+                while (resultSet2.next()) {
+                    position = resultSet2.getInt(1) + 1
+                }
+            }
+        } catch (e: SQLException) {
+            e.printStackTrace()
+        }
+
+
+        var top = ""
+        for (player in players) {
+            val user = api.getUserById(player.id).join()
+            top = "${user.name} -> ${player["bal"]}\n${top}"
+        }
+
+        embed
+            .setDescription(top)
+            .setFooter("Vous êtes en position $position")
+
+        slashCommand.createImmediateResponder()
+            .addEmbed(embed)
+            .respond()
     }
 }

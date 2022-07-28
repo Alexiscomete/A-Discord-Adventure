@@ -99,7 +99,8 @@ class AccountCommandVerify() : SubCommand(
             player["is_verify"] = if (userData.isVerify) "1" else "0"
             if (userData.isVerify) {
                 slashCommand.createImmediateResponder()
-                    .setContent("Votre compte a été associé à votre pixel. Vous avez la vérification").respond()
+                    .setContent("Votre compte a été associé à votre pixel. Vous avez la vérification")
+                    .respond()
             } else {
                 slashCommand.createImmediateResponder()
                     .setContent("Votre compte a été associé à votre pixel. Vous n'avez malheuresement pas la vérification 😕")
@@ -107,7 +108,8 @@ class AccountCommandVerify() : SubCommand(
             }
         } else {
             slashCommand.createImmediateResponder()
-                .setContent("Vous n'avez pas encore de compte de pixel, utilisez le bot de Sylicium").respond()
+                .setContent("Vous n'avez pas encore de compte de pixel, utilisez le bot de Sylicium")
+                .respond()
         }
     }
 }
