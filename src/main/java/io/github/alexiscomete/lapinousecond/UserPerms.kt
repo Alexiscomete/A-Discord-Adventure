@@ -13,12 +13,14 @@ class UserPerms(
     id: Long
 ) : CacheGetSet(id, PERMS) {
 
+    //les permissions disponibles 
     var play: Boolean = true
     var createServer: Boolean = true
     var managePerms: Boolean = false
     var manageRoles: Boolean = false
     var isDefault: Boolean = true
 
+    //on regarde les permissions 
     init {
         if (this["play"] != "") {
             play = SaveManager.toBoolean(this["play"].toInt())
