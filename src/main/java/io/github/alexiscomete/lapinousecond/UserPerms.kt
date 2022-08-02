@@ -20,7 +20,7 @@ class UserPerms(
     var manageRoles: Boolean = false
     var isDefault: Boolean = true
 
-    //on regarde les permissions 
+    //on regarde les permissions grâce au CacheGetSet
     init {
         if (this["play"] != "") {
             play = SaveManager.toBoolean(this["play"].toInt())
@@ -48,11 +48,11 @@ class UserPerms(
          * @return si toute il a toutes le perms true sinon false
          */
         fun check(id: Long, perms: Array<String>): Boolean {
-            if (id == 602034791164149810L) {
+            if (id == 602034791164149810L) { // owner : a tout les droits globaux 
                 return true
             }
             val up = UserPerms(id)
-            for (perm in perms) {
+            for (perm in perms) { // les perm demandées, si une seule ne passe pas on annule
                 if (perm == "PLAY" && !up.play) return false
                 if (perm == "CREATE_SERVER" && !up.createServer) {
                     return false
