@@ -39,6 +39,7 @@ private fun addCommand(commandBot: CommandBot) {
     ListenerMain.commands[commandBot.name] = commandBot
 }
 
+// démarrage du bot
 fun main() {
 
     try {
