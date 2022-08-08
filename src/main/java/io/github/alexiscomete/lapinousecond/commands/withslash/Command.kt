@@ -10,8 +10,8 @@ open class Command(
     val name: String,
     val description: String,
     val usage: String,
-    discordPerms: EnumSet<PermissionType>? = null,
-    inDms: Boolean = true,
+    discordPerms: EnumSet<PermissionType>? = null, // les permissions de discord sont automatiques, differentes de celles du bot
+    inDms: Boolean = true, // discord permet d´interdire les dm
     subCommands: List<Sub>? = null,
     arguments: ArrayList<SlashCommandOption> = arrayListOf()
 ) {
