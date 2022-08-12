@@ -21,9 +21,7 @@ object Map {
         // charge la map à partir du fichier base.png inclus dans le jar
         try {
             map = ImageIO.read(
-
                 Map::class.java.classLoader.getResourceAsStream("base.png")
-
             )
         } catch (e: IOException) {
             e.printStackTrace()

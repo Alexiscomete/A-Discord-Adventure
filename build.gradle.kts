@@ -7,14 +7,6 @@ plugins {
     application
 }
 
-/*sourceSets {
-    main {
-        java {
-            setSrcDirs(listOf("src/main/java/io/github/alexiscomete/lapinousecond"))
-        }
-    }
-}*/
-
 repositories {
     mavenLocal()
     mavenCentral()
