@@ -4,6 +4,7 @@ import io.github.alexiscomete.lapinousecond.resources.Resource
 
 val ownerInfinity = OwnerInfinity()
 
+// simule un owner avec des ressources infinis. La banque
 class OwnerInfinity : Owner {
     override val ownerType: String
         get() = "Infinity"
