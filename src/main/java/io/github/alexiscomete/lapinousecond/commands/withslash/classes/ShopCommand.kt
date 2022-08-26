@@ -8,6 +8,7 @@ import io.github.alexiscomete.lapinousecond.resources.Resource
 import io.github.alexiscomete.lapinousecond.resources.ResourceManager
 import org.javacord.api.entity.message.embed.EmbedBuilder
 import org.javacord.api.interaction.*
+import kotlin.math.round
 
 private const val buyCoef = 1.1
 private const val sellCoef = 0.9
@@ -186,8 +187,8 @@ class ShopListCommand :
         val stringBuilder = StringBuilder()
             .append("Resource -> prix d'achat; prix de vente; prix réel; nom à entrer")
         for (r in Resource.values()) {
-            stringBuilder.append("\n").append(r.name_).append(" -> ").append(r.price * buyCoef).append("; ")
-                .append(r.price * sellCoef).append("; ").append(r.price).append("; ").append(r.progName)
+            stringBuilder.append("\n").append(r.name_).append(" -> ").append(round(r.price * buyCoef * 1000) / 1000).append("; ")
+                .append(round(r.price * sellCoef * 1000) / 1000).append("; ").append(r.price).append("; ").append(r.progName)
         }
         val embedBuilder = EmbedBuilder()
             .setTitle("Liste du shop")
