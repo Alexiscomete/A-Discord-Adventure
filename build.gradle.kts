@@ -53,7 +53,8 @@ publishing {
     }
     publications {
         register<MavenPublication>("gpr") {
-            from(components["java"])
+            artifactId = "ada"
+            artifact(tasks.distZip)
         }
     }
 }
