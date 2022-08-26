@@ -106,47 +106,7 @@ class MapCommand : CommandWithAccount("description", "map", "totalDescription") 
                     messageBuilder.send(messageCreateEvent.channel)
                 }
                 "findpath" -> {
-                    // check if enough arguments
-                    if (args.size < 6) {
-                        sendArgs(messageCreateEvent, p)
-                        return
-                    }
-                    // check if the arguments are numbers
-                    var i = 2
-                    while (i < 6) {
-                        if (isNotNumeric(args[i])) {
-                            sendNumberEx(messageCreateEvent, p, i)
-                            return
-                        }
-                        i++
-                    }
-                    // check if the arguments are in the right range
-                    if (args[2].toInt() < 0 || args[2].toInt() > Map.MAP_WIDTH) {
-                        messageCreateEvent.message.reply("The first argument must be between 0 and " + Map.MAP_WIDTH)
-                        return
-                    }
-                    if (args[3].toInt() < 0 || args[3].toInt() > Map.MAP_HEIGHT) {
-                        messageCreateEvent.message.reply("The second argument must be between 0 and " + Map.MAP_HEIGHT)
-                        return
-                    }
-                    if (args[4].toInt() < 0 || args[4].toInt() > Map.MAP_WIDTH) {
-                        messageCreateEvent.message.reply("The third argument must be between 0 and " + Map.MAP_WIDTH)
-                        return
-                    }
-                    if (args[5].toInt() < 0 || args[5].toInt() > Map.MAP_HEIGHT) {
-                        messageCreateEvent.message.reply("The fourth argument must be between 0 and " + Map.MAP_HEIGHT)
-                        return
-                    }
-                    // send the path
-                    val path = Map.findPath(
-                        Map.getNode(
-                            args[2].toInt(), args[3].toInt(), ArrayList()
-                        ), Map.getNode(
-                            args[4].toInt(), args[5].toInt(), ArrayList()
-                        ), messageCreateEvent.channel
-                    )
-                    messageCreateEvent.message.reply("Path found : " + path.size + " steps")
-                    sendPath(messageCreateEvent, path)
+
                 }
                 else -> sendImpossible(messageCreateEvent, p)
             }

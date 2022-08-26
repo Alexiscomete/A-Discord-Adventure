@@ -1,7 +1,6 @@
 package io.github.alexiscomete.lapinousecond.worlds.map
 
 import io.github.alexiscomete.lapinousecond.worlds.Place
-import org.javacord.api.entity.channel.TextChannel
 import java.awt.Color
 import java.awt.Font
 import java.awt.Image
@@ -127,14 +126,14 @@ object Map {
     // --------------------
 
     // return the path from one pixel to another
-    fun findPath(start: Node, end: Node, channel: TextChannel): ArrayList<Pixel> {
+    fun findPath(start: Node, end: Node): ArrayList<Pixel> {
 
-        // envoie un message d'attente
-        channel.sendMessage("Calcul en cours...")
         require(start.isDirt == end.isDirt) { "start and end must be on the same type of tile" }
+
         val closedList = ArrayList<Node>()
         val openList = ArrayList<Node>()
         openList.add(start)
+
         while (openList.isNotEmpty()) {
             var current = openList[0]
             // je cherche le nœud avec la plus petite heuristique

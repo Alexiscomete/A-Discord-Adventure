@@ -206,8 +206,7 @@ class Travel : CommandInServer("Vous permet de voyager vers un serveur", "travel
                                 .let { it1 ->
                                     Map.findPath(
                                         it,
-                                        it1,
-                                        messageCreateEvent.channel
+                                        it1
                                     )
                                 }
                         }
@@ -232,8 +231,7 @@ class Travel : CommandInServer("Vous permet de voyager vers un serveur", "travel
                         Map.getNode(xDest, yDest, ArrayList()).let { it1 ->
                             Map.findPath(
                                 it,
-                                it1,
-                                messageCreateEvent.channel
+                                it1
                             )
                         }
                     }
@@ -269,8 +267,7 @@ class Travel : CommandInServer("Vous permet de voyager vers un serveur", "travel
                                 .let { it1 ->
                                     Map.findPath(
                                         it,
-                                        it1,
-                                        messageCreateEvent.channel
+                                        it1
                                     )
                                 }
                         }
@@ -296,7 +293,7 @@ class Travel : CommandInServer("Vous permet de voyager vers un serveur", "travel
                     ).let {
                         Map.getNode(xDest, yDest, ArrayList()).let { it1 ->
                             Map.findPath(
-                                it, it1, messageCreateEvent.channel
+                                it, it1
                             )
                         }
                     }
