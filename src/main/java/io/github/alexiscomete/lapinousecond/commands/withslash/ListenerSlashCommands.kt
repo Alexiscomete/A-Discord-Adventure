@@ -14,6 +14,7 @@ fun loadAllS() {
     HelpCommandBase()
     AccountCommandBase()
     InvCommandBase()
+    MarketCommand()
 }
 
 class ListenerSlashCommands : SlashCommandCreateListener {
