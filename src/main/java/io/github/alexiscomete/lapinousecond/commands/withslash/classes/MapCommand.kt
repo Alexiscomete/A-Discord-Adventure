@@ -1,7 +1,6 @@
 package io.github.alexiscomete.lapinousecond.commands.withslash.classes
 
 import io.github.alexiscomete.lapinousecond.buttonsManager
-import io.github.alexiscomete.lapinousecond.commands.withoutslash.classes.sendPath
 import io.github.alexiscomete.lapinousecond.commands.withslash.Command
 import io.github.alexiscomete.lapinousecond.commands.withslash.ExecutableWithArguments
 import io.github.alexiscomete.lapinousecond.commands.withslash.getAccount
@@ -24,7 +23,7 @@ class MapCommand : Command(
 ), ExecutableWithArguments {
     override val fullName: String
         get() = "map"
-    override val botPerms: Array<String>?
+    override val botPerms: Array<String>
         get() = arrayOf("PLAY")
 
     override fun execute(slashCommand: SlashCommandInteraction) {
@@ -41,28 +40,28 @@ class MapCommand : Command(
                     .addButton(
                         "Mondes",
                         "Permet de changer de monde"
-                    ) { messageComponentCreateEvent: MessageComponentCreateEvent ->
+                    ) { mcce: MessageComponentCreateEvent ->
 
                     }
                     .addButton(
                         "Liens",
                         "Les différents liens depuis votre lieu (ex : train)"
-                    ) { messageComponentCreateEvent: MessageComponentCreateEvent ->
+                    ) { mcce: MessageComponentCreateEvent ->
 
                     }
                     .addButton(
                         "Aller à",
                         "Mode de déplacement le plus simple."
-                    ) { messageComponentCreateEvent: MessageComponentCreateEvent ->
+                    ) { mcce: MessageComponentCreateEvent ->
 
                     }
                     .addButton(
                         "Pixel par pixel",
                         "Mode de déplacement maîtrisable."
-                    ) { messageComponentCreateEvent: MessageComponentCreateEvent ->
+                    ) { mcce: MessageComponentCreateEvent ->
 
                     }
-
+                    .modif(messageComponentCreateEvent)
             }
             .addButton(
                 "Retourner au hub",
@@ -70,16 +69,16 @@ class MapCommand : Command(
             ) { messageComponentCreateEvent: MessageComponentCreateEvent ->
                 val p = getAccount(slashCommand)
                 MenuBuilder("Confirmation requise", "Voulez-vous vraiment retourner au hub ?", Color.PINK)
-                    .addButton("Oui", "Retourner au hub") { messageComponentCreateEvent: MessageComponentCreateEvent ->
-                        messageComponentCreateEvent.messageComponentInteraction.createOriginalMessageUpdater()
+                    .addButton("Oui", "Retourner au hub") { mcce: MessageComponentCreateEvent ->
+                        mcce.messageComponentInteraction.createOriginalMessageUpdater()
                             .setContent("✔ Flavinou vient de vous téléporter au hub <https://discord.gg/q4hVQ6gwyx>")
                             .update()
                         p["serv"] = "854288660147994634"
                         p["world"] = "NORMAL"
                         p["place_NORMAL"] = ServerBot(854288660147994634L).getString("places")
                     }
-                    .addButton("Non", "Annuler") { messageComponentCreateEvent: MessageComponentCreateEvent ->
-                        messageComponentCreateEvent.messageComponentInteraction.createOriginalMessageUpdater()
+                    .addButton("Non", "Annuler") { mcce: MessageComponentCreateEvent ->
+                        mcce.messageComponentInteraction.createOriginalMessageUpdater()
                             .setContent("Annulé").update()
                     }
                     .modif(messageComponentCreateEvent)
@@ -92,47 +91,55 @@ class MapCommand : Command(
                     .addButton(
                         "Liste des cartes",
                         "Toutes les cartes permanentes du jeu ... remerciez Darki"
-                    ) { messageComponentCreateEvent: MessageComponentCreateEvent ->
+                    ) { mcce: MessageComponentCreateEvent ->
 
                     }
                     .addButton(
                         "Ma position",
                         "Toutes les informations sur votre position"
-                    ) { messageComponentCreateEvent: MessageComponentCreateEvent ->
+                    ) { mcce: MessageComponentCreateEvent ->
 
                     }
                     .addButton(
                         "Trouver un chemin",
                         "Un lieu ou des coordonnées ? Trouvez le chemin le plus court"
-                    ) { messageComponentCreateEvent: MessageComponentCreateEvent ->
+                    ) { mcce: MessageComponentCreateEvent ->
                         val id = generateUniqueID()
                         val idX1 = generateUniqueID()
                         val idX2 = generateUniqueID()
                         val idY1 = generateUniqueID()
                         val idY2 = generateUniqueID()
-                        messageComponentCreateEvent.messageComponentInteraction.respondWithModal(
-                            id.toString(), "Trouver un chemin", ActionRow.of(
-                                TextInput.create(
-                                    TextInputStyle.SHORT,
-                                    idX1.toString(),
-                                    "Le x du point de départ",
-                                    true
-                                ),
-                                TextInput.create(
-                                    TextInputStyle.SHORT,
-                                    idY1.toString(),
-                                    "Le y du point de départ",
-                                    true
-                                ),
-                                TextInput.create(
-                                    TextInputStyle.SHORT,
-                                    idX2.toString(),
-                                    "Le x du point d'arrivée",
-                                    true
-                                ),
-                                TextInput.create(TextInputStyle.SHORT, idY2.toString(), "Le y du point d'arrivée", true)
+                        mcce.messageComponentInteraction
+                            .respondWithModal(
+                                id.toString(), "Trouver un chemin",
+                                ActionRow.of(
+                                    TextInput.create(
+                                        TextInputStyle.SHORT,
+                                        idX1.toString(),
+                                        "Le x du point de départ",
+                                        true
+                                    ),
+                                    TextInput.create(
+                                        TextInputStyle.SHORT,
+                                        idY1.toString(),
+                                        "Le y du point de départ",
+                                        true
+                                    ),
+                                    TextInput.create(
+                                        TextInputStyle.SHORT,
+                                        idX2.toString(),
+                                        "Le x du point d'arrivée",
+                                        true
+                                    ),
+                                    TextInput.create(
+                                        TextInputStyle.SHORT,
+                                        idY2.toString(),
+                                        "Le y du point d'arrivée",
+                                        true
+                                    )
+                                )
                             )
-                        )
+
                         buttonsManager.addButton(id) { messageComponentCreateEvent: MessageComponentCreateEvent ->
                             val opInt = messageComponentCreateEvent.interaction.asModalInteraction()
                             if (!opInt.isPresent) {
@@ -219,15 +226,16 @@ class MapCommand : Command(
                     .addButton(
                         "Zoomer",
                         "Zoomer sur une carte"
-                    ) { messageComponentCreateEvent: MessageComponentCreateEvent ->
+                    ) { mcce: MessageComponentCreateEvent ->
 
                     }
                     .addButton(
                         "Type de case",
                         "Le biome d'une case et les informations"
-                    ) { messageComponentCreateEvent: MessageComponentCreateEvent ->
+                    ) { mcce: MessageComponentCreateEvent ->
 
                     }
+                    .modif(messageComponentCreateEvent)
             }
             .responder(slashCommand)
 
