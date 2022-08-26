@@ -8,13 +8,10 @@ import io.github.alexiscomete.lapinousecond.commands.withoutslash.classes.*
 
 fun loadAll() {
     load(ConfigServ())
-    load(Give())
     load(BuildingCommand())
-    load(Hub())
     load(MapCommand())
     load(PlaceCommand())
     load(Travel())
-    load(UseCommand())
     load(WorldCommand())
 }
 
