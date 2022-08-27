@@ -2,7 +2,6 @@ package io.github.alexiscomete.lapinousecond.message_event
 
 import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
 import io.github.alexiscomete.lapinousecond.buttonsManager
-import io.github.alexiscomete.lapinousecond.commands.withoutslash.ListenerMain
 import org.javacord.api.entity.message.component.ActionRow
 import org.javacord.api.entity.message.component.Button
 import org.javacord.api.entity.message.embed.EmbedBuilder
@@ -41,7 +40,7 @@ class ListButtons<U>(
     }
 
     val components: ActionRow
-        get() = if (level > 0 && level + 10 < ListenerMain.commands.size) {
+        get() = if (level > 0 && level + 10 < uArrayList.size) {
             ActionRow.of(
                 Button.success(idLast, "Page précédente"),
                 Button.success(idNext, "Page suivante")
@@ -50,7 +49,7 @@ class ListButtons<U>(
             ActionRow.of(
                 Button.success(idLast, "Page précédente")
             )
-        } else if (level + 10 < ListenerMain.commands.size) {
+        } else if (level + 10 < uArrayList.size) {
             ActionRow.of(
                 Button.success(idNext, "Page suivante")
             )

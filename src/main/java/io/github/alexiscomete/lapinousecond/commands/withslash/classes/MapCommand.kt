@@ -101,6 +101,24 @@ class MapCommand : Command(
                         "Ma position",
                         "Toutes les informations sur votre position"
                     ) { mcce: MessageComponentCreateEvent ->
+                        /*
+                        // check if the player is in the world DIBIMAP
+                    val world = p.getString("world")
+                    if (world != "DIBIMAP") {
+                        messageCreateEvent.message.reply("Vous n'êtes pas dans le monde DIBIMAP")
+                        return
+                    }
+                    // get the player's position (x, y) in the world DIBIMAP (x/y_DIBIMAP), x and y are strings
+                    val x = p.getString("x_DIBIMAP")
+                    val y = p.getString("y_DIBIMAP")
+                    // convert the strings to int
+                    val xInt = x.toInt()
+                    val yInt = y.toInt()
+                    // zoom on the player's position and send the map bigger
+                    val messageBuilder2 = MessageBuilder()
+                    messageBuilder2.addAttachment(Map.bigger(Map.zoom(xInt, yInt, 30), 10), "map.png")
+                    messageBuilder2.send(messageCreateEvent.channel)
+                         */
                         //TODO
                     }
                     .addButton(

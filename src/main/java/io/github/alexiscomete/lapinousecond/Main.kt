@@ -1,8 +1,5 @@
 package io.github.alexiscomete.lapinousecond
 
-import io.github.alexiscomete.lapinousecond.commands.withoutslash.CommandBot
-import io.github.alexiscomete.lapinousecond.commands.withoutslash.ListenerMain
-import io.github.alexiscomete.lapinousecond.commands.withoutslash.loadAll
 import io.github.alexiscomete.lapinousecond.commands.withslash.ListenerSlashCommands
 import io.github.alexiscomete.lapinousecond.commands.withslash.loadAllS
 import io.github.alexiscomete.lapinousecond.message_event.ButtonsManager
@@ -31,14 +28,6 @@ val api: DiscordApi = DiscordApiBuilder().setToken(run {
     config.content[0]
 }).login().join()
 
-/**
- * Permet d'ajouter une commande à la liste pour qu'elle puisse être appelée
- * @param commandBot la commande
- */
-private fun addCommand(commandBot: CommandBot) {
-    ListenerMain.commands[commandBot.name] = commandBot
-}
-
 // démarrage du bot
 fun main() {
 
@@ -50,7 +39,6 @@ fun main() {
          * Instance de l'API Javacord
          */
         api.updateActivity("Prefix : -")
-        api.addListener(ListenerMain())
         api.addListener(ListenerSlashCommands())
         api.addListener(reactionManager)
         api.addListener(buttonsManager)
@@ -58,7 +46,6 @@ fun main() {
         api.addListener(modalManager)
 
         // Ajout des commandes
-        loadAll()
         loadAllS()
     } catch (e: IOException) {
         e.printStackTrace()
