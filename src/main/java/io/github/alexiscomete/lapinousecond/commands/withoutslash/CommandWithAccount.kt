@@ -1,7 +1,6 @@
 package io.github.alexiscomete.lapinousecond.commands.withoutslash
 
 import io.github.alexiscomete.lapinousecond.entity.Player
-import io.github.alexiscomete.lapinousecond.entity.players
 import org.javacord.api.event.message.MessageCreateEvent
 
 abstract class CommandWithAccount(

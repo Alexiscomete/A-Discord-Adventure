@@ -8,6 +8,7 @@ import io.github.alexiscomete.lapinousecond.modalManager
 import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
 import io.github.alexiscomete.lapinousecond.worlds.Place
 import io.github.alexiscomete.lapinousecond.worlds.ServerBot
+import io.github.alexiscomete.lapinousecond.worlds.WorldEnum
 import io.github.alexiscomete.lapinousecond.worlds.map.Map
 import org.javacord.api.entity.message.MessageBuilder
 import org.javacord.api.entity.message.component.ActionRow
@@ -44,7 +45,28 @@ class MapCommand : Command(
                         "Mondes",
                         "Permet de changer de monde"
                     ) { mcce: MessageComponentCreateEvent ->
-                        //TODO
+                        // Etape 1 : afficher la liste des mondes
+
+                        // get all worlds
+                        val worldEnums = WorldEnum.values()
+                        val worlds = worldEnums.map { it.world }
+                        val player = getAccount(slashCommand)
+
+                        // create the embed builder
+                        val eb = EmbedBuilder()
+                            .setTitle("Mondes")
+                            .setDescription("Choisissez un monde. Votre monde : ${player["current_world"]}")
+                            .setColor(Color.PINK)
+
+                        // for each world, add a field
+                        for (world in worlds) {
+                            eb.addField(
+                                world.nameRP,
+                                "**Nom officiel :** ${world.progName}\n**Type de serveur :** ${world.name}\n${world.desc}",
+                                true
+                            )
+                        }
+
                     }
                     .addButton(
                         "Liens",
@@ -342,7 +364,12 @@ class MapCommand : Command(
                             )
 
                             val places = Place.getPlacesWithWorld("DIBIMAP")
-                            places.removeIf { place: Place -> !place.getX().isPresent || !place.getY().isPresent || place.getX().get() < xInt - zoomInt * 2 || place.getX().get() > xInt + zoomInt * 2 || place.getY().get() < yInt - zoomInt || place.getY().get() > yInt + zoomInt }
+                            places.removeIf { place: Place ->
+                                !place.getX().isPresent || !place.getY().isPresent || place.getX()
+                                    .get() < xInt - zoomInt * 2 || place.getX()
+                                    .get() > xInt + zoomInt * 2 || place.getY().get() < yInt - zoomInt || place.getY()
+                                    .get() > yInt + zoomInt
+                            }
 
                             Map.getMapWithNames(
                                 places,
