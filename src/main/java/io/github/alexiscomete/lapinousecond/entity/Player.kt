@@ -139,7 +139,7 @@ class Player(id: Long) : CacheGetSet(id, PLAYERS), Owner {
 
     fun positionToString(): String {
         // la première étape est de récupérer le monde
-        val world = this["current_world"]
+        val world = this["world"]
         // si le monde est DIBIMAP c'est compliqué, sinon on peut simplement récupérer le serveur
         if (world == "DIBIMAP") {
             // on récupère le type de lieu, on sépare encore en plusieurs possibilités

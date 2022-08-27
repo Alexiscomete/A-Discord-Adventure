@@ -49,7 +49,7 @@ class Travel : CommandInServer("Vous permet de voyager vers un serveur", "travel
         var world = p.getString("current_world")
         if (world == "") { // si le monde est vide alors on le met à NORMAL
             world = "NORMAL"
-            p["current_world"] = "NORMAL"
+            p["world"] = "NORMAL"
         }
         if (world == "NORMAL") {
             travelWorldNormal(messageCreateEvent, args, p)

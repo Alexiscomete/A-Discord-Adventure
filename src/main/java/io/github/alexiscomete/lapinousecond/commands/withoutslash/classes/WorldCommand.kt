@@ -50,22 +50,7 @@ class WorldCommand : CommandWithAccount(
                 } else {
                     messageCreateEvent.channel.sendMessage("Veuillez entrer le nom du monde")
                 }
-            } else if (args[1] == "list") {
-                val embedBuilder = EmbedBuilder()
-                    .setTitle("Liste des mondes")
-                    .setDescription("Voici la liste des mondes disponibles")
-                for (worldEnum in WorldEnum.values()) {
-                    val world = worldEnum.world
-                    embedBuilder.addField(
-                        world.name,
-                        "(" + world.progName + ") -> NomRP : " + world.nameRP + ". Description : " + world.desc,
-                        false
-                    )
-                }
-                messageCreateEvent.message.reply(embedBuilder)
             }
-        } else {
-            sendArgs(messageCreateEvent, p)
         }
     }
 }

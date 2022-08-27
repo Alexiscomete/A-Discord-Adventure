@@ -1,5 +1,6 @@
 package io.github.alexiscomete.lapinousecond.commands.withslash.classes
 
+import io.github.alexiscomete.lapinousecond.buttonsManager
 import io.github.alexiscomete.lapinousecond.commands.withslash.Command
 import io.github.alexiscomete.lapinousecond.commands.withslash.ExecutableWithArguments
 import io.github.alexiscomete.lapinousecond.commands.withslash.getAccount
@@ -11,9 +12,7 @@ import io.github.alexiscomete.lapinousecond.worlds.ServerBot
 import io.github.alexiscomete.lapinousecond.worlds.WorldEnum
 import io.github.alexiscomete.lapinousecond.worlds.map.Map
 import org.javacord.api.entity.message.MessageBuilder
-import org.javacord.api.entity.message.component.ActionRow
-import org.javacord.api.entity.message.component.TextInput
-import org.javacord.api.entity.message.component.TextInputStyle
+import org.javacord.api.entity.message.component.*
 import org.javacord.api.entity.message.embed.EmbedBuilder
 import org.javacord.api.event.interaction.MessageComponentCreateEvent
 import org.javacord.api.event.interaction.ModalSubmitEvent
@@ -55,7 +54,7 @@ class MapCommand : Command(
                         // create the embed builder
                         val eb = EmbedBuilder()
                             .setTitle("Mondes")
-                            .setDescription("Choisissez un monde. Votre monde : ${player["current_world"]}")
+                            .setDescription("Choisissez un monde. Votre monde : ${player["world"]}")
                             .setColor(Color.PINK)
 
                         // for each world, add a field
@@ -67,6 +66,34 @@ class MapCommand : Command(
                             )
                         }
 
+                        // create the list of selections
+                        val options = ArrayList<SelectMenuOption>()
+                        for ((i, zoneDel) in worlds.withIndex()) {
+                            options.add(SelectMenuOption.create(i.toString(), zoneDel.toString()))
+                        }
+                        val id = generateUniqueID()
+                        val actionRow = ActionRow.of(SelectMenu.create(id.toString(), "Monde où aller", options))
+
+                        buttonsManager.addButton(id) { messageComponentCreateEvent: MessageComponentCreateEvent ->
+                            val mci = messageComponentCreateEvent.messageComponentInteraction
+                            val selectMenuInteraction = mci.asSelectMenuInteraction()
+                            if (selectMenuInteraction.isPresent && mci.user.id == slashCommand.user.id) {
+                                val interaction = selectMenuInteraction.get()
+                                val index = interaction.chosenOptions[0].label.toInt()
+                                val world = worlds[index]
+                                player["world"] = world.progName
+                                mci.createOriginalMessageUpdater()
+                                    .removeAllComponents()
+                                    .setContent("Vous êtes maintenant dans le monde ${world.progName}")
+
+                                //TODO : prix et validation
+                            }
+                        }
+
+                        mcce.messageComponentInteraction.createImmediateResponder()
+                            .addEmbed(eb)
+                            .addComponents(actionRow)
+                            .respond()
                     }
                     .addButton(
                         "Liens",
