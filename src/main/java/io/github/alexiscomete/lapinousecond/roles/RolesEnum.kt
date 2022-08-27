@@ -16,7 +16,14 @@ enum class RolesEnum(
         80,  /* 5 heures */
         43200
     ),  // pas besoin de mettre le nom complet du role car le contain ignore les espaces
-    MODO("modo", "Modérateur du serveur Discord", arrayOf("modo", "modé"), 60, 43200), MEMBER(
+    MODO(
+        "modo",
+        "Modérateur du serveur Discord (ou un chanceux qui a un rôle qui bug)",
+        arrayOf("modo", "modé"),
+        60,
+        43200
+    ),
+    MEMBER(
         "member",
         "Membre du serveur Discord",
         arrayOf("memb"),
@@ -30,14 +37,28 @@ enum class RolesEnum(
         50,  /* 3 heures */
         10800
     ),
-    VISITOR("visitor", "Visiteur du serveur Discord", arrayOf("visit"), 5,  /* 1h */3600), CITOYEN(
+    VISITOR(
+        "visitor",
+        "Visiteur du serveur Discord, de passage ici puis ailleurs, et enfin là-bas",
+        arrayOf("visit"),
+        5,  /* 1h */
+        3600
+    ),
+    CITOYEN(
         "citoyen",
         "Citoyen du Dibistan / de la région / du département",
         arrayOf("citoy"),
         10,  /* 3 heures */
         10800
     ),
-    AMBASSADOR("ambassadeur", "Ambassadeur", arrayOf("ambassad"), 10,  /* 3 heures */10800), DELEGATE(
+    AMBASSADOR(
+        "ambassadeur",
+        "Ambassadeur d'une région, d'un état, ou de toute autre entité qui n'existe qu'au Dibistan",
+        arrayOf("ambassad"),
+        10,  /* 3 heures */
+        10800
+    ),
+    DELEGATE(
         "delegate",
         "Représentant",
         arrayOf("delag", "repr"),

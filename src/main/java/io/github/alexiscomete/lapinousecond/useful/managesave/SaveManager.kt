@@ -135,7 +135,7 @@ class SaveManager(path: String) {
         }
     }
 
-    fun getString(table: Table, row: String, type: String, id: Long): String {
+    fun getString(table: Table, row: String, type: String, id: Long, log: Boolean): String {
         execute("ALTER TABLE " + table.name + " ADD COLUMN " + row + " " + type, false)
         val resultSet: ResultSet
         var str:String? = ""
@@ -144,7 +144,9 @@ class SaveManager(path: String) {
             str = resultSet.getString(row)
             resultSet.close()
         } catch (e: SQLException) {
-            e.printStackTrace()
+            if (log) {
+                e.printStackTrace()
+            }
         }
         if (str == null) {
             str = ""

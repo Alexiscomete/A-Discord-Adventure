@@ -115,7 +115,7 @@ class Building : CacheGetSet, BuildMethods, Owner {
                 )
             )
         buttonsManager.addButton(id) { messageComponentCreateEvent ->
-            val msg: MessageComponentInteraction = messageComponentCreateEvent.messageComponentInteraction
+            val msg = messageComponentCreateEvent.buttonInteraction
             /*
             val transaction = FullTransactionWithVerification(
                 { aDouble: Double ->

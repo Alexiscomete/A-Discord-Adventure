@@ -12,9 +12,9 @@ class SelectMenuManager : SelectMenuChooseListener {
     }
 
     override fun onSelectMenuChoose(p0: SelectMenuChooseEvent) {
-        if (hash.containsKey(p0.selectMenuInteraction.id)) {
+        if (hash.containsKey(p0.selectMenuInteraction.customId.toLong())) {
             try {
-                hash[p0.selectMenuInteraction.id]!!.accept(p0)
+                hash[p0.selectMenuInteraction.customId.toLong()]!!.accept(p0)
             } catch (e: Exception) {
                 if (p0.selectMenuInteraction.channel.isPresent) {
                     p0.selectMenuInteraction.channel.get()

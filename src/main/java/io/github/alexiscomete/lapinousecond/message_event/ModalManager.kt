@@ -12,9 +12,9 @@ class ModalManager : ModalSubmitListener {
     }
 
     override fun onModalSubmit(p0: ModalSubmitEvent) {
-        if (hash.containsKey(p0.modalInteraction.id)) {
+        if (hash.containsKey(p0.modalInteraction.customId.toLong())) {
             try {
-                hash[p0.modalInteraction.id]!!.accept(p0)
+                hash[p0.modalInteraction.customId.toLong()]!!.accept(p0)
             } catch (e: Exception) {
                 if (p0.modalInteraction.channel.isPresent) {
                     p0.modalInteraction.channel.get()

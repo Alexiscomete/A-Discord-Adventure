@@ -18,6 +18,7 @@ import org.javacord.api.entity.message.component.ActionRow
 import org.javacord.api.entity.message.component.Button
 import org.javacord.api.entity.message.embed.EmbedBuilder
 import org.javacord.api.entity.server.invite.InviteBuilder
+import org.javacord.api.event.interaction.ButtonClickEvent
 import org.javacord.api.event.interaction.MessageComponentCreateEvent
 import org.javacord.api.event.message.MessageCreateEvent
 import java.awt.Color
@@ -187,11 +188,11 @@ class Travel : CommandInServer("Vous permet de voyager vers un serveur", "travel
             // on sépare le cas où le joueur veut aller dans un lieu et celui où il veut aller sur des coos
 
             // création du menu
-            extracted("coos", { messageComponentCreateEvent1: MessageComponentCreateEvent ->
+            extracted("coos", { messageComponentCreateEvent1: ButtonClickEvent ->
                 // on récupère le lieu en demandant à l'utilisateur de le rentrer
                 val tc1 = messageCreateEvent.message.channel
                 val userId1 = messageCreateEvent.message.author.id
-                messageComponentCreateEvent1.messageComponentInteraction.createImmediateResponder()
+                messageComponentCreateEvent1.buttonInteraction.createImmediateResponder()
                     .setContent("Entrez le nom du lieu :").respond()
                 messagesManager.addListener(tc1, userId1) { messageCreateEvent11: MessageCreateEvent ->
                     // on récupère le lieu
@@ -216,11 +217,11 @@ class Travel : CommandInServer("Vous permet de voyager vers un serveur", "travel
                         sendNumberEx(messageCreateEvent11, p, -1)
                     }
                 }
-            }) { messageComponentCreateEvent: MessageComponentCreateEvent ->
+            }) { messageComponentCreateEvent: ButtonClickEvent ->
                 // on récupère les coordonnées où le joueur souhaite aller
                 val tc = messageCreateEvent.message.channel
                 val userId = messageCreateEvent.message.author.id
-                messageComponentCreateEvent.messageComponentInteraction.createImmediateResponder()
+                messageComponentCreateEvent.buttonInteraction.createImmediateResponder()
                     .setContent("Entrez les coordonnées de la destination :").respond()
                 messagesManager.addListener(tc, userId) { messageCreateEvent1: MessageCreateEvent ->
                     val coords = getCoosDest(messageCreateEvent1)
@@ -246,11 +247,11 @@ class Travel : CommandInServer("Vous permet de voyager vers un serveur", "travel
 
             // on sépare le cas où le joueur veut aller dans un lieu et celui où il veut aller sur des coos
             // création du menu
-            extracted("city", { messageComponentCreateEvent1: MessageComponentCreateEvent ->
+            extracted("city", { messageComponentCreateEvent1: ButtonClickEvent ->
                 // on récupère le lieu en demandant à l'utilisateur de le rentrer
                 val tc1 = messageCreateEvent.message.channel
                 val userId1 = messageCreateEvent.message.author.id
-                messageComponentCreateEvent1.messageComponentInteraction.createImmediateResponder()
+                messageComponentCreateEvent1.buttonInteraction.createImmediateResponder()
                     .setContent("Entrez le nom du lieu :").respond()
                 messagesManager.addListener(tc1, userId1) { messageCreateEvent11: MessageCreateEvent ->
                     // on récupère le lieu
@@ -277,11 +278,11 @@ class Travel : CommandInServer("Vous permet de voyager vers un serveur", "travel
                         sendNumberEx(messageCreateEvent11, p, -1)
                     }
                 }
-            }) { messageComponentCreateEvent: MessageComponentCreateEvent ->
+            }) { messageComponentCreateEvent: ButtonClickEvent ->
                 // on récupère les coordonnées où le joueur souhaite aller
                 val tc = messageCreateEvent.message.channel
                 val userId = messageCreateEvent.message.author.id
-                messageComponentCreateEvent.messageComponentInteraction.createImmediateResponder()
+                messageComponentCreateEvent.buttonInteraction.createImmediateResponder()
                     .setContent("Entrez les coordonnées de la destination :").respond()
                 messagesManager.addListener(tc, userId) { messageCreateEvent1: MessageCreateEvent ->
                     val coords = getCoosDest(messageCreateEvent1)
@@ -309,8 +310,8 @@ class Travel : CommandInServer("Vous permet de voyager vers un serveur", "travel
 
     private fun extracted(
         type: String,
-        c1: Consumer<MessageComponentCreateEvent>,
-        c2: Consumer<MessageComponentCreateEvent>
+        c1: Consumer<ButtonClickEvent>,
+        c2: Consumer<ButtonClickEvent>
     ) {
         val mb = MessageBuilder()
         val eb = EmbedBuilder()
@@ -334,8 +335,8 @@ class Travel : CommandInServer("Vous permet de voyager vers un serveur", "travel
         buttonsManager.addButton(id2, c2)
     }
 
-    private fun verifButton(p: Player, state: Int, messageButtonEvent: MessageComponentCreateEvent) {
-        val messageComponentInteraction = messageButtonEvent.messageComponentInteraction
+    private fun verifButton(p: Player, state: Int, messageButtonEvent: ButtonClickEvent) {
+        val messageComponentInteraction = messageButtonEvent.buttonInteraction
         check(messageComponentInteraction.user.id == p.id) { "Ce bouton n'est pas pour vous" }
         messageComponentInteraction.message.delete()
         check(p.state == state) { "Ce bouton n'est plus valide" }
@@ -398,18 +399,18 @@ class Travel : CommandInServer("Vous permet de voyager vers un serveur", "travel
             )
         ).send(messageCreateEvent.channel)
         val state = p.state
-        buttonsManager.addButton(id3) { messageButtonEvent: MessageComponentCreateEvent ->
+        buttonsManager.addButton(id3) { messageButtonEvent: ButtonClickEvent ->
             verifButton(p, state, messageButtonEvent)
 
             // on ajoute le chemin au joueur avec pour type "default_time"
             p.setPath(path, "default_time")
 
             // on envoie le message de confirmation
-            messageButtonEvent.messageComponentInteraction.createImmediateResponder()
+            messageButtonEvent.buttonInteraction.createImmediateResponder()
                 .setContent("Vous avez commencé votre trajet pour aller en [$xDest:$yDest] en ${timeMillisToTravel / 1000} secondes.")
                 .respond()
         }
-        buttonsManager.addButton(id4) { messageButtonEvent: MessageComponentCreateEvent ->
+        buttonsManager.addButton(id4) { messageButtonEvent: ButtonClickEvent ->
             verifButton(p, state, messageButtonEvent)
             val bal = p["bal"].toDouble()
             check(bal >= priceToTravel) { "Vous n'avez pas assez de rb pour ce trajet" }
@@ -421,7 +422,7 @@ class Travel : CommandInServer("Vous permet de voyager vers un serveur", "travel
             p["place_DIBIMAP_y"] = yDest.toString()
 
             // on dit au joueur qu'il est téléporté
-            messageButtonEvent.messageComponentInteraction.createImmediateResponder()
+            messageButtonEvent.buttonInteraction.createImmediateResponder()
                 .setContent("Vous avez été téléporté en [$xDest:$yDest] car vous avez payé $priceToTravel rb.")
                 .respond()
         }
@@ -448,18 +449,18 @@ class Travel : CommandInServer("Vous permet de voyager vers un serveur", "travel
             )
         ).send(messageCreateEvent.channel)
         val state = p.state
-        buttonsManager.addButton(id3) { messageButtonEvent: MessageComponentCreateEvent ->
+        buttonsManager.addButton(id3) { messageButtonEvent: ButtonClickEvent ->
             verifButton(p, state, messageButtonEvent)
 
             // on ajoute le chemin au joueur avec pour type "default_time"
             p.setPath(path, "default_time")
 
             // on envoie le message de confirmation
-            messageButtonEvent.messageComponentInteraction.createImmediateResponder()
+            messageButtonEvent.buttonInteraction.createImmediateResponder()
                 .setContent("Vous avez commencé votre trajet pour aller à " + placeO.getString("name") + " en " + timeMillisToTravel / 1000 + " secondes.")
                 .respond()
         }
-        buttonsManager.addButton(id4) { messageButtonEvent: MessageComponentCreateEvent ->
+        buttonsManager.addButton(id4) { messageButtonEvent: ButtonClickEvent ->
             verifButton(p, state, messageButtonEvent)
             val bal = p["bal"].toDouble()
             check(bal >= priceToTravel) { "Vous n'avez pas assez de rb pour ce trajet" }
@@ -472,7 +473,7 @@ class Travel : CommandInServer("Vous permet de voyager vers un serveur", "travel
             p["place_DIBIMAP_y"] = placeO.getString("y")
 
             // on dit au joueur qu'il est téléporté
-            messageButtonEvent.messageComponentInteraction.createImmediateResponder()
+            messageButtonEvent.buttonInteraction.createImmediateResponder()
                 .setContent("Vous avez été téléporté à " + placeO.getString("name") + " car vous avez payé " + priceToTravel + " rb.")
                 .respond()
         }
