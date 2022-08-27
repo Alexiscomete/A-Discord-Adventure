@@ -7,6 +7,7 @@ import io.github.alexiscomete.lapinousecond.commands.withslash.ListenerSlashComm
 import io.github.alexiscomete.lapinousecond.commands.withslash.loadAllS
 import io.github.alexiscomete.lapinousecond.message_event.ButtonsManager
 import io.github.alexiscomete.lapinousecond.message_event.MessagesManager
+import io.github.alexiscomete.lapinousecond.message_event.ModalManager
 import io.github.alexiscomete.lapinousecond.message_event.ReactionManager
 import io.github.alexiscomete.lapinousecond.useful.managesave.SaveLocation
 import io.github.alexiscomete.lapinousecond.useful.managesave.SaveManager
@@ -21,10 +22,9 @@ import java.io.IOException
 val config: SaveLocation<String> = SaveLocation(";", "/config.txt") { a: String -> a }
 
 val reactionManager: ReactionManager = ReactionManager()
-
 val buttonsManager: ButtonsManager = ButtonsManager()
-
 val messagesManager: MessagesManager = MessagesManager()
+val modalManager: ModalManager = ModalManager()
 
 val api: DiscordApi = DiscordApiBuilder().setToken(run {
     config.loadAll()
@@ -55,6 +55,7 @@ fun main() {
         api.addListener(reactionManager)
         api.addListener(buttonsManager)
         api.addListener(messagesManager)
+        api.addListener(modalManager)
 
         // Ajout des commandes
         loadAll()

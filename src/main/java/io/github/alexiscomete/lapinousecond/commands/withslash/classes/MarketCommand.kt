@@ -7,6 +7,7 @@ import io.github.alexiscomete.lapinousecond.commands.withslash.getAccount
 import io.github.alexiscomete.lapinousecond.entity.players
 import io.github.alexiscomete.lapinousecond.message_event.MenuBuilder
 import io.github.alexiscomete.lapinousecond.messagesManager
+import io.github.alexiscomete.lapinousecond.modalManager
 import io.github.alexiscomete.lapinousecond.resources.Resource
 import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
 import io.github.alexiscomete.lapinousecond.useful.transactions.giveFromTo
@@ -14,6 +15,7 @@ import org.javacord.api.entity.message.component.ActionRow
 import org.javacord.api.entity.message.component.TextInput
 import org.javacord.api.entity.message.component.TextInputStyle
 import org.javacord.api.event.interaction.MessageComponentCreateEvent
+import org.javacord.api.event.interaction.ModalSubmitEvent
 import org.javacord.api.interaction.SlashCommandInteraction
 import java.awt.Color
 
@@ -56,7 +58,9 @@ class MarketCommand : Command(
                             idResource.toString(),
                             "Quelle ressource / objet voulez-vous donner ?",
                             true
-                        ),
+                        )
+                    ),
+                    ActionRow.of(
                         TextInput.create(
                             TextInputStyle.SHORT,
                             idQuantity.toString(),
@@ -66,8 +70,8 @@ class MarketCommand : Command(
                     )
                 )
 
-                buttonsManager.addButton(id) { messageComponentCreateEvent: MessageComponentCreateEvent ->
-                    val opInt = messageComponentCreateEvent.interaction.asModalInteraction()
+                modalManager.add(id) { mcce: ModalSubmitEvent ->
+                    val opInt = mcce.interaction.asModalInteraction()
                     if (!opInt.isPresent) {
                         throw IllegalStateException("Interaction is not a modal interaction")
                     }
@@ -97,14 +101,22 @@ class MarketCommand : Command(
                         throw IllegalArgumentException("La quantité doit être positive")
                     }
 
-                    messagesManager.addListener(messageComponentCreateEvent.messageComponentInteraction.channel.get(), messageComponentCreateEvent.messageComponentInteraction.user.id) {
+                    modalInteraction.createImmediateResponder()
+                        .setContent("Continuons. Mentionnez le nom du joueur à qui vous souhaitez donner")
+
+                    messagesManager.addListener(
+                        mcce.modalInteraction.channel.get(),
+                        mcce.modalInteraction.user.id
+                    ) {
                         val owner = it.messageContent
                         // l'owner est au format <@id>, je vais donc extraire l'id
                         val ownerId = owner.substring(2, owner.length - 1)
-                        val player = players[ownerId.toLong()] ?: throw IllegalArgumentException("Le joueur n'existe pas")
+                        val player =
+                            players[ownerId.toLong()] ?: throw IllegalArgumentException("Le joueur n'existe pas")
 
                         // on fait la transaction sécurisée avec GiveFromTo
-                        giveFromTo(p, player, quantityDouble,
+                        giveFromTo(
+                            p, player, quantityDouble,
                             resource
                         )
                     }
@@ -114,25 +126,25 @@ class MarketCommand : Command(
                 "Echanger",
                 "Echanger un objet ou des ressources avec un autre joueur de façon sécurisée"
             ) { messageComponentCreateEvent: MessageComponentCreateEvent ->
-
+                //TODO
             }
             .addButton(
                 "Offres",
                 "Les vendeurs proposent un prix"
             ) { messageComponentCreateEvent: MessageComponentCreateEvent ->
-
+                //TODO
             }
             .addButton(
                 "Recherches",
                 "Les acheteurs recherchent un objet pour un certain prix"
             ) { messageComponentCreateEvent: MessageComponentCreateEvent ->
-
+                //TODO
             }
             .addButton(
                 "Enchères",
                 "Ici trouvez les objets les plus rares et chers"
             ) { messageComponentCreateEvent: MessageComponentCreateEvent ->
-
+                //TODO
             }
             .responder(slashCommand)
 

@@ -18,29 +18,6 @@ class MapCommand : CommandWithAccount("description", "map", "totalDescription") 
         if (args.size > 1) {
             // switch arguments
             when (args[1]) {
-                "dirt" -> {
-                    // check if enough arguments
-                    if (args.size < 4) {
-                        sendArgs(messageCreateEvent, p)
-                        return
-                    }
-                    // check if the arguments are numbers
-                    if (isNotNumeric(args[2])) {
-                        sendNumberEx(messageCreateEvent, p, 2)
-                        return
-                    }
-                    if (isNotNumeric(args[3])) {
-                        sendNumberEx(messageCreateEvent, p, 3)
-                        return
-                    }
-                    if (checkRangeArgsMap(args, messageCreateEvent)) return
-                    // check if the pixel is dirt
-                    if (Map.isDirt(args[2].toInt(), args[3].toInt())) {
-                        messageCreateEvent.message.reply("The pixel is dirt")
-                    } else {
-                        messageCreateEvent.message.reply("The pixel is not dirt")
-                    }
-                }
                 "zoom_p" -> {
                     // check if the player is in the world DIBIMAP
                     val world = p.getString("world")
@@ -58,55 +35,6 @@ class MapCommand : CommandWithAccount("description", "map", "totalDescription") 
                     val messageBuilder2 = MessageBuilder()
                     messageBuilder2.addAttachment(Map.bigger(Map.zoom(xInt, yInt, 30), 10), "map.png")
                     messageBuilder2.send(messageCreateEvent.channel)
-                }
-                "zoom" -> {
-                    // check if enough arguments
-                    if (args.size < 5) {
-                        sendArgs(messageCreateEvent, p)
-                        return
-                    }
-                    // check if the arguments are numbers
-                    if (isNotNumeric(args[2])) {
-                        sendNumberEx(messageCreateEvent, p, 2)
-                        return
-                    }
-                    if (isNotNumeric(args[3])) {
-                        sendNumberEx(messageCreateEvent, p, 3)
-                        return
-                    }
-                    if (isNotNumeric(args[4])) {
-                        sendNumberEx(messageCreateEvent, p, 4)
-                        return
-                    }
-                    if (checkRangeArgsMap(args, messageCreateEvent)) return
-                    // check if arg 4 is < 60
-                    if (args[4].toInt() > 60) {
-                        messageCreateEvent.message.reply("The fourth argument must be between 0 and 60")
-                        return
-                    }
-                    // send the zoom on the map
-                    val messageBuilder = MessageBuilder()
-                    messageCreateEvent.message.reply("Création de la carte en cours et ajout des villes proches ...")
-                    val image = Map.bigger(
-                        Map.zoom(
-                            args[2].toInt(), args[3].toInt(), args[4].toInt()
-                        ), 10
-                    )
-                    val places = Place.getPlacesWithWorld("DIBIMAP")
-                    places.removeIf { place: Place -> !place.getX().isPresent || !place.getY().isPresent || place.getX().get() < args[2].toInt() - args[4].toInt() * 2 || place.getX().get() > args[2].toInt() + args[4].toInt() * 2 || place.getY().get() < args[3].toInt() - args[4].toInt() || place.getY().get() > args[3].toInt() + args[4].toInt() }
-                    Map.getMapWithNames(
-                        places,
-                        args[2].toInt() - args[4].toInt() * 2,
-                        args[3].toInt() - args[4].toInt(),
-                        args[4].toInt() * 4,
-                        args[4].toInt() * 2,
-                        image
-                    )
-                    messageBuilder.addAttachment(image, "zoommap.png")
-                    messageBuilder.send(messageCreateEvent.channel)
-                }
-                "findpath" -> {
-
                 }
                 else -> sendImpossible(messageCreateEvent, p)
             }

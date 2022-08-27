@@ -1,18 +1,21 @@
 package io.github.alexiscomete.lapinousecond.commands.withslash.classes
 
-import io.github.alexiscomete.lapinousecond.buttonsManager
 import io.github.alexiscomete.lapinousecond.commands.withslash.Command
 import io.github.alexiscomete.lapinousecond.commands.withslash.ExecutableWithArguments
 import io.github.alexiscomete.lapinousecond.commands.withslash.getAccount
 import io.github.alexiscomete.lapinousecond.message_event.MenuBuilder
+import io.github.alexiscomete.lapinousecond.modalManager
 import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
+import io.github.alexiscomete.lapinousecond.worlds.Place
 import io.github.alexiscomete.lapinousecond.worlds.ServerBot
 import io.github.alexiscomete.lapinousecond.worlds.map.Map
 import org.javacord.api.entity.message.MessageBuilder
 import org.javacord.api.entity.message.component.ActionRow
 import org.javacord.api.entity.message.component.TextInput
 import org.javacord.api.entity.message.component.TextInputStyle
+import org.javacord.api.entity.message.embed.EmbedBuilder
 import org.javacord.api.event.interaction.MessageComponentCreateEvent
+import org.javacord.api.event.interaction.ModalSubmitEvent
 import org.javacord.api.interaction.SlashCommandInteraction
 import java.awt.Color
 
@@ -41,25 +44,25 @@ class MapCommand : Command(
                         "Mondes",
                         "Permet de changer de monde"
                     ) { mcce: MessageComponentCreateEvent ->
-
+                        //TODO
                     }
                     .addButton(
                         "Liens",
                         "Les différents liens depuis votre lieu (ex : train)"
                     ) { mcce: MessageComponentCreateEvent ->
-
+                        //TODO
                     }
                     .addButton(
                         "Aller à",
                         "Mode de déplacement le plus simple."
                     ) { mcce: MessageComponentCreateEvent ->
-
+                        //TODO
                     }
                     .addButton(
                         "Pixel par pixel",
                         "Mode de déplacement maîtrisable."
                     ) { mcce: MessageComponentCreateEvent ->
-
+                        //TODO
                     }
                     .modif(messageComponentCreateEvent)
             }
@@ -92,13 +95,13 @@ class MapCommand : Command(
                         "Liste des cartes",
                         "Toutes les cartes permanentes du jeu ... remerciez Darki"
                     ) { mcce: MessageComponentCreateEvent ->
-
+                        //TODO
                     }
                     .addButton(
                         "Ma position",
                         "Toutes les informations sur votre position"
                     ) { mcce: MessageComponentCreateEvent ->
-
+                        //TODO
                     }
                     .addButton(
                         "Trouver un chemin",
@@ -118,19 +121,25 @@ class MapCommand : Command(
                                         idX1.toString(),
                                         "Le x du point de départ",
                                         true
-                                    ),
+                                    )
+                                ),
+                                ActionRow.of(
                                     TextInput.create(
                                         TextInputStyle.SHORT,
                                         idY1.toString(),
                                         "Le y du point de départ",
                                         true
-                                    ),
+                                    )
+                                ),
+                                ActionRow.of(
                                     TextInput.create(
                                         TextInputStyle.SHORT,
                                         idX2.toString(),
                                         "Le x du point d'arrivée",
                                         true
-                                    ),
+                                    )
+                                ),
+                                ActionRow.of(
                                     TextInput.create(
                                         TextInputStyle.SHORT,
                                         idY2.toString(),
@@ -140,7 +149,7 @@ class MapCommand : Command(
                                 )
                             )
 
-                        buttonsManager.addButton(id) { messageComponentCreateEvent: MessageComponentCreateEvent ->
+                        modalManager.add(id) { messageComponentCreateEvent: ModalSubmitEvent ->
                             val opInt = messageComponentCreateEvent.interaction.asModalInteraction()
                             if (!opInt.isPresent) {
                                 throw IllegalStateException("Interaction is not a modal interaction")
@@ -228,12 +237,187 @@ class MapCommand : Command(
                         "Zoomer sur une carte"
                     ) { mcce: MessageComponentCreateEvent ->
 
+                        val id = generateUniqueID()
+                        val idX = generateUniqueID()
+                        val idY = generateUniqueID()
+                        val idZoom = generateUniqueID()
+
+                        mcce.messageComponentInteraction
+                            .respondWithModal(
+                                id.toString(), "Informations pour zoomer sur la carte",
+                                ActionRow.of(
+                                    TextInput.create(
+                                        TextInputStyle.SHORT,
+                                        idX.toString(),
+                                        "Le x de la case",
+                                        true
+                                    )
+                                ),
+                                ActionRow.of(
+                                    TextInput.create(
+                                        TextInputStyle.SHORT,
+                                        idY.toString(),
+                                        "Le y de la case",
+                                        true
+                                    )
+                                ),
+                                ActionRow.of(
+                                    TextInput.create(
+                                        TextInputStyle.SHORT,
+                                        idZoom.toString(),
+                                        "Le zoom de 1 à 60 (plus petit rayon de case visibles, attention à rester dans la carte)",
+                                        true
+                                    )
+                                )
+                            )
+
+                        modalManager.add(id) { messageComponentCreateEvent: ModalSubmitEvent ->
+                            val modalInteraction = messageComponentCreateEvent.modalInteraction
+                            val opX = modalInteraction.getTextInputValueByCustomId(idX.toString())
+                            val opY = modalInteraction.getTextInputValueByCustomId(idY.toString())
+                            val opZoom = modalInteraction.getTextInputValueByCustomId(idZoom.toString())
+
+                            // transform optionals to strings
+                            val x = opX.orElse("n")
+                            val y = opY.orElse("n")
+                            val zoom = opZoom.orElse("n")
+
+                            // check if the arguments are numbers
+                            val xInt = try {
+                                x.toInt()
+                            } catch (e: NumberFormatException) {
+                                throw IllegalArgumentException("Le x de la case n'est pas un nombre")
+                            }
+                            val yInt = try {
+                                y.toInt()
+                            } catch (e: NumberFormatException) {
+                                throw IllegalArgumentException("Le y de la case n'est pas un nombre")
+                            }
+                            val zoomInt = try {
+                                zoom.toInt()
+                            } catch (e: NumberFormatException) {
+                                throw IllegalArgumentException("Le zoom n'est pas un nombre")
+                            }
+
+                            // check if the arguments are in the right range
+                            if (xInt < 0 || xInt > Map.MAP_WIDTH) {
+                                throw IllegalArgumentException("Le x de la case n'est pas dans la carte")
+                            }
+                            if (yInt < 0 || yInt > Map.MAP_HEIGHT) {
+                                throw IllegalArgumentException("Le y de la case n'est pas dans la carte")
+                            }
+
+                            // check if zoom is < 60 and > 0
+                            if (zoomInt < 1 || zoomInt > 60) {
+                                throw IllegalArgumentException("Le zoom doit être compris entre 1 et 60 (et rester dans la carte !)")
+                            }
+
+                            // send the zoom on the map
+                            modalInteraction.createImmediateResponder()
+                                .setContent("Création de la carte en cours et ajout des villes proches ...")
+                                .respond()
+
+                            val image = Map.bigger(
+                                Map.zoom(
+                                    xInt, yInt, zoomInt
+                                ), 10
+                            )
+
+                            val places = Place.getPlacesWithWorld("DIBIMAP")
+                            places.removeIf { place: Place -> !place.getX().isPresent || !place.getY().isPresent || place.getX().get() < xInt - zoomInt * 2 || place.getX().get() > xInt + zoomInt * 2 || place.getY().get() < yInt - zoomInt || place.getY().get() > yInt + zoomInt }
+
+                            Map.getMapWithNames(
+                                places,
+                                xInt - zoomInt * 2,
+                                yInt - zoomInt,
+                                zoomInt * 4,
+                                zoomInt * 2,
+                                image
+                            )
+
+                            modalInteraction.createImmediateResponder()
+                                .addEmbed(
+                                    EmbedBuilder()
+                                        .setTitle("Zoom sur la carte")
+                                        .setImage(image)
+                                )
+                                .respond()
+                        }
                     }
                     .addButton(
                         "Type de case",
                         "Le biome d'une case et les informations"
                     ) { mcce: MessageComponentCreateEvent ->
+                        val id = generateUniqueID()
+                        val idX = generateUniqueID()
+                        val idY = generateUniqueID()
+                        mcce.messageComponentInteraction
+                            .respondWithModal(
+                                id.toString(), "Type de case",
+                                ActionRow.of(
+                                    TextInput.create(
+                                        TextInputStyle.SHORT,
+                                        idX.toString(),
+                                        "Le x de la case",
+                                        true
+                                    )
+                                ),
+                                ActionRow.of(
+                                    TextInput.create(
+                                        TextInputStyle.SHORT,
+                                        idY.toString(),
+                                        "Le y de la case",
+                                        true
+                                    )
+                                )
+                            )
 
+                        modalManager.add(id) { messageComponentCreateEvent: ModalSubmitEvent ->
+                            val opInt = messageComponentCreateEvent.interaction.asModalInteraction()
+                            if (!opInt.isPresent) {
+                                throw IllegalStateException("Interaction is not a modal interaction")
+                            }
+
+                            // get optionals text inputs from modal interaction
+                            val modalInteraction = opInt.get()
+                            val opX = modalInteraction.getTextInputValueByCustomId(idX.toString())
+                            val opY = modalInteraction.getTextInputValueByCustomId(idY.toString())
+
+                            // transform optionals to strings
+                            val x = opX.orElse("n")
+                            val y = opY.orElse("n")
+                            val xInt = try {
+                                x.toInt()
+                            } catch (e: NumberFormatException) {
+                                throw IllegalArgumentException("Le x de la case n'est pas un nombre")
+                            }
+                            val yInt = try {
+                                y.toInt()
+                            } catch (e: NumberFormatException) {
+                                throw IllegalArgumentException("Le y de la case n'est pas un nombre")
+                            }
+                            if (xInt < 0 || xInt > Map.MAP_WIDTH) {
+                                throw IllegalArgumentException("Le x de la case n'est pas dans la carte")
+                            }
+                            if (yInt < 0 || yInt > Map.MAP_HEIGHT) {
+                                throw IllegalArgumentException("Le y de la case n'est pas dans la carte")
+                            }
+
+                            val biome = if (Map.isDirt(xInt, yInt)) {
+                                "la terre"
+                            } else {
+                                "l'eau"
+                            }
+
+                            modalInteraction.createImmediateResponder()
+                                .addEmbed(
+                                    EmbedBuilder()
+                                        .setTitle("Type de case de [$xInt:$yInt]")
+                                        .setDescription("🌱 La case est de $biome")
+                                        .setColor(Color.BLUE)
+                                )
+                                .respond()
+                        }
                     }
                     .modif(messageComponentCreateEvent)
             }
