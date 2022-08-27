@@ -6,6 +6,7 @@ import io.github.alexiscomete.lapinousecond.commands.withslash.ExecutableWithArg
 import io.github.alexiscomete.lapinousecond.commands.withslash.getAccount
 import io.github.alexiscomete.lapinousecond.message_event.MenuBuilder
 import io.github.alexiscomete.lapinousecond.modalManager
+import io.github.alexiscomete.lapinousecond.selectMenuManager
 import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
 import io.github.alexiscomete.lapinousecond.worlds.Place
 import io.github.alexiscomete.lapinousecond.worlds.ServerBot
@@ -14,8 +15,10 @@ import io.github.alexiscomete.lapinousecond.worlds.map.Map
 import org.javacord.api.entity.message.MessageBuilder
 import org.javacord.api.entity.message.component.*
 import org.javacord.api.entity.message.embed.EmbedBuilder
+import org.javacord.api.event.interaction.ButtonClickEvent
 import org.javacord.api.event.interaction.MessageComponentCreateEvent
 import org.javacord.api.event.interaction.ModalSubmitEvent
+import org.javacord.api.event.interaction.SelectMenuChooseEvent
 import org.javacord.api.interaction.SlashCommandInteraction
 import java.awt.Color
 
@@ -38,12 +41,12 @@ class MapCommand : Command(
             .addButton(
                 "Voyager",
                 "Permet de se déplacer de plusieurs façons sur la carte"
-            ) { messageComponentCreateEvent: MessageComponentCreateEvent ->
+            ) { messageComponentCreateEvent: ButtonClickEvent ->
                 MenuBuilder("Voyager", "Voyager est important dans ce jeu", Color.PINK)
                     .addButton(
                         "Mondes",
                         "Permet de changer de monde"
-                    ) { mcce: MessageComponentCreateEvent ->
+                    ) { mcce: ButtonClickEvent ->
                         // Etape 1 : afficher la liste des mondes
 
                         // get all worlds
@@ -74,15 +77,13 @@ class MapCommand : Command(
                         val id = generateUniqueID()
                         val actionRow = ActionRow.of(SelectMenu.create(id.toString(), "Monde où aller", options))
 
-                        buttonsManager.addButton(id) { messageComponentCreateEvent: MessageComponentCreateEvent ->
-                            val mci = messageComponentCreateEvent.messageComponentInteraction
-                            val selectMenuInteraction = mci.asSelectMenuInteraction()
-                            if (selectMenuInteraction.isPresent && mci.user.id == slashCommand.user.id) {
-                                val interaction = selectMenuInteraction.get()
-                                val index = interaction.chosenOptions[0].label.toInt()
+                        selectMenuManager.add(id) { mci: SelectMenuChooseEvent ->
+                            val selectMenuInteraction = mci.selectMenuInteraction
+                            if (selectMenuInteraction.user.id == slashCommand.user.id) {
+                                val index = selectMenuInteraction.chosenOptions[0].label.toInt()
                                 val world = worlds[index]
                                 player["world"] = world.progName
-                                mci.createOriginalMessageUpdater()
+                                selectMenuInteraction.createOriginalMessageUpdater()
                                     .removeAllComponents()
                                     .setContent("Vous êtes maintenant dans le monde ${world.progName}")
 
@@ -98,19 +99,19 @@ class MapCommand : Command(
                     .addButton(
                         "Liens",
                         "Les différents liens depuis votre lieu (ex : train)"
-                    ) { mcce: MessageComponentCreateEvent ->
+                    ) { mcce: ButtonClickEvent ->
                         //TODO
                     }
                     .addButton(
                         "Aller à",
                         "Mode de déplacement le plus simple."
-                    ) { mcce: MessageComponentCreateEvent ->
+                    ) { mcce: ButtonClickEvent ->
                         //TODO
                     }
                     .addButton(
                         "Pixel par pixel",
                         "Mode de déplacement maîtrisable."
-                    ) { mcce: MessageComponentCreateEvent ->
+                    ) { mcce: ButtonClickEvent ->
                         //TODO
                     }
                     .modif(messageComponentCreateEvent)
@@ -118,10 +119,10 @@ class MapCommand : Command(
             .addButton(
                 "Retourner au hub",
                 "Une urgence ? Bloqué dans un lieu inexistant ? Retournez au hub gratuitement !"
-            ) { messageComponentCreateEvent: MessageComponentCreateEvent ->
+            ) { messageComponentCreateEvent: ButtonClickEvent ->
                 val p = getAccount(slashCommand)
                 MenuBuilder("Confirmation requise", "Voulez-vous vraiment retourner au hub ?", Color.PINK)
-                    .addButton("Oui", "Retourner au hub") { mcce: MessageComponentCreateEvent ->
+                    .addButton("Oui", "Retourner au hub") { mcce: ButtonClickEvent ->
                         mcce.messageComponentInteraction.createOriginalMessageUpdater()
                             .setContent("✔ Flavinou vient de vous téléporter au hub <https://discord.gg/q4hVQ6gwyx>")
                             .update()
@@ -129,7 +130,7 @@ class MapCommand : Command(
                         p["world"] = "NORMAL"
                         p["place_NORMAL"] = ServerBot(854288660147994634L).getString("places")
                     }
-                    .addButton("Non", "Annuler") { mcce: MessageComponentCreateEvent ->
+                    .addButton("Non", "Annuler") { mcce: ButtonClickEvent ->
                         mcce.messageComponentInteraction.createOriginalMessageUpdater()
                             .setContent("Annulé").update()
                     }
@@ -138,18 +139,18 @@ class MapCommand : Command(
             .addButton(
                 "Cartes",
                 "Les cartes sont disponibles ici ! De nombreuses actions complémentaires sont proposées"
-            ) { messageComponentCreateEvent: MessageComponentCreateEvent ->
+            ) { messageComponentCreateEvent: ButtonClickEvent ->
                 MenuBuilder("Cartes 🌌", "Les cartes ... tellement de cartes !", Color.PINK)
                     .addButton(
                         "Liste des cartes",
                         "Toutes les cartes permanentes du jeu ... remerciez Darki"
-                    ) { mcce: MessageComponentCreateEvent ->
+                    ) { mcce: ButtonClickEvent ->
                         //TODO
                     }
                     .addButton(
                         "Ma position",
                         "Toutes les informations sur votre position"
-                    ) { mcce: MessageComponentCreateEvent ->
+                    ) { mcce: ButtonClickEvent ->
                         /*
                         // check if the player is in the world DIBIMAP
                     val world = p.getString("world")
@@ -173,7 +174,7 @@ class MapCommand : Command(
                     .addButton(
                         "Trouver un chemin",
                         "Un lieu ou des coordonnées ? Trouvez le chemin le plus court"
-                    ) { mcce: MessageComponentCreateEvent ->
+                    ) { mcce: ButtonClickEvent ->
                         val id = generateUniqueID()
                         val idX1 = generateUniqueID()
                         val idX2 = generateUniqueID()
@@ -302,7 +303,7 @@ class MapCommand : Command(
                     .addButton(
                         "Zoomer",
                         "Zoomer sur une carte"
-                    ) { mcce: MessageComponentCreateEvent ->
+                    ) { mcce: ButtonClickEvent ->
 
                         val id = generateUniqueID()
                         val idX = generateUniqueID()
@@ -419,7 +420,7 @@ class MapCommand : Command(
                     .addButton(
                         "Type de case",
                         "Le biome d'une case et les informations"
-                    ) { mcce: MessageComponentCreateEvent ->
+                    ) { mcce: ButtonClickEvent ->
                         val id = generateUniqueID()
                         val idX = generateUniqueID()
                         val idY = generateUniqueID()

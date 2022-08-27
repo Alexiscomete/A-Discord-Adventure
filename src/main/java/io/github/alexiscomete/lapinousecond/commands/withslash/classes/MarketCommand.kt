@@ -14,6 +14,7 @@ import io.github.alexiscomete.lapinousecond.useful.transactions.giveFromTo
 import org.javacord.api.entity.message.component.ActionRow
 import org.javacord.api.entity.message.component.TextInput
 import org.javacord.api.entity.message.component.TextInputStyle
+import org.javacord.api.event.interaction.ButtonClickEvent
 import org.javacord.api.event.interaction.MessageComponentCreateEvent
 import org.javacord.api.event.interaction.ModalSubmitEvent
 import org.javacord.api.interaction.SlashCommandInteraction
@@ -40,7 +41,7 @@ class MarketCommand : Command(
             .addButton(
                 "Donner",
                 "Donner un objet ou des ressources à un autre joueur"
-            ) { messageComponentCreateEvent: MessageComponentCreateEvent ->
+            ) { messageComponentCreateEvent: ButtonClickEvent ->
                 // Fonctionne de la façon suivante : -give <type d'owner> <owner> <ressource> <quantité>
                 // Exemple : -give Jean WOOD 10
 
@@ -125,25 +126,25 @@ class MarketCommand : Command(
             .addButton(
                 "Echanger",
                 "Echanger un objet ou des ressources avec un autre joueur de façon sécurisée"
-            ) { messageComponentCreateEvent: MessageComponentCreateEvent ->
+            ) { messageComponentCreateEvent: ButtonClickEvent ->
                 //TODO
             }
             .addButton(
                 "Offres",
                 "Les vendeurs proposent un prix"
-            ) { messageComponentCreateEvent: MessageComponentCreateEvent ->
+            ) { messageComponentCreateEvent: ButtonClickEvent ->
                 //TODO
             }
             .addButton(
                 "Recherches",
                 "Les acheteurs recherchent un objet pour un certain prix"
-            ) { messageComponentCreateEvent: MessageComponentCreateEvent ->
+            ) { messageComponentCreateEvent: ButtonClickEvent ->
                 //TODO
             }
             .addButton(
                 "Enchères",
                 "Ici trouvez les objets les plus rares et chers"
-            ) { messageComponentCreateEvent: MessageComponentCreateEvent ->
+            ) { messageComponentCreateEvent: ButtonClickEvent ->
                 //TODO
             }
             .responder(slashCommand)

@@ -7,6 +7,7 @@ import org.javacord.api.entity.message.component.ActionRow
 import org.javacord.api.entity.message.component.Button
 import org.javacord.api.entity.message.component.LowLevelComponent
 import org.javacord.api.entity.message.embed.EmbedBuilder
+import org.javacord.api.event.interaction.ButtonClickEvent
 import org.javacord.api.event.interaction.MessageComponentCreateEvent
 import org.javacord.api.interaction.SlashCommandInteraction
 import java.awt.Color
@@ -20,7 +21,7 @@ class MenuBuilder(name: String, description: String, color: Color) {
 
     private val arrayListOfButton = ArrayList<LowLevelComponent>()
 
-    fun addButton(name: String, description: String, whenUsed: (MessageComponentCreateEvent) -> Unit): MenuBuilder {
+    fun addButton(name: String, description: String, whenUsed: (ButtonClickEvent) -> Unit): MenuBuilder {
         embedBuilder.addInlineField(name, description)
 
         val id = generateUniqueID()
@@ -44,8 +45,8 @@ class MenuBuilder(name: String, description: String, color: Color) {
             .respond()
     }
 
-    fun modif(messageComponentCreateEvent: MessageComponentCreateEvent) {
-        messageComponentCreateEvent.messageComponentInteraction.createOriginalMessageUpdater()
+    fun modif(messageComponentCreateEvent: ButtonClickEvent) {
+        messageComponentCreateEvent.buttonInteraction.createOriginalMessageUpdater()
             .removeAllEmbeds()
             .removeAllComponents()
             .addEmbed(embedBuilder)

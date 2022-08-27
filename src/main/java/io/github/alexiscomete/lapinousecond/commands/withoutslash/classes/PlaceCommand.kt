@@ -5,6 +5,7 @@ import io.github.alexiscomete.lapinousecond.commands.withoutslash.CommandWithAcc
 import io.github.alexiscomete.lapinousecond.entity.Player
 import io.github.alexiscomete.lapinousecond.message_event.ListButtons
 import io.github.alexiscomete.lapinousecond.messagesManager
+import io.github.alexiscomete.lapinousecond.selectMenuManager
 import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
 import io.github.alexiscomete.lapinousecond.worlds.*
 import io.github.alexiscomete.lapinousecond.worlds.map.Map
@@ -14,7 +15,8 @@ import org.javacord.api.entity.message.component.Button
 import org.javacord.api.entity.message.component.SelectMenu
 import org.javacord.api.entity.message.component.SelectMenuOption
 import org.javacord.api.entity.message.embed.EmbedBuilder
-import org.javacord.api.event.interaction.MessageComponentCreateEvent
+import org.javacord.api.event.interaction.ButtonClickEvent
+import org.javacord.api.event.interaction.SelectMenuChooseEvent
 import org.javacord.api.event.message.MessageCreateEvent
 import java.awt.Color
 import kotlin.math.min
@@ -171,13 +173,11 @@ class PlaceCommand : CommandWithAccount(
                                 .setContent("Zone à supprimer")
                                 .addComponents(actionRow)
                                 .send(messageCreateEvent.channel)
-                            buttonsManager
-                                .addButton(id) { messageComponentCreateEvent: MessageComponentCreateEvent ->
-                                    val mci = messageComponentCreateEvent.messageComponentInteraction
-                                    val selectMenuInteraction = mci.asSelectMenuInteraction()
-                                    if (selectMenuInteraction.isPresent && mci.user.id == messageCreateEvent.messageAuthor.id) {
-                                        val interaction = selectMenuInteraction.get()
-                                        val index = interaction.chosenOptions[0].label.toInt()
+                            selectMenuManager
+                                .add(id) { messageComponentCreateEvent: SelectMenuChooseEvent ->
+                                    val mci = messageComponentCreateEvent.selectMenuInteraction
+                                    if (mci.user.id == messageCreateEvent.messageAuthor.id) {
+                                        val index = mci.chosenOptions[0].label.toInt()
                                         placeZonesDel.removeZone(index)
                                         messageCreateEvent.message.reply("Zone supprimée")
                                     }
@@ -198,13 +198,11 @@ class PlaceCommand : CommandWithAccount(
                                 .setContent("Zone à modifier")
                                 .addComponents(actionRowModify)
                                 .send(messageCreateEvent.channel)
-                            buttonsManager
-                                .addButton(idModify) { messageComponentCreateEvent: MessageComponentCreateEvent ->
-                                    val mci = messageComponentCreateEvent.messageComponentInteraction
-                                    val selectMenuInteraction = mci.asSelectMenuInteraction()
-                                    if (selectMenuInteraction.isPresent && mci.user.id == messageCreateEvent.messageAuthor.id) {
-                                        val interaction = selectMenuInteraction.get()
-                                        val index = interaction.chosenOptions[0].label.toInt()
+                            selectMenuManager
+                                .add(idModify) { messageComponentCreateEvent: SelectMenuChooseEvent ->
+                                    val mci = messageComponentCreateEvent.selectMenuInteraction
+                                    if (mci.user.id == messageCreateEvent.messageAuthor.id) {
+                                        val index = mci.chosenOptions[0].label.toInt()
                                         val zoneModify = placeZonesModify.zones[index]
                                         messageCreateEvent.message.reply("Zone à modifier : $zoneModify")
                                         // changement des coordonnées de la zone x1, y1, x2, y2
@@ -283,8 +281,8 @@ class PlaceCommand : CommandWithAccount(
             messageCreateEvent.message.reply("ATTENTION : la création d'un lieu dans ce monde est long. Vous devez indiquer x et y pour le lieu dans la commande, ajouter le code à la fin du message et ajouter bien configurer les zones.\nContinuer ?")
             val yes = generateUniqueID()
             val no = generateUniqueID()
-            buttonsManager.addButton(yes) { messageComponentCreateEvent: MessageComponentCreateEvent ->
-                if (messageComponentCreateEvent.messageComponentInteraction.user.id == p.id) {
+            buttonsManager.addButton(yes) { messageComponentCreateEvent: ButtonClickEvent ->
+                if (messageComponentCreateEvent.buttonInteraction.user.id == p.id) {
                     if (serverBot.getArray("places").size == 1 && serverBot.getArray("places")[0] == "") {
                         serverPlace(messageCreateEvent, serverBot, p)
                     } else {
@@ -357,9 +355,9 @@ class PlaceCommand : CommandWithAccount(
                     }
                 }
             }
-            buttonsManager.addButton(no) { messageComponentCreateEvent: MessageComponentCreateEvent ->
-                if (messageComponentCreateEvent.messageComponentInteraction.user.id == p.id) {
-                    messageComponentCreateEvent.messageComponentInteraction.message.delete()
+            buttonsManager.addButton(no) { messageComponentCreateEvent: ButtonClickEvent ->
+                if (messageComponentCreateEvent.buttonInteraction.user.id == p.id) {
+                    messageComponentCreateEvent.buttonInteraction.message.delete()
                 }
             }
             val messageBuilder = MessageBuilder()
