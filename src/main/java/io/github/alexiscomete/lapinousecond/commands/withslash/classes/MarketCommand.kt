@@ -1,6 +1,5 @@
 package io.github.alexiscomete.lapinousecond.commands.withslash.classes
 
-import io.github.alexiscomete.lapinousecond.buttonsManager
 import io.github.alexiscomete.lapinousecond.commands.withslash.Command
 import io.github.alexiscomete.lapinousecond.commands.withslash.ExecutableWithArguments
 import io.github.alexiscomete.lapinousecond.commands.withslash.getAccount
@@ -15,7 +14,6 @@ import org.javacord.api.entity.message.component.ActionRow
 import org.javacord.api.entity.message.component.TextInput
 import org.javacord.api.entity.message.component.TextInputStyle
 import org.javacord.api.event.interaction.ButtonClickEvent
-import org.javacord.api.event.interaction.MessageComponentCreateEvent
 import org.javacord.api.event.interaction.ModalSubmitEvent
 import org.javacord.api.interaction.SlashCommandInteraction
 import java.awt.Color
@@ -50,7 +48,7 @@ class MarketCommand : Command(
                 val idResource = generateUniqueID()
                 val idQuantity = generateUniqueID()
 
-                messageComponentCreateEvent.messageComponentInteraction.respondWithModal(
+                messageComponentCreateEvent.buttonInteraction.respondWithModal(
                     id.toString(),
                     "Répondez aux questions pour donner",
                     ActionRow.of(

@@ -1,6 +1,5 @@
 package io.github.alexiscomete.lapinousecond.commands.withslash.classes
 
-import io.github.alexiscomete.lapinousecond.buttonsManager
 import io.github.alexiscomete.lapinousecond.commands.withslash.Command
 import io.github.alexiscomete.lapinousecond.commands.withslash.ExecutableWithArguments
 import io.github.alexiscomete.lapinousecond.commands.withslash.getAccount
@@ -16,7 +15,6 @@ import org.javacord.api.entity.message.MessageBuilder
 import org.javacord.api.entity.message.component.*
 import org.javacord.api.entity.message.embed.EmbedBuilder
 import org.javacord.api.event.interaction.ButtonClickEvent
-import org.javacord.api.event.interaction.MessageComponentCreateEvent
 import org.javacord.api.event.interaction.ModalSubmitEvent
 import org.javacord.api.event.interaction.SelectMenuChooseEvent
 import org.javacord.api.interaction.SlashCommandInteraction
@@ -91,7 +89,7 @@ class MapCommand : Command(
                             }
                         }
 
-                        mcce.messageComponentInteraction.createImmediateResponder()
+                        mcce.buttonInteraction.createImmediateResponder()
                             .addEmbed(eb)
                             .addComponents(actionRow)
                             .respond()
@@ -123,7 +121,7 @@ class MapCommand : Command(
                 val p = getAccount(slashCommand)
                 MenuBuilder("Confirmation requise", "Voulez-vous vraiment retourner au hub ?", Color.PINK)
                     .addButton("Oui", "Retourner au hub") { mcce: ButtonClickEvent ->
-                        mcce.messageComponentInteraction.createOriginalMessageUpdater()
+                        mcce.buttonInteraction.createOriginalMessageUpdater()
                             .setContent("✔ Flavinou vient de vous téléporter au hub <https://discord.gg/q4hVQ6gwyx>")
                             .update()
                         p["serv"] = "854288660147994634"
@@ -131,7 +129,7 @@ class MapCommand : Command(
                         p["place_NORMAL"] = ServerBot(854288660147994634L).getString("places")
                     }
                     .addButton("Non", "Annuler") { mcce: ButtonClickEvent ->
-                        mcce.messageComponentInteraction.createOriginalMessageUpdater()
+                        mcce.buttonInteraction.createOriginalMessageUpdater()
                             .setContent("Annulé").update()
                     }
                     .modif(messageComponentCreateEvent)
@@ -180,7 +178,7 @@ class MapCommand : Command(
                         val idX2 = generateUniqueID()
                         val idY1 = generateUniqueID()
                         val idY2 = generateUniqueID()
-                        mcce.messageComponentInteraction
+                        mcce.buttonInteraction
                             .respondWithModal(
                                 id.toString(), "Trouver un chemin",
                                 ActionRow.of(
@@ -310,7 +308,7 @@ class MapCommand : Command(
                         val idY = generateUniqueID()
                         val idZoom = generateUniqueID()
 
-                        mcce.messageComponentInteraction
+                        mcce.buttonInteraction
                             .respondWithModal(
                                 id.toString(), "Informations pour zoomer sur la carte",
                                 ActionRow.of(
@@ -424,7 +422,7 @@ class MapCommand : Command(
                         val id = generateUniqueID()
                         val idX = generateUniqueID()
                         val idY = generateUniqueID()
-                        mcce.messageComponentInteraction
+                        mcce.buttonInteraction
                             .respondWithModal(
                                 id.toString(), "Type de case",
                                 ActionRow.of(

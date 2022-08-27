@@ -1,11 +1,11 @@
 package io.github.alexiscomete.lapinousecond.message_event
 
-import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
 import io.github.alexiscomete.lapinousecond.buttonsManager
+import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
 import org.javacord.api.entity.message.component.ActionRow
 import org.javacord.api.entity.message.component.Button
 import org.javacord.api.entity.message.embed.EmbedBuilder
-import org.javacord.api.event.interaction.MessageComponentCreateEvent
+import org.javacord.api.event.interaction.ButtonClickEvent
 
 class ListButtons<U>(
     private val builder: EmbedBuilder,
@@ -15,24 +15,24 @@ class ListButtons<U>(
     private var level = 0
     private val idLast = generateUniqueID().toString()
     private val idNext = generateUniqueID().toString()
-    fun next(messageComponentCreateEvent: MessageComponentCreateEvent) {
+    fun next(messageComponentCreateEvent: ButtonClickEvent) {
         if (level + 10 < uArrayList.size) {
             level += 10
             builder.removeAllFields()
             uAddContent.add(builder, level, 10.coerceAtMost(uArrayList.size - level), uArrayList)
-            messageComponentCreateEvent.messageComponentInteraction.createOriginalMessageUpdater().removeAllEmbeds()
+            messageComponentCreateEvent.buttonInteraction.createOriginalMessageUpdater().removeAllEmbeds()
                 .addEmbed(builder).addComponents(
                 components
             ).update()
         }
     }
 
-    private fun last(messageComponentCreateEvent: MessageComponentCreateEvent) {
+    private fun last(messageComponentCreateEvent: ButtonClickEvent) {
         if (level > 9) {
             level -= 10
             builder.removeAllFields()
             uAddContent.add(builder, level, 10.coerceAtMost(uArrayList.size - level), uArrayList)
-            messageComponentCreateEvent.messageComponentInteraction.createOriginalMessageUpdater().removeAllEmbeds()
+            messageComponentCreateEvent.buttonInteraction.createOriginalMessageUpdater().removeAllEmbeds()
                 .addEmbed(builder).addComponents(
                 components
             ).update()
@@ -59,11 +59,11 @@ class ListButtons<U>(
 
     fun register() {
         buttonsManager
-            .addButton(idLast.toLong()) { messageComponentCreateEvent: MessageComponentCreateEvent ->
+            .addButton(idLast.toLong()) { messageComponentCreateEvent: ButtonClickEvent ->
                 this.last(messageComponentCreateEvent)
             }
         buttonsManager
-            .addButton(idNext.toLong()) { messageComponentCreateEvent: MessageComponentCreateEvent ->
+            .addButton(idNext.toLong()) { messageComponentCreateEvent: ButtonClickEvent ->
                 next(messageComponentCreateEvent)
             }
     }
