@@ -27,7 +27,7 @@ class MarketCommand : Command(
 
     override val fullName: String
         get() = "market"
-    override val botPerms: Array<String>?
+    override val botPerms: Array<String>
         get() = arrayOf("PLAY")
 
     override fun execute(slashCommand: SlashCommandInteraction) {
@@ -125,7 +125,38 @@ class MarketCommand : Command(
                 "Echanger",
                 "Echanger un objet ou des ressources avec un autre joueur de façon sécurisée"
             ) { messageComponentCreateEvent: ButtonClickEvent ->
-                //TODO
+
+                messagesManager.addListener(
+                    slashCommand.channel.get(),
+                    slashCommand.user.id
+                ) {
+                    val owner = it.messageContent
+                    // l'owner est au format <@id>, je vais donc extraire l'id
+                    val ownerId = owner.substring(2, owner.length - 1)
+                    val player =
+                        players[ownerId.toLong()] ?: throw IllegalArgumentException("Le joueur n'existe pas")
+                    MenuBuilder("Demande d'échange", "<@${slashCommand.user.id}> vous a proposé un échange", Color.YELLOW)
+                        .addButton("Accepter", "Vous acceptez de négociez avec lui") { messageComponentCreateEvent: ButtonClickEvent ->
+                            //TODO
+                        }
+                        .addButton("Refuser", "Vous refusez de négocier avec lui") { messageComponentCreateEvent: ButtonClickEvent ->
+                            messageComponentCreateEvent.buttonInteraction
+                                .createOriginalMessageUpdater()
+                                .removeAllEmbeds()
+                                .removeAllComponents()
+                                .setContent("<@${slashCommand.user.id}> a refusé votre échange")
+                                .update()
+                        }
+                        .messageBuilder()
+                        .setContent("<@$ownerId>")
+                        .send(slashCommand.channel.get())
+                }
+
+                messageComponentCreateEvent.buttonInteraction.createOriginalMessageUpdater()
+                    .removeAllEmbeds()
+                    .removeAllComponents()
+                    .setContent("Vous demandez un échange")
+                    .update()
             }
             .addButton(
                 "Offres",
