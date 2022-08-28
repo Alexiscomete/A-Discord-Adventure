@@ -1,12 +1,6 @@
 package io.github.alexiscomete.lapinousecond.worlds
 
-class WorldWithCoos(travelPrice: Int, name: String?, nameRP: String?, progName: String?, desc: String?) :
-    World(travelPrice, name!!, nameRP!!, progName!!, desc!!) {
-    override fun getPriceForDistance(distance: Double, place: Boolean): Double {
-        return 0.0
-    }
+class WorldWithCoos(name: String, serverType: String, progName: String, desc: String, val defaultX: Int, val defaultY: Int) :
+    World(name, serverType, progName, desc) {
 
-    override fun getDistance(place1: Place?, place2: Place?): Double {
-        return 0.0
-    }
 }

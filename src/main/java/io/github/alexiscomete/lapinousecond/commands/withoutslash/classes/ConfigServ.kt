@@ -70,7 +70,7 @@ class ConfigServ : CommandWithAccount(
                                     val w = worldEnum.world
                                     embedBuilder.addField(
                                         w.name, """
-     RP : ${w.nameRP}
+     RP : ${w.serverType}
      Nom à entrer : ${w.progName}
      Description : ${w.desc}
      """.trimIndent()
@@ -95,7 +95,7 @@ class ConfigServ : CommandWithAccount(
                                                             val w = worldEnum.world
                                                             embedBuilder.addField(
                                                                 w.name, """
-     RP : ${w.nameRP}
+     RP : ${w.serverType}
      Nom à entrer : ${w.progName}
      Description : ${w.desc}
      """.trimIndent()
