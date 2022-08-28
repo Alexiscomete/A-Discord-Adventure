@@ -149,25 +149,53 @@ class MapCommand : Command(
                         "Ma position",
                         "Toutes les informations sur votre position"
                     ) { mcce: ButtonClickEvent ->
-                        /*
-                        // check if the player is in the world DIBIMAP
-                    val world = p.getString("world")
-                    if (world != "DIBIMAP") {
-                        messageCreateEvent.message.reply("Vous n'êtes pas dans le monde DIBIMAP")
-                        return
-                    }
-                    // get the player's position (x, y) in the world DIBIMAP (x/y_DIBIMAP), x and y are strings
-                    val x = p.getString("x_DIBIMAP")
-                    val y = p.getString("y_DIBIMAP")
-                    // convert the strings to int
-                    val xInt = x.toInt()
-                    val yInt = y.toInt()
-                    // zoom on the player's position and send the map bigger
-                    val messageBuilder2 = MessageBuilder()
-                    messageBuilder2.addAttachment(Map.bigger(Map.zoom(xInt, yInt, 30), 10), "map.png")
-                    messageBuilder2.send(messageCreateEvent.channel)
-                         */
-                        //TODO
+
+                        val player = getAccount(slashCommand)
+                        val world = player["world"]
+                        val position = player.positionToString()
+
+                        if (world == "DIBIMAP") {
+                            val x = player["x_DIBIMAP"]
+                            val y = player["y_DIBIMAP"]
+                            val xInt = x.toInt()
+                            val yInt = y.toInt()
+                            val image = try {
+                                Map.bigger(Map.zoom(xInt, yInt, 30), 10)
+                            } catch (e: Exception) {
+                                null
+                            }
+                            val biome = if (Map.isDirt(xInt, yInt)) "la terre" else "l'eau"
+
+                            mcce.buttonInteraction.createOriginalMessageUpdater()
+                                .removeAllComponents()
+                                .removeAllEmbeds()
+                                .addEmbed(
+                                    if (image != null) {
+                                        EmbedBuilder()
+                                            .setTitle("Vous êtes dans $biome")
+                                            .setImage(image)
+                                            .setDescription(position)
+                                            .setColor(Color.PINK)
+                                    } else {
+                                        EmbedBuilder()
+                                            .setTitle("Vous êtes dans $biome (image indisponible : bord de map)")
+                                            .setDescription(position)
+                                            .setColor(Color.PINK)
+                                    }
+                                )
+                                .update()
+                        } else {
+                            mcce.buttonInteraction.createOriginalMessageUpdater()
+                                .setContent("Vous n'êtes pas dans le monde DIBIMAP donc les informations de pixel sont indisponibles")
+                                .removeAllComponents()
+                                .removeAllEmbeds()
+                                .addEmbed(
+                                    EmbedBuilder()
+                                        .setTitle("Position")
+                                        .setDescription(position)
+                                )
+                                .update()
+                        }
                     }
                     .addButton(
                         "Trouver un chemin",

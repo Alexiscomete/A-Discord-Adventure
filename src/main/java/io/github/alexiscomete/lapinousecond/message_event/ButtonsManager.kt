@@ -20,14 +20,10 @@ class ButtonsManager : ButtonClickListener {
                     p0
                 )
             } catch (e: Exception) {
-                if (p0.buttonInteraction.channel.isPresent) {
-                    p0.buttonInteraction.channel.get().sendMessage("Une erreur est survenue : " + e.message)
-                } else {
-                    p0.buttonInteraction.user.sendMessage(
-                        """Une erreur est survenue : ${e.message}
-    Impossible de répondre à votre message dans le channel donc ce message est envoyé en DM."""
-                    )
-                }
+                p0.buttonInteraction.createImmediateResponder()
+                    .setContent("Une erreur est survenue : " + e.message)
+                    .respond()
+                e.printStackTrace()
             }
         } else {
             p0.buttonInteraction.createOriginalMessageUpdater().removeAllEmbeds().removeAllComponents()

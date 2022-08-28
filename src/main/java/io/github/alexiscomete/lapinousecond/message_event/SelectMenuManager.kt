@@ -16,15 +16,10 @@ class SelectMenuManager : SelectMenuChooseListener {
             try {
                 hash[p0.selectMenuInteraction.customId.toLong()]!!.accept(p0)
             } catch (e: Exception) {
-                if (p0.selectMenuInteraction.channel.isPresent) {
-                    p0.selectMenuInteraction.channel.get()
-                        .sendMessage("Une erreur est survenue : " + e.message)
-                } else {
-                    p0.selectMenuInteraction.user.sendMessage(
-                        """Une erreur est survenue : ${e.message}
-    Impossible de répondre à votre message dans le channel donc ce message est envoyé en DM."""
-                    )
-                }
+                p0.selectMenuInteraction.createImmediateResponder()
+                    .setContent("Une erreur est survenue : " + e.message)
+                    .respond()
+                e.printStackTrace()
             }
         } else {
             p0.selectMenuInteraction.createImmediateResponder()
