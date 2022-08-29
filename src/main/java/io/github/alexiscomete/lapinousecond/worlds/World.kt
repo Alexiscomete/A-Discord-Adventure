@@ -1,11 +1,11 @@
 package io.github.alexiscomete.lapinousecond.worlds
 
-abstract class World(
+open class World(
+    val typeOfServer: String,
     val name: String,
-    val serverType: String,
     val progName: String,
-    val desc: String
-) {
-
-
-}
+    val desc: String,
+    val defaultX: Int,
+    val defaultY: Int,
+    val mapPath: String
+)

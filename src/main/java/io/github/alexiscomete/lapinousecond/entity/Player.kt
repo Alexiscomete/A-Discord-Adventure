@@ -12,6 +12,7 @@ import io.github.alexiscomete.lapinousecond.view.LangageEnum
 import io.github.alexiscomete.lapinousecond.view.answerManager
 import io.github.alexiscomete.lapinousecond.worlds.Place
 import io.github.alexiscomete.lapinousecond.worlds.ServerBot
+import io.github.alexiscomete.lapinousecond.worlds.WorldEnum
 import io.github.alexiscomete.lapinousecond.worlds.map.Map
 import io.github.alexiscomete.lapinousecond.worlds.map.Pixel
 import io.github.alexiscomete.lapinousecond.worlds.places
@@ -229,6 +230,14 @@ class Player(id: Long) : CacheGetSet(id, PLAYERS), Owner {
 
     override fun askRessource(owner1: Owner, function: (Resource) -> Unit) {
         TODO("Not yet implemented")
+    }
+
+    var world = run {
+        val w = this["world"]
+        if (w == "") {
+            WorldEnum.TUTO
+            this["world"] = WorldEnum.TUTO.world.progName
+        }
     }
 
     init {

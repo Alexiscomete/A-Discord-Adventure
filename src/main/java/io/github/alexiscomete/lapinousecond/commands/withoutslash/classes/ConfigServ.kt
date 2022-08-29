@@ -29,7 +29,7 @@ class ConfigServ : CommandWithAccount(
                     var world = server.getString("world")
                     world = try {
                         val w = WorldEnum.valueOf(world).world
-                        w.name
+                        w.typeOfServer
                     } catch (e: IllegalArgumentException) {
                         "Monde invalide"
                     }
@@ -69,8 +69,8 @@ class ConfigServ : CommandWithAccount(
                                 for (worldEnum in WorldEnum.values()) {
                                     val w = worldEnum.world
                                     embedBuilder.addField(
-                                        w.name, """
-     RP : ${w.serverType}
+                                        w.typeOfServer, """
+     RP : ${w.name}
      Nom à entrer : ${w.progName}
      Description : ${w.desc}
      """.trimIndent()
@@ -94,8 +94,8 @@ class ConfigServ : CommandWithAccount(
                                                         for (worldEnum in WorldEnum.values()) {
                                                             val w = worldEnum.world
                                                             embedBuilder.addField(
-                                                                w.name, """
-     RP : ${w.serverType}
+                                                                w.typeOfServer, """
+     RP : ${w.name}
      Nom à entrer : ${w.progName}
      Description : ${w.desc}
      """.trimIndent()

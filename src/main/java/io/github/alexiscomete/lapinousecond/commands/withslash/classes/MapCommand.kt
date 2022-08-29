@@ -10,7 +10,6 @@ import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
 import io.github.alexiscomete.lapinousecond.worlds.Place
 import io.github.alexiscomete.lapinousecond.worlds.ServerBot
 import io.github.alexiscomete.lapinousecond.worlds.WorldEnum
-import io.github.alexiscomete.lapinousecond.worlds.WorldWithCoos
 import io.github.alexiscomete.lapinousecond.worlds.map.Map
 import org.javacord.api.entity.message.MessageBuilder
 import org.javacord.api.entity.message.component.*
@@ -62,8 +61,8 @@ class MapCommand : Command(
                         // for each world, add a field
                         for (world in worlds) {
                             eb.addField(
-                                world.serverType,
-                                "**Nom officiel :** ${world.progName}\n**Type de serveur :** ${world.name}\n${world.desc}",
+                                world.name,
+                                "**Nom officiel :** ${world.progName}\n**Type de serveur :** ${world.typeOfServer}\n${world.desc}",
                                 true
                             )
                         }
@@ -82,10 +81,9 @@ class MapCommand : Command(
                                 val index = selectMenuInteraction.chosenOptions[0].label.toInt()
                                 val world = worlds[index]
                                 player["world"] = world.progName
-                                if (world is WorldWithCoos && player["x_${world.progName}"] == "") {
-                                    val worldWithCoos: WorldWithCoos = world
-                                    player["x_${world.progName}"] = worldWithCoos.defaultX.toString()
-                                    player["y_${world.progName}"] = worldWithCoos.defaultY.toString()
+                                if (player["x_${world.progName}"] == "") {
+                                    player["x_${world.progName}"] = world.defaultX.toString()
+                                    player["y_${world.progName}"] = world.defaultY.toString()
                                 }
                                 selectMenuInteraction.createOriginalMessageUpdater()
                                     .removeAllComponents()

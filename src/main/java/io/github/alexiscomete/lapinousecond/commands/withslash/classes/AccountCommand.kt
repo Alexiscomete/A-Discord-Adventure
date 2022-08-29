@@ -96,7 +96,7 @@ class AccountCommandVerify() : SubCommand(
         if (userData.hasAccount()) {
             player["x"] = userData.x.toString()
             player["x"] = userData.y.toString()
-            player["has_account"] = userData.hasAccount().toString()
+            player["has_account"] = if (userData.hasAccount()) "1" else "0"
             player["is_verify"] = if (userData.isVerify) "1" else "0"
             if (userData.isVerify) {
                 slashCommand.createImmediateResponder()
