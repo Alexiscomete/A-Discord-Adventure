@@ -60,9 +60,9 @@ class MapCommand : Command(
                             .setColor(Color.PINK)
 
                         // for each world, add a field
-                        for (world in worlds) {
+                        for ((i, world) in worlds.withIndex()) {
                             eb.addField(
-                                world.name,
+                                "(${i}) ${world.name}",
                                 "**Nom officiel :** ${world.progName}\n**Type de serveur :** ${world.typeOfServer}\n${world.desc}",
                                 true
                             )
@@ -85,7 +85,11 @@ class MapCommand : Command(
                                 // get the player's bal
                                 verifBal(player)
 
-                                MenuBuilder("Confirmer", "Confirmez-vous le voyage vers ce monde pour 100 ${Resource.RABBIT_COIN.name_} ?", Color.orange)
+                                MenuBuilder(
+                                    "Confirmer",
+                                    "Confirmez-vous le voyage vers ce monde pour 100 ${Resource.RABBIT_COIN.name_} ?",
+                                    Color.orange
+                                )
                                     .addButton("Oui", "Oui je veux changer de monde") {
                                         // get the player's bal
                                         verifBal(player)
@@ -93,12 +97,14 @@ class MapCommand : Command(
                                         player.removeMoney(100.0)
 
                                         player["world"] = world.progName
-                                        if (player["x_${world.progName}"] == "") {
-                                            player["x_${world.progName}"] = world.defaultX.toString()
-                                            player["y_${world.progName}"] = world.defaultY.toString()
+                                        if (player["place_${world.progName}_x"] == "") {
+                                            player["place_${world}_type"] = "coos"
+                                            player["place_${world.progName}_x"] = world.defaultX.toString()
+                                            player["place_${world.progName}_y"] = world.defaultY.toString()
                                         }
-                                        selectMenuInteraction.createOriginalMessageUpdater()
+                                        it.buttonInteraction.createOriginalMessageUpdater()
                                             .removeAllComponents()
+                                            .removeAllEmbeds()
                                             .setContent("Vous êtes maintenant dans le monde ${world.progName}")
                                             .update()
                                     }
@@ -117,12 +123,6 @@ class MapCommand : Command(
                             .addEmbed(eb)
                             .addComponents(actionRow)
                             .respond()
-                    }
-                    .addButton(
-                        "Liens",
-                        "Les différents liens depuis votre lieu (ex : train)"
-                    ) { mcce: ButtonClickEvent ->
-                        //TODO
                     }
                     .addButton(
                         "Aller à",
@@ -150,8 +150,9 @@ class MapCommand : Command(
                             .update()
                         p["serv"] = "854288660147994634"
                         p["world"] = "TUTO"
-                        p["x_TUTO"] = WorldEnum.TUTO.world.defaultX.toString()
-                        p["y_TUTO"] = WorldEnum.TUTO.world.defaultY.toString()
+                        p["place_TUTO_x"] = WorldEnum.TUTO.world.defaultX.toString()
+                        p["place_TUTO_y"] = WorldEnum.TUTO.world.defaultY.toString()
+                        p["place_TUTO_type"] = "coos"
                     }
                     .addButton("Non", "Annuler") { mcce: ButtonClickEvent ->
                         mcce.buttonInteraction.createOriginalMessageUpdater()
@@ -179,48 +180,36 @@ class MapCommand : Command(
                         val world = player["world"]
                         val position = player.positionToString()
 
-                        if (world == "DIBIMAP") {
-                            val x = player["x_DIBIMAP"]
-                            val y = player["y_DIBIMAP"]
-                            val xInt = x.toInt()
-                            val yInt = y.toInt()
-                            val image = try {
-                                Map.bigger(Map.zoom(xInt, yInt, 30), 10)
-                            } catch (e: Exception) {
-                                null
-                            }
-                            val biome = if (Map.isDirt(xInt, yInt)) "la terre" else "l'eau"
-
-                            mcce.buttonInteraction.createOriginalMessageUpdater()
-                                .removeAllComponents()
-                                .removeAllEmbeds()
-                                .addEmbed(
-                                    if (image != null) {
-                                        EmbedBuilder()
-                                            .setTitle("Vous êtes dans $biome")
-                                            .setImage(image)
-                                            .setDescription(position)
-                                            .setColor(Color.PINK)
-                                    } else {
-                                        EmbedBuilder()
-                                            .setTitle("Vous êtes dans $biome (image indisponible : bord de map)")
-                                            .setDescription(position)
-                                            .setColor(Color.PINK)
-                                    }
-                                )
-                                .update()
-                        } else {
-                            mcce.buttonInteraction.createOriginalMessageUpdater()
-                                .setContent("Vous n'êtes pas dans le monde DIBIMAP donc les informations de pixel sont indisponibles")
-                                .removeAllComponents()
-                                .removeAllEmbeds()
-                                .addEmbed(
-                                    EmbedBuilder()
-                                        .setTitle("Position")
-                                        .setDescription(position)
-                                )
-                                .update()
+                        val x = player["place_${world}_x"]
+                        val y = player["place_${world}_y"]
+                        val xInt = x.toInt()
+                        val yInt = y.toInt()
+                        val image = try {
+                            Map.bigger(Map.zoom(xInt, yInt, 30), 10)
+                        } catch (e: Exception) {
+                            null
                         }
+                        val biome = if (Map.isDirt(xInt, yInt)) "la terre" else "l'eau"
+
+                        mcce.buttonInteraction.createOriginalMessageUpdater()
+                            .removeAllComponents()
+                            .removeAllEmbeds()
+                            .addEmbed(
+                                if (image != null) {
+                                    EmbedBuilder()
+                                        .setTitle("Vous êtes dans $biome")
+                                        .setImage(image)
+                                        .setDescription(position)
+                                        .setColor(Color.PINK)
+                                } else {
+                                    EmbedBuilder()
+                                        .setTitle("Vous êtes dans $biome (image indisponible : bord de map)")
+                                        .setDescription(position)
+                                        .setColor(Color.PINK)
+                                }
+                            )
+                            .update()
+
                     }
                     .addButton(
                         "Trouver un chemin",

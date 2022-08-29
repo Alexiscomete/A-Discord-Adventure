@@ -161,8 +161,9 @@ class AccountCommandStart() : SubCommand(
         }
         p["serv"] = "854288660147994634"
         p["world"] = "TUTO"
-        p["x_TUTO"] = WorldEnum.TUTO.world.defaultX.toString()
-        p["y_TUTO"] = WorldEnum.TUTO.world.defaultY.toString()
+        p["place_TUTO_x"] = WorldEnum.TUTO.world.defaultX.toString()
+        p["place_TUTO_y"] = WorldEnum.TUTO.world.defaultY.toString()
+        p["place_TUTO_type"] = "coos"
         p["tuto"] = "1"
         val embed = EmbedBuilder()
             .setColor(Color.CYAN)

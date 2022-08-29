@@ -77,8 +77,9 @@ class Player(id: Long) : CacheGetSet(id, PLAYERS), Owner {
             if (world == "") {
                 world = "TUTO"
                 set("world", "TUTO")
-                this["x_TUTO"] = WorldEnum.TUTO.world.defaultX.toString()
-                this["y_TUTO"] = WorldEnum.TUTO.world.defaultY.toString()
+                this["place_TUTO_x"] = WorldEnum.TUTO.world.defaultX.toString()
+                this["place_TUTO_y"] = WorldEnum.TUTO.world.defaultY.toString()
+                this["place_TUTO_type"] = "coos"
             }
             //TODO: update this
             var placeID = getString("place_$world")
@@ -144,38 +145,31 @@ class Player(id: Long) : CacheGetSet(id, PLAYERS), Owner {
     fun positionToString(): String {
         // la première étape est de récupérer le monde
         val world = this["world"]
-        // si le monde est DIBIMAP c'est compliqué, sinon on peut simplement récupérer le serveur
-        if (world == "DIBIMAP") {
-            // on récupère le type de lieu, on sépare encore en plusieurs possibilités
-            return when (this["place_DIBIMAP_type"]) {
-                "coos" -> {
-                    // on récupère les coordonnées
-                    val x = this["place_DIBIMAP_x"]
-                    val y = this["place_DIBIMAP_y"]
-                    // on retourne le résultat
-                    "Vous êtes dans le monde DIBIMAP, sur des coordonnées ($x, $y)"
-                }
-                "place" -> {
-                    val placeID = this["place_DIBIMAP_id"]
-                    "Vous êtes dans le monde DIBIMAP, dans le lieu $placeID"
-                }
-                "path" -> {
-                    val path = getPath()
-                    val firstPixel = path[0]
-                    val lastPixel = path[path.size - 1]
-                    "Vous êtes dans le monde DIBIMAP, sur un chemin. Le premier pixel est (${firstPixel.x}, ${firstPixel.y}), le dernier pixel est (${lastPixel.x}, ${lastPixel.y})"
-                }
-                else -> {
-                    "Vous êtes dans le monde DIBIMAP, mais vous ne savez pas où vous êtes"
-                }
+
+        // on récupère le type de lieu, on sépare encore en plusieurs possibilités
+        return when (this["place_${world}_type"]) {
+            "coos" -> {
+                // on récupère les coordonnées
+                val x = this["place_${world}_x"]
+                val y = this["place_${world}_y"]
+                // on retourne le résultat
+                "Vous êtes dans le monde ${world}, sur des coordonnées ($x, $y)"
             }
-        } else {
-            // on récupère le lieu
-            val server = this["place_NORMAL"]
-            // on récupère le lieu
-            // TODO
-            return "Vous êtes dans le monde $world, sur le lieu $server"
+            "place" -> {
+                val placeID = this["place_${world}_id"]
+                "Vous êtes dans le monde ${world}, dans le lieu $placeID"
+            }
+            "path" -> {
+                val path = getPath()
+                val firstPixel = path[0]
+                val lastPixel = path[path.size - 1]
+                "Vous êtes dans le monde ${world}, sur un chemin. Le premier pixel est (${firstPixel.x}, ${firstPixel.y}), le dernier pixel est (${lastPixel.x}, ${lastPixel.y})"
+            }
+            else -> {
+                "Vous êtes dans le monde ${world}, mais vous ne savez pas où vous êtes"
+            }
         }
+
     }
 
     override val ownerType: String
