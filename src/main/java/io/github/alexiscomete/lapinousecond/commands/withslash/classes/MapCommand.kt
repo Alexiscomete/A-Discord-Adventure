@@ -83,7 +83,7 @@ class MapCommand : Command(
                                 val world = worlds[index]
 
                                 // get the player's bal
-                                verifBal(player)
+                                verifyBal(player)
 
                                 MenuBuilder(
                                     "Confirmer",
@@ -92,7 +92,7 @@ class MapCommand : Command(
                                 )
                                     .addButton("Oui", "Oui je veux changer de monde") {
                                         // get the player's bal
-                                        verifBal(player)
+                                        verifyBal(player)
 
                                         player.removeMoney(100.0)
 
@@ -127,13 +127,13 @@ class MapCommand : Command(
                     .addButton(
                         "Aller à",
                         "Mode de déplacement le plus simple."
-                    ) { mcce: ButtonClickEvent ->
+                    ) { buttonClickEvent: ButtonClickEvent ->
                         //TODO
                     }
                     .addButton(
                         "Pixel par pixel",
                         "Mode de déplacement maîtrisable."
-                    ) { mcce: ButtonClickEvent ->
+                    ) { buttonClickEvent: ButtonClickEvent ->
                         //TODO
                     }
                     .modif(messageComponentCreateEvent)
@@ -144,8 +144,8 @@ class MapCommand : Command(
             ) { messageComponentCreateEvent: ButtonClickEvent ->
                 val p = getAccount(slashCommand)
                 MenuBuilder("Confirmation requise", "Voulez-vous vraiment retourner au hub ?", Color.PINK)
-                    .addButton("Oui", "Retourner au hub") { mcce: ButtonClickEvent ->
-                        mcce.buttonInteraction.createOriginalMessageUpdater()
+                    .addButton("Oui", "Retourner au hub") { buttonClickEvent: ButtonClickEvent ->
+                        buttonClickEvent.buttonInteraction.createOriginalMessageUpdater()
                             .setContent("✔ Flavinou vient de vous téléporter au hub <https://discord.gg/q4hVQ6gwyx>")
                             .update()
                         p["serv"] = "854288660147994634"
@@ -168,13 +168,13 @@ class MapCommand : Command(
                     .addButton(
                         "Liste des cartes",
                         "Toutes les cartes permanentes du jeu ... remerciez Darki"
-                    ) { mcce: ButtonClickEvent ->
+                    ) { buttonClickEvent: ButtonClickEvent ->
                         //TODO
                     }
                     .addButton(
                         "Ma position",
                         "Toutes les informations sur votre position"
-                    ) { mcce: ButtonClickEvent ->
+                    ) { buttonClickEvent: ButtonClickEvent ->
 
                         val player = getAccount(slashCommand)
                         val world = player["world"]
@@ -191,7 +191,7 @@ class MapCommand : Command(
                         }
                         val biome = if (Map.isDirt(xInt, yInt)) "la terre" else "l'eau"
 
-                        mcce.buttonInteraction.createOriginalMessageUpdater()
+                        buttonClickEvent.buttonInteraction.createOriginalMessageUpdater()
                             .removeAllComponents()
                             .removeAllEmbeds()
                             .addEmbed(
@@ -538,7 +538,7 @@ class MapCommand : Command(
 
     }
 
-    private fun verifBal(player: Player) {
+    private fun verifyBal(player: Player) {
         var bal = player["bal"]
         if (bal == "") {
             player["bal"] = "0.0"

@@ -153,9 +153,9 @@ class InvCommandResources : SubCommand(
         val re = StringBuilder().append("Cliquez sur une resource pour voir son nom\n")
         for (reM in player.resourceManagers.values) {
             re
-                .append(reM.quantity)
-                .append(" ")
                 .append(reM.resource.name_)
+                .append(" ")
+                .append(reM.quantity)
                 .append("\n")
         }
 
