@@ -3,12 +3,13 @@ package io.github.alexiscomete.lapinousecond.commands.withslash.classes
 import io.github.alexiscomete.lapinousecond.commands.withslash.Command
 import io.github.alexiscomete.lapinousecond.commands.withslash.ExecutableWithArguments
 import io.github.alexiscomete.lapinousecond.commands.withslash.getAccount
+import io.github.alexiscomete.lapinousecond.entity.Player
 import io.github.alexiscomete.lapinousecond.message_event.MenuBuilder
 import io.github.alexiscomete.lapinousecond.modalManager
+import io.github.alexiscomete.lapinousecond.resources.Resource
 import io.github.alexiscomete.lapinousecond.selectMenuManager
 import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
 import io.github.alexiscomete.lapinousecond.worlds.Place
-import io.github.alexiscomete.lapinousecond.worlds.ServerBot
 import io.github.alexiscomete.lapinousecond.worlds.WorldEnum
 import io.github.alexiscomete.lapinousecond.worlds.map.Map
 import org.javacord.api.entity.message.MessageBuilder
@@ -80,17 +81,35 @@ class MapCommand : Command(
                             if (selectMenuInteraction.user.id == slashCommand.user.id) {
                                 val index = selectMenuInteraction.chosenOptions[0].label.toInt()
                                 val world = worlds[index]
-                                player["world"] = world.progName
-                                if (player["x_${world.progName}"] == "") {
-                                    player["x_${world.progName}"] = world.defaultX.toString()
-                                    player["y_${world.progName}"] = world.defaultY.toString()
-                                }
-                                selectMenuInteraction.createOriginalMessageUpdater()
-                                    .removeAllComponents()
-                                    .setContent("Vous êtes maintenant dans le monde ${world.progName}")
-                                    .update()
 
-                                //TODO : prix et validation
+                                // get the player's bal
+                                verifBal(player)
+
+                                MenuBuilder("Confirmer", "Confirmez-vous le voyage vers ce monde pour 100 ${Resource.RABBIT_COIN.name_} ?", Color.orange)
+                                    .addButton("Oui", "Oui je veux changer de monde") {
+                                        // get the player's bal
+                                        verifBal(player)
+
+                                        player.removeMoney(100.0)
+
+                                        player["world"] = world.progName
+                                        if (player["x_${world.progName}"] == "") {
+                                            player["x_${world.progName}"] = world.defaultX.toString()
+                                            player["y_${world.progName}"] = world.defaultY.toString()
+                                        }
+                                        selectMenuInteraction.createOriginalMessageUpdater()
+                                            .removeAllComponents()
+                                            .setContent("Vous êtes maintenant dans le monde ${world.progName}")
+                                            .update()
+                                    }
+                                    .addButton("Non", "Non je ne veux pas changer de monde") {
+                                        it.buttonInteraction.createOriginalMessageUpdater()
+                                            .removeAllComponents()
+                                            .removeAllEmbeds()
+                                            .setContent("Vous avez annulé le voyage")
+                                            .update()
+                                    }
+                                    .modif(mci)
                             }
                         }
 
@@ -528,6 +547,19 @@ class MapCommand : Command(
             }
             .responder(slashCommand)
 
+    }
+
+    private fun verifBal(player: Player) {
+        var bal = player["bal"]
+        if (bal == "") {
+            player["bal"] = "0.0"
+            bal = "0.0"
+        }
+
+        val balDouble = bal.toDouble()
+        if (balDouble < 100.0) {
+            throw IllegalStateException("La guilde des lapins de transports demande 100.0 ${Resource.RABBIT_COIN.name_} pour voyager dans un autre monde")
+        }
     }
 
 }

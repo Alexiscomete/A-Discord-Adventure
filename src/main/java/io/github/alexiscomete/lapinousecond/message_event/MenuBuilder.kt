@@ -9,6 +9,7 @@ import org.javacord.api.entity.message.component.LowLevelComponent
 import org.javacord.api.entity.message.embed.EmbedBuilder
 import org.javacord.api.event.interaction.ButtonClickEvent
 import org.javacord.api.event.interaction.MessageComponentCreateEvent
+import org.javacord.api.event.interaction.SelectMenuChooseEvent
 import org.javacord.api.interaction.SlashCommandInteraction
 import java.awt.Color
 
@@ -47,6 +48,15 @@ class MenuBuilder(name: String, description: String, color: Color) {
 
     fun modif(messageComponentCreateEvent: ButtonClickEvent) {
         messageComponentCreateEvent.buttonInteraction.createOriginalMessageUpdater()
+            .removeAllEmbeds()
+            .removeAllComponents()
+            .addEmbed(embedBuilder)
+            .addComponents(ActionRow.of(arrayListOfButton))
+            .update()
+    }
+
+    fun modif(messageComponentCreateEvent: SelectMenuChooseEvent) {
+        messageComponentCreateEvent.selectMenuInteraction.createOriginalMessageUpdater()
             .removeAllEmbeds()
             .removeAllComponents()
             .addEmbed(embedBuilder)
