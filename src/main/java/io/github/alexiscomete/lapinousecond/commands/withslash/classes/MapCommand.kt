@@ -126,78 +126,138 @@ class MapCommand : Command(
                     }
                     .addButton(
                         "Aller à",
-                        "Mode de déplacement le plus simple."
+                        "Mode de déplacement le plus simple. Permet de se déplacer sur le pixel de son choix"
                     ) { buttonClickEvent: ButtonClickEvent ->
-                        MenuBuilder("Où aller ?", "Première étape : choisir où aller dans le monde", Color(123, 237, 100))
-                            .addButton("Pixel", "Les pixels constituent la map. Vous pouvez vous rendre à un pixel précis pour le visiter et faire certaines actions impossibles dans une ville") { buttonEvent ->
-                                val id = generateUniqueID()
-                                val idX = generateUniqueID()
-                                val idY = generateUniqueID()
+                        val id = generateUniqueID()
+                        val idX = generateUniqueID()
+                        val idY = generateUniqueID()
 
-                                buttonEvent.buttonInteraction.respondWithModal(id.toString(), "Le pixel ?",
-                                    ActionRow.of(
-                                        TextInput.create(TextInputStyle.SHORT, idX.toString(), "Le x du pixel")
-                                    ),
-                                    ActionRow.of(
-                                        TextInput.create(TextInputStyle.SHORT, idY.toString(), "Le y du pixel")
-                                    )
-                                )
+                        buttonClickEvent.buttonInteraction.respondWithModal(
+                            id.toString(), "Sur quel pixel se rendre ?",
+                            ActionRow.of(
+                                TextInput.create(TextInputStyle.SHORT, idX.toString(), "Le x du pixel")
+                            ),
+                            ActionRow.of(
+                                TextInput.create(TextInputStyle.SHORT, idY.toString(), "Le y du pixel")
+                            )
+                        )
 
-                                modalManager.add(id) {
-                                    val modalInteraction = it.modalInteraction
-                                    val opX = modalInteraction.getTextInputValueByCustomId(idX.toString())
-                                    val opY = modalInteraction.getTextInputValueByCustomId(idY.toString())
+                        modalManager.add(id) {
+                            val modalInteraction = it.modalInteraction
+                            val opX = modalInteraction.getTextInputValueByCustomId(idX.toString())
+                            val opY = modalInteraction.getTextInputValueByCustomId(idY.toString())
 
-                                    // optional to string
-                                    val xStr = if (opX.isPresent) {
-                                        opX.get()
-                                    } else {
-                                        throw IllegalArgumentException("x is not present")
-                                    }
-                                    val yStr = if (opY.isPresent) {
-                                        opY.get()
-                                    } else {
-                                        throw IllegalArgumentException("y is not present")
-                                    }
+                            // optional to string
+                            val xStr = if (opX.isPresent) {
+                                opX.get()
+                            } else {
+                                throw IllegalArgumentException("x is not present")
+                            }
+                            val yStr = if (opY.isPresent) {
+                                opY.get()
+                            } else {
+                                throw IllegalArgumentException("y is not present")
+                            }
 
-                                    // str to int
-                                    val x = try {
-                                        xStr.toInt()
-                                    } catch (e: Exception) {
-                                        throw IllegalArgumentException("x is not an int")
-                                    }
-                                    val y = try {
-                                        yStr.toInt()
-                                    } catch (e: Exception) {
-                                        throw IllegalArgumentException("y is not an int")
-                                    }
+                            // str to int
+                            val x = try {
+                                xStr.toInt()
+                            } catch (e: Exception) {
+                                throw IllegalArgumentException("x is not an int")
+                            }
+                            val y = try {
+                                yStr.toInt()
+                            } catch (e: Exception) {
+                                throw IllegalArgumentException("y is not an int")
+                            }
 
-                                    val player = getAccount(slashCommand)
-                                    val world = try {
-                                        WorldEnum.valueOf(player["world"]).world
-                                    } catch (e: Exception) {
-                                        throw IllegalArgumentException("world is not a valid world")
-                                    }
-                                    val currentX = try {
-                                        player["place_${world.progName}_x"].toInt()
-                                    } catch (e: Exception) {
-                                        throw IllegalArgumentException("current x is not an int")
-                                    }
-                                    val currentY = try {
-                                        player["place_${world.progName}_y"].toInt()
-                                    } catch (e: Exception) {
-                                        throw IllegalArgumentException("current y is not an int")
-                                    }
+                            val player = getAccount(slashCommand)
+                            val world = try {
+                                WorldEnum.valueOf(player["world"]).world
+                            } catch (e: Exception) {
+                                throw IllegalArgumentException("world is not a valid world")
+                            }
+                            val currentX = try {
+                                player["place_${world.progName}_x"].toInt()
+                            } catch (e: Exception) {
+                                throw IllegalArgumentException("current x is not an int")
+                            }
+                            val currentY = try {
+                                player["place_${world.progName}_y"].toInt()
+                            } catch (e: Exception) {
+                                throw IllegalArgumentException("current y is not an int")
+                            }
 
-                                    if (x < 0 || x > world.mapWidth || y < 0 || y > world.mapHeight) {
-                                        throw IllegalArgumentException("x or y is out of bounds (bounds are ${world.mapWidth}x${world.mapHeight})")
-                                    }
+                            if (x < 0 || x > world.mapWidth || y < 0 || y > world.mapHeight) {
+                                throw IllegalArgumentException("x or y is out of bounds (bounds are ${world.mapWidth}x${world.mapHeight})")
+                            }
+
+                            // Etape : calcul du trajet et affichage du prix en temps ou en argent
+                            val nodePlayer = Map.getNode(currentX, currentY, ArrayList())
+                            val nodeDest = Map.getNode(x, y, ArrayList())
+                            //long !!
+                            it.modalInteraction.createImmediateResponder()
+                                .setContent("Patientez un instant... calcul du trajet")
+                            val path = Map.findPath(nodePlayer, nodeDest)
+                            val image = Map.drawPath(path)
+
+                            val timeMillisToTravel = path.size * 10000L
+                            val priceToTravel = path.size * 0.5
+
+                            MenuBuilder("Comment voyager ?", "Il existe 2 moyens de voyager de façon simple", Color.RED)
+                                .setImage(image)
+                                .addButton("Temps", "Vous allez prendre $timeMillisToTravel ms pour aller jusqu'à ce pixel") {
+                                    MenuBuilder("Confirmer", "Confirmer le voyage ?", Color.orange)
+                                        .addButton("Oui", "Oui je veux aller jusqu'à ce pixel") {
+                                            player.setPath(path, "default_time")
+                                            it.buttonInteraction.createOriginalMessageUpdater()
+                                                .removeAllComponents()
+                                                .removeAllEmbeds()
+                                                .setContent("Vous êtes maintenant sur le trajet vers le pixel ($x, $y)")
+                                                .update()
+                                        }
+                                        .addButton("Non", "Non je ne veux pas aller jusqu'à ce pixel") {
+                                            it.buttonInteraction.createOriginalMessageUpdater()
+                                                .removeAllComponents()
+                                                .removeAllEmbeds()
+                                                .setContent("Vous avez annulé le voyage")
+                                                .update()
+                                        }
+                                        .modif(it)
                                 }
-                            }
-                            .addButton("Ville", "Les villes sont placées partout sur la map. Elles peuvent être officiels dans le monde DIBIMAP mais aussi créées par des joueurs.") {
-
-                            }
-                            .modif(buttonClickEvent)
+                                .addButton("Argent", "Vous allez dépenser $priceToTravel ${Resource.RABBIT_COIN.name_} pour aller jusqu'à ce pixel") {
+                                    MenuBuilder("Confirmer", "Confirmer le voyage ?", Color.orange)
+                                        .addButton("Oui", "Oui je veux aller jusqu'à ce pixel") {
+                                            // get the player's money
+                                            val money = player.getMoney()
+                                            if (money < priceToTravel) {
+                                                it.buttonInteraction.createOriginalMessageUpdater()
+                                                    .removeAllComponents()
+                                                    .removeAllEmbeds()
+                                                    .setContent("Vous n'avez pas assez d'argent pour aller jusqu'à ce pixel")
+                                                    .update()
+                                            } else {
+                                                player.removeMoney(priceToTravel)
+                                                player["place_${world.progName}_x"] = x.toString()
+                                                player["place_${world.progName}_y"] = y.toString()
+                                                it.buttonInteraction.createOriginalMessageUpdater()
+                                                    .removeAllComponents()
+                                                    .removeAllEmbeds()
+                                                    .setContent("Vous êtes maintenant sur le pixel ($x, $y)")
+                                                    .update()
+                                            }
+                                        }
+                                        .addButton("Non", "Non je ne veux pas aller jusqu'à ce pixel") {
+                                            it.buttonInteraction.createOriginalMessageUpdater()
+                                                .removeAllComponents()
+                                                .removeAllEmbeds()
+                                                .setContent("Vous avez annulé le voyage")
+                                                .update()
+                                        }
+                                        .modif(it)
+                                }
+                                .responder(it.modalInteraction)
+                        }
                     }
                     .addButton(
                         "Pixel par pixel",

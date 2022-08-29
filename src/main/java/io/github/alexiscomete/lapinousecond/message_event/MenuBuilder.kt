@@ -9,9 +9,12 @@ import org.javacord.api.entity.message.component.LowLevelComponent
 import org.javacord.api.entity.message.embed.EmbedBuilder
 import org.javacord.api.event.interaction.ButtonClickEvent
 import org.javacord.api.event.interaction.MessageComponentCreateEvent
+import org.javacord.api.event.interaction.ModalSubmitEvent
 import org.javacord.api.event.interaction.SelectMenuChooseEvent
+import org.javacord.api.interaction.ModalInteraction
 import org.javacord.api.interaction.SlashCommandInteraction
 import java.awt.Color
+import java.awt.image.BufferedImage
 
 class MenuBuilder(name: String, description: String, color: Color) {
 
@@ -33,6 +36,11 @@ class MenuBuilder(name: String, description: String, color: Color) {
         return this
     }
 
+    fun setImage(image: BufferedImage): MenuBuilder {
+        embedBuilder.setImage(image)
+        return this
+    }
+
     fun messageBuilder(): MessageBuilder {
         return MessageBuilder()
             .setEmbed(embedBuilder)
@@ -41,6 +49,13 @@ class MenuBuilder(name: String, description: String, color: Color) {
 
     fun responder(slashCommand: SlashCommandInteraction) {
         slashCommand.createImmediateResponder()
+            .addEmbed(embedBuilder)
+            .addComponents(ActionRow.of(arrayListOfButton))
+            .respond()
+    }
+
+    fun responder(modalInteraction: ModalInteraction) {
+        modalInteraction.createImmediateResponder()
             .addEmbed(embedBuilder)
             .addComponents(ActionRow.of(arrayListOfButton))
             .respond()
