@@ -11,6 +11,8 @@ import io.github.alexiscomete.lapinousecond.entity.players
 import io.github.alexiscomete.lapinousecond.useful.managesave.SaveManager
 import io.github.alexiscomete.lapinousecond.useful.managesave.saveManager
 import io.github.alexiscomete.lapinousecond.worlds.ServerBot
+import io.github.alexiscomete.lapinousecond.worlds.World
+import io.github.alexiscomete.lapinousecond.worlds.WorldEnum
 import org.javacord.api.entity.message.embed.EmbedBuilder
 import org.javacord.api.interaction.SlashCommandInteraction
 import org.javacord.api.interaction.SlashCommandOption
@@ -158,8 +160,9 @@ class AccountCommandStart() : SubCommand(
             p["bal"] = "0.0"
         }
         p["serv"] = "854288660147994634"
-        p["world"] = "NORMAL"
-        p["place_NORMAL"] = ServerBot(854288660147994634L).getString("places")
+        p["world"] = "TUTO"
+        p["x_TUTO"] = WorldEnum.TUTO.world.defaultX.toString()
+        p["y_TUTO"] = WorldEnum.TUTO.world.defaultY.toString()
         p["tuto"] = "1"
         val embed = EmbedBuilder()
             .setColor(Color.CYAN)

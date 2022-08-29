@@ -47,16 +47,12 @@ class Travel : CommandInServer("Vous permet de voyager vers un serveur", "travel
         }
 
         // On récupère le monde du joueur
-        var world = p.getString("current_world")
-        if (world == "") { // si le monde est vide alors on le met à NORMAL
-            world = "NORMAL"
-            p["world"] = "NORMAL"
+        val world = p.getString("current_world")
+        if (world == "") { // si le monde est vide alors on le met à TUTO
+            p["world"] = "TUTO"
         }
-        if (world == "NORMAL") {
-            travelWorldNormal(messageCreateEvent, args, p)
-        } else if (world == "DIBIMAP") {
-            travelWorldDibimap(messageCreateEvent, args, p)
-        }
+
+        travelWorldDibimap(messageCreateEvent, args, p)
     }
     // --------------------------------------------------
     // --------- EN FONCTION DU MONDE -------------------

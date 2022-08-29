@@ -130,8 +130,9 @@ class MapCommand : Command(
                             .setContent("✔ Flavinou vient de vous téléporter au hub <https://discord.gg/q4hVQ6gwyx>")
                             .update()
                         p["serv"] = "854288660147994634"
-                        p["world"] = "NORMAL"
-                        p["place_NORMAL"] = ServerBot(854288660147994634L).getString("places")
+                        p["world"] = "TUTO"
+                        p["x_TUTO"] = WorldEnum.TUTO.world.defaultX.toString()
+                        p["y_TUTO"] = WorldEnum.TUTO.world.defaultY.toString()
                     }
                     .addButton("Non", "Annuler") { mcce: ButtonClickEvent ->
                         mcce.buttonInteraction.createOriginalMessageUpdater()

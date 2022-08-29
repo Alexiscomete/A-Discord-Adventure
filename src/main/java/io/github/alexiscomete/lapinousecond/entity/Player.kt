@@ -75,9 +75,12 @@ class Player(id: Long) : CacheGetSet(id, PLAYERS), Owner {
         get() {
             var world = getString("current_world")
             if (world == "") {
-                world = "NORMAL"
-                set("current_world", "NORMAL")
+                world = "TUTO"
+                set("world", "TUTO")
+                this["x_TUTO"] = WorldEnum.TUTO.world.defaultX.toString()
+                this["y_TUTO"] = WorldEnum.TUTO.world.defaultY.toString()
             }
+            //TODO: update this
             var placeID = getString("place_$world")
             if (placeID == "") {
                 placeID = ServerBot(854288660147994634L).getString("places")

@@ -39,6 +39,7 @@ class PlaceCommand : CommandWithAccount(
                                 when (serverBot.getString("world")) {
                                     "NORMAL" -> createNormalPlace(messageCreateEvent, serverBot, p)
                                     "DIBIMAP" -> createWorldPlace(messageCreateEvent, serverBot, p, args)
+                                    "TUTO" -> messageCreateEvent.message.reply("Le monde du tutoriel est privé")
                                     else -> messageCreateEvent.message.reply("Impossible de créer un lieu officiel pour ce monde")
                                 }
                             } else {
