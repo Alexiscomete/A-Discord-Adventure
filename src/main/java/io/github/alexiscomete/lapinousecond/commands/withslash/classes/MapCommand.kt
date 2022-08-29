@@ -128,13 +128,86 @@ class MapCommand : Command(
                         "Aller à",
                         "Mode de déplacement le plus simple."
                     ) { buttonClickEvent: ButtonClickEvent ->
-                        //TODO
+                        MenuBuilder("Où aller ?", "Première étape : choisir où aller dans le monde", Color(123, 237, 100))
+                            .addButton("Pixel", "Les pixels constituent la map. Vous pouvez vous rendre à un pixel précis pour le visiter et faire certaines actions impossibles dans une ville") { buttonEvent ->
+                                val id = generateUniqueID()
+                                val idX = generateUniqueID()
+                                val idY = generateUniqueID()
+
+                                buttonEvent.buttonInteraction.respondWithModal(id.toString(), "Le pixel ?",
+                                    ActionRow.of(
+                                        TextInput.create(TextInputStyle.SHORT, idX.toString(), "Le x du pixel")
+                                    ),
+                                    ActionRow.of(
+                                        TextInput.create(TextInputStyle.SHORT, idY.toString(), "Le y du pixel")
+                                    )
+                                )
+
+                                modalManager.add(id) {
+                                    val modalInteraction = it.modalInteraction
+                                    val opX = modalInteraction.getTextInputValueByCustomId(idX.toString())
+                                    val opY = modalInteraction.getTextInputValueByCustomId(idY.toString())
+
+                                    // optional to string
+                                    val xStr = if (opX.isPresent) {
+                                        opX.get()
+                                    } else {
+                                        throw IllegalArgumentException("x is not present")
+                                    }
+                                    val yStr = if (opY.isPresent) {
+                                        opY.get()
+                                    } else {
+                                        throw IllegalArgumentException("y is not present")
+                                    }
+
+                                    // str to int
+                                    val x = try {
+                                        xStr.toInt()
+                                    } catch (e: Exception) {
+                                        throw IllegalArgumentException("x is not an int")
+                                    }
+                                    val y = try {
+                                        yStr.toInt()
+                                    } catch (e: Exception) {
+                                        throw IllegalArgumentException("y is not an int")
+                                    }
+
+                                    val player = getAccount(slashCommand)
+                                    val world = try {
+                                        WorldEnum.valueOf(player["world"]).world
+                                    } catch (e: Exception) {
+                                        throw IllegalArgumentException("world is not a valid world")
+                                    }
+                                    val currentX = try {
+                                        player["place_${world.progName}_x"].toInt()
+                                    } catch (e: Exception) {
+                                        throw IllegalArgumentException("current x is not an int")
+                                    }
+                                    val currentY = try {
+                                        player["place_${world.progName}_y"].toInt()
+                                    } catch (e: Exception) {
+                                        throw IllegalArgumentException("current y is not an int")
+                                    }
+
+                                    if (x < 0 || x > world.mapWidth || y < 0 || y > world.mapHeight) {
+                                        throw IllegalArgumentException("x or y is out of bounds (bounds are ${world.mapWidth}x${world.mapHeight})")
+                                    }
+                                }
+                            }
+                            .addButton("Ville", "Les villes sont placées partout sur la map. Elles peuvent être officiels dans le monde DIBIMAP mais aussi créées par des joueurs.") {
+
+                            }
+                            .modif(buttonClickEvent)
                     }
                     .addButton(
                         "Pixel par pixel",
                         "Mode de déplacement maîtrisable."
                     ) { buttonClickEvent: ButtonClickEvent ->
-                        //TODO
+                        buttonClickEvent.buttonInteraction.createOriginalMessageUpdater()
+                            .removeAllComponents()
+                            .removeAllEmbeds()
+                            .setContent("Bientôt disponible ! 😉")
+                            .update()
                     }
                     .modif(messageComponentCreateEvent)
             }
@@ -258,13 +331,9 @@ class MapCommand : Command(
                             )
 
                         modalManager.add(id) { messageComponentCreateEvent: ModalSubmitEvent ->
-                            val opInt = messageComponentCreateEvent.interaction.asModalInteraction()
-                            if (!opInt.isPresent) {
-                                throw IllegalStateException("Interaction is not a modal interaction")
-                            }
 
                             // get optionals text inputs from modal interaction
-                            val modalInteraction = opInt.get()
+                            val modalInteraction = messageComponentCreateEvent.modalInteraction
                             val opX1 = modalInteraction.getTextInputValueByCustomId(idX1.toString())
                             val opY1 = modalInteraction.getTextInputValueByCustomId(idY1.toString())
                             val opX2 = modalInteraction.getTextInputValueByCustomId(idX2.toString())

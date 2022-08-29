@@ -1,30 +1,22 @@
 package io.github.alexiscomete.lapinousecond.commands.withoutslash.classes
 
-import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
-import io.github.alexiscomete.lapinousecond.api
 import io.github.alexiscomete.lapinousecond.buttonsManager
 import io.github.alexiscomete.lapinousecond.commands.withoutslash.CommandInServer
 import io.github.alexiscomete.lapinousecond.entity.Player
+import io.github.alexiscomete.lapinousecond.messagesManager
+import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
 import io.github.alexiscomete.lapinousecond.worlds.Place
-import io.github.alexiscomete.lapinousecond.worlds.ServerBot
 import io.github.alexiscomete.lapinousecond.worlds.map.Map
 import io.github.alexiscomete.lapinousecond.worlds.map.Pixel
 import io.github.alexiscomete.lapinousecond.worlds.places
-import io.github.alexiscomete.lapinousecond.messagesManager
-import io.github.alexiscomete.lapinousecond.worlds.servers
-import org.javacord.api.entity.channel.ServerChannel
 import org.javacord.api.entity.message.MessageBuilder
 import org.javacord.api.entity.message.component.ActionRow
 import org.javacord.api.entity.message.component.Button
 import org.javacord.api.entity.message.embed.EmbedBuilder
-import org.javacord.api.entity.server.invite.InviteBuilder
 import org.javacord.api.event.interaction.ButtonClickEvent
-import org.javacord.api.event.interaction.MessageComponentCreateEvent
 import org.javacord.api.event.message.MessageCreateEvent
 import java.awt.Color
-import java.util.concurrent.ExecutionException
 import java.util.function.Consumer
-import java.util.stream.Collectors
 
 fun sendPath(messageCreateEvent: MessageCreateEvent, path: ArrayList<Pixel>) {
     val sb = StringBuilder()
@@ -57,113 +49,6 @@ class Travel : CommandInServer("Vous permet de voyager vers un serveur", "travel
     // --------------------------------------------------
     // --------- EN FONCTION DU MONDE -------------------
     // --------------------------------------------------
-    /**
-     * Si le monde est le monde est le monde normal
-     */
-    private fun travelWorldNormal(messageCreateEvent: MessageCreateEvent, args: Array<String>, p: Player) {
-        // On récupère le lieu du joueur dans le monde
-        var placeID = p.getString("place_NORMAL")
-        if (placeID == "") { // si le lieu est vide alors on l'initialise au lieu de départ : le serveur A Discord Adventure
-            placeID = ServerBot(854288660147994634L).getString("places")
-            p["place_NORMAL"] = placeID
-        }
-
-        // On récupère le lieu du joueur sous forme d'objet avec l'id
-        val place = places[placeID.toLong()]
-
-        // si le lieu n'existe pas on l'indique au joueur et on propose d'utiliser -hub
-        if (place == null) {
-            println(placeID)
-            messageCreateEvent.message.reply("Votre lieu est introuvable, utilisez -hub pour revenir au spawn.")
-            return
-        }
-
-        // on recupère les lieux dans lesquels le joueur peut se rendre depuis le lieu actuel
-        val places = Place.toPlaces(place.getString("connections"))
-
-        // On récupère le serveur dans lequel le joueur veut se rendre
-        val dest: Place = try {
-            Place(args[1].toLong())
-        } catch (e: IllegalArgumentException) {
-            messageCreateEvent.message.reply("SVP ne jouez pas à entrer autre chose que des nombres")
-            return
-        }
-
-        // On vérifie les liens entre les deux lieux
-        if (!places.contains(dest)) {
-            messageCreateEvent.message.reply("Il n' existe pas de route entre votre lieu et votre destination")
-            return
-        }
-
-        // On regarde si le joueur a assez d'argent pour se rendre à la destination
-        val bal = p["bal"].toDouble()
-        if (bal < 100) {
-            messageCreateEvent.message.reply("Il vous faut 100 rb pour voyager dans le monde normal")
-            return
-        }
-
-        // on récupère le serveur discord de destinatione en optionnel
-        val serverOp = api.getServerById(dest.getString("serv").toLong())
-        if (serverOp.isEmpty) { // si le serveur n'existe pas (ou que le bot n'a pas l'accès) on l'indique au joueur
-            messageCreateEvent.message.reply("Voyage vers cette destination impossible : le serveur discord est inconnu. Possibilités : bot kick, serveur supprimé, corruption du lieu")
-            return
-        }
-
-        // on récupère le serveur discord de destination
-        val server = serverOp.get()
-
-        // message de confirmation
-        if (args.size < 3) {
-            messageCreateEvent.message.reply("Prix pour aller dans ce serveur : 100. Tapez la même commande avec oui à la fin pour confirmer votre choix (ce dernier est irrévocable)")
-            return
-        }
-
-        // on récupère les salons de discussion du serveur
-        var channels = server.channels
-        channels = channels.stream().filter { serverChannel: ServerChannel -> serverChannel.type.isTextChannelType }
-            .collect(Collectors.toList())
-        if (channels.size == 0) { // si on ne trouve pas de salon de discussion on l'indique au joueur et au propriétaire du serveur
-            messageCreateEvent.message.reply("Bon je pense que ce serveur ne vaux pas la peine : il n'y aucun salon !! Je ne peux même pas vous inviter.")
-            server.owner.get()
-                .sendMessage("Bon ... si il n'y a même pas de salon dans votre serveur je ne peux rien faire.")
-            return
-        }
-
-        // on récupère le serveur de destination sous forme d'objet personnalisé
-        val nextServer = servers[dest.getString("serv").toLong()]
-
-        // on regarde si le serveur est bien enregistré dans la base de données
-        if (nextServer == null) {
-            messageCreateEvent.message.reply("Voyage impossible : le serveur n' est pas configuré")
-            return
-        }
-
-        // création de l'invitation vers le serveur
-        val inv = InviteBuilder(channels[0])
-        println(channels[0].name)
-        try {
-
-            // on envoie l'invitation après avoir récupéré l'utilisateur
-            val user = messageCreateEvent.messageAuthor.asUser().get()
-            user.sendMessage(inv.create().get().url.toString())
-            user.sendMessage(dest.getString("train"))
-
-            // on set les valeurs dans la base de données
-            p["serv"] = (nextServer.id).toString()
-            p["bal"] = (bal - 100).toString()
-            p["place_NORMAL"] = dest.id.toString()
-
-            // on envoie un message de confirmation
-            messageCreateEvent.message.reply("Dans le monde NORMAL le voyage est instantané, au revoir !")
-        } catch (e: InterruptedException) {
-            // on envoie un message d'erreur
-            messageCreateEvent.message.reply("Une erreur est survenue lors de la création de l'invitation.")
-            e.printStackTrace()
-        } catch (e: ExecutionException) {
-            messageCreateEvent.message.reply("Une erreur est survenue lors de la création de l'invitation.")
-            e.printStackTrace()
-        }
-    }
 
     // si le joueur est dans le monde Dibimap
     private fun travelWorldDibimap(messageCreateEvent: MessageCreateEvent, args: Array<String>, p: Player) {
@@ -300,7 +185,6 @@ class Travel : CommandInServer("Vous permet de voyager vers un serveur", "travel
         } else {
             // on envoie un message d'erreur
             messageCreateEvent.message.reply("Etrange, ce type de lieu n'existe pas. Je vais donc vous téléporter. Retentez votre commande.")
-            setCoos(p)
         }
     }
 
@@ -473,14 +357,5 @@ class Travel : CommandInServer("Vous permet de voyager vers un serveur", "travel
                 .setContent("Vous avez été téléporté à " + placeO.getString("name") + " car vous avez payé " + priceToTravel + " rb.")
                 .respond()
         }
-    }
-
-    // set coordonnées par défaut
-    private fun setCoos(p: Player) {
-        // on met les coordonnées par défaut
-        p["place_DIBIMAP_x"] = "400"
-        p["place_DIBIMAP_y"] = "250"
-        // et le type de lieu par défaut
-        p["place_DIBIMAP_type"] = "coos"
     }
 }

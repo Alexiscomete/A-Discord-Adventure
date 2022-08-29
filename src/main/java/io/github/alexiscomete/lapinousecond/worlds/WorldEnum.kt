@@ -9,7 +9,9 @@ enum class WorldEnum(val world: World) {
             "Ce monde regroupe tous les serveurs discord qui ne sont pas sur le drapeau. (ex : Wiki, projet, etc.)",
             0,
             0,
-            "NORMAL.png"
+            "NORMAL.png",
+            500,
+            500
         )
     ),
     DIBIMAP(
@@ -20,7 +22,9 @@ enum class WorldEnum(val world: World) {
             "Le serveur discord a un territoire sur le drapeau du Dibistan ? Alors c'est le monde du drapeau !",
             0,
             0,
-            "DIBIMAP.png"
+            "DIBIMAP.png",
+            528,
+            272
         )
     ),
     TUTO(
@@ -31,7 +35,9 @@ enum class WorldEnum(val world: World) {
             "Ce monde est réservé au tutoriel du jeu",
             0,
             0,
-            "TUTO.png"
+            "TUTO.png",
+            100,
+            50
         )
     );
 }

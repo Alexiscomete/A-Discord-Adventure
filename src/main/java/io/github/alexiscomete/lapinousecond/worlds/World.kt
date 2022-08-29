@@ -7,5 +7,7 @@ open class World(
     val desc: String,
     val defaultX: Int,
     val defaultY: Int,
-    val mapPath: String
+    val mapPath: String,
+    val mapWidth: Int,
+    val mapHeight: Int
 )
