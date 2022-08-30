@@ -4,6 +4,7 @@ import io.github.alexiscomete.lapinousecond.commands.withslash.Command
 import io.github.alexiscomete.lapinousecond.commands.withslash.ExecutableWithArguments
 import io.github.alexiscomete.lapinousecond.commands.withslash.getAccount
 import io.github.alexiscomete.lapinousecond.entity.Player
+import io.github.alexiscomete.lapinousecond.message_event.ListButtons
 import io.github.alexiscomete.lapinousecond.message_event.MenuBuilder
 import io.github.alexiscomete.lapinousecond.modalManager
 import io.github.alexiscomete.lapinousecond.resources.Resource
@@ -12,6 +13,7 @@ import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
 import io.github.alexiscomete.lapinousecond.worlds.Place
 import io.github.alexiscomete.lapinousecond.worlds.WorldEnum
 import io.github.alexiscomete.lapinousecond.worlds.bigger
+import io.github.alexiscomete.lapinousecond.worlds.map.FilesMapEnum
 import org.javacord.api.entity.message.MessageBuilder
 import org.javacord.api.entity.message.component.*
 import org.javacord.api.entity.message.embed.EmbedBuilder
@@ -142,8 +144,8 @@ class MapCommand : Command(
                             )
                         )
 
-                        modalManager.add(id) {
-                            val modalInteraction = it.modalInteraction
+                        modalManager.add(id) { modalXY ->
+                            val modalInteraction = modalXY.modalInteraction
                             val opX = modalInteraction.getTextInputValueByCustomId(idX.toString())
                             val opY = modalInteraction.getTextInputValueByCustomId(idY.toString())
 
@@ -196,7 +198,7 @@ class MapCommand : Command(
                             val nodePlayer = world.getNode(currentX, currentY, ArrayList())
                             val nodeDest = world.getNode(x, y, ArrayList())
                             //long !!
-                            it.modalInteraction.createImmediateResponder()
+                            modalXY.modalInteraction.createImmediateResponder()
                                 .setContent("Patientez un instant... calcul du trajet")
                             val path = world.findPath(nodePlayer, nodeDest)
                             val image = world.drawPath(path)
@@ -206,7 +208,7 @@ class MapCommand : Command(
 
                             MenuBuilder("Comment voyager ?", "Il existe 2 moyens de voyager de façon simple", Color.RED)
                                 .setImage(image)
-                                .addButton("Temps", "Vous allez prendre $timeMillisToTravel ms pour aller jusqu'à ce pixel") {
+                                .addButton("Temps", "Vous allez prendre $timeMillisToTravel ms pour aller jusqu'à ce pixel") { timeB ->
                                     MenuBuilder("Confirmer", "Confirmer le voyage ?", Color.orange)
                                         .addButton("Oui", "Oui je veux aller jusqu'à ce pixel") {
                                             player.setPath(path, "default_time")
@@ -223,9 +225,9 @@ class MapCommand : Command(
                                                 .setContent("Vous avez annulé le voyage")
                                                 .update()
                                         }
-                                        .modif(it)
+                                        .modif(timeB)
                                 }
-                                .addButton("Argent", "Vous allez dépenser $priceToTravel ${Resource.RABBIT_COIN.name_} pour aller jusqu'à ce pixel") {
+                                .addButton("Argent", "Vous allez dépenser $priceToTravel ${Resource.RABBIT_COIN.name_} pour aller jusqu'à ce pixel") { moneyB ->
                                     MenuBuilder("Confirmer", "Confirmer le voyage ?", Color.orange)
                                         .addButton("Oui", "Oui je veux aller jusqu'à ce pixel") {
                                             // get the player's money
@@ -254,9 +256,9 @@ class MapCommand : Command(
                                                 .setContent("Vous avez annulé le voyage")
                                                 .update()
                                         }
-                                        .modif(it)
+                                        .modif(moneyB)
                                 }
-                                .responder(it.modalInteraction)
+                                .responder(modalXY.modalInteraction)
                         }
                     }
                     .addButton(
@@ -281,14 +283,10 @@ class MapCommand : Command(
                         buttonClickEvent.buttonInteraction.createOriginalMessageUpdater()
                             .setContent("✔ Flavinou vient de vous téléporter au hub <https://discord.gg/q4hVQ6gwyx>")
                             .update()
-                        p["serv"] = "854288660147994634"
-                        p["world"] = "TUTO"
-                        p["place_TUTO_x"] = WorldEnum.TUTO.world.defaultX.toString()
-                        p["place_TUTO_y"] = WorldEnum.TUTO.world.defaultY.toString()
-                        p["place_TUTO_type"] = "coos"
+                        toSpawn(p)
                     }
-                    .addButton("Non", "Annuler") { mcce: ButtonClickEvent ->
-                        mcce.buttonInteraction.createOriginalMessageUpdater()
+                    .addButton("Non", "Annuler") { buttonClickEvent: ButtonClickEvent ->
+                        buttonClickEvent.buttonInteraction.createOriginalMessageUpdater()
                             .setContent("Annulé").update()
                     }
                     .modif(messageComponentCreateEvent)
@@ -302,7 +300,14 @@ class MapCommand : Command(
                         "Liste des cartes",
                         "Toutes les cartes permanentes du jeu ... remerciez Darki"
                     ) { buttonClickEvent: ButtonClickEvent ->
-                        //TODO
+                        val maps = arrayListOf(*FilesMapEnum.values())
+                        val embed = EmbedBuilder()
+                        val listButtons = ListButtons(embed, maps) { embedBuilder: EmbedBuilder, i: Int, i1: Int, filesMapEnums: ArrayList<FilesMapEnum> ->
+                            for (j in i until i1) {
+                                val map = filesMapEnums[j]
+                                embedBuilder.addField(map.name, map.description + "\n" + map.urlOfMap + "\n de :" + map.author, false)
+                            }
+                        }
                     }
                     .addButton(
                         "Ma position",

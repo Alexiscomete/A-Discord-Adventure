@@ -14,6 +14,7 @@ import org.javacord.api.entity.message.component.ActionRow
 import org.javacord.api.entity.message.component.TextInput
 import org.javacord.api.entity.message.component.TextInputStyle
 import org.javacord.api.event.interaction.ButtonClickEvent
+import org.javacord.api.event.interaction.MessageComponentCreateEvent
 import org.javacord.api.event.interaction.ModalSubmitEvent
 import org.javacord.api.interaction.SlashCommandInteraction
 import java.awt.Color
@@ -102,6 +103,7 @@ class MarketCommand : Command(
 
                     modalInteraction.createImmediateResponder()
                         .setContent("Continuons. Mentionnez le nom du joueur à qui vous souhaitez donner")
+                        .respond()
 
                     messagesManager.addListener(
                         mcce.modalInteraction.channel.get(),
@@ -135,11 +137,21 @@ class MarketCommand : Command(
                     val ownerId = owner.substring(2, owner.length - 1)
                     val player =
                         players[ownerId.toLong()] ?: throw IllegalArgumentException("Le joueur n'existe pas")
-                    MenuBuilder("Demande d'échange", "<@${slashCommand.user.id}> vous a proposé un échange", Color.YELLOW)
-                        .addButton("Accepter", "Vous acceptez de négociez avec lui") { messageComponentCreateEvent: ButtonClickEvent ->
+                    MenuBuilder(
+                        "Demande d'échange",
+                        "<@${slashCommand.user.id}> vous a proposé un échange",
+                        Color.YELLOW
+                    )
+                        .addButton(
+                            "Accepter",
+                            "Vous acceptez de négociez avec lui"
+                        ) { messageComponentCreateEvent: ButtonClickEvent ->
                             //TODO
                         }
-                        .addButton("Refuser", "Vous refusez de négocier avec lui") { messageComponentCreateEvent: ButtonClickEvent ->
+                        .addButton(
+                            "Refuser",
+                            "Vous refusez de négocier avec lui"
+                        ) { messageComponentCreateEvent: ButtonClickEvent ->
                             messageComponentCreateEvent.buttonInteraction
                                 .createOriginalMessageUpdater()
                                 .removeAllEmbeds()
@@ -162,21 +174,69 @@ class MarketCommand : Command(
                 "Offres",
                 "Les vendeurs proposent un prix"
             ) { messageComponentCreateEvent: ButtonClickEvent ->
-                //TODO
+                askWhat("offre", messageComponentCreateEvent, {
+                                                              //TODO
+                }, {
+                    //TODO
+                }) {
+                    //TODO
+                }
             }
             .addButton(
                 "Recherches",
                 "Les acheteurs recherchent un objet pour un certain prix"
             ) { messageComponentCreateEvent: ButtonClickEvent ->
-                //TODO
+                askWhat("recherche", messageComponentCreateEvent, {
+                    //TODO
+                }, {
+                    //TODO
+                }) {
+                    //TODO
+                }
             }
             .addButton(
                 "Enchères",
                 "Ici trouvez les objets les plus rares et chers"
             ) { messageComponentCreateEvent: ButtonClickEvent ->
-                //TODO
+                askWhat("enchère", messageComponentCreateEvent, {
+                    //TODO
+                }, {
+                    //TODO
+                }) {
+                    //TODO
+                }
             }
             .responder(slashCommand)
 
     }
+
+    fun askWhat(
+        name: String,
+        messageComponentCreateEvent: ButtonClickEvent,
+        my: (ButtonClickEvent) -> Unit,
+        everything: (ButtonClickEvent) -> Unit,
+        create: (ButtonClickEvent) -> Unit
+    ) {
+        MenuBuilder("Que faire ?", "Il existe 3 possibilités pour les ${name}s", Color.YELLOW)
+            .addButton(
+                "Mes ${name}s",
+                "Voir vos ${name}s, si elles existent"
+            ) { messageComponentCreateEvent: ButtonClickEvent ->
+                my(messageComponentCreateEvent)
+            }
+            .addButton(
+                "Toutes les ${name}s",
+                "Voir toutes les ${name}s. Vous pouvez interagir avec celles-ci ici"
+            ) { messageComponentCreateEvent: ButtonClickEvent ->
+                everything(messageComponentCreateEvent)
+            }
+            .addButton(
+                "Créer une $name",
+                "Créer une $name avec le menu interactif"
+            ) { messageComponentCreateEvent: ButtonClickEvent ->
+                create(messageComponentCreateEvent)
+            }
+            .modif(messageComponentCreateEvent)
+    }
+
 }

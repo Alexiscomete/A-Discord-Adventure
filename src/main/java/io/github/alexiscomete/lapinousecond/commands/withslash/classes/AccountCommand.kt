@@ -7,6 +7,7 @@ import io.github.alexiscomete.lapinousecond.commands.withslash.ExecutableWithArg
 import io.github.alexiscomete.lapinousecond.commands.withslash.SubCommand
 import io.github.alexiscomete.lapinousecond.commands.withslash.getAccount
 import io.github.alexiscomete.lapinousecond.config
+import io.github.alexiscomete.lapinousecond.entity.Player
 import io.github.alexiscomete.lapinousecond.entity.players
 import io.github.alexiscomete.lapinousecond.useful.managesave.SaveManager
 import io.github.alexiscomete.lapinousecond.useful.managesave.saveManager
@@ -22,6 +23,14 @@ import java.io.IOException
 import java.net.HttpURLConnection
 import java.net.URL
 import java.util.*
+
+fun toSpawn(p: Player) {
+    p["serv"] = "854288660147994634"
+    p["world"] = "TUTO"
+    p["place_TUTO_x"] = WorldEnum.TUTO.world.defaultX.toString()
+    p["place_TUTO_y"] = WorldEnum.TUTO.world.defaultY.toString()
+    p["place_TUTO_type"] = "coos"
+}
 
 class AccountCommandBase : Command(
     "account",
@@ -82,7 +91,7 @@ class UserData(val x: Int, val y: Int, val isVerify: Boolean, private val hasAcc
     }
 }
 
-class AccountCommandVerify() : SubCommand(
+class AccountCommandVerify : SubCommand(
     "verify",
     "Vérifier vos coordonnées (bot de Sylicium)"
 ),
@@ -106,7 +115,7 @@ class AccountCommandVerify() : SubCommand(
                     .respond()
             } else {
                 slashCommand.createImmediateResponder()
-                    .setContent("Votre compte a été associé à votre pixel. Vous n'avez malheuresement pas la vérification 😕")
+                    .setContent("Votre compte a été associé à votre pixel. Vous n'avez malheureusement pas la vérification 😕")
                     .respond()
             }
         } else {
@@ -117,7 +126,7 @@ class AccountCommandVerify() : SubCommand(
     }
 }
 
-class AccountCommandStart() : SubCommand(
+class AccountCommandStart : SubCommand(
     "start",
     "Créer votre compte sur le bot et faire le tuto"
 ),
@@ -137,14 +146,14 @@ class AccountCommandStart() : SubCommand(
             val user = slashCommand.user
             val what = HashMap<String, String>()
             val userData = getUserData(slashCommand.user.id)
-            if (userData.hasAccount()) {
+            content += if (userData.hasAccount()) {
                 if (userData.isVerify) {
-                    content += "Votre compte va être associé à votre pixel. Vous avez la vérification\n"
+                    "Votre compte va être associé à votre pixel. Vous avez la vérification\n"
                 } else {
-                    content += "Votre compte va être associé à votre pixel. Vous n'avez malheuresement pas la vérification 😕\n"
+                    "Votre compte va être associé à votre pixel. Vous n'avez malheureusement pas la vérification 😕\n"
                 }
             } else {
-                content += "Aucun compte de pixel trouvé sur le bot de Sylicium\n"
+                "Aucun compte de pixel trouvé sur le bot de Sylicium\n"
             }
             what["id"] = user.id.toString()
             saveManager.insert("players", what)
@@ -159,11 +168,7 @@ class AccountCommandStart() : SubCommand(
             p["is_verify"] = SaveManager.toBooleanString(userData.isVerify)
             p["bal"] = "0.0"
         }
-        p["serv"] = "854288660147994634"
-        p["world"] = "TUTO"
-        p["place_TUTO_x"] = WorldEnum.TUTO.world.defaultX.toString()
-        p["place_TUTO_y"] = WorldEnum.TUTO.world.defaultY.toString()
-        p["place_TUTO_type"] = "coos"
+        toSpawn(p)
         p["tuto"] = "1"
         val embed = EmbedBuilder()
             .setColor(Color.CYAN)

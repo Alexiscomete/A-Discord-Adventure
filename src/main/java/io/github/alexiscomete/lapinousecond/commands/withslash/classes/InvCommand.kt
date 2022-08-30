@@ -10,7 +10,6 @@ import io.github.alexiscomete.lapinousecond.entity.players
 import io.github.alexiscomete.lapinousecond.resources.Resource
 import io.github.alexiscomete.lapinousecond.useful.managesave.saveManager
 import org.javacord.api.entity.message.embed.EmbedBuilder
-import org.javacord.api.entity.user.User
 import org.javacord.api.interaction.SlashCommandInteraction
 import org.javacord.api.interaction.SlashCommandOption
 import org.javacord.api.interaction.SlashCommandOptionType
@@ -105,7 +104,7 @@ class InvCommandItems : SubCommand(
 
     override fun execute(slashCommand: SlashCommandInteraction) {
 
-        val player = who(slashCommand)
+        //val player = who(slashCommand)
 
         val embed = EmbedBuilder()
             .setTitle("Items")
