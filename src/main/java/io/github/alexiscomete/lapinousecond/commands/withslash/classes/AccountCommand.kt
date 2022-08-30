@@ -10,8 +10,6 @@ import io.github.alexiscomete.lapinousecond.config
 import io.github.alexiscomete.lapinousecond.entity.players
 import io.github.alexiscomete.lapinousecond.useful.managesave.SaveManager
 import io.github.alexiscomete.lapinousecond.useful.managesave.saveManager
-import io.github.alexiscomete.lapinousecond.worlds.ServerBot
-import io.github.alexiscomete.lapinousecond.worlds.World
 import io.github.alexiscomete.lapinousecond.worlds.WorldEnum
 import org.javacord.api.entity.message.embed.EmbedBuilder
 import org.javacord.api.interaction.SlashCommandInteraction
@@ -40,6 +38,8 @@ fun getUser(id: Long): String? {
     try {
         val connection =
             URL("https://dirtybiology.captaincommand.repl.co/api/?authorization=${config.content[2]}&request=getInfosByDiscordId&datas=%7B%22discordId%22:%22$id%22%7D").openConnection() as HttpURLConnection
+        connection.connectTimeout = 5000
+        connection.readTimeout = 5000
         connection.requestMethod = "GET"
         var response = ""
         val scanner = Scanner(connection.inputStream)
@@ -218,7 +218,7 @@ class AccountCommandPerms : SubCommand(
 ), ExecutableWithArguments {
     override val fullName: String
         get() = "account perms"
-    override val botPerms: Array<String>?
+    override val botPerms: Array<String>
         get() = arrayOf("MANAGE_ROLES")
 
     override fun execute(slashCommand: SlashCommandInteraction) {
