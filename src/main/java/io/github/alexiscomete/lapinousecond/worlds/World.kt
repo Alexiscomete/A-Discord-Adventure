@@ -14,7 +14,8 @@ open class World(
     val defaultY: Int,
     val mapPath: String,
     val mapWidth: Int,
-    val mapHeight: Int
+    val mapHeight: Int,
+    val map: Map,
 ) {
     val mapFile: BufferedImage? = try {
         ImageIO.read(

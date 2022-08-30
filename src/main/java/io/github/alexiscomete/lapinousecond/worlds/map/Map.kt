@@ -2,35 +2,66 @@ package io.github.alexiscomete.lapinousecond.worlds.map
 
 import io.github.alexiscomete.lapinousecond.worlds.Place
 import io.github.alexiscomete.lapinousecond.worlds.World
+import io.github.alexiscomete.lapinousecond.worlds.WorldEnum
 import java.awt.Color
 import java.awt.Font
 import java.awt.Image
 import java.awt.image.BufferedImage
-import java.io.IOException
-import javax.imageio.ImageIO
 import kotlin.math.pow
 import kotlin.math.sqrt
 
-object Map {
-    /*
-    var map: BufferedImage? = null
-        private set
-    const val MAP_WIDTH = 528
-    const val MAP_HEIGHT = 272
-    */
+/**
+ * Converts a given Image into a BufferedImage
+ * thanks to [https://stackoverflow.com/questions/13605248/java-converting-image-to-bufferedimage](https://stackoverflow.com/questions/13605248/java-converting-image-to-bufferedimage)
+ * @param img The Image to be converted
+ * @return The converted BufferedImage
+ */
+private fun toBufferedImage(img: Image): BufferedImage {
+    if (img is BufferedImage) {
+        return img
+    }
+
+    // Create a buffered image with transparency
+    val bimage = BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_ARGB)
+
+    // Draw the image on to the buffered image
+    val bGr = bimage.createGraphics()
+    bGr.drawImage(img, 0, 0, null)
+    bGr.dispose()
+
+    // Return the buffered image
+    return bimage
+}
+
+//return a bigger BufferedImage and ask size
+fun bigger(image: BufferedImage, sizeMultiplier: Int): BufferedImage {
+    return toBufferedImage(
+        image.getScaledInstance(
+            image.width * sizeMultiplier,
+            image.height * sizeMultiplier,
+            BufferedImage.SCALE_SMOOTH
+        )
+    )
+}
+
+enum class Map(val world: World) {
+
+    DIBIMAP(WorldEnum.DIBIMAP.world),
+    TUTO(WorldEnum.TUTO.world),
+    NORMAL(WorldEnum.NORMAL.world);
 
     // pixel at (x, y) with Pixel
-    fun getPixel(x: Int, y: Int, world: World): Pixel {
+    fun getPixel(x: Int, y: Int): Pixel {
         return Pixel(x, y, world.mapWidth, world.mapHeight, world.mapFile!!)
     }
 
     // if pixel is Dirt
-    fun isDirt(x: Int, y: Int, world: World): Boolean {
-        return getPixel(x, y, world).isDirt
+    fun isDirt(x: Int, y: Int): Boolean {
+        return getPixel(x, y).isDirt
     }
 
     // zoom and return a BufferedImage
-    private fun zoom(xArg: Int, yArg: Int, widthArg: Int, heightArg: Int, world: World): BufferedImage {
+    private fun zoom(xArg: Int, yArg: Int, widthArg: Int, heightArg: Int): BufferedImage {
         var x = xArg
         var y = yArg
         var width = widthArg
@@ -64,42 +95,8 @@ object Map {
     }
 
     // zoom on coordinates (x, y) and return a BufferedImage
-    fun zoom(x: Int, y: Int, zoom: Int, world: World): BufferedImage {
-        return zoom(x - zoom * 2, y - zoom, zoom * 4, zoom * 2, world)
-    }
-
-    //return a bigger BufferedImage and ask size
-    fun bigger(image: BufferedImage, sizeMultiplier: Int): BufferedImage {
-        return toBufferedImage(
-            image.getScaledInstance(
-                image.width * sizeMultiplier,
-                image.height * sizeMultiplier,
-                BufferedImage.SCALE_SMOOTH
-            )
-        )
-    }
-
-    /**
-     * Converts a given Image into a BufferedImage
-     * thanks to [https://stackoverflow.com/questions/13605248/java-converting-image-to-bufferedimage](https://stackoverflow.com/questions/13605248/java-converting-image-to-bufferedimage)
-     * @param img The Image to be converted
-     * @return The converted BufferedImage
-     */
-    private fun toBufferedImage(img: Image): BufferedImage {
-        if (img is BufferedImage) {
-            return img
-        }
-
-        // Create a buffered image with transparency
-        val bimage = BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_ARGB)
-
-        // Draw the image on to the buffered image
-        val bGr = bimage.createGraphics()
-        bGr.drawImage(img, 0, 0, null)
-        bGr.dispose()
-
-        // Return the buffered image
-        return bimage
+    fun zoom(x: Int, y: Int, zoom: Int): BufferedImage {
+        return zoom(x - zoom * 2, y - zoom, zoom * 4, zoom * 2)
     }
 
     // return an image with the places' names on it
@@ -240,24 +237,24 @@ object Map {
 
     // vérifie si le pixel est dans la map
     private fun isInMap(x: Int, y: Int): Boolean {
-        return x in 0 until MAP_WIDTH && y in 0 until MAP_HEIGHT
+        return x in 0 until world.mapWidth && y in 0 until world.mapHeight
     }
 
     fun getNode(x: Int, y: Int, nodes: ArrayList<Node>): Node {
-        val n = Node(x, y, MAP_WIDTH, MAP_HEIGHT, map!!, 0.0, 0.0)
+        val n = Node(x, y, world.mapWidth, world.mapHeight, world.mapFile!!, 0.0, 0.0)
         return if (nodes.contains(n)) {
             nodes[nodes.indexOf(n)]
         } else n
     }
 
     // distance between two pixels
-    private fun distance(a: Pixel?, b: Pixel): Double {
-        return sqrt((a!!.x - b.x).toDouble().pow(2.0) + (a.y - b.y).toDouble().pow(2.0))
+    private fun distance(a: Pixel, b: Pixel): Double {
+        return sqrt((a.x - b.x).toDouble().pow(2.0) + (a.y - b.y).toDouble().pow(2.0))
     }
 
     fun drawPath(path: ArrayList<Pixel>): BufferedImage {
-        val img = BufferedImage(map!!.width, map!!.height, BufferedImage.TYPE_INT_ARGB)
-        img.data = map!!.data
+        val img = BufferedImage(world.mapFile!!.width, world.mapFile.height, BufferedImage.TYPE_INT_ARGB)
+        img.data = world.mapFile.data
         for (p in path) {
             img.setRGB(p.xImage, p.yImage, Color.RED.rgb)
         }

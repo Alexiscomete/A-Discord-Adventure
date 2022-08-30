@@ -1,5 +1,7 @@
 package io.github.alexiscomete.lapinousecond.worlds
 
+import io.github.alexiscomete.lapinousecond.worlds.map.Map
+
 enum class WorldEnum(val world: World) {
     NORMAL(
         World(
@@ -11,7 +13,8 @@ enum class WorldEnum(val world: World) {
             0,
             "NORMAL.png",
             500,
-            500
+            500,
+            Map.NORMAL
         )
     ),
     DIBIMAP(
@@ -24,7 +27,8 @@ enum class WorldEnum(val world: World) {
             75,
             "DIBIMAP.png",
             528,
-            272
+            272,
+            Map.DIBIMAP
         )
     ),
     TUTO(
@@ -37,7 +41,8 @@ enum class WorldEnum(val world: World) {
             0,
             "TUTO.png",
             100,
-            50
+            50,
+            Map.TUTO
         )
     );
 }

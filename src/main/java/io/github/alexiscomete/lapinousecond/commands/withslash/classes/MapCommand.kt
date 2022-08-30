@@ -12,6 +12,7 @@ import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
 import io.github.alexiscomete.lapinousecond.worlds.Place
 import io.github.alexiscomete.lapinousecond.worlds.WorldEnum
 import io.github.alexiscomete.lapinousecond.worlds.map.Map
+import io.github.alexiscomete.lapinousecond.worlds.map.bigger
 import org.javacord.api.entity.message.MessageBuilder
 import org.javacord.api.entity.message.component.*
 import org.javacord.api.entity.message.embed.EmbedBuilder
@@ -193,13 +194,13 @@ class MapCommand : Command(
                             }
 
                             // Etape : calcul du trajet et affichage du prix en temps ou en argent
-                            val nodePlayer = Map.getNode(currentX, currentY, ArrayList())
-                            val nodeDest = Map.getNode(x, y, ArrayList())
+                            val nodePlayer = world.map.getNode(currentX, currentY, ArrayList())
+                            val nodeDest = world.map.getNode(x, y, ArrayList())
                             //long !!
                             it.modalInteraction.createImmediateResponder()
                                 .setContent("Patientez un instant... calcul du trajet")
-                            val path = Map.findPath(nodePlayer, nodeDest)
-                            val image = Map.drawPath(path)
+                            val path = world.map.findPath(nodePlayer, nodeDest)
+                            val image = world.map.drawPath(path)
 
                             val timeMillisToTravel = path.size * 10000L
                             val priceToTravel = path.size * 0.5
@@ -310,19 +311,20 @@ class MapCommand : Command(
                     ) { buttonClickEvent: ButtonClickEvent ->
 
                         val player = getAccount(slashCommand)
-                        val world = player["world"]
+                        val worldStr = player["world"]
+                        val world = WorldEnum.valueOf(worldStr).world
                         val position = player.positionToString()
 
-                        val x = player["place_${world}_x"]
-                        val y = player["place_${world}_y"]
+                        val x = player["place_${worldStr}_x"]
+                        val y = player["place_${worldStr}_y"]
                         val xInt = x.toInt()
                         val yInt = y.toInt()
                         val image = try {
-                            Map.bigger(Map.zoom(xInt, yInt, 30), 10)
+                            bigger(world.map.zoom(xInt, yInt, 30), 10)
                         } catch (e: Exception) {
                             null
                         }
-                        val biome = if (Map.isDirt(xInt, yInt)) "la terre" else "l'eau"
+                        val biome = if (world.map.isDirt(xInt, yInt)) "la terre" else "l'eau"
 
                         buttonClickEvent.buttonInteraction.createOriginalMessageUpdater()
                             .removeAllComponents()
@@ -427,18 +429,22 @@ class MapCommand : Command(
                                 throw IllegalArgumentException("Le y du point d'arrivée n'est pas un nombre")
                             }
 
+                            val player = getAccount(slashCommand)
+                            val worldStr = player["world"]
+                            val world = WorldEnum.valueOf(worldStr).world
+
                             // check if the arguments are in the right range
-                            if (x1Int < 0 || x1Int > Map.MAP_WIDTH) {
-                                throw IllegalArgumentException("The first argument must be between 0 and " + Map.MAP_WIDTH)
+                            if (x1Int < 0 || x1Int > world.mapWidth) {
+                                throw IllegalArgumentException("The first argument must be between 0 and " + world.mapWidth)
                             }
-                            if (y1Int < 0 || y1Int > Map.MAP_HEIGHT) {
-                                throw IllegalArgumentException("The second argument must be between 0 and " + Map.MAP_HEIGHT)
+                            if (y1Int < 0 || y1Int > world.mapHeight) {
+                                throw IllegalArgumentException("The second argument must be between 0 and " + world.mapHeight)
                             }
-                            if (x2Int < 0 || x2Int > Map.MAP_WIDTH) {
-                                throw IllegalArgumentException("The third argument must be between 0 and " + Map.MAP_WIDTH)
+                            if (x2Int < 0 || x2Int > world.mapWidth) {
+                                throw IllegalArgumentException("The third argument must be between 0 and " + world.mapWidth)
                             }
-                            if (y2Int < 0 || y2Int > Map.MAP_HEIGHT) {
-                                throw IllegalArgumentException("The fourth argument must be between 0 and " + Map.MAP_HEIGHT)
+                            if (y2Int < 0 || y2Int > world.mapHeight) {
+                                throw IllegalArgumentException("The fourth argument must be between 0 and " + world.mapHeight)
                             }
 
                             // send a later responder
@@ -447,10 +453,11 @@ class MapCommand : Command(
                                 .respond()
 
                             // send the path
-                            val path = Map.findPath(
-                                Map.getNode(
+                            val path = world.map.findPath(
+                                world.map.getNode(
                                     x1Int, y1Int, ArrayList()
-                                ), Map.getNode(
+                                ),
+                                world.map.getNode(
                                     x2Int, y2Int, ArrayList()
                                 )
                             )
@@ -464,7 +471,7 @@ class MapCommand : Command(
                                 sb.append(pixel)
                             }
                             MessageBuilder()
-                                .addAttachment(Map.drawPath(path), "path.png")
+                                .addAttachment(world.map.drawPath(path), "path.png")
                                 .setContent(sb.toString())
                                 .send(modalInteraction.channel.get())
                         }
@@ -536,11 +543,15 @@ class MapCommand : Command(
                                 throw IllegalArgumentException("Le zoom n'est pas un nombre")
                             }
 
+                            val player = getAccount(slashCommand)
+                            val worldStr = player["world"]
+                            val world = WorldEnum.valueOf(worldStr).world
+
                             // check if the arguments are in the right range
-                            if (xInt < 0 || xInt > Map.MAP_WIDTH) {
+                            if (xInt < 0 || xInt > world.mapWidth) {
                                 throw IllegalArgumentException("Le x de la case n'est pas dans la carte")
                             }
-                            if (yInt < 0 || yInt > Map.MAP_HEIGHT) {
+                            if (yInt < 0 || yInt > world.mapHeight) {
                                 throw IllegalArgumentException("Le y de la case n'est pas dans la carte")
                             }
 
@@ -554,8 +565,8 @@ class MapCommand : Command(
                                 .setContent("Création de la carte en cours et ajout des villes proches ...")
                                 .respond()
 
-                            val image = Map.bigger(
-                                Map.zoom(
+                            val image = bigger(
+                                world.map.zoom(
                                     xInt, yInt, zoomInt
                                 ), 10
                             )
@@ -568,7 +579,7 @@ class MapCommand : Command(
                                     .get() > yInt + zoomInt
                             }
 
-                            Map.getMapWithNames(
+                            world.map.getMapWithNames(
                                 places,
                                 xInt - zoomInt * 2,
                                 yInt - zoomInt,
@@ -638,14 +649,19 @@ class MapCommand : Command(
                             } catch (e: NumberFormatException) {
                                 throw IllegalArgumentException("Le y de la case n'est pas un nombre")
                             }
-                            if (xInt < 0 || xInt > Map.MAP_WIDTH) {
+
+                            val player = getAccount(slashCommand)
+                            val worldStr = player["world"]
+                            val world = WorldEnum.valueOf(worldStr).world
+
+                            if (xInt < 0 || xInt > world.mapWidth) {
                                 throw IllegalArgumentException("Le x de la case n'est pas dans la carte")
                             }
-                            if (yInt < 0 || yInt > Map.MAP_HEIGHT) {
+                            if (yInt < 0 || yInt > world.mapHeight) {
                                 throw IllegalArgumentException("Le y de la case n'est pas dans la carte")
                             }
 
-                            val biome = if (Map.isDirt(xInt, yInt)) {
+                            val biome = if (world.map.isDirt(xInt, yInt)) {
                                 "la terre"
                             } else {
                                 "l'eau"

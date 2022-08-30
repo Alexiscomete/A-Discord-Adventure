@@ -154,7 +154,7 @@ class PlaceCommand : CommandWithAccount(
                                 y2 = tmp
                             }
                             require(!(x1 < 0 || y1 < 0)) { "Les coordonnées doivent être positives" }
-                            require(!(Map.MAP_HEIGHT < y2 || Map.MAP_WIDTH < x2)) { "Les coordonnées sont en dehors de la carte" }
+                            require(!(WorldEnum.DIBIMAP.world.mapHeight < y2 || WorldEnum.DIBIMAP.world.mapWidth < x2)) { "Les coordonnées sont en dehors de la carte" }
                             val placeZones = PlaceZones(placeParent.id)
                             val zone = Zone(x1, y1, x2, y2)
                             placeZones.addZone(zone)
