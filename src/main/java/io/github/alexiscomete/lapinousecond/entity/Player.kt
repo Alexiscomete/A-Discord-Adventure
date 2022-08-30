@@ -13,7 +13,6 @@ import io.github.alexiscomete.lapinousecond.view.answerManager
 import io.github.alexiscomete.lapinousecond.worlds.Place
 import io.github.alexiscomete.lapinousecond.worlds.ServerBot
 import io.github.alexiscomete.lapinousecond.worlds.WorldEnum
-import io.github.alexiscomete.lapinousecond.worlds.map.Map
 import io.github.alexiscomete.lapinousecond.worlds.map.Pixel
 import io.github.alexiscomete.lapinousecond.worlds.places
 
@@ -136,7 +135,8 @@ class Player(id: Long) : CacheGetSet(id, PLAYERS), Owner {
             val pathSplit = pathStr.split(";")
             for (i in pathSplit.indices) {
                 val pixelSplit = pathSplit[i].split(",")
-                path.add(Map.getPixel(pixelSplit[0].toInt(), pixelSplit[1].toInt()))
+                val world = WorldEnum.valueOf(getString("world")).world
+                path.add(world.getPixel(pixelSplit[0].toInt(), pixelSplit[1].toInt()))
             }
         }
         return path

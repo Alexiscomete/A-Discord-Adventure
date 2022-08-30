@@ -1,7 +1,5 @@
 package io.github.alexiscomete.lapinousecond.worlds
 
-import io.github.alexiscomete.lapinousecond.worlds.map.Map
-
 enum class WorldEnum(val world: World) {
     NORMAL(
         World(
@@ -9,12 +7,11 @@ enum class WorldEnum(val world: World) {
             "Monde du chaos",
             "NORMAL",
             "Ce monde regroupe tous les serveurs discord qui ne sont pas sur le drapeau. (ex : Wiki, projet, etc.)",
-            0,
-            0,
+            250,
+            250,
             "NORMAL.png",
             500,
             500,
-            Map.NORMAL
         )
     ),
     DIBIMAP(
@@ -28,7 +25,6 @@ enum class WorldEnum(val world: World) {
             "DIBIMAP.png",
             528,
             272,
-            Map.DIBIMAP
         )
     ),
     TUTO(
@@ -37,12 +33,11 @@ enum class WorldEnum(val world: World) {
             "Monde du tutoriel",
             "TUTO",
             "Ce monde est réservé au tutoriel du jeu",
-            0,
-            0,
+            50,
+            25,
             "TUTO.png",
             100,
             50,
-            Map.TUTO
         )
     );
 }

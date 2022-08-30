@@ -5,7 +5,7 @@ import io.github.alexiscomete.lapinousecond.commands.withoutslash.CommandInServe
 import io.github.alexiscomete.lapinousecond.entity.Player
 import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
 import io.github.alexiscomete.lapinousecond.worlds.Place
-import io.github.alexiscomete.lapinousecond.worlds.map.Map
+import io.github.alexiscomete.lapinousecond.worlds.WorldEnum
 import io.github.alexiscomete.lapinousecond.worlds.map.Pixel
 import io.github.alexiscomete.lapinousecond.worlds.places
 import org.javacord.api.entity.message.MessageBuilder
@@ -23,7 +23,7 @@ fun sendPath(messageCreateEvent: MessageCreateEvent, path: ArrayList<Pixel>) {
     }
     messageCreateEvent.message.reply(sb.toString())
     val messageBuilder3 = MessageBuilder()
-    messageBuilder3.addAttachment(Map.DIBIMAP.drawPath(path), "path.png")
+    messageBuilder3.addAttachment(WorldEnum.DIBIMAP.world.drawPath(path), "path.png")
     messageBuilder3.send(messageCreateEvent.channel)
 }
 
@@ -102,7 +102,7 @@ class Travel : CommandInServer("Vous permet de voyager vers un serveur", "travel
             EmbedBuilder().setTitle("Vous allez en [$xDest:$yDest]")
                 .setDescription("Avec " + path.size + " pixels de trajet en " + timeMillisToTravel + " millisecondes ou " + priceToTravel + " rb.")
                 .setImage(
-                    Map.DIBIMAP.drawPath(path), "path.png"
+                    WorldEnum.DIBIMAP.world.drawPath(path), "path.png"
                 ).setColor(Color.GREEN)
         ).addComponents(
             ActionRow.of(
@@ -149,7 +149,7 @@ class Travel : CommandInServer("Vous permet de voyager vers un serveur", "travel
             EmbedBuilder().setTitle("Vous allez à " + placeO.getString("name"))
                 .setDescription("Avec " + path.size + " pixels de trajet en " + timeMillisToTravel + " millisecondes ou " + priceToTravel + " rb.")
                 .setImage(
-                    Map.DIBIMAP.drawPath(path), "path.png"
+                    WorldEnum.DIBIMAP.world.drawPath(path), "path.png"
                 ).setColor(Color.GREEN)
         ).addComponents(
             ActionRow.of(

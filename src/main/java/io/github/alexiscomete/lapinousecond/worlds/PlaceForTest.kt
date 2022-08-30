@@ -1,6 +1,5 @@
 package io.github.alexiscomete.lapinousecond.worlds
 
-import io.github.alexiscomete.lapinousecond.worlds.map.Map
 import java.util.*
 
 class PlaceForTest(val name: String, override val id: Long, var x: Int, var y: Int) : Place() {
@@ -23,11 +22,11 @@ class PlaceForTest(val name: String, override val id: Long, var x: Int, var y: I
 
     companion object {
         // génère aléatoirement une place pour les tests, minx = 0, maxx = voir dans Map.java, miny = 0, maxy = voir dans Map.java
-        private fun generateRandomPlace(): PlaceForTest {
+        private fun generateRandomPlace(world: World): PlaceForTest {
 
             // génération des coordonnées aléatoires
-            val x = (Math.random() * Map.MAP_HEIGHT).toInt()
-            val y = (Math.random() * Map.MAP_HEIGHT).toInt()
+            val x = (Math.random() * world.mapWidth).toInt()
+            val y = (Math.random() * world.mapHeight).toInt()
 
             // génération du nom aléatoire
             val name = StringBuilder()
@@ -42,10 +41,10 @@ class PlaceForTest(val name: String, override val id: Long, var x: Int, var y: I
         }
 
         // génération de n places aléatoires
-        fun generateRandomPlaces(n: Int): ArrayList<Place> {
+        fun generateRandomPlaces(n: Int, world: World): ArrayList<Place> {
             val places = ArrayList<Place>()
             for (i in 0 until n) {
-                places.add(generateRandomPlace())
+                places.add(generateRandomPlace(world))
             }
             return places
         }

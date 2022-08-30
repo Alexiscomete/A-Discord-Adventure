@@ -11,8 +11,7 @@ import io.github.alexiscomete.lapinousecond.selectMenuManager
 import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
 import io.github.alexiscomete.lapinousecond.worlds.Place
 import io.github.alexiscomete.lapinousecond.worlds.WorldEnum
-import io.github.alexiscomete.lapinousecond.worlds.map.Map
-import io.github.alexiscomete.lapinousecond.worlds.map.bigger
+import io.github.alexiscomete.lapinousecond.worlds.bigger
 import org.javacord.api.entity.message.MessageBuilder
 import org.javacord.api.entity.message.component.*
 import org.javacord.api.entity.message.embed.EmbedBuilder
@@ -194,13 +193,13 @@ class MapCommand : Command(
                             }
 
                             // Etape : calcul du trajet et affichage du prix en temps ou en argent
-                            val nodePlayer = world.map.getNode(currentX, currentY, ArrayList())
-                            val nodeDest = world.map.getNode(x, y, ArrayList())
+                            val nodePlayer = world.getNode(currentX, currentY, ArrayList())
+                            val nodeDest = world.getNode(x, y, ArrayList())
                             //long !!
                             it.modalInteraction.createImmediateResponder()
                                 .setContent("Patientez un instant... calcul du trajet")
-                            val path = world.map.findPath(nodePlayer, nodeDest)
-                            val image = world.map.drawPath(path)
+                            val path = world.findPath(nodePlayer, nodeDest)
+                            val image = world.drawPath(path)
 
                             val timeMillisToTravel = path.size * 10000L
                             val priceToTravel = path.size * 0.5
@@ -320,11 +319,11 @@ class MapCommand : Command(
                         val xInt = x.toInt()
                         val yInt = y.toInt()
                         val image = try {
-                            bigger(world.map.zoom(xInt, yInt, 30), 10)
+                            bigger(world.zoom(xInt, yInt, 30), 10)
                         } catch (e: Exception) {
                             null
                         }
-                        val biome = if (world.map.isDirt(xInt, yInt)) "la terre" else "l'eau"
+                        val biome = if (world.isDirt(xInt, yInt)) "la terre" else "l'eau"
 
                         buttonClickEvent.buttonInteraction.createOriginalMessageUpdater()
                             .removeAllComponents()
@@ -453,11 +452,11 @@ class MapCommand : Command(
                                 .respond()
 
                             // send the path
-                            val path = world.map.findPath(
-                                world.map.getNode(
+                            val path = world.findPath(
+                                world.getNode(
                                     x1Int, y1Int, ArrayList()
                                 ),
-                                world.map.getNode(
+                                world.getNode(
                                     x2Int, y2Int, ArrayList()
                                 )
                             )
@@ -471,7 +470,7 @@ class MapCommand : Command(
                                 sb.append(pixel)
                             }
                             MessageBuilder()
-                                .addAttachment(world.map.drawPath(path), "path.png")
+                                .addAttachment(world.drawPath(path), "path.png")
                                 .setContent(sb.toString())
                                 .send(modalInteraction.channel.get())
                         }
@@ -566,7 +565,7 @@ class MapCommand : Command(
                                 .respond()
 
                             val image = bigger(
-                                world.map.zoom(
+                                world.zoom(
                                     xInt, yInt, zoomInt
                                 ), 10
                             )
@@ -579,7 +578,7 @@ class MapCommand : Command(
                                     .get() > yInt + zoomInt
                             }
 
-                            world.map.getMapWithNames(
+                            world.getMapWithNames(
                                 places,
                                 xInt - zoomInt * 2,
                                 yInt - zoomInt,
@@ -661,7 +660,7 @@ class MapCommand : Command(
                                 throw IllegalArgumentException("Le y de la case n'est pas dans la carte")
                             }
 
-                            val biome = if (world.map.isDirt(xInt, yInt)) {
+                            val biome = if (world.isDirt(xInt, yInt)) {
                                 "la terre"
                             } else {
                                 "l'eau"
