@@ -20,8 +20,8 @@ enum class WorldEnum(val world: World) {
             "Monde du drapeau",
             "DIBIMAP",
             "Le serveur discord a un territoire sur le drapeau du Dibistan ? Alors c'est le monde du drapeau !",
-            0,
-            0,
+            449,
+            75,
             "DIBIMAP.png",
             528,
             272

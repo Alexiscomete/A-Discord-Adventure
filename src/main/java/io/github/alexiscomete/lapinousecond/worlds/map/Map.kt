@@ -1,6 +1,7 @@
 package io.github.alexiscomete.lapinousecond.worlds.map
 
 import io.github.alexiscomete.lapinousecond.worlds.Place
+import io.github.alexiscomete.lapinousecond.worlds.World
 import java.awt.Color
 import java.awt.Font
 import java.awt.Image
@@ -11,45 +12,60 @@ import kotlin.math.pow
 import kotlin.math.sqrt
 
 object Map {
+    /*
     var map: BufferedImage? = null
         private set
     const val MAP_WIDTH = 528
     const val MAP_HEIGHT = 272
-
-    init {
-        // charge la map à partir du fichier base.png inclus dans le jar
-        try {
-            map = ImageIO.read(
-                Map::class.java.classLoader.getResourceAsStream("base.png")
-            )
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-    }
+    */
 
     // pixel at (x, y) with Pixel
-    fun getPixel(x: Int, y: Int): Pixel {
-        return Pixel(x, y, MAP_WIDTH, MAP_HEIGHT, map!!)
+    fun getPixel(x: Int, y: Int, world: World): Pixel {
+        return Pixel(x, y, world.mapWidth, world.mapHeight, world.mapFile!!)
     }
 
     // if pixel is Dirt
-    fun isDirt(x: Int, y: Int): Boolean {
-        return getPixel(x, y).isDirt
+    fun isDirt(x: Int, y: Int, world: World): Boolean {
+        return getPixel(x, y, world).isDirt
     }
 
     // zoom and return a BufferedImage
-    private fun zoom(x: Int, y: Int, width: Int, height: Int): BufferedImage {
-        return map!!.getSubimage(
-            x * map!!.getWidth(null) / MAP_WIDTH,
-            y * map!!.getHeight(null) / MAP_HEIGHT,
-            width * map!!.getWidth(null) / MAP_WIDTH,
-            height * map!!.getHeight(null) / MAP_HEIGHT
+    private fun zoom(xArg: Int, yArg: Int, widthArg: Int, heightArg: Int, world: World): BufferedImage {
+        var x = xArg
+        var y = yArg
+        var width = widthArg
+        var height = heightArg
+        val mapWidth = world.mapWidth
+        val mapHeight = world.mapHeight
+        if (x < width) {
+            x = width
+            // change the value of width if it is too big for the map
+            if (x + width > mapWidth) {
+                width = mapWidth - x
+            }
+        } else if (x + width > mapWidth) {
+            x = mapWidth - width
+        }
+        if (y < height) {
+            y = height
+            // change the value of height if it is too big for the map
+            if (y + height > mapHeight) {
+                height = mapHeight - y
+            }
+        } else if (y + height > mapHeight) {
+            y = mapHeight - height
+        }
+        return world.mapFile!!.getSubimage(
+            x * world.mapFile.getWidth(null) / mapWidth,
+            y * world.mapFile.getHeight(null) / mapHeight,
+            width * world.mapFile.getWidth(null) / mapWidth,
+            height * world.mapFile.getHeight(null) / mapHeight
         )
     }
 
     // zoom on coordinates (x, y) and return a BufferedImage
-    fun zoom(x: Int, y: Int, zoom: Int): BufferedImage {
-        return zoom(x - zoom * 2, y - zoom, zoom * 4, zoom * 2)
+    fun zoom(x: Int, y: Int, zoom: Int, world: World): BufferedImage {
+        return zoom(x - zoom * 2, y - zoom, zoom * 4, zoom * 2, world)
     }
 
     //return a bigger BufferedImage and ask size
