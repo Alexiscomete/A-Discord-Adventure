@@ -10,7 +10,7 @@ import io.github.alexiscomete.lapinousecond.useful.managesave.Table
 val AUCTIONS = Table("auctions")
 val auctions = CacheCustom(AUCTIONS) { Auction(it) }
 
-class Auction(id: Long) : CacheGetSet(id, AUCTIONS), BaseTransaction {
+class Auction(id: Long) : CacheGetSet(id, AUCTIONS), Transaction {
     override val who: Player
         get() = players[this["who"].toLong()]!!
     override val amount: Int
@@ -19,4 +19,6 @@ class Auction(id: Long) : CacheGetSet(id, AUCTIONS), BaseTransaction {
         get() = Resource.valueOf(this["what"].uppercase())
     override val amountRB: Double
         get() = this["amountRB"].toDouble()
+    val whoMax: Player
+        get() = players[this["whoMax"].toLong()]!!
 }

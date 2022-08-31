@@ -10,7 +10,7 @@ import io.github.alexiscomete.lapinousecond.useful.managesave.Table
 val RESEARCHES = Table("researches")
 val researches = CacheCustom(RESEARCHES) { Research(it) }
 
-class Research(id: Long) : CacheGetSet(id, RESEARCHES), BaseTransaction {
+class Research(id: Long) : CacheGetSet(id, RESEARCHES), Transaction {
     override val who: Player
         get() = players[this["who"].toLong()]!!
     override val amount: Int

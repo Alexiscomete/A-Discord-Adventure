@@ -3,13 +3,14 @@ package io.github.alexiscomete.lapinousecond.commands.withslash.classes
 import io.github.alexiscomete.lapinousecond.commands.withslash.Command
 import io.github.alexiscomete.lapinousecond.commands.withslash.ExecutableWithArguments
 import io.github.alexiscomete.lapinousecond.commands.withslash.getAccount
+import io.github.alexiscomete.lapinousecond.entity.Owner
+import io.github.alexiscomete.lapinousecond.entity.Player
 import io.github.alexiscomete.lapinousecond.entity.players
 import io.github.alexiscomete.lapinousecond.message_event.MenuBuilder
 import io.github.alexiscomete.lapinousecond.messagesManager
 import io.github.alexiscomete.lapinousecond.modalManager
 import io.github.alexiscomete.lapinousecond.resources.Resource
 import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
-import io.github.alexiscomete.lapinousecond.useful.transactions.giveFromTo
 import org.javacord.api.entity.message.component.ActionRow
 import org.javacord.api.entity.message.component.TextInput
 import org.javacord.api.entity.message.component.TextInputStyle
@@ -17,6 +18,16 @@ import org.javacord.api.event.interaction.ButtonClickEvent
 import org.javacord.api.event.interaction.ModalSubmitEvent
 import org.javacord.api.interaction.SlashCommandInteraction
 import java.awt.Color
+
+fun giveFromTo(from: Owner, to: Owner, amount: Double, resource: Resource) : Boolean {
+    return if (from.hasResource(resource, amount)) {
+        from.removeResource(resource, amount)
+        to.addResource(resource, amount)
+        true
+    } else {
+        false
+    }
+}
 
 class MarketCommand : Command(
     "market",
@@ -111,10 +122,13 @@ class MarketCommand : Command(
                             players[ownerId.toLong()] ?: throw IllegalArgumentException("Le joueur n'existe pas")
 
                         // on fait la transaction sécurisée avec GiveFromTo
-                        giveFromTo(
-                            p, player, quantityDouble,
-                            resource
-                        )
+                        if (!giveFromTo(
+                                p, player, quantityDouble,
+                                resource
+                            )
+                        ) {
+                            throw IllegalArgumentException("Vous n'avez pas assez de ressources pour effectuer cette transaction")
+                        }
                     }
                 }
             }
@@ -122,7 +136,7 @@ class MarketCommand : Command(
                 "Echanger",
                 "Echanger un objet ou des ressources avec un autre joueur de façon sécurisée"
             ) { messageComponentCreateEvent: ButtonClickEvent ->
-
+                getAccount(slashCommand)
                 messagesManager.addListener(
                     slashCommand.channel.get(),
                     slashCommand.user.id
@@ -130,11 +144,10 @@ class MarketCommand : Command(
                     val owner = message.messageContent
                     // l'owner est au format <@id>, je vais donc extraire l'id
                     val ownerId = owner.substring(2, owner.length - 1)
-                    val player =
-                        players[ownerId.toLong()] ?: throw IllegalArgumentException("Le joueur n'existe pas")
+                    players[ownerId.toLong()] ?: throw IllegalArgumentException("Le joueur n'existe pas")
                     MenuBuilder(
                         "Demande d'échange",
-                        "<@${slashCommand.user.id}> vous a proposé un échange",
+                        "<@${slashCommand.user.id}> vous a proposé un échange. **Négociez avant avec lui**",
                         Color.YELLOW
                     )
                         .addButton(
@@ -157,11 +170,13 @@ class MarketCommand : Command(
                             var quantity: Double? = null
 
                             var accept = false
-                            var refuse = false
                             var cancel = false
-                            var negotiate = false
 
-                            fun pleaseWait(modalSubmitEvent: ModalSubmitEvent, resourceWait: Resource, quantityWait: Double) {
+                            fun pleaseWait(
+                                modalSubmitEvent: ModalSubmitEvent,
+                                resourceWait: Resource,
+                                quantityWait: Double
+                            ) {
                                 wait = modalSubmitEvent
                                 resource = resourceWait
                                 quantity = quantityWait
@@ -170,30 +185,49 @@ class MarketCommand : Command(
                                     .respond()
                             }
 
-                            fun sendMenu(modalSubmitEvent: ModalSubmitEvent, resource: Resource, quantity: Double) {
-                                // accept, refuse, cancel, negotiate are used to count the number of users who select each button
-                                MenuBuilder("Suite de l'échange", "La personne avec qui vous échangez a proposé $quantity ${resource.name_}", Color.YELLOW)
-                                    .addButton("Accepter", "Vous acceptez l'échange tel qu'il est actuellement. Négociation possible.") {
+                            fun sendMenu(
+                                modalSubmitEvent: ModalSubmitEvent,
+                                resource: Resource,
+                                quantity: Double,
+                                r2: Resource,
+                                quantity2: Double,
+                                p1: Player,
+                                p2: Player
+                            ) {
+                                // accept, cancel are used to count the number of users who select each button
+                                MenuBuilder(
+                                    "Suite de l'échange",
+                                    "La personne avec qui vous échangez a proposé $quantity ${resource.name_}",
+                                    Color.YELLOW
+                                )
+                                    .addButton(
+                                        "Accepter",
+                                        "Vous acceptez l'échange."
+                                    ) {
                                         if (accept) {
                                             it.buttonInteraction.createOriginalMessageUpdater()
                                                 .removeAllComponents()
                                                 .removeAllEmbeds()
                                                 .setContent("Echange accepté. Transaction en cours...")
                                                 .update()
-                                            //TODO
-                                        } else if (refuse || cancel) {
+                                            if (!p1.hasResource(resource, quantity) || !p2.hasResource(r2, quantity2)) {
+                                                throw IllegalArgumentException("Une des personnes n'a pas assez de ressources")
+                                            }
+                                            p1.removeResource(resource, quantity)
+                                            p2.removeResource(r2, quantity2)
+                                            p1.addResource(r2, quantity2)
+                                            p2.addResource(resource, quantity)
+                                            it.buttonInteraction.createOriginalMessageUpdater()
+                                                .removeAllComponents()
+                                                .removeAllEmbeds()
+                                                .setContent("Transaction effectuée")
+                                                .update()
+                                        } else if (cancel) {
                                             it.buttonInteraction.createOriginalMessageUpdater()
                                                 .removeAllComponents()
                                                 .removeAllEmbeds()
                                                 .setContent("L'échange est annulé")
                                                 .update()
-                                        } else if (negotiate) {
-                                            it.buttonInteraction.createOriginalMessageUpdater()
-                                                .removeAllComponents()
-                                                .removeAllEmbeds()
-                                                .setContent("Vous avez accepté l'échange. La négociation va commencer.")
-                                                .update()
-                                            //TODO
                                         } else {
                                             accept = true
                                             it.buttonInteraction.createOriginalMessageUpdater()
@@ -203,30 +237,7 @@ class MarketCommand : Command(
                                                 .update()
                                         }
                                     }
-                                    .addButton("Refuser", "Vous refusez l'échange mais vous autorisez la négociation.") {
-                                        if (accept || refuse || cancel) {
-                                            it.buttonInteraction.createOriginalMessageUpdater()
-                                                .removeAllComponents()
-                                                .removeAllEmbeds()
-                                                .setContent("L'échange est annulé")
-                                                .update()
-                                        } else if (negotiate) {
-                                            it.buttonInteraction.createOriginalMessageUpdater()
-                                                .removeAllComponents()
-                                                .removeAllEmbeds()
-                                                .setContent("Vous avez refusé l'échange. La négociation va commencer.")
-                                                .update()
-                                            //TODO
-                                        } else {
-                                            refuse = true
-                                            it.buttonInteraction.createOriginalMessageUpdater()
-                                                .removeAllComponents()
-                                                .removeAllEmbeds()
-                                                .setContent("Vous avez refusé l'échange. Négociation possible. Merci de patienter.")
-                                                .update()
-                                        }
-                                    }
-                                    .addButton("Annuler", "Vous refusez l'échange et vous interdisez la négociation.") {
+                                    .addButton("Annuler", "Vous refusez l'échange") {
                                         it.buttonInteraction.createOriginalMessageUpdater()
                                             .removeAllComponents()
                                             .removeAllEmbeds()
@@ -234,33 +245,11 @@ class MarketCommand : Command(
                                             .update()
                                         cancel = true
                                     }
-                                    .addButton("Négocier", "Vous proposer une resource et une quantité à la place des $quantity ${resource.name_}") {
-                                        if (cancel) {
-                                            it.buttonInteraction.createOriginalMessageUpdater()
-                                                .removeAllComponents()
-                                                .removeAllEmbeds()
-                                                .setContent("L'échange est annulé")
-                                                .update()
-                                        } else if (accept || refuse || negotiate) {
-                                            it.buttonInteraction.createOriginalMessageUpdater()
-                                                .removeAllComponents()
-                                                .removeAllEmbeds()
-                                                .setContent("La négociation va commencer.")
-                                                .update()
-                                            //TODO
-                                        } else {
-                                            negotiate = true
-                                            it.buttonInteraction.createOriginalMessageUpdater()
-                                                .removeAllComponents()
-                                                .removeAllEmbeds()
-                                                .setContent("Patientez... vous avez demandé une négociation.")
-                                                .update()
-                                        }
-                                    }
                                     .responder(modalSubmitEvent.modalInteraction)
                             }
 
-                            buttonClickEvent.buttonInteraction.respondWithModal(id1.toString(), "Répondez aux question pour commencer l'échange",
+                            buttonClickEvent.buttonInteraction.respondWithModal(
+                                id1.toString(), "Répondez aux question pour commencer l'échange",
                                 ActionRow.of(
                                     TextInput.create(
                                         TextInputStyle.SHORT,
@@ -278,7 +267,8 @@ class MarketCommand : Command(
                                     )
                                 )
                             )
-                            messageComponentCreateEvent.buttonInteraction.respondWithModal(id2.toString(), "Répondez aux question pour commencer l'échange",
+                            messageComponentCreateEvent.buttonInteraction.respondWithModal(
+                                id2.toString(), "Répondez aux question pour commencer l'échange",
                                 ActionRow.of(
                                     TextInput.create(
                                         TextInputStyle.SHORT,
@@ -324,8 +314,10 @@ class MarketCommand : Command(
                                 }
 
                                 if (end2) {
-                                    sendMenu(it, resource!!, quantity!!)
-                                    sendMenu(wait!!, resource1, quantityDouble)
+                                    val p1 = players[it.modalInteraction.user.id]!!
+                                    val p2 = players[wait!!.modalInteraction.user.id]!!
+                                    sendMenu(it, resource!!, quantity!!, resource1, quantityDouble, p2, p1)
+                                    sendMenu(wait!!, resource1, quantityDouble, resource!!, quantity!!, p1, p2)
                                 } else {
                                     pleaseWait(it, resource1, quantityDouble)
                                 }
@@ -359,8 +351,10 @@ class MarketCommand : Command(
                                 }
 
                                 if (end1) {
-                                    sendMenu(it, resource!!, quantity!!)
-                                    sendMenu(wait!!, resource1, quantityDouble)
+                                    val p1 = players[it.modalInteraction.user.id]!!
+                                    val p2 = players[wait!!.modalInteraction.user.id]!!
+                                    sendMenu(it, resource!!, quantity!!, resource1, quantityDouble, p2, p1)
+                                    sendMenu(wait!!, resource1, quantityDouble, resource!!, quantity!!, p1, p2)
                                 } else {
                                     pleaseWait(it, resource1, quantityDouble)
                                 }
@@ -394,11 +388,43 @@ class MarketCommand : Command(
                 "Les vendeurs proposent un prix"
             ) { messageComponentCreateEvent: ButtonClickEvent ->
                 askWhat("offre", messageComponentCreateEvent, {
-                    //TODO
+                    //TODO : list buttons with interactions
                 }, {
-                    //TODO
+                    //TODO : list buttons with interactions
                 }) {
-                    //TODO
+                    //TODO : create with a modal
+                    val id = generateUniqueID()
+                    val idItem = generateUniqueID()
+                    val idQuantity = generateUniqueID()
+                    val cost = generateUniqueID()
+
+                    it.buttonInteraction.respondWithModal(
+                        id.toString(), "Répondez aux question pour faire une offre",
+                        ActionRow.of(
+                            TextInput.create(
+                                TextInputStyle.SHORT,
+                                idItem.toString(),
+                                "Quelle ressource / objet voulez-vous vendre ?",
+                                true
+                            )
+                        ),
+                        ActionRow.of(
+                            TextInput.create(
+                                TextInputStyle.SHORT,
+                                idQuantity.toString(),
+                                "Combien voulez-vous en vendre ?",
+                                true
+                            )
+                        ),
+                        ActionRow.of(
+                            TextInput.create(
+                                TextInputStyle.SHORT,
+                                cost.toString(),
+                                "Combien voulez-vous de ${Resource.RABBIT_COIN.name_} en échange ?",
+                                true
+                            )
+                        )
+                    )
                 }
             }
             .addButton(
@@ -406,11 +432,11 @@ class MarketCommand : Command(
                 "Les acheteurs recherchent un objet pour un certain prix"
             ) { messageComponentCreateEvent: ButtonClickEvent ->
                 askWhat("recherche", messageComponentCreateEvent, {
-                    //TODO
+                    //TODO : list buttons with interactions
                 }, {
-                    //TODO
+                    //TODO : list buttons with interactions
                 }) {
-                    //TODO
+                    //TODO : create with a modal
                 }
             }
             .addButton(
@@ -418,11 +444,11 @@ class MarketCommand : Command(
                 "Ici trouvez les objets les plus rares et chers"
             ) { messageComponentCreateEvent: ButtonClickEvent ->
                 askWhat("enchère", messageComponentCreateEvent, {
-                    //TODO
+                    //TODO : list buttons with interactions
                 }, {
-                    //TODO
+                    //TODO : list buttons with interactions
                 }) {
-                    //TODO
+                    //TODO : create with a modal
                 }
             }
             .responder(slashCommand)
@@ -431,7 +457,7 @@ class MarketCommand : Command(
 
     private fun askWhat(
         name: String,
-        messageComponentCreateEvent: ButtonClickEvent,
+        buttonClickEvent: ButtonClickEvent,
         my: (ButtonClickEvent) -> Unit,
         everything: (ButtonClickEvent) -> Unit,
         create: (ButtonClickEvent) -> Unit
@@ -455,7 +481,7 @@ class MarketCommand : Command(
             ) { messageComponentCreateEvent: ButtonClickEvent ->
                 create(messageComponentCreateEvent)
             }
-            .modif(messageComponentCreateEvent)
+            .modif(buttonClickEvent)
     }
 
 }
