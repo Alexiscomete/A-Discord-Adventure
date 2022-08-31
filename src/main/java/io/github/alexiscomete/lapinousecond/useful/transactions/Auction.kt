@@ -1,0 +1,11 @@
+package io.github.alexiscomete.lapinousecond.useful.transactions
+
+import io.github.alexiscomete.lapinousecond.useful.managesave.CacheCustom
+import io.github.alexiscomete.lapinousecond.useful.managesave.CacheGetSet
+import io.github.alexiscomete.lapinousecond.useful.managesave.Table
+
+val AUCTIONS = Table("auctions")
+val auctions = CacheCustom(AUCTIONS) { Auction(it) }
+
+class Auction(id: Long) : CacheGetSet(id, AUCTIONS) {
+}

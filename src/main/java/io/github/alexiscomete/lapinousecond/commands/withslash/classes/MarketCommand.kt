@@ -175,7 +175,7 @@ class MarketCommand : Command(
                 "Les vendeurs proposent un prix"
             ) { messageComponentCreateEvent: ButtonClickEvent ->
                 askWhat("offre", messageComponentCreateEvent, {
-                                                              //TODO
+                    //TODO
                 }, {
                     //TODO
                 }) {
@@ -210,7 +210,7 @@ class MarketCommand : Command(
 
     }
 
-    fun askWhat(
+    private fun askWhat(
         name: String,
         messageComponentCreateEvent: ButtonClickEvent,
         my: (ButtonClickEvent) -> Unit,
