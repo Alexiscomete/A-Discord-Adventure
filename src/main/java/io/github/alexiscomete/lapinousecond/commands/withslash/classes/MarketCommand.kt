@@ -14,7 +14,6 @@ import org.javacord.api.entity.message.component.ActionRow
 import org.javacord.api.entity.message.component.TextInput
 import org.javacord.api.entity.message.component.TextInputStyle
 import org.javacord.api.event.interaction.ButtonClickEvent
-import org.javacord.api.event.interaction.MessageComponentCreateEvent
 import org.javacord.api.event.interaction.ModalSubmitEvent
 import org.javacord.api.interaction.SlashCommandInteraction
 import java.awt.Color
@@ -71,13 +70,9 @@ class MarketCommand : Command(
                 )
 
                 modalManager.add(id) { mcce: ModalSubmitEvent ->
-                    val opInt = mcce.interaction.asModalInteraction()
-                    if (!opInt.isPresent) {
-                        throw IllegalStateException("Interaction is not a modal interaction")
-                    }
 
                     // get optionals text inputs from modal interaction
-                    val modalInteraction = opInt.get()
+                    val modalInteraction = mcce.modalInteraction
                     val opResource = modalInteraction.getTextInputValueByCustomId(idResource.toString())
                     val opQuantity = modalInteraction.getTextInputValueByCustomId(idQuantity.toString())
 
@@ -131,8 +126,8 @@ class MarketCommand : Command(
                 messagesManager.addListener(
                     slashCommand.channel.get(),
                     slashCommand.user.id
-                ) {
-                    val owner = it.messageContent
+                ) { message ->
+                    val owner = message.messageContent
                     // l'owner est au format <@id>, je vais donc extraire l'id
                     val ownerId = owner.substring(2, owner.length - 1)
                     val player =
@@ -145,8 +140,160 @@ class MarketCommand : Command(
                         .addButton(
                             "Accepter",
                             "Vous acceptez de négociez avec lui"
-                        ) { messageComponentCreateEvent: ButtonClickEvent ->
-                            //TODO
+                        ) { buttonClickEvent: ButtonClickEvent ->
+                            val id1 = generateUniqueID()
+                            val idItem1 = generateUniqueID()
+                            val idQuantity1 = generateUniqueID()
+
+                            val id2 = generateUniqueID()
+                            val idItem2 = generateUniqueID()
+                            val idQuantity2 = generateUniqueID()
+
+                            var end1 = false
+                            var end2 = false
+
+                            var wait: ModalSubmitEvent? = null
+                            var resource: Resource? = null
+                            var quantity: Double? = null
+
+                            var accept = 0
+                            var refuse = 0
+                            var cancel = 0
+                            var negotiate = 0
+
+                            fun pleaseWait(modalSubmitEvent: ModalSubmitEvent, resourceWait: Resource, quantityWait: Double) {
+                                wait = modalSubmitEvent
+                                resource = resourceWait
+                                quantity = quantityWait
+                                modalSubmitEvent.interaction.createImmediateResponder()
+                                    .setContent("Merci de patienter")
+                                    .respond()
+                            }
+
+                            fun sendMenu(modalSubmitEvent: ModalSubmitEvent, resource: Resource, quantity: Double) {
+                                // accept, refuse, cancel, negotiate are used to count the number of users who select each button
+                                MenuBuilder("Suite de l'échange", "La personne avec qui vous échangez a proposé $quantity ${resource.name_}", Color.YELLOW)
+                                    .addButton("Accepter", "Vous acceptez l'échange tel qu'il est actuellement. Négociation possible.") {
+                                        //TODO
+                                    }
+                                    .addButton("Refuser", "Vous refusez l'échange mais vous autorisez la négociation.") {
+                                        //TODO
+                                    }
+                                    .addButton("Annuler", "Vous refusez l'échange et vous interdisez la négociation.") {
+                                        //TODO
+                                    }
+                                    .addButton("Négocier", "Vous proposer une resource et une quantité à la place des $quantity ${resource.name_}") {
+                                        //TODO
+                                    }
+                                    .responder(modalSubmitEvent.modalInteraction)
+                            }
+
+                            buttonClickEvent.buttonInteraction.respondWithModal(id1.toString(), "Répondez aux question pour commencer l'échange",
+                                ActionRow.of(
+                                    TextInput.create(
+                                        TextInputStyle.SHORT,
+                                        idItem1.toString(),
+                                        "Quelle ressource / objet voulez-vous échanger ?",
+                                        true
+                                    )
+                                ),
+                                ActionRow.of(
+                                    TextInput.create(
+                                        TextInputStyle.SHORT,
+                                        idQuantity1.toString(),
+                                        "Combien voulez-vous échanger ?",
+                                        true
+                                    )
+                                )
+                            )
+                            messageComponentCreateEvent.buttonInteraction.respondWithModal(id2.toString(), "Répondez aux question pour commencer l'échange",
+                                ActionRow.of(
+                                    TextInput.create(
+                                        TextInputStyle.SHORT,
+                                        idItem2.toString(),
+                                        "Quelle ressource / objet voulez-vous échanger ?",
+                                        true
+                                    )
+                                ),
+                                ActionRow.of(
+                                    TextInput.create(
+                                        TextInputStyle.SHORT,
+                                        idQuantity2.toString(),
+                                        "Combien voulez-vous échanger ?",
+                                        true
+                                    )
+                                )
+                            )
+
+                            modalManager.add(id1) {
+
+                                val modalInteraction = it.modalInteraction
+                                val opResource = modalInteraction.getTextInputValueByCustomId(idItem1.toString())
+                                val opQuantity = modalInteraction.getTextInputValueByCustomId(idQuantity1.toString())
+
+                                // check if all text inputs are present
+                                if (!opResource.isPresent || !opQuantity.isPresent) {
+                                    throw IllegalArgumentException("Missing text inputs")
+                                }
+
+                                // get text inputs
+                                val ressource = opResource.get()
+                                val quantity1 = opQuantity.get()
+
+                                // On vérifie que la ressource est bien une ressource valide
+                                val resource1 = Resource.valueOf(ressource.uppercase())
+
+                                // On vérifie que la quantité est bien un nombre
+                                val quantityDouble = quantity1.toDouble()
+
+                                // On vérifie que la quantité est bien positive
+                                if (quantityDouble <= 0) {
+                                    throw IllegalArgumentException("La quantité doit être positive")
+                                }
+
+                                if (end2) {
+                                    sendMenu(it, resource!!, quantity!!)
+                                    sendMenu(wait!!, resource1, quantityDouble)
+                                } else {
+                                    pleaseWait(it, resource1, quantityDouble)
+                                }
+                                end1 = true
+                            }
+
+                            modalManager.add(id2) {
+
+                                val modalInteraction = it.modalInteraction
+                                val opResource = modalInteraction.getTextInputValueByCustomId(idItem1.toString())
+                                val opQuantity = modalInteraction.getTextInputValueByCustomId(idQuantity1.toString())
+
+                                // check if all text inputs are present
+                                if (!opResource.isPresent || !opQuantity.isPresent) {
+                                    throw IllegalArgumentException("Missing text inputs")
+                                }
+
+                                // get text inputs
+                                val ressource = opResource.get()
+                                val quantity1 = opQuantity.get()
+
+                                // On vérifie que la ressource est bien une ressource valide
+                                val resource1 = Resource.valueOf(ressource.uppercase())
+
+                                // On vérifie que la quantité est bien un nombre
+                                val quantityDouble = quantity1.toDouble()
+
+                                // On vérifie que la quantité est bien positive
+                                if (quantityDouble <= 0) {
+                                    throw IllegalArgumentException("La quantité doit être positive")
+                                }
+
+                                if (end1) {
+                                    sendMenu(it, resource!!, quantity!!)
+                                    sendMenu(wait!!, resource1, quantityDouble)
+                                } else {
+                                    pleaseWait(it, resource1, quantityDouble)
+                                }
+                                end2 = true
+                            }
                         }
                         .addButton(
                             "Refuser",
@@ -156,7 +303,7 @@ class MarketCommand : Command(
                                 .createOriginalMessageUpdater()
                                 .removeAllEmbeds()
                                 .removeAllComponents()
-                                .setContent("<@${slashCommand.user.id}> a refusé votre échange")
+                                .setContent("<@$ownerId> a refusé votre échange")
                                 .update()
                         }
                         .messageBuilder()
@@ -167,7 +314,7 @@ class MarketCommand : Command(
                 messageComponentCreateEvent.buttonInteraction.createOriginalMessageUpdater()
                     .removeAllEmbeds()
                     .removeAllComponents()
-                    .setContent("Vous demandez un échange")
+                    .setContent("Vous demandez un échange. Mentionnez le joueur avec qui vous souhaitez négocier puis restez dans le salon pour recevoir le modal")
                     .update()
             }
             .addButton(

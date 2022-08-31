@@ -3,6 +3,7 @@ package io.github.alexiscomete.lapinousecond.message_event
 import io.github.alexiscomete.lapinousecond.buttonsManager
 import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
 import org.javacord.api.entity.message.MessageBuilder
+import org.javacord.api.entity.message.MessageFlag
 import org.javacord.api.entity.message.component.ActionRow
 import org.javacord.api.entity.message.component.Button
 import org.javacord.api.entity.message.component.LowLevelComponent
@@ -58,6 +59,7 @@ class MenuBuilder(name: String, description: String, color: Color) {
         modalInteraction.createImmediateResponder()
             .addEmbed(embedBuilder)
             .addComponents(ActionRow.of(arrayListOfButton))
+            .setFlags(MessageFlag.EPHEMERAL)
             .respond()
     }
 
