@@ -156,10 +156,10 @@ class MarketCommand : Command(
                             var resource: Resource? = null
                             var quantity: Double? = null
 
-                            var accept = 0
-                            var refuse = 0
-                            var cancel = 0
-                            var negotiate = 0
+                            var accept = false
+                            var refuse = false
+                            var cancel = false
+                            var negotiate = false
 
                             fun pleaseWait(modalSubmitEvent: ModalSubmitEvent, resourceWait: Resource, quantityWait: Double) {
                                 wait = modalSubmitEvent
@@ -174,16 +174,88 @@ class MarketCommand : Command(
                                 // accept, refuse, cancel, negotiate are used to count the number of users who select each button
                                 MenuBuilder("Suite de l'échange", "La personne avec qui vous échangez a proposé $quantity ${resource.name_}", Color.YELLOW)
                                     .addButton("Accepter", "Vous acceptez l'échange tel qu'il est actuellement. Négociation possible.") {
-                                        //TODO
+                                        if (accept) {
+                                            it.buttonInteraction.createOriginalMessageUpdater()
+                                                .removeAllComponents()
+                                                .removeAllEmbeds()
+                                                .setContent("Echange accepté. Transaction en cours...")
+                                                .update()
+                                            //TODO
+                                        } else if (refuse || cancel) {
+                                            it.buttonInteraction.createOriginalMessageUpdater()
+                                                .removeAllComponents()
+                                                .removeAllEmbeds()
+                                                .setContent("L'échange est annulé")
+                                                .update()
+                                        } else if (negotiate) {
+                                            it.buttonInteraction.createOriginalMessageUpdater()
+                                                .removeAllComponents()
+                                                .removeAllEmbeds()
+                                                .setContent("Vous avez accepté l'échange. La négociation va commencer.")
+                                                .update()
+                                            //TODO
+                                        } else {
+                                            accept = true
+                                            it.buttonInteraction.createOriginalMessageUpdater()
+                                                .removeAllComponents()
+                                                .removeAllEmbeds()
+                                                .setContent("Vous avez accepté l'échange. Négociation possible. Merci de patienter.")
+                                                .update()
+                                        }
                                     }
                                     .addButton("Refuser", "Vous refusez l'échange mais vous autorisez la négociation.") {
-                                        //TODO
+                                        if (accept || refuse || cancel) {
+                                            it.buttonInteraction.createOriginalMessageUpdater()
+                                                .removeAllComponents()
+                                                .removeAllEmbeds()
+                                                .setContent("L'échange est annulé")
+                                                .update()
+                                        } else if (negotiate) {
+                                            it.buttonInteraction.createOriginalMessageUpdater()
+                                                .removeAllComponents()
+                                                .removeAllEmbeds()
+                                                .setContent("Vous avez refusé l'échange. La négociation va commencer.")
+                                                .update()
+                                            //TODO
+                                        } else {
+                                            refuse = true
+                                            it.buttonInteraction.createOriginalMessageUpdater()
+                                                .removeAllComponents()
+                                                .removeAllEmbeds()
+                                                .setContent("Vous avez refusé l'échange. Négociation possible. Merci de patienter.")
+                                                .update()
+                                        }
                                     }
                                     .addButton("Annuler", "Vous refusez l'échange et vous interdisez la négociation.") {
-                                        //TODO
+                                        it.buttonInteraction.createOriginalMessageUpdater()
+                                            .removeAllComponents()
+                                            .removeAllEmbeds()
+                                            .setContent("L'échange est annulé")
+                                            .update()
+                                        cancel = true
                                     }
                                     .addButton("Négocier", "Vous proposer une resource et une quantité à la place des $quantity ${resource.name_}") {
-                                        //TODO
+                                        if (cancel) {
+                                            it.buttonInteraction.createOriginalMessageUpdater()
+                                                .removeAllComponents()
+                                                .removeAllEmbeds()
+                                                .setContent("L'échange est annulé")
+                                                .update()
+                                        } else if (accept || refuse || negotiate) {
+                                            it.buttonInteraction.createOriginalMessageUpdater()
+                                                .removeAllComponents()
+                                                .removeAllEmbeds()
+                                                .setContent("La négociation va commencer.")
+                                                .update()
+                                            //TODO
+                                        } else {
+                                            negotiate = true
+                                            it.buttonInteraction.createOriginalMessageUpdater()
+                                                .removeAllComponents()
+                                                .removeAllEmbeds()
+                                                .setContent("Patientez... vous avez demandé une négociation.")
+                                                .update()
+                                        }
                                     }
                                     .responder(modalSubmitEvent.modalInteraction)
                             }
