@@ -6,6 +6,7 @@ import io.github.alexiscomete.lapinousecond.commands.withslash.getAccount
 import io.github.alexiscomete.lapinousecond.entity.Owner
 import io.github.alexiscomete.lapinousecond.entity.Player
 import io.github.alexiscomete.lapinousecond.entity.players
+import io.github.alexiscomete.lapinousecond.message_event.EmbedPagesWithInteractions
 import io.github.alexiscomete.lapinousecond.message_event.MenuBuilder
 import io.github.alexiscomete.lapinousecond.messagesManager
 import io.github.alexiscomete.lapinousecond.modalManager
@@ -19,6 +20,7 @@ import io.github.alexiscomete.lapinousecond.useful.transactions.researches
 import org.javacord.api.entity.message.component.ActionRow
 import org.javacord.api.entity.message.component.TextInput
 import org.javacord.api.entity.message.component.TextInputStyle
+import org.javacord.api.entity.message.embed.EmbedBuilder
 import org.javacord.api.event.interaction.ButtonClickEvent
 import org.javacord.api.event.interaction.ModalSubmitEvent
 import org.javacord.api.interaction.SlashCommandInteraction
@@ -395,13 +397,63 @@ class MarketCommand : Command(
                 askWhat("offre", messageComponentCreateEvent, {
                     //TODO : list buttons with interactions
                 }, {
-                    //TODO : list buttons with interactions
-                    val result = saveManager.executeQuery("SELECT id FROM offers", true) ?: throw IllegalStateException("No offers")
-                    val offers = mutableListOf<Offer>()
+                    val result = saveManager.executeQuery("SELECT id FROM offers", true) ?: throw IllegalStateException(
+                        "No offers"
+                    )
+                    val offers = arrayListOf<Offer>()
                     while (result.next()) {
                         offers.add(Offer(result.getLong("id")))
                     }
                     result.close()
+                    val embedBuilder = EmbedBuilder()
+                        .setTitle("Offres")
+                        .setDescription("Voici les offres disponibles")
+                        .setColor(Color.GREEN)
+                    val embedPagesWithInteractions = EmbedPagesWithInteractions(
+                        embedBuilder,
+                        offers,
+                        { embedBuilder: EmbedBuilder, start: Int, num: Int, offers: ArrayList<Offer> ->
+                            for (i in start until start + num) {
+                                val offer = offers[i]
+                                embedBuilder.addInlineField(
+                                    "Offre ${i - start} de <@${offer.who.id}>",
+                                    "${offer.amountRB} -> ${offer.amount} ${offer.what.name_}"
+                                )
+                            }
+                        }) { offer: Offer, buttonClickEvent: ButtonClickEvent ->
+                        val player = getAccount(slashCommand)
+                        // On vérifie si l'offre existe encore dans la base de données
+                        val resultSet = saveManager.executeQuery("SELECT id FROM offers WHERE id = ${offer.id}", true)
+                        if (resultSet == null || !resultSet.next()) {
+                            throw IllegalStateException("L'offre n'existe plus")
+                        }
+                        if (offer.who.id == player.id) {
+                            throw IllegalArgumentException("Vous ne pouvez pas acheter vos propres offres")
+                        }
+                        if (!player.hasMoney(offer.amountRB)) {
+                            throw IllegalArgumentException("Vous n'avez pas assez d'argent pour acheter cette offre")
+                        }
+                        player.removeMoney(offer.amountRB)
+                        offer.who.addMoney(offer.amountRB)
+                        player.addResource(offer.what, offer.amount)
+                        // remove the offer from the database
+                        saveManager.execute("DELETE FROM offers WHERE id = ${offer.id}", true)
+                        // respond
+                        buttonClickEvent.buttonInteraction
+                            .createOriginalMessageUpdater()
+                            .removeAllEmbeds()
+                            .removeAllComponents()
+                            .setContent("Vous avez acheté l'offre ${offer.id} de <@${offer.who.id}>")
+                            .update()
+                    }
+                    embedPagesWithInteractions.register()
+                    it.buttonInteraction
+                        .createOriginalMessageUpdater()
+                        .removeAllEmbeds()
+                        .removeAllComponents()
+                        .addEmbed(embedBuilder)
+                        .addComponents(embedPagesWithInteractions.components, ActionRow.of(embedPagesWithInteractions.buttons))
+                        .update()
                 }) { event ->
                     val id = generateUniqueID()
                     val idItem = generateUniqueID()
@@ -498,7 +550,27 @@ class MarketCommand : Command(
                 askWhat("recherche", messageComponentCreateEvent, {
                     //TODO : list buttons with interactions
                 }, {
-                    //TODO : list buttons with interactions
+                    val result = saveManager.executeQuery("SELECT id FROM researches", true) ?: throw IllegalStateException(
+                        "No researches found"
+                    )
+                    val researches = arrayListOf<Research>()
+                    while (result.next()) {
+                        researches.add(Research(result.getLong("id")))
+                    }
+                    result.close()
+                    val embedBuilder = EmbedBuilder()
+                        .setTitle("Les recherches")
+                        .setDescription("Voici les recherches en cours")
+                        .setColor(Color.ORANGE)
+                    val embedPagesWithInteractions = EmbedPagesWithInteractions(
+                        embedBuilder,
+                        researches,
+                        { embedBuilder: EmbedBuilder, start: Int, num: Int, research: ArrayList<Research> ->
+
+                        }
+                    ) { research: Research, buttonClickEvent: ButtonClickEvent ->
+
+                    }
                 }) { event ->
                     val id = generateUniqueID()
                     val idItem = generateUniqueID()

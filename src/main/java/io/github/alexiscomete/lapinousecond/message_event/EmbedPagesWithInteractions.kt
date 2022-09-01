@@ -19,11 +19,21 @@ class EmbedPagesWithInteractions<U>(
     uAddContent
 ) {
     override val number = 5
+
     init {
         builder.setFooter("Cliquez sur les numéros pour interagir avec un élément")
     }
 
-    private fun component(u: U, index: Int) : Button {
+    val buttons: ArrayList<LowLevelComponent>
+        get() {
+            val buttons = ArrayList<LowLevelComponent>()
+            for (i in level until level + number.coerceAtMost(uArrayList.size - level)) {
+                buttons.add(component(uArrayList[i], i - level + 1))
+            }
+            return buttons
+        }
+
+    private fun component(u: U, index: Int): Button {
         val id = generateUniqueID()
         buttonsManager.addButton(id) {
             whenSelected(u, it)
@@ -36,10 +46,6 @@ class EmbedPagesWithInteractions<U>(
             level += number
             builder.removeAllFields()
             uAddContent.add(builder, level, number.coerceAtMost(uArrayList.size - level), uArrayList)
-            val buttons = ArrayList<LowLevelComponent>()
-            for (i in level until level + number.coerceAtMost(uArrayList.size - level)) {
-                buttons.add(component(uArrayList[i], i - level + 1))
-            }
             messageComponentCreateEvent.buttonInteraction.createOriginalMessageUpdater()
                 .removeAllComponents()
                 .removeAllEmbeds()
@@ -54,10 +60,6 @@ class EmbedPagesWithInteractions<U>(
             level -= number
             builder.removeAllFields()
             uAddContent.add(builder, level, number.coerceAtMost(uArrayList.size - level), uArrayList)
-            val buttons = ArrayList<LowLevelComponent>()
-            for (i in level until level + number.coerceAtMost(uArrayList.size - level)) {
-                buttons.add(component(uArrayList[i], i - level + 1))
-            }
             messageComponentCreateEvent.buttonInteraction.createOriginalMessageUpdater()
                 .removeAllComponents()
                 .removeAllEmbeds()

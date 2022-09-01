@@ -18,6 +18,7 @@ open class EmbedPages<U>(
     open val number = 10
 
     protected open fun next(messageComponentCreateEvent: ButtonClickEvent) {
+        // check if the button is valid : it must have enough elements to go to the next page
         if (level + number < uArrayList.size) {
             level += number
             builder.removeAllFields()

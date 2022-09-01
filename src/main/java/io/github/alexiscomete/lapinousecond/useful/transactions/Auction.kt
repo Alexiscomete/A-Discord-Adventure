@@ -13,8 +13,8 @@ val auctions = CacheCustom(AUCTIONS) { Auction(it) }
 class Auction(id: Long) : CacheGetSet(id, AUCTIONS), Transaction {
     override val who: Player
         get() = players[this["who"].toLong()]!!
-    override val amount: Int
-        get() = this["amount"].toInt()
+    override val amount: Double
+        get() = this["amount"].toDouble()
     override val what: Resource
         get() = Resource.valueOf(this["what"].uppercase())
     override val amountRB: Double

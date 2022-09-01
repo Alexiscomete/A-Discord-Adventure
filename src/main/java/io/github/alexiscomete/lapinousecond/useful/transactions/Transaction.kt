@@ -5,7 +5,7 @@ import io.github.alexiscomete.lapinousecond.resources.Resource
 
 interface Transaction {
     val who: Player
-    val amount: Int
+    val amount: Double
     val what: Resource
     val amountRB: Double
 }
