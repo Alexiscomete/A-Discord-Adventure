@@ -4,7 +4,7 @@ import io.github.alexiscomete.lapinousecond.commands.withslash.Command
 import io.github.alexiscomete.lapinousecond.commands.withslash.ExecutableWithArguments
 import io.github.alexiscomete.lapinousecond.commands.withslash.getAccount
 import io.github.alexiscomete.lapinousecond.entity.Player
-import io.github.alexiscomete.lapinousecond.message_event.ListButtons
+import io.github.alexiscomete.lapinousecond.message_event.EmbedPages
 import io.github.alexiscomete.lapinousecond.message_event.MenuBuilder
 import io.github.alexiscomete.lapinousecond.modalManager
 import io.github.alexiscomete.lapinousecond.resources.Resource
@@ -302,12 +302,20 @@ class MapCommand : Command(
                     ) { buttonClickEvent: ButtonClickEvent ->
                         val maps = arrayListOf(*FilesMapEnum.values())
                         val embed = EmbedBuilder()
-                        val listButtons = ListButtons(embed, maps) { embedBuilder: EmbedBuilder, i: Int, i1: Int, filesMapEnums: ArrayList<FilesMapEnum> ->
+                        val embedPages = EmbedPages(embed, maps) { embedBuilder: EmbedBuilder, i: Int, i1: Int, filesMapEnums: ArrayList<FilesMapEnum> ->
                             for (j in i until i1) {
                                 val map = filesMapEnums[j]
-                                embedBuilder.addField(map.name, map.description + "\n" + map.urlOfMap + "\n de :" + map.author, false)
+                                embedBuilder.addField(map.name, map.description + "\n" + map.urlOfMap + "\n de : " + map.author, false)
                             }
                         }
+                        embedPages.register()
+                        buttonClickEvent.buttonInteraction.createOriginalMessageUpdater()
+                            .removeAllComponents()
+                            .removeAllEmbeds()
+                            .setContent("Liste des cartes")
+                            .addEmbed(embed)
+                            .addComponents(embedPages.components)
+                            .update()
                     }
                     .addButton(
                         "Ma position",

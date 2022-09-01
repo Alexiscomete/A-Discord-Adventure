@@ -3,7 +3,7 @@ package io.github.alexiscomete.lapinousecond.commands.withoutslash.classes
 import io.github.alexiscomete.lapinousecond.buttonsManager
 import io.github.alexiscomete.lapinousecond.commands.withoutslash.CommandWithAccount
 import io.github.alexiscomete.lapinousecond.entity.Player
-import io.github.alexiscomete.lapinousecond.message_event.ListButtons
+import io.github.alexiscomete.lapinousecond.message_event.EmbedPages
 import io.github.alexiscomete.lapinousecond.messagesManager
 import io.github.alexiscomete.lapinousecond.selectMenuManager
 import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
@@ -53,7 +53,7 @@ class PlaceCommand : CommandWithAccount(
                             val messageBuilder = MessageBuilder()
                             val builder = EmbedBuilder()
                             setPlaceEmbed(builder, 0, 11, places)
-                            val listButtons1 = ListButtons(
+                            val embedPages1 = EmbedPages(
                                 builder,
                                 places
                             ) { embedBuilder: EmbedBuilder, min: Int, max: Int, places: ArrayList<Place> ->
@@ -64,9 +64,9 @@ class PlaceCommand : CommandWithAccount(
                                     places
                                 )
                             }
-                            messageBuilder.addComponents(listButtons1.components)
+                            messageBuilder.addComponents(embedPages1.components)
                             messageBuilder.setEmbed(builder)
-                            listButtons1.register()
+                            embedPages1.register()
                             messageBuilder.send(messageCreateEvent.channel)
                         }
                         "links" -> {
@@ -76,7 +76,7 @@ class PlaceCommand : CommandWithAccount(
                             val messageBuilder1 = MessageBuilder()
                             val builder1 = EmbedBuilder()
                             setPlaceEmbed(builder1, 0, min(places1.size, 11), places1)
-                            val listButtons2 = ListButtons(
+                            val embedPages2 = EmbedPages(
                                 builder1,
                                 places1
                             ) { embedBuilder: EmbedBuilder, min: Int, max: Int, places: ArrayList<Place> ->
@@ -87,9 +87,9 @@ class PlaceCommand : CommandWithAccount(
                                     places
                                 )
                             }
-                            messageBuilder1.addComponents(listButtons2.components)
+                            messageBuilder1.addComponents(embedPages2.components)
                             messageBuilder1.setEmbed(builder1)
-                            listButtons2.register()
+                            embedPages2.register()
                             messageBuilder1.send(messageCreateEvent.channel)
                         }
                         "add_link" -> if (args.size > 2) {

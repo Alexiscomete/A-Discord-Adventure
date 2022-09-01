@@ -11,6 +11,7 @@ import io.github.alexiscomete.lapinousecond.messagesManager
 import io.github.alexiscomete.lapinousecond.modalManager
 import io.github.alexiscomete.lapinousecond.resources.Resource
 import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
+import io.github.alexiscomete.lapinousecond.useful.managesave.saveManager
 import io.github.alexiscomete.lapinousecond.useful.transactions.Offer
 import io.github.alexiscomete.lapinousecond.useful.transactions.Research
 import io.github.alexiscomete.lapinousecond.useful.transactions.offers
@@ -395,6 +396,12 @@ class MarketCommand : Command(
                     //TODO : list buttons with interactions
                 }, {
                     //TODO : list buttons with interactions
+                    val result = saveManager.executeQuery("SELECT id FROM offers", true) ?: throw IllegalStateException("No offers")
+                    val offers = mutableListOf<Offer>()
+                    while (result.next()) {
+                        offers.add(Offer(result.getLong("id")))
+                    }
+                    result.close()
                 }) { event ->
                     val id = generateUniqueID()
                     val idItem = generateUniqueID()

@@ -2,7 +2,7 @@ package io.github.alexiscomete.lapinousecond.commands.withoutslash.classes
 
 import io.github.alexiscomete.lapinousecond.commands.withoutslash.CommandInServer
 import io.github.alexiscomete.lapinousecond.entity.Player
-import io.github.alexiscomete.lapinousecond.message_event.ListButtons
+import io.github.alexiscomete.lapinousecond.message_event.EmbedPages
 import io.github.alexiscomete.lapinousecond.view.AnswerEnum
 import io.github.alexiscomete.lapinousecond.worlds.buildings.Building
 import io.github.alexiscomete.lapinousecond.worlds.buildings.Buildings
@@ -133,7 +133,7 @@ class BuildingCommand : CommandInServer(
         val embedBuilder = EmbedBuilder()
         messageBuilder.setEmbed(embedBuilder)
         val buildings = ArrayList(listOf(*Buildings.values()))
-        val buildingListButtons = ListButtons(
+        val buildingEmbedPages = EmbedPages(
             embedBuilder,
             buildings
         ) { embedBuilder: EmbedBuilder, min: Int, num: Int, list: ArrayList<Buildings> ->
@@ -144,7 +144,8 @@ class BuildingCommand : CommandInServer(
                 list
             )
         }
-        buildingListButtons.register()
+        buildingEmbedPages.register()
+        messageBuilder.addComponents(buildingEmbedPages.components)
         messageBuilder.send(messageCreateEvent.channel)
     }
 
@@ -167,7 +168,7 @@ class BuildingCommand : CommandInServer(
         val messageBuilder = MessageBuilder()
         val embedBuilder = EmbedBuilder()
         messageBuilder.setEmbed(embedBuilder)
-        val buildingListButtons = ListButtons(
+        val buildingEmbedPages = EmbedPages(
             embedBuilder,
             buildings
         ) { embedBuilder: EmbedBuilder, min: Int, num: Int, uArrayList: ArrayList<Building> ->
@@ -178,7 +179,8 @@ class BuildingCommand : CommandInServer(
                 uArrayList
             )
         }
-        buildingListButtons.register()
+        buildingEmbedPages.register()
+        messageBuilder.addComponents(buildingEmbedPages.components)
         messageBuilder.send(messageCreateEvent.channel)
     }
 

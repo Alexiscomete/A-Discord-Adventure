@@ -124,7 +124,7 @@ class SaveManager(path: String) {
         }
     }
 
-    fun executeQuery(ex: String?, bo: Boolean): ResultSet? {
+    fun executeQuery(ex: String, bo: Boolean): ResultSet? {
         return try {
             st!!.executeQuery(ex)
         } catch (e: SQLException) {
