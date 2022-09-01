@@ -565,11 +565,40 @@ class MarketCommand : Command(
                     val embedPagesWithInteractions = EmbedPagesWithInteractions(
                         embedBuilder,
                         researches,
-                        { embedBuilder: EmbedBuilder, start: Int, num: Int, research: ArrayList<Research> ->
-
+                        { embedBuilder: EmbedBuilder, start: Int, num: Int, researches: ArrayList<Research> ->
+                            for (i in start until start + num) {
+                                val research = researches[i]
+                                embedBuilder.addInlineField(
+                                    "Recherche ${i - start} par <@${research.who.id}>",
+                                    "${research.amount} ${research.what.name_} -> ${research.amountRB}"
+                                )
+                            }
                         }
                     ) { research: Research, buttonClickEvent: ButtonClickEvent ->
-
+                        val player = getAccount(slashCommand)
+                        // On vérifie si l'offre existe encore dans la base de données
+                        val resultSet = saveManager.executeQuery("SELECT id FROM researches WHERE id = ${research.id}", true)
+                        if (resultSet == null || !resultSet.next()) {
+                            throw IllegalStateException("La recherche n'existe plus")
+                        }
+                        if (research.who.id == player.id) {
+                            throw IllegalArgumentException("Vous ne pouvez pas répondre à votre propre recherche")
+                        }
+                        if (!player.hasResource(research.what, research.amount)) {
+                            throw IllegalArgumentException("Vous n'avez pas assez de ${research.what.name_} pour répondre à cette recherche")
+                        }
+                        player.removeResource(research.what, research.amount)
+                        research.who.addResource(research.what, research.amount)
+                        research.who.addMoney(research.amountRB)
+                        // remove the research from the database
+                        saveManager.execute("DELETE FROM researches WHERE id = ${research.id}", true)
+                        // respond
+                        buttonClickEvent.buttonInteraction
+                            .createOriginalMessageUpdater()
+                            .removeAllEmbeds()
+                            .removeAllComponents()
+                            .setContent("Vous avez répondu à la recherche de <@${research.who.id}>")
+                            .update()
                     }
                 }) { event ->
                     val id = generateUniqueID()
