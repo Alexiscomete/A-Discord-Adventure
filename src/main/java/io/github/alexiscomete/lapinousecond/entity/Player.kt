@@ -190,43 +190,60 @@ class Player(id: Long) : CacheGetSet(id, PLAYERS), Owner {
         this["bal"] = (getMoney() - amount).toString()
     }
 
-    override fun addResource(resource: Resource, amount: Double) {
-        TODO("Not yet implemented")
-    }
-
     override fun getResource(resource: Resource): Double {
-        TODO("Not yet implemented")
+        if (resource == Resource.RABBIT_COIN) {
+            return getMoney()
+        }
+        var resourceManager = resourceManagers[resource]
+        if (resourceManager == null) {
+            resourceManager = ResourceManager(resource, 0)
+            resourceManagers[resource] = resourceManager
+        }
+        return resourceManager.quantity.toDouble()
     }
 
     override fun removeResource(resource: Resource, amount: Double) {
-        TODO("Not yet implemented")
+        if (resource == Resource.RABBIT_COIN) {
+            removeMoney(amount)
+            return
+        }
+        val resourceManager = resourceManagers[resource]
+        if (resourceManager == null) {
+            throw IllegalArgumentException("Le joueur n'a pas de ressource $resource")
+        } else {
+            resourceManager.quantity = resourceManager.quantity - amount.toInt()
+        }
+        updateResources()
     }
 
     override fun hasResource(resource: Resource, amount: Double): Boolean {
-        TODO("Not yet implemented")
+        if (resource == Resource.RABBIT_COIN) {
+            return getMoney() >= amount
+        }
+        val resourceManager = resourceManagers[resource]
+        return if (resourceManager == null) {
+            false
+        } else {
+            resourceManager.quantity >= amount
+        }
+    }
+
+    override fun addResource(resource: Resource, amount: Double) {
+        if (resource == Resource.RABBIT_COIN) {
+            addMoney(amount)
+            return
+        }
+        val resourceManager = resourceManagers[resource]
+        if (resourceManager == null) {
+            resourceManagers[resource] = ResourceManager(resource, amount.toInt())
+        } else {
+            resourceManager.quantity = resourceManager.quantity + amount.toInt()
+        }
+        updateResources()
     }
 
     override fun hasMoney(amount: Double): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override fun askValidation(
-        owner1: Owner,
-        amount0: Double,
-        ressource0: Resource,
-        amount1: Double,
-        ressource1: Resource,
-        validation: (Boolean) -> Unit
-    ) {
-        TODO("Not yet implemented")
-    }
-
-    override fun askAmount(owner0: Owner, function: (Double) -> Unit) {
-        TODO("Not yet implemented")
-    }
-
-    override fun askRessource(owner1: Owner, function: (Resource) -> Unit) {
-        TODO("Not yet implemented")
+        return getMoney() >= amount
     }
 
     var world = run {

@@ -96,25 +96,6 @@ open class Place : CacheGetSet, Owner {
         TODO("Not yet implemented")
     }
 
-    override fun askValidation(
-        owner1: Owner,
-        amount0: Double,
-        ressource0: Resource,
-        amount1: Double,
-        ressource1: Resource,
-        validation: (Boolean) -> Unit
-    ) {
-        TODO("Not yet implemented")
-    }
-
-    override fun askAmount(owner0: Owner, function: (Double) -> Unit) {
-        TODO("Not yet implemented")
-    }
-
-    override fun askRessource(owner1: Owner, function: (Resource) -> Unit) {
-        TODO("Not yet implemented")
-    }
-
     companion object {
         fun toPlaces(places: String): ArrayList<Place> {
             val str = places.split(";".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()

@@ -13,10 +13,7 @@ import io.github.alexiscomete.lapinousecond.modalManager
 import io.github.alexiscomete.lapinousecond.resources.Resource
 import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
 import io.github.alexiscomete.lapinousecond.useful.managesave.saveManager
-import io.github.alexiscomete.lapinousecond.useful.transactions.Offer
-import io.github.alexiscomete.lapinousecond.useful.transactions.Research
-import io.github.alexiscomete.lapinousecond.useful.transactions.offers
-import io.github.alexiscomete.lapinousecond.useful.transactions.researches
+import io.github.alexiscomete.lapinousecond.useful.transactions.*
 import org.javacord.api.entity.message.component.ActionRow
 import org.javacord.api.entity.message.component.TextInput
 import org.javacord.api.entity.message.component.TextInputStyle
@@ -135,6 +132,10 @@ class MarketCommand : Command(
                             )
                         ) {
                             throw IllegalArgumentException("Vous n'avez pas assez de ressources pour effectuer cette transaction")
+                        } else {
+                            modalInteraction.createImmediateResponder()
+                                .setContent("Vous avez bien donné $quantity $resource à $owner")
+                                .respond()
                         }
                     }
                 }
@@ -412,10 +413,10 @@ class MarketCommand : Command(
                     val embedPagesWithInteractions = EmbedPagesWithInteractions(
                         embedBuilder,
                         offers,
-                        { embedBuilder: EmbedBuilder, start: Int, num: Int, offers: ArrayList<Offer> ->
+                        { builder: EmbedBuilder, start: Int, num: Int, offerArrayList: ArrayList<Offer> ->
                             for (i in start until start + num) {
-                                val offer = offers[i]
-                                embedBuilder.addInlineField(
+                                val offer = offerArrayList[i]
+                                builder.addInlineField(
                                     "Offre ${i - start} de <@${offer.who.id}>",
                                     "${offer.amountRB} -> ${offer.amount} ${offer.what.name_}"
                                 )
@@ -565,10 +566,10 @@ class MarketCommand : Command(
                     val embedPagesWithInteractions = EmbedPagesWithInteractions(
                         embedBuilder,
                         researches,
-                        { embedBuilder: EmbedBuilder, start: Int, num: Int, researches: ArrayList<Research> ->
+                        { builder: EmbedBuilder, start: Int, num: Int, researchArrayList: ArrayList<Research> ->
                             for (i in start until start + num) {
-                                val research = researches[i]
-                                embedBuilder.addInlineField(
+                                val research = researchArrayList[i]
+                                builder.addInlineField(
                                     "Recherche ${i - start} par <@${research.who.id}>",
                                     "${research.amount} ${research.what.name_} -> ${research.amountRB}"
                                 )
@@ -600,6 +601,14 @@ class MarketCommand : Command(
                             .setContent("Vous avez répondu à la recherche de <@${research.who.id}>")
                             .update()
                     }
+                    embedPagesWithInteractions.register()
+                    it.buttonInteraction
+                        .createOriginalMessageUpdater()
+                        .removeAllEmbeds()
+                        .removeAllComponents()
+                        .addEmbed(embedBuilder)
+                        .addComponents(embedPagesWithInteractions.components, ActionRow.of(embedPagesWithInteractions.buttons))
+                        .update()
                 }) { event ->
                     val id = generateUniqueID()
                     val idItem = generateUniqueID()
@@ -696,7 +705,63 @@ class MarketCommand : Command(
                 askWhat("enchère", messageComponentCreateEvent, {
                     //TODO : list buttons with interactions
                 }, {
-                    //TODO : list buttons with interactions
+                    val result = saveManager.executeQuery("SELECT id FROM auctions", true) ?: throw IllegalStateException(
+                        "No auctions found"
+                    )
+                    val auctions = arrayListOf<Auction>()
+                    while (result.next()) {
+                        auctions.add(Auction(result.getLong("id")))
+                    }
+                    result.close()
+                    val embedBuilder = EmbedBuilder()
+                        .setTitle("Les enchères")
+                        .setDescription("Voici les enchères en cours. Les objets rares sont ici !")
+                        .setColor(Color.ORANGE)
+                    val embedPagesWithInteractions = EmbedPagesWithInteractions(
+                        embedBuilder,
+                        auctions,
+                        { builder: EmbedBuilder, start: Int, num: Int, auctionArrayList: ArrayList<Auction> ->
+                            for (i in start until start + num) {
+                                val research = auctionArrayList[i]
+                                builder.addInlineField(
+                                    "Enchère ${i - start} par <@${research.who.id}>",
+                                    "${research.amountRB} de <@${research.whoMax.id}> -> ${research.amount} ${research.what.name_} "
+                                )
+                            }
+                        }
+                    ) { auction: Auction, buttonClickEvent: ButtonClickEvent ->
+                        val player = getAccount(slashCommand)
+                        // On vérifie si l'offre existe encore dans la base de données
+                        val resultSet = saveManager.executeQuery("SELECT id FROM auctions WHERE id = ${auction.id}", true)
+                        if (resultSet == null || !resultSet.next()) {
+                            throw IllegalStateException("L'enchère n'existe plus")
+                        }
+                        if (auction.who.id == player.id || auction.whoMax.id == player.id) {
+                            throw IllegalArgumentException("Vous ne pouvez pas répondre à votre propre enchère")
+                        }
+                        if (!player.hasMoney(auction.amountRB + 100.0)) {
+                            throw IllegalArgumentException("Vous n'avez pas assez d'argent pour répondre à cette enchère (il faut enchérir de 100 ${Resource.RABBIT_COIN.name_})")
+                        }
+                        player.removeMoney(auction.amountRB + 100.0)
+                        auction.whoMax.addMoney(auction.amountRB)
+                        auction["whoMax"] = player.id.toString()
+                        auction["amountRB"] = (auction.amountRB + 100.0).toString()
+                        // respond
+                        buttonClickEvent.buttonInteraction
+                            .createOriginalMessageUpdater()
+                            .removeAllEmbeds()
+                            .removeAllComponents()
+                            .setContent("Vous avez répondu à l'enchère de ${auction.amountRB} ${Resource.RABBIT_COIN.name_}")
+                            .update()
+                    }
+                    embedPagesWithInteractions.register()
+                    it.buttonInteraction
+                        .createOriginalMessageUpdater()
+                        .removeAllEmbeds()
+                        .removeAllComponents()
+                        .addEmbed(embedBuilder)
+                        .addComponents(embedPagesWithInteractions.components, ActionRow.of(embedPagesWithInteractions.buttons))
+                        .update()
                 }) { event ->
                     val id = generateUniqueID()
                     val idItem = generateUniqueID()
@@ -764,7 +829,7 @@ class MarketCommand : Command(
 
                         // On vérifie que le prix est bien positif
                         if (costDouble <= 0) {
-                            throw IllegalArgumentException("Le prix doit être positif")
+                            throw IllegalArgumentException("Le prix de départ doit être positif")
                         }
 
                         val p = getAccount(slashCommand)
@@ -772,16 +837,17 @@ class MarketCommand : Command(
                             throw IllegalArgumentException("Vous n'avez pas assez de ${resource.progName}")
                         }
                         p.removeResource(resource, quantityDouble)
-                        val offerId = generateUniqueID()
-                        offers.add(offerId)
-                        val offer = Offer(offerId)
-                        offer["who"] = p.id.toString()
-                        offer["what"] = resource.progName
-                        offer["amount"] = quantityDouble.toString()
-                        offer["amountRB"] = costDouble.toString()
+                        val auctionId = generateUniqueID()
+                        auctions.add(auctionId)
+                        val auction = Auction(auctionId)
+                        auction["who"] = p.id.toString()
+                        auction["what"] = resource.progName
+                        auction["amount"] = quantityDouble.toString()
+                        auction["amountRB"] = costDouble.toString()
+                        auction["whoMax"] = p.id.toString()
 
                         it.modalInteraction.createImmediateResponder()
-                            .setContent("Votre offre a bien été enregistrée :  $costDouble ${Resource.RABBIT_COIN.name_} -> $quantityDouble ${resource.progName}")
+                            .setContent("Votre enchère a bien été enregistrée :  $costDouble ${Resource.RABBIT_COIN.name_} -> $quantityDouble ${resource.progName}")
                             .respond()
                     }
                 }
