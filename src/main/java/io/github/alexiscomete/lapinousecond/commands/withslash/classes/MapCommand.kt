@@ -303,7 +303,7 @@ class MapCommand : Command(
                         val maps = arrayListOf(*FilesMapEnum.values())
                         val embed = EmbedBuilder()
                         val embedPages = EmbedPages(embed, maps) { embedBuilder: EmbedBuilder, i: Int, i1: Int, filesMapEnums: ArrayList<FilesMapEnum> ->
-                            for (j in i until i1) {
+                            for (j in i until i + i1) {
                                 val map = filesMapEnums[j]
                                 embedBuilder.addField(map.name, map.description + "\n" + map.urlOfMap + "\n de : " + map.author, false)
                             }

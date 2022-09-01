@@ -8,16 +8,16 @@ import org.javacord.api.entity.message.embed.EmbedBuilder
 import org.javacord.api.event.interaction.ButtonClickEvent
 
 open class EmbedPages<U>(
-    private val builder: EmbedBuilder,
-    private val uArrayList: ArrayList<U>,
-    private val uAddContent: AddContent<U>
+    protected val builder: EmbedBuilder,
+    protected val uArrayList: ArrayList<U>,
+    protected val uAddContent: AddContent<U>
 ) {
-    private var level = 0
-    private val idLast = generateUniqueID().toString()
-    private val idNext = generateUniqueID().toString()
+    protected var level = 0
+    protected val idLast = generateUniqueID().toString()
+    protected val idNext = generateUniqueID().toString()
     open val number = 10
 
-    private fun next(messageComponentCreateEvent: ButtonClickEvent) {
+    protected open fun next(messageComponentCreateEvent: ButtonClickEvent) {
         if (level + number < uArrayList.size) {
             level += number
             builder.removeAllFields()
@@ -31,7 +31,7 @@ open class EmbedPages<U>(
         }
     }
 
-    private fun last(messageComponentCreateEvent: ButtonClickEvent) {
+    protected open fun last(messageComponentCreateEvent: ButtonClickEvent) {
         if (level > number - 1) {
             level -= number
             builder.removeAllFields()
