@@ -183,6 +183,14 @@ class MarketCommand : Command(
                             var accept = false
                             var cancel = false
 
+                            /**
+                             * It takes a modalSubmitEvent, a resource and a quantity, and then sets the wait, resource and
+                             * quantity variables to the values of the parameters. And say to the user to wait
+                             *
+                             * @param modalSubmitEvent The event that triggered the interaction.
+                             * @param resourceWait The resource that the user is waiting for
+                             * @param quantityWait The quantity of the resource you want to wait for.
+                             */
                             fun pleaseWait(
                                 modalSubmitEvent: ModalSubmitEvent,
                                 resourceWait: Resource,
@@ -279,12 +287,12 @@ class MarketCommand : Command(
                                 )
                             )
                             messageComponentCreateEvent.buttonInteraction.respondWithModal(
-                                id2.toString(), "Répondez aux question pour commencer l'échange",
+                                id2.toString(), "Que donner ?",
                                 ActionRow.of(
                                     TextInput.create(
                                         TextInputStyle.SHORT,
                                         idItem2.toString(),
-                                        "Quelle ressource / objet voulez-vous échanger ?",
+                                        "Ressource / objet à échanger",
                                         true
                                     )
                                 ),
@@ -401,6 +409,7 @@ class MarketCommand : Command(
                 askWhat("offre", messageComponentCreateEvent, {
                     //TODO : list buttons with interactions
                 }, {
+                    println("offre")
                     val result = saveManager.executeQuery("SELECT id FROM offers", true) ?: throw IllegalStateException(
                         "No offers"
                     )
@@ -409,6 +418,7 @@ class MarketCommand : Command(
                         offers.add(Offer(result.getLong("id")))
                     }
                     result.close()
+                    println("offers : $offers")
                     val embedBuilder = EmbedBuilder()
                         .setTitle("Offres")
                         .setDescription("Voici les offres disponibles")
@@ -451,6 +461,7 @@ class MarketCommand : Command(
                             .update()
                     }
                     embedPagesWithInteractions.register()
+                    println("registered")
                     it.buttonInteraction
                         .createOriginalMessageUpdater()
                         .removeAllEmbeds()
@@ -465,7 +476,7 @@ class MarketCommand : Command(
                     val idCost = generateUniqueID()
 
                     event.buttonInteraction.respondWithModal(
-                        id.toString(), "Répondez aux questions pour faire une offre",
+                        id.toString(), "Création d'une offre",
                         ActionRow.of(
                             TextInput.create(
                                 TextInputStyle.SHORT,
@@ -486,7 +497,7 @@ class MarketCommand : Command(
                             TextInput.create(
                                 TextInputStyle.SHORT,
                                 idCost.toString(),
-                                "Combien voulez-vous de  en échange ?",
+                                "Combien voulez-vous de RB en échange ?",
                                 true
                             )
                         )
@@ -619,12 +630,12 @@ class MarketCommand : Command(
                     val idCost = generateUniqueID()
 
                     event.buttonInteraction.respondWithModal(
-                        id.toString(), "Répondez aux questions pour faire une recherche",
+                        id.toString(), "Création d'une recherche",
                         ActionRow.of(
                             TextInput.create(
                                 TextInputStyle.SHORT,
                                 idItem.toString(),
-                                "Quelle ressource / objet voulez-vous rechercher ?",
+                                "Quelle ressource / objet cherchez vous ?",
                                 true
                             )
                         ),
@@ -640,7 +651,7 @@ class MarketCommand : Command(
                             TextInput.create(
                                 TextInputStyle.SHORT,
                                 idCost.toString(),
-                                "Combien voulez-vous donner de ${Resource.RABBIT_COIN.name_} en échange ?",
+                                "Combien voulez-vous donner de RB en échange ?",
                                 true
                             )
                         )
@@ -772,12 +783,12 @@ class MarketCommand : Command(
                     val idCost = generateUniqueID()
 
                     event.buttonInteraction.respondWithModal(
-                        id.toString(), "Répondez aux questions pour faire une enchère",
+                        id.toString(), "Création d'une enchère",
                         ActionRow.of(
                             TextInput.create(
                                 TextInputStyle.SHORT,
                                 idItem.toString(),
-                                "Quelle ressource / objet voulez-vous mettre aux enchères ?",
+                                "Ressource / objet à mettre aux enchères",
                                 true
                             )
                         ),
@@ -793,7 +804,7 @@ class MarketCommand : Command(
                             TextInput.create(
                                 TextInputStyle.SHORT,
                                 idCost.toString(),
-                                "Combien voulez-vous de ${Resource.RABBIT_COIN.name_} en échange au départ ?",
+                                "Prix de base de l'enchère",
                                 true
                             )
                         )

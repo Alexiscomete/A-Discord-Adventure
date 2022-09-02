@@ -33,7 +33,15 @@ class EmbedPagesWithInteractions<U>(
             return buttons
         }
 
+    /**
+     * It creates a button with a unique ID, adds it to the buttons manager, and returns it
+     *
+     * @param u U - The object that is being selected
+     * @param index The index of the component in the list.
+     * @return A Button
+     */
     private fun component(u: U, index: Int): Button {
+        println("Component $index")
         val id = generateUniqueID()
         buttonsManager.addButton(id) {
             whenSelected(u, it)

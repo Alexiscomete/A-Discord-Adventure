@@ -61,7 +61,9 @@ open class EmbedPages<U>(
                 Button.success(idNext, "Page suivante ➡")
             )
         } else {
-            ActionRow.of()
+            ActionRow.of(
+                Button.success("0", "Aucune autre page", true)
+            )
         }
 
     fun register() {
