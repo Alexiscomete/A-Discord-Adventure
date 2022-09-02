@@ -21,6 +21,7 @@ class EmbedPagesWithInteractions<U>(
     override val number = 5
 
     init {
+        uAddContent.add(builder, 0, number.coerceAtMost(uArrayList.size - level), uArrayList)
         builder.setFooter("Cliquez sur les numéros pour interagir avec un élément")
     }
 
