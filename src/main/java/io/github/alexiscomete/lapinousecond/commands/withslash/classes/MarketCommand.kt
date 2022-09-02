@@ -46,6 +46,9 @@ class MarketCommand : Command(
         get() = arrayOf("PLAY")
 
     override fun execute(slashCommand: SlashCommandInteraction) {
+        AUCTIONS
+        OFFERS
+        RESEARCHES
         MenuBuilder(
             "Le marché",
             "Ici est le lieu d'échanges entre les joueurs ! Avancez sur vos quêtes en trouvant ici des objets introuvables, gagnez de l'argent en vendant des objets ou des ressources .... bref c'est le lieu des joueurs",
