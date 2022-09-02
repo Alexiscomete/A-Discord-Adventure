@@ -241,7 +241,7 @@ class MarketCommand : Command(
                                             it.buttonInteraction.createOriginalMessageUpdater()
                                                 .removeAllComponents()
                                                 .removeAllEmbeds()
-                                                .setContent("Vous avez accepté l'échange. Négociation possible. Merci de patienter.")
+                                                .setContent("Vous avez accepté l'échange. Merci de patienter.")
                                                 .update()
                                         }
                                     }
@@ -483,7 +483,7 @@ class MarketCommand : Command(
                             TextInput.create(
                                 TextInputStyle.SHORT,
                                 idCost.toString(),
-                                "Combien voulez-vous de ${Resource.RABBIT_COIN.name_} en échange ?",
+                                "Combien voulez-vous de  en échange ?",
                                 true
                             )
                         )
