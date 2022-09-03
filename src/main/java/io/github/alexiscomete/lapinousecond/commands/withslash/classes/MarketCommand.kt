@@ -453,7 +453,7 @@ class MarketCommand : Command(
                                 .createOriginalMessageUpdater()
                                 .removeAllEmbeds()
                                 .removeAllComponents()
-                                .setContent("Vous avez acheté supprimé l'offre ${offer.id} et récupéré vos ressources")
+                                .setContent("Vous avez supprimé l'offre ${offer.id} et récupéré vos ressources")
                                 .update()
                         }
                         embedPagesWithInteractions.register()
@@ -675,7 +675,7 @@ class MarketCommand : Command(
                                 .createOriginalMessageUpdater()
                                 .removeAllEmbeds()
                                 .removeAllComponents()
-                                .setContent("Vous avez acheté supprimé la recherche ${offer.id} et récupéré votre argent")
+                                .setContent("Vous avez supprimé la recherche ${offer.id} et récupéré votre argent")
                                 .update()
                         }
                         embedPagesWithInteractions.register()
@@ -882,6 +882,9 @@ class MarketCommand : Command(
                         }
                         if (auction.who.id != player.id) {
                             throw IllegalArgumentException("Cette enchère ne vous appartient pas. Vous ne pouvez pas la terminer et elle ne devrait pas apparaître dans cette liste")
+                        }
+                        if (auction.who.id == auction.whoMax.id) {
+                            throw IllegalArgumentException("Vous êtes le meilleur enchérisseur. Vous ne pouvez pas terminer cette enchère")
                         }
                         // give the auction money
                         player.addMoney(auction.amountRB)

@@ -16,6 +16,7 @@ fun loadAllS() {
     InvCommandBase()
     MarketCommand()
     MapCommand()
+    ConfigCommand()
 }
 
 class ListenerSlashCommands : SlashCommandCreateListener {
