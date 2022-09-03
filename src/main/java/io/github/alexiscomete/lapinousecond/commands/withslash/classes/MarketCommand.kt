@@ -848,51 +848,53 @@ class MarketCommand : Command(
             ) { messageComponentCreateEvent: ButtonClickEvent ->
                 askWhat("enchère", messageComponentCreateEvent, {
                     val result = saveManager.executeQuery(
-                        "SELECT id FROM offers WHERE who = ${messageComponentCreateEvent.buttonInteraction.user.id}",
+                        "SELECT id FROM auctions WHERE who = ${messageComponentCreateEvent.buttonInteraction.user.id}",
                         true
-                    ) ?: throw IllegalArgumentException("No offers")
-                    val offers = arrayListOf<Offer>()
+                    ) ?: throw IllegalArgumentException("No auctions")
+                    val auctions = arrayListOf<Auction>()
                     while (result.next()) {
-                        offers.add(Offer(result.getLong("id")))
+                        auctions.add(Auction(result.getLong("id")))
                     }
                     result.close()
                     val embedBuilder = EmbedBuilder()
-                        .setTitle("Vos offres")
-                        .setDescription("Vous avez ${offers.size} offres en cours. Vous pouvez **supprimer** une offre en cliquant sur le bouton correspondant et ainsi **récupérer vos ressources**")
+                        .setTitle("Vos enchères")
+                        .setDescription("Vous avez ${auctions.size} offres en cours. Vous pouvez **supprimer** une offre en cliquant sur le bouton correspondant et ainsi **récupérer vos ressources**")
                         .setColor(Color.GREEN)
                     val embedPagesWithInteractions = EmbedPagesWithInteractions(
                         embedBuilder,
-                        offers,
-                        { builder: EmbedBuilder, start: Int, num: Int, offerArrayList: ArrayList<Offer> ->
+                        auctions,
+                        { builder: EmbedBuilder, start: Int, num: Int, auctionArrayList: ArrayList<Auction> ->
                             for (i in start until start + num) {
-                                val offer = offerArrayList[i]
+                                val auction = auctionArrayList[i]
                                 builder.addInlineField(
-                                    "Offre ${i - start + 1}",
-                                    "${offer.amountRB} -> ${offer.amount} ${offer.what.name_}"
+                                    "Enchère ${i - start + 1}",
+                                    "${auction.amountRB} -> ${auction.amount} ${auction.what.name_}"
                                 )
                             }
                         }
-                    ) { offer: Offer, buttonClickEvent: ButtonClickEvent ->
+                    ) { auction: Auction, buttonClickEvent: ButtonClickEvent ->
                         val player = getAccount(slashCommand)
-                        // On vérifie si l'offre existe encore dans la base de données
+                        // On vérifie si l'enchère existe encore dans la base de données
                         val resultSet =
-                            saveManager.executeQuery("SELECT id FROM offers WHERE id = ${offer.id}", true)
+                            saveManager.executeQuery("SELECT id FROM auctions WHERE id = ${auction.id}", true)
                         if (resultSet == null || !resultSet.next()) {
-                            throw IllegalStateException("L'offre n'existe plus")
+                            throw IllegalStateException("L'enchère n'existe plus")
                         }
-                        if (offer.who.id != player.id) {
-                            throw IllegalArgumentException("Cette offre ne vous appartient pas. Vous ne pouvez pas la supprimer et elle ne devrait pas apparaître dans cette liste")
+                        if (auction.who.id != player.id) {
+                            throw IllegalArgumentException("Cette enchère ne vous appartient pas. Vous ne pouvez pas la terminer et elle ne devrait pas apparaître dans cette liste")
                         }
-                        // give back resources
-                        player.addResource(offer.what, offer.amount)
-                        // remove the offer from the database
-                        saveManager.execute("DELETE FROM offers WHERE id = ${offer.id}", true)
+                        // give the auction money
+                        player.addMoney(auction.amountRB)
+                        // and the resources
+                        auction.whoMax.addResource(auction.what, auction.amount)
+                        // remove the auction from the database
+                        saveManager.execute("DELETE FROM auctions WHERE id = ${auction.id}", true)
                         // respond
                         buttonClickEvent.buttonInteraction
                             .createOriginalMessageUpdater()
                             .removeAllEmbeds()
                             .removeAllComponents()
-                            .setContent("Vous avez acheté supprimé l'offre ${offer.id} et récupéré vos ressources")
+                            .setContent("Vous avez terminé l'enchère ${auction.id} et récupéré l'argent")
                             .update()
                     }
                     embedPagesWithInteractions.register()
