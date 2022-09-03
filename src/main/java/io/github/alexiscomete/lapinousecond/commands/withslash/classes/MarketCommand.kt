@@ -58,8 +58,6 @@ class MarketCommand : Command(
                 "Donner",
                 "Donner un objet ou des ressources à un autre joueur"
             ) { messageComponentCreateEvent: ButtonClickEvent ->
-                // Fonctionne de la façon suivante : -give <type d'owner> <owner> <ressource> <quantité>
-                // Exemple : -give Jean WOOD 10
 
                 val p = getAccount(slashCommand)
                 val id = generateUniqueID()
@@ -406,70 +404,136 @@ class MarketCommand : Command(
                 "Offres",
                 "Les vendeurs proposent un prix"
             ) { messageComponentCreateEvent: ButtonClickEvent ->
-                askWhat("offre", messageComponentCreateEvent, {
-                    //TODO : list buttons with interactions
-                }, {
-                    println("offre")
-                    val result = saveManager.executeQuery("SELECT id FROM offers", true) ?: throw IllegalStateException(
-                        "No offers"
-                    )
-                    val offers = arrayListOf<Offer>()
-                    while (result.next()) {
-                        offers.add(Offer(result.getLong("id")))
-                    }
-                    result.close()
-                    println("offers : $offers")
-                    val embedBuilder = EmbedBuilder()
-                        .setTitle("Offres")
-                        .setDescription("Voici les offres disponibles")
-                        .setColor(Color.GREEN)
-                    val embedPagesWithInteractions = EmbedPagesWithInteractions(
-                        embedBuilder,
-                        offers,
-                        { builder: EmbedBuilder, start: Int, num: Int, offerArrayList: ArrayList<Offer> ->
-                            for (i in start until start + num) {
-                                val offer = offerArrayList[i]
-                                builder.addInlineField(
-                                    "Offre ${i - start} de <@${offer.who.id}>",
-                                    "${offer.amountRB} -> ${offer.amount} ${offer.what.name_}"
-                                )
+                askWhat(
+                    "offre",
+                    messageComponentCreateEvent,
+                    {
+                        val result = saveManager.executeQuery(
+                            "SELECT id FROM offers WHERE who = ${messageComponentCreateEvent.buttonInteraction.user.id}",
+                            true
+                        ) ?: throw IllegalArgumentException("No offers")
+                        val offers = arrayListOf<Offer>()
+                        while (result.next()) {
+                            offers.add(Offer(result.getLong("id")))
+                        }
+                        result.close()
+                        val embedBuilder = EmbedBuilder()
+                            .setTitle("Vos offres")
+                            .setDescription("Vous avez ${offers.size} offres en cours. Vous pouvez **supprimer** une offre en cliquant sur le bouton correspondant et ainsi **récupérer vos ressources**")
+                            .setColor(Color.GREEN)
+                        val embedPagesWithInteractions = EmbedPagesWithInteractions(
+                            embedBuilder,
+                            offers,
+                            { builder: EmbedBuilder, start: Int, num: Int, offerArrayList: ArrayList<Offer> ->
+                                for (i in start until start + num) {
+                                    val offer = offerArrayList[i]
+                                    builder.addInlineField(
+                                        "Offre ${i - start + 1}",
+                                        "${offer.amountRB} -> ${offer.amount} ${offer.what.name_}"
+                                    )
+                                }
                             }
-                        }) { offer: Offer, buttonClickEvent: ButtonClickEvent ->
-                        val player = getAccount(slashCommand)
-                        // On vérifie si l'offre existe encore dans la base de données
-                        val resultSet = saveManager.executeQuery("SELECT id FROM offers WHERE id = ${offer.id}", true)
-                        if (resultSet == null || !resultSet.next()) {
-                            throw IllegalStateException("L'offre n'existe plus")
+                        ) { offer: Offer, buttonClickEvent: ButtonClickEvent ->
+                            val player = getAccount(slashCommand)
+                            // On vérifie si l'offre existe encore dans la base de données
+                            val resultSet =
+                                saveManager.executeQuery("SELECT id FROM offers WHERE id = ${offer.id}", true)
+                            if (resultSet == null || !resultSet.next()) {
+                                throw IllegalStateException("L'offre n'existe plus")
+                            }
+                            if (offer.who.id != player.id) {
+                                throw IllegalArgumentException("Cette offre ne vous appartient pas. Vous ne pouvez pas la supprimer et elle ne devrait pas apparaître dans cette liste")
+                            }
+                            // give back resources
+                            player.addResource(offer.what, offer.amount)
+                            // remove the offer from the database
+                            saveManager.execute("DELETE FROM offers WHERE id = ${offer.id}", true)
+                            // respond
+                            buttonClickEvent.buttonInteraction
+                                .createOriginalMessageUpdater()
+                                .removeAllEmbeds()
+                                .removeAllComponents()
+                                .setContent("Vous avez acheté supprimé l'offre ${offer.id} et récupéré vos ressources")
+                                .update()
                         }
-                        if (offer.who.id == player.id) {
-                            throw IllegalArgumentException("Vous ne pouvez pas acheter vos propres offres")
-                        }
-                        if (!player.hasMoney(offer.amountRB)) {
-                            throw IllegalArgumentException("Vous n'avez pas assez d'argent pour acheter cette offre")
-                        }
-                        player.removeMoney(offer.amountRB)
-                        offer.who.addMoney(offer.amountRB)
-                        player.addResource(offer.what, offer.amount)
-                        // remove the offer from the database
-                        saveManager.execute("DELETE FROM offers WHERE id = ${offer.id}", true)
-                        // respond
-                        buttonClickEvent.buttonInteraction
+                        embedPagesWithInteractions.register()
+                        it.buttonInteraction
                             .createOriginalMessageUpdater()
                             .removeAllEmbeds()
                             .removeAllComponents()
-                            .setContent("Vous avez acheté l'offre ${offer.id} de <@${offer.who.id}>")
+                            .addEmbed(embedBuilder)
+                            .addComponents(
+                                embedPagesWithInteractions.components,
+                                ActionRow.of(embedPagesWithInteractions.buttons)
+                            )
                             .update()
-                    }
-                    embedPagesWithInteractions.register()
-                    println("registered")
-                    it.buttonInteraction
-                        .createOriginalMessageUpdater()
-                        .removeAllEmbeds()
-                        .removeAllComponents()
-                        .addEmbed(embedBuilder)
-                        .addComponents(embedPagesWithInteractions.components, ActionRow.of(embedPagesWithInteractions.buttons))
-                        .update()
-                }) { event ->
+                    }, {
+                        println("offre")
+                        val result =
+                            saveManager.executeQuery("SELECT id FROM offers", true) ?: throw IllegalStateException(
+                                "No offers"
+                            )
+                        val offers = arrayListOf<Offer>()
+                        while (result.next()) {
+                            offers.add(Offer(result.getLong("id")))
+                        }
+                        result.close()
+                        println("offers : $offers")
+                        val embedBuilder = EmbedBuilder()
+                            .setTitle("Offres")
+                            .setDescription("Voici les offres disponibles. Le bouton correspondant vous permet d'accepter une offre et ainsi **acheter les ressources**")
+                            .setColor(Color.GREEN)
+                        val embedPagesWithInteractions = EmbedPagesWithInteractions(
+                            embedBuilder,
+                            offers,
+                            { builder: EmbedBuilder, start: Int, num: Int, offerArrayList: ArrayList<Offer> ->
+                                for (i in start until start + num) {
+                                    val offer = offerArrayList[i]
+                                    builder.addInlineField(
+                                        "Offre ${i - start + 1} de <@${offer.who.id}>",
+                                        "${offer.amountRB} -> ${offer.amount} ${offer.what.name_}"
+                                    )
+                                }
+                            }) { offer: Offer, buttonClickEvent: ButtonClickEvent ->
+                            val player = getAccount(slashCommand)
+                            // On vérifie si l'offre existe encore dans la base de données
+                            val resultSet =
+                                saveManager.executeQuery("SELECT id FROM offers WHERE id = ${offer.id}", true)
+                            if (resultSet == null || !resultSet.next()) {
+                                throw IllegalStateException("L'offre n'existe plus")
+                            }
+                            if (offer.who.id == player.id) {
+                                throw IllegalArgumentException("Vous ne pouvez pas acheter vos propres offres")
+                            }
+                            if (!player.hasMoney(offer.amountRB)) {
+                                throw IllegalArgumentException("Vous n'avez pas assez d'argent pour acheter cette offre")
+                            }
+                            player.removeMoney(offer.amountRB)
+                            offer.who.addMoney(offer.amountRB)
+                            player.addResource(offer.what, offer.amount)
+                            // remove the offer from the database
+                            saveManager.execute("DELETE FROM offers WHERE id = ${offer.id}", true)
+                            // respond
+                            buttonClickEvent.buttonInteraction
+                                .createOriginalMessageUpdater()
+                                .removeAllEmbeds()
+                                .removeAllComponents()
+                                .setContent("Vous avez acheté l'offre ${offer.id} de <@${offer.who.id}>")
+                                .update()
+                        }
+                        embedPagesWithInteractions.register()
+                        println("registered")
+                        it.buttonInteraction
+                            .createOriginalMessageUpdater()
+                            .removeAllEmbeds()
+                            .removeAllComponents()
+                            .addEmbed(embedBuilder)
+                            .addComponents(
+                                embedPagesWithInteractions.components,
+                                ActionRow.of(embedPagesWithInteractions.buttons)
+                            )
+                            .update()
+                    }) { event ->
                     val id = generateUniqueID()
                     val idItem = generateUniqueID()
                     val idQuantity = generateUniqueID()
@@ -562,68 +626,134 @@ class MarketCommand : Command(
                 "Recherches",
                 "Les acheteurs recherchent un objet pour un certain prix"
             ) { messageComponentCreateEvent: ButtonClickEvent ->
-                askWhat("recherche", messageComponentCreateEvent, {
-                    //TODO : list buttons with interactions
-                }, {
-                    val result = saveManager.executeQuery("SELECT id FROM researches", true) ?: throw IllegalStateException(
-                        "No researches found"
-                    )
-                    val researches = arrayListOf<Research>()
-                    while (result.next()) {
-                        researches.add(Research(result.getLong("id")))
-                    }
-                    result.close()
-                    val embedBuilder = EmbedBuilder()
-                        .setTitle("Les recherches")
-                        .setDescription("Voici les recherches en cours")
-                        .setColor(Color.ORANGE)
-                    val embedPagesWithInteractions = EmbedPagesWithInteractions(
-                        embedBuilder,
-                        researches,
-                        { builder: EmbedBuilder, start: Int, num: Int, researchArrayList: ArrayList<Research> ->
-                            for (i in start until start + num) {
-                                val research = researchArrayList[i]
-                                builder.addInlineField(
-                                    "Recherche ${i - start} par <@${research.who.id}>",
-                                    "${research.amount} ${research.what.name_} -> ${research.amountRB}"
-                                )
+                askWhat(
+                    "recherche",
+                    messageComponentCreateEvent,
+                    {
+                        val result = saveManager.executeQuery(
+                            "SELECT id FROM researches WHERE who = ${messageComponentCreateEvent.buttonInteraction.user.id}",
+                            true
+                        ) ?: throw IllegalArgumentException("No researches")
+                        val researches = arrayListOf<Research>()
+                        while (result.next()) {
+                            researches.add(Research(result.getLong("id")))
+                        }
+                        result.close()
+                        val embedBuilder = EmbedBuilder()
+                            .setTitle("Vos offres")
+                            .setDescription("Vous avez ${researches.size} recherches en cours. Vous pouvez **supprimer** une recherche en cliquant sur le bouton correspondant et ainsi **récupérer votre argent**")
+                            .setColor(Color.GREEN)
+                        val embedPagesWithInteractions = EmbedPagesWithInteractions(
+                            embedBuilder,
+                            researches,
+                            { builder: EmbedBuilder, start: Int, num: Int, researchArrayList: ArrayList<Research> ->
+                                for (i in start until start + num) {
+                                    val research = researchArrayList[i]
+                                    builder.addInlineField(
+                                        "Offre ${i - start + 1}",
+                                        "${research.amountRB} -> ${research.amount} ${research.what.name_}"
+                                    )
+                                }
                             }
+                        ) { offer: Research, buttonClickEvent: ButtonClickEvent ->
+                            val player = getAccount(slashCommand)
+                            // On vérifie si l'offre existe encore dans la base de données
+                            val resultSet =
+                                saveManager.executeQuery("SELECT id FROM researches WHERE id = ${offer.id}", true)
+                            if (resultSet == null || !resultSet.next()) {
+                                throw IllegalStateException("La recherche n'existe plus")
+                            }
+                            if (offer.who.id != player.id) {
+                                throw IllegalArgumentException("Cette recherche ne vous appartient pas. Vous ne pouvez pas la supprimer et elle ne devrait pas apparaître dans cette liste")
+                            }
+                            // give back resources
+                            player.addMoney(offer.amountRB)
+                            // remove the offer from the database
+                            saveManager.execute("DELETE FROM researches WHERE id = ${offer.id}", true)
+                            // respond
+                            buttonClickEvent.buttonInteraction
+                                .createOriginalMessageUpdater()
+                                .removeAllEmbeds()
+                                .removeAllComponents()
+                                .setContent("Vous avez acheté supprimé la recherche ${offer.id} et récupéré votre argent")
+                                .update()
                         }
-                    ) { research: Research, buttonClickEvent: ButtonClickEvent ->
-                        val player = getAccount(slashCommand)
-                        // On vérifie si l'offre existe encore dans la base de données
-                        val resultSet = saveManager.executeQuery("SELECT id FROM researches WHERE id = ${research.id}", true)
-                        if (resultSet == null || !resultSet.next()) {
-                            throw IllegalStateException("La recherche n'existe plus")
-                        }
-                        if (research.who.id == player.id) {
-                            throw IllegalArgumentException("Vous ne pouvez pas répondre à votre propre recherche")
-                        }
-                        if (!player.hasResource(research.what, research.amount)) {
-                            throw IllegalArgumentException("Vous n'avez pas assez de ${research.what.name_} pour répondre à cette recherche")
-                        }
-                        player.removeResource(research.what, research.amount)
-                        research.who.addResource(research.what, research.amount)
-                        research.who.addMoney(research.amountRB)
-                        // remove the research from the database
-                        saveManager.execute("DELETE FROM researches WHERE id = ${research.id}", true)
-                        // respond
-                        buttonClickEvent.buttonInteraction
+                        embedPagesWithInteractions.register()
+                        it.buttonInteraction
                             .createOriginalMessageUpdater()
                             .removeAllEmbeds()
                             .removeAllComponents()
-                            .setContent("Vous avez répondu à la recherche de <@${research.who.id}>")
+                            .addEmbed(embedBuilder)
+                            .addComponents(
+                                embedPagesWithInteractions.components,
+                                ActionRow.of(embedPagesWithInteractions.buttons)
+                            )
                             .update()
-                    }
-                    embedPagesWithInteractions.register()
-                    it.buttonInteraction
-                        .createOriginalMessageUpdater()
-                        .removeAllEmbeds()
-                        .removeAllComponents()
-                        .addEmbed(embedBuilder)
-                        .addComponents(embedPagesWithInteractions.components, ActionRow.of(embedPagesWithInteractions.buttons))
-                        .update()
-                }) { event ->
+                    }, {
+                        val result =
+                            saveManager.executeQuery("SELECT id FROM researches", true) ?: throw IllegalStateException(
+                                "No researches found"
+                            )
+                        val researches = arrayListOf<Research>()
+                        while (result.next()) {
+                            researches.add(Research(result.getLong("id")))
+                        }
+                        result.close()
+                        val embedBuilder = EmbedBuilder()
+                            .setTitle("Les recherches")
+                            .setDescription("Voici les recherches en cours")
+                            .setColor(Color.ORANGE)
+                        val embedPagesWithInteractions = EmbedPagesWithInteractions(
+                            embedBuilder,
+                            researches,
+                            { builder: EmbedBuilder, start: Int, num: Int, researchArrayList: ArrayList<Research> ->
+                                for (i in start until start + num) {
+                                    val research = researchArrayList[i]
+                                    builder.addInlineField(
+                                        "Recherche ${i - start} par <@${research.who.id}>",
+                                        "${research.amount} ${research.what.name_} -> ${research.amountRB}"
+                                    )
+                                }
+                            }
+                        ) { research: Research, buttonClickEvent: ButtonClickEvent ->
+                            val player = getAccount(slashCommand)
+                            // On vérifie si l'offre existe encore dans la base de données
+                            val resultSet =
+                                saveManager.executeQuery("SELECT id FROM researches WHERE id = ${research.id}", true)
+                            if (resultSet == null || !resultSet.next()) {
+                                throw IllegalStateException("La recherche n'existe plus")
+                            }
+                            if (research.who.id == player.id) {
+                                throw IllegalArgumentException("Vous ne pouvez pas répondre à votre propre recherche")
+                            }
+                            if (!player.hasResource(research.what, research.amount)) {
+                                throw IllegalArgumentException("Vous n'avez pas assez de ${research.what.name_} pour répondre à cette recherche")
+                            }
+                            player.removeResource(research.what, research.amount)
+                            research.who.addResource(research.what, research.amount)
+                            research.who.addMoney(research.amountRB)
+                            // remove the research from the database
+                            saveManager.execute("DELETE FROM researches WHERE id = ${research.id}", true)
+                            // respond
+                            buttonClickEvent.buttonInteraction
+                                .createOriginalMessageUpdater()
+                                .removeAllEmbeds()
+                                .removeAllComponents()
+                                .setContent("Vous avez répondu à la recherche de <@${research.who.id}>")
+                                .update()
+                        }
+                        embedPagesWithInteractions.register()
+                        it.buttonInteraction
+                            .createOriginalMessageUpdater()
+                            .removeAllEmbeds()
+                            .removeAllComponents()
+                            .addEmbed(embedBuilder)
+                            .addComponents(
+                                embedPagesWithInteractions.components,
+                                ActionRow.of(embedPagesWithInteractions.buttons)
+                            )
+                            .update()
+                    }) { event ->
                     val id = generateUniqueID()
                     val idItem = generateUniqueID()
                     val idQuantity = generateUniqueID()
@@ -717,11 +847,70 @@ class MarketCommand : Command(
                 "Ici trouvez les objets les plus rares et chers"
             ) { messageComponentCreateEvent: ButtonClickEvent ->
                 askWhat("enchère", messageComponentCreateEvent, {
-                    //TODO : list buttons with interactions
+                    val result = saveManager.executeQuery(
+                        "SELECT id FROM offers WHERE who = ${messageComponentCreateEvent.buttonInteraction.user.id}",
+                        true
+                    ) ?: throw IllegalArgumentException("No offers")
+                    val offers = arrayListOf<Offer>()
+                    while (result.next()) {
+                        offers.add(Offer(result.getLong("id")))
+                    }
+                    result.close()
+                    val embedBuilder = EmbedBuilder()
+                        .setTitle("Vos offres")
+                        .setDescription("Vous avez ${offers.size} offres en cours. Vous pouvez **supprimer** une offre en cliquant sur le bouton correspondant et ainsi **récupérer vos ressources**")
+                        .setColor(Color.GREEN)
+                    val embedPagesWithInteractions = EmbedPagesWithInteractions(
+                        embedBuilder,
+                        offers,
+                        { builder: EmbedBuilder, start: Int, num: Int, offerArrayList: ArrayList<Offer> ->
+                            for (i in start until start + num) {
+                                val offer = offerArrayList[i]
+                                builder.addInlineField(
+                                    "Offre ${i - start + 1}",
+                                    "${offer.amountRB} -> ${offer.amount} ${offer.what.name_}"
+                                )
+                            }
+                        }
+                    ) { offer: Offer, buttonClickEvent: ButtonClickEvent ->
+                        val player = getAccount(slashCommand)
+                        // On vérifie si l'offre existe encore dans la base de données
+                        val resultSet =
+                            saveManager.executeQuery("SELECT id FROM offers WHERE id = ${offer.id}", true)
+                        if (resultSet == null || !resultSet.next()) {
+                            throw IllegalStateException("L'offre n'existe plus")
+                        }
+                        if (offer.who.id != player.id) {
+                            throw IllegalArgumentException("Cette offre ne vous appartient pas. Vous ne pouvez pas la supprimer et elle ne devrait pas apparaître dans cette liste")
+                        }
+                        // give back resources
+                        player.addResource(offer.what, offer.amount)
+                        // remove the offer from the database
+                        saveManager.execute("DELETE FROM offers WHERE id = ${offer.id}", true)
+                        // respond
+                        buttonClickEvent.buttonInteraction
+                            .createOriginalMessageUpdater()
+                            .removeAllEmbeds()
+                            .removeAllComponents()
+                            .setContent("Vous avez acheté supprimé l'offre ${offer.id} et récupéré vos ressources")
+                            .update()
+                    }
+                    embedPagesWithInteractions.register()
+                    it.buttonInteraction
+                        .createOriginalMessageUpdater()
+                        .removeAllEmbeds()
+                        .removeAllComponents()
+                        .addEmbed(embedBuilder)
+                        .addComponents(
+                            embedPagesWithInteractions.components,
+                            ActionRow.of(embedPagesWithInteractions.buttons)
+                        )
+                        .update()
                 }, {
-                    val result = saveManager.executeQuery("SELECT id FROM auctions", true) ?: throw IllegalStateException(
-                        "No auctions found"
-                    )
+                    val result =
+                        saveManager.executeQuery("SELECT id FROM auctions", true) ?: throw IllegalStateException(
+                            "No auctions found"
+                        )
                     val auctions = arrayListOf<Auction>()
                     while (result.next()) {
                         auctions.add(Auction(result.getLong("id")))
@@ -746,7 +935,8 @@ class MarketCommand : Command(
                     ) { auction: Auction, buttonClickEvent: ButtonClickEvent ->
                         val player = getAccount(slashCommand)
                         // On vérifie si l'offre existe encore dans la base de données
-                        val resultSet = saveManager.executeQuery("SELECT id FROM auctions WHERE id = ${auction.id}", true)
+                        val resultSet =
+                            saveManager.executeQuery("SELECT id FROM auctions WHERE id = ${auction.id}", true)
                         if (resultSet == null || !resultSet.next()) {
                             throw IllegalStateException("L'enchère n'existe plus")
                         }
@@ -774,7 +964,10 @@ class MarketCommand : Command(
                         .removeAllEmbeds()
                         .removeAllComponents()
                         .addEmbed(embedBuilder)
-                        .addComponents(embedPagesWithInteractions.components, ActionRow.of(embedPagesWithInteractions.buttons))
+                        .addComponents(
+                            embedPagesWithInteractions.components,
+                            ActionRow.of(embedPagesWithInteractions.buttons)
+                        )
                         .update()
                 }) { event ->
                     val id = generateUniqueID()
@@ -880,13 +1073,13 @@ class MarketCommand : Command(
         MenuBuilder("Que faire ?", "Il existe 3 possibilités pour les ${name}s", Color.YELLOW)
             .addButton(
                 "Mes ${name}s",
-                "Voir vos ${name}s, si elles existent"
+                "Voir vos ${name}s, si elles existent. Dans le cas des offres et recherches, vous pouvez les supprimer. Dans le cas des enchères, vous pouvez finir une enchère.",
             ) { messageComponentCreateEvent: ButtonClickEvent ->
                 my(messageComponentCreateEvent)
             }
             .addButton(
                 "Toutes les ${name}s",
-                "Voir toutes les ${name}s. Vous pouvez interagir avec celles-ci ici"
+                "Voir toutes les ${name}s. Vous pouvez interagir avec celles-ci ici (répondre à une enchère, acheter une offre, etc.)",
             ) { messageComponentCreateEvent: ButtonClickEvent ->
                 everything(messageComponentCreateEvent)
             }
