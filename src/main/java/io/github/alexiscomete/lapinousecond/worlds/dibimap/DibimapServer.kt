@@ -3,6 +3,15 @@ package io.github.alexiscomete.lapinousecond.worlds.dibimap
 import io.github.alexiscomete.lapinousecond.worlds.WorldEnum
 import io.github.alexiscomete.lapinousecond.worlds.Zone
 
+fun isDibimap(id: Long) : Boolean {
+    DibimapServer.values().forEach {
+        if (it.serverId == id) {
+            return true
+        }
+    }
+    return false
+}
+
 enum class DibimapServer(val serverId: Long = 0, val zones: List<Zone> = listOf(), val name_: String = "") {
     LIGNE224(906247039703195658, listOf(Zone(1, 224, WorldEnum.DIBIMAP.world.mapWidth, 224)), "Ligne 224"),
     COEUR_HISTORIQUE(905024934517047307, listOf(Zone(1, 1, 110, 50)), "Coeur Historique"),
