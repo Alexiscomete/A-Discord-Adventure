@@ -54,19 +54,25 @@ class ConfigCommand : Command(
                             serverC["name"] = slashCommand.server.get().name
                         }
                         WorldEnum.TUTO -> {
+                            val id = generateUniqueID()
+                            places.add(id)
+                            val place = places[id]
+                                ?: throw IllegalArgumentException("Un problème de source inconnue est survenue. La création du serveur a échoué.")
+                            place["nameRP"] = "Saint-Lapin-sur-bot" // TODO
+                            place["description"] = "Ville accueillante du tutoriel"
+                            place["welcome"] = "Ne restez pas trop longtemps ici ! Profitez de l'aventure"
+                            place["x"] = 45.toString()
+                            place["y"] = 20.toString()
+                            place["type"] = "city"
+                            place["world"] = world.progName
+                            place["server"] = serverId.toString()
+
                             servers.add(serverId)
                             val serverC = servers[serverId]
                                 ?: throw IllegalArgumentException("Un problème de source inconnue est survenue. La création du serveur a échoué.")
                             serverC["world"] = world.progName
                             serverC["name"] = slashCommand.server.get().name
-                            val nameRP = "Saint-Lapin-sur-bot" // TODO
-                            val description = "Ville accueillante du tutoriel"
-                            val welcome = "Ne restez pas trop longtemps ici ! Profitez de l'aventure"
-                            val x = 45
-                            val y = 20
-
-                            val id = generateUniqueID()
-                            places.add(id)
+                            serverC["places"] = id.toString()
                         }
                     }
 
