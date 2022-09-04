@@ -6,6 +6,7 @@ import io.github.alexiscomete.lapinousecond.message_event.MenuBuilder
 import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
 import io.github.alexiscomete.lapinousecond.worlds.WorldEnum
 import io.github.alexiscomete.lapinousecond.worlds.dibimap.isDibimap
+import io.github.alexiscomete.lapinousecond.worlds.places
 import io.github.alexiscomete.lapinousecond.worlds.servers
 import org.javacord.api.entity.permission.PermissionType
 import org.javacord.api.interaction.SlashCommandInteraction
@@ -37,19 +38,38 @@ class ConfigCommand : Command(
                 Color.BLUE
             )
                 .addButton("Oui", "Le monde est correcte et je continue la configuration. **Irréversible**") {
-                    /*servers.add(serverId)
-                    val serverC = servers[serverId]
-                        ?: throw IllegalArgumentException("Un problème de source inconnue est survenue. La création du serveur a échoué.")
-                    serverC["world"] = world.progName
-                    serverC["name"] = slashCommand.server.get().name*/
 
-                    if (world == WorldEnum.DIBIMAP) {
+                    when (world) {
+                        WorldEnum.NORMAL -> {
+                            val id = generateUniqueID()
+                            val idNameRP = generateUniqueID()
+                            val idDescription = generateUniqueID()
+                            val idWelcome = generateUniqueID()
+                        }
+                        WorldEnum.DIBIMAP -> {
+                            servers.add(serverId)
+                            val serverC = servers[serverId]
+                                ?: throw IllegalArgumentException("Un problème de source inconnue est survenue. La création du serveur a échoué.")
+                            serverC["world"] = world.progName
+                            serverC["name"] = slashCommand.server.get().name
+                        }
+                        WorldEnum.TUTO -> {
+                            servers.add(serverId)
+                            val serverC = servers[serverId]
+                                ?: throw IllegalArgumentException("Un problème de source inconnue est survenue. La création du serveur a échoué.")
+                            serverC["world"] = world.progName
+                            serverC["name"] = slashCommand.server.get().name
+                            val nameRP = "Saint-Lapin-sur-bot" // TODO
+                            val description = "Ville accueillante du tutoriel"
+                            val welcome = "Ne restez pas trop longtemps ici ! Profitez de l'aventure"
+                            val x = 45
+                            val y = 20
 
+                            val id = generateUniqueID()
+                            places.add(id)
+                        }
                     }
-                    val id = generateUniqueID()
-                    val idNameRP = generateUniqueID()
-                    val idDescription = generateUniqueID()
-                    val idWelcome = generateUniqueID()
+
                 }
                 .addButton("Non", "Le monde est incorrecte ou je veux changer quelque chose. **Réversible**") {
                     it.buttonInteraction.createOriginalMessageUpdater()

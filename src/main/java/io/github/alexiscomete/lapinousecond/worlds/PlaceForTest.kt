@@ -22,7 +22,7 @@ class PlaceForTest(val name: String, override val id: Long, var x: Int, var y: I
 
     companion object {
         // génère aléatoirement une place pour les tests, minx = 0, maxx = voir dans Map.java, miny = 0, maxy = voir dans Map.java
-        private fun generateRandomPlace(world: World): PlaceForTest {
+        private fun generateRandomPlace(world: WorldEnum): PlaceForTest {
 
             // génération des coordonnées aléatoires
             val x = (Math.random() * world.mapWidth).toInt()
@@ -41,7 +41,7 @@ class PlaceForTest(val name: String, override val id: Long, var x: Int, var y: I
         }
 
         // génération de n places aléatoires
-        fun generateRandomPlaces(n: Int, world: World): ArrayList<Place> {
+        fun generateRandomPlaces(n: Int, world: WorldEnum): ArrayList<Place> {
             val places = ArrayList<Place>()
             for (i in 0 until n) {
                 places.add(generateRandomPlace(world))

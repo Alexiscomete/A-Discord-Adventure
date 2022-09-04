@@ -20,7 +20,7 @@ val places = CacheCustom(PLACES) { id: Long -> Place(id) }
 open class Place : CacheGetSet, Owner {
     private var serverID: Long? = null
     private var serverBot: ServerBot? = null
-    var world: World? = null
+    var world: WorldEnum? = null
     private var x: Int? = null
     private var y: Int? = null
     lateinit var connections: LongArray

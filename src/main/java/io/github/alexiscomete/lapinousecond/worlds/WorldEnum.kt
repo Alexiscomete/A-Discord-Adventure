@@ -92,7 +92,7 @@ enum class WorldEnum(
 
     val mapFile: BufferedImage? = try {
         ImageIO.read(
-            World::class.java.classLoader.getResourceAsStream(mapPath)
+            WorldEnum::class.java.classLoader.getResourceAsStream(mapPath)
         )
     } catch (e: IOException) {
         e.printStackTrace()
