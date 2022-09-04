@@ -28,7 +28,7 @@ class ConfigServ : CommandWithAccount(
                     val welcome = server.getString("welcome")
                     var world = server.getString("world")
                     world = try {
-                        val w = WorldEnum.valueOf(world).world
+                        val w = WorldEnum.valueOf(world)
                         w.typeOfServer
                     } catch (e: IllegalArgumentException) {
                         "Monde invalide"
@@ -67,10 +67,10 @@ class ConfigServ : CommandWithAccount(
                                     .setTitle("Les mondes")
                                     .setDescription("Maintenant configurons le monde de votre serveur ...")
                                 for (worldEnum in WorldEnum.values()) {
-                                    val w = worldEnum.world
+                                    val w = worldEnum
                                     embedBuilder.addField(
                                         w.typeOfServer, """
-     RP : ${w.name}
+     RP : ${w.nameRP}
      Nom à entrer : ${w.progName}
      Description : ${w.desc}
      """.trimIndent()
@@ -83,7 +83,7 @@ class ConfigServ : CommandWithAccount(
                                                 override fun accept(messageCreateEvent: MessageCreateEvent) {
                                                     try {
                                                         val world =
-                                                            WorldEnum.valueOf(messageCreateEvent.messageContent).world
+                                                            WorldEnum.valueOf(messageCreateEvent.messageContent)
                                                         finalServer["world"] = world.progName
                                                         messageCreateEvent.message.reply("Configuration terminée !! Enfin ! (et moi j' ai fini de coder ça, maintenant c'est les lieux 😑). Faites -help place pour la suite. Vous pouvez modifier tout cela à n' importe quel moment avec config [what] [value] et voir la configuration avec -config info.")
                                                     } catch (e: IllegalArgumentException) {
@@ -92,10 +92,10 @@ class ConfigServ : CommandWithAccount(
                                                             .setTitle("Les mondes")
                                                             .setDescription("SVP lisez")
                                                         for (worldEnum in WorldEnum.values()) {
-                                                            val w = worldEnum.world
+                                                            val w = worldEnum
                                                             embedBuilder.addField(
                                                                 w.typeOfServer, """
-     RP : ${w.name}
+     RP : ${w.nameRP}
      Nom à entrer : ${w.progName}
      Description : ${w.desc}
      """.trimIndent()

@@ -52,7 +52,7 @@ class MapCommand : Command(
 
                         // get all worlds
                         val worldEnums = WorldEnum.values()
-                        val worlds = worldEnums.map { it.world }
+                        val worlds = worldEnums.map { it }
                         val player = getAccount(slashCommand)
 
                         // create the embed builder
@@ -64,7 +64,7 @@ class MapCommand : Command(
                         // for each world, add a field
                         for ((i, world) in worlds.withIndex()) {
                             eb.addField(
-                                "(${i}) ${world.name}",
+                                "(${i}) ${world.nameRP}",
                                 "**Nom officiel :** ${world.progName}\n**Type de serveur :** ${world.typeOfServer}\n${world.desc}",
                                 true
                             )
@@ -175,7 +175,7 @@ class MapCommand : Command(
 
                             val player = getAccount(slashCommand)
                             val world = try {
-                                WorldEnum.valueOf(player["world"]).world
+                                WorldEnum.valueOf(player["world"])
                             } catch (e: Exception) {
                                 throw IllegalArgumentException("world is not a valid world")
                             }
@@ -324,7 +324,7 @@ class MapCommand : Command(
 
                         val player = getAccount(slashCommand)
                         val worldStr = player["world"]
-                        val world = WorldEnum.valueOf(worldStr).world
+                        val world = WorldEnum.valueOf(worldStr)
                         val position = player.positionToString()
 
                         val x = player["place_${worldStr}_x"]
@@ -443,7 +443,7 @@ class MapCommand : Command(
 
                             val player = getAccount(slashCommand)
                             val worldStr = player["world"]
-                            val world = WorldEnum.valueOf(worldStr).world
+                            val world = WorldEnum.valueOf(worldStr)
 
                             // check if the arguments are in the right range
                             if (x1Int < 0 || x1Int > world.mapWidth) {
@@ -557,7 +557,7 @@ class MapCommand : Command(
 
                             val player = getAccount(slashCommand)
                             val worldStr = player["world"]
-                            val world = WorldEnum.valueOf(worldStr).world
+                            val world = WorldEnum.valueOf(worldStr)
 
                             // check if the arguments are in the right range
                             if (xInt < 0 || xInt > world.mapWidth) {
@@ -664,7 +664,7 @@ class MapCommand : Command(
 
                             val player = getAccount(slashCommand)
                             val worldStr = player["world"]
-                            val world = WorldEnum.valueOf(worldStr).world
+                            val world = WorldEnum.valueOf(worldStr)
 
                             if (xInt < 0 || xInt > world.mapWidth) {
                                 throw IllegalArgumentException("Le x de la case n'est pas dans la carte")

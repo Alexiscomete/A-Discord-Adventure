@@ -76,8 +76,8 @@ class Player(id: Long) : CacheGetSet(id, PLAYERS), Owner {
             if (world == "") {
                 world = "TUTO"
                 set("world", "TUTO")
-                this["place_TUTO_x"] = WorldEnum.TUTO.world.defaultX.toString()
-                this["place_TUTO_y"] = WorldEnum.TUTO.world.defaultY.toString()
+                this["place_TUTO_x"] = WorldEnum.TUTO.defaultX.toString()
+                this["place_TUTO_y"] = WorldEnum.TUTO.defaultY.toString()
                 this["place_TUTO_type"] = "coos"
             }
             //TODO: update this
@@ -135,7 +135,7 @@ class Player(id: Long) : CacheGetSet(id, PLAYERS), Owner {
             val pathSplit = pathStr.split(";")
             for (i in pathSplit.indices) {
                 val pixelSplit = pathSplit[i].split(",")
-                val world = WorldEnum.valueOf(getString("world")).world
+                val world = WorldEnum.valueOf(getString("world"))
                 path.add(world.getPixel(pixelSplit[0].toInt(), pixelSplit[1].toInt()))
             }
         }
@@ -250,7 +250,7 @@ class Player(id: Long) : CacheGetSet(id, PLAYERS), Owner {
         val w = this["world"]
         if (w == "") {
             WorldEnum.TUTO
-            this["world"] = WorldEnum.TUTO.world.progName
+            this["world"] = WorldEnum.TUTO.progName
         }
     }
 

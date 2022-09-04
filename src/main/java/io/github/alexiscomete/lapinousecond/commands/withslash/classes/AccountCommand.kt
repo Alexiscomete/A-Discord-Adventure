@@ -27,8 +27,8 @@ import java.util.*
 fun toSpawn(p: Player) {
     p["serv"] = "854288660147994634"
     p["world"] = "TUTO"
-    p["place_TUTO_x"] = WorldEnum.TUTO.world.defaultX.toString()
-    p["place_TUTO_y"] = WorldEnum.TUTO.world.defaultY.toString()
+    p["place_TUTO_x"] = WorldEnum.TUTO.defaultX.toString()
+    p["place_TUTO_y"] = WorldEnum.TUTO.defaultY.toString()
     p["place_TUTO_type"] = "coos"
 }
 

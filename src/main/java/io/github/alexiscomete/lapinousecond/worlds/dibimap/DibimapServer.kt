@@ -13,7 +13,7 @@ fun isDibimap(id: Long) : Boolean {
 }
 
 enum class DibimapServer(val serverId: Long = 0, val zones: List<Zone> = listOf(), val name_: String = "") {
-    LIGNE224(906247039703195658, listOf(Zone(1, 224, WorldEnum.DIBIMAP.world.mapWidth, 224)), "Ligne 224"),
+    LIGNE224(906247039703195658, listOf(Zone(1, 224, WorldEnum.DIBIMAP.mapWidth, 224)), "Ligne 224"),
     COEUR_HISTORIQUE(905024934517047307, listOf(Zone(1, 1, 110, 50)), "Coeur Historique"),
     CONTREES_MAGMATIQUES(
         941423362339659826, listOf(

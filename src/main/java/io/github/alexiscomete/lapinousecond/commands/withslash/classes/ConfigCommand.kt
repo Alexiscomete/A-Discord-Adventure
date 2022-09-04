@@ -3,10 +3,10 @@ package io.github.alexiscomete.lapinousecond.commands.withslash.classes
 import io.github.alexiscomete.lapinousecond.commands.withslash.Command
 import io.github.alexiscomete.lapinousecond.commands.withslash.ExecutableWithArguments
 import io.github.alexiscomete.lapinousecond.message_event.MenuBuilder
+import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
 import io.github.alexiscomete.lapinousecond.worlds.WorldEnum
 import io.github.alexiscomete.lapinousecond.worlds.dibimap.isDibimap
 import io.github.alexiscomete.lapinousecond.worlds.servers
-import org.javacord.api.entity.message.embed.EmbedBuilder
 import org.javacord.api.entity.permission.PermissionType
 import org.javacord.api.interaction.SlashCommandInteraction
 import java.awt.Color
@@ -29,10 +29,38 @@ class ConfigCommand : Command(
         val serverId = slashCommand.server.get().id
         val server = servers[serverId]
         if (server == null) {
-            val world = if (serverId == 854288660147994634) WorldEnum.TUTO else if (isDibimap(serverId)) WorldEnum.DIBIMAP else WorldEnum.NORMAL
-            MenuBuilder("Votre première configuration", "", Color.BLUE)
+            val world =
+                if (serverId == 854288660147994634) WorldEnum.TUTO else if (isDibimap(serverId)) WorldEnum.DIBIMAP else WorldEnum.NORMAL
+            MenuBuilder(
+                "Votre première configuration",
+                "Votre serveur discord a été automatiquement assigné au ${world.nameRP}. Explications :\nLe Dibistan a un drapeau qui est aussi son territoire principal. Si votre serveur discord est un état ou une région qui a un territoire en forme de polygone sur le drapeau, alors sont monde est le ${WorldEnum.DIBIMAP.nameRP} sinon c'est le monde ${WorldEnum.NORMAL.nameRP}. Les mécaniques sont différentes dans les 2 mondes. **Le monde détecté est-il correcte ?**",
+                Color.BLUE
+            )
+                .addButton("Oui", "Le monde est correcte et je continue la configuration. **Irréversible**") {
+                    /*servers.add(serverId)
+                    val serverC = servers[serverId]
+                        ?: throw IllegalArgumentException("Un problème de source inconnue est survenue. La création du serveur a échoué.")
+                    serverC["world"] = world.progName
+                    serverC["name"] = slashCommand.server.get().name*/
+
+                    if (world == WorldEnum.DIBIMAP) {
+
+                    }
+                    val id = generateUniqueID()
+                    val idNameRP = generateUniqueID()
+                    val idDescription = generateUniqueID()
+                    val idWelcome = generateUniqueID()
+                }
+                .addButton("Non", "Le monde est incorrecte ou je veux changer quelque chose. **Réversible**") {
+                    it.buttonInteraction.createOriginalMessageUpdater()
+                        .setContent("Contactez un administrateur pour changer le monde si c'est le problème")
+                        .removeAllEmbeds()
+                        .removeAllComponents()
+                        .update()
+                }
+                .responder(slashCommand)
         } else {
-            val world = WorldEnum.valueOf(server["world"]).world
+            val world = WorldEnum.valueOf(server["world"])
         }
     }
 
