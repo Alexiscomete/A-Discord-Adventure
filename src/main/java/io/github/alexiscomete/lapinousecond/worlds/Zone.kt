@@ -40,7 +40,7 @@ class Zone(var x1: Int, var y1: Int, var x2: Int, var y2: Int) {
     // setters
     // permet de récupérer la zone en string
     override fun toString(): String {
-        return "{$x1,$y1,$x2,$y2}"
+        return "[$x1:$y1] -> [$x2:$y2]"
     }
 
     companion object {

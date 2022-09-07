@@ -6,6 +6,7 @@ import io.github.alexiscomete.lapinousecond.message_event.MenuBuilder
 import io.github.alexiscomete.lapinousecond.modalManager
 import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
 import io.github.alexiscomete.lapinousecond.worlds.WorldEnum
+import io.github.alexiscomete.lapinousecond.worlds.dibimap.DibimapServer
 import io.github.alexiscomete.lapinousecond.worlds.dibimap.isDibimap
 import io.github.alexiscomete.lapinousecond.worlds.places
 import io.github.alexiscomete.lapinousecond.worlds.servers
@@ -110,14 +111,24 @@ class ConfigCommand : Command(
 
                                 configNormalServer(world, slashCommand, placeId)
 
+                                it.modalInteraction.createImmediateResponder()
+                                    .setContent("Le serveur a été configuré avec succès ! Les coordonnées sont [${x}:${y}]")
+                                    .respond()
                             }
                         }
                         WorldEnum.DIBIMAP -> {
+
                             servers.add(serverId)
                             val serverC = servers[serverId]
                                 ?: throw IllegalArgumentException("Un problème de source inconnue est survenue. La création du serveur a échoué.")
                             serverC["world"] = world.progName
                             serverC["name"] = slashCommand.server.get().name
+
+                            val serverForZones = DibimapServer.valueOf(serverId.toString())
+
+                            yes.buttonInteraction.createImmediateResponder()
+                                .setContent("Le serveur a été configuré avec succès ! Vous devez faire à nouveau la commande pour ajouter des villes. ")
+                                .respond()
                         }
                         WorldEnum.TUTO -> {
                             val id = generateUniqueID()
@@ -134,6 +145,10 @@ class ConfigCommand : Command(
                             place["server"] = serverId.toString() // automatique normalement
 
                             configNormalServer(world, slashCommand, id)
+
+                            yes.buttonInteraction.createImmediateResponder()
+                                .setContent("Le serveur a été configuré avec succès !")
+                                .respond()
                         }
                     }
 
