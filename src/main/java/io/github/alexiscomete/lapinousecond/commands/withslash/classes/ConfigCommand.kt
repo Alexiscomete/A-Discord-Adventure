@@ -127,7 +127,7 @@ class ConfigCommand : Command(
                             val serverForZones = DibimapServer.valueOf(serverId.toString())
 
                             yes.buttonInteraction.createImmediateResponder()
-                                .setContent("Le serveur a été configuré avec succès ! Vous devez faire à nouveau la commande pour ajouter des villes. ")
+                                .setContent("Le serveur a été configuré avec succès ! Vous devez faire à nouveau la commande pour ajouter des villes. Les $serverForZones ont été ajoutées automatiquement.")
                                 .respond()
                         }
                         WorldEnum.TUTO -> {

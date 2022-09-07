@@ -36,4 +36,8 @@ enum class DibimapServer(val serverId: Long = 0, val zones: List<Zone> = listOf(
     fun isInZones(x: Int, y: Int): Boolean {
         return zones.any { it.contains(x, y) }
     }
+
+    override fun toString(): String {
+        return "zones " + zones.joinToString { it.toString() + ", " } + " sur le serveur $name_"
+    }
 }
