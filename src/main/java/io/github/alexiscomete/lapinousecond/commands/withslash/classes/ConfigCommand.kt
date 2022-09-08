@@ -5,11 +5,9 @@ import io.github.alexiscomete.lapinousecond.commands.withslash.ExecutableWithArg
 import io.github.alexiscomete.lapinousecond.message_event.MenuBuilder
 import io.github.alexiscomete.lapinousecond.modalManager
 import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
-import io.github.alexiscomete.lapinousecond.worlds.WorldEnum
+import io.github.alexiscomete.lapinousecond.worlds.*
 import io.github.alexiscomete.lapinousecond.worlds.dibimap.DibimapServer
 import io.github.alexiscomete.lapinousecond.worlds.dibimap.isDibimap
-import io.github.alexiscomete.lapinousecond.worlds.places
-import io.github.alexiscomete.lapinousecond.worlds.servers
 import org.javacord.api.entity.message.component.ActionRow
 import org.javacord.api.entity.message.component.TextInput
 import org.javacord.api.entity.message.component.TextInputStyle
@@ -32,6 +30,9 @@ class ConfigCommand : Command(
         get() = arrayOf("CREATE_SERVER")
 
     override fun execute(slashCommand: SlashCommandInteraction) {
+        SERVERS
+        PLACES
+
         val serverId = slashCommand.server.get().id
         val server = servers[serverId]
         if (server == null) {
@@ -162,7 +163,28 @@ class ConfigCommand : Command(
                 }
                 .responder(slashCommand)
         } else {
-            val world = WorldEnum.valueOf(server["world"])
+            when(WorldEnum.valueOf(server["world"])) {
+                WorldEnum.NORMAL -> {
+                    MenuBuilder("Modification du serveur dans un monde à lieu unique", "Vous pouvez modifier la configuration du serveur discord de façon simple dans un monde à serveur unique. Sélectionner ce qu'il faut modifier :", Color.YELLOW)
+                        .addButton("Mise à jour du nom du serveur", "Le nom du serveur discord est stocké dans la base de données. Mais si vous changer le nom du serveur discord le bot ne met pas à jour automatiquement de son côté.") {
+
+                        }
+                        .addButton("Modifier le nom RP du lieu", "Modifiable à tout moment, le nom de votre ville est personnalisable.") {
+
+                        }
+                        .addButton("Modifier la description du lieu", "Modifiable à tout moment, la description de votre ville est la deuxième chose que voix une personne quand il regarde le lieu.") {
+
+                        }
+                        .addButton("Modifier le message de bienvenue", "Modifiable à tout moment, le message de bienvenue est nécessaire pour mettre l'ambiance : ville magique ? Tech ? Abandonné ? Repaire de Pirates ?") {
+
+                        }
+                        .responder(slashCommand)
+                }
+                WorldEnum.DIBIMAP -> TODO()
+                WorldEnum.TUTO -> {
+
+                }
+            }
         }
     }
 
