@@ -165,93 +165,13 @@ class ConfigCommand : Command(
         } else {
             when(WorldEnum.valueOf(server["world"])) {
                 WorldEnum.NORMAL -> {
-                    MenuBuilder("Modification du serveur dans un monde à lieu unique", "Vous pouvez modifier la configuration du serveur discord de façon simple dans un monde à serveur unique. Sélectionner ce qu'il faut modifier :", Color.YELLOW)
-                        .addButton("Mise à jour du nom du serveur", "Le nom du serveur discord est stocké dans la base de données. Mais si vous changer le nom du serveur discord le bot ne met pas à jour automatiquement de son côté.") { name ->
-
-                        }
-                        .addButton("Modifier le nom RP du lieu", "Modifiable à tout moment, le nom de votre ville est personnalisable.") {name ->
-                            val id = generateUniqueID()
-                            val idName = generateUniqueID()
-
-                            modalManager.add(id) {
-                                val opName = it.modalInteraction.getTextInputValueByCustomId(idName.toString())
-
-                                if (!opName.isPresent) {
-                                    throw IllegalArgumentException("Le nom n'a pas été rempli")
-                                }
-
-                                server["name"] = opName.get()
-
-                                it.modalInteraction.createImmediateResponder()
-                                    .setContent("Le nom RP de la ville a été modifié avec succès !")
-                                    .respond()
-                            }
-
-                            name.buttonInteraction.respondWithModal(
-                                id.toString(),
-                                "Mise à jour du nom RP de la ville",
-                                ActionRow.of(
-                                    TextInput.create(TextInputStyle.SHORT, idName.toString(), "Nom de la ville")
-                                )
-                            )
-                        }
-                        .addButton("Modifier la description du lieu", "Modifiable à tout moment, la description de votre ville est la deuxième chose que voix une personne quand il regarde le lieu.") { description ->
-                            val id = generateUniqueID()
-                            val idDescription = generateUniqueID()
-
-                            modalManager.add(id) {
-                                val opDescription = it.modalInteraction.getTextInputValueByCustomId(idDescription.toString())
-
-                                if (!opDescription.isPresent) {
-                                    throw IllegalArgumentException("La description n'a pas été remplie")
-                                }
-
-                                server["description"] = opDescription.get()
-
-                                it.modalInteraction.createImmediateResponder()
-                                    .setContent("La description de la ville a été modifiée avec succès !")
-                                    .respond()
-                            }
-
-                            description.buttonInteraction.respondWithModal(
-                                id.toString(),
-                                "Mise à jour de la description de la ville",
-                                ActionRow.of(
-                                    TextInput.create(TextInputStyle.PARAGRAPH, idDescription.toString(), "Description de la ville")
-                                )
-                            )
-                        }
-                        .addButton("Modifier le message de bienvenue", "Modifiable à tout moment, le message de bienvenue est nécessaire pour mettre l'ambiance : ville magique ? Tech ? Abandonné ? Repaire de Pirates ?") { welcome ->
-                            val id = generateUniqueID()
-                            val idWelcome = generateUniqueID()
-
-                            modalManager.add(id) {
-                                val opWelcome = it.modalInteraction.getTextInputValueByCustomId(idWelcome.toString())
-
-                                if (!opWelcome.isPresent) {
-                                    throw IllegalArgumentException("Le message de bienvenue n'a pas été rempli")
-                                }
-
-                                server["welcome"] = opWelcome.get()
-
-                                it.modalInteraction.createImmediateResponder()
-                                    .setContent("Le message de bienvenue a été modifié avec succès !")
-                                    .respond()
-                            }
-
-                            welcome.buttonInteraction.respondWithModal(
-                                id.toString(),
-                                "Mise à jour du message de bienvenue",
-                                ActionRow.of(
-                                    TextInput.create(TextInputStyle.PARAGRAPH, idWelcome.toString(), "Message de bienvenue")
-                                )
-                            )
-                        }
-                        .responder(slashCommand)
+                    modifServer(slashCommand, server)
                 }
-                WorldEnum.DIBIMAP -> TODO()
-                WorldEnum.TUTO -> {
+                WorldEnum.DIBIMAP -> {
 
+                }
+                WorldEnum.TUTO -> {
+                    modifServer(slashCommand, server)
                 }
             }
         }
@@ -265,5 +185,95 @@ class ConfigCommand : Command(
         serverC["world"] = world.progName
         serverC["name"] = server.name
         serverC["places"] = placeId.toString()
+    }
+
+    private fun modifServer(slashCommand: SlashCommandInteraction, server: ServerBot) {
+        MenuBuilder("Modification du serveur dans un monde à lieu unique", "Vous pouvez modifier la configuration du serveur discord de façon simple dans un monde à serveur unique. Sélectionner ce qu'il faut modifier :", Color.YELLOW)
+            .addButton("Mise à jour du nom du serveur", "Le nom du serveur discord est stocké dans la base de données. Mais si vous changer le nom du serveur discord le bot ne met pas à jour automatiquement de son côté.") { name ->
+                val serverDiscord = slashCommand.server.get()
+                server["name"] = serverDiscord.name
+                name.buttonInteraction.createImmediateResponder()
+                    .setContent("Le nom du serveur a été mis à jour avec succès !")
+                    .respond()
+            }
+            .addButton("Modifier le nom RP du lieu", "Modifiable à tout moment, le nom de votre ville est personnalisable.") {name ->
+                val id = generateUniqueID()
+                val idName = generateUniqueID()
+
+                modalManager.add(id) {
+                    val opName = it.modalInteraction.getTextInputValueByCustomId(idName.toString())
+
+                    if (!opName.isPresent) {
+                        throw IllegalArgumentException("Le nom n'a pas été rempli")
+                    }
+
+                    server["name"] = opName.get()
+
+                    it.modalInteraction.createImmediateResponder()
+                        .setContent("Le nom RP de la ville a été modifié avec succès !")
+                        .respond()
+                }
+
+                name.buttonInteraction.respondWithModal(
+                    id.toString(),
+                    "Mise à jour du nom RP de la ville",
+                    ActionRow.of(
+                        TextInput.create(TextInputStyle.SHORT, idName.toString(), "Nom de la ville")
+                    )
+                )
+            }
+            .addButton("Modifier la description du lieu", "Modifiable à tout moment, la description de votre ville est la deuxième chose que voix une personne quand il regarde le lieu.") { description ->
+                val id = generateUniqueID()
+                val idDescription = generateUniqueID()
+
+                modalManager.add(id) {
+                    val opDescription = it.modalInteraction.getTextInputValueByCustomId(idDescription.toString())
+
+                    if (!opDescription.isPresent) {
+                        throw IllegalArgumentException("La description n'a pas été remplie")
+                    }
+
+                    server["description"] = opDescription.get()
+
+                    it.modalInteraction.createImmediateResponder()
+                        .setContent("La description de la ville a été modifiée avec succès !")
+                        .respond()
+                }
+
+                description.buttonInteraction.respondWithModal(
+                    id.toString(),
+                    "Mise à jour de la description de la ville",
+                    ActionRow.of(
+                        TextInput.create(TextInputStyle.PARAGRAPH, idDescription.toString(), "Description de la ville")
+                    )
+                )
+            }
+            .addButton("Modifier le message de bienvenue", "Modifiable à tout moment, le message de bienvenue est nécessaire pour mettre l'ambiance : ville magique ? Tech ? Abandonné ? Repaire de Pirates ?") { welcome ->
+                val id = generateUniqueID()
+                val idWelcome = generateUniqueID()
+
+                modalManager.add(id) {
+                    val opWelcome = it.modalInteraction.getTextInputValueByCustomId(idWelcome.toString())
+
+                    if (!opWelcome.isPresent) {
+                        throw IllegalArgumentException("Le message de bienvenue n'a pas été rempli")
+                    }
+
+                    server["welcome"] = opWelcome.get()
+
+                    it.modalInteraction.createImmediateResponder()
+                        .setContent("Le message de bienvenue a été modifié avec succès !")
+                        .respond()
+                }
+
+                welcome.buttonInteraction.respondWithModal(
+                    id.toString(),
+                    "Mise à jour du message de bienvenue",
+                    ActionRow.of(
+                        TextInput.create(TextInputStyle.PARAGRAPH, idWelcome.toString(), "Message de bienvenue")
+                    )
+                )
+            }
+            .responder(slashCommand)
     }
 }
