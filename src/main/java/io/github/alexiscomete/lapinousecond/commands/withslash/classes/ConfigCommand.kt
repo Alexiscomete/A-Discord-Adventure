@@ -79,7 +79,8 @@ class ConfigCommand : Command(
 
                             modalManager.add(id) {
                                 val opNameRp = it.modalInteraction.getTextInputValueByCustomId(idNameRP.toString())
-                                val opDescription = it.modalInteraction.getTextInputValueByCustomId(idDescription.toString())
+                                val opDescription =
+                                    it.modalInteraction.getTextInputValueByCustomId(idDescription.toString())
                                 val opWelcome = it.modalInteraction.getTextInputValueByCustomId(idWelcome.toString())
 
                                 if (!opNameRp.isPresent || !opDescription.isPresent || !opWelcome.isPresent) {
@@ -163,14 +164,21 @@ class ConfigCommand : Command(
                 }
                 .responder(slashCommand)
         } else {
-            when(WorldEnum.valueOf(server["world"])) {
+            when (WorldEnum.valueOf(server["world"])) {
                 WorldEnum.NORMAL -> {
                     modifServer(slashCommand, server)
                 }
                 WorldEnum.DIBIMAP -> {
                     val serverForZones = DibimapServer.valueOf(serverId.toString())
-                    MenuBuilder("Configuration du serveur", "Configurer votre serveur discord d'entité territorial", Color.BLUE)
-                        .addButton("Mise à jour du nom", "Le nom du serveur discord est stocké dans la base de données. Mais si vous changer le nom du serveur discord le bot ne met pas à jour automatiquement de son côté.") { name ->
+                    MenuBuilder(
+                        "Configuration du serveur",
+                        "Configurer votre serveur discord d'entité territorial",
+                        Color.BLUE
+                    )
+                        .addButton(
+                            "Mise à jour du nom",
+                            "Le nom du serveur discord est stocké dans la base de données. Mais si vous changer le nom du serveur discord le bot ne met pas à jour automatiquement de son côté."
+                        ) { name ->
                             val serverDiscord = slashCommand.server.get()
                             server["name"] = serverDiscord.name
                             name.buttonInteraction.createImmediateResponder()
@@ -213,11 +221,11 @@ class ConfigCommand : Command(
                                 )
                             )
 
-                            modalManager.add(id) {
+                            modalManager.add(id) { modalPart1 ->
                                 // partie 2 du modal avec x et y, j'utilise à nouveau idNameRP (pour x); idDescription (pour y)
                                 val id2 = generateUniqueID()
 
-                                it.modalInteraction.respondWithModal(
+                                modalPart1.modalInteraction.respondWithModal(
                                     id2.toString(),
                                     "Ajout d'une ville (2/2)",
                                     ActionRow.of(
@@ -239,11 +247,66 @@ class ConfigCommand : Command(
                                 )
 
                                 modalManager.add(id2) {
+                                    // récupération de tous les éléments : description, nameRP, welcome, x, y
+                                    val opNameRP =
+                                        modalPart1.modalInteraction.getTextInputValueByCustomId(idNameRP.toString())
+                                    val opDescription =
+                                        modalPart1.modalInteraction.getTextInputValueByCustomId(idDescription.toString())
+                                    val opWelcome =
+                                        modalPart1.modalInteraction.getTextInputValueByCustomId(idWelcome.toString())
+                                    val opX = it.modalInteraction.getTextInputValueByCustomId(idNameRP.toString())
+                                    val opY = it.modalInteraction.getTextInputValueByCustomId(idDescription.toString())
 
+                                    // s'il manque un élément, on annule
+                                    if (!opNameRP.isPresent || !opDescription.isPresent || !opWelcome.isPresent || !opX.isPresent || !opY.isPresent) {
+                                        throw IllegalArgumentException("Vous avez oublié un élément !")
+                                    }
+
+                                    // on récupère les éléments
+                                    val nameRP = opNameRP.get()
+                                    val description = opDescription.get()
+                                    val welcome = opWelcome.get()
+                                    val x = opX.get()
+                                    val y = opY.get()
+
+                                    // on vérifie que les coordonnées sont bien des nombres
+                                    try {
+                                        x.toInt()
+                                        y.toInt()
+                                    } catch (e: NumberFormatException) {
+                                        throw IllegalArgumentException("Les coordonnées doivent être des nombres !")
+                                    }
+
+                                    if (!serverForZones.isInZones(x.toInt(), y.toInt())) {
+                                        throw IllegalArgumentException("Les coordonnées ne sont pas dans les zones autorisées pour votre entité !")
+                                    }
+
+                                    // TODO : vérifier l'existence de la ville au même endroit ou avec le même nom ou dans les villes du lore officiel
+
+
+                                    // création de la ville, on réutilise encore id
+                                    places.add(id)
+                                    val place = places[id]
+                                        ?: throw IllegalArgumentException("Un problème de source inconnue est survenue. La création de la ville a échoué.")
+                                    place["nameRP"] = nameRP
+                                    place["description"] = description
+                                    place["welcome"] = welcome
+                                    place["x"] = x
+                                    place["y"] = y
+
+                                    // TODO : mettre le type du lieu en ville et ajouter le serveur
+
+                                    // on envoie un message de succès
+                                    it.modalInteraction.createImmediateResponder()
+                                        .setContent("La ville a été créée avec succès !")
+                                        .respond()
                                 }
                             }
                         }
-                        .addButton("Supprimer une ville", "Permet de supprimer une ville sur la carte si elle n'est pas utilisée pour le lore") {
+                        .addButton(
+                            "Supprimer une ville",
+                            "Permet de supprimer une ville sur la carte si elle n'est pas utilisée pour le lore"
+                        ) {
 
                         }
                         .addButton("Modifier une ville", "Permet de modifier une ville sur la carte") {
@@ -268,15 +331,25 @@ class ConfigCommand : Command(
     }
 
     private fun modifServer(slashCommand: SlashCommandInteraction, server: ServerBot) {
-        MenuBuilder("Modification du serveur dans un monde à lieu unique", "Vous pouvez modifier la configuration du serveur discord de façon simple dans un monde à serveur unique. Sélectionner ce qu'il faut modifier :", Color.YELLOW)
-            .addButton("Mise à jour du nom du serveur", "Le nom du serveur discord est stocké dans la base de données. Mais si vous changer le nom du serveur discord le bot ne met pas à jour automatiquement de son côté.") { name ->
+        MenuBuilder(
+            "Modification du serveur dans un monde à lieu unique",
+            "Vous pouvez modifier la configuration du serveur discord de façon simple dans un monde à serveur unique. Sélectionner ce qu'il faut modifier :",
+            Color.YELLOW
+        )
+            .addButton(
+                "Mise à jour du nom du serveur",
+                "Le nom du serveur discord est stocké dans la base de données. Mais si vous changer le nom du serveur discord le bot ne met pas à jour automatiquement de son côté."
+            ) { name ->
                 val serverDiscord = slashCommand.server.get()
                 server["name"] = serverDiscord.name
                 name.buttonInteraction.createImmediateResponder()
                     .setContent("Le nom du serveur a été mis à jour avec succès !")
                     .respond()
             }
-            .addButton("Modifier le nom RP du lieu", "Modifiable à tout moment, le nom de votre ville est personnalisable.") {name ->
+            .addButton(
+                "Modifier le nom RP du lieu",
+                "Modifiable à tout moment, le nom de votre ville est personnalisable."
+            ) { name ->
                 val id = generateUniqueID()
                 val idName = generateUniqueID()
 
@@ -302,7 +375,10 @@ class ConfigCommand : Command(
                     )
                 )
             }
-            .addButton("Modifier la description du lieu", "Modifiable à tout moment, la description de votre ville est la deuxième chose que voix une personne quand il regarde le lieu.") { description ->
+            .addButton(
+                "Modifier la description du lieu",
+                "Modifiable à tout moment, la description de votre ville est la deuxième chose que voix une personne quand il regarde le lieu."
+            ) { description ->
                 val id = generateUniqueID()
                 val idDescription = generateUniqueID()
 
@@ -324,11 +400,19 @@ class ConfigCommand : Command(
                     id.toString(),
                     "Mise à jour de la description de la ville",
                     ActionRow.of(
-                        TextInput.create(TextInputStyle.PARAGRAPH, idDescription.toString(), "Description de la ville", true)
+                        TextInput.create(
+                            TextInputStyle.PARAGRAPH,
+                            idDescription.toString(),
+                            "Description de la ville",
+                            true
+                        )
                     )
                 )
             }
-            .addButton("Modifier le message de bienvenue", "Modifiable à tout moment, le message de bienvenue est nécessaire pour mettre l'ambiance : ville magique ? Tech ? Abandonné ? Repaire de Pirates ?") { welcome ->
+            .addButton(
+                "Modifier le message de bienvenue",
+                "Modifiable à tout moment, le message de bienvenue est nécessaire pour mettre l'ambiance : ville magique ? Tech ? Abandonné ? Repaire de Pirates ?"
+            ) { welcome ->
                 val id = generateUniqueID()
                 val idWelcome = generateUniqueID()
 
