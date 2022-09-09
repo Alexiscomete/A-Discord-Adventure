@@ -168,7 +168,87 @@ class ConfigCommand : Command(
                     modifServer(slashCommand, server)
                 }
                 WorldEnum.DIBIMAP -> {
+                    val serverForZones = DibimapServer.valueOf(serverId.toString())
+                    MenuBuilder("Configuration du serveur", "Configurer votre serveur discord d'entité territorial", Color.BLUE)
+                        .addButton("Mise à jour du nom", "Le nom du serveur discord est stocké dans la base de données. Mais si vous changer le nom du serveur discord le bot ne met pas à jour automatiquement de son côté.") { name ->
+                            val serverDiscord = slashCommand.server.get()
+                            server["name"] = serverDiscord.name
+                            name.buttonInteraction.createImmediateResponder()
+                                .setContent("Le nom du serveur a été mis à jour avec succès !")
+                                .respond()
+                        }
+                        .addButton("Ajouter une ville", "Permet d'ajouter une ville sur la carte") { addCity ->
+                            // j'ai besoin d'un nom, d'une description, d'un message de bienvenue, et de x et y. Les modals sont limités à 4 champs donc je vais faire 2 modals
+                            val id = generateUniqueID()
+                            val idNameRP = generateUniqueID()
+                            val idDescription = generateUniqueID()
+                            val idWelcome = generateUniqueID()
 
+                            addCity.buttonInteraction.respondWithModal(
+                                id.toString(),
+                                "Ajout d'une ville (1/2)",
+                                ActionRow.of(
+                                    TextInput.create(
+                                        TextInputStyle.SHORT,
+                                        idNameRP.toString(),
+                                        "Nom RP de la ville",
+                                        true
+                                    )
+                                ),
+                                ActionRow.of(
+                                    TextInput.create(
+                                        TextInputStyle.SHORT,
+                                        idDescription.toString(),
+                                        "Description de la ville",
+                                        true
+                                    )
+                                ),
+                                ActionRow.of(
+                                    TextInput.create(
+                                        TextInputStyle.PARAGRAPH,
+                                        idWelcome.toString(),
+                                        "Message de bienvenue",
+                                        true
+                                    )
+                                )
+                            )
+
+                            modalManager.add(id) {
+                                // partie 2 du modal avec x et y, j'utilise à nouveau idNameRP (pour x); idDescription (pour y)
+                                val id2 = generateUniqueID()
+
+                                it.modalInteraction.respondWithModal(
+                                    id2.toString(),
+                                    "Ajout d'une ville (2/2)",
+                                    ActionRow.of(
+                                        TextInput.create(
+                                            TextInputStyle.SHORT,
+                                            idNameRP.toString(),
+                                            "Coordonnée X",
+                                            true
+                                        )
+                                    ),
+                                    ActionRow.of(
+                                        TextInput.create(
+                                            TextInputStyle.SHORT,
+                                            idDescription.toString(),
+                                            "Coordonnée Y",
+                                            true
+                                        )
+                                    )
+                                )
+
+                                modalManager.add(id2) {
+
+                                }
+                            }
+                        }
+                        .addButton("Supprimer une ville", "Permet de supprimer une ville sur la carte si elle n'est pas utilisée pour le lore") {
+
+                        }
+                        .addButton("Modifier une ville", "Permet de modifier une ville sur la carte") {
+
+                        }
                 }
                 WorldEnum.TUTO -> {
                     modifServer(slashCommand, server)
@@ -218,7 +298,7 @@ class ConfigCommand : Command(
                     id.toString(),
                     "Mise à jour du nom RP de la ville",
                     ActionRow.of(
-                        TextInput.create(TextInputStyle.SHORT, idName.toString(), "Nom de la ville")
+                        TextInput.create(TextInputStyle.SHORT, idName.toString(), "Nom de la ville", true)
                     )
                 )
             }
@@ -244,7 +324,7 @@ class ConfigCommand : Command(
                     id.toString(),
                     "Mise à jour de la description de la ville",
                     ActionRow.of(
-                        TextInput.create(TextInputStyle.PARAGRAPH, idDescription.toString(), "Description de la ville")
+                        TextInput.create(TextInputStyle.PARAGRAPH, idDescription.toString(), "Description de la ville", true)
                     )
                 )
             }
@@ -270,7 +350,7 @@ class ConfigCommand : Command(
                     id.toString(),
                     "Mise à jour du message de bienvenue",
                     ActionRow.of(
-                        TextInput.create(TextInputStyle.PARAGRAPH, idWelcome.toString(), "Message de bienvenue")
+                        TextInput.create(TextInputStyle.PARAGRAPH, idWelcome.toString(), "Message de bienvenue", true)
                     )
                 )
             }
