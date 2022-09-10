@@ -9,23 +9,42 @@ val servers = CacheCustom(SERVERS) { id: Long -> ServerBot(id) }
 
 /**
  * Représente un serveur discord dans la base de données
- * Créer un nouveau serveur / ! \ passer par SaveManager
+ * Pour créer un server utilisez le CacheCustom
  * @param id l'identifiant discord du serveur
  */
 class ServerBot(id: Long) : CacheGetSet(id, SERVERS) {
-    /**
-     * Permet de tester si le paramètre est valid en nombre de caractères puis de le régler
-     * @param len longueur du message
-     * @param message la valeur du paramètre
-     * @param prog_name le paramètre
-     * @return un message d'erreur s'il y a trop de caractères, il faudrait recoder cette partie
-     */
-    fun testValueAndSet(len: Int, message: String, prog_name: String?): String {
-        return if (message.length < len) {
-            set(prog_name!!, message)
-            ""
+
+    fun addPlace(id: Long) {
+        val places = this["places"]
+        if (places == "") {
+            this["places"] = id.toString()
         } else {
-            "Impossible : trop de caractères : " + message.length + ", nombre autorisé : " + len
+            this["places"] += ",$id"
+        }
+    }
+
+    fun removePlace(id: Long) : Boolean {
+        val places = this["places"]
+        return if (places == "") {
+            false
+        } else if (places.startsWith("$id,")) {
+            this["places"] = places.replace("$id,", "")
+            true
+        } else if (places == id.toString()) {
+            this["places"] = ""
+            true
+        } else {
+            this["places"] = places.replace(",$id,", ",")
+            true
+        }
+    }
+
+    fun getPlaces() : List<Long> {
+        val places = this["places"]
+        return if (places == "") {
+            listOf()
+        } else {
+            places.split(",").map { it.toLong() }
         }
     }
 }

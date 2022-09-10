@@ -2,6 +2,7 @@ package io.github.alexiscomete.lapinousecond.commands.withslash.classes
 
 import io.github.alexiscomete.lapinousecond.commands.withslash.Command
 import io.github.alexiscomete.lapinousecond.commands.withslash.ExecutableWithArguments
+import io.github.alexiscomete.lapinousecond.message_event.EmbedPagesWithInteractions
 import io.github.alexiscomete.lapinousecond.message_event.MenuBuilder
 import io.github.alexiscomete.lapinousecond.modalManager
 import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
@@ -11,10 +12,13 @@ import io.github.alexiscomete.lapinousecond.worlds.dibimap.isDibimap
 import org.javacord.api.entity.message.component.ActionRow
 import org.javacord.api.entity.message.component.TextInput
 import org.javacord.api.entity.message.component.TextInputStyle
+import org.javacord.api.entity.message.embed.EmbedBuilder
 import org.javacord.api.entity.permission.PermissionType
+import org.javacord.api.event.interaction.ButtonClickEvent
 import org.javacord.api.interaction.SlashCommandInteraction
 import java.awt.Color
 import java.util.*
+import kotlin.collections.ArrayList
 
 //TODO
 class ConfigCommand : Command(
@@ -293,8 +297,11 @@ class ConfigCommand : Command(
                                     place["welcome"] = welcome
                                     place["x"] = x
                                     place["y"] = y
+                                    place["server"] = serverId.toString()
+                                    place["type"] = "city"
+                                    place["world"] = WorldEnum.DIBIMAP.progName
 
-                                    // TODO : mettre le type du lieu en ville et ajouter le serveur
+                                    server.addPlace(id)
 
                                     // on envoie un message de succès
                                     it.modalInteraction.createImmediateResponder()
@@ -307,7 +314,34 @@ class ConfigCommand : Command(
                             "Supprimer une ville",
                             "Permet de supprimer une ville sur la carte si elle n'est pas utilisée pour le lore"
                         ) {
+                            /**
+                             * Etapes :
+                             * 1. Récupérer la liste des villes
+                             * 2. Afficher la liste des villes au joueur dans un embed avec interactions
+                             * 3. Récupérer la ville sélectionnée
+                             * 4. Supprimer la ville
+                             * 5. Envoyer un message de succès
+                             */
 
+                            // 1. Récupérer la liste des villes
+                            val placesLong = server.getPlaces()
+
+                            val placesPlace = arrayListOf(*placesLong.map { places[it]!! }.toTypedArray())
+
+                            // 2. Afficher la liste des villes au joueur dans un embed avec interactions
+                            val embedBuilder = EmbedBuilder()
+                                .setTitle("Liste des villes")
+                                .setDescription("Sélectionnez une ville à supprimer")
+                                .setColor(Color.GREEN)
+
+                            EmbedPagesWithInteractions(
+                                embedBuilder,
+                                placesPlace,
+                                { embedBuilder: EmbedBuilder, start: Int, num: Int, placesArray: ArrayList<Place> ->
+
+                                }) { place: Place, buttonClickEvent: ButtonClickEvent ->
+
+                            }
                         }
                         .addButton("Modifier une ville", "Permet de modifier une ville sur la carte") {
 
