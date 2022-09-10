@@ -379,8 +379,142 @@ class ConfigCommand : Command(
                              * 5. Modifier la ville
                              */
 
+                            // 1. Récupérer la liste des villes
+                            val placesLong = server.getPlaces()
 
+                            val placesPlace = arrayListOf(*placesLong.map { places[it]!! }.toTypedArray())
+
+                            // 2. Afficher la liste des villes au joueur dans un embed avec interactions
+                            val embedBuilder = EmbedBuilder()
+                                .setTitle("Liste des villes")
+                                .setDescription("Sélectionnez une ville à modifier")
+                                .setColor(Color.GREEN)
+
+                            val em = EmbedPagesWithInteractions(
+                                embedBuilder,
+                                placesPlace,
+                                { builder: EmbedBuilder, start: Int, num: Int, placesArray: ArrayList<Place> ->
+                                    for (i in start until start + num) {
+                                        val place = placesArray[i]
+                                        builder.addField(
+                                            place["nameRP"],
+                                            "Coordonnées : ${place["x"]}, ${place["y"]}",
+                                            true
+                                        )
+                                    }
+                                }) { place: Place, buttonClickEvent: ButtonClickEvent ->
+                                // 3. Récupérer la ville sélectionnée
+                                // 4. Afficher les options de modification
+
+                                MenuBuilder(
+                                    "Modification de la ville ${place["nameRP"]}",
+                                    "Sélectionner ce qu'il faut modifier :",
+                                    Color.YELLOW
+                                )
+                                    .addButton(
+                                        "Modifier le nom RP du lieu",
+                                        "Modifiable à tout moment, le nom de votre ville est personnalisable."
+                                    ) { name ->
+                                        val id = generateUniqueID()
+                                        val idName = generateUniqueID()
+
+                                        modalManager.add(id) {
+                                            val opName = it.modalInteraction.getTextInputValueByCustomId(idName.toString())
+
+                                            if (!opName.isPresent) {
+                                                throw IllegalArgumentException("Le nom n'a pas été rempli")
+                                            }
+
+                                            server["name"] = opName.get()
+
+                                            it.modalInteraction.createImmediateResponder()
+                                                .setContent("Le nom RP de la ville a été modifié avec succès !")
+                                                .respond()
+                                        }
+
+                                        name.buttonInteraction.respondWithModal(
+                                            id.toString(),
+                                            "Mise à jour du nom RP de la ville",
+                                            ActionRow.of(
+                                                TextInput.create(TextInputStyle.SHORT, idName.toString(), "Nom de la ville", true)
+                                            )
+                                        )
+                                    }
+                                    .addButton(
+                                        "Modifier la description du lieu",
+                                        "Modifiable à tout moment, la description de votre ville est la deuxième chose que voix une personne quand il regarde le lieu."
+                                    ) { description ->
+                                        val id = generateUniqueID()
+                                        val idDescription = generateUniqueID()
+
+                                        modalManager.add(id) {
+                                            val opDescription = it.modalInteraction.getTextInputValueByCustomId(idDescription.toString())
+
+                                            if (!opDescription.isPresent) {
+                                                throw IllegalArgumentException("La description n'a pas été remplie")
+                                            }
+
+                                            server["description"] = opDescription.get()
+
+                                            it.modalInteraction.createImmediateResponder()
+                                                .setContent("La description de la ville a été modifiée avec succès !")
+                                                .respond()
+                                        }
+
+                                        description.buttonInteraction.respondWithModal(
+                                            id.toString(),
+                                            "Mise à jour de la description de la ville",
+                                            ActionRow.of(
+                                                TextInput.create(
+                                                    TextInputStyle.PARAGRAPH,
+                                                    idDescription.toString(),
+                                                    "Description de la ville",
+                                                    true
+                                                )
+                                            )
+                                        )
+                                    }
+                                    .addButton(
+                                        "Modifier le message de bienvenue",
+                                        "Modifiable à tout moment, le message de bienvenue est nécessaire pour mettre l'ambiance : ville magique ? Tech ? Abandonné ? Repaire de Pirates ?"
+                                    ) { welcome ->
+                                        val id = generateUniqueID()
+                                        val idWelcome = generateUniqueID()
+
+                                        modalManager.add(id) {
+                                            val opWelcome = it.modalInteraction.getTextInputValueByCustomId(idWelcome.toString())
+
+                                            if (!opWelcome.isPresent) {
+                                                throw IllegalArgumentException("Le message de bienvenue n'a pas été rempli")
+                                            }
+
+                                            server["welcome"] = opWelcome.get()
+
+                                            it.modalInteraction.createImmediateResponder()
+                                                .setContent("Le message de bienvenue a été modifié avec succès !")
+                                                .respond()
+                                        }
+
+                                        welcome.buttonInteraction.respondWithModal(
+                                            id.toString(),
+                                            "Mise à jour du message de bienvenue",
+                                            ActionRow.of(
+                                                TextInput.create(TextInputStyle.PARAGRAPH, idWelcome.toString(), "Message de bienvenue", true)
+                                            )
+                                        )
+                                    }
+                                    .responder(slashCommand)
+                            }
+
+                            em.register()
+                            it.buttonInteraction.createOriginalMessageUpdater()
+                                .removeAllEmbeds()
+                                .removeAllComponents()
+                                .addComponents(em.components, ActionRow.of(em.buttons))
+                                .addEmbed(embedBuilder)
+                                .update()
                         }
+
                 }
                 WorldEnum.TUTO -> {
                     modifServer(slashCommand, server)
