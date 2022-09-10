@@ -6,6 +6,7 @@ import io.github.alexiscomete.lapinousecond.message_event.EmbedPagesWithInteract
 import io.github.alexiscomete.lapinousecond.message_event.MenuBuilder
 import io.github.alexiscomete.lapinousecond.modalManager
 import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
+import io.github.alexiscomete.lapinousecond.useful.managesave.saveManager
 import io.github.alexiscomete.lapinousecond.worlds.*
 import io.github.alexiscomete.lapinousecond.worlds.dibimap.DibimapServer
 import io.github.alexiscomete.lapinousecond.worlds.dibimap.isDibimap
@@ -334,16 +335,50 @@ class ConfigCommand : Command(
                                 .setDescription("Sélectionnez une ville à supprimer")
                                 .setColor(Color.GREEN)
 
-                            EmbedPagesWithInteractions(
+                            val em = EmbedPagesWithInteractions(
                                 embedBuilder,
                                 placesPlace,
-                                { embedBuilder: EmbedBuilder, start: Int, num: Int, placesArray: ArrayList<Place> ->
-
+                                { builder: EmbedBuilder, start: Int, num: Int, placesArray: ArrayList<Place> ->
+                                    for (i in start until start + num) {
+                                        val place = placesArray[i]
+                                        builder.addField(
+                                            place["nameRP"],
+                                            "Coordonnées : ${place["x"]}, ${place["y"]}",
+                                            true
+                                        )
+                                    }
                                 }) { place: Place, buttonClickEvent: ButtonClickEvent ->
-
+                                // 3. Récupérer la ville sélectionnée
+                                // 4. Supprimer la ville
+                                server.removePlace(place.id)
+                                saveManager.execute("DELETE FROM places WHERE id = ${place.id}")
+                                // TODO : supprimer la ville côté joueur et le tp
+                                // 5. Envoyer un message de succès
+                                buttonClickEvent.buttonInteraction.createOriginalMessageUpdater()
+                                    .setContent("La ville a été supprimée avec succès !")
+                                    .removeAllEmbeds()
+                                    .removeAllComponents()
+                                    .update()
                             }
+
+                            em.register()
+                            it.buttonInteraction.createOriginalMessageUpdater()
+                                .removeAllEmbeds()
+                                .removeAllComponents()
+                                .addComponents(em.components, ActionRow.of(em.buttons))
+                                .addEmbed(embedBuilder)
+                                .update()
                         }
                         .addButton("Modifier une ville", "Permet de modifier une ville sur la carte") {
+                            /**
+                             * Etapes :
+                             * 1. Récupérer la liste des villes
+                             * 2. Afficher la liste des villes au joueur dans un embed avec interactions
+                             * 3. Récupérer la ville sélectionnée
+                             * 4. Afficher les options de modification
+                             * 5. Modifier la ville
+                             */
+
 
                         }
                 }
