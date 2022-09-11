@@ -175,6 +175,18 @@ class ConfigCommand : Command(
                 }
                 WorldEnum.DIBIMAP -> {
                     val serverForZones = DibimapServer.valueOf(serverId.toString())
+
+                    fun fillEmbed(builder: EmbedBuilder, start: Int, num: Int, placesArray: ArrayList<Place>) {
+                        for (i in start until start + num) {
+                            val place = placesArray[i]
+                            builder.addField(
+                                place["nameRP"],
+                                "Coordonnées : ${place["x"]}, ${place["y"]}",
+                                true
+                            )
+                        }
+                    }
+
                     MenuBuilder(
                         "Configuration du serveur",
                         "Configurer votre serveur discord d'entité territorial",
@@ -314,7 +326,7 @@ class ConfigCommand : Command(
                         .addButton(
                             "Supprimer une ville",
                             "Permet de supprimer une ville sur la carte si elle n'est pas utilisée pour le lore"
-                        ) {
+                        ) { remove ->
                             /**
                              * Etapes :
                              * 1. Récupérer la liste des villes
@@ -338,16 +350,8 @@ class ConfigCommand : Command(
                             val em = EmbedPagesWithInteractions(
                                 embedBuilder,
                                 placesPlace,
-                                { builder: EmbedBuilder, start: Int, num: Int, placesArray: ArrayList<Place> ->
-                                    for (i in start until start + num) {
-                                        val place = placesArray[i]
-                                        builder.addField(
-                                            place["nameRP"],
-                                            "Coordonnées : ${place["x"]}, ${place["y"]}",
-                                            true
-                                        )
-                                    }
-                                }) { place: Place, buttonClickEvent: ButtonClickEvent ->
+                                ::fillEmbed
+                            ) { place: Place, buttonClickEvent: ButtonClickEvent ->
                                 // 3. Récupérer la ville sélectionnée
                                 // 4. Supprimer la ville
                                 server.removePlace(place.id)
@@ -362,14 +366,14 @@ class ConfigCommand : Command(
                             }
 
                             em.register()
-                            it.buttonInteraction.createOriginalMessageUpdater()
+                            remove.buttonInteraction.createOriginalMessageUpdater()
                                 .removeAllEmbeds()
                                 .removeAllComponents()
                                 .addComponents(em.components, ActionRow.of(em.buttons))
                                 .addEmbed(embedBuilder)
                                 .update()
                         }
-                        .addButton("Modifier une ville", "Permet de modifier une ville sur la carte") {
+                        .addButton("Modifier une ville", "Permet de modifier une ville sur la carte") { city ->
                             /**
                              * Etapes :
                              * 1. Récupérer la liste des villes
@@ -393,16 +397,8 @@ class ConfigCommand : Command(
                             val em = EmbedPagesWithInteractions(
                                 embedBuilder,
                                 placesPlace,
-                                { builder: EmbedBuilder, start: Int, num: Int, placesArray: ArrayList<Place> ->
-                                    for (i in start until start + num) {
-                                        val place = placesArray[i]
-                                        builder.addField(
-                                            place["nameRP"],
-                                            "Coordonnées : ${place["x"]}, ${place["y"]}",
-                                            true
-                                        )
-                                    }
-                                }) { place: Place, buttonClickEvent: ButtonClickEvent ->
+                                ::fillEmbed
+                            ) { place: Place, buttonClickEvent: ButtonClickEvent ->
                                 // 3. Récupérer la ville sélectionnée
                                 // 4. Afficher les options de modification
 
@@ -419,13 +415,14 @@ class ConfigCommand : Command(
                                         val idName = generateUniqueID()
 
                                         modalManager.add(id) {
-                                            val opName = it.modalInteraction.getTextInputValueByCustomId(idName.toString())
+                                            val opName =
+                                                it.modalInteraction.getTextInputValueByCustomId(idName.toString())
 
                                             if (!opName.isPresent) {
                                                 throw IllegalArgumentException("Le nom n'a pas été rempli")
                                             }
 
-                                            server["name"] = opName.get()
+                                            place["nameRP"] = opName.get()
 
                                             it.modalInteraction.createImmediateResponder()
                                                 .setContent("Le nom RP de la ville a été modifié avec succès !")
@@ -436,7 +433,12 @@ class ConfigCommand : Command(
                                             id.toString(),
                                             "Mise à jour du nom RP de la ville",
                                             ActionRow.of(
-                                                TextInput.create(TextInputStyle.SHORT, idName.toString(), "Nom de la ville", true)
+                                                TextInput.create(
+                                                    TextInputStyle.SHORT,
+                                                    idName.toString(),
+                                                    "Nom de la ville",
+                                                    true
+                                                )
                                             )
                                         )
                                     }
@@ -448,13 +450,14 @@ class ConfigCommand : Command(
                                         val idDescription = generateUniqueID()
 
                                         modalManager.add(id) {
-                                            val opDescription = it.modalInteraction.getTextInputValueByCustomId(idDescription.toString())
+                                            val opDescription =
+                                                it.modalInteraction.getTextInputValueByCustomId(idDescription.toString())
 
                                             if (!opDescription.isPresent) {
                                                 throw IllegalArgumentException("La description n'a pas été remplie")
                                             }
 
-                                            server["description"] = opDescription.get()
+                                            place["description"] = opDescription.get()
 
                                             it.modalInteraction.createImmediateResponder()
                                                 .setContent("La description de la ville a été modifiée avec succès !")
@@ -482,13 +485,14 @@ class ConfigCommand : Command(
                                         val idWelcome = generateUniqueID()
 
                                         modalManager.add(id) {
-                                            val opWelcome = it.modalInteraction.getTextInputValueByCustomId(idWelcome.toString())
+                                            val opWelcome =
+                                                it.modalInteraction.getTextInputValueByCustomId(idWelcome.toString())
 
                                             if (!opWelcome.isPresent) {
                                                 throw IllegalArgumentException("Le message de bienvenue n'a pas été rempli")
                                             }
 
-                                            server["welcome"] = opWelcome.get()
+                                            place["welcome"] = opWelcome.get()
 
                                             it.modalInteraction.createImmediateResponder()
                                                 .setContent("Le message de bienvenue a été modifié avec succès !")
@@ -499,15 +503,20 @@ class ConfigCommand : Command(
                                             id.toString(),
                                             "Mise à jour du message de bienvenue",
                                             ActionRow.of(
-                                                TextInput.create(TextInputStyle.PARAGRAPH, idWelcome.toString(), "Message de bienvenue", true)
+                                                TextInput.create(
+                                                    TextInputStyle.PARAGRAPH,
+                                                    idWelcome.toString(),
+                                                    "Message de bienvenue",
+                                                    true
+                                                )
                                             )
                                         )
                                     }
-                                    .responder(slashCommand)
+                                    .modif(buttonClickEvent)
                             }
 
                             em.register()
-                            it.buttonInteraction.createOriginalMessageUpdater()
+                            city.buttonInteraction.createOriginalMessageUpdater()
                                 .removeAllEmbeds()
                                 .removeAllComponents()
                                 .addComponents(em.components, ActionRow.of(em.buttons))
@@ -563,7 +572,7 @@ class ConfigCommand : Command(
                         throw IllegalArgumentException("Le nom n'a pas été rempli")
                     }
 
-                    server["name"] = opName.get()
+                    getUniquePlace(server)["name"] = opName.get()
 
                     it.modalInteraction.createImmediateResponder()
                         .setContent("Le nom RP de la ville a été modifié avec succès !")
@@ -592,7 +601,7 @@ class ConfigCommand : Command(
                         throw IllegalArgumentException("La description n'a pas été remplie")
                     }
 
-                    server["description"] = opDescription.get()
+                    getUniquePlace(server)["description"] = opDescription.get()
 
                     it.modalInteraction.createImmediateResponder()
                         .setContent("La description de la ville a été modifiée avec succès !")
@@ -626,7 +635,7 @@ class ConfigCommand : Command(
                         throw IllegalArgumentException("Le message de bienvenue n'a pas été rempli")
                     }
 
-                    server["welcome"] = opWelcome.get()
+                    getUniquePlace(server)["welcome"] = opWelcome.get()
 
                     it.modalInteraction.createImmediateResponder()
                         .setContent("Le message de bienvenue a été modifié avec succès !")
@@ -642,5 +651,13 @@ class ConfigCommand : Command(
                 )
             }
             .responder(slashCommand)
+    }
+
+    private fun getUniquePlace(server: ServerBot): Place {
+        val placesL = server.getPlaces()
+        if (placesL.size != 1) {
+            throw IllegalArgumentException("Le serveur n'a pas un lieu unique. Contactez un administrateur.")
+        }
+        return places[placesL[0]] ?: throw IllegalArgumentException("Le lieu n'existe pas. Contactez un administrateur.")
     }
 }
