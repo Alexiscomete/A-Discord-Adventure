@@ -52,12 +52,17 @@ class SaveManager(path: String) {
                 return resultSet.getString("type")
             }
             resultSet.close()
-        } catch (throwables: SQLException) {
-            throwables.printStackTrace()
+        } catch (throwable: SQLException) {
+            throwable.printStackTrace()
         }
         return ""
     }
 
+    /**
+     * It returns an array list of 6 random elements from the table specified in the parameter
+     *
+     * @param from Table - The table to get the random elements from
+     */
     fun randomElements(from: Table): ArrayList<Long> =
         try {
             val resultSet = st!!.executeQuery("SELECT id FROM ${from.name} ORDER BY RAND() LIMIT 6")
@@ -67,11 +72,20 @@ class SaveManager(path: String) {
             }
             resultSet.close()
             longs
-        } catch (throwables: SQLException) {
-            throwables.printStackTrace()
+        } catch (throwable: SQLException) {
+            throwable.printStackTrace()
             ArrayList()
         }
 
+    /**
+     * It sets a value in a table
+     *
+     * @param where The table you want to update
+     * @param which The column name of the row you want to change.
+     * @param whichValue The value of the column which you want to change.
+     * @param valueName The name of the value you want to change.
+     * @param value The value to be set.
+     */
     fun setValue(where: String, which: String, whichValue: String, valueName: String, value: String) {
         val va = value.replace("\\", "\\\\").replace("'", "\\'").replace("\"", "\\\"")
         try {
@@ -81,15 +95,57 @@ class SaveManager(path: String) {
         }
     }
 
+    /**
+     * This function sets the value of a row in a table, given the table name, the id of the row, the name of the row, and
+     * the value to set.
+     *
+     * @param table The table to update
+     * @param id The id of the row you want to change
+     * @param row The row you want to set the value of
+     * @param value The value to set the row to.
+     */
     fun setValue(table: Table, id: Long, row: String, value: String) {
         setValue(table.name, "id", id.toString(), row, value)
     }
 
+    /**
+     * If the column doesn't exist, create it, then set the value.
+     *
+     * @param table The table you want to set the value in.
+     * @param id The id of the row you want to set the value of.
+     * @param row The name of the row you want to set the value of.
+     * @param value The value you want to set
+     * @param type The type of the column.
+     */
     fun setValue(table: Table, id: Long, row: String, value: String, type: String) {
         execute("ALTER TABLE " + table.name + " ADD COLUMN " + row + " " + type, false)
         setValue(table, id, row, value)
     }
 
+    /**
+     * It executes a query and returns true if the query has a result
+     *
+     * @param query The query to be executed.
+     * @return A boolean value
+     */
+    fun hasResult(query: String): Boolean {
+        try {
+            val resultSet = st!!.executeQuery(query)
+            val next = resultSet.next()
+            resultSet.close()
+            return next
+        } catch (throwables: SQLException) {
+            throwables.printStackTrace()
+        }
+        return false
+    }
+
+    /**
+     * It takes a table name and a hashmap of column names and values, and inserts the values into the table
+     *
+     * @param where The table you want to insert into
+     * @param what HashMap<String, String>
+     */
     fun insert(where: String, what: HashMap<String, String>) {
         val values = StringBuilder("(")
         val keys = StringBuilder("(")
@@ -114,6 +170,12 @@ class SaveManager(path: String) {
     }
 
     @JvmOverloads
+    /**
+     * It executes a SQL statement
+     *
+     * @param ex The SQL statement to execute
+     * @param bo Boolean, if true, it will print the stack trace if an error occurs.
+     */
     fun execute(ex: String, bo: Boolean = true) {
         try {
             st!!.executeUpdate(ex)
@@ -124,6 +186,13 @@ class SaveManager(path: String) {
         }
     }
 
+    /**
+     * It executes a query and returns the result set.
+     *
+     * @param ex The query you want to execute
+     * @param bo Boolean - If true, it will print the stack trace of the exception.
+     * @return A ResultSet object
+     */
     fun executeQuery(ex: String, bo: Boolean): ResultSet? {
         return try {
             st!!.executeQuery(ex)
@@ -135,6 +204,16 @@ class SaveManager(path: String) {
         }
     }
 
+    /**
+     * It adds a column to a table, then returns the value of that column for a specific row
+     *
+     * @param table The table you want to get the string from.
+     * @param row The name of the row you want to get the value of.
+     * @param type The type of the column.
+     * @param id The id of the row you want to get the value from.
+     * @param log If true, it will print the stack trace if an error occurs.
+     * @return A string
+     */
     fun getString(table: Table, row: String, type: String, id: Long, log: Boolean): String {
         execute("ALTER TABLE " + table.name + " ADD COLUMN " + row + " " + type, false)
         val resultSet: ResultSet

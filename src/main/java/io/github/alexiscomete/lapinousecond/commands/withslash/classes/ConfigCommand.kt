@@ -298,8 +298,11 @@ class ConfigCommand : Command(
                                         throw IllegalArgumentException("Les coordonnées ne sont pas dans les zones autorisées pour votre entité !")
                                     }
 
-                                    // TODO : vérifier l'existence de la ville au même endroit ou avec le même nom ou dans les villes du lore officiel
+                                    // TODO : vérifier l'existence de la ville dans les villes du lore officiel
 
+                                    if (saveManager.hasResult("SELECT * FROM places WHERE nameRP = $nameRP OR x = $x AND y = $y")) {
+                                        throw IllegalArgumentException("Une ville existe déjà à ces coordonnées ou avec ce nom !")
+                                    }
 
                                     // création de la ville, on réutilise encore id
                                     places.add(id)
