@@ -59,10 +59,59 @@ class InteractCommandBase : Command(
                 }
             }
             "building" -> {
-
+                val building = places[player["place_${world.progName}_id"].toLong()]
+                    ?: throw IllegalArgumentException("Building not found")
+                MenuBuilder(
+                    "Interactions sur le bâtiment ${building["nameRP"]} du monde ${world.nameRP}",
+                    "Liste de toutes vos possibilités dans la version actuelle du bot.",
+                    Color.BLUE
+                )
+                    .addButton("Sortir du bâtiment", "Vous sortez du bâtiment ${building["nameRP"]} et retournez dans la ville.") {
+                        player["place_${world.progName}_type"] = "city"
+                        it.buttonInteraction.createImmediateResponder()
+                            .setContent("Vous êtes maintenant dans la ville ${building["nameRP"]} !")
+                            .setFlags(MessageFlag.EPHEMERAL)
+                            .respond()
+                    }
+                    .addButton("Informations", "Vous regardez les informations du bâtiment ${building["nameRP"]}.") {
+                        it.buttonInteraction.createImmediateResponder()
+                            .setContent("Le bâtiment ${building["nameRP"]} est un bâtiment ${building["type"]}. Description : ${building["description"]}")
+                            .setFlags(MessageFlag.EPHEMERAL)
+                            .respond()
+                    }
             }
             "city" -> {
-
+                val place = places[player["place_${world.progName}_id"].toLong()]
+                    ?: throw IllegalArgumentException("Place not found")
+                MenuBuilder("Interactions dans la ville ${place["nameRP"]}", "Liste de toutes vos possibilités dans la version actuelle du bot.", Color.BLUE)
+                    .addButton("Quitter la ville", "Vous quittez la ville ${place["nameRP"]} et retournez dans la nature") {
+                        player["place_${world.progName}_type"] = "coos"
+                        player["place_${world.progName}_id"] = "0"
+                        it.buttonInteraction.createImmediateResponder()
+                            .setContent("Vous êtes maintenant dans la nature !")
+                            .setFlags(MessageFlag.EPHEMERAL)
+                            .respond()
+                    }
+                    .addButton("Voir les bâtiments", "Vous pouvez voir les bâtiments de la ville ${place["nameRP"]} en cliquant sur ce bouton et interagir avec eux") {
+                        // TODO : interactions avec les bâtiments
+                        it.buttonInteraction.createImmediateResponder()
+                            .setContent("Les bâtiments de la ville ${place["nameRP"]} sont : ${place["buildings"]}")
+                            .setFlags(MessageFlag.EPHEMERAL)
+                            .respond()
+                    }
+                    .addButton("Vos bâtiments", "Vous pouvez voir vos bâtiments en cliquant sur ce bouton et interagir avec eux") {
+                        // TODO : interactions avec les bâtiments
+                        it.buttonInteraction.createImmediateResponder()
+                            .setContent("Vos bâtiments sont : ${player["buildings"]}")
+                            .setFlags(MessageFlag.EPHEMERAL)
+                            .respond()
+                    }
+                    .addButton("Informations sur la ville", "Vous pouvez voir les informations sur la ville ${place["nameRP"]} en cliquant sur ce bouton") {
+                        it.buttonInteraction.createImmediateResponder()
+                            .setContent("La ville ${place["nameRP"]} est une ville aux coordonnées ${place["x"]} ${place["y"]} du monde ${world.nameRP}. Description : ${place["description"]}")
+                            .setFlags(MessageFlag.EPHEMERAL)
+                            .respond()
+                    }
             }
             else -> {
                 slashCommand.createImmediateResponder()
