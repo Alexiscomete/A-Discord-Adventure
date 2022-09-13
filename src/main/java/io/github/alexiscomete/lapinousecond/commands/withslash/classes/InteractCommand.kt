@@ -27,6 +27,7 @@ class InteractCommandBase : Command(
         val world = WorldEnum.valueOf(player["world"])
         when (player["place_${world.progName}_type"]) {
             "coos" -> {
+            // TODO : e´voyer l´invitation
                 // on regarde si il existe une ville à l'endroit où le joueur est
                 val x = player["place_${world.progName}_x"].toInt()
                 val y = player["place_${world.progName}_y"].toInt()
