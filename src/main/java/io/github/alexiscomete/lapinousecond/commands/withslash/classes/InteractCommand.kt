@@ -7,10 +7,12 @@ import io.github.alexiscomete.lapinousecond.commands.withslash.getAccount
 import io.github.alexiscomete.lapinousecond.message_event.MenuBuilder
 import io.github.alexiscomete.lapinousecond.useful.managesave.saveManager
 import io.github.alexiscomete.lapinousecond.worlds.WorldEnum
+import io.github.alexiscomete.lapinousecond.worlds.buildings.Building
 import io.github.alexiscomete.lapinousecond.worlds.places
 import org.javacord.api.entity.message.MessageFlag
 import org.javacord.api.entity.server.invite.Invite
 import org.javacord.api.entity.server.invite.InviteBuilder
+import org.javacord.api.event.interaction.ButtonClickEvent
 import org.javacord.api.interaction.SlashCommandInteraction
 import java.awt.Color
 
@@ -111,6 +113,24 @@ class InteractCommandBase : Command(
             "city" -> {
                 val place = places[player["place_${world.progName}_id"].toLong()]
                     ?: throw IllegalArgumentException("Place not found")
+
+                fun enterInBuilding(building: Building, buttonClickEvent: ButtonClickEvent) {
+                    player["place_${world.progName}_type"] = "building"
+                    player["place_${world.progName}_building_id"] = building["id"]
+                    buttonClickEvent.buttonInteraction.createImmediateResponder()
+                        .setContent("Vous êtes maintenant dans le bâtiment ${building["nameRP"]} !")
+                        .setFlags(MessageFlag.EPHEMERAL)
+                        .respond()
+                }
+
+                fun helpBuilding(building: Building, buttonClickEvent: ButtonClickEvent) {
+                    // TODO : help
+                    buttonClickEvent.buttonInteraction.createImmediateResponder()
+                        .setContent("Le bâtiment ${building["nameRP"]} est un bâtiment ${building["type"]}. Description : ${building["description"]}")
+                        .setFlags(MessageFlag.EPHEMERAL)
+                        .respond()
+                }
+
                 MenuBuilder("Interactions dans la ville ${place["nameRP"]}", "Liste de toutes vos possibilités dans la version actuelle du bot.", Color.BLUE)
                     .addButton("Quitter la ville", "Vous quittez la ville ${place["nameRP"]} et retournez dans la nature") {
                         player["place_${world.progName}_type"] = "coos"
@@ -131,6 +151,13 @@ class InteractCommandBase : Command(
                         // TODO : interactions avec les bâtiments
                         it.buttonInteraction.createImmediateResponder()
                             .setContent("Vos bâtiments sont : ${player["buildings"]}")
+                            .setFlags(MessageFlag.EPHEMERAL)
+                            .respond()
+                    }
+                    .addButton("Bâtiments en construction", "Vous pouvez voir les bâtiments en construction dans la ville en cliquant sur ce bouton et interagir avec eux") {
+                        // TODO : interactions avec les bâtiments
+                        it.buttonInteraction.createImmediateResponder()
+                            .setContent("Vos bâtiments en construction sont : ${player["buildings_in_construction"]}")
                             .setFlags(MessageFlag.EPHEMERAL)
                             .respond()
                     }
