@@ -17,6 +17,7 @@ fun loadAllS() {
     MarketCommand()
     MapCommand()
     ConfigCommand()
+    InteractCommandBase()
 }
 
 class ListenerSlashCommands : SlashCommandCreateListener {

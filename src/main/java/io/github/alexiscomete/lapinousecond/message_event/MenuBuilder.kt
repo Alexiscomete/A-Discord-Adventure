@@ -19,6 +19,8 @@ import java.awt.image.BufferedImage
 
 class MenuBuilder(name: String, description: String, color: Color) {
 
+    private var ephemeral = false
+
     private val embedBuilder: EmbedBuilder = EmbedBuilder()
         .setTitle(name)
         .setDescription(description)
@@ -37,6 +39,11 @@ class MenuBuilder(name: String, description: String, color: Color) {
         return this
     }
 
+    fun addEphemeral() : MenuBuilder {
+        ephemeral = true
+        return this
+    }
+
     fun setImage(image: BufferedImage): MenuBuilder {
         embedBuilder.setImage(image)
         return this
@@ -49,35 +56,38 @@ class MenuBuilder(name: String, description: String, color: Color) {
     }
 
     fun responder(slashCommand: SlashCommandInteraction) {
-        slashCommand.createImmediateResponder()
+        val responder = slashCommand.createImmediateResponder()
             .addEmbed(embedBuilder)
             .addComponents(ActionRow.of(arrayListOfButton))
-            .respond()
+        if (ephemeral) responder.setFlags(MessageFlag.EPHEMERAL)
+        responder.respond()
     }
 
     fun responder(modalInteraction: ModalInteraction) {
-        modalInteraction.createImmediateResponder()
+        val responder = modalInteraction.createImmediateResponder()
             .addEmbed(embedBuilder)
             .addComponents(ActionRow.of(arrayListOfButton))
-            .setFlags(MessageFlag.EPHEMERAL)
-            .respond()
+        if (ephemeral) responder.setFlags(MessageFlag.EPHEMERAL)
+        responder.respond()
     }
 
     fun modif(messageComponentCreateEvent: ButtonClickEvent) {
-        messageComponentCreateEvent.buttonInteraction.createOriginalMessageUpdater()
+        val updater = messageComponentCreateEvent.buttonInteraction.createOriginalMessageUpdater()
             .removeAllEmbeds()
             .removeAllComponents()
             .addEmbed(embedBuilder)
             .addComponents(ActionRow.of(arrayListOfButton))
-            .update()
+        if (ephemeral) updater.setFlags(MessageFlag.EPHEMERAL)
+        updater.update()
     }
 
     fun modif(messageComponentCreateEvent: SelectMenuChooseEvent) {
-        messageComponentCreateEvent.selectMenuInteraction.createOriginalMessageUpdater()
+        val updater = messageComponentCreateEvent.selectMenuInteraction.createOriginalMessageUpdater()
             .removeAllEmbeds()
             .removeAllComponents()
             .addEmbed(embedBuilder)
             .addComponents(ActionRow.of(arrayListOfButton))
-            .update()
+        if (ephemeral) updater.setFlags(MessageFlag.EPHEMERAL)
+        updater.update()
     }
 }

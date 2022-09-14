@@ -1,5 +1,6 @@
 package io.github.alexiscomete.lapinousecond.commands.withslash.classes
 
+import io.github.alexiscomete.lapinousecond.api
 import io.github.alexiscomete.lapinousecond.commands.withslash.Command
 import io.github.alexiscomete.lapinousecond.commands.withslash.ExecutableWithArguments
 import io.github.alexiscomete.lapinousecond.commands.withslash.getAccount
@@ -8,6 +9,8 @@ import io.github.alexiscomete.lapinousecond.useful.managesave.saveManager
 import io.github.alexiscomete.lapinousecond.worlds.WorldEnum
 import io.github.alexiscomete.lapinousecond.worlds.places
 import org.javacord.api.entity.message.MessageFlag
+import org.javacord.api.entity.server.invite.Invite
+import org.javacord.api.entity.server.invite.InviteBuilder
 import org.javacord.api.interaction.SlashCommandInteraction
 import java.awt.Color
 
@@ -27,7 +30,6 @@ class InteractCommandBase : Command(
         val world = WorldEnum.valueOf(player["world"])
         when (player["place_${world.progName}_type"]) {
             "coos" -> {
-            // TODO : e´voyer l´invitation
                 // on regarde si il existe une ville à l'endroit où le joueur est
                 val x = player["place_${world.progName}_x"].toInt()
                 val y = player["place_${world.progName}_y"].toInt()
@@ -45,10 +47,35 @@ class InteractCommandBase : Command(
                         Color.BLUE
                     )
                         .addButton("Entrer dans la ville", "La ville ${place["nameRP"]} est ici ! Vous pouvez y entrer en cliquant sur ce bouton. Description : ${place["description"]}") {
+                            fun errorWithSuccess() {
+                                it.buttonInteraction.createImmediateResponder()
+                                    .setContent("Vous êtes maintenant dans la ville ${place["nameRP"]} ! Invitation impossible, le serveur n'est pas accessible.")
+                                    .setFlags(MessageFlag.EPHEMERAL)
+                                    .respond()
+                            }
+
                             player["place_${world.progName}_type"] = "city"
                             player["place_${world.progName}_id"] = place["id"]
+                            val serverId = place["server"]
+                            val op = api.getServerById(serverId)
+                            if (!op.isPresent) {
+                                errorWithSuccess()
+                                return@addButton
+                            }
+                            val server = op.get()
+                            val firstChannel = server.textChannels.firstOrNull()
+                            if (firstChannel == null) {
+                                errorWithSuccess()
+                                return@addButton
+                            }
+                            val invite: Invite = InviteBuilder(firstChannel)
+                                .setMaxUses(42)
+                                .setNeverExpire()
+                                .create()
+                                .join()
+
                             it.buttonInteraction.createImmediateResponder()
-                                .setContent("Vous êtes maintenant dans la ville ${place["nameRP"]} !")
+                                .setContent("Vous êtes maintenant dans la ville ${place["nameRP"]} ! Voici l'invitation pour rejoindre le serveur : ${invite.url}")
                                 .setFlags(MessageFlag.EPHEMERAL)
                                 .respond()
                         }
