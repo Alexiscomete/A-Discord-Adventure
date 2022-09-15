@@ -76,6 +76,14 @@ class Building : CacheGetSet, BuildMethods, Owner {
         }
     }
 
+    fun title(): String {
+        return "${getString("nameRP")} - ${getString("type")}"
+    }
+
+    fun descriptionShort(): String {
+        return "ID : $id\nPropriétaire : ${getString("owner")}\n${(if (getString("build_status") == "building") "En construction : \n" else "")}${getString("description")}"
+    }
+
     fun completeInfos(p: Player): MessageBuilder? {
         return if (getString("build_status") == "building") {
             inBuildCompleteInfos(p)

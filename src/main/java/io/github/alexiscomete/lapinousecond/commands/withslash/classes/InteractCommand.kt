@@ -118,9 +118,16 @@ class InteractCommandBase : Command(
                 val place = places[player["place_${world.progName}_id"].toLong()]
                     ?: throw IllegalArgumentException("Place not found")
 
+                /**
+                 * It sets the player's place type to "building" and the player's place building id to the building's id,
+                 * and then it sends a message to the player saying that they are now in the building
+                 *
+                 * @param building Building - The building that the player is entering
+                 * @param buttonClickEvent The event that triggered the button click.
+                 */
                 fun enterInBuilding(building: Building, buttonClickEvent: ButtonClickEvent) {
                     player["place_${world.progName}_type"] = "building"
-                    player["place_${world.progName}_building_id"] = building["id"]
+                    player["place_${world.progName}_building_id"] = building.id.toString()
                     buttonClickEvent.buttonInteraction.createImmediateResponder()
                         .setContent("Vous êtes maintenant dans le bâtiment ${building["nameRP"]} !")
                         .setFlags(MessageFlag.EPHEMERAL)
@@ -158,7 +165,7 @@ class InteractCommandBase : Command(
                                     val building = buildingsL[i]
                                     // TODO : restructurer la manière de faire
                                     builder.addField(
-                                        "${building["nameRP"]} (${building["type"]})",
+                                        building.title(),
                                         "Description : ${building["description"]}",
                                     )
                                 }
@@ -189,7 +196,7 @@ class InteractCommandBase : Command(
                                     val building = buildingsL[i]
                                     // TODO : restructurer la manière de faire
                                     builder.addField(
-                                        "${building["nameRP"]} (${building["type"]})",
+                                        building.title(),
                                         "Description : ${building["description"]}",
                                     )
                                 }
@@ -220,7 +227,7 @@ class InteractCommandBase : Command(
                                     val building = buildingsL[i]
                                     // TODO : restructurer la manière de faire
                                     builder.addField(
-                                        "${building["nameRP"]} (${building["type"]})",
+                                        building.title(),
                                         "Description : ${building["description"]}",
                                     )
                                 }
