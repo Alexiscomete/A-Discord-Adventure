@@ -4,12 +4,16 @@ import io.github.alexiscomete.lapinousecond.api
 import io.github.alexiscomete.lapinousecond.commands.withslash.Command
 import io.github.alexiscomete.lapinousecond.commands.withslash.ExecutableWithArguments
 import io.github.alexiscomete.lapinousecond.commands.withslash.getAccount
+import io.github.alexiscomete.lapinousecond.message_event.EmbedPagesWithInteractions
 import io.github.alexiscomete.lapinousecond.message_event.MenuBuilder
 import io.github.alexiscomete.lapinousecond.useful.managesave.saveManager
 import io.github.alexiscomete.lapinousecond.worlds.WorldEnum
 import io.github.alexiscomete.lapinousecond.worlds.buildings.Building
+import io.github.alexiscomete.lapinousecond.worlds.buildings.Buildings
 import io.github.alexiscomete.lapinousecond.worlds.places
 import org.javacord.api.entity.message.MessageFlag
+import org.javacord.api.entity.message.component.ActionRow
+import org.javacord.api.entity.message.embed.EmbedBuilder
 import org.javacord.api.entity.server.invite.Invite
 import org.javacord.api.entity.server.invite.InviteBuilder
 import org.javacord.api.event.interaction.ButtonClickEvent
@@ -141,23 +145,93 @@ class InteractCommandBase : Command(
                             .respond()
                     }
                     .addButton("Voir les bâtiments", "Vous pouvez voir les bâtiments de la ville ${place["nameRP"]} en cliquant sur ce bouton et interagir avec eux") {
-                        // TODO : interactions avec les bâtiments
+                        val buildings = Buildings.loadBuildings(place["buildings"])
+                        val embedBuilder = EmbedBuilder()
+                            .setTitle("Bâtiments de la ville ${place["nameRP"]}")
+                            .setDescription("Liste de tous les bâtiments de la ville ${place["nameRP"]}.")
+                            .setColor(Color.BLUE)
+                        val embedPagesWithInteractions = EmbedPagesWithInteractions(
+                            embedBuilder,
+                            buildings,
+                            { builder: EmbedBuilder, start: Int, max: Int, buildingsL: ArrayList<Building> ->
+                                for (i in start until max) {
+                                    val building = buildingsL[i]
+                                    // TODO : restructurer la manière de faire
+                                    builder.addField(
+                                        "${building["nameRP"]} (${building["type"]})",
+                                        "Description : ${building["description"]}",
+                                    )
+                                }
+                            }
+                        ) { building: Building, buttonClickEvent: ButtonClickEvent ->
+                            //TODO
+                        }
+                        embedPagesWithInteractions.register()
                         it.buttonInteraction.createImmediateResponder()
-                            .setContent("Les bâtiments de la ville ${place["nameRP"]} sont : ${place["buildings"]}")
+                            .addEmbed(embedBuilder)
+                            .addComponents(ActionRow.of(embedPagesWithInteractions.buttons), embedPagesWithInteractions.components)
                             .setFlags(MessageFlag.EPHEMERAL)
                             .respond()
                     }
                     .addButton("Vos bâtiments", "Vous pouvez voir vos bâtiments en cliquant sur ce bouton et interagir avec eux") {
-                        // TODO : interactions avec les bâtiments
+                        val buildings = Buildings.loadBuildings(place["buildings"])
+                        // remove if not with this owner
+                        buildings.removeIf { building -> building["owner"] != player.id.toString() }
+                        val embedBuilder = EmbedBuilder()
+                            .setTitle("Vos bâtiments de la ville ${place["nameRP"]}")
+                            .setDescription("Liste de tous vos bâtiments de la ville ${place["nameRP"]}.")
+                            .setColor(Color.BLUE)
+                        val embedPagesWithInteractions = EmbedPagesWithInteractions(
+                            embedBuilder,
+                            buildings,
+                            { builder: EmbedBuilder, start: Int, max: Int, buildingsL: ArrayList<Building> ->
+                                for (i in start until max) {
+                                    val building = buildingsL[i]
+                                    // TODO : restructurer la manière de faire
+                                    builder.addField(
+                                        "${building["nameRP"]} (${building["type"]})",
+                                        "Description : ${building["description"]}",
+                                    )
+                                }
+                            }
+                        ) { building: Building, buttonClickEvent: ButtonClickEvent ->
+                            //TODO
+                        }
+                        embedPagesWithInteractions.register()
                         it.buttonInteraction.createImmediateResponder()
-                            .setContent("Vos bâtiments sont : ${player["buildings"]}")
+                            .addEmbed(embedBuilder)
+                            .addComponents(ActionRow.of(embedPagesWithInteractions.buttons), embedPagesWithInteractions.components)
                             .setFlags(MessageFlag.EPHEMERAL)
                             .respond()
                     }
                     .addButton("Bâtiments en construction", "Vous pouvez voir les bâtiments en construction dans la ville en cliquant sur ce bouton et interagir avec eux") {
-                        // TODO : interactions avec les bâtiments
+                        val buildings = Buildings.loadBuildings(place["buildings"])
+                        // remove if not in construction
+                        buildings.removeIf { building -> building["build_status"] != "building" }
+                        val embedBuilder = EmbedBuilder()
+                            .setTitle("Bâtiments en construction de la ville ${place["nameRP"]}")
+                            .setDescription("Liste de tous les bâtiments en construction de la ville ${place["nameRP"]}.")
+                            .setColor(Color.BLUE)
+                        val embedPagesWithInteractions = EmbedPagesWithInteractions(
+                            embedBuilder,
+                            buildings,
+                            { builder: EmbedBuilder, start: Int, max: Int, buildingsL: ArrayList<Building> ->
+                                for (i in start until max) {
+                                    val building = buildingsL[i]
+                                    // TODO : restructurer la manière de faire
+                                    builder.addField(
+                                        "${building["nameRP"]} (${building["type"]})",
+                                        "Description : ${building["description"]}",
+                                    )
+                                }
+                            }
+                        ) { building: Building, buttonClickEvent: ButtonClickEvent ->
+                            //TODO
+                        }
+                        embedPagesWithInteractions.register()
                         it.buttonInteraction.createImmediateResponder()
-                            .setContent("Vos bâtiments en construction sont : ${player["buildings_in_construction"]}")
+                            .addEmbed(embedBuilder)
+                            .addComponents(ActionRow.of(embedPagesWithInteractions.buttons), embedPagesWithInteractions.components)
                             .setFlags(MessageFlag.EPHEMERAL)
                             .respond()
                     }

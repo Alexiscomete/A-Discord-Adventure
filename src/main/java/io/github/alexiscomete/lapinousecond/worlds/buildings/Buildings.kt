@@ -71,8 +71,8 @@ enum class Buildings(private val getBuildingM: (Building) -> BuildingInteraction
     }
 
     companion object {
-        fun load(save: String?): Building? {
-            var save1 = save ?: return null
+        fun load(save: String): Building? {
+            var save1 = save
             if (save1.contains(":")) {
                 save1 = save1.split(":".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[1]
             }
