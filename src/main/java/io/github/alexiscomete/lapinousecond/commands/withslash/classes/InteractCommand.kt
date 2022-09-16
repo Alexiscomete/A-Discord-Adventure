@@ -6,14 +6,19 @@ import io.github.alexiscomete.lapinousecond.commands.withslash.ExecutableWithArg
 import io.github.alexiscomete.lapinousecond.commands.withslash.getAccount
 import io.github.alexiscomete.lapinousecond.message_event.EmbedPagesWithInteractions
 import io.github.alexiscomete.lapinousecond.message_event.MenuBuilder
-import io.github.alexiscomete.lapinousecond.useful.ProgressionBar
+import io.github.alexiscomete.lapinousecond.modalManager
+import io.github.alexiscomete.lapinousecond.resources.Resource
+import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
 import io.github.alexiscomete.lapinousecond.useful.managesave.saveManager
 import io.github.alexiscomete.lapinousecond.worlds.WorldEnum
 import io.github.alexiscomete.lapinousecond.worlds.buildings.Building
 import io.github.alexiscomete.lapinousecond.worlds.buildings.Buildings
+import io.github.alexiscomete.lapinousecond.worlds.buildings.Buildings.Companion.load
 import io.github.alexiscomete.lapinousecond.worlds.places
 import org.javacord.api.entity.message.MessageFlag
 import org.javacord.api.entity.message.component.ActionRow
+import org.javacord.api.entity.message.component.TextInput
+import org.javacord.api.entity.message.component.TextInputStyle
 import org.javacord.api.entity.message.embed.EmbedBuilder
 import org.javacord.api.entity.server.invite.Invite
 import org.javacord.api.entity.server.invite.InviteBuilder
@@ -99,7 +104,7 @@ class InteractCommandBase : Command(
             }
 
             "building" -> {
-                val building = places[player["place_${world.progName}_id"].toLong()]
+                val building = load(player["place_${world.progName}_id"])
                     ?: throw IllegalArgumentException("Building not found")
                 MenuBuilder(
                     "Interactions sur le bâtiment ${building["nameRP"]} du monde ${world.nameRP}",
@@ -118,7 +123,7 @@ class InteractCommandBase : Command(
                     }
                     .addButton("Informations", "Vous regardez les informations du bâtiment ${building["nameRP"]}.") {
                         it.buttonInteraction.createImmediateResponder()
-                            .setContent("Le bâtiment ${building["nameRP"]} est un bâtiment ${building["type"]}. Description : ${building["description"]}")
+                            .setContent("${building.title()}\n${building.descriptionShort()}")
                             .setFlags(MessageFlag.EPHEMERAL)
                             .respond()
                     }
@@ -145,11 +150,50 @@ class InteractCommandBase : Command(
                 }
 
                 fun helpBuilding(building: Building, buttonClickEvent: ButtonClickEvent) {
-                    // TODO : help
-                    buttonClickEvent.buttonInteraction.createImmediateResponder()
-                        .setContent("Le bâtiment ${building["nameRP"]} est un bâtiment ${building["type"]}. Description : ${building["description"]}")
-                        .setFlags(MessageFlag.EPHEMERAL)
-                        .respond()
+                    // Etape 1 : demander au joueur le montant à entrer en montrant le montant nécessaire
+                    // Etape 2 : vérifier que le joueur a assez d'argent et que le montant ne dépasse pas le montant nécessaire
+                    // Etape 3 : retirer l'argent du joueur et ajouter l'argent au bâtiment
+
+                    // Etape 1
+                    val id = generateUniqueID()
+                    val idMoney = generateUniqueID()
+
+                    buttonClickEvent.buttonInteraction.respondWithModal(
+                        id.toString(),
+                        "Actuellement ${building["collect_value"]} / ${building["collect_target"]} rb",
+                        ActionRow.of(
+                            TextInput.create(
+                                TextInputStyle.SHORT,
+                                idMoney.toString(),
+                                "Montant à donner"
+                            )
+                        )
+                    )
+
+                    modalManager.add(id) {
+                        // Etape 2
+                        val opMoney = it.modalInteraction.getTextInputValueByCustomId(idMoney.toString())
+                        if (!opMoney.isPresent) {
+                            throw IllegalArgumentException("Money not found")
+                        }
+
+                        var money = opMoney.get().toDouble()
+                        if (money > player.getMoney()) {
+                            throw IllegalArgumentException("You don't have enough money")
+                        }
+
+                        if (money > building["collect_target"].toDouble() - building["collect_value"].toDouble()) {
+                            money = (building["collect_target"].toDouble() - building["collect_value"].toDouble())
+                        }
+
+                        // Etape 3
+                        player.removeMoney(money)
+                        building.addMoney(money)
+
+                        it.modalInteraction.createImmediateResponder()
+                            .setContent("Vous avez donné $money ${Resource.RABBIT_COIN.name_} au bâtiment ${building["nameRP"]} ! <@${building["owner"]}> peut vous remerciez !")
+                            .respond()
+                    }
                 }
 
                 MenuBuilder(
@@ -183,7 +227,6 @@ class InteractCommandBase : Command(
                             { builder: EmbedBuilder, start: Int, max: Int, buildingsL: ArrayList<Building> ->
                                 for (i in start until max) {
                                     val building = buildingsL[i]
-                                    // TODO : restructurer la manière de faire
                                     builder.addField(
                                         building.title(),
                                         building.descriptionShort()
@@ -191,7 +234,11 @@ class InteractCommandBase : Command(
                                 }
                             }
                         ) { building: Building, buttonClickEvent: ButtonClickEvent ->
-                            //TODO
+                            if (building["build_status"] == "building") {
+                                helpBuilding(building, buttonClickEvent)
+                            } else {
+                                enterInBuilding(building, buttonClickEvent)
+                            }
                         }
                         embedPagesWithInteractions.register()
                         it.buttonInteraction.createImmediateResponder()
@@ -206,7 +253,7 @@ class InteractCommandBase : Command(
                     .addButton(
                         "Vos bâtiments",
                         "Vous pouvez voir vos bâtiments en cliquant sur ce bouton et interagir avec eux"
-                    ) {
+                    ) { yours ->
                         val buildings = Buildings.loadBuildings(place["buildings"])
                         // remove if not with this owner
                         buildings.removeIf { building -> building["owner"] != player.id.toString() }
@@ -220,7 +267,6 @@ class InteractCommandBase : Command(
                             { builder: EmbedBuilder, start: Int, max: Int, buildingsL: ArrayList<Building> ->
                                 for (i in start until max) {
                                     val building = buildingsL[i]
-                                    // TODO : restructurer la manière de faire
                                     builder.addField(
                                         building.title(),
                                         building.descriptionShort()
@@ -228,10 +274,41 @@ class InteractCommandBase : Command(
                                 }
                             }
                         ) { building: Building, buttonClickEvent: ButtonClickEvent ->
-                            //TODO
+                            if (building["build_status"] == "building") {
+                                // annuler ou aider le bâtiment
+                                MenuBuilder(
+                                    "Bâtiment ${building["nameRP"]}",
+                                    "Que voulez-vous faire avec le bâtiment ${building["nameRP"]} ?",
+                                    Color.BLUE
+                                )
+                                    .addButton(
+                                        "Annuler le bâtiment",
+                                        "Vous annulez le bâtiment ${building["nameRP"]}"
+                                    ) {
+                                        // on le retire de la bdd
+                                        saveManager.execute(
+                                            "DELETE FROM buildings WHERE id = ${building.id}",
+                                            true
+                                        )
+                                        it.buttonInteraction.createImmediateResponder()
+                                            .setContent("Vous avez annulé le bâtiment !")
+                                            .setFlags(MessageFlag.EPHEMERAL)
+                                            .respond()
+                                    }
+                                    .addButton(
+                                        "Aider le bâtiment",
+                                        "Vous aidez le bâtiment ${building["nameRP"]}"
+                                    ) {
+                                        helpBuilding(building, it)
+                                    }
+                                    .addEphemeral()
+                                    .modif(buttonClickEvent)
+                            } else {
+                                enterInBuilding(building, buttonClickEvent)
+                            }
                         }
                         embedPagesWithInteractions.register()
-                        it.buttonInteraction.createImmediateResponder()
+                        yours.buttonInteraction.createImmediateResponder()
                             .addEmbed(embedBuilder)
                             .addComponents(
                                 ActionRow.of(embedPagesWithInteractions.buttons),
@@ -257,7 +334,6 @@ class InteractCommandBase : Command(
                             { builder: EmbedBuilder, start: Int, max: Int, buildingsL: ArrayList<Building> ->
                                 for (i in start until max) {
                                     val building = buildingsL[i]
-                                    // TODO : restructurer la manière de faire
                                     builder.addField(
                                         building.title(),
                                         building.descriptionShort()
@@ -265,7 +341,11 @@ class InteractCommandBase : Command(
                                 }
                             }
                         ) { building: Building, buttonClickEvent: ButtonClickEvent ->
-                            //TODO
+                            if (building["build_status"] == "building") {
+                                helpBuilding(building, buttonClickEvent)
+                            } else {
+                                enterInBuilding(building, buttonClickEvent)
+                            }
                         }
                         embedPagesWithInteractions.register()
                         it.buttonInteraction.createImmediateResponder()
