@@ -37,13 +37,13 @@ enum class Buildings(private val getBuildingM: (Building) -> BuildingInteraction
         { building: Building -> Hopital(building) }, "hopital"
     ),
     JOURNAL(
-        { building: Building? -> Journal(building) }, "journal"
+        { building: Building -> Journal(building) }, "journal"
     ),
     MAIRIE(
-        { building: Building? -> Mairie(building) }, "mairie"
+        { building: Building -> Mairie(building) }, "mairie"
     ),
     MAISON(
-        { building: Building? -> Maison(building) }, "maison"
+        { building: Building -> Maison(building) }, "maison"
     ),
     PHARMACIE(
         { building: Building -> Pharmacie(building) }, "pharmacie"

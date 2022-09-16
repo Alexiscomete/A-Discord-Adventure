@@ -196,6 +196,41 @@ class InteractCommandBase : Command(
                     }
                 }
 
+                fun sendBuildingsInEmbed(
+                    embedBuilder: EmbedBuilder,
+                    buildings: ArrayList<Building>,
+                    it: ButtonClickEvent
+                ) {
+                    val embedPagesWithInteractions = EmbedPagesWithInteractions(
+                        embedBuilder,
+                        buildings,
+                        { builder: EmbedBuilder, start: Int, max: Int, buildingsL: ArrayList<Building> ->
+                            for (i in start until max) {
+                                val building = buildingsL[i]
+                                builder.addField(
+                                    building.title(),
+                                    building.descriptionShort()
+                                )
+                            }
+                        }
+                    ) { building: Building, buttonClickEvent: ButtonClickEvent ->
+                        if (building["build_status"] == "building") {
+                            helpBuilding(building, buttonClickEvent)
+                        } else {
+                            enterInBuilding(building, buttonClickEvent)
+                        }
+                    }
+                    embedPagesWithInteractions.register()
+                    it.buttonInteraction.createImmediateResponder()
+                        .addEmbed(embedBuilder)
+                        .addComponents(
+                            ActionRow.of(embedPagesWithInteractions.buttons),
+                            embedPagesWithInteractions.components
+                        )
+                        .setFlags(MessageFlag.EPHEMERAL)
+                        .respond()
+                }
+
                 MenuBuilder(
                     "Interactions dans la ville ${place["nameRP"]}",
                     "Liste de toutes vos possibilités dans la version actuelle du bot.",
@@ -221,34 +256,7 @@ class InteractCommandBase : Command(
                             .setTitle("Bâtiments de la ville ${place["nameRP"]}")
                             .setDescription("Liste de tous les bâtiments de la ville ${place["nameRP"]}.")
                             .setColor(Color.BLUE)
-                        val embedPagesWithInteractions = EmbedPagesWithInteractions(
-                            embedBuilder,
-                            buildings,
-                            { builder: EmbedBuilder, start: Int, max: Int, buildingsL: ArrayList<Building> ->
-                                for (i in start until max) {
-                                    val building = buildingsL[i]
-                                    builder.addField(
-                                        building.title(),
-                                        building.descriptionShort()
-                                    )
-                                }
-                            }
-                        ) { building: Building, buttonClickEvent: ButtonClickEvent ->
-                            if (building["build_status"] == "building") {
-                                helpBuilding(building, buttonClickEvent)
-                            } else {
-                                enterInBuilding(building, buttonClickEvent)
-                            }
-                        }
-                        embedPagesWithInteractions.register()
-                        it.buttonInteraction.createImmediateResponder()
-                            .addEmbed(embedBuilder)
-                            .addComponents(
-                                ActionRow.of(embedPagesWithInteractions.buttons),
-                                embedPagesWithInteractions.components
-                            )
-                            .setFlags(MessageFlag.EPHEMERAL)
-                            .respond()
+                        sendBuildingsInEmbed(embedBuilder, buildings, it)
                     }
                     .addButton(
                         "Vos bâtiments",
@@ -328,34 +336,7 @@ class InteractCommandBase : Command(
                             .setTitle("Bâtiments en construction de la ville ${place["nameRP"]}")
                             .setDescription("Liste de tous les bâtiments en construction de la ville ${place["nameRP"]}.")
                             .setColor(Color.BLUE)
-                        val embedPagesWithInteractions = EmbedPagesWithInteractions(
-                            embedBuilder,
-                            buildings,
-                            { builder: EmbedBuilder, start: Int, max: Int, buildingsL: ArrayList<Building> ->
-                                for (i in start until max) {
-                                    val building = buildingsL[i]
-                                    builder.addField(
-                                        building.title(),
-                                        building.descriptionShort()
-                                    )
-                                }
-                            }
-                        ) { building: Building, buttonClickEvent: ButtonClickEvent ->
-                            if (building["build_status"] == "building") {
-                                helpBuilding(building, buttonClickEvent)
-                            } else {
-                                enterInBuilding(building, buttonClickEvent)
-                            }
-                        }
-                        embedPagesWithInteractions.register()
-                        it.buttonInteraction.createImmediateResponder()
-                            .addEmbed(embedBuilder)
-                            .addComponents(
-                                ActionRow.of(embedPagesWithInteractions.buttons),
-                                embedPagesWithInteractions.components
-                            )
-                            .setFlags(MessageFlag.EPHEMERAL)
-                            .respond()
+                        sendBuildingsInEmbed(embedBuilder, buildings, it)
                     }
                     .addButton(
                         "Informations sur la ville",
@@ -366,6 +347,53 @@ class InteractCommandBase : Command(
                             .setFlags(MessageFlag.EPHEMERAL)
                             .respond()
                     }
+                    .addButton(
+                        "Construire un bâtiment",
+                        "Vous pouvez construire un bâtiment dans la ville ${place["nameRP"]} en cliquant sur ce bouton"
+                    ) { again ->
+                        val buildsTypes = arrayListOf(*Buildings.values())
+                        val embedBuilder = EmbedBuilder()
+                            .setTitle("Bâtiments disponibles")
+                            .setDescription("Liste de tous les bâtiments disponibles.")
+                            .setColor(Color.BLUE)
+                        val embedPagesWithInteractions = EmbedPagesWithInteractions(
+                            embedBuilder,
+                            buildsTypes,
+                            { builder: EmbedBuilder, start: Int, max: Int, buildsTypesL: ArrayList<Buildings> ->
+                                for (i in start until max) {
+                                    val buildType = buildsTypesL[i]
+                                    builder.addField(
+                                        buildType.name_,
+                                        buildType.basePrice.toString() + " " + Resource.RABBIT_COIN.name_ + " (Peut être construit : " + buildType.isBuild + ")"
+                                    )
+                                }
+                            }
+                        ) { buildType: Buildings, buttonClickEvent: ButtonClickEvent ->
+                            if (buildType.isBuild && buildType.buildingAutorisations?.isAutorise(player) == true) {
+                                val place1 = player.place
+                                val building2 = place1?.let { Building(buildType, player, it) }
+                                val builder = building2?.infos(player)
+                                buttonClickEvent.buttonInteraction.createImmediateResponder()
+                                    .addEmbed(builder)
+                                    .setFlags(MessageFlag.EPHEMERAL)
+                                    .respond()
+                            } else {
+                                throw IllegalArgumentException("Vous ne pouvez pas construire ce bâtiment")
+                            }
+                        }
+                        embedPagesWithInteractions.register()
+                        again.buttonInteraction.createImmediateResponder()
+                            .addEmbed(embedBuilder)
+                            .addComponents(
+                                ActionRow.of(embedPagesWithInteractions.buttons),
+                                embedPagesWithInteractions.components
+                            )
+                            .setFlags(MessageFlag.EPHEMERAL)
+                            .respond()
+                    }
+                    .addEphemeral()
+                    .responder(slashCommand)
+
             }
 
             else -> {
