@@ -30,14 +30,11 @@ class Building : CacheGetSet, BuildMethods, Owner {
     constructor(id: Long, buildings: Buildings) : super(id, BUILDINGS) {
         progressionBar = ProgressionBar(
             "💰",
-            3,
             "🧱",
-            3,
-            " ",
-            1,
+            "🔨",
             getString("collect_target").toDouble(),
             getString("collect_value").toDouble(),
-            20
+            10
         )
         buildingInteraction = buildings[this]
     }
@@ -65,7 +62,7 @@ class Building : CacheGetSet, BuildMethods, Owner {
                 special.key?.let { special.value?.let { it1 -> set(it, it1) } }
             }
         }
-        progressionBar = ProgressionBar("💰", 3, "🧱", 3, " ", 1, buildings1.basePrice, 0.0, 20)
+        progressionBar = ProgressionBar("💰", "🧱", "🔨", buildings1.basePrice, 0.0, 10)
     }
 
     fun infos(p: Player): EmbedBuilder? {

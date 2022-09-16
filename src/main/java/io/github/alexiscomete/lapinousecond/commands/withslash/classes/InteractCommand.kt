@@ -6,6 +6,7 @@ import io.github.alexiscomete.lapinousecond.commands.withslash.ExecutableWithArg
 import io.github.alexiscomete.lapinousecond.commands.withslash.getAccount
 import io.github.alexiscomete.lapinousecond.message_event.EmbedPagesWithInteractions
 import io.github.alexiscomete.lapinousecond.message_event.MenuBuilder
+import io.github.alexiscomete.lapinousecond.useful.ProgressionBar
 import io.github.alexiscomete.lapinousecond.useful.managesave.saveManager
 import io.github.alexiscomete.lapinousecond.worlds.WorldEnum
 import io.github.alexiscomete.lapinousecond.worlds.buildings.Building
@@ -32,11 +33,12 @@ class InteractCommandBase : Command(
         get() = arrayOf("PLAY")
 
     override fun execute(slashCommand: SlashCommandInteraction) {
+
         val player = getAccount(slashCommand)
         val world = WorldEnum.valueOf(player["world"])
         when (player["place_${world.progName}_type"]) {
             "coos" -> {
-                // on regarde si il existe une ville à l'endroit où le joueur est
+                // on regarde s'il existe une ville à l'endroit où le joueur est
                 val x = player["place_${world.progName}_x"].toInt()
                 val y = player["place_${world.progName}_y"].toInt()
                 val resultSet = saveManager.executeQuery(
@@ -52,7 +54,10 @@ class InteractCommandBase : Command(
                         "Liste de toutes vos possibilités dans la version actuelle du bot. Les sorts ne sont pas compris.",
                         Color.BLUE
                     )
-                        .addButton("Entrer dans la ville", "La ville ${place["nameRP"]} est ici ! Vous pouvez y entrer en cliquant sur ce bouton. Description : ${place["description"]}") {
+                        .addButton(
+                            "Entrer dans la ville",
+                            "La ville ${place["nameRP"]} est ici ! Vous pouvez y entrer en cliquant sur ce bouton. Description : ${place["description"]}"
+                        ) {
                             fun errorWithSuccess() {
                                 it.buttonInteraction.createImmediateResponder()
                                     .setContent("Vous êtes maintenant dans la ville ${place["nameRP"]} ! Invitation impossible, le serveur n'est pas accessible.")
@@ -92,6 +97,7 @@ class InteractCommandBase : Command(
                         .respond()
                 }
             }
+
             "building" -> {
                 val building = places[player["place_${world.progName}_id"].toLong()]
                     ?: throw IllegalArgumentException("Building not found")
@@ -100,7 +106,10 @@ class InteractCommandBase : Command(
                     "Liste de toutes vos possibilités dans la version actuelle du bot.",
                     Color.BLUE
                 )
-                    .addButton("Sortir du bâtiment", "Vous sortez du bâtiment ${building["nameRP"]} et retournez dans la ville.") {
+                    .addButton(
+                        "Sortir du bâtiment",
+                        "Vous sortez du bâtiment ${building["nameRP"]} et retournez dans la ville."
+                    ) {
                         player["place_${world.progName}_type"] = "city"
                         it.buttonInteraction.createImmediateResponder()
                             .setContent("Vous êtes maintenant dans la ville ${building["nameRP"]} !")
@@ -114,6 +123,7 @@ class InteractCommandBase : Command(
                             .respond()
                     }
             }
+
             "city" -> {
                 val place = places[player["place_${world.progName}_id"].toLong()]
                     ?: throw IllegalArgumentException("Place not found")
@@ -142,8 +152,15 @@ class InteractCommandBase : Command(
                         .respond()
                 }
 
-                MenuBuilder("Interactions dans la ville ${place["nameRP"]}", "Liste de toutes vos possibilités dans la version actuelle du bot.", Color.BLUE)
-                    .addButton("Quitter la ville", "Vous quittez la ville ${place["nameRP"]} et retournez dans la nature") {
+                MenuBuilder(
+                    "Interactions dans la ville ${place["nameRP"]}",
+                    "Liste de toutes vos possibilités dans la version actuelle du bot.",
+                    Color.BLUE
+                )
+                    .addButton(
+                        "Quitter la ville",
+                        "Vous quittez la ville ${place["nameRP"]} et retournez dans la nature"
+                    ) {
                         player["place_${world.progName}_type"] = "coos"
                         player["place_${world.progName}_id"] = "0"
                         it.buttonInteraction.createImmediateResponder()
@@ -151,7 +168,10 @@ class InteractCommandBase : Command(
                             .setFlags(MessageFlag.EPHEMERAL)
                             .respond()
                     }
-                    .addButton("Voir les bâtiments", "Vous pouvez voir les bâtiments de la ville ${place["nameRP"]} en cliquant sur ce bouton et interagir avec eux") {
+                    .addButton(
+                        "Voir les bâtiments",
+                        "Vous pouvez voir les bâtiments de la ville ${place["nameRP"]} en cliquant sur ce bouton et interagir avec eux"
+                    ) {
                         val buildings = Buildings.loadBuildings(place["buildings"])
                         val embedBuilder = EmbedBuilder()
                             .setTitle("Bâtiments de la ville ${place["nameRP"]}")
@@ -166,7 +186,7 @@ class InteractCommandBase : Command(
                                     // TODO : restructurer la manière de faire
                                     builder.addField(
                                         building.title(),
-                                        "Description : ${building["description"]}",
+                                        building.descriptionShort()
                                     )
                                 }
                             }
@@ -176,11 +196,17 @@ class InteractCommandBase : Command(
                         embedPagesWithInteractions.register()
                         it.buttonInteraction.createImmediateResponder()
                             .addEmbed(embedBuilder)
-                            .addComponents(ActionRow.of(embedPagesWithInteractions.buttons), embedPagesWithInteractions.components)
+                            .addComponents(
+                                ActionRow.of(embedPagesWithInteractions.buttons),
+                                embedPagesWithInteractions.components
+                            )
                             .setFlags(MessageFlag.EPHEMERAL)
                             .respond()
                     }
-                    .addButton("Vos bâtiments", "Vous pouvez voir vos bâtiments en cliquant sur ce bouton et interagir avec eux") {
+                    .addButton(
+                        "Vos bâtiments",
+                        "Vous pouvez voir vos bâtiments en cliquant sur ce bouton et interagir avec eux"
+                    ) {
                         val buildings = Buildings.loadBuildings(place["buildings"])
                         // remove if not with this owner
                         buildings.removeIf { building -> building["owner"] != player.id.toString() }
@@ -197,7 +223,7 @@ class InteractCommandBase : Command(
                                     // TODO : restructurer la manière de faire
                                     builder.addField(
                                         building.title(),
-                                        "Description : ${building["description"]}",
+                                        building.descriptionShort()
                                     )
                                 }
                             }
@@ -207,11 +233,17 @@ class InteractCommandBase : Command(
                         embedPagesWithInteractions.register()
                         it.buttonInteraction.createImmediateResponder()
                             .addEmbed(embedBuilder)
-                            .addComponents(ActionRow.of(embedPagesWithInteractions.buttons), embedPagesWithInteractions.components)
+                            .addComponents(
+                                ActionRow.of(embedPagesWithInteractions.buttons),
+                                embedPagesWithInteractions.components
+                            )
                             .setFlags(MessageFlag.EPHEMERAL)
                             .respond()
                     }
-                    .addButton("Bâtiments en construction", "Vous pouvez voir les bâtiments en construction dans la ville en cliquant sur ce bouton et interagir avec eux") {
+                    .addButton(
+                        "Bâtiments en construction",
+                        "Vous pouvez voir les bâtiments en construction dans la ville en cliquant sur ce bouton et interagir avec eux"
+                    ) {
                         val buildings = Buildings.loadBuildings(place["buildings"])
                         // remove if not in construction
                         buildings.removeIf { building -> building["build_status"] != "building" }
@@ -228,7 +260,7 @@ class InteractCommandBase : Command(
                                     // TODO : restructurer la manière de faire
                                     builder.addField(
                                         building.title(),
-                                        "Description : ${building["description"]}",
+                                        building.descriptionShort()
                                     )
                                 }
                             }
@@ -238,17 +270,24 @@ class InteractCommandBase : Command(
                         embedPagesWithInteractions.register()
                         it.buttonInteraction.createImmediateResponder()
                             .addEmbed(embedBuilder)
-                            .addComponents(ActionRow.of(embedPagesWithInteractions.buttons), embedPagesWithInteractions.components)
+                            .addComponents(
+                                ActionRow.of(embedPagesWithInteractions.buttons),
+                                embedPagesWithInteractions.components
+                            )
                             .setFlags(MessageFlag.EPHEMERAL)
                             .respond()
                     }
-                    .addButton("Informations sur la ville", "Vous pouvez voir les informations sur la ville ${place["nameRP"]} en cliquant sur ce bouton") {
+                    .addButton(
+                        "Informations sur la ville",
+                        "Vous pouvez voir les informations sur la ville ${place["nameRP"]} en cliquant sur ce bouton"
+                    ) {
                         it.buttonInteraction.createImmediateResponder()
                             .setContent("La ville ${place["nameRP"]} est une ville aux coordonnées ${place["x"]} ${place["y"]} du monde ${world.nameRP}. Description : ${place["description"]}")
                             .setFlags(MessageFlag.EPHEMERAL)
                             .respond()
                     }
             }
+
             else -> {
                 slashCommand.createImmediateResponder()
                     .setContent("Aucune interaction possible ici")
