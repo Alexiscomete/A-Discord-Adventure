@@ -201,7 +201,7 @@ class MapCommand : Command(
                             modalXY.modalInteraction.createImmediateResponder()
                                 .setContent("Patientez un instant... calcul du trajet")
                             val path = world.findPath(nodePlayer, nodeDest)
-                            val image = world.drawPath(path)
+                            val image = bigger(world.drawPath(path), 3)
 
                             val timeMillisToTravel = path.size * 10000L
                             val priceToTravel = path.size * 0.5
@@ -334,6 +334,7 @@ class MapCommand : Command(
                         val image = try {
                             bigger(world.zoom(xInt, yInt, 30), 10)
                         } catch (e: Exception) {
+                            e.printStackTrace()
                             null
                         }
                         val biome = if (world.isDirt(xInt, yInt)) "la terre" else "l'eau"
