@@ -14,15 +14,19 @@ class Journal(building: Building?) : BuildingInteraction(building!!) {
         get() = null
 
     override fun getCompleteInfos(p: Player): MenuBuilder {
-        return MenuBuilder("Pharmacie", "Bienvenue dans la pharmacie !", Color.DARK_GRAY)
+        return MenuBuilder(
+            "Journal",
+            "Voici votre journal",
+            Color.DARK_GRAY
+        )
     }
 
     override fun descriptionShort(): String {
-        TODO("Not yet implemented")
+        return "Journal"
     }
 
     override fun title(): String {
-        TODO("Not yet implemented")
+        return "Journal"
     }
 
     override fun configBuilding() {}

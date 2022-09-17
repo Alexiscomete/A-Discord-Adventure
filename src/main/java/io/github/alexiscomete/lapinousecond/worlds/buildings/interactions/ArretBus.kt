@@ -14,15 +14,15 @@ class ArretBus(building: Building?) : BuildingInteraction(building!!) {
         get() = null
 
     override fun getCompleteInfos(p: Player): MenuBuilder {
-        return MenuBuilder("Pharmacie", "Bienvenue dans la pharmacie !", Color.DARK_GRAY)
+        return MenuBuilder("Arrêt de bus", "Cet arrêt de bus est vide, il n'y a personne pour l'instant.", Color(0, 0, 0))
     }
 
     override fun descriptionShort(): String {
-        TODO("Not yet implemented")
+        return "Arrêt de bus"
     }
 
     override fun title(): String {
-        TODO("Not yet implemented")
+        return "Arrêt de bus"
     }
 
     override fun configBuilding() {}

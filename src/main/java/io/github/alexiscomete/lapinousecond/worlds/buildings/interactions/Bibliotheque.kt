@@ -14,15 +14,19 @@ class Bibliotheque(building: Building?) : BuildingInteraction(building!!) {
         get() = null
 
     override fun getCompleteInfos(p: Player): MenuBuilder {
-        return MenuBuilder("Pharmacie", "Bienvenue dans la pharmacie !", Color.DARK_GRAY)
+        return MenuBuilder(
+            "Bibliothèque",
+            "Bienvenue dans la bibliothèque de l'Université de Lapinou !",
+            Color.DARK_GRAY
+        )
     }
 
     override fun descriptionShort(): String {
-        TODO("Not yet implemented")
+        return "Bibliothèque"
     }
 
     override fun title(): String {
-        TODO("Not yet implemented")
+        return "Bibliothèque"
     }
 
     override fun configBuilding() {}

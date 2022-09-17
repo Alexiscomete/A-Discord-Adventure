@@ -14,15 +14,19 @@ class Bar(building: Building?) : BuildingInteraction(building!!) {
         get() = null
 
     override fun getCompleteInfos(p: Player): MenuBuilder {
-        return MenuBuilder("Pharmacie", "Bienvenue dans la pharmacie !", Color.DARK_GRAY)
+        return MenuBuilder(
+            "Bar",
+            "Le bar est un endroit convivial où vous pouvez vous détendre et vous amuser.",
+            Color.DARK_GRAY
+        )
     }
 
     override fun descriptionShort(): String {
-        TODO("Not yet implemented")
+        return "Le bar est un endroit convivial où vous pouvez vous détendre et vous amuser."
     }
 
     override fun title(): String {
-        TODO("Not yet implemented")
+        return "Bar"
     }
 
     override fun configBuilding() {}

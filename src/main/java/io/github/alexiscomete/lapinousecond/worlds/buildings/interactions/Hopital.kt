@@ -14,15 +14,19 @@ class Hopital(building: Building?) : BuildingInteraction(building!!) {
         get() = null
 
     override fun getCompleteInfos(p: Player): MenuBuilder {
-        return MenuBuilder("Pharmacie", "Bienvenue dans la pharmacie !", Color.DARK_GRAY)
+        return MenuBuilder(
+            "Hôpital",
+            "Bienvenue à l'hôpital !",
+            Color.DARK_GRAY
+        )
     }
 
     override fun descriptionShort(): String {
-        TODO("Not yet implemented")
+        return "Hôpital"
     }
 
     override fun title(): String {
-        TODO("Not yet implemented")
+        return "Hôpital"
     }
 
     override fun configBuilding() {}

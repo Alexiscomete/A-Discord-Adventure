@@ -14,11 +14,11 @@ class Marche(building: Building?) : BuildingInteraction(building!!) {
         get() = null
 
     override fun descriptionShort(): String {
-        TODO("Not yet implemented")
+        return "Marché"
     }
 
     override fun title(): String {
-        TODO("Not yet implemented")
+        return "Marché"
     }
 
     override fun getCompleteInfos(p: Player): MenuBuilder {

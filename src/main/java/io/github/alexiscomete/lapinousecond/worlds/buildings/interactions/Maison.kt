@@ -14,15 +14,19 @@ class Maison(building: Building?) : BuildingInteraction(building!!) {
         get() = null
 
     override fun descriptionShort(): String {
-        TODO("Not yet implemented")
+        return "Maison"
     }
 
     override fun title(): String {
-        TODO("Not yet implemented")
+        return "Maison"
     }
 
     override fun getCompleteInfos(p: Player): MenuBuilder {
-        return MenuBuilder("Pharmacie", "Bienvenue dans la pharmacie !", Color.DARK_GRAY)
+        return MenuBuilder(
+            "Maison",
+            "Bienvenue dans votre maison",
+            Color.DARK_GRAY
+        )
     }
 
     override fun configBuilding() {}

@@ -14,11 +14,11 @@ class Pharmacie(building: Building?) : BuildingInteraction(building!!) {
         get() = null
 
     override fun descriptionShort(): String {
-        TODO("Not yet implemented")
+        return "Pharmacie"
     }
 
     override fun title(): String {
-        TODO("Not yet implemented")
+        return "Pharmacie"
     }
 
     override fun getCompleteInfos(p: Player): MenuBuilder {

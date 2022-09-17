@@ -14,15 +14,19 @@ class Casino(building: Building?) : BuildingInteraction(building!!) {
         get() = null
 
     override fun getCompleteInfos(p: Player): MenuBuilder {
-        return MenuBuilder("Pharmacie", "Bienvenue dans la pharmacie !", Color.DARK_GRAY)
+        return MenuBuilder(
+            "Casino",
+            "Bienvenue dans le casino !",
+            Color.DARK_GRAY
+        )
     }
 
     override fun descriptionShort(): String {
-        TODO("Not yet implemented")
+        return "Casino"
     }
 
     override fun title(): String {
-        TODO("Not yet implemented")
+        return "Casino"
     }
 
     override fun configBuilding() {}

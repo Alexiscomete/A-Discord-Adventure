@@ -14,15 +14,19 @@ class Armurerie(building: Building?) : BuildingInteraction(building!!) {
         get() = null
 
     override fun getCompleteInfos(p: Player): MenuBuilder {
-        return MenuBuilder("Pharmacie", "Bienvenue dans la pharmacie !", Color.DARK_GRAY)
+        return MenuBuilder(
+            "Armurerie",
+            "Bienvenue dans l'armurerie !",
+            Color.DARK_GRAY
+        )
     }
 
     override fun descriptionShort(): String {
-        TODO("Not yet implemented")
+        return "Armurerie"
     }
 
     override fun title(): String {
-        TODO("Not yet implemented")
+        return "Armurerie"
     }
 
     override fun configBuilding() {}

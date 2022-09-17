@@ -14,15 +14,19 @@ class Boulangerie(building: Building?) : BuildingInteraction(building!!) {
         get() = null
 
     override fun getCompleteInfos(p: Player): MenuBuilder {
-        return MenuBuilder("Pharmacie", "Bienvenue dans la pharmacie !", Color.DARK_GRAY)
+        return MenuBuilder(
+            "Boulangerie",
+            "Bienvenue dans la boulangerie !",
+            Color.DARK_GRAY
+        )
     }
 
     override fun descriptionShort(): String {
-        TODO("Not yet implemented")
+        return "Boulangerie"
     }
 
     override fun title(): String {
-        TODO("Not yet implemented")
+        return "Boulangerie"
     }
 
     override fun configBuilding() {}

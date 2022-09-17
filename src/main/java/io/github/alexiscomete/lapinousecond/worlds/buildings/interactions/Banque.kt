@@ -14,15 +14,19 @@ class Banque(building: Building?) : BuildingInteraction(building!!) {
         get() = null
 
     override fun getCompleteInfos(p: Player): MenuBuilder {
-        return MenuBuilder("Pharmacie", "Bienvenue dans la pharmacie !", Color.DARK_GRAY)
+        return MenuBuilder(
+            "Banque",
+            "Vous pouvez déposer ou retirer de l'argent de votre compte bancaire ici.",
+            Color.DARK_GRAY
+        )
     }
 
     override fun descriptionShort(): String {
-        TODO("Not yet implemented")
+        return "Banque"
     }
 
     override fun title(): String {
-        TODO("Not yet implemented")
+        return "Banque"
     }
 
     override fun configBuilding() {}

@@ -14,15 +14,15 @@ class Auberge(building: Building?) : BuildingInteraction(building!!) {
         get() = null
 
     override fun getCompleteInfos(p: Player): MenuBuilder {
-        return MenuBuilder("Pharmacie", "Bienvenue dans la pharmacie !", Color.DARK_GRAY)
+        return MenuBuilder("Auberge", "Bienvenue dans l'auberge !", Color(0, 0, 0))
     }
 
     override fun descriptionShort(): String {
-        TODO("Not yet implemented")
+        return "Auberge"
     }
 
     override fun title(): String {
-        TODO("Not yet implemented")
+        return "Auberge"
     }
 
     override fun configBuilding() {}
