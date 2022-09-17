@@ -371,8 +371,11 @@ class InteractCommandBase : Command(
                         ) { buildType: Buildings, buttonClickEvent: ButtonClickEvent ->
                             if (buildType.isBuild && buildType.buildingAutorisations?.isAutorise(player) == true) {
                                 val place1 = player.place
-                                val building2 = place1?.let { Building(buildType, player, it) }
-                                val builder = building2?.infos(player)
+                                    ?: throw IllegalArgumentException("Le joueur n'est pas dans une ville")
+                                val building2 = Building(buildType, player, place1)
+                                val builder = EmbedBuilder()
+                                    .setTitle(building2.title())
+                                    .setDescription(building2.descriptionShort())
                                 buttonClickEvent.buttonInteraction.createImmediateResponder()
                                     .addEmbed(builder)
                                     .setFlags(MessageFlag.EPHEMERAL)

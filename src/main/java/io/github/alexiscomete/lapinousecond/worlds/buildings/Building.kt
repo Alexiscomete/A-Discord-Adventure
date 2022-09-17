@@ -1,20 +1,15 @@
 package io.github.alexiscomete.lapinousecond.worlds.buildings
 
-import io.github.alexiscomete.lapinousecond.useful.managesave.CacheCustom
-import io.github.alexiscomete.lapinousecond.useful.managesave.Table
-import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
-import io.github.alexiscomete.lapinousecond.buttonsManager
 import io.github.alexiscomete.lapinousecond.entity.Owner
 import io.github.alexiscomete.lapinousecond.entity.Player
-import io.github.alexiscomete.lapinousecond.useful.managesave.CacheGetSet
+import io.github.alexiscomete.lapinousecond.message_event.MenuBuilder
 import io.github.alexiscomete.lapinousecond.resources.Resource
 import io.github.alexiscomete.lapinousecond.useful.ProgressionBar
-import io.github.alexiscomete.lapinousecond.view.AnswerEnum
+import io.github.alexiscomete.lapinousecond.useful.managesave.CacheCustom
+import io.github.alexiscomete.lapinousecond.useful.managesave.CacheGetSet
+import io.github.alexiscomete.lapinousecond.useful.managesave.Table
+import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
 import io.github.alexiscomete.lapinousecond.worlds.Place
-import org.javacord.api.entity.message.MessageBuilder
-import org.javacord.api.entity.message.component.ActionRow
-import org.javacord.api.entity.message.component.Button
-import org.javacord.api.entity.message.embed.EmbedBuilder
 import org.json.JSONObject
 import java.awt.Color
 import java.util.*
@@ -65,19 +60,11 @@ class Building : CacheGetSet, BuildMethods, Owner {
         progressionBar = ProgressionBar("💰", "🧱", "🔨", buildings1.basePrice, 0.0, 10)
     }
 
-    fun infos(p: Player): EmbedBuilder? {
-        return if (getString("build_status") == "building") {
-            inBuildInfos(p)
-        } else {
-            getInfos(p)
-        }
-    }
-
-    fun title(): String {
+    override fun title(): String {
         return "${getString("nameRP")} - ${getString("type")}"
     }
 
-    fun descriptionShort(): String {
+    override fun descriptionShort(): String {
         return "ID : $id\nPropriétaire : ${getString("owner")}\n${(if (getString("build_status") == "building") "En construction : \n" else "")}${
             getString(
                 "description"
@@ -85,67 +72,19 @@ class Building : CacheGetSet, BuildMethods, Owner {
         }"
     }
 
-    fun completeInfos(p: Player): MessageBuilder? {
+    fun completeInfos(p: Player): MenuBuilder {
         return if (getString("build_status") == "building") {
-            inBuildCompleteInfos(p)
+            inBuildCompleteInfos()
         } else {
             getCompleteInfos(p)
         }
     }
 
-    private fun inBuildInfos(p: Player): EmbedBuilder {
-        return EmbedBuilder()
-            .setColor(Color.CYAN)
-            .setTitle(p.getAnswer(AnswerEnum.BUILDING_BA, true))
-            .setDescription(
-                """Type : ${getString("type")}
- ID : $id"""
-            )
-            .addInlineField(
-                p.getAnswer(AnswerEnum.OWNER, true), """
-     Type : ${getString("type")}
-     Identification : ${getString("owner")}
-     """.trimIndent()
-            )
-            .addInlineField(
-                p.getAnswer(AnswerEnum.PROGRESSION, true),
-                progressionBar.bar + "\n" + getString("collect_value") + "/" + getString("collect_target")
-            )
-    }
-
-    private fun inBuildCompleteInfos(p: Player): MessageBuilder {
-        val id: Long = generateUniqueID()
-        val messageBuilder: MessageBuilder = MessageBuilder()
-            .addEmbed(inBuildInfos(p))
-            .addComponents(
-                ActionRow.of(
-                    Button.success(id.toString(), "Donner de l'argent")
-                )
-            )
-        buttonsManager.addButton(id) { messageComponentCreateEvent ->
-            val msg = messageComponentCreateEvent.buttonInteraction
-            /*
-            val transaction = FullTransactionWithVerification(
-                { aDouble: Double ->
-                    set("collect_value", (getString("collect_value").toDouble() + aDouble).toString())
-                    if (Objects.equals(getString("collect_value"), getString("collect_target"))) {
-                        msg.channel.get().sendMessage("Build terminé")
-                        set("build_status", "finish")
-                        configBuilding()
-                    } else {
-                        msg.channel.get().sendMessage(inBuildInfos(p))
-                    }
-                },
-                { aDouble: Double -> p["bal"] = (p["bal"].toDouble() - aDouble).toString() },
-                { p["bal"].toDouble() },
-                p,
-                { getString("collect_target").toDouble() - getString("collect_value").toDouble() })
-            transaction.full(msg)
-
-             */
-            TODO("todo")
-        }
-        return messageBuilder
+    private fun inBuildCompleteInfos(): MenuBuilder {
+        return MenuBuilder(title(), descriptionShort(), Color.DARK_GRAY)
+            .addButton("Donner de l'argent", "Permet de donner de l'argent à ce bâtiment") {
+                TODO("todo")
+            }
     }
 
     fun evolute(buildingInteraction: BuildingInteraction?) {
@@ -168,11 +107,7 @@ class Building : CacheGetSet, BuildMethods, Owner {
     override val usage: String?
         get() = buildingInteraction!!.usage
 
-    override fun getInfos(p: Player?): EmbedBuilder? {
-        return buildingInteraction!!.getInfos(p)
-    }
-
-    override fun getCompleteInfos(p: Player?): MessageBuilder? {
+    override fun getCompleteInfos(p: Player): MenuBuilder {
         return buildingInteraction!!.getCompleteInfos(p)
     }
 
@@ -201,20 +136,25 @@ class Building : CacheGetSet, BuildMethods, Owner {
     }
 
     override val ownerType: String
-        get() = TODO("Not yet implemented")
+        get() = "building"
     override val ownerString: String
-        get() = TODO("Not yet implemented")
-
-    override fun addMoney(amount: Double) {
-        TODO("Not yet implemented")
-    }
+        get() = id.toString()
 
     override fun getMoney(): Double {
-        TODO("Not yet implemented")
+        // TODO : complex money if building is finish
+        return getString("collect_value").toDouble()
+    }
+
+    override fun addMoney(amount: Double) {
+        set("collect_value", (getString("collect_value").toDouble() + amount).toString())
+        if (getMoney() >= getString("collect_target").toDouble()) {
+            set("build_status", "finish")
+            configBuilding()
+        }
     }
 
     override fun removeMoney(amount: Double) {
-        TODO("Not yet implemented")
+        set("collect_value", (getString("collect_value").toDouble() - amount).toString())
     }
 
     override fun addResource(resource: Resource, amount: Double) {
@@ -234,7 +174,7 @@ class Building : CacheGetSet, BuildMethods, Owner {
     }
 
     override fun hasMoney(amount: Double): Boolean {
-        TODO("Not yet implemented")
+        return getString("collect_value").toDouble() >= amount
     }
 
 }
