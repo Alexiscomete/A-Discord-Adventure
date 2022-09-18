@@ -492,16 +492,17 @@ class MapCommand : Command(
                     .addButton(
                         "Zoomer",
                         "Zoomer sur une carte"
-                    ) { mcce: ButtonClickEvent ->
+                    ) { zoom: ButtonClickEvent ->
 
                         val id = generateUniqueID()
                         val idX = generateUniqueID()
                         val idY = generateUniqueID()
                         val idZoom = generateUniqueID()
 
-                        mcce.buttonInteraction
+                        zoom.buttonInteraction
                             .respondWithModal(
-                                id.toString(), "Informations pour zoomer sur la carte",
+                                id.toString(),
+                                "Informations pour zoomer sur la carte",
                                 ActionRow.of(
                                     TextInput.create(
                                         TextInputStyle.SHORT,
@@ -522,7 +523,7 @@ class MapCommand : Command(
                                     TextInput.create(
                                         TextInputStyle.SHORT,
                                         idZoom.toString(),
-                                        "Le zoom de 1 à 60 (plus petit rayon de case visibles, attention à rester dans la carte)",
+                                        "Zoom (1-60) = hauteur/2",
                                         true
                                     )
                                 )
@@ -537,7 +538,7 @@ class MapCommand : Command(
                             // transform optionals to strings
                             val x = opX.orElse("n")
                             val y = opY.orElse("n")
-                            val zoom = opZoom.orElse("n")
+                            val zoomStr = opZoom.orElse("n")
 
                             // check if the arguments are numbers
                             val xInt = try {
@@ -551,7 +552,7 @@ class MapCommand : Command(
                                 throw IllegalArgumentException("Le y de la case n'est pas un nombre")
                             }
                             val zoomInt = try {
-                                zoom.toInt()
+                                zoomStr.toInt()
                             } catch (e: NumberFormatException) {
                                 throw IllegalArgumentException("Le zoom n'est pas un nombre")
                             }
