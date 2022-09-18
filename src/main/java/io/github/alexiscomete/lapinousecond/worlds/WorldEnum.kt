@@ -1,5 +1,6 @@
 package io.github.alexiscomete.lapinousecond.worlds
 
+import io.github.alexiscomete.lapinousecond.entity.Player
 import io.github.alexiscomete.lapinousecond.worlds.map.Node
 import io.github.alexiscomete.lapinousecond.worlds.map.Pixel
 import java.awt.Color
@@ -183,17 +184,13 @@ enum class WorldEnum(
         return zoom(x - zoom * 2, y - zoom, zoom * 4, zoom * 2)
     }
 
-    /**
-     * > This function takes in an x and y coordinate, and a zoom level, and returns a BufferedImage of the map with the
-     * city names on it
-     *
-     * @param x The x coordinate of the center of the map
-     * @param y Int, x: Int, zoom: Int
-     * @param zoom The zoom level of the map.
-     * @return A BufferedImage
-     */
-    fun zoomWithCity(x: Int, y: Int, zoom: Int): BufferedImage {
-        val image = bigger(zoom(x, y, zoom), 10)
+
+    fun zoomWithCity(x: Int, y: Int, zoom: Int, player: Player? = null): BufferedImage {
+        var img = zoom(x, y, zoom)
+        if (player != null) {
+            img.setRGB(player["place_${progName}_x"].toInt(), player["place_${progName}_y"].toInt(), Color.RED.rgb)
+        }
+        img = bigger(img, 10)
 
         val places = Place.getPlacesWithWorld(progName)
         places.removeIf { place: Place ->
@@ -203,16 +200,18 @@ enum class WorldEnum(
                 .get() > y + zoom
         }
 
+        println(places.size)
+
         getMapWithNames(
             places,
             x - zoom * 2,
             y - zoom,
             zoom * 4,
             zoom * 2,
-            image
+            img
         )
 
-        return image
+        return img
     }
 
     // return an image with the places' names on it

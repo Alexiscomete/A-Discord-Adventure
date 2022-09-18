@@ -344,20 +344,21 @@ class MapCommand : Command(
                         val xInt = x.toInt()
                         val yInt = y.toInt()
                         val biome = if (world.isDirt(xInt, yInt)) "la terre" else "l'eau"
-                        val zoom = 30
-                        val image = world.zoomWithCity(xInt, yInt, zoom)
 
-                        buttonClickEvent.buttonInteraction.createOriginalMessageUpdater()
-                            .removeAllComponents()
-                            .removeAllEmbeds()
-                            .addEmbed(
+                        val later = buttonClickEvent.buttonInteraction.respondLater()
+                        val image = world.zoomWithCity(xInt, yInt, 30, player)
+
+                        later.thenAccept {
+                            it.addEmbed(
                                 EmbedBuilder()
                                     .setTitle("Vous êtes dans $biome")
                                     .setImage(image)
                                     .setDescription(position)
                                     .setColor(Color.PINK)
+
                             )
-                            .update()
+                                .update()
+                        }
 
                     }
                     .addButton(
