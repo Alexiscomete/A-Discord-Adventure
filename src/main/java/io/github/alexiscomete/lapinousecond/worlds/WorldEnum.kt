@@ -183,6 +183,38 @@ enum class WorldEnum(
         return zoom(x - zoom * 2, y - zoom, zoom * 4, zoom * 2)
     }
 
+    /**
+     * > This function takes in an x and y coordinate, and a zoom level, and returns a BufferedImage of the map with the
+     * city names on it
+     *
+     * @param x The x coordinate of the center of the map
+     * @param y Int, x: Int, zoom: Int
+     * @param zoom The zoom level of the map.
+     * @return A BufferedImage
+     */
+    fun zoomWithCity(x: Int, y: Int, zoom: Int): BufferedImage {
+        val image = bigger(zoom(x, y, zoom), 10)
+
+        val places = Place.getPlacesWithWorld(progName)
+        places.removeIf { place: Place ->
+            !place.getX().isPresent || !place.getY().isPresent || place.getX()
+                .get() < x - zoom * 2 || place.getX()
+                .get() > x + zoom * 2 || place.getY().get() < y - zoom || place.getY()
+                .get() > y + zoom
+        }
+
+        getMapWithNames(
+            places,
+            x - zoom * 2,
+            y - zoom,
+            zoom * 4,
+            zoom * 2,
+            image
+        )
+
+        return image
+    }
+
     // return an image with the places' names on it
     fun getMapWithNames(
         places: ArrayList<Place>, xStart: Int, yStart: Int, width: Int, height: Int, image: BufferedImage

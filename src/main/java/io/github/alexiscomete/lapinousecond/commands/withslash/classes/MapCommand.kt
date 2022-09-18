@@ -10,7 +10,6 @@ import io.github.alexiscomete.lapinousecond.modalManager
 import io.github.alexiscomete.lapinousecond.resources.Resource
 import io.github.alexiscomete.lapinousecond.selectMenuManager
 import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
-import io.github.alexiscomete.lapinousecond.worlds.Place
 import io.github.alexiscomete.lapinousecond.worlds.WorldEnum
 import io.github.alexiscomete.lapinousecond.worlds.bigger
 import io.github.alexiscomete.lapinousecond.worlds.map.FilesMapEnum
@@ -344,25 +343,9 @@ class MapCommand : Command(
                         val y = player["place_${worldStr}_y"]
                         val xInt = x.toInt()
                         val yInt = y.toInt()
-                        val image = bigger(world.zoom(xInt, yInt, 30), 10)
                         val biome = if (world.isDirt(xInt, yInt)) "la terre" else "l'eau"
-
-                        val places = Place.getPlacesWithWorld("DIBIMAP")
-                        places.removeIf { place: Place ->
-                            !place.getX().isPresent || !place.getY().isPresent || place.getX()
-                                .get() < xInt - 30 * 2 || place.getX()
-                                .get() > xInt + 30 * 2 || place.getY().get() < yInt - 30 || place.getY()
-                                .get() > yInt + 30
-                        }
-
-                        world.getMapWithNames(
-                            places,
-                            xInt - 30 * 2,
-                            yInt - 30,
-                            30 * 4,
-                            30 * 2,
-                            image
-                        )
+                        val zoom = 30
+                        val image = world.zoomWithCity(xInt, yInt, zoom)
 
                         buttonClickEvent.buttonInteraction.createOriginalMessageUpdater()
                             .removeAllComponents()
@@ -587,28 +570,7 @@ class MapCommand : Command(
                             // send the zoom on the map
                             val later = modalInteraction.respondLater()
 
-                            val image = bigger(
-                                world.zoom(
-                                    xInt, yInt, zoomInt
-                                ), 10
-                            )
-
-                            val places = Place.getPlacesWithWorld("DIBIMAP")
-                            places.removeIf { place: Place ->
-                                !place.getX().isPresent || !place.getY().isPresent || place.getX()
-                                    .get() < xInt - zoomInt * 2 || place.getX()
-                                    .get() > xInt + zoomInt * 2 || place.getY().get() < yInt - zoomInt || place.getY()
-                                    .get() > yInt + zoomInt
-                            }
-
-                            world.getMapWithNames(
-                                places,
-                                xInt - zoomInt * 2,
-                                yInt - zoomInt,
-                                zoomInt * 4,
-                                zoomInt * 2,
-                                image
-                            )
+                            val image = world.zoomWithCity(xInt, yInt, zoomInt)
 
                             later.thenAccept {
                                 it.addEmbed(
