@@ -65,7 +65,7 @@ enum class WorldEnum(
     val desc: String,
     val defaultX: Int,
     val defaultY: Int,
-    val mapPath: String,
+    mapPath: String,
     val mapWidth: Int,
     val mapHeight: Int,
 ) {
@@ -203,11 +203,14 @@ enum class WorldEnum(
         img = bigger(img, 10)
 
         val places = Place.getPlacesWithWorld(progName)
+        println(places.size)
+
         places.removeIf { place: Place ->
-            !place.getX().isPresent || !place.getY().isPresent || place.getX()
-                .get() < x - zoom * 2 || place.getX()
-                .get() > x + zoom * 2 || place.getY().get() < y - zoom || place.getY()
-                .get() > y + zoom
+            !place.getX().isPresent || !place.getY().isPresent
+                    || place.getX().get() < x - zoom * 2
+                    || place.getX().get() > x + zoom * 2
+                    || place.getY().get() < y - zoom
+                    || place.getY().get() > y + zoom
         }
 
         println(places.size)
@@ -225,7 +228,7 @@ enum class WorldEnum(
     }
 
     // return an image with the places' names on it
-    fun getMapWithNames(
+    private fun getMapWithNames(
         places: ArrayList<Place>, xStart: Int, yStart: Int, width: Int, height: Int, image: BufferedImage
     ) {
         val g = image.createGraphics()
@@ -242,16 +245,20 @@ enum class WorldEnum(
                 g.fillOval(x, y, (size * 0.7).toInt(), (size * 0.7).toInt())
                 // draw the name
                 try {
-                    g.drawString(place.getString("name"), (x + 1.1 * size).toInt(), y)
+                    g.drawString(place.getString("nameRP"), (x + 1.1 * size).toInt(), y)
                 } catch (ignored: Exception) {
                 }
-                // draw the id
+                // draw the x and y coordinates
                 try {
-                    g.drawString(place.id.toString(), (x + 1.1 * size).toInt(), (y + 1.1 * size).toInt())
+                    g.drawString(
+                        "(${place.getX().get()}, ${place.getY().get()})",
+                        (x + 1.1 * size).toInt(),
+                        (y + 1.1 * size).toInt())
                 } catch (ignored: Exception) {
                 }
             }
         }
+        g.dispose()
     }
 
     // --------------------

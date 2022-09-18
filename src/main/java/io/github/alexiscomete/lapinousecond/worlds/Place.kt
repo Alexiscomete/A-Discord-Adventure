@@ -18,12 +18,6 @@ val PLACES = Table("places")
 val places = CacheCustom(PLACES) { id: Long -> Place(id) }
 
 open class Place : CacheGetSet, Owner {
-    private var serverID: Long? = null
-    private var serverBot: ServerBot? = null
-    var world: WorldEnum? = null
-    private var x: Int? = null
-    private var y: Int? = null
-    lateinit var connections: LongArray
 
     constructor() : super(generateUniqueID(), PLACES) {
         val h = HashMap<String, String>()
@@ -33,20 +27,12 @@ open class Place : CacheGetSet, Owner {
 
     constructor(id: Long) : super(id, PLACES)
 
-    fun getServerBot(): Optional<ServerBot> {
-        return Optional.ofNullable(serverBot)
-    }
-
-    fun getServerID(): Optional<Long> {
-        return Optional.ofNullable(serverID)
-    }
-
     open fun getX(): Optional<Int> {
-        return Optional.ofNullable(x)
+        return Optional.ofNullable(this["x"].toInt())
     }
 
     open fun getY(): Optional<Int> {
-        return Optional.ofNullable(y)
+        return Optional.ofNullable(this["y"].toInt())
     }
 
     fun setAndGet(row: String?, value: String?): Place {
