@@ -54,7 +54,7 @@ fun bigger(image: BufferedImage, sizeMultiplier: Int): BufferedImage {
 fun cloneBufferedImage(bi: BufferedImage): BufferedImage {
     val cm = bi.colorModel
     val isAlphaPremultiplied = cm.isAlphaPremultiplied
-    val raster = bi.copyData(null)
+    val raster = bi.copyData(bi.getRaster().createCompatibleWritableRaster())
     return BufferedImage(cm, raster, isAlphaPremultiplied, null)
 }
 
