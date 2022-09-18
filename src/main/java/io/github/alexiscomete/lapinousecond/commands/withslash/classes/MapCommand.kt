@@ -208,7 +208,10 @@ class MapCommand : Command(
 
                             MenuBuilder("Comment voyager ?", "Il existe 2 moyens de voyager de façon simple", Color.RED)
                                 .setImage(image)
-                                .addButton("Temps", "Vous allez prendre $timeMillisToTravel ms pour aller jusqu'à ce pixel") { timeB ->
+                                .addButton(
+                                    "Temps",
+                                    "Vous allez prendre $timeMillisToTravel ms pour aller jusqu'à ce pixel"
+                                ) { timeB ->
                                     MenuBuilder("Confirmer", "Confirmer le voyage ?", Color.orange)
                                         .addButton("Oui", "Oui je veux aller jusqu'à ce pixel") {
                                             player.setPath(path, "default_time")
@@ -227,7 +230,10 @@ class MapCommand : Command(
                                         }
                                         .modif(timeB)
                                 }
-                                .addButton("Argent", "Vous allez dépenser $priceToTravel ${Resource.RABBIT_COIN.name_} pour aller jusqu'à ce pixel") { moneyB ->
+                                .addButton(
+                                    "Argent",
+                                    "Vous allez dépenser $priceToTravel ${Resource.RABBIT_COIN.name_} pour aller jusqu'à ce pixel"
+                                ) { moneyB ->
                                     MenuBuilder("Confirmer", "Confirmer le voyage ?", Color.orange)
                                         .addButton("Oui", "Oui je veux aller jusqu'à ce pixel") {
                                             // get the player's money
@@ -302,10 +308,17 @@ class MapCommand : Command(
                     ) { buttonClickEvent: ButtonClickEvent ->
                         val maps = arrayListOf(*FilesMapEnum.values())
                         val embed = EmbedBuilder()
-                        val embedPages = EmbedPages(embed, maps) { embedBuilder: EmbedBuilder, i: Int, i1: Int, filesMapEnums: ArrayList<FilesMapEnum> ->
+                        val embedPages = EmbedPages(
+                            embed,
+                            maps
+                        ) { embedBuilder: EmbedBuilder, i: Int, i1: Int, filesMapEnums: ArrayList<FilesMapEnum> ->
                             for (j in i until i + i1) {
                                 val map = filesMapEnums[j]
-                                embedBuilder.addField(map.name, map.description + "\n" + map.urlOfMap + "\n de : " + map.author, false)
+                                embedBuilder.addField(
+                                    map.name,
+                                    map.description + "\n" + map.urlOfMap + "\n de : " + map.author,
+                                    false
+                                )
                             }
                         }
                         embedPages.register()
@@ -331,30 +344,35 @@ class MapCommand : Command(
                         val y = player["place_${worldStr}_y"]
                         val xInt = x.toInt()
                         val yInt = y.toInt()
-                        val image = try {
-                            bigger(world.zoom(xInt, yInt, 30), 10)
-                        } catch (e: Exception) {
-                            e.printStackTrace()
-                            null
-                        }
+                        val image = bigger(world.zoom(xInt, yInt, 30), 10)
                         val biome = if (world.isDirt(xInt, yInt)) "la terre" else "l'eau"
+
+                        val places = Place.getPlacesWithWorld("DIBIMAP")
+                        places.removeIf { place: Place ->
+                            !place.getX().isPresent || !place.getY().isPresent || place.getX()
+                                .get() < xInt - 30 * 2 || place.getX()
+                                .get() > xInt + 30 * 2 || place.getY().get() < yInt - 30 || place.getY()
+                                .get() > yInt + 30
+                        }
+
+                        world.getMapWithNames(
+                            places,
+                            xInt - 30 * 2,
+                            yInt - 30,
+                            30 * 4,
+                            30 * 2,
+                            image
+                        )
 
                         buttonClickEvent.buttonInteraction.createOriginalMessageUpdater()
                             .removeAllComponents()
                             .removeAllEmbeds()
                             .addEmbed(
-                                if (image != null) {
-                                    EmbedBuilder()
-                                        .setTitle("Vous êtes dans $biome")
-                                        .setImage(image)
-                                        .setDescription(position)
-                                        .setColor(Color.PINK)
-                                } else {
-                                    EmbedBuilder()
-                                        .setTitle("Vous êtes dans $biome (image indisponible : bord de map)")
-                                        .setDescription(position)
-                                        .setColor(Color.PINK)
-                                }
+                                EmbedBuilder()
+                                    .setTitle("Vous êtes dans $biome")
+                                    .setImage(image)
+                                    .setDescription(position)
+                                    .setColor(Color.PINK)
                             )
                             .update()
 
@@ -475,17 +493,9 @@ class MapCommand : Command(
                                 )
                             )
 
-                            modalInteraction.createImmediateResponder()
-                                .setContent("📍 Chemin trouvé : " + path.size + " étapes")
-                                .respond()
-
-                            val sb = StringBuilder()
-                            for (pixel in path) {
-                                sb.append(pixel)
-                            }
                             MessageBuilder()
                                 .addAttachment(world.drawPath(path), "path.png")
-                                .setContent(sb.toString())
+                                .setContent("📍 Chemin trouvé : " + path.size + " étapes")
                                 .send(modalInteraction.channel.get())
                         }
                     }
@@ -575,9 +585,7 @@ class MapCommand : Command(
                             }
 
                             // send the zoom on the map
-                            modalInteraction.createImmediateResponder()
-                                .setContent("Création de la carte en cours et ajout des villes proches ...")
-                                .respond()
+                            val later = modalInteraction.respondLater()
 
                             val image = bigger(
                                 world.zoom(
@@ -602,13 +610,14 @@ class MapCommand : Command(
                                 image
                             )
 
-                            modalInteraction.createImmediateResponder()
-                                .addEmbed(
+                            later.thenAccept {
+                                it.addEmbed(
                                     EmbedBuilder()
                                         .setTitle("Zoom sur la carte")
                                         .setImage(image)
                                 )
-                                .respond()
+                                    .update()
+                            }
                         }
                     }
                     .addButton(

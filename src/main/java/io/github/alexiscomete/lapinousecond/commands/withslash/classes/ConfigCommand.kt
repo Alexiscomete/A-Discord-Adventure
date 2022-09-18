@@ -144,7 +144,7 @@ class ConfigCommand : Command(
                                 ?: throw IllegalArgumentException("Un problème de source inconnue est survenue. La création du serveur a échoué.")
                             place["nameRP"] = "Saint-Lapin-sur-bot" // à Demander
                             place["description"] = "Ville accueillante du tutoriel" // à Demander
-                            place["welcome"] = "Ne restez pas trop longtemps ici ! Profitez de l'aventure" // à Demander
+                            place["welcome"] = "Ne restez pas trop longtemps ici et profitez de l'aventure" // à Demander
                             place["x"] = 45.toString() // automatique normalement : aléatoire
                             place["y"] = 20.toString() // automatique normalement : aléatoire
                             place["type"] = "city" // automatique normalement
