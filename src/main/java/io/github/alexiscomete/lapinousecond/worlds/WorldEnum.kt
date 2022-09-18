@@ -160,6 +160,10 @@ enum class WorldEnum(
             }
         } else if (x + width > mapWidth) {
             x = mapWidth - width
+            if (x < 0) {
+                x = 0
+                width = mapWidth
+            }
         }
         if (y < 0) {
             y = 0
@@ -169,13 +173,19 @@ enum class WorldEnum(
             }
         } else if (y + height > mapHeight) {
             y = mapHeight - height
+            if (y < 0) {
+                y = 0
+                height = mapHeight
+            }
         }
         println("x = $x, y = $y, width = $width, height = $height")
-        return mapFile!!.getSubimage(
-            x * mapFile.getWidth(null) / mapWidth,
-            y * mapFile.getHeight(null) / mapHeight,
-            width * mapFile.getWidth(null) / mapWidth,
-            height * mapFile.getHeight(null) / mapHeight
+        return cloneBufferedImage(
+            mapFile!!.getSubimage(
+                x * mapFile.getWidth(null) / mapWidth,
+                y * mapFile.getHeight(null) / mapHeight,
+                width * mapFile.getWidth(null) / mapWidth,
+                height * mapFile.getHeight(null) / mapHeight
+            )
         )
     }
 
@@ -340,7 +350,9 @@ enum class WorldEnum(
      */
     fun getNode(x: Int, y: Int, nodes: ArrayList<Node>): Node {
         val n = Node(x, y, mapWidth, mapHeight, mapFile!!, 0.0, 0.0)
-        return if (nodes.contains(n)) { nodes[nodes.indexOf(n)] } else n
+        return if (nodes.contains(n)) {
+            nodes[nodes.indexOf(n)]
+        } else n
     }
 
     // distance between two pixels
