@@ -103,6 +103,37 @@ enum class WorldEnum(
         50,
     );
 
+    class ZoneToAdapt(var x: Int, var y: Int, var width: Int, var height: Int, val maxX: Int, val maxY: Int) {
+        init {
+            if (x < 0) {
+                x = 0
+                // change the value of width if it is too big for the map
+                if (width > maxX) {
+                    width = maxX
+                }
+            } else if (x + width > maxX) {
+                x = maxX - width
+                if (x < 0) {
+                    x = 0
+                    width = maxX
+                }
+            }
+            if (y < 0) {
+                y = 0
+                // change the value of height if it is too big for the map
+                if (height > maxY) {
+                    height = maxY
+                }
+            } else if (y + height > maxY) {
+                y = maxY - height
+                if (y < 0) {
+                    y = 0
+                    height = maxY
+                }
+            }
+        }
+    }
+
     val START_X = 1
     val START_Y = 1
 
@@ -150,15 +181,42 @@ enum class WorldEnum(
         return zoom(xArg, yArg, widthArg, heightArg, mapFile!!)
     }
 
-    // zoom on coordinates (x, y) and return a BufferedImage
+    /**
+     * "Zoom in on the map at the given coordinates by the given amount."
+     *
+     * @param x The x coordinate of the top left corner of the image.
+     * @param y The y coordinate of the center of the image.
+     * @param zoom The zoom level.
+     * @return A BufferedImage
+     */
     fun zoom(x: Int, y: Int, zoom: Int): BufferedImage {
         return zoom(x - zoom * 2, y - zoom, zoom * 4, zoom * 2)
     }
 
+    /**
+     * > It takes a BufferedImage, and returns a BufferedImage that is zoomed in on the specified coordinates
+     *
+     * @param x The x coordinate of the center of the zoomed image.
+     * @param y The y coordinate of the center of the zoomed image.
+     * @param zoom The zoom level.
+     * @param bi The image to zoom in on
+     * @return A BufferedImage
+     */
     fun zoom(x: Int, y: Int, zoom: Int, bi: BufferedImage): BufferedImage {
         return zoom(x - zoom * 2, y - zoom, zoom * 4, zoom * 2, bi)
     }
 
+    /**
+     * If the user tries to zoom in on a part of the map that is outside the bounds of the map, then the zoomed in area
+     * will be adjusted to fit within the bounds of the map
+     *
+     * @param xArg the x coordinate of the top left corner of the rectangle
+     * @param yArg the y coordinate of the top left corner of the rectangle
+     * @param widthArg the width of the map
+     * @param heightArg the height of the rectangle
+     * @param bi the image to be zoomed
+     * @return A subimage of the original image.
+     */
     private fun zoom(xArg: Int, yArg: Int, widthArg: Int, heightArg: Int, bi: BufferedImage): BufferedImage {
         var x = xArg
         var y = yArg
@@ -201,15 +259,37 @@ enum class WorldEnum(
     }
 
 
+    /**
+     * It takes in a bunch of parameters, and returns a BufferedImage
+     *
+     * @param x The x coordinate of the center of the map
+     * @param y The y coordinate of the center of the map
+     * @param zoom The zoom level of the map.
+     * @param player The player that is viewing the map.
+     * @return A BufferedImage
+     */
     fun zoomWithCity(x: Int, y: Int, zoom: Int, player: Player? = null): BufferedImage {
         var image = cloneBufferedImage(mapFile!!)
         if (player != null) {
             image.setRGB(player["place_${progName}_x"].toInt(), player["place_${progName}_y"].toInt(), Color.RED.rgb)
         }
+
+        image = zoom(x, y, zoom, image)
+        image = bigger(image, 10)
+
         val places = Place.getPlacesWithWorld(progName)
+        println(places.size)
+
         places.removeIf { place: Place ->
             !place.getX().isPresent || !place.getY().isPresent
+                    || place.getX().get() < x - zoom * 2
+                    || place.getX().get() > x + zoom * 2
+                    || place.getY().get() < y - zoom
+                    || place.getY().get() > y + zoom
         }
+
+        println(places.size)
+
         getMapWithNames(
             places,
             x - zoom * 2,
@@ -218,9 +298,6 @@ enum class WorldEnum(
             zoom * 2,
             image
         )
-
-        image = zoom(x, y, zoom, image)
-        image = bigger(image, 10)
 
         return image
     }
