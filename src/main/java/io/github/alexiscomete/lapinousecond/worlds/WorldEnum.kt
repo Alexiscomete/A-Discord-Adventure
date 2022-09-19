@@ -54,7 +54,7 @@ fun bigger(image: BufferedImage, sizeMultiplier: Int): BufferedImage {
 fun cloneBufferedImage(bi: BufferedImage): BufferedImage {
     val cm = bi.colorModel
     val isAlphaPremultiplied = cm.isAlphaPremultiplied
-    val raster = bi.copyData(bi.getRaster().createCompatibleWritableRaster())
+    val raster = bi.copyData(bi.raster.createCompatibleWritableRaster())
     return BufferedImage(cm, raster, isAlphaPremultiplied, null)
 }
 
@@ -106,7 +106,7 @@ enum class WorldEnum(
     val START_X = 1
     val START_Y = 1
 
-    val mapFile: BufferedImage? = try {
+    private val mapFile: BufferedImage? = try {
         ImageIO.read(
             WorldEnum::class.java.classLoader.getResourceAsStream(mapPath)
         )
@@ -147,6 +147,19 @@ enum class WorldEnum(
      * @return A subimage of the mapFile.
      */
     private fun zoom(xArg: Int, yArg: Int, widthArg: Int, heightArg: Int): BufferedImage {
+        return zoom(xArg, yArg, widthArg, heightArg, mapFile!!)
+    }
+
+    // zoom on coordinates (x, y) and return a BufferedImage
+    fun zoom(x: Int, y: Int, zoom: Int): BufferedImage {
+        return zoom(x - zoom * 2, y - zoom, zoom * 4, zoom * 2)
+    }
+
+    fun zoom(x: Int, y: Int, zoom: Int, bi: BufferedImage): BufferedImage {
+        return zoom(x - zoom * 2, y - zoom, zoom * 4, zoom * 2, bi)
+    }
+
+    private fun zoom(xArg: Int, yArg: Int, widthArg: Int, heightArg: Int, bi: BufferedImage): BufferedImage {
         var x = xArg
         var y = yArg
         var width = widthArg
@@ -179,52 +192,37 @@ enum class WorldEnum(
             }
         }
         println("x = $x, y = $y, width = $width, height = $height")
-        return cloneBufferedImage(
-            mapFile!!.getSubimage(
-                x * mapFile.getWidth(null) / mapWidth,
-                y * mapFile.getHeight(null) / mapHeight,
-                width * mapFile.getWidth(null) / mapWidth,
-                height * mapFile.getHeight(null) / mapHeight
-            )
+        return bi.getSubimage(
+            x * bi.getWidth(null) / mapWidth,
+            y * bi.getHeight(null) / mapHeight,
+            width * bi.getWidth(null) / mapWidth,
+            height * bi.getHeight(null) / mapHeight
         )
-    }
-
-    // zoom on coordinates (x, y) and return a BufferedImage
-    fun zoom(x: Int, y: Int, zoom: Int): BufferedImage {
-        return zoom(x - zoom * 2, y - zoom, zoom * 4, zoom * 2)
     }
 
 
     fun zoomWithCity(x: Int, y: Int, zoom: Int, player: Player? = null): BufferedImage {
-        var img = zoom(x, y, zoom)
+        var image = cloneBufferedImage(mapFile!!)
         if (player != null) {
-            img.setRGB(player["place_${progName}_x"].toInt(), player["place_${progName}_y"].toInt(), Color.RED.rgb)
+            image.setRGB(player["place_${progName}_x"].toInt(), player["place_${progName}_y"].toInt(), Color.RED.rgb)
         }
-        img = bigger(img, 10)
-
         val places = Place.getPlacesWithWorld(progName)
-        println(places.size)
-
         places.removeIf { place: Place ->
             !place.getX().isPresent || !place.getY().isPresent
-                    || place.getX().get() < x - zoom * 2
-                    || place.getX().get() > x + zoom * 2
-                    || place.getY().get() < y - zoom
-                    || place.getY().get() > y + zoom
         }
-
-        println(places.size)
-
         getMapWithNames(
             places,
             x - zoom * 2,
             y - zoom,
             zoom * 4,
             zoom * 2,
-            img
+            image
         )
 
-        return img
+        image = zoom(x, y, zoom, image)
+        image = bigger(image, 10)
+
+        return image
     }
 
     // return an image with the places' names on it
@@ -253,7 +251,8 @@ enum class WorldEnum(
                     g.drawString(
                         "(${place.getX().get()}, ${place.getY().get()})",
                         (x + 1.1 * size).toInt(),
-                        (y + 1.1 * size).toInt())
+                        (y + 1.1 * size).toInt()
+                    )
                 } catch (ignored: Exception) {
                 }
             }
