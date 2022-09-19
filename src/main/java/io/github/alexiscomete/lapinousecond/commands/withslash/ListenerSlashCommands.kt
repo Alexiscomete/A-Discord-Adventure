@@ -18,6 +18,7 @@ fun loadAllS() {
     MapCommand()
     ConfigCommand()
     InteractCommandBase()
+    println("Loaded ${commands.size} commands")
 }
 
 class ListenerSlashCommands : SlashCommandCreateListener {

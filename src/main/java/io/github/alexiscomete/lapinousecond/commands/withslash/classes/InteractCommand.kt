@@ -94,6 +94,8 @@ class InteractCommandBase : Command(
                                 .setContent("Vous êtes maintenant dans la ville ${place["nameRP"]} ! Voici l'invitation pour rejoindre le serveur : ${invite.url}")
                                 .setFlags(MessageFlag.EPHEMERAL)
                                 .respond()
+
+                            player["serv"] = serverId
                         }
                         .responder(slashCommand)
                 } else {
@@ -232,6 +234,8 @@ class InteractCommandBase : Command(
                         .setFlags(MessageFlag.EPHEMERAL)
                         .respond()
                 }
+
+                println("place: $place")
 
                 MenuBuilder(
                     "Interactions dans la ville ${place["nameRP"]}",
