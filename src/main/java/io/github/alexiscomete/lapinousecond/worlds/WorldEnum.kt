@@ -178,7 +178,7 @@ enum class WorldEnum(
      * @return A subimage of the mapFile.
      */
     private fun zoom(xArg: Int, yArg: Int, widthArg: Int, heightArg: Int): BufferedImage {
-        return zoom(xArg, yArg, widthArg, heightArg, mapFile!!)
+        return zoom(ZoneToAdapt(xArg, yArg, widthArg, heightArg, mapWidth, mapHeight), mapFile!!)
     }
 
     /**
@@ -194,62 +194,31 @@ enum class WorldEnum(
     }
 
     /**
-     * > It takes a BufferedImage, and returns a BufferedImage that is zoomed in on the specified coordinates
+     * "Given a point and a zoom level, return a BufferedImage of the map centered on that point at that zoom level."
      *
-     * @param x The x coordinate of the center of the zoomed image.
-     * @param y The y coordinate of the center of the zoomed image.
-     * @param zoom The zoom level.
-     * @param bi The image to zoom in on
+     * @param x The x coordinate of the center of the zoomed area
+     * @param y The y coordinate of the center of the zoomed area
+     * @param zoom the zoom level, 1 is the default, 2 is twice as big, etc.
+     * @param bi The image to zoom
      * @return A BufferedImage
      */
     fun zoom(x: Int, y: Int, zoom: Int, bi: BufferedImage): BufferedImage {
-        return zoom(x - zoom * 2, y - zoom, zoom * 4, zoom * 2, bi)
+        return zoom(ZoneToAdapt(x - zoom * 2, y - zoom, zoom * 4, zoom * 2, mapWidth, mapHeight), bi)
     }
 
     /**
-     * If the user tries to zoom in on a part of the map that is outside the bounds of the map, then the zoomed in area
-     * will be adjusted to fit within the bounds of the map
+     * It takes a zone and a buffered image, and returns a buffered image that is a zoomed in version of the original
+     * buffered image, with the zoomed in area being the zone
      *
-     * @param xArg the x coordinate of the top left corner of the rectangle
-     * @param yArg the y coordinate of the top left corner of the rectangle
-     * @param widthArg the width of the map
-     * @param heightArg the height of the rectangle
+     * @param zone ZoneToAdapt
      * @param bi the image to be zoomed
-     * @return A subimage of the original image.
+     * @return A BufferedImage
      */
-    private fun zoom(xArg: Int, yArg: Int, widthArg: Int, heightArg: Int, bi: BufferedImage): BufferedImage {
-        var x = xArg
-        var y = yArg
-        var width = widthArg
-        var height = heightArg
-        println("x = $x, y = $y, width = $width, height = $height")
-        if (x < 0) {
-            x = 0
-            // change the value of width if it is too big for the map
-            if (width > mapWidth) {
-                width = mapWidth
-            }
-        } else if (x + width > mapWidth) {
-            x = mapWidth - width
-            if (x < 0) {
-                x = 0
-                width = mapWidth
-            }
-        }
-        if (y < 0) {
-            y = 0
-            // change the value of height if it is too big for the map
-            if (height > mapHeight) {
-                height = mapHeight
-            }
-        } else if (y + height > mapHeight) {
-            y = mapHeight - height
-            if (y < 0) {
-                y = 0
-                height = mapHeight
-            }
-        }
-        println("x = $x, y = $y, width = $width, height = $height")
+    private fun zoom(zone: ZoneToAdapt, bi: BufferedImage): BufferedImage {
+        val x = zone.x
+        val y = zone.y
+        val width = zone.width
+        val height = zone.height
         return bi.getSubimage(
             x * bi.getWidth(null) / mapWidth,
             y * bi.getHeight(null) / mapHeight,
@@ -257,7 +226,6 @@ enum class WorldEnum(
             height * bi.getHeight(null) / mapHeight
         )
     }
-
 
     /**
      * It takes in a bunch of parameters, and returns a BufferedImage
@@ -292,10 +260,14 @@ enum class WorldEnum(
 
         getMapWithNames(
             places,
-            x - zoom * 2,
-            y - zoom,
-            zoom * 4,
-            zoom * 2,
+            ZoneToAdapt(
+                x - zoom * 2,
+                y - zoom,
+                zoom * 4,
+                zoom * 2,
+                mapWidth,
+                mapHeight
+            ),
             image
         )
 
@@ -304,7 +276,7 @@ enum class WorldEnum(
 
     // return an image with the places' names on it
     private fun getMapWithNames(
-        places: ArrayList<Place>, xStart: Int, yStart: Int, width: Int, height: Int, image: BufferedImage
+        places: ArrayList<Place>, zone: ZoneToAdapt, image: BufferedImage
     ) {
         val g = image.createGraphics()
         g.color = Color(0, 255, 0)
@@ -314,8 +286,8 @@ enum class WorldEnum(
         for (place in places) {
             if (place.getX().isPresent && place.getY().isPresent) {
                 // coos on image (x, y) after resizing (x and y are not the same as the image's coos)
-                val x = (place.getX().get() - xStart) * image.width / width
-                val y = (place.getY().get() - yStart) * image.height / height
+                val x = (place.getX().get() - zone.x) * image.width / zone.width
+                val y = (place.getY().get() - zone.y) * image.height / zone.height
                 // draw a point
                 g.fillOval(x, y, (size * 0.7).toInt(), (size * 0.7).toInt())
                 // draw the name

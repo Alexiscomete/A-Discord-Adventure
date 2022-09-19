@@ -95,6 +95,7 @@ class InteractCommandBase : Command(
                                 .setFlags(MessageFlag.EPHEMERAL)
                                 .respond()
                         }
+                        .responder(slashCommand)
                 } else {
                     slashCommand.createImmediateResponder()
                         .setContent("Il n'y a rien ici. De nouvelles interactions arriveront à l'avenir, pour le moment allez vers une ville")
@@ -127,6 +128,7 @@ class InteractCommandBase : Command(
                             .setFlags(MessageFlag.EPHEMERAL)
                             .respond()
                     }
+                    .responder(slashCommand)
             }
 
             "city" -> {
