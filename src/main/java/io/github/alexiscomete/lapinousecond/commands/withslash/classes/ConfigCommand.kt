@@ -9,6 +9,7 @@ import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
 import io.github.alexiscomete.lapinousecond.useful.managesave.saveManager
 import io.github.alexiscomete.lapinousecond.worlds.*
 import io.github.alexiscomete.lapinousecond.worlds.dibimap.DibimapServer
+import io.github.alexiscomete.lapinousecond.worlds.dibimap.getValueById
 import io.github.alexiscomete.lapinousecond.worlds.dibimap.isDibimap
 import org.javacord.api.entity.message.component.ActionRow
 import org.javacord.api.entity.message.component.TextInput
@@ -137,7 +138,7 @@ class ConfigCommand : Command(
                             serverC["world"] = world.progName
                             serverC["name"] = slashCommand.server.get().name
 
-                            val serverForZones = DibimapServer.valueOf(serverId.toString())
+                            val serverForZones = getValueById(serverId)
 
                             yes.buttonInteraction.createImmediateResponder()
                                 .setContent("Le serveur a été configuré avec succès ! Vous devez faire à nouveau la commande pour ajouter des villes. Les $serverForZones ont été ajoutées automatiquement.")
@@ -183,7 +184,7 @@ class ConfigCommand : Command(
                 }
 
                 WorldEnum.DIBIMAP -> {
-                    val serverForZones = DibimapServer.valueOf(serverId.toString())
+                    val serverForZones = getValueById(serverId)
 
                     fun fillEmbed(builder: EmbedBuilder, start: Int, num: Int, placesArray: ArrayList<Place>) {
                         for (i in start until start + num) {
@@ -535,6 +536,7 @@ class ConfigCommand : Command(
                                 .addEmbed(embedBuilder)
                                 .update()
                         }
+                        .responder(slashCommand)
 
                 }
 
