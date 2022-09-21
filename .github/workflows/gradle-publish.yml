@@ -43,7 +43,3 @@ jobs:
         USERNAME: ${{ github.actor }}
         TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Run snapshot action
-      uses: mikepenz/gradle-dependency-submission@{latest}
-      with:
-        gradle-build-module: ":main"
