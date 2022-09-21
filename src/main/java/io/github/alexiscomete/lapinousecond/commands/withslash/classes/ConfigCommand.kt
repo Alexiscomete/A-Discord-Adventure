@@ -249,91 +249,98 @@ class ConfigCommand : Command(
                             )
 
                             modalManager.add(id) { modalPart1 ->
-                                // partie 2 du modal avec x et y, j'utilise à nouveau idNameRP (pour x); idDescription (pour y)
-                                val id2 = generateUniqueID()
+                                // création d'un bouton pour continuer
+                                MenuBuilder("Discord n'autorise pas l'enchainement des entrées de texte", "Donc cliquez sur ce", Color.GREEN)
+                                    .addButton(
+                                        "Bouton",
+                                    "pour continuer") { button ->
+                                        // partie 2 du modal avec x et y, j'utilise à nouveau idNameRP (pour x); idDescription (pour y)
+                                        val id2 = generateUniqueID()
 
-                                modalPart1.modalInteraction.respondWithModal(
-                                    id2.toString(),
-                                    "Ajout d'une ville (2/2)",
-                                    ActionRow.of(
-                                        TextInput.create(
-                                            TextInputStyle.SHORT,
-                                            idNameRP.toString(),
-                                            "Coordonnée X",
-                                            true
+                                        button.buttonInteraction.respondWithModal(
+                                            id2.toString(),
+                                            "Ajout d'une ville (2/2)",
+                                            ActionRow.of(
+                                                TextInput.create(
+                                                    TextInputStyle.SHORT,
+                                                    idNameRP.toString(),
+                                                    "Coordonnée X",
+                                                    true
+                                                )
+                                            ),
+                                            ActionRow.of(
+                                                TextInput.create(
+                                                    TextInputStyle.SHORT,
+                                                    idDescription.toString(),
+                                                    "Coordonnée Y",
+                                                    true
+                                                )
+                                            )
                                         )
-                                    ),
-                                    ActionRow.of(
-                                        TextInput.create(
-                                            TextInputStyle.SHORT,
-                                            idDescription.toString(),
-                                            "Coordonnée Y",
-                                            true
-                                        )
-                                    )
-                                )
 
-                                modalManager.add(id2) {
-                                    // récupération de tous les éléments : description, nameRP, welcome, x, y
-                                    val opNameRP =
-                                        modalPart1.modalInteraction.getTextInputValueByCustomId(idNameRP.toString())
-                                    val opDescription =
-                                        modalPart1.modalInteraction.getTextInputValueByCustomId(idDescription.toString())
-                                    val opWelcome =
-                                        modalPart1.modalInteraction.getTextInputValueByCustomId(idWelcome.toString())
-                                    val opX = it.modalInteraction.getTextInputValueByCustomId(idNameRP.toString())
-                                    val opY = it.modalInteraction.getTextInputValueByCustomId(idDescription.toString())
+                                        modalManager.add(id2) {
+                                            // récupération de tous les éléments : description, nameRP, welcome, x, y
+                                            val opNameRP =
+                                                modalPart1.modalInteraction.getTextInputValueByCustomId(idNameRP.toString())
+                                            val opDescription =
+                                                modalPart1.modalInteraction.getTextInputValueByCustomId(idDescription.toString())
+                                            val opWelcome =
+                                                modalPart1.modalInteraction.getTextInputValueByCustomId(idWelcome.toString())
+                                            val opX = it.modalInteraction.getTextInputValueByCustomId(idNameRP.toString())
+                                            val opY = it.modalInteraction.getTextInputValueByCustomId(idDescription.toString())
 
-                                    // s'il manque un élément, on annule
-                                    if (!opNameRP.isPresent || !opDescription.isPresent || !opWelcome.isPresent || !opX.isPresent || !opY.isPresent) {
-                                        throw IllegalArgumentException("Vous avez oublié un élément !")
+                                            // s'il manque un élément, on annule
+                                            if (!opNameRP.isPresent || !opDescription.isPresent || !opWelcome.isPresent || !opX.isPresent || !opY.isPresent) {
+                                                throw IllegalArgumentException("Vous avez oublié un élément !")
+                                            }
+
+                                            // on récupère les éléments
+                                            val nameRP = opNameRP.get()
+                                            val description = opDescription.get()
+                                            val welcome = opWelcome.get()
+                                            val x = opX.get()
+                                            val y = opY.get()
+
+                                            // on vérifie que les coordonnées sont bien des nombres
+                                            try {
+                                                x.toInt()
+                                                y.toInt()
+                                            } catch (e: NumberFormatException) {
+                                                throw IllegalArgumentException("Les coordonnées doivent être des nombres !")
+                                            }
+
+                                            if (!serverForZones.isInZones(x.toInt(), y.toInt())) {
+                                                throw IllegalArgumentException("Les coordonnées ne sont pas dans les zones autorisées pour votre entité !")
+                                            }
+
+                                            // TODO : vérifier l'existence de la ville dans les villes du lore officiel
+
+                                            if (saveManager.hasResult("SELECT * FROM places WHERE nameRP = $nameRP OR x = $x AND y = $y")) {
+                                                throw IllegalArgumentException("Une ville existe déjà à ces coordonnées ou avec ce nom !")
+                                            }
+
+                                            // création de la ville, on réutilise encore id
+                                            places.add(id)
+                                            val place = places[id]
+                                                ?: throw IllegalArgumentException("Un problème de source inconnue est survenue. La création de la ville a échoué.")
+                                            place["nameRP"] = nameRP
+                                            place["description"] = description
+                                            place["welcome"] = welcome
+                                            place["x"] = x
+                                            place["y"] = y
+                                            place["server"] = serverId.toString()
+                                            place["type"] = "city"
+                                            place["world"] = WorldEnum.DIBIMAP.progName
+
+                                            server.addPlace(id)
+
+                                            // on envoie un message de succès
+                                            it.modalInteraction.createImmediateResponder()
+                                                .setContent("La ville a été créée avec succès !")
+                                                .respond()
+                                        }
                                     }
-
-                                    // on récupère les éléments
-                                    val nameRP = opNameRP.get()
-                                    val description = opDescription.get()
-                                    val welcome = opWelcome.get()
-                                    val x = opX.get()
-                                    val y = opY.get()
-
-                                    // on vérifie que les coordonnées sont bien des nombres
-                                    try {
-                                        x.toInt()
-                                        y.toInt()
-                                    } catch (e: NumberFormatException) {
-                                        throw IllegalArgumentException("Les coordonnées doivent être des nombres !")
-                                    }
-
-                                    if (!serverForZones.isInZones(x.toInt(), y.toInt())) {
-                                        throw IllegalArgumentException("Les coordonnées ne sont pas dans les zones autorisées pour votre entité !")
-                                    }
-
-                                    // TODO : vérifier l'existence de la ville dans les villes du lore officiel
-
-                                    if (saveManager.hasResult("SELECT * FROM places WHERE nameRP = $nameRP OR x = $x AND y = $y")) {
-                                        throw IllegalArgumentException("Une ville existe déjà à ces coordonnées ou avec ce nom !")
-                                    }
-
-                                    // création de la ville, on réutilise encore id
-                                    places.add(id)
-                                    val place = places[id]
-                                        ?: throw IllegalArgumentException("Un problème de source inconnue est survenue. La création de la ville a échoué.")
-                                    place["nameRP"] = nameRP
-                                    place["description"] = description
-                                    place["welcome"] = welcome
-                                    place["x"] = x
-                                    place["y"] = y
-                                    place["server"] = serverId.toString()
-                                    place["type"] = "city"
-                                    place["world"] = WorldEnum.DIBIMAP.progName
-
-                                    server.addPlace(id)
-
-                                    // on envoie un message de succès
-                                    it.modalInteraction.createImmediateResponder()
-                                        .setContent("La ville a été créée avec succès !")
-                                        .respond()
-                                }
+                                    .responder(modalPart1.modalInteraction)
                             }
                         }
                         .addButton(
