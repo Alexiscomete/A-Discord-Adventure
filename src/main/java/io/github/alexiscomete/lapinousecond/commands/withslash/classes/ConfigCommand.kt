@@ -45,13 +45,14 @@ class ConfigCommand : Command(
                 if (serverId == 854288660147994634) WorldEnum.TUTO else if (isDibimap(serverId)) WorldEnum.DIBIMAP else WorldEnum.NORMAL
             MenuBuilder(
                 "Votre première configuration",
-                "Votre serveur discord a été automatiquement assigné au ${world.nameRP}. Explications :\nLe Dibistan a un drapeau qui est aussi son territoire principal. Si votre serveur discord est un état ou une région qui a un territoire en forme de polygone sur le drapeau, alors sont monde est le ${WorldEnum.DIBIMAP.nameRP} sinon c'est le monde ${WorldEnum.NORMAL.nameRP}. Les mécaniques sont différentes dans les 2 mondes. **Le monde détecté est-il correcte ?**",
+                "Votre serveur discord a été automatiquement assigné au ${world.nameRP}. Explications :\nLe Dibistan a un drapeau qui est aussi son territoire principal. Si votre serveur discord est un État ou une région qui a un territoire en forme de polygone sur le drapeau, alors son monde est le ${WorldEnum.DIBIMAP.nameRP} sinon c'est le monde ${WorldEnum.NORMAL.nameRP}. Les mécaniques sont différentes dans les 2 mondes. **Le monde détecté est-il correct ?**",
                 Color.BLUE
             )
                 .addButton("Oui", "Le monde est correcte et je continue la configuration. **Irréversible**") { yes ->
 
                     when (world) {
                         WorldEnum.NORMAL -> {
+                            println("Normal")
                             val id = generateUniqueID()
                             val idNameRP = generateUniqueID()
                             val idDescription = generateUniqueID()
@@ -64,15 +65,19 @@ class ConfigCommand : Command(
                                     TextInput.create(
                                         TextInputStyle.SHORT,
                                         idNameRP.toString(),
-                                        "Nom de la ville (rp)",
+                                        "Nom de la ville",
                                         true
-                                    ),
+                                    )
+                                ),
+                                ActionRow.of(
                                     TextInput.create(
                                         TextInputStyle.PARAGRAPH,
                                         idDescription.toString(),
-                                        "Description de la ville (rp)",
+                                        "Description de la ville",
                                         true
-                                    ),
+                                    )
+                                ),
+                                ActionRow.of(
                                     TextInput.create(
                                         TextInputStyle.PARAGRAPH,
                                         idWelcome.toString(),
@@ -80,7 +85,7 @@ class ConfigCommand : Command(
                                         true
                                     )
                                 )
-                            )
+                                )
 
                             modalManager.add(id) {
                                 val opNameRp = it.modalInteraction.getTextInputValueByCustomId(idNameRP.toString())
@@ -123,6 +128,7 @@ class ConfigCommand : Command(
                                     .respond()
                             }
                         }
+
                         WorldEnum.DIBIMAP -> {
 
                             servers.add(serverId)
@@ -137,6 +143,7 @@ class ConfigCommand : Command(
                                 .setContent("Le serveur a été configuré avec succès ! Vous devez faire à nouveau la commande pour ajouter des villes. Les $serverForZones ont été ajoutées automatiquement.")
                                 .respond()
                         }
+
                         WorldEnum.TUTO -> {
                             val id = generateUniqueID()
                             places.add(id)
@@ -144,7 +151,8 @@ class ConfigCommand : Command(
                                 ?: throw IllegalArgumentException("Un problème de source inconnue est survenue. La création du serveur a échoué.")
                             place["nameRP"] = "Saint-Lapin-sur-bot" // à Demander
                             place["description"] = "Ville accueillante du tutoriel" // à Demander
-                            place["welcome"] = "Ne restez pas trop longtemps ici et profitez de l'aventure" // à Demander
+                            place["welcome"] =
+                                "Ne restez pas trop longtemps ici et profitez de l'aventure" // à Demander
                             place["x"] = 45.toString() // automatique normalement : aléatoire
                             place["y"] = 20.toString() // automatique normalement : aléatoire
                             place["type"] = "city" // automatique normalement
@@ -173,6 +181,7 @@ class ConfigCommand : Command(
                 WorldEnum.NORMAL -> {
                     modifServer(slashCommand, server)
                 }
+
                 WorldEnum.DIBIMAP -> {
                     val serverForZones = DibimapServer.valueOf(serverId.toString())
 
@@ -528,6 +537,7 @@ class ConfigCommand : Command(
                         }
 
                 }
+
                 WorldEnum.TUTO -> {
                     modifServer(slashCommand, server)
                 }
@@ -661,6 +671,7 @@ class ConfigCommand : Command(
         if (placesL.size != 1) {
             throw IllegalArgumentException("Le serveur n'a pas un lieu unique. Contactez un administrateur.")
         }
-        return places[placesL[0]] ?: throw IllegalArgumentException("Le lieu n'existe pas. Contactez un administrateur.")
+        return places[placesL[0]]
+            ?: throw IllegalArgumentException("Le lieu n'existe pas. Contactez un administrateur.")
     }
 }

@@ -87,7 +87,7 @@ class SaveManager(path: String) {
      * @param value The value to be set.
      */
     fun setValue(where: String, which: String, whichValue: String, valueName: String, value: String) {
-        val va = value.replace("\\", "\\\\").replace("'", "\\'").replace("\"", "\\\"")
+        val va = value.replace("\\", " ").replace("'", " ").replace("\"", " ").replace("--", " ")
         try {
             st!!.executeUpdate("UPDATE $where SET $valueName = '$va' WHERE $which = $whichValue")
         } catch (throwables: SQLException) {
