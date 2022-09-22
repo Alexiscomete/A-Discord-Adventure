@@ -445,8 +445,7 @@ class MapCommand : Command(
                             }
 
                             val player = getAccount(slashCommand)
-                            val worldStr = player["world"]
-                            val world = WorldEnum.valueOf(worldStr)
+                            val world = player.world
 
                             // check if the arguments are in the right range
                             if (x1Int < 0 || x1Int > world.mapWidth) {
@@ -552,8 +551,7 @@ class MapCommand : Command(
                             }
 
                             val player = getAccount(slashCommand)
-                            val worldStr = player["world"]
-                            val world = WorldEnum.valueOf(worldStr)
+                            val world = player.world
 
                             // check if the arguments are in the right range
                             if (xInt < 0 || xInt > world.mapWidth) {
@@ -637,8 +635,7 @@ class MapCommand : Command(
                             }
 
                             val player = getAccount(slashCommand)
-                            val worldStr = player["world"]
-                            val world = WorldEnum.valueOf(worldStr)
+                            val world = player.world
 
                             if (xInt < 0 || xInt > world.mapWidth) {
                                 throw IllegalArgumentException("Le x de la case n'est pas dans la carte")

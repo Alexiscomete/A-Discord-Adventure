@@ -23,7 +23,7 @@ class Player(id: Long) : CacheGetSet(id, PLAYERS), Owner {
     var workTime: Long
         private set
     val roles: ArrayList<Role>
-    val items = ArrayList<io.github.alexiscomete.lapinousecond.Item>()
+    private val items = ArrayList<io.github.alexiscomete.lapinousecond.Item>()
     val resourceManagers: HashMap<Resource, ResourceManager>
     var state = 0
 
@@ -72,21 +72,20 @@ class Player(id: Long) : CacheGetSet(id, PLAYERS), Owner {
 
     val place: Place?
         get() {
-            var world = getString("current_world")
-            if (world == "") {
-                world = "TUTO"
-                set("world", "TUTO")
-                this["place_TUTO_x"] = WorldEnum.TUTO.defaultX.toString()
-                this["place_TUTO_y"] = WorldEnum.TUTO.defaultY.toString()
-                this["place_TUTO_type"] = "coos"
+            val worldName = world.progName
+            return when (this["place_${worldName}_type"]) {
+                "place" -> {
+                    val placeID = this["place_${worldName}_id"]
+                    return places[placeID.toLong()]
+                }
+                "city" -> {
+                    val cityID = this["place_${worldName}_id"]
+                    return places[cityID.toLong()]
+                }
+                else -> {
+                    null
+                }
             }
-            //TODO: update this
-            var placeID = getString("place_$world")
-            if (placeID == "") {
-                placeID = ServerBot(854288660147994634L).getString("places")
-                set("place_NORMAL", ServerBot(854288660147994634L).getString("places"))
-            }
-            return places[placeID.toLong()]
         }
 
 
@@ -164,6 +163,14 @@ class Player(id: Long) : CacheGetSet(id, PLAYERS), Owner {
                 val firstPixel = path[0]
                 val lastPixel = path[path.size - 1]
                 "Vous êtes dans le monde ${world}, sur un chemin. Le premier pixel est (${firstPixel.x}, ${firstPixel.y}), le dernier pixel est (${lastPixel.x}, ${lastPixel.y})"
+            }
+            "city" -> {
+                val cityID = this["place_${world}_id"]
+                "Vous êtes dans le monde ${world}, dans la ville $cityID"
+            }
+            "building" -> {
+                val buildingID = this["place_${world}_building_id"]
+                "Vous êtes dans le monde ${world}, dans le bâtiment $buildingID"
             }
             else -> {
                 "Vous êtes dans le monde ${world}, mais vous ne savez pas où vous êtes"
@@ -252,6 +259,7 @@ class Player(id: Long) : CacheGetSet(id, PLAYERS), Owner {
             WorldEnum.TUTO
             this["world"] = WorldEnum.TUTO.progName
         }
+        WorldEnum.valueOf(w)
     }
 
     init {

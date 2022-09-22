@@ -117,7 +117,7 @@ class Building : CacheGetSet, BuildMethods, Owner {
 
         // load the json file
         init {
-            val inputStream = Building::class.java.classLoader.getResourceAsStream("buildings_config.json")
+            val inputStream = Building::class.java.classLoader.getResourceAsStream("config_buildings.json")
             println(inputStream)
             jsonObject = if (inputStream == null) {
                 println("eeee")

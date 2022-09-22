@@ -254,97 +254,6 @@ class InteractCommandBase : Command(
                             .respond()
                     }
                     .addButton(
-                        "Voir les bâtiments",
-                        "Vous pouvez voir les bâtiments de la ville ${place["nameRP"]} en cliquant sur ce bouton et interagir avec eux"
-                    ) {
-                        val buildings = Buildings.loadBuildings(place["buildings"])
-                        val embedBuilder = EmbedBuilder()
-                            .setTitle("Bâtiments de la ville ${place["nameRP"]}")
-                            .setDescription("Liste de tous les bâtiments de la ville ${place["nameRP"]}.")
-                            .setColor(Color.BLUE)
-                        sendBuildingsInEmbed(embedBuilder, buildings, it)
-                    }
-                    .addButton(
-                        "Vos bâtiments",
-                        "Vous pouvez voir vos bâtiments en cliquant sur ce bouton et interagir avec eux"
-                    ) { yours ->
-                        val buildings = Buildings.loadBuildings(place["buildings"])
-                        // remove if not with this owner
-                        buildings.removeIf { building -> building["owner"] != player.id.toString() }
-                        val embedBuilder = EmbedBuilder()
-                            .setTitle("Vos bâtiments de la ville ${place["nameRP"]}")
-                            .setDescription("Liste de tous vos bâtiments de la ville ${place["nameRP"]}.")
-                            .setColor(Color.BLUE)
-                        val embedPagesWithInteractions = EmbedPagesWithInteractions(
-                            embedBuilder,
-                            buildings,
-                            { builder: EmbedBuilder, start: Int, max: Int, buildingsL: ArrayList<Building> ->
-                                for (i in start until max) {
-                                    val building = buildingsL[i]
-                                    builder.addField(
-                                        building.title(),
-                                        building.descriptionShort()
-                                    )
-                                }
-                            }
-                        ) { building: Building, buttonClickEvent: ButtonClickEvent ->
-                            if (building["build_status"] == "building") {
-                                // annuler ou aider le bâtiment
-                                MenuBuilder(
-                                    "Bâtiment ${building["nameRP"]}",
-                                    "Que voulez-vous faire avec le bâtiment ${building["nameRP"]} ?",
-                                    Color.BLUE
-                                )
-                                    .addButton(
-                                        "Annuler le bâtiment",
-                                        "Vous annulez le bâtiment ${building["nameRP"]}"
-                                    ) {
-                                        // on le retire de la bdd
-                                        saveManager.execute(
-                                            "DELETE FROM buildings WHERE id = ${building.id}",
-                                            true
-                                        )
-                                        it.buttonInteraction.createImmediateResponder()
-                                            .setContent("Vous avez annulé le bâtiment !")
-                                            .setFlags(MessageFlag.EPHEMERAL)
-                                            .respond()
-                                    }
-                                    .addButton(
-                                        "Aider le bâtiment",
-                                        "Vous aidez le bâtiment ${building["nameRP"]}"
-                                    ) {
-                                        helpBuilding(building, it)
-                                    }
-                                    .addEphemeral()
-                                    .modif(buttonClickEvent)
-                            } else {
-                                enterInBuilding(building, buttonClickEvent)
-                            }
-                        }
-                        embedPagesWithInteractions.register()
-                        yours.buttonInteraction.createImmediateResponder()
-                            .addEmbed(embedBuilder)
-                            .addComponents(
-                                ActionRow.of(embedPagesWithInteractions.buttons),
-                                embedPagesWithInteractions.components
-                            )
-                            .setFlags(MessageFlag.EPHEMERAL)
-                            .respond()
-                    }
-                    .addButton(
-                        "Bâtiments en construction",
-                        "Vous pouvez voir les bâtiments en construction dans la ville en cliquant sur ce bouton et interagir avec eux"
-                    ) {
-                        val buildings = Buildings.loadBuildings(place["buildings"])
-                        // remove if not in construction
-                        buildings.removeIf { building -> building["build_status"] != "building" }
-                        val embedBuilder = EmbedBuilder()
-                            .setTitle("Bâtiments en construction de la ville ${place["nameRP"]}")
-                            .setDescription("Liste de tous les bâtiments en construction de la ville ${place["nameRP"]}.")
-                            .setColor(Color.BLUE)
-                        sendBuildingsInEmbed(embedBuilder, buildings, it)
-                    }
-                    .addButton(
                         "Informations sur la ville",
                         "Vous pouvez voir les informations sur la ville ${place["nameRP"]} en cliquant sur ce bouton"
                     ) {
@@ -354,55 +263,157 @@ class InteractCommandBase : Command(
                             .respond()
                     }
                     .addButton(
-                        "Construire un bâtiment",
-                        "Vous pouvez construire un bâtiment dans la ville ${place["nameRP"]} en cliquant sur ce bouton"
-                    ) { again ->
-                        val buildsTypes = arrayListOf(*Buildings.values())
-                        val embedBuilder = EmbedBuilder()
-                            .setTitle("Bâtiments disponibles")
-                            .setDescription("Liste de tous les bâtiments disponibles.")
-                            .setColor(Color.BLUE)
-                        val embedPagesWithInteractions = EmbedPagesWithInteractions(
-                            embedBuilder,
-                            buildsTypes,
-                            { builder: EmbedBuilder, start: Int, max: Int, buildsTypesL: ArrayList<Buildings> ->
-                                for (i in start until max) {
-                                    val buildType = buildsTypesL[i]
-                                    builder.addField(
-                                        buildType.name_,
-                                        buildType.basePrice.toString() + " " + Resource.RABBIT_COIN.name_ + " (Peut être construit : " + buildType.isBuild + ")"
-                                    )
-                                }
+                        "Interactions avec les bâtiments",
+                        "Vous pouvez entrer dans un bâtiment, en financer un, ou simplement voir les vôtres."
+                    ) { bat ->
+                        MenuBuilder(
+                            "Bâtiments",
+                            "Interactions avec les bâtiments",
+                            Color.BLUE
+                        )
+                            .addButton(
+                                "Voir les bâtiments",
+                                "Vous pouvez voir les bâtiments de la ville ${place["nameRP"]} en cliquant sur ce bouton et interagir avec eux"
+                            ) {
+                                val buildings = Buildings.loadBuildings(place["buildings"])
+                                val embedBuilder = EmbedBuilder()
+                                    .setTitle("Bâtiments de la ville ${place["nameRP"]}")
+                                    .setDescription("Liste de tous les bâtiments de la ville ${place["nameRP"]}.")
+                                    .setColor(Color.BLUE)
+                                sendBuildingsInEmbed(embedBuilder, buildings, it)
                             }
-                        ) { buildType: Buildings, buttonClickEvent: ButtonClickEvent ->
-                            if (buildType.isBuild && buildType.buildingAutorisations?.isAutorise(player) == true) {
-                                val place1 = player.place
-                                    ?: throw IllegalArgumentException("Le joueur n'est pas dans une ville")
-                                val building2 = Building(buildType, player, place1)
-                                val builder = EmbedBuilder()
-                                    .setTitle(building2.title())
-                                    .setDescription(building2.descriptionShort())
-                                buttonClickEvent.buttonInteraction.createImmediateResponder()
-                                    .addEmbed(builder)
+                            .addButton(
+                                "Vos bâtiments",
+                                "Vous pouvez voir vos bâtiments en cliquant sur ce bouton et interagir avec eux"
+                            ) { yours ->
+                                val buildings = Buildings.loadBuildings(place["buildings"])
+                                // remove if not with this owner
+                                buildings.removeIf { building -> building["owner"] != player.id.toString() }
+                                val embedBuilder = EmbedBuilder()
+                                    .setTitle("Vos bâtiments de la ville ${place["nameRP"]}")
+                                    .setDescription("Liste de tous vos bâtiments de la ville ${place["nameRP"]}.")
+                                    .setColor(Color.BLUE)
+                                val embedPagesWithInteractions = EmbedPagesWithInteractions(
+                                    embedBuilder,
+                                    buildings,
+                                    { builder: EmbedBuilder, start: Int, max: Int, buildingsL: ArrayList<Building> ->
+                                        for (i in start until max) {
+                                            val building = buildingsL[i]
+                                            builder.addField(
+                                                building.title(),
+                                                building.descriptionShort()
+                                            )
+                                        }
+                                    }
+                                ) { building: Building, buttonClickEvent: ButtonClickEvent ->
+                                    if (building["build_status"] == "building") {
+                                        // annuler ou aider le bâtiment
+                                        MenuBuilder(
+                                            "Bâtiment ${building["nameRP"]}",
+                                            "Que voulez-vous faire avec le bâtiment ${building["nameRP"]} ?",
+                                            Color.BLUE
+                                        )
+                                            .addButton(
+                                                "Annuler le bâtiment",
+                                                "Vous annulez le bâtiment ${building["nameRP"]}"
+                                            ) {
+                                                // on le retire de la bdd
+                                                saveManager.execute(
+                                                    "DELETE FROM buildings WHERE id = ${building.id}",
+                                                    true
+                                                )
+                                                it.buttonInteraction.createImmediateResponder()
+                                                    .setContent("Vous avez annulé le bâtiment !")
+                                                    .setFlags(MessageFlag.EPHEMERAL)
+                                                    .respond()
+                                            }
+                                            .addButton(
+                                                "Aider le bâtiment",
+                                                "Vous aidez le bâtiment ${building["nameRP"]}"
+                                            ) {
+                                                helpBuilding(building, it)
+                                            }
+                                            .addEphemeral()
+                                            .modif(buttonClickEvent)
+                                    } else {
+                                        enterInBuilding(building, buttonClickEvent)
+                                    }
+                                }
+                                embedPagesWithInteractions.register()
+                                yours.buttonInteraction.createImmediateResponder()
+                                    .addEmbed(embedBuilder)
+                                    .addComponents(
+                                        ActionRow.of(embedPagesWithInteractions.buttons),
+                                        embedPagesWithInteractions.components
+                                    )
                                     .setFlags(MessageFlag.EPHEMERAL)
                                     .respond()
-                            } else {
-                                throw IllegalArgumentException("Vous ne pouvez pas construire ce bâtiment")
                             }
-                        }
-                        embedPagesWithInteractions.register()
-                        again.buttonInteraction.createImmediateResponder()
-                            .addEmbed(embedBuilder)
-                            .addComponents(
-                                ActionRow.of(embedPagesWithInteractions.buttons),
-                                embedPagesWithInteractions.components
-                            )
-                            .setFlags(MessageFlag.EPHEMERAL)
-                            .respond()
+                            .addButton(
+                                "Bâtiments en construction",
+                                "Vous pouvez voir les bâtiments en construction dans la ville en cliquant sur ce bouton et interagir avec eux"
+                            ) {
+                                val buildings = Buildings.loadBuildings(place["buildings"])
+                                // remove if not in construction
+                                buildings.removeIf { building -> building["build_status"] != "building" }
+                                val embedBuilder = EmbedBuilder()
+                                    .setTitle("Bâtiments en construction de la ville ${place["nameRP"]}")
+                                    .setDescription("Liste de tous les bâtiments en construction de la ville ${place["nameRP"]}.")
+                                    .setColor(Color.BLUE)
+                                sendBuildingsInEmbed(embedBuilder, buildings, it)
+                            }
+                            .addButton(
+                                "Construire un bâtiment",
+                                "Vous pouvez construire un bâtiment dans la ville ${place["nameRP"]} en cliquant sur ce bouton"
+                            ) { again ->
+                                val buildsTypes = arrayListOf(*Buildings.values())
+                                val embedBuilder = EmbedBuilder()
+                                    .setTitle("Bâtiments disponibles")
+                                    .setDescription("Liste de tous les bâtiments disponibles.")
+                                    .setColor(Color.BLUE)
+                                val embedPagesWithInteractions = EmbedPagesWithInteractions(
+                                    embedBuilder,
+                                    buildsTypes,
+                                    { builder: EmbedBuilder, start: Int, max: Int, buildsTypesL: ArrayList<Buildings> ->
+                                        for (i in start until max) {
+                                            val buildType = buildsTypesL[i]
+                                            builder.addField(
+                                                buildType.name_,
+                                                buildType.basePrice.toString() + " " + Resource.RABBIT_COIN.name_ + " (Peut être construit : " + buildType.isBuild + ")"
+                                            )
+                                        }
+                                    }
+                                ) { buildType: Buildings, buttonClickEvent: ButtonClickEvent ->
+                                    if (buildType.isBuild && buildType.buildingAutorisations?.isAutorise(player) == true) {
+                                        val place1 = player.place
+                                            ?: throw IllegalArgumentException("Le joueur n'est pas dans une ville")
+                                        val building2 = Building(buildType, player, place1)
+                                        val builder = EmbedBuilder()
+                                            .setTitle(building2.title())
+                                            .setDescription(building2.descriptionShort())
+                                        buttonClickEvent.buttonInteraction.createImmediateResponder()
+                                            .addEmbed(builder)
+                                            .setFlags(MessageFlag.EPHEMERAL)
+                                            .respond()
+                                    } else {
+                                        throw IllegalArgumentException("Vous ne pouvez pas construire ce bâtiment")
+                                    }
+                                }
+                                embedPagesWithInteractions.register()
+                                again.buttonInteraction.createImmediateResponder()
+                                    .addEmbed(embedBuilder)
+                                    .addComponents(
+                                        ActionRow.of(embedPagesWithInteractions.buttons),
+                                        embedPagesWithInteractions.components
+                                    )
+                                    .setFlags(MessageFlag.EPHEMERAL)
+                                    .respond()
+                            }
+                            .modif(bat)
                     }
                     .addEphemeral()
                     .responder(slashCommand)
-
+                println("Le joueur $player a ouvert le menu de la ville ${place["nameRP"]}")
             }
 
             else -> {
