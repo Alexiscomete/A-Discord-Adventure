@@ -232,7 +232,7 @@ class ConfigCommand : Command(
                                 ),
                                 ActionRow.of(
                                     TextInput.create(
-                                        TextInputStyle.SHORT,
+                                        TextInputStyle.PARAGRAPH,
                                         idDescription.toString(),
                                         "Description de la ville",
                                         true
@@ -315,7 +315,7 @@ class ConfigCommand : Command(
 
                                             // TODO : vérifier l'existence de la ville dans les villes du lore officiel
 
-                                            if (saveManager.hasResult("SELECT * FROM places WHERE nameRP = $nameRP OR x = $x AND y = $y")) {
+                                            if (saveManager.hasResult("SELECT * FROM places WHERE nameRP = '$nameRP' OR x = '$x' AND y = '$y'")) {
                                                 throw IllegalArgumentException("Une ville existe déjà à ces coordonnées ou avec ce nom !")
                                             }
 
