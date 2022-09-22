@@ -65,7 +65,10 @@ class Building : CacheGetSet, BuildMethods, Owner {
     }
 
     override fun descriptionShort(): String {
-        return "ID : $id\nPropriétaire : ${getString("owner")}\n${(if (getString("build_status") == "building") "En construction : \n" else "")}${
+        return "ID : $id\nPropriétaire : ${getString("owner")}\n${
+            if (getString("build_status") == "building") "En construction : ${progressionBar.bar}\n"
+            else ""
+        }${
             getString(
                 "description"
             )
