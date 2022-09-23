@@ -36,13 +36,14 @@ class MapCommand : Command(
         MenuBuilder(
             "Carte 🗺",
             "Se déplacer est important dans le jeu ! Visitez le monde et regardez autour de vous",
-            Color.PINK
+            Color.PINK,
+            slashCommand.user.id
         )
             .addButton(
                 "Voyager",
                 "Permet de se déplacer de plusieurs façons sur la carte"
             ) { messageComponentCreateEvent: ButtonClickEvent ->
-                MenuBuilder("Voyager", "Voyager est important dans ce jeu", Color.PINK)
+                MenuBuilder("Voyager", "Voyager est important dans ce jeu", Color.PINK, messageComponentCreateEvent.buttonInteraction.user.id)
                     .addButton(
                         "Mondes",
                         "Permet de changer de monde"
@@ -89,7 +90,8 @@ class MapCommand : Command(
                                 MenuBuilder(
                                     "Confirmer",
                                     "Confirmez-vous le voyage vers ce monde pour 100 ${Resource.RABBIT_COIN.name_} ?",
-                                    Color.orange
+                                    Color.orange,
+                                    mci.selectMenuInteraction.user.id
                                 )
                                     .addButton("Oui", "Oui je veux changer de monde") {
                                         // get the player's bal
@@ -205,13 +207,18 @@ class MapCommand : Command(
                             val timeMillisToTravel = path.size * 10000L
                             val priceToTravel = path.size * 0.5
 
-                            MenuBuilder("Comment voyager ?", "Il existe 2 moyens de voyager de façon simple", Color.RED)
+                            MenuBuilder(
+                                "Comment voyager ?",
+                                "Il existe 2 moyens de voyager de façon simple",
+                                Color.RED,
+                                modalXY.modalInteraction.user.id
+                            )
                                 .setImage(image)
                                 .addButton(
                                     "Temps",
                                     "Vous allez prendre $timeMillisToTravel ms pour aller jusqu'à ce pixel"
                                 ) { timeB ->
-                                    MenuBuilder("Confirmer", "Confirmer le voyage ?", Color.orange)
+                                    MenuBuilder("Confirmer", "Confirmer le voyage ?", Color.orange,timeB.buttonInteraction.user.id)
                                         .addButton("Oui", "Oui je veux aller jusqu'à ce pixel") {
                                             player.setPath(path, "default_time")
                                             it.buttonInteraction.createOriginalMessageUpdater()
@@ -233,7 +240,7 @@ class MapCommand : Command(
                                     "Argent",
                                     "Vous allez dépenser $priceToTravel ${Resource.RABBIT_COIN.name_} pour aller jusqu'à ce pixel"
                                 ) { moneyB ->
-                                    MenuBuilder("Confirmer", "Confirmer le voyage ?", Color.orange)
+                                    MenuBuilder("Confirmer", "Confirmer le voyage ?", Color.orange,moneyB.buttonInteraction.user.id)
                                         .addButton("Oui", "Oui je veux aller jusqu'à ce pixel") {
                                             // get the player's money
                                             val money = player.getMoney()
@@ -283,7 +290,7 @@ class MapCommand : Command(
                 "Une urgence ? Bloqué dans un lieu inexistant ? Retournez au hub gratuitement !"
             ) { messageComponentCreateEvent: ButtonClickEvent ->
                 val p = getAccount(slashCommand)
-                MenuBuilder("Confirmation requise", "Voulez-vous vraiment retourner au hub ?", Color.PINK)
+                MenuBuilder("Confirmation requise", "Voulez-vous vraiment retourner au hub ?", Color.PINK,messageComponentCreateEvent.buttonInteraction.user.id)
                     .addButton("Oui", "Retourner au hub") { buttonClickEvent: ButtonClickEvent ->
                         buttonClickEvent.buttonInteraction.createOriginalMessageUpdater()
                             .setContent("✔ Flavinou vient de vous téléporter au hub <https://discord.gg/q4hVQ6gwyx>")
@@ -300,7 +307,7 @@ class MapCommand : Command(
                 "Cartes",
                 "Les cartes sont disponibles ici ! De nombreuses actions complémentaires sont proposées"
             ) { messageComponentCreateEvent: ButtonClickEvent ->
-                MenuBuilder("Cartes 🌌", "Les cartes ... tellement de cartes !", Color.PINK)
+                MenuBuilder("Cartes 🌌", "Les cartes ... tellement de cartes !", Color.PINK,messageComponentCreateEvent.buttonInteraction.user.id)
                     .addButton(
                         "Liste des cartes",
                         "Toutes les cartes permanentes du jeu ... remerciez Darki"

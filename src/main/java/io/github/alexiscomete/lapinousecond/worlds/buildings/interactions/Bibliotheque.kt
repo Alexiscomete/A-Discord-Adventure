@@ -17,7 +17,8 @@ class Bibliotheque(building: Building?) : BuildingInteraction(building!!) {
         return MenuBuilder(
             "Bibliothèque",
             "Bienvenue dans la bibliothèque de l'Université de Lapinou !",
-            Color.DARK_GRAY
+            Color.DARK_GRAY,
+            p.id
         )
     }
 

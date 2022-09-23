@@ -52,7 +52,8 @@ class MarketCommand : Command(
         MenuBuilder(
             "Le marché",
             "Ici est le lieu d'échanges entre les joueurs ! Avancez sur vos quêtes en trouvant ici des objets introuvables, gagnez de l'argent en vendant des objets ou des ressources .... bref c'est le lieu des joueurs",
-            Color.YELLOW
+            Color.YELLOW,
+            slashCommand.user.id
         )
             .addButton(
                 "Donner",
@@ -157,7 +158,8 @@ class MarketCommand : Command(
                     MenuBuilder(
                         "Demande d'échange",
                         "<@${slashCommand.user.id}> vous a proposé un échange. **Négociez avant avec lui**",
-                        Color.YELLOW
+                        Color.YELLOW,
+                        message.messageAuthor.id
                     )
                         .addButton(
                             "Accepter",
@@ -215,7 +217,8 @@ class MarketCommand : Command(
                                 MenuBuilder(
                                     "Suite de l'échange",
                                     "La personne avec qui vous échangez a proposé $quantity ${resource.name_}",
-                                    Color.YELLOW
+                                    Color.YELLOW,
+                                    modalSubmitEvent.interaction.user.id
                                 )
                                     .addButton(
                                         "Accepter",
@@ -1075,7 +1078,7 @@ class MarketCommand : Command(
         everything: (ButtonClickEvent) -> Unit,
         create: (ButtonClickEvent) -> Unit
     ) {
-        MenuBuilder("Que faire ?", "Il existe 3 possibilités pour les ${name}s", Color.YELLOW)
+        MenuBuilder("Que faire ?", "Il existe 3 possibilités pour les ${name}s", Color.YELLOW, buttonClickEvent.buttonInteraction.user.id)
             .addButton(
                 "Mes ${name}s",
                 "Voir vos ${name}s, si elles existent. Dans le cas des offres et recherches, vous pouvez les supprimer. Dans le cas des enchères, vous pouvez finir une enchère.",

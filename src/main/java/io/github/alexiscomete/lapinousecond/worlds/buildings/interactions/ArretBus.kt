@@ -14,7 +14,12 @@ class ArretBus(building: Building?) : BuildingInteraction(building!!) {
         get() = null
 
     override fun getCompleteInfos(p: Player): MenuBuilder {
-        return MenuBuilder("Arrêt de bus", "Cet arrêt de bus est vide, il n'y a personne pour l'instant.", Color(0, 0, 0))
+        return MenuBuilder(
+            "Arrêt de bus",
+            "Cet arrêt de bus est vide, il n'y a personne pour l'instant.",
+            Color(0, 0, 0),
+            p.id
+        )
     }
 
     override fun descriptionShort(): String {

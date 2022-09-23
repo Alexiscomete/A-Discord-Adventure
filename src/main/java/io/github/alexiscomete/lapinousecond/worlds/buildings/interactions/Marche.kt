@@ -22,7 +22,7 @@ class Marche(building: Building?) : BuildingInteraction(building!!) {
     }
 
     override fun getCompleteInfos(p: Player): MenuBuilder {
-        return MenuBuilder("Marché", "Bienvenue dans le marché !", Color.DARK_GRAY)
+        return MenuBuilder("Marché", "Bienvenue dans le marché !", Color.DARK_GRAY,p.id)
     }
 
     override fun configBuilding() {}

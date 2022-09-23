@@ -8,7 +8,6 @@ import io.github.alexiscomete.lapinousecond.modalManager
 import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
 import io.github.alexiscomete.lapinousecond.useful.managesave.saveManager
 import io.github.alexiscomete.lapinousecond.worlds.*
-import io.github.alexiscomete.lapinousecond.worlds.dibimap.DibimapServer
 import io.github.alexiscomete.lapinousecond.worlds.dibimap.getValueById
 import io.github.alexiscomete.lapinousecond.worlds.dibimap.isDibimap
 import org.javacord.api.entity.message.component.ActionRow
@@ -47,7 +46,8 @@ class ConfigCommand : Command(
             MenuBuilder(
                 "Votre première configuration",
                 "Votre serveur discord a été automatiquement assigné au ${world.nameRP}. Explications :\nLe Dibistan a un drapeau qui est aussi son territoire principal. Si votre serveur discord est un État ou une région qui a un territoire en forme de polygone sur le drapeau, alors son monde est le ${WorldEnum.DIBIMAP.nameRP} sinon c'est le monde ${WorldEnum.NORMAL.nameRP}. Les mécaniques sont différentes dans les 2 mondes. **Le monde détecté est-il correct ?**",
-                Color.BLUE
+                Color.BLUE,
+                slashCommand.user.id
             )
                 .addButton("Oui", "Le monde est correcte et je continue la configuration. **Irréversible**") { yes ->
 
@@ -200,7 +200,8 @@ class ConfigCommand : Command(
                     MenuBuilder(
                         "Configuration du serveur",
                         "Configurer votre serveur discord d'entité territorial",
-                        Color.BLUE
+                        Color.BLUE,
+                        slashCommand.user.id
                     )
                         .addButton(
                             "Mise à jour du nom",
@@ -250,7 +251,12 @@ class ConfigCommand : Command(
 
                             modalManager.add(id) { modalPart1 ->
                                 // création d'un bouton pour continuer
-                                MenuBuilder("Discord n'autorise pas l'enchainement des entrées de texte", "Donc cliquez sur ce", Color.GREEN)
+                                MenuBuilder(
+                                    "Discord n'autorise pas l'enchainement des entrées de texte",
+                                    "Donc cliquez sur ce",
+                                    Color.GREEN,
+                                    modalPart1.modalInteraction.user.id
+                                )
                                     .addButton(
                                         "Bouton",
                                     "pour continuer") { button ->
@@ -425,7 +431,8 @@ class ConfigCommand : Command(
                                 MenuBuilder(
                                     "Modification de la ville ${place["nameRP"]}",
                                     "Sélectionner ce qu'il faut modifier :",
-                                    Color.YELLOW
+                                    Color.YELLOW,
+                                    buttonClickEvent.buttonInteraction.user.id
                                 )
                                     .addButton(
                                         "Modifier le nom RP du lieu",
@@ -568,7 +575,8 @@ class ConfigCommand : Command(
         MenuBuilder(
             "Modification du serveur dans un monde à lieu unique",
             "Vous pouvez modifier la configuration du serveur discord de façon simple dans un monde à serveur unique. Sélectionner ce qu'il faut modifier :",
-            Color.YELLOW
+            Color.YELLOW,
+            slashCommand.user.id
         )
             .addButton(
                 "Mise à jour du nom du serveur",

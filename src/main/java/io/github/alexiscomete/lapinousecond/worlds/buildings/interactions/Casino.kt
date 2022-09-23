@@ -17,7 +17,8 @@ class Casino(building: Building?) : BuildingInteraction(building!!) {
         return MenuBuilder(
             "Casino",
             "Bienvenue dans le casino !",
-            Color.DARK_GRAY
+            Color.DARK_GRAY,
+            p.id
         )
     }
 

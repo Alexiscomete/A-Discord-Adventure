@@ -22,7 +22,7 @@ class Pharmacie(building: Building?) : BuildingInteraction(building!!) {
     }
 
     override fun getCompleteInfos(p: Player): MenuBuilder {
-        return MenuBuilder("Pharmacie", "Bienvenue dans la pharmacie !", Color.DARK_GRAY)
+        return MenuBuilder("Pharmacie", "Bienvenue dans la pharmacie !", Color.DARK_GRAY, p.id)
     }
 
     override fun configBuilding() {}

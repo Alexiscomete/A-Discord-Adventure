@@ -14,7 +14,7 @@ class Auberge(building: Building?) : BuildingInteraction(building!!) {
         get() = null
 
     override fun getCompleteInfos(p: Player): MenuBuilder {
-        return MenuBuilder("Auberge", "Bienvenue dans l'auberge !", Color(0, 0, 0))
+        return MenuBuilder("Auberge", "Bienvenue dans l'auberge !", Color(0, 0, 0),p.id)
     }
 
     override fun descriptionShort(): String {

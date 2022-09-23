@@ -57,7 +57,8 @@ class InteractCommandBase : Command(
                     MenuBuilder(
                         "Interactions sur la case $x $y du monde ${world.nameRP}",
                         "Liste de toutes vos possibilités dans la version actuelle du bot. Les sorts ne sont pas compris.",
-                        Color.BLUE
+                        Color.BLUE,
+                        slashCommand.user.id
                     )
                         .addButton(
                             "Entrer dans la ville",
@@ -112,7 +113,8 @@ class InteractCommandBase : Command(
                 MenuBuilder(
                     "Interactions sur le bâtiment ${building["nameRP"]} du monde ${world.nameRP}",
                     "Liste de toutes vos possibilités dans la version actuelle du bot.",
-                    Color.BLUE
+                    Color.BLUE,
+                    slashCommand.user.id
                 )
                     .addButton(
                         "Sortir du bâtiment",
@@ -240,7 +242,8 @@ class InteractCommandBase : Command(
                 MenuBuilder(
                     "Interactions dans la ville ${place["nameRP"]}",
                     "Liste de toutes vos possibilités dans la version actuelle du bot.",
-                    Color.BLUE
+                    Color.BLUE,
+                    slashCommand.user.id
                 )
                     .addButton(
                         "Quitter la ville",
@@ -269,7 +272,8 @@ class InteractCommandBase : Command(
                         MenuBuilder(
                             "Bâtiments",
                             "Interactions avec les bâtiments",
-                            Color.BLUE
+                            Color.BLUE,
+                            bat.buttonInteraction.user.id
                         )
                             .addButton(
                                 "Voir les bâtiments",
@@ -311,7 +315,8 @@ class InteractCommandBase : Command(
                                         MenuBuilder(
                                             "Bâtiment ${building["nameRP"]}",
                                             "Que voulez-vous faire avec le bâtiment ${building["nameRP"]} ?",
-                                            Color.BLUE
+                                            Color.BLUE,
+                                            buttonClickEvent.buttonInteraction.user.id
                                         )
                                             .addButton(
                                                 "Annuler le bâtiment",

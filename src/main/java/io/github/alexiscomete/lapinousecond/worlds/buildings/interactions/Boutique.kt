@@ -17,7 +17,8 @@ class Boutique(building: Building?) : BuildingInteraction(building!!) {
         return MenuBuilder(
             "Boutique",
             "Bienvenue dans la boutique !",
-            Color.DARK_GRAY
+            Color.DARK_GRAY,
+            p.id
         )
     }
 

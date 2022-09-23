@@ -17,7 +17,8 @@ class Hopital(building: Building?) : BuildingInteraction(building!!) {
         return MenuBuilder(
             "Hôpital",
             "Bienvenue à l'hôpital !",
-            Color.DARK_GRAY
+            Color.DARK_GRAY,
+            p.id
         )
     }
 

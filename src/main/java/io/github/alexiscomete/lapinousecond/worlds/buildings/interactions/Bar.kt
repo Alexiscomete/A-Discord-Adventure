@@ -17,7 +17,8 @@ class Bar(building: Building?) : BuildingInteraction(building!!) {
         return MenuBuilder(
             "Bar",
             "Le bar est un endroit convivial où vous pouvez vous détendre et vous amuser.",
-            Color.DARK_GRAY
+            Color.DARK_GRAY,
+            p.id
         )
     }
 

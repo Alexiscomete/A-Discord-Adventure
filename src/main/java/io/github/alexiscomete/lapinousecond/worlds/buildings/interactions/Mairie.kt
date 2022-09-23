@@ -17,7 +17,8 @@ class Mairie(building: Building?) : BuildingInteraction(building!!) {
         return MenuBuilder(
             "Mairie",
             "Bienvenue dans la mairie !",
-            Color.DARK_GRAY
+            Color.DARK_GRAY,
+            p.id
         )
     }
 

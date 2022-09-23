@@ -77,14 +77,14 @@ class Building : CacheGetSet, BuildMethods, Owner {
 
     fun completeInfos(p: Player): MenuBuilder {
         return if (getString("build_status") == "building") {
-            inBuildCompleteInfos()
+            inBuildCompleteInfos(p)
         } else {
             getCompleteInfos(p)
         }
     }
 
-    private fun inBuildCompleteInfos(): MenuBuilder {
-        return MenuBuilder(title(), descriptionShort(), Color.DARK_GRAY)
+    private fun inBuildCompleteInfos(player: Player): MenuBuilder {
+        return MenuBuilder(title(), descriptionShort(), Color.DARK_GRAY, player.id)
             .addButton("Donner de l'argent", "Permet de donner de l'argent à ce bâtiment") {
                 TODO("todo")
             }

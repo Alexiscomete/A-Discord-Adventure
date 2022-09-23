@@ -17,7 +17,8 @@ class Banque(building: Building?) : BuildingInteraction(building!!) {
         return MenuBuilder(
             "Banque",
             "Vous pouvez déposer ou retirer de l'argent de votre compte bancaire ici.",
-            Color.DARK_GRAY
+            Color.DARK_GRAY,
+            p.id
         )
     }
 

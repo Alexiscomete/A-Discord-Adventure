@@ -9,15 +9,13 @@ import org.javacord.api.entity.message.component.Button
 import org.javacord.api.entity.message.component.LowLevelComponent
 import org.javacord.api.entity.message.embed.EmbedBuilder
 import org.javacord.api.event.interaction.ButtonClickEvent
-import org.javacord.api.event.interaction.MessageComponentCreateEvent
-import org.javacord.api.event.interaction.ModalSubmitEvent
 import org.javacord.api.event.interaction.SelectMenuChooseEvent
 import org.javacord.api.interaction.ModalInteraction
 import org.javacord.api.interaction.SlashCommandInteraction
 import java.awt.Color
 import java.awt.image.BufferedImage
 
-class MenuBuilder(name: String, description: String, color: Color) {
+class MenuBuilder(name: String, description: String, color: Color, val player: Long) {
 
     private var ephemeral = false
 
@@ -34,7 +32,11 @@ class MenuBuilder(name: String, description: String, color: Color) {
         val id = generateUniqueID()
 
         arrayListOfButton.add(Button.success(id.toString(), name))
-        buttonsManager.addButton(id, whenUsed)
+        buttonsManager.addButton(id) { event ->
+            if (event.buttonInteraction.user.id == player) {
+                whenUsed(event)
+            }
+        }
 
         return this
     }

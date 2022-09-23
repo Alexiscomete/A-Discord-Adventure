@@ -25,7 +25,8 @@ class Maison(building: Building?) : BuildingInteraction(building!!) {
         return MenuBuilder(
             "Maison",
             "Bienvenue dans votre maison",
-            Color.DARK_GRAY
+            Color.DARK_GRAY,
+            p.id
         )
     }
 

@@ -17,7 +17,8 @@ class Journal(building: Building?) : BuildingInteraction(building!!) {
         return MenuBuilder(
             "Journal",
             "Voici votre journal",
-            Color.DARK_GRAY
+            Color.DARK_GRAY,
+            p.id
         )
     }
 

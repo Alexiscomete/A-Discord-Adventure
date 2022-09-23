@@ -17,7 +17,8 @@ class Armurerie(building: Building?) : BuildingInteraction(building!!) {
         return MenuBuilder(
             "Armurerie",
             "Bienvenue dans l'armurerie !",
-            Color.DARK_GRAY
+            Color.DARK_GRAY,
+            p.id
         )
     }
 
