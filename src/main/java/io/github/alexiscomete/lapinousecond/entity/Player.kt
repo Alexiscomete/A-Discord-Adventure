@@ -253,7 +253,8 @@ class Player(id: Long) : CacheGetSet(id, PLAYERS), Owner {
         return getMoney() >= amount
     }
 
-    var world = run {
+    val world
+        get() = run {
         val w = this["world"]
         if (w == "") {
             WorldEnum.TUTO

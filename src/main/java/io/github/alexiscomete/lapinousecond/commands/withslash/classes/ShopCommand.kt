@@ -188,20 +188,28 @@ class ShopListCommand :
         val stringBuilder = StringBuilder()
             .append("Resource -> prix d'achat; prix de vente; prix réel; nom à entrer")
         for (r in Resource.values()) {
-            stringBuilder.append("\n").append(r.name_).append(" -> ").append(round(r.price * buyCoef * 1000) / 1000)
-                .append("; ")
-                .append(round(r.price * sellCoef * 1000) / 1000).append("; ").append(r.price).append("; ")
+            stringBuilder
+                .append("\n")
+                .append(r.name_)
+                .append(" -> `")
+                .append(round(r.price * buyCoef * 1000) / 1000)
+                .append("`; `")
+                .append(round(r.price * sellCoef * 1000) / 1000)
+                .append("`; `")
+                .append(r.price)
+                .append("`; `")
                 .append(r.progName)
+                .append("`")
         }
         val embedBuilder = EmbedBuilder()
             .setTitle("Liste du shop")
-            .setFooter("Ceci est temporaire en attendant que les marchés qui pourront être contruits dans les serveurs ou les villes")
+            .setFooter("Ceci est temporaire en attendant que les marchés qui pourront être construits dans les serveurs ou les villes")
             .addField("Resources", stringBuilder.toString())
         val responder = slashCommand.createImmediateResponder()
             .addEmbed(embedBuilder)
         if (player["tuto"].toInt() == 5) {
             player["tuto"] = "6"
-            responder.setContent("Je vous laisse découvrir la suite tout seul ...")
+            responder.setContent("> (Aurimezi) : Voici la liste des ressources disponibles dans le magasin ! Bon faut pas le dire mais ils prennent un pourcentage sur chaque vente donc il vaut mieux que tu passes par le marché ! Mais il faut vite avancer et une offre au marché peut rester plusieurs jours.")
         }
         responder.respond()
     }

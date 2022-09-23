@@ -75,6 +75,7 @@ class ListenerSlashCommands : SlashCommandCreateListener {
             slashCommand.createImmediateResponder()
                 .setContent("Une erreur est survenue. Vérifiez le contenu de la commande. Erreur = `${e.localizedMessage}`")
                 .setFlags(MessageFlag.EPHEMERAL).respond()
+            e.printStackTrace()
         }
     }
 }

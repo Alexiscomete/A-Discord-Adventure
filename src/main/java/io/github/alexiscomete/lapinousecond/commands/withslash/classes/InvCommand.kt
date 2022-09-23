@@ -140,10 +140,10 @@ class InvCommandResources : SubCommand(
 
         val tuto = player["tuto"].toInt()
         if (tuto == 1) {
-            content += "Bon ... comme vous l'avez vu vous n'avez normalement pas d'argent. Utilisez la commande `work` pour en gagner un peu ...\n"
+            content += "> (Aurimezi) : Vide ?! Comment tu as fait pour acheter un inventaire sans argent ?\n\n> (Vous) : Je ne me souviens de rien. Depuis quand un inventaire parle ?\n\n> (Aurimezi) : Bon je crois que je vais devoir un peu te guider ...\n\nUtilisez `/work all`\n"
             player["tuto"] = "3"
         } else if (tuto == 4) {
-            content += "Vous remarquerez quelques changements. Utilisez -shop pour échanger ce que vous avez récupéré\n"
+            content += "> (Aurimezi) : Ca fait du bien de ne pas se sentir vide ... maintenant achetons ou vendons des ressources. Regardons ce qu'on a au magasin\n\nUtilisez `/shop list`\n"
             player["tuto"] = "5"
         }
 

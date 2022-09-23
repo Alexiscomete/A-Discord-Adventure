@@ -338,7 +338,6 @@ class InteractCommandBase : Command(
                                             ) {
                                                 helpBuilding(building, it)
                                             }
-                                            .addEphemeral()
                                             .modif(buttonClickEvent)
                                     } else {
                                         enterInBuilding(building, buttonClickEvent)
@@ -416,9 +415,7 @@ class InteractCommandBase : Command(
                             }
                             .modif(bat)
                     }
-                    .addEphemeral()
                     .responder(slashCommand)
-                println("Le joueur $player a ouvert le menu de la ville ${place["nameRP"]}")
             }
 
             else -> {

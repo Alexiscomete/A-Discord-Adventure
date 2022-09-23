@@ -60,7 +60,7 @@ fun setWork(
         }
         player.updateWorkTime()
         if (player["tuto"].toInt() == 3) {
-            response.setContent("La récompense peut varier d'un work à un autre. Utilisez inv ...")
+            response.setContent("> (Aurimezi) : Bon tu as déjà plus de trucs. Maintenant on va utiliser ma fonctionnalité de magasin pour échanger ce que tu as trouvé. Bon qu'est ce qu'on a ramassé ...\n\nUtilisez à nouveau la commande d'inventaire")
             player["tuto"] = "4"
         }
     } else {

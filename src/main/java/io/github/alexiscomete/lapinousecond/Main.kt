@@ -38,7 +38,7 @@ fun main() {
         /**
          * Instance de l'API Javacord
          */
-        api.updateActivity("Prefix : -")
+        api.updateActivity("Utilisez /account start pour commencer votre aventure ! ❤")
         api.addListener(ListenerSlashCommands())
         api.addListener(buttonsManager)
         api.addListener(messagesManager)
