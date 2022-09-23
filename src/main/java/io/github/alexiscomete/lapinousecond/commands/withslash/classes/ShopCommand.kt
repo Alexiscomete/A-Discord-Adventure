@@ -209,7 +209,7 @@ class ShopListCommand :
             .addEmbed(embedBuilder)
         if (player["tuto"].toInt() == 5) {
             player["tuto"] = "6"
-            responder.setContent("> (Aurimezi) : Voici la liste des ressources disponibles dans le magasin ! Bon faut pas le dire mais ils prennent un pourcentage sur chaque vente donc il vaut mieux que tu passes par le marché ! Mais il faut vite avancer et une offre au marché peut rester plusieurs jours.")
+            responder.setContent("> (Aurimezi) : Voici la liste des ressources disponibles dans le magasin ! Bon faut pas le dire mais ils prennent un pourcentage sur chaque vente donc il vaut mieux que tu passes par le marché ! Mais il faut vite avancer et une offre au marché peut rester plusieurs jours. Je te laisse faire tes achats avec `/shop sell` et `/shop buy`, moi je me prépare à partir à l'aventure ! Utilises `/map` quand tu est prêt. Sélectionnes `Cartes` puis `Ma position`.")
         }
         responder.respond()
     }

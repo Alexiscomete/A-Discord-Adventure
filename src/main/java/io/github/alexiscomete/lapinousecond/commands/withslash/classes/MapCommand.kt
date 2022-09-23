@@ -43,7 +43,12 @@ class MapCommand : Command(
                 "Voyager",
                 "Permet de se déplacer de plusieurs façons sur la carte"
             ) { messageComponentCreateEvent: ButtonClickEvent ->
-                MenuBuilder("Voyager", "Voyager est important dans ce jeu", Color.PINK, messageComponentCreateEvent.buttonInteraction.user.id)
+                MenuBuilder(
+                    "Voyager",
+                    "Voyager est important dans ce jeu",
+                    Color.PINK,
+                    messageComponentCreateEvent.buttonInteraction.user.id
+                )
                     .addButton(
                         "Mondes",
                         "Permet de changer de monde"
@@ -218,7 +223,12 @@ class MapCommand : Command(
                                     "Temps",
                                     "Vous allez prendre $timeMillisToTravel ms pour aller jusqu'à ce pixel"
                                 ) { timeB ->
-                                    MenuBuilder("Confirmer", "Confirmer le voyage ?", Color.orange,timeB.buttonInteraction.user.id)
+                                    MenuBuilder(
+                                        "Confirmer",
+                                        "Confirmer le voyage ?",
+                                        Color.orange,
+                                        timeB.buttonInteraction.user.id
+                                    )
                                         .addButton("Oui", "Oui je veux aller jusqu'à ce pixel") {
                                             player.setPath(path, "default_time")
                                             it.buttonInteraction.createOriginalMessageUpdater()
@@ -240,7 +250,12 @@ class MapCommand : Command(
                                     "Argent",
                                     "Vous allez dépenser $priceToTravel ${Resource.RABBIT_COIN.name_} pour aller jusqu'à ce pixel"
                                 ) { moneyB ->
-                                    MenuBuilder("Confirmer", "Confirmer le voyage ?", Color.orange,moneyB.buttonInteraction.user.id)
+                                    MenuBuilder(
+                                        "Confirmer",
+                                        "Confirmer le voyage ?",
+                                        Color.orange,
+                                        moneyB.buttonInteraction.user.id
+                                    )
                                         .addButton("Oui", "Oui je veux aller jusqu'à ce pixel") {
                                             // get the player's money
                                             val money = player.getMoney()
@@ -290,7 +305,12 @@ class MapCommand : Command(
                 "Une urgence ? Bloqué dans un lieu inexistant ? Retournez au hub gratuitement !"
             ) { messageComponentCreateEvent: ButtonClickEvent ->
                 val p = getAccount(slashCommand)
-                MenuBuilder("Confirmation requise", "Voulez-vous vraiment retourner au hub ?", Color.PINK,messageComponentCreateEvent.buttonInteraction.user.id)
+                MenuBuilder(
+                    "Confirmation requise",
+                    "Voulez-vous vraiment retourner au hub ?",
+                    Color.PINK,
+                    messageComponentCreateEvent.buttonInteraction.user.id
+                )
                     .addButton("Oui", "Retourner au hub") { buttonClickEvent: ButtonClickEvent ->
                         buttonClickEvent.buttonInteraction.createOriginalMessageUpdater()
                             .setContent("✔ Flavinou vient de vous téléporter au hub <https://discord.gg/q4hVQ6gwyx>")
@@ -307,7 +327,12 @@ class MapCommand : Command(
                 "Cartes",
                 "Les cartes sont disponibles ici ! De nombreuses actions complémentaires sont proposées"
             ) { messageComponentCreateEvent: ButtonClickEvent ->
-                MenuBuilder("Cartes 🌌", "Les cartes ... tellement de cartes !", Color.PINK,messageComponentCreateEvent.buttonInteraction.user.id)
+                MenuBuilder(
+                    "Cartes 🌌",
+                    "Les cartes ... tellement de cartes !",
+                    Color.PINK,
+                    messageComponentCreateEvent.buttonInteraction.user.id
+                )
                     .addButton(
                         "Liste des cartes",
                         "Toutes les cartes permanentes du jeu ... remerciez Darki"
@@ -356,15 +381,28 @@ class MapCommand : Command(
                         val image = world.zoomWithCity(xInt, yInt, 30, player)
 
                         later.thenAccept {
-                            it.addEmbed(
-                                EmbedBuilder()
-                                    .setTitle("Vous êtes dans $biome")
-                                    .setImage(image)
-                                    .setDescription(position)
-                                    .setColor(Color.PINK)
-
-                            )
-                                .update()
+                            if (player["tuto"] == "6") {
+                                it
+                                    .addEmbed(
+                                        EmbedBuilder()
+                                            .setTitle("Vous êtes dans $biome")
+                                            .setImage(image)
+                                            .setDescription(position)
+                                            .setColor(Color.PINK)
+                                    )
+                                    .setContent("> (Aurimezi) : Drôle de position ... allons voir la ville la plus proche ! Fait `/map` puis `voyager` et enfin `Aller à`. Je doit malheureusement te laisser, je dois aller voir un de tes futurs équipements pour un recrutement. Bonne chance !")
+                                    .update()
+                            } else {
+                                it
+                                    .addEmbed(
+                                        EmbedBuilder()
+                                            .setTitle("Vous êtes dans $biome")
+                                            .setImage(image)
+                                            .setDescription(position)
+                                            .setColor(Color.PINK)
+                                    )
+                                    .update()
+                            }
                         }
 
                     }
