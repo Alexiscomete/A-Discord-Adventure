@@ -199,12 +199,13 @@ class InvCommandTop : SubCommand(
             .setTimestampToNow()
 
         // top 10
-        val resultSet = saveManager.executeQuery("SELECT * FROM players ORDER BY (bal + 0.0) ASC LIMIT 10", true)
+        val resultSet = saveManager.executeQuery("SELECT * FROM players ORDER BY CAST(bal AS INTEGER) DESC LIMIT 10", true)
 
         val players = ArrayList<Player>()
         try {
             if (resultSet != null) {
                 while (resultSet.next()) {
+                    println("Player : " + resultSet.getString("id"))
                     players.add(
                         Player(
                             resultSet.getLong("id"),
