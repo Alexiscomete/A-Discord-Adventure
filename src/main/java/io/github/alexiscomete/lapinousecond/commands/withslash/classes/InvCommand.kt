@@ -14,6 +14,7 @@ import org.javacord.api.interaction.SlashCommandInteraction
 import org.javacord.api.interaction.SlashCommandOption
 import org.javacord.api.interaction.SlashCommandOptionType
 import java.awt.Color
+import java.sql.PreparedStatement
 import java.sql.SQLException
 
 fun who(slashCommand: SlashCommandInteraction): Player {

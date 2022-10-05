@@ -205,6 +205,30 @@ class SaveManager(path: String) {
     }
 
     /**
+     * Thanks to https://stackoverflow.com/questions/9696572/queries-returning-multiple-result-sets
+     */
+    fun executeMultipleQuery(statement: PreparedStatement, bo: Boolean): ArrayList<ResultSet> {
+        val isResultSet = statement.execute()
+        val resultSets = ArrayList<ResultSet>()
+
+        var inWhile = true
+        while (inWhile) {
+            if (isResultSet) {
+                resultSets.add(statement.resultSet)
+            } else {
+                if (statement.updateCount == -1) {
+                    inWhile = false
+                }
+            }
+            if (inWhile) {
+                inWhile = statement.moreResults
+            }
+        }
+
+        return resultSets
+    }
+
+    /**
      * It adds a column to a table, then returns the value of that column for a specific row
      *
      * @param table The table you want to get the string from.
