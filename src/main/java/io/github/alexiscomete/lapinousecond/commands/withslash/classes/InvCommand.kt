@@ -14,7 +14,6 @@ import org.javacord.api.interaction.SlashCommandInteraction
 import org.javacord.api.interaction.SlashCommandOption
 import org.javacord.api.interaction.SlashCommandOptionType
 import java.awt.Color
-import java.sql.PreparedStatement
 import java.sql.SQLException
 
 fun who(slashCommand: SlashCommandInteraction): Player {
@@ -56,7 +55,12 @@ class InvCommandInfos : SubCommand(
     "infos",
     "Permet d'afficher vos informations générales",
     arrayListOf(
-        SlashCommandOption.create(SlashCommandOptionType.USER, "player", "Spécifier un joueur si ce n'est pas vous", false)
+        SlashCommandOption.create(
+            SlashCommandOptionType.USER,
+            "player",
+            "Spécifier un joueur si ce n'est pas vous",
+            false
+        )
     )
 ), ExecutableWithArguments {
     override val fullName: String
@@ -95,7 +99,12 @@ class InvCommandItems : SubCommand(
     "items",
     "Permet d'afficher vos items",
     arrayListOf(
-        SlashCommandOption.create(SlashCommandOptionType.USER, "player", "Spécifier un joueur si ce n'est pas vous", false)
+        SlashCommandOption.create(
+            SlashCommandOptionType.USER,
+            "player",
+            "Spécifier un joueur si ce n'est pas vous",
+            false
+        )
     )
 ), ExecutableWithArguments {
     override val fullName: String
@@ -126,7 +135,12 @@ class InvCommandResources : SubCommand(
     "resources",
     "Permet d'afficher vos ressources",
     arrayListOf(
-        SlashCommandOption.create(SlashCommandOptionType.USER, "player", "Spécifier un joueur si ce n'est pas vous", false)
+        SlashCommandOption.create(
+            SlashCommandOptionType.USER,
+            "player",
+            "Spécifier un joueur si ce n'est pas vous",
+            false
+        )
     )
 ), ExecutableWithArguments {
     override val fullName: String
@@ -183,7 +197,12 @@ class InvCommandTop : SubCommand(
     "top",
     "Permet de voir le top des joueurs",
     arrayListOf(
-        SlashCommandOption.create(SlashCommandOptionType.USER, "player", "Spécifier un joueur si ce n'est pas vous", false)
+        SlashCommandOption.create(
+            SlashCommandOptionType.USER,
+            "player",
+            "Spécifier un joueur si ce n'est pas vous",
+            false
+        )
     )
 ), ExecutableWithArguments {
     override val fullName: String
@@ -200,18 +219,20 @@ class InvCommandTop : SubCommand(
             .setTimestampToNow()
 
         // top 10
-        val resultSet = saveManager.executeQuery("SELECT * FROM players ORDER BY CAST(bal AS INTEGER) DESC LIMIT 10", true)
+        val preparedStatement =
+            saveManager.preparedStatement("SELECT * FROM players ORDER BY CAST(bal AS INTEGER) DESC LIMIT 10")
+        val results = saveManager.executeMultipleQuery(preparedStatement, true)
 
-        val players = ArrayList<Player>()
+        val playerArrayList = ArrayList<Player>()
         try {
-            if (resultSet != null) {
-                while (resultSet.next()) {
-                    println("Player : " + resultSet.getString("id"))
-                    players.add(
-                        Player(
-                            resultSet.getLong("id"),
-                        )
-                    )
+            for (result in results) {
+                println(result)
+                while (result.next()) {
+                    println("result")
+                    val player = players[result.getLong("id")]
+                    if (player != null) {
+                        playerArrayList.add(player)
+                    }
                 }
             }
         } catch (e: SQLException) {
@@ -234,7 +255,7 @@ class InvCommandTop : SubCommand(
 
 
         var top = ""
-        for (player in players) {
+        for (player in playerArrayList) {
             val user = api.getUserById(player.id).join()
             top = "${user.name} ${player["bal"]} ${Resource.RABBIT_COIN.name_}\n${top}"
         }

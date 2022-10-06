@@ -204,24 +204,36 @@ class SaveManager(path: String) {
         }
     }
 
+    fun preparedStatement(query: String): PreparedStatement {
+        return co!!.prepareStatement(query)
+    }
+
     /**
      * Thanks to https://stackoverflow.com/questions/9696572/queries-returning-multiple-result-sets
      */
-    fun executeMultipleQuery(statement: PreparedStatement, bo: Boolean): ArrayList<ResultSet> {
-        val isResultSet = statement.execute()
+    fun executeMultipleQuery(statement: PreparedStatement, bo: Boolean = false): ArrayList<ResultSet> {
+
         val resultSets = ArrayList<ResultSet>()
 
-        var inWhile = true
-        while (inWhile) {
-            if (isResultSet) {
-                resultSets.add(statement.resultSet)
-            } else {
-                if (statement.updateCount == -1) {
-                    inWhile = false
+        try {
+            val isResultSet = statement.execute()
+
+            var inWhile = true
+            while (inWhile) {
+                if (isResultSet) {
+                    resultSets.add(statement.resultSet)
+                } else {
+                    if (statement.updateCount == -1) {
+                        inWhile = false
+                    }
+                }
+                if (inWhile) {
+                    inWhile = statement.moreResults
                 }
             }
-            if (inWhile) {
-                inWhile = statement.moreResults
+        } catch (e: SQLException) {
+            if (bo) {
+                e.printStackTrace()
             }
         }
 
