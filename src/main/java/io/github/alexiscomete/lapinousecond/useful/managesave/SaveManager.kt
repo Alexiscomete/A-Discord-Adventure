@@ -170,12 +170,12 @@ class SaveManager(path: String) {
     }
 
     @JvmOverloads
-    /**
-     * It executes a SQL statement
-     *
-     * @param ex The SQL statement to execute
-     * @param bo Boolean, if true, it will print the stack trace if an error occurs.
-     */
+            /**
+             * It executes a SQL statement
+             *
+             * @param ex The SQL statement to execute
+             * @param bo Boolean, if true, it will print the stack trace if an error occurs.
+             */
     fun execute(ex: String, bo: Boolean = true) {
         try {
             st!!.executeUpdate(ex)
@@ -211,33 +211,31 @@ class SaveManager(path: String) {
     /**
      * Thanks to https://stackoverflow.com/questions/9696572/queries-returning-multiple-result-sets
      */
-    fun executeMultipleQuery(statement: PreparedStatement, bo: Boolean = false): ArrayList<ResultSet> {
-
-        val resultSets = ArrayList<ResultSet>()
-
+    fun executeMultipleQueryKey(statement: PreparedStatement, bo: Boolean = false, key: String = "id"): ArrayList<Long> {
+        val ids = ArrayList<Long>()
         try {
             val isResultSet = statement.execute()
 
             var inWhile = true
             while (inWhile) {
                 if (isResultSet) {
-                    resultSets.add(statement.resultSet)
+                    val resultSet = statement.resultSet
+                    while (resultSet.next()) {
+                        ids.add(resultSet.getLong(key))
+                    }
                 } else {
                     if (statement.updateCount == -1) {
-                        inWhile = false
+                        break
                     }
                 }
-                if (inWhile) {
-                    inWhile = statement.moreResults
-                }
+                inWhile = statement.moreResults
             }
         } catch (e: SQLException) {
             if (bo) {
                 e.printStackTrace()
             }
         }
-
-        return resultSets
+        return ids
     }
 
     /**
@@ -253,7 +251,7 @@ class SaveManager(path: String) {
     fun getString(table: Table, row: String, type: String, id: Long, log: Boolean): String {
         execute("ALTER TABLE " + table.name + " ADD COLUMN " + row + " " + type, false)
         val resultSet: ResultSet
-        var str:String? = ""
+        var str: String? = ""
         try {
             resultSet = st!!.executeQuery("SELECT " + row + " FROM " + table.name + " WHERE id=" + id)
             str = resultSet.getString(row)

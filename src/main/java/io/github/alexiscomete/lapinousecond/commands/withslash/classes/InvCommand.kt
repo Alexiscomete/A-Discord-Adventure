@@ -220,27 +220,24 @@ class InvCommandTop : SubCommand(
 
         // top 10
         val preparedStatement =
-            saveManager.preparedStatement("SELECT * FROM players ORDER BY CAST(bal AS INTEGER) DESC LIMIT 10")
-        val results = saveManager.executeMultipleQuery(preparedStatement, true)
+            saveManager.preparedStatement("SELECT * FROM players ORDER BY CAST(bal AS INTEGER) ASC LIMIT 10")
+        val results = saveManager.executeMultipleQueryKey(preparedStatement, true)
 
         val playerArrayList = ArrayList<Player>()
         try {
             for (result in results) {
-                println(result)
-                while (result.next()) {
-                    println("result")
-                    val player = players[result.getLong("id")]
-                    if (player != null) {
-                        playerArrayList.add(player)
-                    }
+                val player = players[result]
+                if (player != null) {
+                    playerArrayList.add(player)
                 }
+
             }
         } catch (e: SQLException) {
             e.printStackTrace()
         }
 
         // position
-        val resultSet2 = saveManager.executeQuery("SELECT count(*) FROM players WHERE bal > ${pl["bal"]}", true)
+        val resultSet2 = saveManager.executeQuery("SELECT count(*) FROM players WHERE CAST(bal AS INTEGER) > ${pl["bal"]}", true)
 
         var position = 0
         try {
