@@ -25,6 +25,7 @@ class Player(id: Long) : CacheGetSet(id, PLAYERS), Owner {
     private val items = ArrayList<io.github.alexiscomete.lapinousecond.Item>()
     val resourceManagers: HashMap<Resource, ResourceManager>
     var state = 0
+    val level: Level = Level(this, "xp")
 
     fun updateWorkTime() {
         workTime = System.currentTimeMillis()

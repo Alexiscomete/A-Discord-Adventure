@@ -2,7 +2,7 @@ package io.github.alexiscomete.lapinousecond.entity
 
 import io.github.alexiscomete.lapinousecond.useful.managesave.CacheGetSet
 
-class Level(entity: CacheGetSet, field: String, val accumulation: Double = 2.5, val start: Double = 20.0) {
+class Level(val entity: CacheGetSet, val field: String, val accumulation: Double = 2.5, val start: Double = 20.0) {
 
     fun xpForLevel(level: Int, xpForLastLevel: Double? = null): Double {
         if (level == 1) return start
@@ -21,8 +21,12 @@ class Level(entity: CacheGetSet, field: String, val accumulation: Double = 2.5, 
     }
 
     fun xpForNextLevel(xp: Double): Double {
+        return totalXpForNextLevel(xp) - xp
+    }
+
+    fun totalXpForNextLevel(xp: Double): Double {
         val level = levelForXp(xp)
-        return xpForLevel(level + 1) - xp
+        return xpForLevel(level + 1)
     }
 
     fun xpForLastLevel(xp: Double): Double {
@@ -31,7 +35,42 @@ class Level(entity: CacheGetSet, field: String, val accumulation: Double = 2.5, 
     }
 
     fun xpInCurrentLevel(xp: Double): Double {
-        val level = levelForXp(xp)
-        return xp - xpForLevel(level)
+        return xp - xpForLastLevel(xp)
+    }
+
+    val level
+        get() = levelForXp(if (entity[field] == "") 0.0 else entity[field].toDouble())
+
+    val xpForNextLevel
+        get() = xpForNextLevel(if (entity[field] == "") 0.0 else entity[field].toDouble())
+
+    val totalXpForNextLevel
+        get() = totalXpForNextLevel(if (entity[field] == "") 0.0 else entity[field].toDouble())
+
+    val xpForLastLevel
+        get() = xpForLastLevel(if (entity[field] == "") 0.0 else entity[field].toDouble())
+
+    val xpInCurrentLevel
+        get() = xpInCurrentLevel(if (entity[field] == "") 0.0 else entity[field].toDouble())
+
+    fun addXp(xp: Double) {
+        entity[field] = ((if (entity[field] == "") 0.0 else entity[field].toDouble()) + xp).toString()
+    }
+
+    fun removeXp(xp: Double) {
+        entity[field] = ((if (entity[field] == "") 0.0 else entity[field].toDouble()) - xp).toString()
+        if (entity[field].toDouble() < 0) entity[field] = "0"
+    }
+
+    fun setXp(xp: Double) {
+        entity[field] = xp.toString()
+    }
+
+    fun setLevel(level: Int) {
+        entity[field] = xpForLevel(level).toString()
+    }
+
+    fun addLevel(level: Int) {
+        entity[field] = (xpForLevel(level) + (if (entity[field] == "") 0.0 else entity[field].toDouble())).toString()
     }
 }
