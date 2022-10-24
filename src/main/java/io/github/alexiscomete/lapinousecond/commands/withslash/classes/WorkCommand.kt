@@ -59,9 +59,11 @@ fun setWork(
             player.updateResources()
         }
         player.updateWorkTime()
+        player.level.addXp(0.1)
         if (player["tuto"].toInt() == 3) {
             response.setContent("> (Aurimezi) : Bon tu as déjà plus de trucs. Maintenant on va utiliser ma fonctionnalité de magasin pour échanger ce que tu as trouvé. Bon qu'est ce qu'on a ramassé ...\n\nUtilisez à nouveau la commande d'inventaire")
             player["tuto"] = "4"
+            player.level.addXp(1.0)
         }
     } else {
         embedBuilder.addField(
@@ -111,6 +113,7 @@ private fun setRoles(
             }
         }
         player["bal"] = (player["bal"].toDouble() + totalRoles).toString()
+        player.level.addXp(0.1)
     } else {
         roles.append("Vous n'êtes pas sur un serveur")
     }
@@ -136,7 +139,7 @@ class WorkCommandRoles :
 
     override val fullName: String
         get() = "work roles"
-    override val botPerms: Array<String>?
+    override val botPerms: Array<String>
         get() = arrayOf("PLAY")
 
     override fun execute(slashCommand: SlashCommandInteraction) {
@@ -162,7 +165,7 @@ class WorkCommandAll :
     ExecutableWithArguments {
     override val fullName: String
         get() = "work all"
-    override val botPerms: Array<String>?
+    override val botPerms: Array<String>
         get() = arrayOf("PLAY")
 
     override fun execute(slashCommand: SlashCommandInteraction) {
@@ -189,7 +192,7 @@ class WorkCommandResources :
     ExecutableWithArguments {
     override val fullName: String
         get() = "work resources"
-    override val botPerms: Array<String>?
+    override val botPerms: Array<String>
         get() = arrayOf("PLAY")
 
     override fun execute(slashCommand: SlashCommandInteraction) {

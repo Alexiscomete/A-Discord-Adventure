@@ -21,7 +21,6 @@ import java.awt.Color
 import java.util.*
 import kotlin.collections.ArrayList
 
-//TODO
 class ConfigCommand : Command(
     "config",
     "Permet de configurer le serveur discord et les lieux associés à celui-ci",
