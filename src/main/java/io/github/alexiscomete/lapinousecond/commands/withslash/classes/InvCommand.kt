@@ -86,6 +86,7 @@ class InvCommandInfos : SubCommand(
      """.trimIndent(), true
                 )
                 .addField("Position", player.positionToString())
+                .addField("Niveau", player.level.toString())
                 .setColor(Color.green)
                 .setThumbnail("https://cdn.discordapp.com/attachments/854322477152337920/924612939879702588/unknown.png")
 
@@ -237,7 +238,8 @@ class InvCommandTop : SubCommand(
         }
 
         // position
-        val resultSet2 = saveManager.executeQuery("SELECT count(*) FROM players WHERE CAST(bal AS INTEGER) > ${pl["bal"]}", true)
+        val resultSet2 =
+            saveManager.executeQuery("SELECT count(*) FROM players WHERE CAST(bal AS INTEGER) > ${pl["bal"]}", true)
 
         var position = 0
         try {

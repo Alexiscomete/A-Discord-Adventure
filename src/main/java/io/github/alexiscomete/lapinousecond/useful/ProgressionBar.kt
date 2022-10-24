@@ -12,10 +12,7 @@ class ProgressionBar(
     val bar: String
         get() {
             val min = partMin
-            val max = numberChars - min
-            val r = "`" + before(min) + indicator + after(max) + "`"
-            println(r)
-            return r
+            return "`" + before(min) + indicator + after(numberChars - min) + "`"
         }
 
     private fun before(n: Int): String {

@@ -1,8 +1,9 @@
 package io.github.alexiscomete.lapinousecond.entity
 
+import io.github.alexiscomete.lapinousecond.useful.ProgressionBar
 import io.github.alexiscomete.lapinousecond.useful.managesave.CacheGetSet
 
-class Level(val entity: CacheGetSet, val field: String, val accumulation: Double = 2.5, val start: Double = 20.0) {
+class Level(val entity: CacheGetSet, private val field: String, private val accumulation: Double = 2.5, val start: Double = 20.0) {
 
     fun xpForLevel(level: Int, xpForLastLevel: Double? = null): Double {
         if (level == 1) return start
@@ -11,7 +12,7 @@ class Level(val entity: CacheGetSet, val field: String, val accumulation: Double
     }
 
     fun levelForXp(xp: Double): Int {
-        var level = 1
+        var level = 0
         var xpForLastLevel = start
         while (xpForLevel(level, xpForLastLevel) < xp) {
             xpForLastLevel = xpForLevel(level, xpForLastLevel)
@@ -72,5 +73,16 @@ class Level(val entity: CacheGetSet, val field: String, val accumulation: Double
 
     fun addLevel(level: Int) {
         entity[field] = (xpForLevel(level) + (if (entity[field] == "") 0.0 else entity[field].toDouble())).toString()
+    }
+
+    override fun toString(): String {
+        return ProgressionBar(
+            "🟡",
+            "🟨",
+            "⬜",
+            xpForNextLevel,
+            xpInCurrentLevel,
+            15
+        ).bar + " **$level** ($xpInCurrentLevel/$xpForNextLevel)"
     }
 }
