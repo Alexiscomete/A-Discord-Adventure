@@ -49,6 +49,15 @@ class MarketCommand : Command(
         AUCTIONS
         OFFERS
         RESEARCHES
+
+        val player = getAccount(slashCommand)
+        if (player.level.level < 2) {
+            slashCommand.createImmediateResponder()
+                .setContent("Vous devez être niveau 2 pour accéder au marché. Utilisez la commande `/shop` pour monter commercer et la commande `/work` pour gagner de l'xp.")
+                .respond()
+            return
+        }
+
         MenuBuilder(
             "Le marché",
             "Ici est le lieu d'échanges entre les joueurs ! Avancez sur vos quêtes en trouvant ici des objets introuvables, gagnez de l'argent en vendant des objets ou des ressources .... bref c'est le lieu des joueurs",
