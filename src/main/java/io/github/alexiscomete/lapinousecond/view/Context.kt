@@ -2,7 +2,7 @@ package io.github.alexiscomete.lapinousecond.view
 
 import io.github.alexiscomete.lapinousecond.entity.PlayerWithAccount
 import io.github.alexiscomete.lapinousecond.view.message_event.ButtonsContextManager
-import io.github.alexiscomete.lapinousecond.view.message_event.SelectMenuContextManager
+import org.javacord.api.event.interaction.SelectMenuChooseEvent
 
 data class Players(val player: PlayerWithAccount, val otherPlayers: List<PlayerWithAccount> = listOf())
 
@@ -37,5 +37,5 @@ fun contextFor(players: List<PlayerWithAccount>): Context {
 
 class Context(val players: Players?) {
     val buttons: ButtonsContextManager? = null
-    val selectMenu: SelectMenuContextManager? = null
+    val selectMenu: ((SelectMenuChooseEvent, Context) -> Unit)? = null
 }
