@@ -1,9 +1,7 @@
-package io.github.alexiscomete.lapinousecond.message_event
+package io.github.alexiscomete.lapinousecond.view.message_event
 
 import org.javacord.api.event.interaction.ButtonClickEvent
-import org.javacord.api.event.interaction.MessageComponentCreateEvent
 import org.javacord.api.listener.interaction.ButtonClickListener
-import org.javacord.api.listener.interaction.MessageComponentCreateListener
 import java.util.function.Consumer
 
 class ButtonsManager : ButtonClickListener {

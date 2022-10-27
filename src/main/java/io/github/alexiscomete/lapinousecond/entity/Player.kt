@@ -18,7 +18,7 @@ import io.github.alexiscomete.lapinousecond.worlds.places
 val PLAYERS = Table("players")
 val players = CacheCustom(PLAYERS) { id: Long -> Player(id) }
 
-class Player(id: Long) : CacheGetSet(id, PLAYERS), Owner {
+open class Player(id: Long) : CacheGetSet(id, PLAYERS), Owner {
     var workTime: Long
         private set
     val roles: ArrayList<Role>

@@ -1,16 +1,16 @@
-package io.github.alexiscomete.lapinousecond.message_event
+package io.github.alexiscomete.lapinousecond.view
 
-import io.github.alexiscomete.lapinousecond.entity.Player
+import io.github.alexiscomete.lapinousecond.entity.PlayerWithAccount
 
-data class Players(val player: Player, val otherPlayers: List<Player> = listOf())
+data class Players(val player: PlayerWithAccount, val otherPlayers: List<PlayerWithAccount> = listOf())
 
 val contexts = mutableMapOf<Players, Context>()
 
-fun contextForOrNull(player: Player, otherPlayers: List<Player>): Context? {
+fun contextForOrNull(player: PlayerWithAccount, otherPlayers: List<PlayerWithAccount>): Context? {
     return contexts[Players(player, otherPlayers)]
 }
 
-fun contextFor(player: Player, otherPlayers: List<Player>): Context {
+fun contextFor(player: PlayerWithAccount, otherPlayers: List<PlayerWithAccount>): Context {
     return contextForOrNull(player, otherPlayers)
         ?: run {
             val players = Players(player, otherPlayers)
@@ -21,7 +21,7 @@ fun contextFor(player: Player, otherPlayers: List<Player>): Context {
         }
 }
 
-fun contextFor(players: List<Player>): Context {
+fun contextFor(players: List<PlayerWithAccount>): Context {
     // for each combination of players
     for (player in players) {
         players.minus(player).also { list ->

@@ -2,8 +2,8 @@ package io.github.alexiscomete.lapinousecond.commands.withslash.classes
 
 import io.github.alexiscomete.lapinousecond.commands.withslash.Command
 import io.github.alexiscomete.lapinousecond.commands.withslash.ExecutableWithArguments
-import io.github.alexiscomete.lapinousecond.message_event.EmbedPagesWithInteractions
-import io.github.alexiscomete.lapinousecond.message_event.MenuBuilder
+import io.github.alexiscomete.lapinousecond.view.message_event.EmbedPagesWithInteractions
+import io.github.alexiscomete.lapinousecond.view.message_event.MenuBuilder
 import io.github.alexiscomete.lapinousecond.modalManager
 import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
 import io.github.alexiscomete.lapinousecond.useful.managesave.saveManager

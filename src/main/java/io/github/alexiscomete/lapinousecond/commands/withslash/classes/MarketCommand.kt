@@ -6,8 +6,8 @@ import io.github.alexiscomete.lapinousecond.commands.withslash.getAccount
 import io.github.alexiscomete.lapinousecond.entity.Owner
 import io.github.alexiscomete.lapinousecond.entity.Player
 import io.github.alexiscomete.lapinousecond.entity.players
-import io.github.alexiscomete.lapinousecond.message_event.EmbedPagesWithInteractions
-import io.github.alexiscomete.lapinousecond.message_event.MenuBuilder
+import io.github.alexiscomete.lapinousecond.view.message_event.EmbedPagesWithInteractions
+import io.github.alexiscomete.lapinousecond.view.message_event.MenuBuilder
 import io.github.alexiscomete.lapinousecond.messagesManager
 import io.github.alexiscomete.lapinousecond.modalManager
 import io.github.alexiscomete.lapinousecond.resources.Resource

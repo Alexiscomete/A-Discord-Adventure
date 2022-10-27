@@ -1,4 +1,4 @@
-package io.github.alexiscomete.lapinousecond.message_event
+package io.github.alexiscomete.lapinousecond.view.message_event
 
 import io.github.alexiscomete.lapinousecond.messagesManager
 import io.github.alexiscomete.lapinousecond.worlds.ServerBot

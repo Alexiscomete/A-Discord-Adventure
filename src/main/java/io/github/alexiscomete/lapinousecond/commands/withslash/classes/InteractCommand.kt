@@ -4,8 +4,8 @@ import io.github.alexiscomete.lapinousecond.api
 import io.github.alexiscomete.lapinousecond.commands.withslash.Command
 import io.github.alexiscomete.lapinousecond.commands.withslash.ExecutableWithArguments
 import io.github.alexiscomete.lapinousecond.commands.withslash.getAccount
-import io.github.alexiscomete.lapinousecond.message_event.EmbedPagesWithInteractions
-import io.github.alexiscomete.lapinousecond.message_event.MenuBuilder
+import io.github.alexiscomete.lapinousecond.view.message_event.EmbedPagesWithInteractions
+import io.github.alexiscomete.lapinousecond.view.message_event.MenuBuilder
 import io.github.alexiscomete.lapinousecond.modalManager
 import io.github.alexiscomete.lapinousecond.resources.Resource
 import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID

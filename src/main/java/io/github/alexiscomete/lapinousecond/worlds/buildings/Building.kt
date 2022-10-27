@@ -2,7 +2,7 @@ package io.github.alexiscomete.lapinousecond.worlds.buildings
 
 import io.github.alexiscomete.lapinousecond.entity.Owner
 import io.github.alexiscomete.lapinousecond.entity.Player
-import io.github.alexiscomete.lapinousecond.message_event.MenuBuilder
+import io.github.alexiscomete.lapinousecond.view.message_event.MenuBuilder
 import io.github.alexiscomete.lapinousecond.resources.Resource
 import io.github.alexiscomete.lapinousecond.useful.ProgressionBar
 import io.github.alexiscomete.lapinousecond.useful.managesave.CacheCustom

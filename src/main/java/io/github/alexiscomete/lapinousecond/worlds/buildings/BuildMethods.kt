@@ -1,8 +1,7 @@
 package io.github.alexiscomete.lapinousecond.worlds.buildings
 
 import io.github.alexiscomete.lapinousecond.entity.Player
-import io.github.alexiscomete.lapinousecond.message_event.MenuBuilder
-import org.javacord.api.entity.message.embed.EmbedBuilder
+import io.github.alexiscomete.lapinousecond.view.message_event.MenuBuilder
 
 interface BuildMethods {
     fun getCompleteInfos(p: Player): MenuBuilder

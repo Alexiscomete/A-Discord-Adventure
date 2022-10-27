@@ -1,4 +1,4 @@
-package io.github.alexiscomete.lapinousecond.message_event
+package io.github.alexiscomete.lapinousecond.view.message_event
 
 import org.javacord.api.event.interaction.ModalSubmitEvent
 import org.javacord.api.listener.interaction.ModalSubmitListener
