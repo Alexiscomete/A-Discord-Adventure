@@ -5,7 +5,7 @@ import org.javacord.api.listener.interaction.SelectMenuChooseListener
 import java.util.function.Consumer
 
 class SelectMenuManager : SelectMenuChooseListener {
-    val hash = HashMap<Long, Consumer<SelectMenuChooseEvent>>()
+    private val hash = HashMap<Long, Consumer<SelectMenuChooseEvent>>()
 
     fun add(id: Long, consumer: Consumer<SelectMenuChooseEvent>) {
         hash[id] = consumer

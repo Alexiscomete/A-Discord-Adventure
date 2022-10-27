@@ -1,0 +1,3 @@
+package io.github.alexiscomete.lapinousecond.view.message_event
+
+interface ContextManager

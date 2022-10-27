@@ -5,7 +5,7 @@ import org.javacord.api.listener.interaction.ModalSubmitListener
 import java.util.function.Consumer
 
 class ModalManager : ModalSubmitListener {
-    val hash = HashMap<Long, Consumer<ModalSubmitEvent>>()
+    private val hash = HashMap<Long, Consumer<ModalSubmitEvent>>()
 
     fun add(id: Long, consumer: Consumer<ModalSubmitEvent>) {
         hash[id] = consumer

@@ -1,6 +1,8 @@
 package io.github.alexiscomete.lapinousecond.view
 
 import io.github.alexiscomete.lapinousecond.entity.PlayerWithAccount
+import io.github.alexiscomete.lapinousecond.view.message_event.ButtonsContextManager
+import io.github.alexiscomete.lapinousecond.view.message_event.SelectMenuContextManager
 
 data class Players(val player: PlayerWithAccount, val otherPlayers: List<PlayerWithAccount> = listOf())
 
@@ -10,7 +12,7 @@ fun contextForOrNull(player: PlayerWithAccount, otherPlayers: List<PlayerWithAcc
     return contexts[Players(player, otherPlayers)]
 }
 
-fun contextFor(player: PlayerWithAccount, otherPlayers: List<PlayerWithAccount>): Context {
+fun contextFor(player: PlayerWithAccount, otherPlayers: List<PlayerWithAccount> = listOf()): Context {
     return contextForOrNull(player, otherPlayers)
         ?: run {
             val players = Players(player, otherPlayers)
@@ -33,6 +35,7 @@ fun contextFor(players: List<PlayerWithAccount>): Context {
     return contextFor(players.first(), players.minus(players.first()))
 }
 
-class Context(val players: Players) {
-
+class Context(val players: Players?) {
+    val buttons: ButtonsContextManager? = null
+    val selectMenu: SelectMenuContextManager? = null
 }
