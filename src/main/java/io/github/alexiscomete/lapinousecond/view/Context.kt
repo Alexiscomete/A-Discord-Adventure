@@ -38,4 +38,6 @@ fun contextFor(players: List<PlayerWithAccount>): Context {
 class Context(val players: Players?) {
     val buttons: ButtonsContextManager? = null
     val selectMenu: ((SelectMenuChooseEvent, Context) -> Unit)? = null
+    val multiContext: Context? = null
+
 }
