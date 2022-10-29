@@ -4,6 +4,7 @@ import io.github.alexiscomete.lapinousecond.entity.PlayerWithAccount
 import io.github.alexiscomete.lapinousecond.view.message_event.ButtonsContextManager
 import io.github.alexiscomete.lapinousecond.view.message_event.ContextManager
 import io.github.alexiscomete.lapinousecond.view.message_event.SelectMenuContextManager
+import org.javacord.api.event.interaction.ButtonClickEvent
 import org.javacord.api.event.interaction.SelectMenuChooseEvent
 
 data class Players(val player: PlayerWithAccount, val otherPlayers: List<PlayerWithAccount> = listOf())
@@ -118,7 +119,27 @@ class Context(val players: Players, canParallel: Boolean = false) : ContextManag
                 return
             }
         }
+        throw IllegalStateException("Cannot apply $string")
     }
 
+    fun apply(string: String, event: ButtonClickEvent) {
+        if (multiContext != null) {
+            if (multiContext!!.canApply(string)) {
+                multiContext!!.apply(string, event)
+                return
+            }
+        }
+        if (buttons != null) {
+            if (buttons!!.canApply(string)) {
+                val button = buttons!!.hash[string]
+                if (button != null) {
+                    button(event, this, buttons!!)
+                    return
+                }
+                return
+            }
+        }
+        throw IllegalStateException("Cannot apply $string")
+    }
 
 }
