@@ -5,7 +5,7 @@ import org.javacord.api.event.interaction.ButtonClickEvent
 
 class ButtonsContextManager(var hash: HashMap<String, (ButtonClickEvent, Context, ButtonsContextManager) -> Unit >) : ContextManager {
     override fun canApply(string: String): Boolean {
-        TODO("Not yet implemented")
+        return hash.containsKey(string)
     }
 
 }

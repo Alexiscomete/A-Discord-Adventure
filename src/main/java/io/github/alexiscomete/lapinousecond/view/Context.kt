@@ -3,6 +3,7 @@ package io.github.alexiscomete.lapinousecond.view
 import io.github.alexiscomete.lapinousecond.entity.PlayerWithAccount
 import io.github.alexiscomete.lapinousecond.view.message_event.ButtonsContextManager
 import io.github.alexiscomete.lapinousecond.view.message_event.ContextManager
+import io.github.alexiscomete.lapinousecond.view.message_event.SelectMenuContextManager
 import org.javacord.api.event.interaction.SelectMenuChooseEvent
 
 data class Players(val player: PlayerWithAccount, val otherPlayers: List<PlayerWithAccount> = listOf())
@@ -50,7 +51,7 @@ class Context(val players: Players, canParallel: Boolean = false) : ContextManag
 
     var buttons: ButtonsContextManager? = null
         private set
-    var selectMenu: ((SelectMenuChooseEvent, Context) -> Unit)? = null
+    var selectMenu: SelectMenuContextManager? = null
         private set
     var multiContext: Context? = null
         private set
@@ -63,7 +64,7 @@ class Context(val players: Players, canParallel: Boolean = false) : ContextManag
         return this
     }
 
-    fun selectMenu(selectMenu: (SelectMenuChooseEvent, Context) -> Unit, canParallel:Boolean=false): Context {
+    fun selectMenu(selectMenu: SelectMenuContextManager, canParallel:Boolean=false): Context {
         if (!canParallel) {
             clear()
         }
@@ -86,7 +87,37 @@ class Context(val players: Players, canParallel: Boolean = false) : ContextManag
     }
 
     override fun canApply(string: String): Boolean {
-        TODO("Not yet implemented")
+        if (multiContext != null) {
+            if (multiContext!!.canApply(string)) {
+                return true
+            }
+        }
+        if (buttons != null) {
+            if (buttons!!.canApply(string)) {
+                return true
+            }
+        }
+        if (selectMenu != null) {
+            if (selectMenu!!.canApply(string)) {
+                return true
+            }
+        }
+        return false
+    }
+
+    fun apply(string: String, event: SelectMenuChooseEvent) {
+        if (multiContext != null) {
+            if (multiContext!!.canApply(string)) {
+                multiContext!!.apply(string, event)
+                return
+            }
+        }
+        if (selectMenu != null) {
+            if (selectMenu!!.canApply(string)) {
+                selectMenu!!.ex(event, this)
+                return
+            }
+        }
     }
 
 
