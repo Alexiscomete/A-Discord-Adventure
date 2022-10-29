@@ -2,6 +2,7 @@ package io.github.alexiscomete.lapinousecond.view
 
 import io.github.alexiscomete.lapinousecond.entity.PlayerWithAccount
 import io.github.alexiscomete.lapinousecond.view.message_event.ButtonsContextManager
+import io.github.alexiscomete.lapinousecond.view.message_event.ContextManager
 import org.javacord.api.event.interaction.SelectMenuChooseEvent
 
 data class Players(val player: PlayerWithAccount, val otherPlayers: List<PlayerWithAccount> = listOf())
@@ -35,15 +36,13 @@ fun contextFor(players: List<PlayerWithAccount>): Context {
     return contextFor(players.first(), players.minus(players.first()))
 }
 
-class Context(val players: Players?, canParallel: Boolean = false) {
+class Context(val players: Players, canParallel: Boolean = false) : ContextManager {
 
     init {
-        if (players != null) {
-            if (players.otherPlayers.isNotEmpty()) {
-                for (player in players.otherPlayers) {
-                    contextFor(player).also {
-                        it.multiContext(this, canParallel)
-                    }
+        if (players.otherPlayers.isNotEmpty()) {
+            for (player in players.otherPlayers) {
+                contextFor(player).also {
+                    it.multiContext(this, canParallel)
                 }
             }
         }
@@ -85,4 +84,10 @@ class Context(val players: Players?, canParallel: Boolean = false) {
         selectMenu = null
         multiContext = null
     }
+
+    override fun canApply(string: String): Boolean {
+        TODO("Not yet implemented")
+    }
+
+
 }
