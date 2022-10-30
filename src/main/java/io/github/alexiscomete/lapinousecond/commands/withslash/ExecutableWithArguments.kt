@@ -15,6 +15,15 @@ fun getAccount(slashCommandInteraction: SlashCommandInteraction): Player {
     }
 }
 
+fun getAccount(id: Long): Player {
+    try {
+        return players[id]
+            ?: throw IllegalStateException("Vous devez avoir un compte pour utiliser cette commande. Utilisez /start")
+    } catch (e: Exception) {
+        throw IllegalStateException("Vous devez avoir un compte pour utiliser cette commande. Utilisez /start")
+    }
+}
+
 interface ExecutableWithArguments {
 
     val fullName: String

@@ -7,5 +7,4 @@ class ButtonsContextManager(var hash: HashMap<String, (ButtonClickEvent, Context
     override fun canApply(string: String): Boolean {
         return hash.containsKey(string)
     }
-
 }
