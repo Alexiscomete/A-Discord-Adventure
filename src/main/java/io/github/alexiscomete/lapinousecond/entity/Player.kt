@@ -78,10 +78,12 @@ open class Player(id: Long) : CacheGetSet(id, PLAYERS), Owner {
                     val placeID = this["place_${worldName}_id"]
                     return places[placeID.toLong()]
                 }
+
                 "city" -> {
                     val cityID = this["place_${worldName}_id"]
                     return places[cityID.toLong()]
                 }
+
                 else -> {
                     null
                 }
@@ -154,24 +156,29 @@ open class Player(id: Long) : CacheGetSet(id, PLAYERS), Owner {
                 // on retourne le résultat
                 "Vous êtes dans le monde ${world}, sur des coordonnées ($x, $y)"
             }
+
             "place" -> {
                 val placeID = this["place_${world}_id"]
                 "Vous êtes dans le monde ${world}, dans le lieu $placeID"
             }
+
             "path" -> {
                 val path = getPath()
                 val firstPixel = path[0]
                 val lastPixel = path[path.size - 1]
                 "Vous êtes dans le monde ${world}, sur un chemin. Le premier pixel est (${firstPixel.x}, ${firstPixel.y}), le dernier pixel est (${lastPixel.x}, ${lastPixel.y})"
             }
+
             "city" -> {
                 val cityID = this["place_${world}_id"]
                 "Vous êtes dans le monde ${world}, dans la ville $cityID"
             }
+
             "building" -> {
                 val buildingID = this["place_${world}_building_id"]
                 "Vous êtes dans le monde ${world}, dans le bâtiment $buildingID"
             }
+
             else -> {
                 "Vous êtes dans le monde ${world}, mais vous ne savez pas où vous êtes"
             }
@@ -255,13 +262,13 @@ open class Player(id: Long) : CacheGetSet(id, PLAYERS), Owner {
 
     val world
         get() = run {
-        val w = this["world"]
-        if (w == "") {
-            WorldEnum.TUTO
-            this["world"] = WorldEnum.TUTO.progName
+            val w = this["world"]
+            if (w == "") {
+                WorldEnum.TUTO
+                this["world"] = WorldEnum.TUTO.progName
+            }
+            WorldEnum.valueOf(w)
         }
-        WorldEnum.valueOf(w)
-    }
 
     init {
         workTime = 0

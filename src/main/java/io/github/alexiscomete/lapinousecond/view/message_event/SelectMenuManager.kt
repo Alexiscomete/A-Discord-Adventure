@@ -12,9 +12,9 @@ class SelectMenuManager : SelectMenuChooseListener {
 
     override fun onSelectMenuChoose(p0: SelectMenuChooseEvent) {
         try {
-            val player = getAccount(p0.selectMenuInteraction.user.id)
-            contextFor(Players(player))
-            hash[p0.selectMenuInteraction.customId.toLong()]!!.accept(p0)
+            val player = getAccount(p0.selectMenuInteraction.user)
+            contextFor(player)
+                .apply(p0.selectMenuInteraction.customId, p0)
         } catch (e: Exception) {
             p0.selectMenuInteraction.createImmediateResponder()
                 .setContent("Une erreur est survenue : " + e.message)

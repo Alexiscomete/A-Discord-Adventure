@@ -1,9 +1,11 @@
 package io.github.alexiscomete.lapinousecond.commands.withslash
 
 import io.github.alexiscomete.lapinousecond.entity.Player
+import io.github.alexiscomete.lapinousecond.entity.PlayerWithAccount
 import io.github.alexiscomete.lapinousecond.entity.players
 import io.github.alexiscomete.lapinousecond.worlds.ServerBot
 import io.github.alexiscomete.lapinousecond.worlds.servers
+import org.javacord.api.entity.user.User
 import org.javacord.api.interaction.SlashCommandInteraction
 
 fun getAccount(slashCommandInteraction: SlashCommandInteraction): Player {
@@ -18,6 +20,15 @@ fun getAccount(slashCommandInteraction: SlashCommandInteraction): Player {
 fun getAccount(id: Long): Player {
     try {
         return players[id]
+            ?: throw IllegalStateException("Vous devez avoir un compte pour utiliser cette commande. Utilisez /start")
+    } catch (e: Exception) {
+        throw IllegalStateException("Vous devez avoir un compte pour utiliser cette commande. Utilisez /start")
+    }
+}
+
+fun getAccount(user: User): PlayerWithAccount {
+    try {
+        return PlayerWithAccount(user)
             ?: throw IllegalStateException("Vous devez avoir un compte pour utiliser cette commande. Utilisez /start")
     } catch (e: Exception) {
         throw IllegalStateException("Vous devez avoir un compte pour utiliser cette commande. Utilisez /start")
