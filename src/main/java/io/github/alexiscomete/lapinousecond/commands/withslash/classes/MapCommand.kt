@@ -4,12 +4,16 @@ import io.github.alexiscomete.lapinousecond.commands.withslash.Command
 import io.github.alexiscomete.lapinousecond.commands.withslash.ExecutableWithArguments
 import io.github.alexiscomete.lapinousecond.commands.withslash.getAccount
 import io.github.alexiscomete.lapinousecond.entity.Player
+import io.github.alexiscomete.lapinousecond.entity.PlayerWithAccount
 import io.github.alexiscomete.lapinousecond.view.message_event.EmbedPages
 import io.github.alexiscomete.lapinousecond.view.message_event.MenuBuilder
 import io.github.alexiscomete.lapinousecond.modalManager
 import io.github.alexiscomete.lapinousecond.resources.Resource
 import io.github.alexiscomete.lapinousecond.selectMenuManager
 import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
+import io.github.alexiscomete.lapinousecond.view.Context
+import io.github.alexiscomete.lapinousecond.view.contextFor
+import io.github.alexiscomete.lapinousecond.view.message_event.SelectMenuContextManager
 import io.github.alexiscomete.lapinousecond.worlds.WorldEnum
 import io.github.alexiscomete.lapinousecond.worlds.bigger
 import io.github.alexiscomete.lapinousecond.worlds.map.FilesMapEnum
@@ -22,6 +26,63 @@ import org.javacord.api.event.interaction.SelectMenuChooseEvent
 import org.javacord.api.interaction.SlashCommandInteraction
 import java.awt.Color
 
+private fun verifyBal(player: Player) {
+    var bal = player["bal"]
+    if (bal == "") {
+        player["bal"] = "0.0"
+        bal = "0.0"
+    }
+
+    val balDouble = bal.toDouble()
+    if (balDouble < 100.0) {
+        throw IllegalStateException("La guilde des lapins de transports demande 100.0 ${Resource.RABBIT_COIN.name_} pour voyager dans un autre monde")
+    }
+}
+
+class Select(name: String, val worlds: List<WorldEnum>) : SelectMenuContextManager(name) {
+    override fun ex(smce: SelectMenuChooseEvent, c: Context) {
+        val selectMenuInteraction = smce.selectMenuInteraction
+        val index = selectMenuInteraction.chosenOptions[0].label.toInt()
+        val world = worlds[index]
+        val player = c.players.player.player
+        // get the player's bal
+        verifyBal(player)
+
+        MenuBuilder(
+            "Confirmer",
+            "Confirmez-vous le voyage vers ce monde pour 100 ${Resource.RABBIT_COIN.name_} ?",
+            Color.orange,
+            smce.selectMenuInteraction.user.id
+        )
+            .addButton("Oui", "Oui je veux changer de monde") {
+                // get the player's bal
+                verifyBal(player)
+
+                player.removeMoney(100.0)
+
+                player["world"] = world.progName
+                if (player["place_${world.progName}_x"] == "") {
+                    player["place_${world}_type"] = "coos"
+                    player["place_${world.progName}_x"] = world.defaultX.toString()
+                    player["place_${world.progName}_y"] = world.defaultY.toString()
+                }
+                it.buttonInteraction.createOriginalMessageUpdater()
+                    .removeAllComponents()
+                    .removeAllEmbeds()
+                    .setContent("Vous êtes maintenant dans le monde ${world.progName}")
+                    .update()
+            }
+            .addButton("Non", "Non je ne veux pas changer de monde") {
+                it.buttonInteraction.createOriginalMessageUpdater()
+                    .removeAllComponents()
+                    .removeAllEmbeds()
+                    .setContent("Vous avez annulé le voyage")
+                    .update()
+            }
+            .modif(smce)
+    }
+}
+
 class MapCommand : Command(
     "map",
     "Permet de faire toutes les actions à propos des déplacements sur la carte",
@@ -33,6 +94,7 @@ class MapCommand : Command(
         get() = arrayOf("PLAY")
 
     override fun execute(slashCommand: SlashCommandInteraction) {
+        val context = contextFor(PlayerWithAccount(slashCommand.user))
         MenuBuilder(
             "Carte 🗺",
             "Se déplacer est important dans le jeu ! Visitez le monde et regardez autour de vous",
@@ -83,49 +145,7 @@ class MapCommand : Command(
                         val id = generateUniqueID()
                         val actionRow = ActionRow.of(SelectMenu.create(id.toString(), "Monde où aller", options))
 
-                        selectMenuManager.add(id) { mci: SelectMenuChooseEvent ->
-                            val selectMenuInteraction = mci.selectMenuInteraction
-                            if (selectMenuInteraction.user.id == slashCommand.user.id) {
-                                val index = selectMenuInteraction.chosenOptions[0].label.toInt()
-                                val world = worlds[index]
-
-                                // get the player's bal
-                                verifyBal(player)
-
-                                MenuBuilder(
-                                    "Confirmer",
-                                    "Confirmez-vous le voyage vers ce monde pour 100 ${Resource.RABBIT_COIN.name_} ?",
-                                    Color.orange,
-                                    mci.selectMenuInteraction.user.id
-                                )
-                                    .addButton("Oui", "Oui je veux changer de monde") {
-                                        // get the player's bal
-                                        verifyBal(player)
-
-                                        player.removeMoney(100.0)
-
-                                        player["world"] = world.progName
-                                        if (player["place_${world.progName}_x"] == "") {
-                                            player["place_${world}_type"] = "coos"
-                                            player["place_${world.progName}_x"] = world.defaultX.toString()
-                                            player["place_${world.progName}_y"] = world.defaultY.toString()
-                                        }
-                                        it.buttonInteraction.createOriginalMessageUpdater()
-                                            .removeAllComponents()
-                                            .removeAllEmbeds()
-                                            .setContent("Vous êtes maintenant dans le monde ${world.progName}")
-                                            .update()
-                                    }
-                                    .addButton("Non", "Non je ne veux pas changer de monde") {
-                                        it.buttonInteraction.createOriginalMessageUpdater()
-                                            .removeAllComponents()
-                                            .removeAllEmbeds()
-                                            .setContent("Vous avez annulé le voyage")
-                                            .update()
-                                    }
-                                    .modif(mci)
-                            }
-                        }
+                        context.selectMenu(Select(id.toString(), worlds))
 
                         mcce.buttonInteraction.createImmediateResponder()
                             .addEmbed(eb)
@@ -710,18 +730,4 @@ class MapCommand : Command(
             .responder(slashCommand)
 
     }
-
-    private fun verifyBal(player: Player) {
-        var bal = player["bal"]
-        if (bal == "") {
-            player["bal"] = "0.0"
-            bal = "0.0"
-        }
-
-        val balDouble = bal.toDouble()
-        if (balDouble < 100.0) {
-            throw IllegalStateException("La guilde des lapins de transports demande 100.0 ${Resource.RABBIT_COIN.name_} pour voyager dans un autre monde")
-        }
-    }
-
 }
