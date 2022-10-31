@@ -5,12 +5,6 @@ import org.javacord.api.listener.interaction.ButtonClickListener
 import java.util.function.Consumer
 
 class ButtonsManager : ButtonClickListener {
-    private val hashButton = HashMap<Long, Consumer<ButtonClickEvent>>()
-
-    fun addButton(id: Long, eventConsumer: Consumer<ButtonClickEvent>) {
-        hashButton[id] = eventConsumer
-    }
-
     override fun onButtonClick(p0: ButtonClickEvent) {
         if (hashButton.containsKey(p0.buttonInteraction.customId.toLong())) {
             try {
