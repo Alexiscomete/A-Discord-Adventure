@@ -1,6 +1,5 @@
 package io.github.alexiscomete.lapinousecond.view.message_event
 
-import io.github.alexiscomete.lapinousecond.buttonsManager
 import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
 import org.javacord.api.entity.message.MessageBuilder
 import org.javacord.api.entity.message.MessageFlag
@@ -32,6 +31,7 @@ class MenuBuilder(name: String, description: String, color: Color, val player: L
         val id = generateUniqueID()
 
         arrayListOfButton.add(Button.success(id.toString(), name))
+        //TODO
         buttonsManager.addButton(id) { event ->
             if (event.buttonInteraction.user.id == player) {
                 whenUsed(event)

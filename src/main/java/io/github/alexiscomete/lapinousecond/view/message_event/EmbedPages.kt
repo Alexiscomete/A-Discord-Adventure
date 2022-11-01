@@ -1,6 +1,5 @@
 package io.github.alexiscomete.lapinousecond.view.message_event
 
-import io.github.alexiscomete.lapinousecond.buttonsManager
 import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
 import org.javacord.api.entity.message.component.ActionRow
 import org.javacord.api.entity.message.component.Button
@@ -67,6 +66,7 @@ open class EmbedPages<U>(
         }
 
     fun register() {
+        //TODO
         buttonsManager.addButton(idLast.toLong()) { messageComponentCreateEvent: ButtonClickEvent ->
                 last(messageComponentCreateEvent)
             }

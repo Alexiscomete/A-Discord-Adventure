@@ -1,6 +1,5 @@
 package io.github.alexiscomete.lapinousecond.view.message_event
 
-import io.github.alexiscomete.lapinousecond.buttonsManager
 import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
 import org.javacord.api.entity.message.component.ActionRow
 import org.javacord.api.entity.message.component.Button
@@ -44,6 +43,7 @@ class EmbedPagesWithInteractions<U>(
     private fun component(u: U, index: Int): Button {
         println("Component $index")
         val id = generateUniqueID()
+        //TODO
         buttonsManager.addButton(id) {
             whenSelected(u, it)
         }

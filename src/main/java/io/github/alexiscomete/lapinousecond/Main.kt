@@ -18,10 +18,8 @@ import java.io.IOException
  */
 val config: SaveLocation<String> = SaveLocation(";", "/config.txt") { a: String -> a }
 
-val buttonsManager: ButtonsManager = ButtonsManager()
 val messagesManager: MessagesManager = MessagesManager()
 val modalManager: ModalManager = ModalManager()
-val selectMenuManager: SelectMenuManager = SelectMenuManager()
 
 val api: DiscordApi = DiscordApiBuilder().setToken(run {
     config.loadAll()
@@ -40,10 +38,10 @@ fun main() {
          */
         api.updateActivity("Utilisez /account start pour commencer votre aventure ! ❤")
         api.addListener(ListenerSlashCommands())
-        api.addListener(buttonsManager)
+        api.addListener(ButtonsManager())
         api.addListener(messagesManager)
         api.addListener(modalManager)
-        api.addListener(selectMenuManager)
+        api.addListener(SelectMenuManager())
 
         // Ajout des commandes
         loadAllS()

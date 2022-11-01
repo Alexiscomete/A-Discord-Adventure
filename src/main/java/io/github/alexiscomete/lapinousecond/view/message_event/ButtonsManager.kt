@@ -5,7 +5,6 @@ import io.github.alexiscomete.lapinousecond.view.contextFor
 import org.javacord.api.entity.message.MessageFlag
 import org.javacord.api.event.interaction.ButtonClickEvent
 import org.javacord.api.listener.interaction.ButtonClickListener
-import java.util.function.Consumer
 
 class ButtonsManager : ButtonClickListener {
     override fun onButtonClick(p0: ButtonClickEvent) {
