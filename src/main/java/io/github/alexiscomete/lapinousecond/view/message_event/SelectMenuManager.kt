@@ -4,6 +4,7 @@ import io.github.alexiscomete.lapinousecond.commands.withslash.getAccount
 import io.github.alexiscomete.lapinousecond.entity.Player
 import io.github.alexiscomete.lapinousecond.view.Players
 import io.github.alexiscomete.lapinousecond.view.contextFor
+import org.javacord.api.entity.message.MessageFlag
 import org.javacord.api.event.interaction.SelectMenuChooseEvent
 import org.javacord.api.listener.interaction.SelectMenuChooseListener
 import java.util.function.Consumer
@@ -18,6 +19,7 @@ class SelectMenuManager : SelectMenuChooseListener {
         } catch (e: Exception) {
             p0.selectMenuInteraction.createImmediateResponder()
                 .setContent("Une erreur est survenue : " + e.message)
+                .setFlags(MessageFlag.EPHEMERAL)
                 .respond()
             e.printStackTrace()
         }
