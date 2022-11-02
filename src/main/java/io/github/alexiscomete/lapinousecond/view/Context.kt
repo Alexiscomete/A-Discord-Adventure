@@ -3,8 +3,10 @@ package io.github.alexiscomete.lapinousecond.view
 import io.github.alexiscomete.lapinousecond.entity.PlayerWithAccount
 import io.github.alexiscomete.lapinousecond.view.message_event.ButtonsContextManager
 import io.github.alexiscomete.lapinousecond.view.message_event.ContextManager
+import io.github.alexiscomete.lapinousecond.view.message_event.ModalContextManager
 import io.github.alexiscomete.lapinousecond.view.message_event.SelectMenuContextManager
 import org.javacord.api.event.interaction.ButtonClickEvent
+import org.javacord.api.event.interaction.ModalSubmitEvent
 import org.javacord.api.event.interaction.SelectMenuChooseEvent
 
 data class Players(val player: PlayerWithAccount, val otherPlayers: List<PlayerWithAccount> = listOf())
@@ -56,6 +58,7 @@ class Context(val players: Players, canParallel: Boolean = false) : ContextManag
         private set
     var multiContext: Context? = null
         private set
+    val modal: ModalContextManager? = null
 
     fun buttons(buttons: ButtonsContextManager, canParallel:Boolean=false): Context {
         if (!canParallel) {
@@ -142,4 +145,19 @@ class Context(val players: Players, canParallel: Boolean = false) : ContextManag
         throw IllegalStateException("Cannot apply $string")
     }
 
+    fun apply(customId: String, p0: ModalSubmitEvent) {
+        if (multiContext != null) {
+            if (multiContext!!.canApply(customId)) {
+                multiContext!!.apply(customId, p0)
+                return
+            }
+        }
+        if (modal != null) {
+            if (modal.canApply(customId)) {
+                modal.ex(p0, this)
+                return
+            }
+        }
+        throw IllegalStateException("Cannot apply $customId")
+    }
 }

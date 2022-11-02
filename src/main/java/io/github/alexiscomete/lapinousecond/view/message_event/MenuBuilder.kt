@@ -1,6 +1,7 @@
 package io.github.alexiscomete.lapinousecond.view.message_event
 
 import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
+import io.github.alexiscomete.lapinousecond.view.Context
 import org.javacord.api.entity.message.MessageBuilder
 import org.javacord.api.entity.message.MessageFlag
 import org.javacord.api.entity.message.component.ActionRow
@@ -14,9 +15,10 @@ import org.javacord.api.interaction.SlashCommandInteraction
 import java.awt.Color
 import java.awt.image.BufferedImage
 
-class MenuBuilder(name: String, description: String, color: Color, val player: Long) {
+class MenuBuilder(name: String, description: String, color: Color, val context: Context) {
 
     private var ephemeral = false
+    private val manager = ButtonsContextManager(hashMapOf())
 
     private val embedBuilder: EmbedBuilder = EmbedBuilder()
         .setTitle(name)
@@ -25,23 +27,17 @@ class MenuBuilder(name: String, description: String, color: Color, val player: L
 
     private val arrayListOfButton = ArrayList<LowLevelComponent>()
 
-    fun addButton(name: String, description: String, whenUsed: (ButtonClickEvent) -> Unit): MenuBuilder {
+    fun addButton(name: String, description: String, whenUsed: (ButtonClickEvent, Context, ButtonsContextManager) -> Unit): MenuBuilder {
         embedBuilder.addInlineField(name, description)
 
         val id = generateUniqueID()
 
         arrayListOfButton.add(Button.success(id.toString(), name))
-        //TODO
-        buttonsManager.addButton(id) { event ->
-            if (event.buttonInteraction.user.id == player) {
-                whenUsed(event)
-            }
-        }
-
+        manager.hash[id.toString()] = whenUsed
         return this
     }
 
-    fun addEphemeral() : MenuBuilder {
+    fun addEphemeral(): MenuBuilder {
         ephemeral = true
         return this
     }

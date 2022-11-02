@@ -11,7 +11,7 @@ class EmbedPagesWithInteractions<U>(
     builder: EmbedBuilder,
     uArrayList: ArrayList<U>,
     uAddContent: AddContent<U>,
-    val whenSelected: (U, ButtonClickEvent) -> Unit,
+    val whenSelected: (U, ButtonClickEvent, Context) -> Unit,
     context: Context
 ) : EmbedPages<U>(
     builder,
@@ -46,7 +46,7 @@ class EmbedPagesWithInteractions<U>(
         println("Component $index")
         //TODO
         manager.hash[index.toString()] = { event, context, manager ->
-            whenSelected(u, event)
+            whenSelected(u, event, context)
         }
         return Button.success(index.toString(), index.toString())
     }

@@ -2,11 +2,13 @@ package io.github.alexiscomete.lapinousecond.commands.withslash.classes
 
 import io.github.alexiscomete.lapinousecond.commands.withslash.Command
 import io.github.alexiscomete.lapinousecond.commands.withslash.ExecutableWithArguments
+import io.github.alexiscomete.lapinousecond.commands.withslash.getAccount
 import io.github.alexiscomete.lapinousecond.view.message_event.EmbedPagesWithInteractions
 import io.github.alexiscomete.lapinousecond.view.message_event.MenuBuilder
 import io.github.alexiscomete.lapinousecond.modalManager
 import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
 import io.github.alexiscomete.lapinousecond.useful.managesave.saveManager
+import io.github.alexiscomete.lapinousecond.view.contextFor
 import io.github.alexiscomete.lapinousecond.worlds.*
 import io.github.alexiscomete.lapinousecond.worlds.dibimap.getValueById
 import io.github.alexiscomete.lapinousecond.worlds.dibimap.isDibimap
@@ -39,6 +41,8 @@ class ConfigCommand : Command(
 
         val serverId = slashCommand.server.get().id
         val server = servers[serverId]
+        val context = contextFor(getAccount(slashCommand.user))
+
         if (server == null) {
             val world =
                 if (serverId == 854288660147994634) WorldEnum.TUTO else if (isDibimap(serverId)) WorldEnum.DIBIMAP else WorldEnum.NORMAL
@@ -46,9 +50,9 @@ class ConfigCommand : Command(
                 "Votre première configuration",
                 "Votre serveur discord a été automatiquement assigné au ${world.nameRP}. Explications :\nLe Dibistan a un drapeau qui est aussi son territoire principal. Si votre serveur discord est un État ou une région qui a un territoire en forme de polygone sur le drapeau, alors son monde est le ${WorldEnum.DIBIMAP.nameRP} sinon c'est le monde ${WorldEnum.NORMAL.nameRP}. Les mécaniques sont différentes dans les 2 mondes. **Le monde détecté est-il correct ?**",
                 Color.BLUE,
-                slashCommand.user.id
+                context
             )
-                .addButton("Oui", "Le monde est correcte et je continue la configuration. **Irréversible**") { yes ->
+                .addButton("Oui", "Le monde est correcte et je continue la configuration. **Irréversible**") { yes, _, _ ->
 
                     when (world) {
                         WorldEnum.NORMAL -> {
@@ -168,7 +172,7 @@ class ConfigCommand : Command(
                     }
 
                 }
-                .addButton("Non", "Le monde est incorrecte ou je veux changer quelque chose. **Réversible**") {
+                .addButton("Non", "Le monde est incorrecte ou je veux changer quelque chose. **Réversible**") { it, _, _ ->
                     it.buttonInteraction.createOriginalMessageUpdater()
                         .setContent("Contactez un administrateur pour changer le monde si c'est le problème")
                         .removeAllEmbeds()
@@ -200,19 +204,19 @@ class ConfigCommand : Command(
                         "Configuration du serveur",
                         "Configurer votre serveur discord d'entité territorial",
                         Color.BLUE,
-                        slashCommand.user.id
+                        context
                     )
                         .addButton(
                             "Mise à jour du nom",
                             "Le nom du serveur discord est stocké dans la base de données. Mais si vous changer le nom du serveur discord le bot ne met pas à jour automatiquement de son côté."
-                        ) { name ->
+                        ) { name, _, _ ->
                             val serverDiscord = slashCommand.server.get()
                             server["name"] = serverDiscord.name
                             name.buttonInteraction.createImmediateResponder()
                                 .setContent("Le nom du serveur a été mis à jour avec succès !")
                                 .respond()
                         }
-                        .addButton("Ajouter une ville", "Permet d'ajouter une ville sur la carte") { addCity ->
+                        .addButton("Ajouter une ville", "Permet d'ajouter une ville sur la carte") { addCity, c1, b1 ->
                             // j'ai besoin d'un nom, d'une description, d'un message de bienvenue, et de x et y. Les modals sont limités à 4 champs donc je vais faire 2 modals
                             val id = generateUniqueID()
                             val idNameRP = generateUniqueID()
