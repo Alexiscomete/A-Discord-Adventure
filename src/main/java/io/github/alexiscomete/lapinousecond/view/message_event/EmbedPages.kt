@@ -1,6 +1,6 @@
 package io.github.alexiscomete.lapinousecond.view.message_event
 
-import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
+import io.github.alexiscomete.lapinousecond.view.Context
 import org.javacord.api.entity.message.component.ActionRow
 import org.javacord.api.entity.message.component.Button
 import org.javacord.api.entity.message.embed.EmbedBuilder
@@ -9,14 +9,25 @@ import org.javacord.api.event.interaction.ButtonClickEvent
 open class EmbedPages<U>(
     protected val builder: EmbedBuilder,
     protected val uArrayList: ArrayList<U>,
-    protected val uAddContent: AddContent<U>
+    protected val uAddContent: AddContent<U>,
+    protected val context: Context
 ) {
     protected var level = 0
-    protected val idLast = generateUniqueID().toString()
-    protected val idNext = generateUniqueID().toString()
+    protected val idLast = "last"
+    protected val idNext = "next"
+    protected val manager = ButtonsContextManager(
+        hashMapOf(
+            idLast to ::last,
+            idNext to ::next
+        )
+    )
     open val number = 10
 
-    protected open fun next(messageComponentCreateEvent: ButtonClickEvent) {
+    protected open fun next(
+        messageComponentCreateEvent: ButtonClickEvent,
+        context: Context,
+        manager: ButtonsContextManager
+    ) {
         // check if the button is valid : it must have enough elements to go to the next page
         if (level + number < uArrayList.size) {
             level += number
@@ -31,7 +42,11 @@ open class EmbedPages<U>(
         }
     }
 
-    protected open fun last(messageComponentCreateEvent: ButtonClickEvent) {
+    protected open fun last(
+        messageComponentCreateEvent: ButtonClickEvent,
+        context: Context,
+        manager: ButtonsContextManager
+    ) {
         if (level > number - 1) {
             level -= number
             builder.removeAllFields()
@@ -66,13 +81,7 @@ open class EmbedPages<U>(
         }
 
     fun register() {
-        //TODO
-        buttonsManager.addButton(idLast.toLong()) { messageComponentCreateEvent: ButtonClickEvent ->
-                last(messageComponentCreateEvent)
-            }
-        buttonsManager.addButton(idNext.toLong()) { messageComponentCreateEvent: ButtonClickEvent ->
-                next(messageComponentCreateEvent)
-            }
+        context.buttons(manager)
     }
 
     init {

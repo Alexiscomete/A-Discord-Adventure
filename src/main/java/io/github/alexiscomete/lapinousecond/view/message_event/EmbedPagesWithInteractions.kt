@@ -1,6 +1,6 @@
 package io.github.alexiscomete.lapinousecond.view.message_event
 
-import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
+import io.github.alexiscomete.lapinousecond.view.Context
 import org.javacord.api.entity.message.component.ActionRow
 import org.javacord.api.entity.message.component.Button
 import org.javacord.api.entity.message.component.LowLevelComponent
@@ -11,11 +11,13 @@ class EmbedPagesWithInteractions<U>(
     builder: EmbedBuilder,
     uArrayList: ArrayList<U>,
     uAddContent: AddContent<U>,
-    val whenSelected: (U, ButtonClickEvent) -> Unit
+    val whenSelected: (U, ButtonClickEvent) -> Unit,
+    context: Context
 ) : EmbedPages<U>(
     builder,
     uArrayList,
-    uAddContent
+    uAddContent,
+    context
 ) {
     override val number = 5
 
@@ -42,15 +44,14 @@ class EmbedPagesWithInteractions<U>(
      */
     private fun component(u: U, index: Int): Button {
         println("Component $index")
-        val id = generateUniqueID()
         //TODO
-        buttonsManager.addButton(id) {
-            whenSelected(u, it)
+        manager.hash[index.toString()] = { event, context, manager ->
+            whenSelected(u, event)
         }
-        return Button.success(id.toString(), index.toString())
+        return Button.success(index.toString(), index.toString())
     }
 
-    override fun next(messageComponentCreateEvent: ButtonClickEvent) {
+    override fun next(messageComponentCreateEvent: ButtonClickEvent, context: Context, manager: ButtonsContextManager) {
         if (level + number < uArrayList.size) {
             level += number
             builder.removeAllFields()
@@ -64,7 +65,7 @@ class EmbedPagesWithInteractions<U>(
         }
     }
 
-    override fun last(messageComponentCreateEvent: ButtonClickEvent) {
+    override fun last(messageComponentCreateEvent: ButtonClickEvent, context: Context, manager: ButtonsContextManager) {
         if (level > number - 1) {
             level -= number
             builder.removeAllFields()
