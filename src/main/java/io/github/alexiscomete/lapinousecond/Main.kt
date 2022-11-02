@@ -19,7 +19,6 @@ import java.io.IOException
 val config: SaveLocation<String> = SaveLocation(";", "/config.txt") { a: String -> a }
 
 val messagesManager: MessagesManager = MessagesManager()
-val modalManager: ModalManager = ModalManager()
 
 val api: DiscordApi = DiscordApiBuilder().setToken(run {
     config.loadAll()

@@ -58,7 +58,7 @@ class Context(val players: Players, canParallel: Boolean = false) : ContextManag
         private set
     var multiContext: Context? = null
         private set
-    val modal: ModalContextManager? = null
+    var modal: ModalContextManager? = null
 
     fun buttons(buttons: ButtonsContextManager, canParallel:Boolean=false): Context {
         if (!canParallel) {
@@ -81,6 +81,14 @@ class Context(val players: Players, canParallel: Boolean = false) : ContextManag
             clear()
         }
         this.multiContext = multiContext
+        return this
+    }
+
+    fun modal(modal: ModalContextManager, canParallel:Boolean=false): Context {
+        if (!canParallel) {
+            clear()
+        }
+        this.modal = modal
         return this
     }
 
@@ -153,8 +161,8 @@ class Context(val players: Players, canParallel: Boolean = false) : ContextManag
             }
         }
         if (modal != null) {
-            if (modal.canApply(customId)) {
-                modal.ex(p0, this)
+            if (modal!!.canApply(customId)) {
+                modal!!.ex(p0, this)
                 return
             }
         }

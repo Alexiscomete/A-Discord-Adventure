@@ -9,11 +9,11 @@ import io.github.alexiscomete.lapinousecond.entity.players
 import io.github.alexiscomete.lapinousecond.view.message_event.EmbedPagesWithInteractions
 import io.github.alexiscomete.lapinousecond.view.message_event.MenuBuilder
 import io.github.alexiscomete.lapinousecond.messagesManager
-import io.github.alexiscomete.lapinousecond.modalManager
 import io.github.alexiscomete.lapinousecond.resources.Resource
 import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
 import io.github.alexiscomete.lapinousecond.useful.managesave.saveManager
 import io.github.alexiscomete.lapinousecond.useful.transactions.*
+import io.github.alexiscomete.lapinousecond.view.contextFor
 import org.javacord.api.entity.message.component.ActionRow
 import org.javacord.api.entity.message.component.TextInput
 import org.javacord.api.entity.message.component.TextInputStyle
@@ -51,6 +51,7 @@ class MarketCommand : Command(
         RESEARCHES
 
         val player = getAccount(slashCommand)
+        val context = contextFor(getAccount(slashCommand.user))
         if (player.level.level < 2) {
             slashCommand.createImmediateResponder()
                 .setContent("Vous devez être niveau 2 pour accéder au marché. Utilisez la commande `/shop` pour monter commercer et la commande `/work` pour gagner de l'xp.")
@@ -62,7 +63,7 @@ class MarketCommand : Command(
             "Le marché",
             "Ici est le lieu d'échanges entre les joueurs ! Avancez sur vos quêtes en trouvant ici des objets introuvables, gagnez de l'argent en vendant des objets ou des ressources .... bref c'est le lieu des joueurs",
             Color.YELLOW,
-            slashCommand.user.id
+            context
         )
             .addButton(
                 "Donner",

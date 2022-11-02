@@ -5,10 +5,11 @@ import io.github.alexiscomete.lapinousecond.commands.withslash.ExecutableWithArg
 import io.github.alexiscomete.lapinousecond.commands.withslash.getAccount
 import io.github.alexiscomete.lapinousecond.view.message_event.EmbedPagesWithInteractions
 import io.github.alexiscomete.lapinousecond.view.message_event.MenuBuilder
-import io.github.alexiscomete.lapinousecond.modalManager
 import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
 import io.github.alexiscomete.lapinousecond.useful.managesave.saveManager
+import io.github.alexiscomete.lapinousecond.view.Context
 import io.github.alexiscomete.lapinousecond.view.contextFor
+import io.github.alexiscomete.lapinousecond.view.message_event.ModalContextManager
 import io.github.alexiscomete.lapinousecond.worlds.*
 import io.github.alexiscomete.lapinousecond.worlds.dibimap.getValueById
 import io.github.alexiscomete.lapinousecond.worlds.dibimap.isDibimap
@@ -18,10 +19,21 @@ import org.javacord.api.entity.message.component.TextInputStyle
 import org.javacord.api.entity.message.embed.EmbedBuilder
 import org.javacord.api.entity.permission.PermissionType
 import org.javacord.api.event.interaction.ButtonClickEvent
+import org.javacord.api.event.interaction.ModalSubmitEvent
 import org.javacord.api.interaction.SlashCommandInteraction
 import java.awt.Color
 import java.util.*
 import kotlin.collections.ArrayList
+
+fun configNormalServer(world: WorldEnum, slashCommand: SlashCommandInteraction, placeId: Long) {
+    val server = slashCommand.server.get()
+    servers.add(server.id)
+    val serverC = servers[server.id]
+        ?: throw IllegalArgumentException("Un problème de source inconnue est survenue. La création du serveur a échoué.")
+    serverC["world"] = world.progName
+    serverC["name"] = server.name
+    serverC["places"] = placeId.toString()
+}
 
 class ConfigCommand : Command(
     "config",
@@ -34,6 +46,50 @@ class ConfigCommand : Command(
         get() = "config"
     override val botPerms: Array<String>
         get() = arrayOf("CREATE_SERVER")
+
+    class M1(name: String) : ModalContextManager(name) {
+        override fun ex(smce: ModalSubmitEvent, c: Context) {
+            val opNameRp = smce.modalInteraction.getTextInputValueByCustomId(idNameRP.toString())
+            val opDescription =
+                smce.modalInteraction.getTextInputValueByCustomId(idDescription.toString())
+            val opWelcome = smce.modalInteraction.getTextInputValueByCustomId(idWelcome.toString())
+
+            if (!opNameRp.isPresent || !opDescription.isPresent || !opWelcome.isPresent) {
+                throw IllegalArgumentException("Un des champs n'a pas été rempli")
+            }
+
+            val placeId = generateUniqueID()
+            places.add(placeId)
+            val place = places[placeId]
+                ?: throw IllegalArgumentException("Un problème de source inconnue est survenue. La création du serveur a échoué.")
+
+            place["nameRP"] = opNameRp.get()
+            place["description"] = opDescription.get()
+            place["welcome"] = opWelcome.get()
+
+            // génération aléatoire des coordonnées du lieu entre 1 et le maximum du lieu
+            var x: Int
+            var y: Int
+            do {
+                y = (1..world.mapWidth).random()
+                x = (1..world.mapHeight).random()
+            } while (world.isDirt(x, y))
+
+            place["x"] = x.toString()
+            place["y"] = y.toString()
+
+            place["type"] = "city" // automatique normalement
+            place["world"] = world.progName // automatique normalement
+            place["server"] = serverId.toString() // automatique normalement
+
+            configNormalServer(world, slashCommand, placeId)
+
+            smce.modalInteraction.createImmediateResponder()
+                .setContent("Le serveur a été configuré avec succès ! Les coordonnées sont [${x}:${y}]")
+                .respond()
+        }
+
+    }
 
     override fun execute(slashCommand: SlashCommandInteraction) {
         SERVERS
@@ -52,7 +108,10 @@ class ConfigCommand : Command(
                 Color.BLUE,
                 context
             )
-                .addButton("Oui", "Le monde est correcte et je continue la configuration. **Irréversible**") { yes, _, _ ->
+                .addButton(
+                    "Oui",
+                    "Le monde est correcte et je continue la configuration. **Irréversible**"
+                ) { yes, c1, _ ->
 
                     when (world) {
                         WorldEnum.NORMAL -> {
@@ -89,48 +148,9 @@ class ConfigCommand : Command(
                                         true
                                     )
                                 )
-                                )
+                            )
 
-                            modalManager.add(id) {
-                                val opNameRp = it.modalInteraction.getTextInputValueByCustomId(idNameRP.toString())
-                                val opDescription =
-                                    it.modalInteraction.getTextInputValueByCustomId(idDescription.toString())
-                                val opWelcome = it.modalInteraction.getTextInputValueByCustomId(idWelcome.toString())
-
-                                if (!opNameRp.isPresent || !opDescription.isPresent || !opWelcome.isPresent) {
-                                    throw IllegalArgumentException("Un des champs n'a pas été rempli")
-                                }
-
-                                val placeId = generateUniqueID()
-                                places.add(placeId)
-                                val place = places[placeId]
-                                    ?: throw IllegalArgumentException("Un problème de source inconnue est survenue. La création du serveur a échoué.")
-
-                                place["nameRP"] = opNameRp.get()
-                                place["description"] = opDescription.get()
-                                place["welcome"] = opWelcome.get()
-
-                                // génération aléatoire des coordonnées du lieu entre 1 et le maximum du lieu
-                                var x: Int
-                                var y: Int
-                                do {
-                                    y = (1..world.mapWidth).random()
-                                    x = (1..world.mapHeight).random()
-                                } while (world.isDirt(x, y))
-
-                                place["x"] = x.toString()
-                                place["y"] = y.toString()
-
-                                place["type"] = "city" // automatique normalement
-                                place["world"] = world.progName // automatique normalement
-                                place["server"] = serverId.toString() // automatique normalement
-
-                                configNormalServer(world, slashCommand, placeId)
-
-                                it.modalInteraction.createImmediateResponder()
-                                    .setContent("Le serveur a été configuré avec succès ! Les coordonnées sont [${x}:${y}]")
-                                    .respond()
-                            }
+                            c1.modal(M1(id.toString()))
                         }
 
                         WorldEnum.DIBIMAP -> {
@@ -172,7 +192,10 @@ class ConfigCommand : Command(
                     }
 
                 }
-                .addButton("Non", "Le monde est incorrecte ou je veux changer quelque chose. **Réversible**") { it, _, _ ->
+                .addButton(
+                    "Non",
+                    "Le monde est incorrecte ou je veux changer quelque chose. **Réversible**"
+                ) { it, _, _ ->
                     it.buttonInteraction.createOriginalMessageUpdater()
                         .setContent("Contactez un administrateur pour changer le monde si c'est le problème")
                         .removeAllEmbeds()
@@ -262,7 +285,8 @@ class ConfigCommand : Command(
                                 )
                                     .addButton(
                                         "Bouton",
-                                    "pour continuer") { button ->
+                                        "pour continuer"
+                                    ) { button, c2, b2 ->
                                         // partie 2 du modal avec x et y, j'utilise à nouveau idNameRP (pour x); idDescription (pour y)
                                         val id2 = generateUniqueID()
 
@@ -295,8 +319,10 @@ class ConfigCommand : Command(
                                                 modalPart1.modalInteraction.getTextInputValueByCustomId(idDescription.toString())
                                             val opWelcome =
                                                 modalPart1.modalInteraction.getTextInputValueByCustomId(idWelcome.toString())
-                                            val opX = it.modalInteraction.getTextInputValueByCustomId(idNameRP.toString())
-                                            val opY = it.modalInteraction.getTextInputValueByCustomId(idDescription.toString())
+                                            val opX =
+                                                it.modalInteraction.getTextInputValueByCustomId(idNameRP.toString())
+                                            val opY =
+                                                it.modalInteraction.getTextInputValueByCustomId(idDescription.toString())
 
                                             // s'il manque un élément, on annule
                                             if (!opNameRP.isPresent || !opDescription.isPresent || !opWelcome.isPresent || !opX.isPresent || !opY.isPresent) {
@@ -355,7 +381,7 @@ class ConfigCommand : Command(
                         .addButton(
                             "Supprimer une ville",
                             "Permet de supprimer une ville sur la carte si elle n'est pas utilisée pour le lore"
-                        ) { remove ->
+                        ) { remove, c1, b1 ->
                             /**
                              * Etapes :
                              * 1. Récupérer la liste des villes
@@ -379,8 +405,9 @@ class ConfigCommand : Command(
                             val em = EmbedPagesWithInteractions(
                                 embedBuilder,
                                 placesPlace,
-                                ::fillEmbed
-                            ) { place: Place, buttonClickEvent: ButtonClickEvent ->
+                                ::fillEmbed,
+                                c1
+                            ) { place: Place, buttonClickEvent: ButtonClickEvent, c2 ->
                                 // 3. Récupérer la ville sélectionnée
                                 // 4. Supprimer la ville
                                 server.removePlace(place.id)
@@ -402,7 +429,7 @@ class ConfigCommand : Command(
                                 .addEmbed(embedBuilder)
                                 .update()
                         }
-                        .addButton("Modifier une ville", "Permet de modifier une ville sur la carte") { city ->
+                        .addButton("Modifier une ville", "Permet de modifier une ville sur la carte") { city, c1, _ ->
                             /**
                              * Etapes :
                              * 1. Récupérer la liste des villes
@@ -426,8 +453,9 @@ class ConfigCommand : Command(
                             val em = EmbedPagesWithInteractions(
                                 embedBuilder,
                                 placesPlace,
-                                ::fillEmbed
-                            ) { place: Place, buttonClickEvent: ButtonClickEvent ->
+                                ::fillEmbed,
+                                c1
+                            ) { place: Place, buttonClickEvent: ButtonClickEvent, c2  ->
                                 // 3. Récupérer la ville sélectionnée
                                 // 4. Afficher les options de modification
 
@@ -435,12 +463,12 @@ class ConfigCommand : Command(
                                     "Modification de la ville ${place["nameRP"]}",
                                     "Sélectionner ce qu'il faut modifier :",
                                     Color.YELLOW,
-                                    buttonClickEvent.buttonInteraction.user.id
+                                    c2
                                 )
                                     .addButton(
                                         "Modifier le nom RP du lieu",
                                         "Modifiable à tout moment, le nom de votre ville est personnalisable."
-                                    ) { name ->
+                                    ) { name, c3, b3 ->
                                         val id = generateUniqueID()
                                         val idName = generateUniqueID()
 
@@ -475,7 +503,7 @@ class ConfigCommand : Command(
                                     .addButton(
                                         "Modifier la description du lieu",
                                         "Modifiable à tout moment, la description de votre ville est la deuxième chose que voix une personne quand il regarde le lieu."
-                                    ) { description ->
+                                    ) { description, c2, b2 ->
                                         val id = generateUniqueID()
                                         val idDescription = generateUniqueID()
 
@@ -510,7 +538,7 @@ class ConfigCommand : Command(
                                     .addButton(
                                         "Modifier le message de bienvenue",
                                         "Modifiable à tout moment, le message de bienvenue est nécessaire pour mettre l'ambiance : ville magique ? Tech ? Abandonné ? Repaire de Pirates ?"
-                                    ) { welcome ->
+                                    ) { welcome, c2, b2 ->
                                         val id = generateUniqueID()
                                         val idWelcome = generateUniqueID()
 
@@ -564,17 +592,7 @@ class ConfigCommand : Command(
         }
     }
 
-    private fun configNormalServer(world: WorldEnum, slashCommand: SlashCommandInteraction, placeId: Long) {
-        val server = slashCommand.server.get()
-        servers.add(server.id)
-        val serverC = servers[server.id]
-            ?: throw IllegalArgumentException("Un problème de source inconnue est survenue. La création du serveur a échoué.")
-        serverC["world"] = world.progName
-        serverC["name"] = server.name
-        serverC["places"] = placeId.toString()
-    }
-
-    private fun modifServer(slashCommand: SlashCommandInteraction, server: ServerBot) {
+    fun modifServer(slashCommand: SlashCommandInteraction, server: ServerBot) {
         MenuBuilder(
             "Modification du serveur dans un monde à lieu unique",
             "Vous pouvez modifier la configuration du serveur discord de façon simple dans un monde à serveur unique. Sélectionner ce qu'il faut modifier :",
@@ -584,7 +602,7 @@ class ConfigCommand : Command(
             .addButton(
                 "Mise à jour du nom du serveur",
                 "Le nom du serveur discord est stocké dans la base de données. Mais si vous changer le nom du serveur discord le bot ne met pas à jour automatiquement de son côté."
-            ) { name ->
+            ) { name, c1, b1 ->
                 val serverDiscord = slashCommand.server.get()
                 server["name"] = serverDiscord.name
                 name.buttonInteraction.createImmediateResponder()
@@ -594,7 +612,7 @@ class ConfigCommand : Command(
             .addButton(
                 "Modifier le nom RP du lieu",
                 "Modifiable à tout moment, le nom de votre ville est personnalisable."
-            ) { name ->
+            ) { name, c1, b1 ->
                 val id = generateUniqueID()
                 val idName = generateUniqueID()
 
@@ -623,7 +641,7 @@ class ConfigCommand : Command(
             .addButton(
                 "Modifier la description du lieu",
                 "Modifiable à tout moment, la description de votre ville est la deuxième chose que voix une personne quand il regarde le lieu."
-            ) { description ->
+            ) { description, c1, b1 ->
                 val id = generateUniqueID()
                 val idDescription = generateUniqueID()
 
@@ -657,7 +675,7 @@ class ConfigCommand : Command(
             .addButton(
                 "Modifier le message de bienvenue",
                 "Modifiable à tout moment, le message de bienvenue est nécessaire pour mettre l'ambiance : ville magique ? Tech ? Abandonné ? Repaire de Pirates ?"
-            ) { welcome ->
+            ) { welcome, c1, b1 ->
                 val id = generateUniqueID()
                 val idWelcome = generateUniqueID()
 

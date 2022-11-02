@@ -11,8 +11,8 @@ class EmbedPagesWithInteractions<U>(
     builder: EmbedBuilder,
     uArrayList: ArrayList<U>,
     uAddContent: AddContent<U>,
-    val whenSelected: (U, ButtonClickEvent, Context) -> Unit,
-    context: Context
+    context: Context,
+    val whenSelected: (U, ButtonClickEvent, Context) -> Unit
 ) : EmbedPages<U>(
     builder,
     uArrayList,
