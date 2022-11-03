@@ -18,6 +18,7 @@ import org.javacord.api.entity.message.component.TextInput
 import org.javacord.api.entity.message.component.TextInputStyle
 import org.javacord.api.entity.message.embed.EmbedBuilder
 import org.javacord.api.entity.permission.PermissionType
+import org.javacord.api.entity.server.Server
 import org.javacord.api.event.interaction.ButtonClickEvent
 import org.javacord.api.event.interaction.ModalSubmitEvent
 import org.javacord.api.interaction.SlashCommandInteraction
@@ -25,8 +26,7 @@ import java.awt.Color
 import java.util.*
 import kotlin.collections.ArrayList
 
-fun configNormalServer(world: WorldEnum, slashCommand: SlashCommandInteraction, placeId: Long) {
-    val server = slashCommand.server.get()
+fun configNormalServer(world: WorldEnum, server: Server, placeId: Long) {
     servers.add(server.id)
     val serverC = servers[server.id]
         ?: throw IllegalArgumentException("Un problème de source inconnue est survenue. La création du serveur a échoué.")
@@ -47,12 +47,19 @@ class ConfigCommand : Command(
     override val botPerms: Array<String>
         get() = arrayOf("CREATE_SERVER")
 
-    class M1(name: String) : ModalContextManager(name) {
+    class M1(
+        name: String,
+        val idNameRP: String,
+        val idDescription: String,
+        val idWelcome: String,
+        val world: WorldEnum,
+        val serverId: Long
+    ) : ModalContextManager(name) {
         override fun ex(smce: ModalSubmitEvent, c: Context) {
-            val opNameRp = smce.modalInteraction.getTextInputValueByCustomId(idNameRP.toString())
+            val opNameRp = smce.modalInteraction.getTextInputValueByCustomId(idNameRP)
             val opDescription =
-                smce.modalInteraction.getTextInputValueByCustomId(idDescription.toString())
-            val opWelcome = smce.modalInteraction.getTextInputValueByCustomId(idWelcome.toString())
+                smce.modalInteraction.getTextInputValueByCustomId(idDescription)
+            val opWelcome = smce.modalInteraction.getTextInputValueByCustomId(idWelcome)
 
             if (!opNameRp.isPresent || !opDescription.isPresent || !opWelcome.isPresent) {
                 throw IllegalArgumentException("Un des champs n'a pas été rempli")
@@ -82,13 +89,122 @@ class ConfigCommand : Command(
             place["world"] = world.progName // automatique normalement
             place["server"] = serverId.toString() // automatique normalement
 
-            configNormalServer(world, slashCommand, placeId)
+            configNormalServer(world, smce.modalInteraction.server.get(), placeId)
 
             smce.modalInteraction.createImmediateResponder()
                 .setContent("Le serveur a été configuré avec succès ! Les coordonnées sont [${x}:${y}]")
                 .respond()
         }
+    }
 
+    class M2(name: String, private val idNameRP: String, private val idDescription: String) : ModalContextManager(name) {
+        override fun ex(smce: ModalSubmitEvent, c: Context) {
+
+            // création d'un bouton pour continuer
+            MenuBuilder(
+                "Discord n'autorise pas l'enchainement des entrées de texte",
+                "Donc cliquez sur ce",
+                Color.GREEN,
+                c
+            )
+                .addButton(
+                    "Bouton",
+                    "pour continuer"
+                ) { button, c2, b2 ->
+                    // partie 2 du modal avec x et y, j'utilise à nouveau idNameRP (pour x); idDescription (pour y)
+                    val id2 = generateUniqueID()
+
+                    button.buttonInteraction.respondWithModal(
+                        id2.toString(),
+                        "Ajout d'une ville (2/2)",
+                        ActionRow.of(
+                            TextInput.create(
+                                TextInputStyle.SHORT,
+                                idNameRP,
+                                "Coordonnée X",
+                                true
+                            )
+                        ),
+                        ActionRow.of(
+                            TextInput.create(
+                                TextInputStyle.SHORT,
+                                idDescription,
+                                "Coordonnée Y",
+                                true
+                            )
+                        )
+                    )
+
+                    c.modal(M3(id2.toString()))
+                }
+                .responder(smce.modalInteraction)
+        }
+    }
+
+    class M3(name: String) : ModalContextManager(name) {
+        override fun ex(smce: ModalSubmitEvent, c: Context) {
+            // récupération de tous les éléments : description, nameRP, welcome, x, y
+            val opNameRP =
+                modalPart1.modalInteraction.getTextInputValueByCustomId(idNameRP.toString())
+            val opDescription =
+                modalPart1.modalInteraction.getTextInputValueByCustomId(idDescription.toString())
+            val opWelcome =
+                modalPart1.modalInteraction.getTextInputValueByCustomId(idWelcome.toString())
+            val opX =
+                it.modalInteraction.getTextInputValueByCustomId(idNameRP.toString())
+            val opY =
+                it.modalInteraction.getTextInputValueByCustomId(idDescription.toString())
+
+            // s'il manque un élément, on annule
+            if (!opNameRP.isPresent || !opDescription.isPresent || !opWelcome.isPresent || !opX.isPresent || !opY.isPresent) {
+                throw IllegalArgumentException("Vous avez oublié un élément !")
+            }
+
+            // on récupère les éléments
+            val nameRP = opNameRP.get()
+            val description = opDescription.get()
+            val welcome = opWelcome.get()
+            val x = opX.get()
+            val y = opY.get()
+
+            // on vérifie que les coordonnées sont bien des nombres
+            try {
+                x.toInt()
+                y.toInt()
+            } catch (e: NumberFormatException) {
+                throw IllegalArgumentException("Les coordonnées doivent être des nombres !")
+            }
+
+            if (!serverForZones.isInZones(x.toInt(), y.toInt())) {
+                throw IllegalArgumentException("Les coordonnées ne sont pas dans les zones autorisées pour votre entité !")
+            }
+
+            // TODO : vérifier l'existence de la ville dans les villes du lore officiel
+
+            if (saveManager.hasResult("SELECT * FROM places WHERE nameRP = '$nameRP' OR x = '$x' AND y = '$y'")) {
+                throw IllegalArgumentException("Une ville existe déjà à ces coordonnées ou avec ce nom !")
+            }
+
+            // création de la ville, on réutilise encore id
+            places.add(id)
+            val place = places[id]
+                ?: throw IllegalArgumentException("Un problème de source inconnue est survenue. La création de la ville a échoué.")
+            place["nameRP"] = nameRP
+            place["description"] = description
+            place["welcome"] = welcome
+            place["x"] = x
+            place["y"] = y
+            place["server"] = serverId.toString()
+            place["type"] = "city"
+            place["world"] = WorldEnum.DIBIMAP.progName
+
+            server.addPlace(id)
+
+            // on envoie un message de succès
+            it.modalInteraction.createImmediateResponder()
+                .setContent("La ville a été créée avec succès !")
+                .respond()
+        }
     }
 
     override fun execute(slashCommand: SlashCommandInteraction) {
@@ -150,7 +266,16 @@ class ConfigCommand : Command(
                                 )
                             )
 
-                            c1.modal(M1(id.toString()))
+                            c1.modal(
+                                M1(
+                                    id.toString(),
+                                    idNameRP.toString(),
+                                    idDescription.toString(),
+                                    idWelcome.toString(),
+                                    world,
+                                    serverId
+                                )
+                            )
                         }
 
                         WorldEnum.DIBIMAP -> {
@@ -183,7 +308,7 @@ class ConfigCommand : Command(
                             place["world"] = world.progName // automatique normalement
                             place["server"] = serverId.toString() // automatique normalement
 
-                            configNormalServer(world, slashCommand, id)
+                            configNormalServer(world, slashCommand.server.get(), id)
 
                             yes.buttonInteraction.createImmediateResponder()
                                 .setContent("Le serveur a été configuré avec succès !")
@@ -206,7 +331,7 @@ class ConfigCommand : Command(
         } else {
             when (WorldEnum.valueOf(server["world"])) {
                 WorldEnum.NORMAL -> {
-                    modifServer(slashCommand, server)
+                    modifServer(server, context, slashCommand.server.get())
                 }
 
                 WorldEnum.DIBIMAP -> {
@@ -275,113 +400,18 @@ class ConfigCommand : Command(
                                 )
                             )
 
-                            modalManager.add(id) { modalPart1 ->
-                                // création d'un bouton pour continuer
-                                MenuBuilder(
-                                    "Discord n'autorise pas l'enchainement des entrées de texte",
-                                    "Donc cliquez sur ce",
-                                    Color.GREEN,
-                                    modalPart1.modalInteraction.user.id
+                            c1.modal(
+                                M2(
+                                    id.toString(),
+                                    idNameRP.toString(),
+                                    idDescription.toString(),
                                 )
-                                    .addButton(
-                                        "Bouton",
-                                        "pour continuer"
-                                    ) { button, c2, b2 ->
-                                        // partie 2 du modal avec x et y, j'utilise à nouveau idNameRP (pour x); idDescription (pour y)
-                                        val id2 = generateUniqueID()
-
-                                        button.buttonInteraction.respondWithModal(
-                                            id2.toString(),
-                                            "Ajout d'une ville (2/2)",
-                                            ActionRow.of(
-                                                TextInput.create(
-                                                    TextInputStyle.SHORT,
-                                                    idNameRP.toString(),
-                                                    "Coordonnée X",
-                                                    true
-                                                )
-                                            ),
-                                            ActionRow.of(
-                                                TextInput.create(
-                                                    TextInputStyle.SHORT,
-                                                    idDescription.toString(),
-                                                    "Coordonnée Y",
-                                                    true
-                                                )
-                                            )
-                                        )
-
-                                        modalManager.add(id2) {
-                                            // récupération de tous les éléments : description, nameRP, welcome, x, y
-                                            val opNameRP =
-                                                modalPart1.modalInteraction.getTextInputValueByCustomId(idNameRP.toString())
-                                            val opDescription =
-                                                modalPart1.modalInteraction.getTextInputValueByCustomId(idDescription.toString())
-                                            val opWelcome =
-                                                modalPart1.modalInteraction.getTextInputValueByCustomId(idWelcome.toString())
-                                            val opX =
-                                                it.modalInteraction.getTextInputValueByCustomId(idNameRP.toString())
-                                            val opY =
-                                                it.modalInteraction.getTextInputValueByCustomId(idDescription.toString())
-
-                                            // s'il manque un élément, on annule
-                                            if (!opNameRP.isPresent || !opDescription.isPresent || !opWelcome.isPresent || !opX.isPresent || !opY.isPresent) {
-                                                throw IllegalArgumentException("Vous avez oublié un élément !")
-                                            }
-
-                                            // on récupère les éléments
-                                            val nameRP = opNameRP.get()
-                                            val description = opDescription.get()
-                                            val welcome = opWelcome.get()
-                                            val x = opX.get()
-                                            val y = opY.get()
-
-                                            // on vérifie que les coordonnées sont bien des nombres
-                                            try {
-                                                x.toInt()
-                                                y.toInt()
-                                            } catch (e: NumberFormatException) {
-                                                throw IllegalArgumentException("Les coordonnées doivent être des nombres !")
-                                            }
-
-                                            if (!serverForZones.isInZones(x.toInt(), y.toInt())) {
-                                                throw IllegalArgumentException("Les coordonnées ne sont pas dans les zones autorisées pour votre entité !")
-                                            }
-
-                                            // TODO : vérifier l'existence de la ville dans les villes du lore officiel
-
-                                            if (saveManager.hasResult("SELECT * FROM places WHERE nameRP = '$nameRP' OR x = '$x' AND y = '$y'")) {
-                                                throw IllegalArgumentException("Une ville existe déjà à ces coordonnées ou avec ce nom !")
-                                            }
-
-                                            // création de la ville, on réutilise encore id
-                                            places.add(id)
-                                            val place = places[id]
-                                                ?: throw IllegalArgumentException("Un problème de source inconnue est survenue. La création de la ville a échoué.")
-                                            place["nameRP"] = nameRP
-                                            place["description"] = description
-                                            place["welcome"] = welcome
-                                            place["x"] = x
-                                            place["y"] = y
-                                            place["server"] = serverId.toString()
-                                            place["type"] = "city"
-                                            place["world"] = WorldEnum.DIBIMAP.progName
-
-                                            server.addPlace(id)
-
-                                            // on envoie un message de succès
-                                            it.modalInteraction.createImmediateResponder()
-                                                .setContent("La ville a été créée avec succès !")
-                                                .respond()
-                                        }
-                                    }
-                                    .responder(modalPart1.modalInteraction)
-                            }
+                            )
                         }
                         .addButton(
                             "Supprimer une ville",
                             "Permet de supprimer une ville sur la carte si elle n'est pas utilisée pour le lore"
-                        ) { remove, c1, b1 ->
+                        ) { remove, c1, _ ->
                             /**
                              * Etapes :
                              * 1. Récupérer la liste des villes
@@ -455,7 +485,7 @@ class ConfigCommand : Command(
                                 placesPlace,
                                 ::fillEmbed,
                                 c1
-                            ) { place: Place, buttonClickEvent: ButtonClickEvent, c2  ->
+                            ) { place: Place, buttonClickEvent: ButtonClickEvent, c2 ->
                                 // 3. Récupérer la ville sélectionnée
                                 // 4. Afficher les options de modification
 
@@ -592,18 +622,17 @@ class ConfigCommand : Command(
         }
     }
 
-    fun modifServer(slashCommand: SlashCommandInteraction, server: ServerBot) {
+    private fun modifServer(server: ServerBot, context: Context, serverDiscord: Server) {
         MenuBuilder(
             "Modification du serveur dans un monde à lieu unique",
             "Vous pouvez modifier la configuration du serveur discord de façon simple dans un monde à serveur unique. Sélectionner ce qu'il faut modifier :",
             Color.YELLOW,
-            slashCommand.user.id
+            context
         )
             .addButton(
                 "Mise à jour du nom du serveur",
                 "Le nom du serveur discord est stocké dans la base de données. Mais si vous changer le nom du serveur discord le bot ne met pas à jour automatiquement de son côté."
-            ) { name, c1, b1 ->
-                val serverDiscord = slashCommand.server.get()
+            ) { name, _, _ ->
                 server["name"] = serverDiscord.name
                 name.buttonInteraction.createImmediateResponder()
                     .setContent("Le nom du serveur a été mis à jour avec succès !")
