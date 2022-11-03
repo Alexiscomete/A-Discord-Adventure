@@ -5,7 +5,6 @@ import io.github.alexiscomete.lapinousecond.commands.withslash.ExecutableWithArg
 import io.github.alexiscomete.lapinousecond.commands.withslash.getAccount
 import io.github.alexiscomete.lapinousecond.entity.Player
 import io.github.alexiscomete.lapinousecond.entity.PlayerWithAccount
-import io.github.alexiscomete.lapinousecond.modalManager
 import io.github.alexiscomete.lapinousecond.resources.Resource
 import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
 import io.github.alexiscomete.lapinousecond.view.Context
@@ -98,22 +97,22 @@ class MapCommand : Command(
             "Carte 🗺",
             "Se déplacer est important dans le jeu ! Visitez le monde et regardez autour de vous",
             Color.PINK,
-            slashCommand.user.id
+            context
         )
             .addButton(
                 "Voyager",
                 "Permet de se déplacer de plusieurs façons sur la carte"
-            ) { messageComponentCreateEvent: ButtonClickEvent ->
+            ) { messageComponentCreateEvent: ButtonClickEvent, c1, b1 ->
                 MenuBuilder(
                     "Voyager",
                     "Voyager est important dans ce jeu",
                     Color.PINK,
-                    messageComponentCreateEvent.buttonInteraction.user.id
+                    c1
                 )
                     .addButton(
                         "Mondes",
                         "Permet de changer de monde"
-                    ) { mcce: ButtonClickEvent ->
+                    ) { mcce: ButtonClickEvent, c2, b2 ->
                         // Etape 1 : afficher la liste des mondes
 
                         // get all worlds
@@ -154,7 +153,7 @@ class MapCommand : Command(
                     .addButton(
                         "Aller à",
                         "Mode de déplacement le plus simple. Permet de se déplacer sur le pixel de son choix"
-                    ) { buttonClickEvent: ButtonClickEvent ->
+                    ) { buttonClickEvent: ButtonClickEvent, c2, b2 ->
                         val id = generateUniqueID()
                         val idX = generateUniqueID()
                         val idY = generateUniqueID()
@@ -241,12 +240,12 @@ class MapCommand : Command(
                                 .addButton(
                                     "Temps",
                                     "Vous allez prendre $timeMillisToTravel ms pour aller jusqu'à ce pixel"
-                                ) { timeB ->
+                                ) { timeB, c3, b3 ->
                                     MenuBuilder(
                                         "Confirmer",
                                         "Confirmer le voyage ?",
                                         Color.orange,
-                                        timeB.buttonInteraction.user.id
+                                        c3
                                     )
                                         .addButton("Oui", "Oui je veux aller jusqu'à ce pixel") {
                                             player.setPath(path, "default_time")
@@ -268,7 +267,7 @@ class MapCommand : Command(
                                 .addButton(
                                     "Argent",
                                     "Vous allez dépenser $priceToTravel ${Resource.RABBIT_COIN.name_} pour aller jusqu'à ce pixel"
-                                ) { moneyB ->
+                                ) { moneyB, c3, b3 ->
                                     MenuBuilder(
                                         "Confirmer",
                                         "Confirmer le voyage ?",
@@ -310,7 +309,7 @@ class MapCommand : Command(
                     .addButton(
                         "Pixel par pixel",
                         "Mode de déplacement maîtrisable."
-                    ) { buttonClickEvent: ButtonClickEvent ->
+                    ) { buttonClickEvent: ButtonClickEvent, c2, b2 ->
                         buttonClickEvent.buttonInteraction.createOriginalMessageUpdater()
                             .removeAllComponents()
                             .removeAllEmbeds()
@@ -322,13 +321,13 @@ class MapCommand : Command(
             .addButton(
                 "Retourner au hub",
                 "Une urgence ? Bloqué dans un lieu inexistant ? Retournez au hub gratuitement !"
-            ) { messageComponentCreateEvent: ButtonClickEvent ->
+            ) { messageComponentCreateEvent: ButtonClickEvent, c1, b1 ->
                 val p = getAccount(slashCommand)
                 MenuBuilder(
                     "Confirmation requise",
                     "Voulez-vous vraiment retourner au hub ?",
                     Color.PINK,
-                    messageComponentCreateEvent.buttonInteraction.user.id
+                    c1
                 )
                     .addButton("Oui", "Retourner au hub") { buttonClickEvent: ButtonClickEvent ->
                         buttonClickEvent.buttonInteraction.createOriginalMessageUpdater()

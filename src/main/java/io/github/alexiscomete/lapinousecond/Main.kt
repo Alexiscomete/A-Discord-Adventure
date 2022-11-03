@@ -39,7 +39,7 @@ fun main() {
         api.addListener(ListenerSlashCommands())
         api.addListener(ButtonsManager())
         api.addListener(messagesManager)
-        api.addListener(modalManager)
+        api.addListener(ModalManager())
         api.addListener(SelectMenuManager())
 
         // Ajout des commandes

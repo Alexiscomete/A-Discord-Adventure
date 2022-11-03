@@ -1,6 +1,6 @@
 package io.github.alexiscomete.lapinousecond.worlds.buildings.interactions
 
-import io.github.alexiscomete.lapinousecond.entity.Player
+import io.github.alexiscomete.lapinousecond.view.Context
 import io.github.alexiscomete.lapinousecond.view.message_event.MenuBuilder
 import io.github.alexiscomete.lapinousecond.worlds.buildings.Building
 import io.github.alexiscomete.lapinousecond.worlds.buildings.BuildingInteraction
@@ -13,12 +13,12 @@ class Journal(building: Building?) : BuildingInteraction(building!!) {
     override val usage: String?
         get() = null
 
-    override fun getCompleteInfos(p: Player): MenuBuilder {
+    override fun getCompleteInfos(p: Context): MenuBuilder {
         return MenuBuilder(
             "Journal",
             "Voici votre journal",
             Color.DARK_GRAY,
-            p.id
+            p
         )
     }
 

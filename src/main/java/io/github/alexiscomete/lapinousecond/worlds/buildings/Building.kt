@@ -1,7 +1,6 @@
 package io.github.alexiscomete.lapinousecond.worlds.buildings
 
 import io.github.alexiscomete.lapinousecond.entity.Owner
-import io.github.alexiscomete.lapinousecond.entity.Player
 import io.github.alexiscomete.lapinousecond.view.message_event.MenuBuilder
 import io.github.alexiscomete.lapinousecond.resources.Resource
 import io.github.alexiscomete.lapinousecond.useful.ProgressionBar
@@ -9,6 +8,7 @@ import io.github.alexiscomete.lapinousecond.useful.managesave.CacheCustom
 import io.github.alexiscomete.lapinousecond.useful.managesave.CacheGetSet
 import io.github.alexiscomete.lapinousecond.useful.managesave.Table
 import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
+import io.github.alexiscomete.lapinousecond.view.Context
 import io.github.alexiscomete.lapinousecond.worlds.Place
 import org.json.JSONObject
 import java.awt.Color
@@ -75,7 +75,7 @@ class Building : CacheGetSet, BuildMethods, Owner {
         }"
     }
 
-    fun completeInfos(p: Player): MenuBuilder {
+    fun completeInfos(p: Context): MenuBuilder {
         return if (getString("build_status") == "building") {
             inBuildCompleteInfos(p)
         } else {
@@ -83,9 +83,9 @@ class Building : CacheGetSet, BuildMethods, Owner {
         }
     }
 
-    private fun inBuildCompleteInfos(player: Player): MenuBuilder {
-        return MenuBuilder(title(), descriptionShort(), Color.DARK_GRAY, player.id)
-            .addButton("Donner de l'argent", "Permet de donner de l'argent à ce bâtiment") {
+    private fun inBuildCompleteInfos(player: Context): MenuBuilder {
+        return MenuBuilder(title(), descriptionShort(), Color.DARK_GRAY, player)
+            .addButton("Donner de l'argent", "Permet de donner de l'argent à ce bâtiment") { it, c1, b1 ->
                 TODO("todo")
             }
     }
@@ -110,7 +110,7 @@ class Building : CacheGetSet, BuildMethods, Owner {
     override val usage: String?
         get() = buildingInteraction!!.usage
 
-    override fun getCompleteInfos(p: Player): MenuBuilder {
+    override fun getCompleteInfos(p: Context): MenuBuilder {
         return buildingInteraction!!.getCompleteInfos(p)
     }
 

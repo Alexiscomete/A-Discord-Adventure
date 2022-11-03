@@ -68,7 +68,7 @@ class MarketCommand : Command(
             .addButton(
                 "Donner",
                 "Donner un objet ou des ressources à un autre joueur"
-            ) { messageComponentCreateEvent: ButtonClickEvent ->
+            ) { messageComponentCreateEvent: ButtonClickEvent, c1, b1 ->
 
                 val p = getAccount(slashCommand)
                 val id = generateUniqueID()
@@ -155,7 +155,7 @@ class MarketCommand : Command(
             .addButton(
                 "Echanger",
                 "Echanger un objet ou des ressources avec un autre joueur de façon sécurisée"
-            ) { messageComponentCreateEvent: ButtonClickEvent ->
+            ) { messageComponentCreateEvent: ButtonClickEvent, c1, b1 ->
                 getAccount(slashCommand)
                 messagesManager.addListener(
                     slashCommand.channel.get(),
@@ -174,7 +174,7 @@ class MarketCommand : Command(
                         .addButton(
                             "Accepter",
                             "Vous acceptez de négociez avec lui"
-                        ) { buttonClickEvent: ButtonClickEvent ->
+                        ) { buttonClickEvent: ButtonClickEvent, c3, b3 ->
                             val id1 = generateUniqueID()
                             val idItem1 = generateUniqueID()
                             val idQuantity1 = generateUniqueID()
@@ -233,7 +233,7 @@ class MarketCommand : Command(
                                     .addButton(
                                         "Accepter",
                                         "Vous acceptez l'échange."
-                                    ) {
+                                    ) { it, c4, b4 ->
                                         if (accept) {
                                             it.buttonInteraction.createOriginalMessageUpdater()
                                                 .removeAllComponents()
@@ -267,7 +267,7 @@ class MarketCommand : Command(
                                                 .update()
                                         }
                                     }
-                                    .addButton("Annuler", "Vous refusez l'échange") {
+                                    .addButton("Annuler", "Vous refusez l'échange") { it, c4, b4 ->
                                         it.buttonInteraction.createOriginalMessageUpdater()
                                             .removeAllComponents()
                                             .removeAllEmbeds()
@@ -394,7 +394,7 @@ class MarketCommand : Command(
                         .addButton(
                             "Refuser",
                             "Vous refusez de négocier avec lui"
-                        ) { messageComponentCreateEvent: ButtonClickEvent ->
+                        ) { messageComponentCreateEvent: ButtonClickEvent, c2, b2 ->
                             messageComponentCreateEvent.buttonInteraction
                                 .createOriginalMessageUpdater()
                                 .removeAllEmbeds()
@@ -416,7 +416,7 @@ class MarketCommand : Command(
             .addButton(
                 "Offres",
                 "Les vendeurs proposent un prix"
-            ) { messageComponentCreateEvent: ButtonClickEvent ->
+            ) { messageComponentCreateEvent: ButtonClickEvent, c1, b1 ->
                 askWhat(
                     "offre",
                     messageComponentCreateEvent,
@@ -446,7 +446,7 @@ class MarketCommand : Command(
                                     )
                                 }
                             }
-                        ) { offer: Offer, buttonClickEvent: ButtonClickEvent ->
+                        ) { offer: Offer, buttonClickEvent: ButtonClickEvent, c3 ->
                             val player = getAccount(slashCommand)
                             // On vérifie si l'offre existe encore dans la base de données
                             val resultSet =
@@ -507,7 +507,7 @@ class MarketCommand : Command(
                                         "${offer.amountRB} -> ${offer.amount} ${offer.what.name_}"
                                     )
                                 }
-                            }) { offer: Offer, buttonClickEvent: ButtonClickEvent ->
+                            }) { offer: Offer, buttonClickEvent: ButtonClickEvent, c3 ->
                             val player = getAccount(slashCommand)
                             // On vérifie si l'offre existe encore dans la base de données
                             val resultSet =
@@ -638,7 +638,7 @@ class MarketCommand : Command(
             .addButton(
                 "Recherches",
                 "Les acheteurs recherchent un objet pour un certain prix"
-            ) { messageComponentCreateEvent: ButtonClickEvent ->
+            ) { messageComponentCreateEvent: ButtonClickEvent, c1, b1 ->
                 askWhat(
                     "recherche",
                     messageComponentCreateEvent,
@@ -668,7 +668,7 @@ class MarketCommand : Command(
                                     )
                                 }
                             }
-                        ) { offer: Research, buttonClickEvent: ButtonClickEvent ->
+                        ) { offer: Research, buttonClickEvent: ButtonClickEvent, c2 ->
                             val player = getAccount(slashCommand)
                             // On vérifie si l'offre existe encore dans la base de données
                             val resultSet =
@@ -728,7 +728,7 @@ class MarketCommand : Command(
                                     )
                                 }
                             }
-                        ) { research: Research, buttonClickEvent: ButtonClickEvent ->
+                        ) { research: Research, buttonClickEvent: ButtonClickEvent, c2 ->
                             val player = getAccount(slashCommand)
                             // On vérifie si l'offre existe encore dans la base de données
                             val resultSet =
@@ -858,7 +858,7 @@ class MarketCommand : Command(
             .addButton(
                 "Enchères",
                 "Ici trouvez les objets les plus rares et chers"
-            ) { messageComponentCreateEvent: ButtonClickEvent ->
+            ) { messageComponentCreateEvent: ButtonClickEvent, c1, b1 ->
                 askWhat("enchère", messageComponentCreateEvent, {
                     val result = saveManager.executeQuery(
                         "SELECT id FROM auctions WHERE who = ${messageComponentCreateEvent.buttonInteraction.user.id}",
@@ -885,7 +885,7 @@ class MarketCommand : Command(
                                 )
                             }
                         }
-                    ) { auction: Auction, buttonClickEvent: ButtonClickEvent ->
+                    ) { auction: Auction, buttonClickEvent: ButtonClickEvent, c2 ->
                         val player = getAccount(slashCommand)
                         // On vérifie si l'enchère existe encore dans la base de données
                         val resultSet =
@@ -950,7 +950,7 @@ class MarketCommand : Command(
                                 )
                             }
                         }
-                    ) { auction: Auction, buttonClickEvent: ButtonClickEvent ->
+                    ) { auction: Auction, buttonClickEvent: ButtonClickEvent, c2 ->
                         val player = getAccount(slashCommand)
                         // On vérifie si l'offre existe encore dans la base de données
                         val resultSet =

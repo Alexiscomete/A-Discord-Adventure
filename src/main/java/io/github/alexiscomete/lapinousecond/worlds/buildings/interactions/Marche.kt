@@ -1,6 +1,6 @@
 package io.github.alexiscomete.lapinousecond.worlds.buildings.interactions
 
-import io.github.alexiscomete.lapinousecond.entity.Player
+import io.github.alexiscomete.lapinousecond.view.Context
 import io.github.alexiscomete.lapinousecond.view.message_event.MenuBuilder
 import io.github.alexiscomete.lapinousecond.worlds.buildings.Building
 import io.github.alexiscomete.lapinousecond.worlds.buildings.BuildingInteraction
@@ -21,8 +21,8 @@ class Marche(building: Building?) : BuildingInteraction(building!!) {
         return "Marché"
     }
 
-    override fun getCompleteInfos(p: Player): MenuBuilder {
-        return MenuBuilder("Marché", "Bienvenue dans le marché !", Color.DARK_GRAY,p.id)
+    override fun getCompleteInfos(p: Context): MenuBuilder {
+        return MenuBuilder("Marché", "Bienvenue dans le marché !", Color.DARK_GRAY,p)
     }
 
     override fun configBuilding() {}

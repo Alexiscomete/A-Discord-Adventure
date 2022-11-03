@@ -1,10 +1,10 @@
 package io.github.alexiscomete.lapinousecond.worlds.buildings
 
-import io.github.alexiscomete.lapinousecond.entity.Player
+import io.github.alexiscomete.lapinousecond.view.Context
 import io.github.alexiscomete.lapinousecond.view.message_event.MenuBuilder
 
 interface BuildMethods {
-    fun getCompleteInfos(p: Player): MenuBuilder
+    fun getCompleteInfos(p: Context): MenuBuilder
     fun configBuilding()
     fun interpret(args: Array<String>)
     val help: String?
