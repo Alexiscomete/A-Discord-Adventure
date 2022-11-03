@@ -9,9 +9,9 @@ import io.github.alexiscomete.lapinousecond.resources.Resource
 import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
 import io.github.alexiscomete.lapinousecond.view.Context
 import io.github.alexiscomete.lapinousecond.view.contextFor
-import io.github.alexiscomete.lapinousecond.view.message_event.EmbedPages
-import io.github.alexiscomete.lapinousecond.view.message_event.MenuBuilder
-import io.github.alexiscomete.lapinousecond.view.message_event.SelectMenuContextManager
+import io.github.alexiscomete.lapinousecond.view.ui.EmbedPages
+import io.github.alexiscomete.lapinousecond.view.ui.MenuBuilder
+import io.github.alexiscomete.lapinousecond.view.contextmanager.SelectMenuContextManager
 import io.github.alexiscomete.lapinousecond.worlds.WorldEnum
 import io.github.alexiscomete.lapinousecond.worlds.bigger
 import io.github.alexiscomete.lapinousecond.worlds.map.FilesMapEnum

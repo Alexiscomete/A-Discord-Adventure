@@ -1,4 +1,4 @@
-package io.github.alexiscomete.lapinousecond.view.message_event
+package io.github.alexiscomete.lapinousecond.view.contextmanager
 
 interface ContextManager {
     fun canApply(string: String): Boolean

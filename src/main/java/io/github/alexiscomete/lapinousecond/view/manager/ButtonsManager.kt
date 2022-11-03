@@ -1,4 +1,4 @@
-package io.github.alexiscomete.lapinousecond.view.message_event
+package io.github.alexiscomete.lapinousecond.view.manager
 
 import io.github.alexiscomete.lapinousecond.commands.withslash.getAccount
 import io.github.alexiscomete.lapinousecond.view.contextFor

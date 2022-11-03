@@ -1,11 +1,10 @@
-package io.github.alexiscomete.lapinousecond.view.message_event
+package io.github.alexiscomete.lapinousecond.view.manager
 
 import io.github.alexiscomete.lapinousecond.commands.withslash.getAccount
 import io.github.alexiscomete.lapinousecond.view.contextFor
 import org.javacord.api.entity.message.MessageFlag
 import org.javacord.api.event.interaction.ModalSubmitEvent
 import org.javacord.api.listener.interaction.ModalSubmitListener
-import java.util.function.Consumer
 
 class ModalManager : ModalSubmitListener {
     override fun onModalSubmit(p0: ModalSubmitEvent) {

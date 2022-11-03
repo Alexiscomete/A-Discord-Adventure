@@ -1,6 +1,7 @@
-package io.github.alexiscomete.lapinousecond.view.message_event
+package io.github.alexiscomete.lapinousecond.view.ui
 
 import io.github.alexiscomete.lapinousecond.view.Context
+import io.github.alexiscomete.lapinousecond.view.contextmanager.ButtonsContextManager
 import org.javacord.api.entity.message.component.ActionRow
 import org.javacord.api.entity.message.component.Button
 import org.javacord.api.entity.message.embed.EmbedBuilder

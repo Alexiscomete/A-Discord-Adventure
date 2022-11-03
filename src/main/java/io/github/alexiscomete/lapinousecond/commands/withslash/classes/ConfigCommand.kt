@@ -3,13 +3,13 @@ package io.github.alexiscomete.lapinousecond.commands.withslash.classes
 import io.github.alexiscomete.lapinousecond.commands.withslash.Command
 import io.github.alexiscomete.lapinousecond.commands.withslash.ExecutableWithArguments
 import io.github.alexiscomete.lapinousecond.commands.withslash.getAccount
-import io.github.alexiscomete.lapinousecond.view.message_event.EmbedPagesWithInteractions
-import io.github.alexiscomete.lapinousecond.view.message_event.MenuBuilder
+import io.github.alexiscomete.lapinousecond.view.ui.EmbedPagesWithInteractions
+import io.github.alexiscomete.lapinousecond.view.ui.MenuBuilder
 import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
 import io.github.alexiscomete.lapinousecond.useful.managesave.saveManager
 import io.github.alexiscomete.lapinousecond.view.Context
 import io.github.alexiscomete.lapinousecond.view.contextFor
-import io.github.alexiscomete.lapinousecond.view.message_event.ModalContextManager
+import io.github.alexiscomete.lapinousecond.view.contextmanager.ModalContextManager
 import io.github.alexiscomete.lapinousecond.worlds.*
 import io.github.alexiscomete.lapinousecond.worlds.dibimap.getValueById
 import io.github.alexiscomete.lapinousecond.worlds.dibimap.isDibimap

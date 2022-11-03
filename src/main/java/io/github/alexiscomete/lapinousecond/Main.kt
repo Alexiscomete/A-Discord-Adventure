@@ -2,10 +2,10 @@ package io.github.alexiscomete.lapinousecond
 
 import io.github.alexiscomete.lapinousecond.commands.withslash.ListenerSlashCommands
 import io.github.alexiscomete.lapinousecond.commands.withslash.loadAllS
-import io.github.alexiscomete.lapinousecond.view.message_event.ButtonsManager
-import io.github.alexiscomete.lapinousecond.view.message_event.MessagesManager
-import io.github.alexiscomete.lapinousecond.view.message_event.ModalManager
-import io.github.alexiscomete.lapinousecond.view.message_event.SelectMenuManager
+import io.github.alexiscomete.lapinousecond.view.manager.ButtonsManager
+import io.github.alexiscomete.lapinousecond.view.manager.MessagesManager
+import io.github.alexiscomete.lapinousecond.view.manager.ModalManager
+import io.github.alexiscomete.lapinousecond.view.manager.SelectMenuManager
 import io.github.alexiscomete.lapinousecond.useful.managesave.SaveLocation
 import io.github.alexiscomete.lapinousecond.useful.managesave.SaveManager
 import io.github.alexiscomete.lapinousecond.useful.managesave.saveManager

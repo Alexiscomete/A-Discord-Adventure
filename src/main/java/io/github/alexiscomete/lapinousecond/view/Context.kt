@@ -1,13 +1,11 @@
 package io.github.alexiscomete.lapinousecond.view
 
 import io.github.alexiscomete.lapinousecond.entity.PlayerWithAccount
-import io.github.alexiscomete.lapinousecond.view.message_event.ButtonsContextManager
-import io.github.alexiscomete.lapinousecond.view.message_event.ContextManager
-import io.github.alexiscomete.lapinousecond.view.message_event.ModalContextManager
-import io.github.alexiscomete.lapinousecond.view.message_event.SelectMenuContextManager
+import io.github.alexiscomete.lapinousecond.view.contextmanager.*
 import org.javacord.api.event.interaction.ButtonClickEvent
 import org.javacord.api.event.interaction.ModalSubmitEvent
 import org.javacord.api.event.interaction.SelectMenuChooseEvent
+import org.javacord.api.event.message.MessageCreateEvent
 
 data class Players(val player: PlayerWithAccount, val otherPlayers: List<PlayerWithAccount> = listOf())
 
@@ -52,13 +50,11 @@ class Context(val players: Players, canParallel: Boolean = false) : ContextManag
         }
     }
 
-    var buttons: ButtonsContextManager? = null
-        private set
-    var selectMenu: SelectMenuContextManager? = null
-        private set
-    var multiContext: Context? = null
-        private set
-    var modal: ModalContextManager? = null
+    private var buttons: ButtonsContextManager? = null
+    private var selectMenu: SelectMenuContextManager? = null
+    private var multiContext: Context? = null
+    private var modal: ModalContextManager? = null
+    private var messages: MessagesContextManager? = null
 
     fun buttons(buttons: ButtonsContextManager, canParallel:Boolean=false): Context {
         if (!canParallel) {
@@ -92,10 +88,20 @@ class Context(val players: Players, canParallel: Boolean = false) : ContextManag
         return this
     }
 
+    fun messages(messages: MessagesContextManager, canParallel:Boolean=false): Context {
+        if (!canParallel) {
+            clear()
+        }
+        this.messages = messages
+        return this
+    }
+
     fun clear() {
         buttons = null
         selectMenu = null
         multiContext = null
+        modal = null
+        messages = null
     }
 
     override fun canApply(string: String): Boolean {
@@ -111,6 +117,16 @@ class Context(val players: Players, canParallel: Boolean = false) : ContextManag
         }
         if (selectMenu != null) {
             if (selectMenu!!.canApply(string)) {
+                return true
+            }
+        }
+        if (modal != null) {
+            if (modal!!.canApply(string)) {
+                return true
+            }
+        }
+        if (messages != null) {
+            if (messages!!.canApply(string)) {
                 return true
             }
         }
@@ -167,5 +183,21 @@ class Context(val players: Players, canParallel: Boolean = false) : ContextManag
             }
         }
         throw IllegalStateException("Cannot apply $customId")
+    }
+
+    fun apply(string: String, event: MessageCreateEvent) {
+        if (multiContext != null) {
+            if (multiContext!!.canApply(string)) {
+                multiContext!!.apply(string, event)
+                return
+            }
+        }
+        if (messages != null) {
+            if (messages!!.canApply(string)) {
+                messages!!.ex(event, this)
+                return
+            }
+        }
+        throw IllegalStateException("Cannot apply $string")
     }
 }
