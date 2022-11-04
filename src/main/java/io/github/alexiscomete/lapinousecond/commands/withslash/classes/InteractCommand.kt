@@ -4,12 +4,15 @@ import io.github.alexiscomete.lapinousecond.api
 import io.github.alexiscomete.lapinousecond.commands.withslash.Command
 import io.github.alexiscomete.lapinousecond.commands.withslash.ExecutableWithArguments
 import io.github.alexiscomete.lapinousecond.commands.withslash.getAccount
+import io.github.alexiscomete.lapinousecond.entity.Player
 import io.github.alexiscomete.lapinousecond.view.ui.EmbedPagesWithInteractions
 import io.github.alexiscomete.lapinousecond.view.ui.MenuBuilder
-import io.github.alexiscomete.lapinousecond.modalManager
 import io.github.alexiscomete.lapinousecond.resources.Resource
 import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
 import io.github.alexiscomete.lapinousecond.useful.managesave.saveManager
+import io.github.alexiscomete.lapinousecond.view.Context
+import io.github.alexiscomete.lapinousecond.view.contextFor
+import io.github.alexiscomete.lapinousecond.view.contextmanager.ModalContextManager
 import io.github.alexiscomete.lapinousecond.worlds.WorldEnum
 import io.github.alexiscomete.lapinousecond.worlds.buildings.Building
 import io.github.alexiscomete.lapinousecond.worlds.buildings.Buildings
@@ -23,6 +26,7 @@ import org.javacord.api.entity.message.embed.EmbedBuilder
 import org.javacord.api.entity.server.invite.Invite
 import org.javacord.api.entity.server.invite.InviteBuilder
 import org.javacord.api.event.interaction.ButtonClickEvent
+import org.javacord.api.event.interaction.ModalSubmitEvent
 import org.javacord.api.interaction.SlashCommandInteraction
 import java.awt.Color
 
@@ -31,6 +35,34 @@ class InteractCommandBase : Command(
     "Interact with your environment",
     "interact"
 ), ExecutableWithArguments {
+
+    class M1(name: String, val player: Player, val building: Building) : ModalContextManager(name) {
+        override fun ex(smce: ModalSubmitEvent, c: Context) {
+            // Etape 2
+            val opMoney = smce.modalInteraction.getTextInputValueByCustomId("cmoneyid")
+            if (!opMoney.isPresent) {
+                throw IllegalArgumentException("Money not found")
+            }
+
+            var money = opMoney.get().toDouble()
+            if (money > player.getMoney()) {
+                throw IllegalArgumentException("You don't have enough money")
+            }
+
+            if (money > building["collect_target"].toDouble() - building["collect_value"].toDouble()) {
+                money = (building["collect_target"].toDouble() - building["collect_value"].toDouble())
+            }
+
+            // Etape 3
+            player.removeMoney(money)
+            building.addMoney(money)
+
+            smce.modalInteraction.createImmediateResponder()
+                .setContent("Vous avez donné $money ${Resource.RABBIT_COIN.name_} au bâtiment ${building["nameRP"]} ! <@${building["owner"]}> peut vous remerciez !")
+                .respond()
+        }
+
+    }
 
     override val fullName: String
         get() = "interact"
@@ -41,6 +73,7 @@ class InteractCommandBase : Command(
 
         val player = getAccount(slashCommand)
         val world = WorldEnum.valueOf(player["world"])
+        val context = contextFor(getAccount(slashCommand.user))
         when (player["place_${world.progName}_type"]) {
             "coos" -> {
                 // on regarde s'il existe une ville à l'endroit où le joueur est
@@ -58,12 +91,12 @@ class InteractCommandBase : Command(
                         "Interactions sur la case $x $y du monde ${world.nameRP}",
                         "Liste de toutes vos possibilités dans la version actuelle du bot. Les sorts ne sont pas compris.",
                         Color.BLUE,
-                        slashCommand.user.id
+                        context
                     )
                         .addButton(
                             "Entrer dans la ville",
                             "La ville ${place["nameRP"]} est ici ! Vous pouvez y entrer en cliquant sur ce bouton. Description : ${place["description"]}"
-                        ) {
+                        ) { it, _, _ ->
                             fun errorWithSuccess() {
                                 it.buttonInteraction.createImmediateResponder()
                                     .setContent("Vous êtes maintenant dans la ville ${place["nameRP"]} ! Invitation impossible, le serveur n'est pas accessible.")
@@ -114,19 +147,22 @@ class InteractCommandBase : Command(
                     "Interactions sur le bâtiment ${building["nameRP"]} du monde ${world.nameRP}",
                     "Liste de toutes vos possibilités dans la version actuelle du bot.",
                     Color.BLUE,
-                    slashCommand.user.id
+                    context
                 )
                     .addButton(
                         "Sortir du bâtiment",
                         "Vous sortez du bâtiment ${building["nameRP"]} et retournez dans la ville."
-                    ) {
+                    ) { it, _, _ ->
                         player["place_${world.progName}_type"] = "city"
                         it.buttonInteraction.createImmediateResponder()
                             .setContent("Vous êtes maintenant dans la ville ${building["nameRP"]} !")
                             .setFlags(MessageFlag.EPHEMERAL)
                             .respond()
                     }
-                    .addButton("Informations", "Vous regardez les informations du bâtiment ${building["nameRP"]}.") {
+                    .addButton(
+                        "Informations",
+                        "Vous regardez les informations du bâtiment ${building["nameRP"]}."
+                    ) { it, _, _ ->
                         it.buttonInteraction.createImmediateResponder()
                             .setContent("${building.title()}\n${building.descriptionShort()}")
                             .setFlags(MessageFlag.EPHEMERAL)
@@ -162,7 +198,6 @@ class InteractCommandBase : Command(
 
                     // Etape 1
                     val id = generateUniqueID()
-                    val idMoney = generateUniqueID()
 
                     buttonClickEvent.buttonInteraction.respondWithModal(
                         id.toString(),
@@ -170,36 +205,19 @@ class InteractCommandBase : Command(
                         ActionRow.of(
                             TextInput.create(
                                 TextInputStyle.SHORT,
-                                idMoney.toString(),
+                                "cmoneyid",
                                 "Montant à donner"
                             )
                         )
                     )
 
-                    modalManager.add(id) {
-                        // Etape 2
-                        val opMoney = it.modalInteraction.getTextInputValueByCustomId(idMoney.toString())
-                        if (!opMoney.isPresent) {
-                            throw IllegalArgumentException("Money not found")
-                        }
-
-                        var money = opMoney.get().toDouble()
-                        if (money > player.getMoney()) {
-                            throw IllegalArgumentException("You don't have enough money")
-                        }
-
-                        if (money > building["collect_target"].toDouble() - building["collect_value"].toDouble()) {
-                            money = (building["collect_target"].toDouble() - building["collect_value"].toDouble())
-                        }
-
-                        // Etape 3
-                        player.removeMoney(money)
-                        building.addMoney(money)
-
-                        it.modalInteraction.createImmediateResponder()
-                            .setContent("Vous avez donné $money ${Resource.RABBIT_COIN.name_} au bâtiment ${building["nameRP"]} ! <@${building["owner"]}> peut vous remerciez !")
-                            .respond()
-                    }
+                    context.modal(
+                        M1(
+                            id.toString(),
+                            player,
+                            building
+                        )
+                    )
                 }
 
                 fun sendBuildingsInEmbed(
@@ -218,8 +236,9 @@ class InteractCommandBase : Command(
                                     building.descriptionShort()
                                 )
                             }
-                        }
-                    ) { building: Building, buttonClickEvent: ButtonClickEvent ->
+                        },
+                        context
+                    ) { building: Building, buttonClickEvent: ButtonClickEvent, _: Context ->
                         if (building["build_status"] == "building") {
                             helpBuilding(building, buttonClickEvent)
                         } else {
@@ -243,12 +262,12 @@ class InteractCommandBase : Command(
                     "Interactions dans la ville ${place["nameRP"]}",
                     "Liste de toutes vos possibilités dans la version actuelle du bot.",
                     Color.BLUE,
-                    slashCommand.user.id
+                    context
                 )
                     .addButton(
                         "Quitter la ville",
                         "Vous quittez la ville ${place["nameRP"]} et retournez dans la nature"
-                    ) {
+                    ) { it, _, _ ->
                         player["place_${world.progName}_type"] = "coos"
                         player["place_${world.progName}_id"] = "0"
                         it.buttonInteraction.createImmediateResponder()
@@ -259,7 +278,7 @@ class InteractCommandBase : Command(
                     .addButton(
                         "Informations sur la ville",
                         "Vous pouvez voir les informations sur la ville ${place["nameRP"]} en cliquant sur ce bouton"
-                    ) {
+                    ) { it, _, _ ->
                         it.buttonInteraction.createImmediateResponder()
                             .setContent("La ville ${place["nameRP"]} est une ville aux coordonnées ${place["x"]} ${place["y"]} du monde ${world.nameRP}. Description : ${place["description"]}")
                             .setFlags(MessageFlag.EPHEMERAL)
@@ -268,17 +287,17 @@ class InteractCommandBase : Command(
                     .addButton(
                         "Interactions avec les bâtiments",
                         "Vous pouvez entrer dans un bâtiment, en financer un, ou simplement voir les vôtres."
-                    ) { bat ->
+                    ) { bat, c1, _ ->
                         MenuBuilder(
                             "Bâtiments",
                             "Interactions avec les bâtiments",
                             Color.BLUE,
-                            bat.buttonInteraction.user.id
+                            c1
                         )
                             .addButton(
                                 "Voir les bâtiments",
                                 "Vous pouvez voir les bâtiments de la ville ${place["nameRP"]} en cliquant sur ce bouton et interagir avec eux"
-                            ) {
+                            ) { it, _, _ ->
                                 val buildings = Buildings.loadBuildings(place["buildings"])
                                 val embedBuilder = EmbedBuilder()
                                     .setTitle("Bâtiments de la ville ${place["nameRP"]}")
@@ -289,7 +308,7 @@ class InteractCommandBase : Command(
                             .addButton(
                                 "Vos bâtiments",
                                 "Vous pouvez voir vos bâtiments en cliquant sur ce bouton et interagir avec eux"
-                            ) { yours ->
+                            ) { yours, c2, _ ->
                                 val buildings = Buildings.loadBuildings(place["buildings"])
                                 // remove if not with this owner
                                 buildings.removeIf { building -> building["owner"] != player.id.toString() }
@@ -308,20 +327,21 @@ class InteractCommandBase : Command(
                                                 building.descriptionShort()
                                             )
                                         }
-                                    }
-                                ) { building: Building, buttonClickEvent: ButtonClickEvent ->
+                                    },
+                                    c2
+                                ) { building: Building, buttonClickEvent: ButtonClickEvent, c3: Context ->
                                     if (building["build_status"] == "building") {
                                         // annuler ou aider le bâtiment
                                         MenuBuilder(
                                             "Bâtiment ${building["nameRP"]}",
                                             "Que voulez-vous faire avec le bâtiment ${building["nameRP"]} ?",
                                             Color.BLUE,
-                                            buttonClickEvent.buttonInteraction.user.id
+                                            c3
                                         )
                                             .addButton(
                                                 "Annuler le bâtiment",
                                                 "Vous annulez le bâtiment ${building["nameRP"]}"
-                                            ) {
+                                            ) { it, _, _ ->
                                                 // on le retire de la bdd
                                                 saveManager.execute(
                                                     "DELETE FROM buildings WHERE id = ${building.id}",
@@ -335,7 +355,7 @@ class InteractCommandBase : Command(
                                             .addButton(
                                                 "Aider le bâtiment",
                                                 "Vous aidez le bâtiment ${building["nameRP"]}"
-                                            ) {
+                                            ) { it, _, _ ->
                                                 helpBuilding(building, it)
                                             }
                                             .modif(buttonClickEvent)
@@ -356,7 +376,7 @@ class InteractCommandBase : Command(
                             .addButton(
                                 "Bâtiments en construction",
                                 "Vous pouvez voir les bâtiments en construction dans la ville en cliquant sur ce bouton et interagir avec eux"
-                            ) {
+                            ) { it, _, _ ->
                                 val buildings = Buildings.loadBuildings(place["buildings"])
                                 // remove if not in construction
                                 buildings.removeIf { building -> building["build_status"] != "building" }
@@ -369,7 +389,7 @@ class InteractCommandBase : Command(
                             .addButton(
                                 "Construire un bâtiment",
                                 "Vous pouvez construire un bâtiment dans la ville ${place["nameRP"]} en cliquant sur ce bouton"
-                            ) { again ->
+                            ) { again, c2, _ ->
                                 val buildsTypes = arrayListOf(*Buildings.values())
                                 val embedBuilder = EmbedBuilder()
                                     .setTitle("Bâtiments disponibles")
@@ -386,8 +406,9 @@ class InteractCommandBase : Command(
                                                 buildType.basePrice.toString() + " " + Resource.RABBIT_COIN.name_ + " (Peut être construit : " + buildType.isBuild + ")"
                                             )
                                         }
-                                    }
-                                ) { buildType: Buildings, buttonClickEvent: ButtonClickEvent ->
+                                    },
+                                    c2
+                                ) { buildType: Buildings, buttonClickEvent: ButtonClickEvent, _: Context ->
                                     if (buildType.isBuild && buildType.buildingAutorisations?.isAutorise(player) == true) {
                                         val place1 = player.place
                                             ?: throw IllegalArgumentException("Le joueur n'est pas dans une ville")
