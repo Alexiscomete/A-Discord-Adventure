@@ -22,6 +22,7 @@ import org.javacord.api.entity.permission.PermissionType
 import org.javacord.api.entity.server.Server
 import org.javacord.api.event.interaction.ButtonClickEvent
 import org.javacord.api.event.interaction.ModalSubmitEvent
+import org.javacord.api.interaction.SlashCommand
 import org.javacord.api.interaction.SlashCommandInteraction
 import java.awt.Color
 import java.util.*
@@ -34,6 +35,15 @@ fun configNormalServer(world: WorldEnum, server: Server, placeId: Long) {
     serverC["world"] = world.progName
     serverC["name"] = server.name
     serverC["places"] = placeId.toString()
+}
+
+fun getUniquePlace(server: ServerBot): Place {
+    val placesL = server.getPlaces()
+    if (placesL.size != 1) {
+        throw IllegalArgumentException("Le serveur n'a pas un lieu unique. Contactez un administrateur.")
+    }
+    return places[placesL[0]]
+        ?: throw IllegalArgumentException("Le lieu n'existe pas. Contactez un administrateur.")
 }
 
 class ConfigCommand : Command(
@@ -216,7 +226,7 @@ class ConfigCommand : Command(
         }
     }
 
-    class M4(name: String, val place: Place): ModalContextManager(name) {
+    class M4(name: String, val place: Place) : ModalContextManager(name) {
         override fun ex(smce: ModalSubmitEvent, c: Context) {
             val opName =
                 smce.modalInteraction.getTextInputValueByCustomId("cnameid")
@@ -234,7 +244,7 @@ class ConfigCommand : Command(
 
     }
 
-    class M5(name: String, val place: Place): ModalContextManager(name) {
+    class M5(name: String, val place: Place) : ModalContextManager(name) {
         override fun ex(smce: ModalSubmitEvent, c: Context) {
             val opDescription =
                 smce.modalInteraction.getTextInputValueByCustomId("cdescid")
@@ -252,7 +262,7 @@ class ConfigCommand : Command(
 
     }
 
-    class M6(name: String, val place: Place): ModalContextManager(name) {
+    class M6(name: String, val place: Place) : ModalContextManager(name) {
         override fun ex(smce: ModalSubmitEvent, c: Context) {
             val opWelcome =
                 smce.modalInteraction.getTextInputValueByCustomId("cwelcomeid")
@@ -394,7 +404,7 @@ class ConfigCommand : Command(
         } else {
             when (WorldEnum.valueOf(server["world"])) {
                 WorldEnum.NORMAL -> {
-                    modifServer(server, context, slashCommand.server.get())
+                    modifServer(server, context, slashCommand.server.get(), slashCommand)
                 }
 
                 WorldEnum.DIBIMAP -> {
@@ -648,13 +658,69 @@ class ConfigCommand : Command(
                 }
 
                 WorldEnum.TUTO -> {
-                    modifServer(slashCommand, server)
+                    modifServer(server, context, slashCommand.server.get(), slashCommand)
                 }
             }
         }
     }
 
-    private fun modifServer(server: ServerBot, context: Context, serverDiscord: Server) {
+    class M7(name: String, private val server: ServerBot) : ModalContextManager(name) {
+        override fun ex(smce: ModalSubmitEvent, c: Context) {
+            val opName = smce.modalInteraction.getTextInputValueByCustomId("cnameid")
+
+            if (!opName.isPresent) {
+                throw IllegalArgumentException("Le nom n'a pas été rempli")
+            }
+
+            getUniquePlace(server)["name"] = opName.get()
+
+            smce.modalInteraction.createImmediateResponder()
+                .setContent("Le nom RP de la ville a été modifié avec succès !")
+                .respond()
+        }
+
+    }
+
+    class M8(name: String, private val server: ServerBot) : ModalContextManager(name) {
+        override fun ex(smce: ModalSubmitEvent, c: Context) {
+            val opDescription = smce.modalInteraction.getTextInputValueByCustomId("cdescid")
+
+            if (!opDescription.isPresent) {
+                throw IllegalArgumentException("La description n'a pas été remplie")
+            }
+
+            getUniquePlace(server)["description"] = opDescription.get()
+
+            smce.modalInteraction.createImmediateResponder()
+                .setContent("La description de la ville a été modifiée avec succès !")
+                .respond()
+        }
+
+    }
+
+    class M9(name: String, private val server: ServerBot) : ModalContextManager(name) {
+        override fun ex(smce: ModalSubmitEvent, c: Context) {
+            val opWelcome = smce.modalInteraction.getTextInputValueByCustomId("cwelcomeid")
+
+            if (!opWelcome.isPresent) {
+                throw IllegalArgumentException("Le message de bienvenue n'a pas été rempli")
+            }
+
+            getUniquePlace(server)["welcome"] = opWelcome.get()
+
+            smce.modalInteraction.createImmediateResponder()
+                .setContent("Le message de bienvenue a été modifié avec succès !")
+                .respond()
+        }
+
+    }
+
+    private fun modifServer(
+        server: ServerBot,
+        context: Context,
+        serverDiscord: Server,
+        slashCommand: SlashCommandInteraction
+    ) {
         MenuBuilder(
             "Modification du serveur dans un monde à lieu unique",
             "Vous pouvez modifier la configuration du serveur discord de façon simple dans un monde à serveur unique. Sélectionner ce qu'il faut modifier :",
@@ -673,52 +739,37 @@ class ConfigCommand : Command(
             .addButton(
                 "Modifier le nom RP du lieu",
                 "Modifiable à tout moment, le nom de votre ville est personnalisable."
-            ) { name, c1, b1 ->
+            ) { name, c1, _ ->
                 val id = generateUniqueID()
-                val idName = generateUniqueID()
 
-                modalManager.add(id) {
-                    val opName = it.modalInteraction.getTextInputValueByCustomId(idName.toString())
-
-                    if (!opName.isPresent) {
-                        throw IllegalArgumentException("Le nom n'a pas été rempli")
-                    }
-
-                    getUniquePlace(server)["name"] = opName.get()
-
-                    it.modalInteraction.createImmediateResponder()
-                        .setContent("Le nom RP de la ville a été modifié avec succès !")
-                        .respond()
-                }
+                c1.modal(
+                    M7(
+                        id.toString(),
+                        server
+                    )
+                )
 
                 name.buttonInteraction.respondWithModal(
                     id.toString(),
                     "Mise à jour du nom RP de la ville",
                     ActionRow.of(
-                        TextInput.create(TextInputStyle.SHORT, idName.toString(), "Nom de la ville", true)
+                        TextInput.create(TextInputStyle.SHORT, "cnameid", "Nom de la ville", true)
                     )
                 )
             }
             .addButton(
                 "Modifier la description du lieu",
                 "Modifiable à tout moment, la description de votre ville est la deuxième chose que voix une personne quand il regarde le lieu."
-            ) { description, c1, b1 ->
+            ) { description, c1, _ ->
                 val id = generateUniqueID()
                 val idDescription = generateUniqueID()
 
-                modalManager.add(id) {
-                    val opDescription = it.modalInteraction.getTextInputValueByCustomId(idDescription.toString())
-
-                    if (!opDescription.isPresent) {
-                        throw IllegalArgumentException("La description n'a pas été remplie")
-                    }
-
-                    getUniquePlace(server)["description"] = opDescription.get()
-
-                    it.modalInteraction.createImmediateResponder()
-                        .setContent("La description de la ville a été modifiée avec succès !")
-                        .respond()
-                }
+                c1.modal(
+                    M8(
+                        id.toString(),
+                        server
+                    )
+                )
 
                 description.buttonInteraction.respondWithModal(
                     id.toString(),
@@ -736,23 +787,16 @@ class ConfigCommand : Command(
             .addButton(
                 "Modifier le message de bienvenue",
                 "Modifiable à tout moment, le message de bienvenue est nécessaire pour mettre l'ambiance : ville magique ? Tech ? Abandonné ? Repaire de Pirates ?"
-            ) { welcome, c1, b1 ->
+            ) { welcome, c1, _ ->
                 val id = generateUniqueID()
                 val idWelcome = generateUniqueID()
 
-                modalManager.add(id) {
-                    val opWelcome = it.modalInteraction.getTextInputValueByCustomId(idWelcome.toString())
-
-                    if (!opWelcome.isPresent) {
-                        throw IllegalArgumentException("Le message de bienvenue n'a pas été rempli")
-                    }
-
-                    getUniquePlace(server)["welcome"] = opWelcome.get()
-
-                    it.modalInteraction.createImmediateResponder()
-                        .setContent("Le message de bienvenue a été modifié avec succès !")
-                        .respond()
-                }
+                c1.modal(
+                    M9(
+                        id.toString(),
+                        server
+                    )
+                )
 
                 welcome.buttonInteraction.respondWithModal(
                     id.toString(),
@@ -763,14 +807,5 @@ class ConfigCommand : Command(
                 )
             }
             .responder(slashCommand)
-    }
-
-    private fun getUniquePlace(server: ServerBot): Place {
-        val placesL = server.getPlaces()
-        if (placesL.size != 1) {
-            throw IllegalArgumentException("Le serveur n'a pas un lieu unique. Contactez un administrateur.")
-        }
-        return places[placesL[0]]
-            ?: throw IllegalArgumentException("Le lieu n'existe pas. Contactez un administrateur.")
     }
 }
