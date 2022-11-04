@@ -216,6 +216,60 @@ class ConfigCommand : Command(
         }
     }
 
+    class M4(name: String, val place: Place): ModalContextManager(name) {
+        override fun ex(smce: ModalSubmitEvent, c: Context) {
+            val opName =
+                smce.modalInteraction.getTextInputValueByCustomId("cnameid")
+
+            if (!opName.isPresent) {
+                throw IllegalArgumentException("Le nom n'a pas été rempli")
+            }
+
+            place["nameRP"] = opName.get()
+
+            smce.modalInteraction.createImmediateResponder()
+                .setContent("Le nom RP de la ville a été modifié avec succès !")
+                .respond()
+        }
+
+    }
+
+    class M5(name: String, val place: Place): ModalContextManager(name) {
+        override fun ex(smce: ModalSubmitEvent, c: Context) {
+            val opDescription =
+                smce.modalInteraction.getTextInputValueByCustomId("cdescid")
+
+            if (!opDescription.isPresent) {
+                throw IllegalArgumentException("La description n'a pas été remplie")
+            }
+
+            place["description"] = opDescription.get()
+
+            smce.modalInteraction.createImmediateResponder()
+                .setContent("La description de la ville a été modifiée avec succès !")
+                .respond()
+        }
+
+    }
+
+    class M6(name: String, val place: Place): ModalContextManager(name) {
+        override fun ex(smce: ModalSubmitEvent, c: Context) {
+            val opWelcome =
+                smce.modalInteraction.getTextInputValueByCustomId("cwelcomeid")
+
+            if (!opWelcome.isPresent) {
+                throw IllegalArgumentException("Le message de bienvenue n'a pas été rempli")
+            }
+
+            place["welcome"] = opWelcome.get()
+
+            smce.modalInteraction.createImmediateResponder()
+                .setContent("Le message de bienvenue a été modifié avec succès !")
+                .respond()
+        }
+
+    }
+
     override fun execute(slashCommand: SlashCommandInteraction) {
         SERVERS
         PLACES
@@ -442,7 +496,7 @@ class ConfigCommand : Command(
                                 placesPlace,
                                 ::fillEmbed,
                                 c1
-                            ) { place: Place, buttonClickEvent: ButtonClickEvent, c2 ->
+                            ) { place: Place, buttonClickEvent: ButtonClickEvent, _ ->
                                 // 3. Récupérer la ville sélectionnée
                                 // 4. Supprimer la ville
                                 server.removePlace(place.id)
@@ -503,24 +557,15 @@ class ConfigCommand : Command(
                                     .addButton(
                                         "Modifier le nom RP du lieu",
                                         "Modifiable à tout moment, le nom de votre ville est personnalisable."
-                                    ) { name, c3, b3 ->
+                                    ) { name, c3, _ ->
                                         val id = generateUniqueID()
-                                        val idName = generateUniqueID()
 
-                                        modalManager.add(id) {
-                                            val opName =
-                                                it.modalInteraction.getTextInputValueByCustomId(idName.toString())
-
-                                            if (!opName.isPresent) {
-                                                throw IllegalArgumentException("Le nom n'a pas été rempli")
-                                            }
-
-                                            place["nameRP"] = opName.get()
-
-                                            it.modalInteraction.createImmediateResponder()
-                                                .setContent("Le nom RP de la ville a été modifié avec succès !")
-                                                .respond()
-                                        }
+                                        c3.modal(
+                                            M4(
+                                                id.toString(),
+                                                place
+                                            )
+                                        )
 
                                         name.buttonInteraction.respondWithModal(
                                             id.toString(),
@@ -528,7 +573,7 @@ class ConfigCommand : Command(
                                             ActionRow.of(
                                                 TextInput.create(
                                                     TextInputStyle.SHORT,
-                                                    idName.toString(),
+                                                    "cnameid",
                                                     "Nom de la ville",
                                                     true
                                                 )
@@ -538,24 +583,15 @@ class ConfigCommand : Command(
                                     .addButton(
                                         "Modifier la description du lieu",
                                         "Modifiable à tout moment, la description de votre ville est la deuxième chose que voix une personne quand il regarde le lieu."
-                                    ) { description, c2, b2 ->
+                                    ) { description, c3, _ ->
                                         val id = generateUniqueID()
-                                        val idDescription = generateUniqueID()
 
-                                        modalManager.add(id) {
-                                            val opDescription =
-                                                it.modalInteraction.getTextInputValueByCustomId(idDescription.toString())
-
-                                            if (!opDescription.isPresent) {
-                                                throw IllegalArgumentException("La description n'a pas été remplie")
-                                            }
-
-                                            place["description"] = opDescription.get()
-
-                                            it.modalInteraction.createImmediateResponder()
-                                                .setContent("La description de la ville a été modifiée avec succès !")
-                                                .respond()
-                                        }
+                                        c3.modal(
+                                            M5(
+                                                id.toString(),
+                                                place
+                                            )
+                                        )
 
                                         description.buttonInteraction.respondWithModal(
                                             id.toString(),
@@ -563,7 +599,7 @@ class ConfigCommand : Command(
                                             ActionRow.of(
                                                 TextInput.create(
                                                     TextInputStyle.PARAGRAPH,
-                                                    idDescription.toString(),
+                                                    "cdescid",
                                                     "Description de la ville",
                                                     true
                                                 )
@@ -573,24 +609,15 @@ class ConfigCommand : Command(
                                     .addButton(
                                         "Modifier le message de bienvenue",
                                         "Modifiable à tout moment, le message de bienvenue est nécessaire pour mettre l'ambiance : ville magique ? Tech ? Abandonné ? Repaire de Pirates ?"
-                                    ) { welcome, c2, b2 ->
+                                    ) { welcome, c3, _ ->
                                         val id = generateUniqueID()
-                                        val idWelcome = generateUniqueID()
 
-                                        modalManager.add(id) {
-                                            val opWelcome =
-                                                it.modalInteraction.getTextInputValueByCustomId(idWelcome.toString())
-
-                                            if (!opWelcome.isPresent) {
-                                                throw IllegalArgumentException("Le message de bienvenue n'a pas été rempli")
-                                            }
-
-                                            place["welcome"] = opWelcome.get()
-
-                                            it.modalInteraction.createImmediateResponder()
-                                                .setContent("Le message de bienvenue a été modifié avec succès !")
-                                                .respond()
-                                        }
+                                        c3.modal(
+                                            M6(
+                                                id.toString(),
+                                                place
+                                            )
+                                        )
 
                                         welcome.buttonInteraction.respondWithModal(
                                             id.toString(),
@@ -598,7 +625,7 @@ class ConfigCommand : Command(
                                             ActionRow.of(
                                                 TextInput.create(
                                                     TextInputStyle.PARAGRAPH,
-                                                    idWelcome.toString(),
+                                                    "cwelcomeid",
                                                     "Message de bienvenue",
                                                     true
                                                 )
