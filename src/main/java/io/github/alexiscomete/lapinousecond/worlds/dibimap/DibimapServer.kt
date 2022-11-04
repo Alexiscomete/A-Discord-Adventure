@@ -21,6 +21,15 @@ fun getValueById(id: Long) : DibimapServer {
     throw IllegalArgumentException("No server with id $id")
 }
 
+fun checkById(id: Long) {
+    DibimapServer.values().forEach {
+        if (it.serverId == id) {
+            return
+        }
+    }
+    throw IllegalArgumentException("No server with id $id")
+}
+
 enum class DibimapServer(val serverId: Long = 0, val zones: List<Zone> = listOf(), val name_: String = "") {
     LIGNE224(906247039703195658, listOf(Zone(1, 224, WorldEnum.DIBIMAP.mapWidth, 224)), "Ligne 224"),
     COEUR_HISTORIQUE(905024934517047307, listOf(Zone(1, 1, 110, 50)), "Coeur Historique"),

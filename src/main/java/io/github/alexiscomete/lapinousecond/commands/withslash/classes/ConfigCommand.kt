@@ -11,6 +11,7 @@ import io.github.alexiscomete.lapinousecond.view.Context
 import io.github.alexiscomete.lapinousecond.view.contextFor
 import io.github.alexiscomete.lapinousecond.view.contextmanager.ModalContextManager
 import io.github.alexiscomete.lapinousecond.worlds.*
+import io.github.alexiscomete.lapinousecond.worlds.dibimap.checkById
 import io.github.alexiscomete.lapinousecond.worlds.dibimap.getValueById
 import io.github.alexiscomete.lapinousecond.worlds.dibimap.isDibimap
 import org.javacord.api.entity.message.component.ActionRow
@@ -49,11 +50,11 @@ class ConfigCommand : Command(
 
     class M1(
         name: String,
-        val idNameRP: String,
-        val idDescription: String,
-        val idWelcome: String,
-        val world: WorldEnum,
-        val serverId: Long
+        private val idNameRP: String,
+        private val idDescription: String,
+        private val idWelcome: String,
+        private val world: WorldEnum,
+        private val serverId: Long
     ) : ModalContextManager(name) {
         override fun ex(smce: ModalSubmitEvent, c: Context) {
             val opNameRp = smce.modalInteraction.getTextInputValueByCustomId(idNameRP)
@@ -97,7 +98,7 @@ class ConfigCommand : Command(
         }
     }
 
-    class M2(name: String, private val idNameRP: String, private val idDescription: String) : ModalContextManager(name) {
+    class M2(name: String, private val serverId: Long) : ModalContextManager(name) {
         override fun ex(smce: ModalSubmitEvent, c: Context) {
 
             // création d'un bouton pour continuer
@@ -110,7 +111,7 @@ class ConfigCommand : Command(
                 .addButton(
                     "Bouton",
                     "pour continuer"
-                ) { button, c2, b2 ->
+                ) { button, c2, _ ->
                     // partie 2 du modal avec x et y, j'utilise à nouveau idNameRP (pour x); idDescription (pour y)
                     val id2 = generateUniqueID()
 
@@ -120,7 +121,7 @@ class ConfigCommand : Command(
                         ActionRow.of(
                             TextInput.create(
                                 TextInputStyle.SHORT,
-                                idNameRP,
+                                "cxid",
                                 "Coordonnée X",
                                 true
                             )
@@ -128,32 +129,39 @@ class ConfigCommand : Command(
                         ActionRow.of(
                             TextInput.create(
                                 TextInputStyle.SHORT,
-                                idDescription,
+                                "cyid",
                                 "Coordonnée Y",
                                 true
                             )
                         )
                     )
 
-                    c.modal(M3(id2.toString()))
+                    val opNameRP =
+                        smce.modalInteraction.getTextInputValueByCustomId("cnameid")
+                    val opDescription =
+                        smce.modalInteraction.getTextInputValueByCustomId("cdescid")
+                    val opWelcome =
+                        smce.modalInteraction.getTextInputValueByCustomId("cwelcomeid")
+
+                    c2.modal(M3(id2.toString(), opNameRP, opDescription, opWelcome, serverId))
                 }
                 .responder(smce.modalInteraction)
         }
     }
 
-    class M3(name: String) : ModalContextManager(name) {
+    class M3(
+        name: String,
+        private val opNameRP: Optional<String>,
+        private val opDescription: Optional<String>,
+        private val opWelcome: Optional<String>,
+        private val serverId: Long
+    ) : ModalContextManager(name) {
         override fun ex(smce: ModalSubmitEvent, c: Context) {
             // récupération de tous les éléments : description, nameRP, welcome, x, y
-            val opNameRP =
-                modalPart1.modalInteraction.getTextInputValueByCustomId(idNameRP.toString())
-            val opDescription =
-                modalPart1.modalInteraction.getTextInputValueByCustomId(idDescription.toString())
-            val opWelcome =
-                modalPart1.modalInteraction.getTextInputValueByCustomId(idWelcome.toString())
             val opX =
-                it.modalInteraction.getTextInputValueByCustomId(idNameRP.toString())
+                smce.modalInteraction.getTextInputValueByCustomId("cxid")
             val opY =
-                it.modalInteraction.getTextInputValueByCustomId(idDescription.toString())
+                smce.modalInteraction.getTextInputValueByCustomId("cyid")
 
             // s'il manque un élément, on annule
             if (!opNameRP.isPresent || !opDescription.isPresent || !opWelcome.isPresent || !opX.isPresent || !opY.isPresent) {
@@ -175,7 +183,7 @@ class ConfigCommand : Command(
                 throw IllegalArgumentException("Les coordonnées doivent être des nombres !")
             }
 
-            if (!serverForZones.isInZones(x.toInt(), y.toInt())) {
+            if (!getValueById(serverId).isInZones(x.toInt(), y.toInt())) {
                 throw IllegalArgumentException("Les coordonnées ne sont pas dans les zones autorisées pour votre entité !")
             }
 
@@ -185,6 +193,7 @@ class ConfigCommand : Command(
                 throw IllegalArgumentException("Une ville existe déjà à ces coordonnées ou avec ce nom !")
             }
 
+            val id = generateUniqueID()
             // création de la ville, on réutilise encore id
             places.add(id)
             val place = places[id]
@@ -198,10 +207,10 @@ class ConfigCommand : Command(
             place["type"] = "city"
             place["world"] = WorldEnum.DIBIMAP.progName
 
-            server.addPlace(id)
+            servers[serverId]!!.addPlace(id)
 
             // on envoie un message de succès
-            it.modalInteraction.createImmediateResponder()
+            smce.modalInteraction.createImmediateResponder()
                 .setContent("La ville a été créée avec succès !")
                 .respond()
         }
@@ -335,7 +344,7 @@ class ConfigCommand : Command(
                 }
 
                 WorldEnum.DIBIMAP -> {
-                    val serverForZones = getValueById(serverId)
+                    checkById(serverId)
 
                     fun fillEmbed(builder: EmbedBuilder, start: Int, num: Int, placesArray: ArrayList<Place>) {
                         for (i in start until start + num) {
@@ -364,12 +373,9 @@ class ConfigCommand : Command(
                                 .setContent("Le nom du serveur a été mis à jour avec succès !")
                                 .respond()
                         }
-                        .addButton("Ajouter une ville", "Permet d'ajouter une ville sur la carte") { addCity, c1, b1 ->
+                        .addButton("Ajouter une ville", "Permet d'ajouter une ville sur la carte") { addCity, c1, _ ->
                             // j'ai besoin d'un nom, d'une description, d'un message de bienvenue, et de x et y. Les modals sont limités à 4 champs donc je vais faire 2 modals
                             val id = generateUniqueID()
-                            val idNameRP = generateUniqueID()
-                            val idDescription = generateUniqueID()
-                            val idWelcome = generateUniqueID()
 
                             addCity.buttonInteraction.respondWithModal(
                                 id.toString(),
@@ -377,7 +383,7 @@ class ConfigCommand : Command(
                                 ActionRow.of(
                                     TextInput.create(
                                         TextInputStyle.SHORT,
-                                        idNameRP.toString(),
+                                        "cnameid",
                                         "Nom RP de la ville",
                                         true
                                     )
@@ -385,7 +391,7 @@ class ConfigCommand : Command(
                                 ActionRow.of(
                                     TextInput.create(
                                         TextInputStyle.PARAGRAPH,
-                                        idDescription.toString(),
+                                        "cdescid",
                                         "Description de la ville",
                                         true
                                     )
@@ -393,7 +399,7 @@ class ConfigCommand : Command(
                                 ActionRow.of(
                                     TextInput.create(
                                         TextInputStyle.PARAGRAPH,
-                                        idWelcome.toString(),
+                                        "cwelcomeid",
                                         "Message de bienvenue",
                                         true
                                     )
@@ -403,8 +409,7 @@ class ConfigCommand : Command(
                             c1.modal(
                                 M2(
                                     id.toString(),
-                                    idNameRP.toString(),
-                                    idDescription.toString(),
+                                    serverId
                                 )
                             )
                         }
