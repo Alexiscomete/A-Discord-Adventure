@@ -662,6 +662,7 @@ class ConfigCommand : Command(
         }
     }
 
+    //TODO : optimiser les classes qui servent à rien
     class M7(name: String, private val server: ServerBot) : ModalContextManager(name) {
         override fun ex(smce: ModalSubmitEvent, c: Context) {
             val opName = smce.modalInteraction.getTextInputValueByCustomId("cnameid")

@@ -50,9 +50,9 @@ class Select(name: String, val worlds: List<WorldEnum>) : SelectMenuContextManag
             "Confirmer",
             "Confirmez-vous le voyage vers ce monde pour 100 ${Resource.RABBIT_COIN.name_} ?",
             Color.orange,
-            smce.selectMenuInteraction.user.id
+            c
         )
-            .addButton("Oui", "Oui je veux changer de monde") {
+            .addButton("Oui", "Oui je veux changer de monde") { it, _, _ ->
                 // get the player's bal
                 verifyBal(player)
 
@@ -70,7 +70,7 @@ class Select(name: String, val worlds: List<WorldEnum>) : SelectMenuContextManag
                     .setContent("Vous êtes maintenant dans le monde ${world.progName}")
                     .update()
             }
-            .addButton("Non", "Non je ne veux pas changer de monde") {
+            .addButton("Non", "Non je ne veux pas changer de monde") { it, _, _ ->
                 it.buttonInteraction.createOriginalMessageUpdater()
                     .removeAllComponents()
                     .removeAllEmbeds()
@@ -329,13 +329,13 @@ class MapCommand : Command(
                     Color.PINK,
                     c1
                 )
-                    .addButton("Oui", "Retourner au hub") { buttonClickEvent: ButtonClickEvent ->
+                    .addButton("Oui", "Retourner au hub") { buttonClickEvent: ButtonClickEvent, c2, b2 ->
                         buttonClickEvent.buttonInteraction.createOriginalMessageUpdater()
                             .setContent("✔ Flavinou vient de vous téléporter au hub <https://discord.gg/q4hVQ6gwyx>")
                             .update()
                         toSpawn(p)
                     }
-                    .addButton("Non", "Annuler") { buttonClickEvent: ButtonClickEvent ->
+                    .addButton("Non", "Annuler") { buttonClickEvent: ButtonClickEvent, c2, b2 ->
                         buttonClickEvent.buttonInteraction.createOriginalMessageUpdater()
                             .setContent("Annulé").update()
                     }
@@ -344,32 +344,34 @@ class MapCommand : Command(
             .addButton(
                 "Cartes",
                 "Les cartes sont disponibles ici ! De nombreuses actions complémentaires sont proposées"
-            ) { messageComponentCreateEvent: ButtonClickEvent ->
+            ) { messageComponentCreateEvent: ButtonClickEvent, c1, b1 ->
                 MenuBuilder(
                     "Cartes 🌌",
                     "Les cartes ... tellement de cartes !",
                     Color.PINK,
-                    messageComponentCreateEvent.buttonInteraction.user.id
+                    c1
                 )
                     .addButton(
                         "Liste des cartes",
                         "Toutes les cartes permanentes du jeu ... remerciez Darki"
-                    ) { buttonClickEvent: ButtonClickEvent ->
+                    ) { buttonClickEvent: ButtonClickEvent, c2, b2 ->
                         val maps = arrayListOf(*FilesMapEnum.values())
                         val embed = EmbedBuilder()
                         val embedPages = EmbedPages(
                             embed,
-                            maps
-                        ) { embedBuilder: EmbedBuilder, i: Int, i1: Int, filesMapEnums: ArrayList<FilesMapEnum> ->
-                            for (j in i until i + i1) {
-                                val map = filesMapEnums[j]
-                                embedBuilder.addField(
-                                    map.name,
-                                    map.description + "\n" + map.urlOfMap + "\n de : " + map.author,
-                                    false
-                                )
-                            }
-                        }
+                            maps,
+                            { embedBuilder: EmbedBuilder, i: Int, i1: Int, filesMapEnums: ArrayList<FilesMapEnum> ->
+                                for (j in i until i + i1) {
+                                    val map = filesMapEnums[j]
+                                    embedBuilder.addField(
+                                        map.name,
+                                        map.description + "\n" + map.urlOfMap + "\n de : " + map.author,
+                                        false
+                                    )
+                                }
+                            },
+                            context
+                        )
                         embedPages.register()
                         buttonClickEvent.buttonInteraction.createOriginalMessageUpdater()
                             .removeAllComponents()
@@ -382,7 +384,7 @@ class MapCommand : Command(
                     .addButton(
                         "Ma position",
                         "Toutes les informations sur votre position"
-                    ) { buttonClickEvent: ButtonClickEvent ->
+                    ) { buttonClickEvent: ButtonClickEvent, c2, b2 ->
 
                         val player = getAccount(slashCommand)
                         val worldStr = player["world"]
@@ -427,7 +429,7 @@ class MapCommand : Command(
                     .addButton(
                         "Trouver un chemin",
                         "Un lieu ou des coordonnées ? Trouvez le chemin le plus court"
-                    ) { mcce: ButtonClickEvent ->
+                    ) { mcce: ButtonClickEvent, c2, b2 ->
                         val id = generateUniqueID()
                         val idX1 = generateUniqueID()
                         val idX2 = generateUniqueID()
@@ -548,8 +550,7 @@ class MapCommand : Command(
                     .addButton(
                         "Zoomer",
                         "Zoomer sur une carte"
-                    ) { zoom: ButtonClickEvent ->
-
+                    ) { zoom: ButtonClickEvent, c2, b2 ->
                         val id = generateUniqueID()
                         val idX = generateUniqueID()
                         val idY = generateUniqueID()
@@ -647,7 +648,7 @@ class MapCommand : Command(
                     .addButton(
                         "Type de case",
                         "Le biome d'une case et les informations"
-                    ) { mcce: ButtonClickEvent ->
+                    ) { mcce: ButtonClickEvent, c2, b2 ->
                         val id = generateUniqueID()
                         val idX = generateUniqueID()
                         val idY = generateUniqueID()
