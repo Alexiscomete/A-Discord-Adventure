@@ -13,7 +13,10 @@ import io.github.alexiscomete.lapinousecond.resources.Resource
 import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
 import io.github.alexiscomete.lapinousecond.useful.managesave.saveManager
 import io.github.alexiscomete.lapinousecond.useful.transactions.*
+import io.github.alexiscomete.lapinousecond.view.Context
 import io.github.alexiscomete.lapinousecond.view.contextFor
+import io.github.alexiscomete.lapinousecond.view.contextmanager.ButtonsContextManager
+import io.github.alexiscomete.lapinousecond.view.contextmanager.ModalContextManager
 import org.javacord.api.entity.message.component.ActionRow
 import org.javacord.api.entity.message.component.TextInput
 import org.javacord.api.entity.message.component.TextInputStyle
@@ -45,6 +48,239 @@ class MarketCommand : Command(
     override val botPerms: Array<String>
         get() = arrayOf("PLAY")
 
+    class M1(name: String) : ModalContextManager(name) {
+        override fun ex(smce: ModalSubmitEvent, c: Context) {
+
+            // get optionals text inputs from modal interaction
+            val modalInteraction = smce.modalInteraction
+            val opResource = modalInteraction.getTextInputValueByCustomId("cresourceid")
+            val opQuantity = modalInteraction.getTextInputValueByCustomId("cquantityid")
+
+            // check if all text inputs are present
+            if (!opResource.isPresent || !opQuantity.isPresent) {
+                throw IllegalArgumentException("Missing text inputs")
+            }
+
+            // get text inputs
+            val ressource = opResource.get()
+            val quantity = opQuantity.get()
+
+            // On vérifie que la ressource est bien une ressource valide
+            val resource = Resource.valueOf(ressource.uppercase())
+
+            // On vérifie que la quantité est bien un nombre
+            val quantityDouble = quantity.toDouble()
+
+            // On vérifie que la quantité est bien positive
+            if (quantityDouble <= 0) {
+                throw IllegalArgumentException("La quantité doit être positive")
+            }
+
+            modalInteraction.createImmediateResponder()
+                .setContent("Continuons. Mentionnez le nom du joueur à qui vous souhaitez donner")
+                .respond()
+
+            messagesManager.addListener(
+                smce.modalInteraction.channel.get(),
+                smce.modalInteraction.user.id
+            ) {
+                val owner = it.messageContent
+                // l'owner est au format <@id>, je vais donc extraire l'id
+                val ownerId = owner.substring(2, owner.length - 1)
+                val player =
+                    players[ownerId.toLong()] ?: throw IllegalArgumentException("Le joueur n'existe pas")
+
+                // on fait la transaction sécurisée avec GiveFromTo
+                if (!giveFromTo(
+                        c.players.player.player, player, quantityDouble,
+                        resource
+                    )
+                ) {
+                    throw IllegalArgumentException("Vous n'avez pas assez de ressources pour effectuer cette transaction")
+                } else {
+                    modalInteraction.createImmediateResponder()
+                        .setContent("Vous avez bien donné $quantity $resource à $owner")
+                        .respond()
+                }
+            }
+        }
+    }
+
+    class Wait23 {
+
+        var accept = false
+        var cancel = false
+
+        var end1 = false
+        var end2 = false
+
+        var wait: ModalSubmitEvent? = null
+        var resource: Resource? = null
+        var quantity: Double? = null
+
+        fun sendMenu(
+            modalSubmitEvent: ModalSubmitEvent,
+            resource: Resource,
+            quantity: Double,
+            r2: Resource,
+            quantity2: Double,
+            p1: Player,
+            p2: Player,
+            c3: Context
+        ) {
+            // accept, cancel are used to count the number of users who select each button
+            MenuBuilder(
+                "Suite de l'échange",
+                "La personne avec qui vous échangez a proposé $quantity ${resource.name_}",
+                Color.YELLOW,
+                c3
+            )
+                .addButton(
+                    "Accepter",
+                    "Vous acceptez l'échange."
+                ) { it, c4, b4 ->
+                    if (accept) {
+                        it.buttonInteraction.createOriginalMessageUpdater()
+                            .removeAllComponents()
+                            .removeAllEmbeds()
+                            .setContent("Echange accepté. Transaction en cours...")
+                            .update()
+                        if (!p1.hasResource(resource, quantity) || !p2.hasResource(r2, quantity2)) {
+                            throw IllegalArgumentException("Une des personnes n'a pas assez de ressources")
+                        }
+                        p1.removeResource(resource, quantity)
+                        p2.removeResource(r2, quantity2)
+                        p1.addResource(r2, quantity2)
+                        p2.addResource(resource, quantity)
+                        it.buttonInteraction.createOriginalMessageUpdater()
+                            .removeAllComponents()
+                            .removeAllEmbeds()
+                            .setContent("Transaction effectuée")
+                            .update()
+                    } else if (cancel) {
+                        it.buttonInteraction.createOriginalMessageUpdater()
+                            .removeAllComponents()
+                            .removeAllEmbeds()
+                            .setContent("L'échange est annulé")
+                            .update()
+                    } else {
+                        accept = true
+                        it.buttonInteraction.createOriginalMessageUpdater()
+                            .removeAllComponents()
+                            .removeAllEmbeds()
+                            .setContent("Vous avez accepté l'échange. Merci de patienter.")
+                            .update()
+                    }
+                }
+                .addButton("Annuler", "Vous refusez l'échange") { it, c4, b4 ->
+                    it.buttonInteraction.createOriginalMessageUpdater()
+                        .removeAllComponents()
+                        .removeAllEmbeds()
+                        .setContent("L'échange est annulé")
+                        .update()
+                    cancel = true
+                }
+                .responder(modalSubmitEvent.modalInteraction)
+        }
+
+        /**
+         * It takes a modalSubmitEvent, a resource and a quantity, and then sets the wait, resource and
+         * quantity variables to the values of the parameters. And say to the user to wait
+         *
+         * @param modalSubmitEvent The event that triggered the interaction.
+         * @param resourceWait The resource that the user is waiting for
+         * @param quantityWait The quantity of the resource you want to wait for.
+         */
+        fun pleaseWait(
+            modalSubmitEvent: ModalSubmitEvent,
+            resourceWait: Resource,
+            quantityWait: Double
+        ) {
+            wait = modalSubmitEvent
+            resource = resourceWait
+            quantity = quantityWait
+            modalSubmitEvent.interaction.createImmediateResponder()
+                .setContent("Merci de patienter")
+                .respond()
+        }
+    }
+
+    class M2(name: String, private val wait: Wait23, private val otherC: Context) : ModalContextManager(name) {
+        override fun ex(smce: ModalSubmitEvent, c: Context) {
+            val modalInteraction = smce.modalInteraction
+            val opResource = modalInteraction.getTextInputValueByCustomId("cresource1id")
+            val opQuantity = modalInteraction.getTextInputValueByCustomId("cquantity1id")
+
+            // check if all text inputs are present
+            if (!opResource.isPresent || !opQuantity.isPresent) {
+                throw IllegalArgumentException("Missing text inputs")
+            }
+
+            // get text inputs
+            val ressource = opResource.get()
+            val quantity1 = opQuantity.get()
+
+            // On vérifie que la ressource est bien une ressource valide
+            val resource1 = Resource.valueOf(ressource.uppercase())
+
+            // On vérifie que la quantité est bien un nombre
+            val quantityDouble = quantity1.toDouble()
+
+            // On vérifie que la quantité est bien positive
+            if (quantityDouble <= 0) {
+                throw IllegalArgumentException("La quantité doit être positive")
+            }
+
+            if (wait.end2) {
+                val p1 = players[smce.modalInteraction.user.id]!!
+                val p2 = players[wait.wait!!.modalInteraction.user.id]!!
+                wait.sendMenu(smce, wait.resource!!, wait.quantity!!, resource1, quantityDouble, p2, p1, c)
+                wait.sendMenu(wait.wait!!, resource1, quantityDouble, wait.resource!!, wait.quantity!!, p1, p2, otherC)
+            } else {
+                wait.pleaseWait(smce, resource1, quantityDouble)
+            }
+            wait.end1 = true
+        }
+    }
+
+    class M3(name: String, private val wait: Wait23, private val otherC: Context) : ModalContextManager(name) {
+        override fun ex(smce: ModalSubmitEvent, c: Context) {
+            val modalInteraction = smce.modalInteraction
+            val opResource = modalInteraction.getTextInputValueByCustomId("cresource2id")
+            val opQuantity = modalInteraction.getTextInputValueByCustomId("cquantity2id")
+
+            // check if all text inputs are present
+            if (!opResource.isPresent || !opQuantity.isPresent) {
+                throw IllegalArgumentException("Missing text inputs")
+            }
+
+            // get text inputs
+            val ressource = opResource.get()
+            val quantity1 = opQuantity.get()
+
+            // On vérifie que la ressource est bien une ressource valide
+            val resource1 = Resource.valueOf(ressource.uppercase())
+
+            // On vérifie que la quantité est bien un nombre
+            val quantityDouble = quantity1.toDouble()
+
+            // On vérifie que la quantité est bien positive
+            if (quantityDouble <= 0) {
+                throw IllegalArgumentException("La quantité doit être positive")
+            }
+
+            if (wait.end1) {
+                val p1 = players[smce.modalInteraction.user.id]!!
+                val p2 = players[wait.wait!!.modalInteraction.user.id]!!
+                wait.sendMenu(smce, wait.resource!!, wait.quantity!!, resource1, quantityDouble, p2, p1, c)
+                wait.sendMenu(wait.wait!!, resource1, quantityDouble, wait.resource!!, wait.quantity!!, p1, p2, otherC)
+            } else {
+                wait.pleaseWait(smce, resource1, quantityDouble)
+            }
+            wait.end2 = true
+        }
+    }
+
     override fun execute(slashCommand: SlashCommandInteraction) {
         AUCTIONS
         OFFERS
@@ -68,12 +304,8 @@ class MarketCommand : Command(
             .addButton(
                 "Donner",
                 "Donner un objet ou des ressources à un autre joueur"
-            ) { messageComponentCreateEvent: ButtonClickEvent, c1, b1 ->
-
-                val p = getAccount(slashCommand)
+            ) { messageComponentCreateEvent: ButtonClickEvent, c1, _ ->
                 val id = generateUniqueID()
-                val idResource = generateUniqueID()
-                val idQuantity = generateUniqueID()
 
                 messageComponentCreateEvent.buttonInteraction.respondWithModal(
                     id.toString(),
@@ -81,7 +313,7 @@ class MarketCommand : Command(
                     ActionRow.of(
                         TextInput.create(
                             TextInputStyle.SHORT,
-                            idResource.toString(),
+                            "cresourceid",
                             "Quelle ressource / objet voulez-vous donner ?",
                             true
                         )
@@ -89,68 +321,14 @@ class MarketCommand : Command(
                     ActionRow.of(
                         TextInput.create(
                             TextInputStyle.SHORT,
-                            idQuantity.toString(),
+                            "cquantityid",
                             "Combien voulez-vous donner ?",
                             true
                         )
                     )
                 )
 
-                modalManager.add(id) { mcce: ModalSubmitEvent ->
-
-                    // get optionals text inputs from modal interaction
-                    val modalInteraction = mcce.modalInteraction
-                    val opResource = modalInteraction.getTextInputValueByCustomId(idResource.toString())
-                    val opQuantity = modalInteraction.getTextInputValueByCustomId(idQuantity.toString())
-
-                    // check if all text inputs are present
-                    if (!opResource.isPresent || !opQuantity.isPresent) {
-                        throw IllegalArgumentException("Missing text inputs")
-                    }
-
-                    // get text inputs
-                    val ressource = opResource.get()
-                    val quantity = opQuantity.get()
-
-                    // On vérifie que la ressource est bien une ressource valide
-                    val resource = Resource.valueOf(ressource.uppercase())
-
-                    // On vérifie que la quantité est bien un nombre
-                    val quantityDouble = quantity.toDouble()
-
-                    // On vérifie que la quantité est bien positive
-                    if (quantityDouble <= 0) {
-                        throw IllegalArgumentException("La quantité doit être positive")
-                    }
-
-                    modalInteraction.createImmediateResponder()
-                        .setContent("Continuons. Mentionnez le nom du joueur à qui vous souhaitez donner")
-                        .respond()
-
-                    messagesManager.addListener(
-                        mcce.modalInteraction.channel.get(),
-                        mcce.modalInteraction.user.id
-                    ) {
-                        val owner = it.messageContent
-                        // l'owner est au format <@id>, je vais donc extraire l'id
-                        val ownerId = owner.substring(2, owner.length - 1)
-                        val player =
-                            players[ownerId.toLong()] ?: throw IllegalArgumentException("Le joueur n'existe pas")
-
-                        // on fait la transaction sécurisée avec GiveFromTo
-                        if (!giveFromTo(
-                                p, player, quantityDouble,
-                                resource
-                            )
-                        ) {
-                            throw IllegalArgumentException("Vous n'avez pas assez de ressources pour effectuer cette transaction")
-                        } else {
-                            modalInteraction.createImmediateResponder()
-                                .setContent("Vous avez bien donné $quantity $resource à $owner")
-                                .respond()
-                        }
-                    }
-                }
+                c1.modal(M1(id.toString()))
             }
             .addButton(
                 "Echanger",
@@ -169,121 +347,21 @@ class MarketCommand : Command(
                         "Demande d'échange",
                         "<@${slashCommand.user.id}> vous a proposé un échange. **Négociez avant avec lui**",
                         Color.YELLOW,
-                        message.messageAuthor.id
+                        contextFor(getAccount(message.message.mentionedUsers[0]))
                     )
                         .addButton(
                             "Accepter",
                             "Vous acceptez de négociez avec lui"
                         ) { buttonClickEvent: ButtonClickEvent, c3, b3 ->
                             val id1 = generateUniqueID()
-                            val idItem1 = generateUniqueID()
-                            val idQuantity1 = generateUniqueID()
-
                             val id2 = generateUniqueID()
-                            val idItem2 = generateUniqueID()
-                            val idQuantity2 = generateUniqueID()
-
-                            var end1 = false
-                            var end2 = false
-
-                            var wait: ModalSubmitEvent? = null
-                            var resource: Resource? = null
-                            var quantity: Double? = null
-
-                            var accept = false
-                            var cancel = false
-
-                            /**
-                             * It takes a modalSubmitEvent, a resource and a quantity, and then sets the wait, resource and
-                             * quantity variables to the values of the parameters. And say to the user to wait
-                             *
-                             * @param modalSubmitEvent The event that triggered the interaction.
-                             * @param resourceWait The resource that the user is waiting for
-                             * @param quantityWait The quantity of the resource you want to wait for.
-                             */
-                            fun pleaseWait(
-                                modalSubmitEvent: ModalSubmitEvent,
-                                resourceWait: Resource,
-                                quantityWait: Double
-                            ) {
-                                wait = modalSubmitEvent
-                                resource = resourceWait
-                                quantity = quantityWait
-                                modalSubmitEvent.interaction.createImmediateResponder()
-                                    .setContent("Merci de patienter")
-                                    .respond()
-                            }
-
-                            fun sendMenu(
-                                modalSubmitEvent: ModalSubmitEvent,
-                                resource: Resource,
-                                quantity: Double,
-                                r2: Resource,
-                                quantity2: Double,
-                                p1: Player,
-                                p2: Player
-                            ) {
-                                // accept, cancel are used to count the number of users who select each button
-                                MenuBuilder(
-                                    "Suite de l'échange",
-                                    "La personne avec qui vous échangez a proposé $quantity ${resource.name_}",
-                                    Color.YELLOW,
-                                    modalSubmitEvent.interaction.user.id
-                                )
-                                    .addButton(
-                                        "Accepter",
-                                        "Vous acceptez l'échange."
-                                    ) { it, c4, b4 ->
-                                        if (accept) {
-                                            it.buttonInteraction.createOriginalMessageUpdater()
-                                                .removeAllComponents()
-                                                .removeAllEmbeds()
-                                                .setContent("Echange accepté. Transaction en cours...")
-                                                .update()
-                                            if (!p1.hasResource(resource, quantity) || !p2.hasResource(r2, quantity2)) {
-                                                throw IllegalArgumentException("Une des personnes n'a pas assez de ressources")
-                                            }
-                                            p1.removeResource(resource, quantity)
-                                            p2.removeResource(r2, quantity2)
-                                            p1.addResource(r2, quantity2)
-                                            p2.addResource(resource, quantity)
-                                            it.buttonInteraction.createOriginalMessageUpdater()
-                                                .removeAllComponents()
-                                                .removeAllEmbeds()
-                                                .setContent("Transaction effectuée")
-                                                .update()
-                                        } else if (cancel) {
-                                            it.buttonInteraction.createOriginalMessageUpdater()
-                                                .removeAllComponents()
-                                                .removeAllEmbeds()
-                                                .setContent("L'échange est annulé")
-                                                .update()
-                                        } else {
-                                            accept = true
-                                            it.buttonInteraction.createOriginalMessageUpdater()
-                                                .removeAllComponents()
-                                                .removeAllEmbeds()
-                                                .setContent("Vous avez accepté l'échange. Merci de patienter.")
-                                                .update()
-                                        }
-                                    }
-                                    .addButton("Annuler", "Vous refusez l'échange") { it, c4, b4 ->
-                                        it.buttonInteraction.createOriginalMessageUpdater()
-                                            .removeAllComponents()
-                                            .removeAllEmbeds()
-                                            .setContent("L'échange est annulé")
-                                            .update()
-                                        cancel = true
-                                    }
-                                    .responder(modalSubmitEvent.modalInteraction)
-                            }
 
                             buttonClickEvent.buttonInteraction.respondWithModal(
                                 id1.toString(), "Répondez aux question pour commencer l'échange",
                                 ActionRow.of(
                                     TextInput.create(
                                         TextInputStyle.SHORT,
-                                        idItem1.toString(),
+                                        "cresource1id",
                                         "Quelle ressource / objet voulez-vous échanger ?",
                                         true
                                     )
@@ -291,7 +369,7 @@ class MarketCommand : Command(
                                 ActionRow.of(
                                     TextInput.create(
                                         TextInputStyle.SHORT,
-                                        idQuantity1.toString(),
+                                        "cquantity1id",
                                         "Combien voulez-vous échanger ?",
                                         true
                                     )
@@ -302,7 +380,7 @@ class MarketCommand : Command(
                                 ActionRow.of(
                                     TextInput.create(
                                         TextInputStyle.SHORT,
-                                        idItem2.toString(),
+                                        "cresource2id",
                                         "Ressource / objet à échanger",
                                         true
                                     )
@@ -310,86 +388,17 @@ class MarketCommand : Command(
                                 ActionRow.of(
                                     TextInput.create(
                                         TextInputStyle.SHORT,
-                                        idQuantity2.toString(),
+                                        "cquantity2id",
                                         "Combien voulez-vous échanger ?",
                                         true
                                     )
                                 )
                             )
 
-                            modalManager.add(id1) {
+                            val wait = Wait23()
 
-                                val modalInteraction = it.modalInteraction
-                                val opResource = modalInteraction.getTextInputValueByCustomId(idItem1.toString())
-                                val opQuantity = modalInteraction.getTextInputValueByCustomId(idQuantity1.toString())
-
-                                // check if all text inputs are present
-                                if (!opResource.isPresent || !opQuantity.isPresent) {
-                                    throw IllegalArgumentException("Missing text inputs")
-                                }
-
-                                // get text inputs
-                                val ressource = opResource.get()
-                                val quantity1 = opQuantity.get()
-
-                                // On vérifie que la ressource est bien une ressource valide
-                                val resource1 = Resource.valueOf(ressource.uppercase())
-
-                                // On vérifie que la quantité est bien un nombre
-                                val quantityDouble = quantity1.toDouble()
-
-                                // On vérifie que la quantité est bien positive
-                                if (quantityDouble <= 0) {
-                                    throw IllegalArgumentException("La quantité doit être positive")
-                                }
-
-                                if (end2) {
-                                    val p1 = players[it.modalInteraction.user.id]!!
-                                    val p2 = players[wait!!.modalInteraction.user.id]!!
-                                    sendMenu(it, resource!!, quantity!!, resource1, quantityDouble, p2, p1)
-                                    sendMenu(wait!!, resource1, quantityDouble, resource!!, quantity!!, p1, p2)
-                                } else {
-                                    pleaseWait(it, resource1, quantityDouble)
-                                }
-                                end1 = true
-                            }
-
-                            modalManager.add(id2) {
-
-                                val modalInteraction = it.modalInteraction
-                                val opResource = modalInteraction.getTextInputValueByCustomId(idItem1.toString())
-                                val opQuantity = modalInteraction.getTextInputValueByCustomId(idQuantity1.toString())
-
-                                // check if all text inputs are present
-                                if (!opResource.isPresent || !opQuantity.isPresent) {
-                                    throw IllegalArgumentException("Missing text inputs")
-                                }
-
-                                // get text inputs
-                                val ressource = opResource.get()
-                                val quantity1 = opQuantity.get()
-
-                                // On vérifie que la ressource est bien une ressource valide
-                                val resource1 = Resource.valueOf(ressource.uppercase())
-
-                                // On vérifie que la quantité est bien un nombre
-                                val quantityDouble = quantity1.toDouble()
-
-                                // On vérifie que la quantité est bien positive
-                                if (quantityDouble <= 0) {
-                                    throw IllegalArgumentException("La quantité doit être positive")
-                                }
-
-                                if (end1) {
-                                    val p1 = players[it.modalInteraction.user.id]!!
-                                    val p2 = players[wait!!.modalInteraction.user.id]!!
-                                    sendMenu(it, resource!!, quantity!!, resource1, quantityDouble, p2, p1)
-                                    sendMenu(wait!!, resource1, quantityDouble, resource!!, quantity!!, p1, p2)
-                                } else {
-                                    pleaseWait(it, resource1, quantityDouble)
-                                }
-                                end2 = true
-                            }
+                            c1.modal(M2(id1.toString(), wait, c3))
+                            c3.modal(M3(id2.toString(), wait, c1))
                         }
                         .addButton(
                             "Refuser",
@@ -420,7 +429,8 @@ class MarketCommand : Command(
                 askWhat(
                     "offre",
                     messageComponentCreateEvent,
-                    {
+                    c1,
+                    { it, c2, b2 ->
                         val result = saveManager.executeQuery(
                             "SELECT id FROM offers WHERE who = ${messageComponentCreateEvent.buttonInteraction.user.id}",
                             true
@@ -445,7 +455,8 @@ class MarketCommand : Command(
                                         "${offer.amountRB} -> ${offer.amount} ${offer.what.name_}"
                                     )
                                 }
-                            }
+                            },
+                            c2
                         ) { offer: Offer, buttonClickEvent: ButtonClickEvent, c3 ->
                             val player = getAccount(slashCommand)
                             // On vérifie si l'offre existe encore dans la base de données
@@ -480,7 +491,7 @@ class MarketCommand : Command(
                                 ActionRow.of(embedPagesWithInteractions.buttons)
                             )
                             .update()
-                    }, {
+                    }, { it, c2, b2 ->
                         println("offre")
                         val result =
                             saveManager.executeQuery("SELECT id FROM offers", true) ?: throw IllegalStateException(
@@ -507,7 +518,9 @@ class MarketCommand : Command(
                                         "${offer.amountRB} -> ${offer.amount} ${offer.what.name_}"
                                     )
                                 }
-                            }) { offer: Offer, buttonClickEvent: ButtonClickEvent, c3 ->
+                            },
+                            c2
+                        ) { offer: Offer, buttonClickEvent: ButtonClickEvent, c3 ->
                             val player = getAccount(slashCommand)
                             // On vérifie si l'offre existe encore dans la base de données
                             val resultSet =
@@ -546,7 +559,7 @@ class MarketCommand : Command(
                                 ActionRow.of(embedPagesWithInteractions.buttons)
                             )
                             .update()
-                    }) { event ->
+                    }) { event, c2, b2 ->
                     val id = generateUniqueID()
                     val idItem = generateUniqueID()
                     val idQuantity = generateUniqueID()
@@ -642,7 +655,8 @@ class MarketCommand : Command(
                 askWhat(
                     "recherche",
                     messageComponentCreateEvent,
-                    {
+                    c1,
+                    { it, c2, b2 ->
                         val result = saveManager.executeQuery(
                             "SELECT id FROM researches WHERE who = ${messageComponentCreateEvent.buttonInteraction.user.id}",
                             true
@@ -667,7 +681,8 @@ class MarketCommand : Command(
                                         "${research.amountRB} -> ${research.amount} ${research.what.name_}"
                                     )
                                 }
-                            }
+                            },
+                            c2
                         ) { offer: Research, buttonClickEvent: ButtonClickEvent, c2 ->
                             val player = getAccount(slashCommand)
                             // On vérifie si l'offre existe encore dans la base de données
@@ -702,7 +717,7 @@ class MarketCommand : Command(
                                 ActionRow.of(embedPagesWithInteractions.buttons)
                             )
                             .update()
-                    }, {
+                    }, { it, c2, b2 ->
                         val result =
                             saveManager.executeQuery("SELECT id FROM researches", true) ?: throw IllegalStateException(
                                 "No researches found"
@@ -727,7 +742,8 @@ class MarketCommand : Command(
                                         "${research.amount} ${research.what.name_} -> ${research.amountRB}"
                                     )
                                 }
-                            }
+                            },
+                            c2
                         ) { research: Research, buttonClickEvent: ButtonClickEvent, c2 ->
                             val player = getAccount(slashCommand)
                             // On vérifie si l'offre existe encore dans la base de données
@@ -766,7 +782,7 @@ class MarketCommand : Command(
                                 ActionRow.of(embedPagesWithInteractions.buttons)
                             )
                             .update()
-                    }) { event ->
+                    }) { event, c2, b2 ->
                     val id = generateUniqueID()
                     val idItem = generateUniqueID()
                     val idQuantity = generateUniqueID()
@@ -859,7 +875,7 @@ class MarketCommand : Command(
                 "Enchères",
                 "Ici trouvez les objets les plus rares et chers"
             ) { messageComponentCreateEvent: ButtonClickEvent, c1, b1 ->
-                askWhat("enchère", messageComponentCreateEvent, {
+                askWhat("enchère", messageComponentCreateEvent, c1, { it, c2, b2 ->
                     val result = saveManager.executeQuery(
                         "SELECT id FROM auctions WHERE who = ${messageComponentCreateEvent.buttonInteraction.user.id}",
                         true
@@ -884,7 +900,8 @@ class MarketCommand : Command(
                                     "${auction.amountRB} -> ${auction.amount} ${auction.what.name_}"
                                 )
                             }
-                        }
+                        },
+                        c2
                     ) { auction: Auction, buttonClickEvent: ButtonClickEvent, c2 ->
                         val player = getAccount(slashCommand)
                         // On vérifie si l'enchère existe encore dans la base de données
@@ -924,7 +941,7 @@ class MarketCommand : Command(
                             ActionRow.of(embedPagesWithInteractions.buttons)
                         )
                         .update()
-                }, {
+                }, { it, c2, b2 ->
                     val result =
                         saveManager.executeQuery("SELECT id FROM auctions", true) ?: throw IllegalStateException(
                             "No auctions found"
@@ -949,7 +966,8 @@ class MarketCommand : Command(
                                     "${research.amountRB} de <@${research.whoMax.id}> -> ${research.amount} ${research.what.name_} "
                                 )
                             }
-                        }
+                        },
+                        c1
                     ) { auction: Auction, buttonClickEvent: ButtonClickEvent, c2 ->
                         val player = getAccount(slashCommand)
                         // On vérifie si l'offre existe encore dans la base de données
@@ -987,7 +1005,7 @@ class MarketCommand : Command(
                             ActionRow.of(embedPagesWithInteractions.buttons)
                         )
                         .update()
-                }) { event ->
+                }) { event, c2, b2 ->
                     val id = generateUniqueID()
                     val idItem = generateUniqueID()
                     val idQuantity = generateUniqueID()
@@ -1084,30 +1102,30 @@ class MarketCommand : Command(
     private fun askWhat(
         name: String,
         buttonClickEvent: ButtonClickEvent,
-        my: (ButtonClickEvent) -> Unit,
-        everything: (ButtonClickEvent) -> Unit,
-        create: (ButtonClickEvent) -> Unit
+        context: Context,
+        my: (ButtonClickEvent, Context, ButtonsContextManager) -> Unit,
+        everything: (ButtonClickEvent, Context, ButtonsContextManager) -> Unit,
+        create: (ButtonClickEvent, Context, ButtonsContextManager) -> Unit
     ) {
-        MenuBuilder("Que faire ?", "Il existe 3 possibilités pour les ${name}s", Color.YELLOW, buttonClickEvent.buttonInteraction.user.id)
+        MenuBuilder("Que faire ?", "Il existe 3 possibilités pour les ${name}s", Color.YELLOW, context)
             .addButton(
                 "Mes ${name}s",
                 "Voir vos ${name}s, si elles existent. Dans le cas des offres et recherches, vous pouvez les supprimer. Dans le cas des enchères, vous pouvez finir une enchère.",
-            ) { messageComponentCreateEvent: ButtonClickEvent ->
-                my(messageComponentCreateEvent)
+            ) { messageComponentCreateEvent: ButtonClickEvent, c1, b1 ->
+                my(messageComponentCreateEvent, c1, b1)
             }
             .addButton(
                 "Toutes les ${name}s",
                 "Voir toutes les ${name}s. Vous pouvez interagir avec celles-ci ici (répondre à une enchère, acheter une offre, etc.)",
-            ) { messageComponentCreateEvent: ButtonClickEvent ->
-                everything(messageComponentCreateEvent)
+            ) { messageComponentCreateEvent: ButtonClickEvent, c1, b1 ->
+                everything(messageComponentCreateEvent, c1, b1)
             }
             .addButton(
                 "Créer une $name",
                 "Créer une $name avec le menu interactif"
-            ) { messageComponentCreateEvent: ButtonClickEvent ->
-                create(messageComponentCreateEvent)
+            ) { messageComponentCreateEvent: ButtonClickEvent, c1, b1 ->
+                create(messageComponentCreateEvent, c1, b1)
             }
             .modif(buttonClickEvent)
     }
-
 }
