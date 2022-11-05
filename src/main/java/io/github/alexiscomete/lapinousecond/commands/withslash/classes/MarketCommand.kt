@@ -108,8 +108,8 @@ class MarketCommand : Command(
 
     class Wait23 {
 
-        var accept = false
-        var cancel = false
+        private var accept = false
+        private var cancel = false
 
         var end1 = false
         var end2 = false
@@ -138,7 +138,7 @@ class MarketCommand : Command(
                 .addButton(
                     "Accepter",
                     "Vous acceptez l'échange."
-                ) { it, c4, b4 ->
+                ) { it, _, _ ->
                     if (accept) {
                         it.buttonInteraction.createOriginalMessageUpdater()
                             .removeAllComponents()
@@ -172,7 +172,7 @@ class MarketCommand : Command(
                             .update()
                     }
                 }
-                .addButton("Annuler", "Vous refusez l'échange") { it, c4, b4 ->
+                .addButton("Annuler", "Vous refusez l'échange") { it, _, _ ->
                     it.buttonInteraction.createOriginalMessageUpdater()
                         .removeAllComponents()
                         .removeAllEmbeds()
@@ -500,7 +500,7 @@ class MarketCommand : Command(
             .addButton(
                 "Echanger",
                 "Echanger un objet ou des ressources avec un autre joueur de façon sécurisée"
-            ) { messageComponentCreateEvent: ButtonClickEvent, c1, b1 ->
+            ) { messageComponentCreateEvent: ButtonClickEvent, c1, _ ->
                 getAccount(slashCommand)
                 messagesManager.addListener(
                     slashCommand.channel.get(),
@@ -519,7 +519,7 @@ class MarketCommand : Command(
                         .addButton(
                             "Accepter",
                             "Vous acceptez de négociez avec lui"
-                        ) { buttonClickEvent: ButtonClickEvent, c3, b3 ->
+                        ) { buttonClickEvent: ButtonClickEvent, c3, _ ->
                             val id1 = generateUniqueID()
                             val id2 = generateUniqueID()
 
@@ -570,7 +570,7 @@ class MarketCommand : Command(
                         .addButton(
                             "Refuser",
                             "Vous refusez de négocier avec lui"
-                        ) { messageComponentCreateEvent: ButtonClickEvent, c2, b2 ->
+                        ) { messageComponentCreateEvent: ButtonClickEvent, _, _ ->
                             messageComponentCreateEvent.buttonInteraction
                                 .createOriginalMessageUpdater()
                                 .removeAllEmbeds()
@@ -592,12 +592,12 @@ class MarketCommand : Command(
             .addButton(
                 "Offres",
                 "Les vendeurs proposent un prix"
-            ) { messageComponentCreateEvent: ButtonClickEvent, c1, b1 ->
+            ) { messageComponentCreateEvent: ButtonClickEvent, c1, _ ->
                 askWhat(
                     "offre",
                     messageComponentCreateEvent,
                     c1,
-                    { it, c2, b2 ->
+                    { it, c2, _ ->
                         val result = saveManager.executeQuery(
                             "SELECT id FROM offers WHERE who = ${messageComponentCreateEvent.buttonInteraction.user.id}",
                             true
@@ -624,19 +624,19 @@ class MarketCommand : Command(
                                 }
                             },
                             c2
-                        ) { offer: Offer, buttonClickEvent: ButtonClickEvent, c3 ->
-                            val player = getAccount(slashCommand)
+                        ) { offer: Offer, buttonClickEvent: ButtonClickEvent, _ ->
+                            val player2 = getAccount(slashCommand)
                             // On vérifie si l'offre existe encore dans la base de données
                             val resultSet =
                                 saveManager.executeQuery("SELECT id FROM offers WHERE id = ${offer.id}", true)
                             if (resultSet == null || !resultSet.next()) {
                                 throw IllegalStateException("L'offre n'existe plus")
                             }
-                            if (offer.who.id != player.id) {
+                            if (offer.who.id != player2.id) {
                                 throw IllegalArgumentException("Cette offre ne vous appartient pas. Vous ne pouvez pas la supprimer et elle ne devrait pas apparaître dans cette liste")
                             }
                             // give back resources
-                            player.addResource(offer.what, offer.amount)
+                            player2.addResource(offer.what, offer.amount)
                             // remove the offer from the database
                             saveManager.execute("DELETE FROM offers WHERE id = ${offer.id}", true)
                             // respond
@@ -658,7 +658,7 @@ class MarketCommand : Command(
                                 ActionRow.of(embedPagesWithInteractions.buttons)
                             )
                             .update()
-                    }, { it, c2, b2 ->
+                    }, { it, c2, _ ->
                         println("offre")
                         val result =
                             saveManager.executeQuery("SELECT id FROM offers", true) ?: throw IllegalStateException(
@@ -687,23 +687,23 @@ class MarketCommand : Command(
                                 }
                             },
                             c2
-                        ) { offer: Offer, buttonClickEvent: ButtonClickEvent, c3 ->
-                            val player = getAccount(slashCommand)
+                        ) { offer: Offer, buttonClickEvent: ButtonClickEvent, _ ->
+                            val player2 = getAccount(slashCommand)
                             // On vérifie si l'offre existe encore dans la base de données
                             val resultSet =
                                 saveManager.executeQuery("SELECT id FROM offers WHERE id = ${offer.id}", true)
                             if (resultSet == null || !resultSet.next()) {
                                 throw IllegalStateException("L'offre n'existe plus")
                             }
-                            if (offer.who.id == player.id) {
+                            if (offer.who.id == player2.id) {
                                 throw IllegalArgumentException("Vous ne pouvez pas acheter vos propres offres")
                             }
-                            if (!player.hasMoney(offer.amountRB)) {
+                            if (!player2.hasMoney(offer.amountRB)) {
                                 throw IllegalArgumentException("Vous n'avez pas assez d'argent pour acheter cette offre")
                             }
-                            player.removeMoney(offer.amountRB)
+                            player2.removeMoney(offer.amountRB)
                             offer.who.addMoney(offer.amountRB)
-                            player.addResource(offer.what, offer.amount)
+                            player2.addResource(offer.what, offer.amount)
                             // remove the offer from the database
                             saveManager.execute("DELETE FROM offers WHERE id = ${offer.id}", true)
                             // respond
@@ -726,7 +726,7 @@ class MarketCommand : Command(
                                 ActionRow.of(embedPagesWithInteractions.buttons)
                             )
                             .update()
-                    }) { event, c2, b2 ->
+                    }) { event, c2, _ ->
                     val id = generateUniqueID().toString()
 
                     event.buttonInteraction.respondWithModal(
@@ -767,12 +767,12 @@ class MarketCommand : Command(
             .addButton(
                 "Recherches",
                 "Les acheteurs recherchent un objet pour un certain prix"
-            ) { messageComponentCreateEvent: ButtonClickEvent, c1, b1 ->
+            ) { messageComponentCreateEvent: ButtonClickEvent, c1, _ ->
                 askWhat(
                     "recherche",
                     messageComponentCreateEvent,
                     c1,
-                    { it, c2, b2 ->
+                    { it, c2, _ ->
                         val result = saveManager.executeQuery(
                             "SELECT id FROM researches WHERE who = ${messageComponentCreateEvent.buttonInteraction.user.id}",
                             true
@@ -799,19 +799,19 @@ class MarketCommand : Command(
                                 }
                             },
                             c2
-                        ) { offer: Research, buttonClickEvent: ButtonClickEvent, c2 ->
-                            val player = getAccount(slashCommand)
+                        ) { offer: Research, buttonClickEvent: ButtonClickEvent, _ ->
+                            val player2 = getAccount(slashCommand)
                             // On vérifie si l'offre existe encore dans la base de données
                             val resultSet =
                                 saveManager.executeQuery("SELECT id FROM researches WHERE id = ${offer.id}", true)
                             if (resultSet == null || !resultSet.next()) {
                                 throw IllegalStateException("La recherche n'existe plus")
                             }
-                            if (offer.who.id != player.id) {
+                            if (offer.who.id != player2.id) {
                                 throw IllegalArgumentException("Cette recherche ne vous appartient pas. Vous ne pouvez pas la supprimer et elle ne devrait pas apparaître dans cette liste")
                             }
                             // give back resources
-                            player.addMoney(offer.amountRB)
+                            player2.addMoney(offer.amountRB)
                             // remove the offer from the database
                             saveManager.execute("DELETE FROM researches WHERE id = ${offer.id}", true)
                             // respond
@@ -833,7 +833,7 @@ class MarketCommand : Command(
                                 ActionRow.of(embedPagesWithInteractions.buttons)
                             )
                             .update()
-                    }, { it, c2, b2 ->
+                    }, { it, c2, _ ->
                         val result =
                             saveManager.executeQuery("SELECT id FROM researches", true) ?: throw IllegalStateException(
                                 "No researches found"
@@ -860,21 +860,21 @@ class MarketCommand : Command(
                                 }
                             },
                             c2
-                        ) { research: Research, buttonClickEvent: ButtonClickEvent, c2 ->
-                            val player = getAccount(slashCommand)
+                        ) { research: Research, buttonClickEvent: ButtonClickEvent, _ ->
+                            val player2 = getAccount(slashCommand)
                             // On vérifie si l'offre existe encore dans la base de données
                             val resultSet =
                                 saveManager.executeQuery("SELECT id FROM researches WHERE id = ${research.id}", true)
                             if (resultSet == null || !resultSet.next()) {
                                 throw IllegalStateException("La recherche n'existe plus")
                             }
-                            if (research.who.id == player.id) {
+                            if (research.who.id == player2.id) {
                                 throw IllegalArgumentException("Vous ne pouvez pas répondre à votre propre recherche")
                             }
-                            if (!player.hasResource(research.what, research.amount)) {
+                            if (!player2.hasResource(research.what, research.amount)) {
                                 throw IllegalArgumentException("Vous n'avez pas assez de ${research.what.name_} pour répondre à cette recherche")
                             }
-                            player.removeResource(research.what, research.amount)
+                            player2.removeResource(research.what, research.amount)
                             research.who.addResource(research.what, research.amount)
                             research.who.addMoney(research.amountRB)
                             // remove the research from the database
@@ -898,7 +898,7 @@ class MarketCommand : Command(
                                 ActionRow.of(embedPagesWithInteractions.buttons)
                             )
                             .update()
-                    }) { event, c2, b2 ->
+                    }) { event, c2, _ ->
                     val id = generateUniqueID().toString()
 
                     event.buttonInteraction.respondWithModal(
@@ -939,8 +939,8 @@ class MarketCommand : Command(
             .addButton(
                 "Enchères",
                 "Ici trouvez les objets les plus rares et chers"
-            ) { messageComponentCreateEvent: ButtonClickEvent, c1, b1 ->
-                askWhat("enchère", messageComponentCreateEvent, c1, { it, c2, b2 ->
+            ) { messageComponentCreateEvent: ButtonClickEvent, c1, _ ->
+                askWhat("enchère", messageComponentCreateEvent, c1, { it, c2, _ ->
                     val result = saveManager.executeQuery(
                         "SELECT id FROM auctions WHERE who = ${messageComponentCreateEvent.buttonInteraction.user.id}",
                         true
@@ -967,22 +967,22 @@ class MarketCommand : Command(
                             }
                         },
                         c2
-                    ) { auction: Auction, buttonClickEvent: ButtonClickEvent, c2 ->
-                        val player = getAccount(slashCommand)
+                    ) { auction: Auction, buttonClickEvent: ButtonClickEvent, _ ->
+                        val player2 = getAccount(slashCommand)
                         // On vérifie si l'enchère existe encore dans la base de données
                         val resultSet =
                             saveManager.executeQuery("SELECT id FROM auctions WHERE id = ${auction.id}", true)
                         if (resultSet == null || !resultSet.next()) {
                             throw IllegalStateException("L'enchère n'existe plus")
                         }
-                        if (auction.who.id != player.id) {
+                        if (auction.who.id != player2.id) {
                             throw IllegalArgumentException("Cette enchère ne vous appartient pas. Vous ne pouvez pas la terminer et elle ne devrait pas apparaître dans cette liste")
                         }
                         if (auction.who.id == auction.whoMax.id) {
                             throw IllegalArgumentException("Vous êtes le meilleur enchérisseur. Vous ne pouvez pas terminer cette enchère")
                         }
                         // give the auction money
-                        player.addMoney(auction.amountRB)
+                        player2.addMoney(auction.amountRB)
                         // and the resources
                         auction.whoMax.addResource(auction.what, auction.amount)
                         // remove the auction from the database
@@ -1006,7 +1006,7 @@ class MarketCommand : Command(
                             ActionRow.of(embedPagesWithInteractions.buttons)
                         )
                         .update()
-                }, { it, c2, b2 ->
+                }, { it, _, _ ->
                     val result =
                         saveManager.executeQuery("SELECT id FROM auctions", true) ?: throw IllegalStateException(
                             "No auctions found"
@@ -1033,23 +1033,23 @@ class MarketCommand : Command(
                             }
                         },
                         c1
-                    ) { auction: Auction, buttonClickEvent: ButtonClickEvent, c2 ->
-                        val player = getAccount(slashCommand)
+                    ) { auction: Auction, buttonClickEvent: ButtonClickEvent, _ ->
+                        val player2 = getAccount(slashCommand)
                         // On vérifie si l'offre existe encore dans la base de données
                         val resultSet =
                             saveManager.executeQuery("SELECT id FROM auctions WHERE id = ${auction.id}", true)
                         if (resultSet == null || !resultSet.next()) {
                             throw IllegalStateException("L'enchère n'existe plus")
                         }
-                        if (auction.who.id == player.id || auction.whoMax.id == player.id) {
+                        if (auction.who.id == player2.id || auction.whoMax.id == player2.id) {
                             throw IllegalArgumentException("Vous ne pouvez pas répondre à votre propre enchère")
                         }
-                        if (!player.hasMoney(auction.amountRB + 100.0)) {
+                        if (!player2.hasMoney(auction.amountRB + 100.0)) {
                             throw IllegalArgumentException("Vous n'avez pas assez d'argent pour répondre à cette enchère (il faut enchérir de 100 ${Resource.RABBIT_COIN.name_})")
                         }
-                        player.removeMoney(auction.amountRB + 100.0)
+                        player2.removeMoney(auction.amountRB + 100.0)
                         auction.whoMax.addMoney(auction.amountRB)
-                        auction["whoMax"] = player.id.toString()
+                        auction["whoMax"] = player2.id.toString()
                         auction["amountRB"] = (auction.amountRB + 100.0).toString()
                         // respond
                         buttonClickEvent.buttonInteraction
@@ -1070,7 +1070,7 @@ class MarketCommand : Command(
                             ActionRow.of(embedPagesWithInteractions.buttons)
                         )
                         .update()
-                }) { event, c2, b2 ->
+                }) { event, c2, _ ->
                     val id = generateUniqueID().toString()
 
                     event.buttonInteraction.respondWithModal(

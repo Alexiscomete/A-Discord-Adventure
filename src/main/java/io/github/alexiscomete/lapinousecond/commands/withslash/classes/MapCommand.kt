@@ -9,6 +9,7 @@ import io.github.alexiscomete.lapinousecond.resources.Resource
 import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
 import io.github.alexiscomete.lapinousecond.view.Context
 import io.github.alexiscomete.lapinousecond.view.contextFor
+import io.github.alexiscomete.lapinousecond.view.contextmanager.ModalContextManager
 import io.github.alexiscomete.lapinousecond.view.ui.EmbedPages
 import io.github.alexiscomete.lapinousecond.view.ui.MenuBuilder
 import io.github.alexiscomete.lapinousecond.view.contextmanager.SelectMenuContextManager
@@ -91,6 +92,147 @@ class MapCommand : Command(
     override val botPerms: Array<String>
         get() = arrayOf("PLAY")
 
+    class M1(name: String) : ModalContextManager(name) {
+        override fun ex(smce: ModalSubmitEvent, c: Context) {
+            val modalInteraction = smce.modalInteraction
+            val opX = modalInteraction.getTextInputValueByCustomId("cxid")
+            val opY = modalInteraction.getTextInputValueByCustomId("cyid")
+
+            // optional to string
+            val xStr = if (opX.isPresent) {
+                opX.get()
+            } else {
+                throw IllegalArgumentException("x is not present")
+            }
+            val yStr = if (opY.isPresent) {
+                opY.get()
+            } else {
+                throw IllegalArgumentException("y is not present")
+            }
+
+            // str to int
+            val x = try {
+                xStr.toInt()
+            } catch (e: Exception) {
+                throw IllegalArgumentException("x is not an int")
+            }
+            val y = try {
+                yStr.toInt()
+            } catch (e: Exception) {
+                throw IllegalArgumentException("y is not an int")
+            }
+
+            val player = c.players.player.player
+            val world = try {
+                WorldEnum.valueOf(player["world"])
+            } catch (e: Exception) {
+                throw IllegalArgumentException("world is not a valid world")
+            }
+            val currentX = try {
+                player["place_${world.progName}_x"].toInt()
+            } catch (e: Exception) {
+                throw IllegalArgumentException("current x is not an int")
+            }
+            val currentY = try {
+                player["place_${world.progName}_y"].toInt()
+            } catch (e: Exception) {
+                throw IllegalArgumentException("current y is not an int")
+            }
+
+            if (x < 0 || x > world.mapWidth || y < 0 || y > world.mapHeight) {
+                throw IllegalArgumentException("x or y is out of bounds (bounds are ${world.mapWidth}x${world.mapHeight})")
+            }
+
+            // Etape : calcul du trajet et affichage du prix en temps ou en argent
+            val nodePlayer = world.getNode(currentX, currentY, ArrayList())
+            val nodeDest = world.getNode(x, y, ArrayList())
+            //long !!
+            smce.modalInteraction.createImmediateResponder()
+                .setContent("Patientez un instant... calcul du trajet")
+            val path = world.findPath(nodePlayer, nodeDest)
+            val image = bigger(world.drawPath(path), 3)
+
+            val timeMillisToTravel = path.size * 10000L
+            val priceToTravel = path.size * 0.5
+
+            MenuBuilder(
+                "Comment voyager ?",
+                "Il existe 2 moyens de voyager de façon simple",
+                Color.RED,
+                c
+            )
+                .setImage(image)
+                .addButton(
+                    "Temps",
+                    "Vous allez prendre $timeMillisToTravel ms pour aller jusqu'à ce pixel"
+                ) { timeB, c3, _ ->
+                    MenuBuilder(
+                        "Confirmer",
+                        "Confirmer le voyage ?",
+                        Color.orange,
+                        c3
+                    )
+                        .addButton("Oui", "Oui je veux aller jusqu'à ce pixel") { it, _, _ ->
+                            player.setPath(path, "default_time")
+                            it.buttonInteraction.createOriginalMessageUpdater()
+                                .removeAllComponents()
+                                .removeAllEmbeds()
+                                .setContent("Vous êtes maintenant sur le trajet vers le pixel ($x, $y)")
+                                .update()
+                        }
+                        .addButton("Non", "Non je ne veux pas aller jusqu'à ce pixel") { it, _, _ ->
+                            it.buttonInteraction.createOriginalMessageUpdater()
+                                .removeAllComponents()
+                                .removeAllEmbeds()
+                                .setContent("Vous avez annulé le voyage")
+                                .update()
+                        }
+                        .modif(timeB)
+                }
+                .addButton(
+                    "Argent",
+                    "Vous allez dépenser $priceToTravel ${Resource.RABBIT_COIN.name_} pour aller jusqu'à ce pixel"
+                ) { moneyB, c3, _ ->
+                    MenuBuilder(
+                        "Confirmer",
+                        "Confirmer le voyage ?",
+                        Color.orange,
+                        c3
+                    )
+                        .addButton("Oui", "Oui je veux aller jusqu'à ce pixel") { it, _, _ ->
+                            // get the player's money
+                            val money = player.getMoney()
+                            if (money < priceToTravel) {
+                                it.buttonInteraction.createOriginalMessageUpdater()
+                                    .removeAllComponents()
+                                    .removeAllEmbeds()
+                                    .setContent("Vous n'avez pas assez d'argent pour aller jusqu'à ce pixel")
+                                    .update()
+                            } else {
+                                player.removeMoney(priceToTravel)
+                                player["place_${world.progName}_x"] = x.toString()
+                                player["place_${world.progName}_y"] = y.toString()
+                                it.buttonInteraction.createOriginalMessageUpdater()
+                                    .removeAllComponents()
+                                    .removeAllEmbeds()
+                                    .setContent("Vous êtes maintenant sur le pixel ($x, $y)")
+                                    .update()
+                            }
+                        }
+                        .addButton("Non", "Non je ne veux pas aller jusqu'à ce pixel") { it, _, _ ->
+                            it.buttonInteraction.createOriginalMessageUpdater()
+                                .removeAllComponents()
+                                .removeAllEmbeds()
+                                .setContent("Vous avez annulé le voyage")
+                                .update()
+                        }
+                        .modif(moneyB)
+                }
+                .responder(smce.modalInteraction)
+        }
+
+    }
+
     override fun execute(slashCommand: SlashCommandInteraction) {
         val context = contextFor(PlayerWithAccount(slashCommand.user))
         MenuBuilder(
@@ -102,7 +244,7 @@ class MapCommand : Command(
             .addButton(
                 "Voyager",
                 "Permet de se déplacer de plusieurs façons sur la carte"
-            ) { messageComponentCreateEvent: ButtonClickEvent, c1, b1 ->
+            ) { messageComponentCreateEvent: ButtonClickEvent, c1, _ ->
                 MenuBuilder(
                     "Voyager",
                     "Voyager est important dans ce jeu",
@@ -112,7 +254,7 @@ class MapCommand : Command(
                     .addButton(
                         "Mondes",
                         "Permet de changer de monde"
-                    ) { mcce: ButtonClickEvent, c2, b2 ->
+                    ) { mcce: ButtonClickEvent, _, _ ->
                         // Etape 1 : afficher la liste des mondes
 
                         // get all worlds
@@ -153,163 +295,29 @@ class MapCommand : Command(
                     .addButton(
                         "Aller à",
                         "Mode de déplacement le plus simple. Permet de se déplacer sur le pixel de son choix"
-                    ) { buttonClickEvent: ButtonClickEvent, c2, b2 ->
-                        val id = generateUniqueID()
-                        val idX = generateUniqueID()
-                        val idY = generateUniqueID()
+                    ) { buttonClickEvent: ButtonClickEvent, c2, _ ->
+                        val id = generateUniqueID().toString()
 
                         buttonClickEvent.buttonInteraction.respondWithModal(
-                            id.toString(), "Sur quel pixel se rendre ?",
+                            id, "Sur quel pixel se rendre ?",
                             ActionRow.of(
-                                TextInput.create(TextInputStyle.SHORT, idX.toString(), "Le x du pixel")
+                                TextInput.create(TextInputStyle.SHORT, "cxid", "Le x du pixel")
                             ),
                             ActionRow.of(
-                                TextInput.create(TextInputStyle.SHORT, idY.toString(), "Le y du pixel")
+                                TextInput.create(TextInputStyle.SHORT, "cyid", "Le y du pixel")
                             )
                         )
 
-                        modalManager.add(id) { modalXY ->
-                            val modalInteraction = modalXY.modalInteraction
-                            val opX = modalInteraction.getTextInputValueByCustomId(idX.toString())
-                            val opY = modalInteraction.getTextInputValueByCustomId(idY.toString())
-
-                            // optional to string
-                            val xStr = if (opX.isPresent) {
-                                opX.get()
-                            } else {
-                                throw IllegalArgumentException("x is not present")
-                            }
-                            val yStr = if (opY.isPresent) {
-                                opY.get()
-                            } else {
-                                throw IllegalArgumentException("y is not present")
-                            }
-
-                            // str to int
-                            val x = try {
-                                xStr.toInt()
-                            } catch (e: Exception) {
-                                throw IllegalArgumentException("x is not an int")
-                            }
-                            val y = try {
-                                yStr.toInt()
-                            } catch (e: Exception) {
-                                throw IllegalArgumentException("y is not an int")
-                            }
-
-                            val player = getAccount(slashCommand)
-                            val world = try {
-                                WorldEnum.valueOf(player["world"])
-                            } catch (e: Exception) {
-                                throw IllegalArgumentException("world is not a valid world")
-                            }
-                            val currentX = try {
-                                player["place_${world.progName}_x"].toInt()
-                            } catch (e: Exception) {
-                                throw IllegalArgumentException("current x is not an int")
-                            }
-                            val currentY = try {
-                                player["place_${world.progName}_y"].toInt()
-                            } catch (e: Exception) {
-                                throw IllegalArgumentException("current y is not an int")
-                            }
-
-                            if (x < 0 || x > world.mapWidth || y < 0 || y > world.mapHeight) {
-                                throw IllegalArgumentException("x or y is out of bounds (bounds are ${world.mapWidth}x${world.mapHeight})")
-                            }
-
-                            // Etape : calcul du trajet et affichage du prix en temps ou en argent
-                            val nodePlayer = world.getNode(currentX, currentY, ArrayList())
-                            val nodeDest = world.getNode(x, y, ArrayList())
-                            //long !!
-                            modalXY.modalInteraction.createImmediateResponder()
-                                .setContent("Patientez un instant... calcul du trajet")
-                            val path = world.findPath(nodePlayer, nodeDest)
-                            val image = bigger(world.drawPath(path), 3)
-
-                            val timeMillisToTravel = path.size * 10000L
-                            val priceToTravel = path.size * 0.5
-
-                            MenuBuilder(
-                                "Comment voyager ?",
-                                "Il existe 2 moyens de voyager de façon simple",
-                                Color.RED,
-                                modalXY.modalInteraction.user.id
+                        c2.modal(
+                            M1(
+                                id
                             )
-                                .setImage(image)
-                                .addButton(
-                                    "Temps",
-                                    "Vous allez prendre $timeMillisToTravel ms pour aller jusqu'à ce pixel"
-                                ) { timeB, c3, b3 ->
-                                    MenuBuilder(
-                                        "Confirmer",
-                                        "Confirmer le voyage ?",
-                                        Color.orange,
-                                        c3
-                                    )
-                                        .addButton("Oui", "Oui je veux aller jusqu'à ce pixel") {
-                                            player.setPath(path, "default_time")
-                                            it.buttonInteraction.createOriginalMessageUpdater()
-                                                .removeAllComponents()
-                                                .removeAllEmbeds()
-                                                .setContent("Vous êtes maintenant sur le trajet vers le pixel ($x, $y)")
-                                                .update()
-                                        }
-                                        .addButton("Non", "Non je ne veux pas aller jusqu'à ce pixel") {
-                                            it.buttonInteraction.createOriginalMessageUpdater()
-                                                .removeAllComponents()
-                                                .removeAllEmbeds()
-                                                .setContent("Vous avez annulé le voyage")
-                                                .update()
-                                        }
-                                        .modif(timeB)
-                                }
-                                .addButton(
-                                    "Argent",
-                                    "Vous allez dépenser $priceToTravel ${Resource.RABBIT_COIN.name_} pour aller jusqu'à ce pixel"
-                                ) { moneyB, c3, b3 ->
-                                    MenuBuilder(
-                                        "Confirmer",
-                                        "Confirmer le voyage ?",
-                                        Color.orange,
-                                        moneyB.buttonInteraction.user.id
-                                    )
-                                        .addButton("Oui", "Oui je veux aller jusqu'à ce pixel") {
-                                            // get the player's money
-                                            val money = player.getMoney()
-                                            if (money < priceToTravel) {
-                                                it.buttonInteraction.createOriginalMessageUpdater()
-                                                    .removeAllComponents()
-                                                    .removeAllEmbeds()
-                                                    .setContent("Vous n'avez pas assez d'argent pour aller jusqu'à ce pixel")
-                                                    .update()
-                                            } else {
-                                                player.removeMoney(priceToTravel)
-                                                player["place_${world.progName}_x"] = x.toString()
-                                                player["place_${world.progName}_y"] = y.toString()
-                                                it.buttonInteraction.createOriginalMessageUpdater()
-                                                    .removeAllComponents()
-                                                    .removeAllEmbeds()
-                                                    .setContent("Vous êtes maintenant sur le pixel ($x, $y)")
-                                                    .update()
-                                            }
-                                        }
-                                        .addButton("Non", "Non je ne veux pas aller jusqu'à ce pixel") {
-                                            it.buttonInteraction.createOriginalMessageUpdater()
-                                                .removeAllComponents()
-                                                .removeAllEmbeds()
-                                                .setContent("Vous avez annulé le voyage")
-                                                .update()
-                                        }
-                                        .modif(moneyB)
-                                }
-                                .responder(modalXY.modalInteraction)
-                        }
+                        )
                     }
                     .addButton(
                         "Pixel par pixel",
                         "Mode de déplacement maîtrisable."
-                    ) { buttonClickEvent: ButtonClickEvent, c2, b2 ->
+                    ) { buttonClickEvent: ButtonClickEvent, _, _ ->
                         buttonClickEvent.buttonInteraction.createOriginalMessageUpdater()
                             .removeAllComponents()
                             .removeAllEmbeds()
@@ -321,7 +329,7 @@ class MapCommand : Command(
             .addButton(
                 "Retourner au hub",
                 "Une urgence ? Bloqué dans un lieu inexistant ? Retournez au hub gratuitement !"
-            ) { messageComponentCreateEvent: ButtonClickEvent, c1, b1 ->
+            ) { messageComponentCreateEvent: ButtonClickEvent, c1, _ ->
                 val p = getAccount(slashCommand)
                 MenuBuilder(
                     "Confirmation requise",
@@ -329,13 +337,13 @@ class MapCommand : Command(
                     Color.PINK,
                     c1
                 )
-                    .addButton("Oui", "Retourner au hub") { buttonClickEvent: ButtonClickEvent, c2, b2 ->
+                    .addButton("Oui", "Retourner au hub") { buttonClickEvent: ButtonClickEvent, _, _ ->
                         buttonClickEvent.buttonInteraction.createOriginalMessageUpdater()
                             .setContent("✔ Flavinou vient de vous téléporter au hub <https://discord.gg/q4hVQ6gwyx>")
                             .update()
                         toSpawn(p)
                     }
-                    .addButton("Non", "Annuler") { buttonClickEvent: ButtonClickEvent, c2, b2 ->
+                    .addButton("Non", "Annuler") { buttonClickEvent: ButtonClickEvent, _, _ ->
                         buttonClickEvent.buttonInteraction.createOriginalMessageUpdater()
                             .setContent("Annulé").update()
                     }
@@ -344,7 +352,7 @@ class MapCommand : Command(
             .addButton(
                 "Cartes",
                 "Les cartes sont disponibles ici ! De nombreuses actions complémentaires sont proposées"
-            ) { messageComponentCreateEvent: ButtonClickEvent, c1, b1 ->
+            ) { messageComponentCreateEvent: ButtonClickEvent, c1, _ ->
                 MenuBuilder(
                     "Cartes 🌌",
                     "Les cartes ... tellement de cartes !",
@@ -354,7 +362,7 @@ class MapCommand : Command(
                     .addButton(
                         "Liste des cartes",
                         "Toutes les cartes permanentes du jeu ... remerciez Darki"
-                    ) { buttonClickEvent: ButtonClickEvent, c2, b2 ->
+                    ) { buttonClickEvent: ButtonClickEvent, _, _ ->
                         val maps = arrayListOf(*FilesMapEnum.values())
                         val embed = EmbedBuilder()
                         val embedPages = EmbedPages(
@@ -384,7 +392,7 @@ class MapCommand : Command(
                     .addButton(
                         "Ma position",
                         "Toutes les informations sur votre position"
-                    ) { buttonClickEvent: ButtonClickEvent, c2, b2 ->
+                    ) { buttonClickEvent: ButtonClickEvent, _, _ ->
 
                         val player = getAccount(slashCommand)
                         val worldStr = player["world"]
@@ -429,7 +437,7 @@ class MapCommand : Command(
                     .addButton(
                         "Trouver un chemin",
                         "Un lieu ou des coordonnées ? Trouvez le chemin le plus court"
-                    ) { mcce: ButtonClickEvent, c2, b2 ->
+                    ) { mcce: ButtonClickEvent, c2, _ ->
                         val id = generateUniqueID()
                         val idX1 = generateUniqueID()
                         val idX2 = generateUniqueID()
