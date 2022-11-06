@@ -233,6 +233,84 @@ class MapCommand : Command(
 
     }
 
+    class M2(name: String): ModalContextManager(name) {
+        override fun ex(smce: ModalSubmitEvent, c: Context) {
+
+            // get optionals text inputs from modal interaction
+            val modalInteraction = smce.modalInteraction
+            val opX1 = modalInteraction.getTextInputValueByCustomId("cx1id")
+            val opY1 = modalInteraction.getTextInputValueByCustomId("cy1id")
+            val opX2 = modalInteraction.getTextInputValueByCustomId("cx2id")
+            val opY2 = modalInteraction.getTextInputValueByCustomId("cy2id")
+
+            // transform optionals to strings
+            val x1 = opX1.orElse("n")
+            val y1 = opY1.orElse("n")
+            val x2 = opX2.orElse("n")
+            val y2 = opY2.orElse("n")
+
+            // check if the strings are numbers
+            val x1Int = try {
+                x1.toInt()
+            } catch (e: NumberFormatException) {
+                throw IllegalArgumentException("Le x du point de départ n'est pas un nombre")
+            }
+            val y1Int = try {
+                y1.toInt()
+            } catch (e: NumberFormatException) {
+                throw IllegalArgumentException("Le y du point de départ n'est pas un nombre")
+            }
+            val x2Int = try {
+                x2.toInt()
+            } catch (e: NumberFormatException) {
+                throw IllegalArgumentException("Le x du point d'arrivée n'est pas un nombre")
+            }
+            val y2Int = try {
+                y2.toInt()
+            } catch (e: NumberFormatException) {
+                throw IllegalArgumentException("Le y du point d'arrivée n'est pas un nombre")
+            }
+
+            val player = c.players.player.player
+            val world = player.world
+
+            // check if the arguments are in the right range
+            if (x1Int < 0 || x1Int > world.mapWidth) {
+                throw IllegalArgumentException("The first argument must be between 0 and " + world.mapWidth)
+            }
+            if (y1Int < 0 || y1Int > world.mapHeight) {
+                throw IllegalArgumentException("The second argument must be between 0 and " + world.mapHeight)
+            }
+            if (x2Int < 0 || x2Int > world.mapWidth) {
+                throw IllegalArgumentException("The third argument must be between 0 and " + world.mapWidth)
+            }
+            if (y2Int < 0 || y2Int > world.mapHeight) {
+                throw IllegalArgumentException("The fourth argument must be between 0 and " + world.mapHeight)
+            }
+
+            // send a later responder
+            modalInteraction.createImmediateResponder()
+                .setContent("📍 Calcul en cours ...")
+                .respond()
+
+            // send the path
+            val path = world.findPath(
+                world.getNode(
+                    x1Int, y1Int, ArrayList()
+                ),
+                world.getNode(
+                    x2Int, y2Int, ArrayList()
+                )
+            )
+
+            MessageBuilder()
+                .addAttachment(world.drawPath(path), "path.png")
+                .setContent("📍 Chemin trouvé : " + path.size + " étapes")
+                .send(modalInteraction.channel.get())
+        }
+
+    }
+
     override fun execute(slashCommand: SlashCommandInteraction) {
         val context = contextFor(PlayerWithAccount(slashCommand.user))
         MenuBuilder(
@@ -438,18 +516,14 @@ class MapCommand : Command(
                         "Trouver un chemin",
                         "Un lieu ou des coordonnées ? Trouvez le chemin le plus court"
                     ) { mcce: ButtonClickEvent, c2, _ ->
-                        val id = generateUniqueID()
-                        val idX1 = generateUniqueID()
-                        val idX2 = generateUniqueID()
-                        val idY1 = generateUniqueID()
-                        val idY2 = generateUniqueID()
+                        val id = generateUniqueID().toString()
                         mcce.buttonInteraction
                             .respondWithModal(
-                                id.toString(), "Trouver un chemin",
+                                id, "Trouver un chemin",
                                 ActionRow.of(
                                     TextInput.create(
                                         TextInputStyle.SHORT,
-                                        idX1.toString(),
+                                        "cx1id",
                                         "Le x du point de départ",
                                         true
                                     )
@@ -457,7 +531,7 @@ class MapCommand : Command(
                                 ActionRow.of(
                                     TextInput.create(
                                         TextInputStyle.SHORT,
-                                        idY1.toString(),
+                                        "cy1id",
                                         "Le y du point de départ",
                                         true
                                     )
@@ -465,7 +539,7 @@ class MapCommand : Command(
                                 ActionRow.of(
                                     TextInput.create(
                                         TextInputStyle.SHORT,
-                                        idX2.toString(),
+                                        "cx2id",
                                         "Le x du point d'arrivée",
                                         true
                                     )
@@ -473,87 +547,16 @@ class MapCommand : Command(
                                 ActionRow.of(
                                     TextInput.create(
                                         TextInputStyle.SHORT,
-                                        idY2.toString(),
+                                        "cy2id",
                                         "Le y du point d'arrivée",
                                         true
                                     )
                                 )
                             )
 
-                        modalManager.add(id) { messageComponentCreateEvent: ModalSubmitEvent ->
-
-                            // get optionals text inputs from modal interaction
-                            val modalInteraction = messageComponentCreateEvent.modalInteraction
-                            val opX1 = modalInteraction.getTextInputValueByCustomId(idX1.toString())
-                            val opY1 = modalInteraction.getTextInputValueByCustomId(idY1.toString())
-                            val opX2 = modalInteraction.getTextInputValueByCustomId(idX2.toString())
-                            val opY2 = modalInteraction.getTextInputValueByCustomId(idY2.toString())
-
-                            // transform optionals to strings
-                            val x1 = opX1.orElse("n")
-                            val y1 = opY1.orElse("n")
-                            val x2 = opX2.orElse("n")
-                            val y2 = opY2.orElse("n")
-
-                            // check if the strings are numbers
-                            val x1Int = try {
-                                x1.toInt()
-                            } catch (e: NumberFormatException) {
-                                throw IllegalArgumentException("Le x du point de départ n'est pas un nombre")
-                            }
-                            val y1Int = try {
-                                y1.toInt()
-                            } catch (e: NumberFormatException) {
-                                throw IllegalArgumentException("Le y du point de départ n'est pas un nombre")
-                            }
-                            val x2Int = try {
-                                x2.toInt()
-                            } catch (e: NumberFormatException) {
-                                throw IllegalArgumentException("Le x du point d'arrivée n'est pas un nombre")
-                            }
-                            val y2Int = try {
-                                y2.toInt()
-                            } catch (e: NumberFormatException) {
-                                throw IllegalArgumentException("Le y du point d'arrivée n'est pas un nombre")
-                            }
-
-                            val player = getAccount(slashCommand)
-                            val world = player.world
-
-                            // check if the arguments are in the right range
-                            if (x1Int < 0 || x1Int > world.mapWidth) {
-                                throw IllegalArgumentException("The first argument must be between 0 and " + world.mapWidth)
-                            }
-                            if (y1Int < 0 || y1Int > world.mapHeight) {
-                                throw IllegalArgumentException("The second argument must be between 0 and " + world.mapHeight)
-                            }
-                            if (x2Int < 0 || x2Int > world.mapWidth) {
-                                throw IllegalArgumentException("The third argument must be between 0 and " + world.mapWidth)
-                            }
-                            if (y2Int < 0 || y2Int > world.mapHeight) {
-                                throw IllegalArgumentException("The fourth argument must be between 0 and " + world.mapHeight)
-                            }
-
-                            // send a later responder
-                            modalInteraction.createImmediateResponder()
-                                .setContent("📍 Calcul en cours ...")
-                                .respond()
-
-                            // send the path
-                            val path = world.findPath(
-                                world.getNode(
-                                    x1Int, y1Int, ArrayList()
-                                ),
-                                world.getNode(
-                                    x2Int, y2Int, ArrayList()
-                                )
-                            )
-
-                            MessageBuilder()
-                                .addAttachment(world.drawPath(path), "path.png")
-                                .setContent("📍 Chemin trouvé : " + path.size + " étapes")
-                                .send(modalInteraction.channel.get())
-                        }
+                        c2.modal(
+                            M2(id)
+                        )
                     }
                     .addButton(
                         "Zoomer",
