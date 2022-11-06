@@ -384,15 +384,13 @@ class MapCommand : Command(
             val opY = modalInteraction.getTextInputValueByCustomId("cyid")
 
             // transform optionals to strings
-            val x = opX.orElse("n")
-            val y = opY.orElse("n")
-            val xInt = try {
-                x.toInt()
+            val x = try {
+                opX.orElse("n").toInt()
             } catch (e: NumberFormatException) {
                 throw IllegalArgumentException("Le x de la case n'est pas un nombre")
             }
-            val yInt = try {
-                y.toInt()
+            val y = try {
+                opY.orElse("n").toInt()
             } catch (e: NumberFormatException) {
                 throw IllegalArgumentException("Le y de la case n'est pas un nombre")
             }
@@ -400,14 +398,14 @@ class MapCommand : Command(
             val player = c.players.player.player
             val world = player.world
 
-            if (xInt < 0 || xInt > world.mapWidth) {
+            if (x < 0 || x > world.mapWidth) {
                 throw IllegalArgumentException("Le x de la case n'est pas dans la carte")
             }
-            if (yInt < 0 || yInt > world.mapHeight) {
+            if (y < 0 || y > world.mapHeight) {
                 throw IllegalArgumentException("Le y de la case n'est pas dans la carte")
             }
 
-            val biome = if (world.isDirt(xInt, yInt)) {
+            val biome = if (world.isDirt(x, y)) {
                 "la terre"
             } else {
                 "l'eau"
@@ -416,7 +414,7 @@ class MapCommand : Command(
             modalInteraction.createImmediateResponder()
                 .addEmbed(
                     EmbedBuilder()
-                        .setTitle("Type de case de [$xInt:$yInt]")
+                        .setTitle("Type de case de [$x:$y]")
                         .setDescription("🌱 La case est de $biome")
                         .setColor(Color.BLUE)
                 )
