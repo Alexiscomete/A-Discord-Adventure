@@ -308,6 +308,120 @@ class MapCommand : Command(
                 .setContent("📍 Chemin trouvé : " + path.size + " étapes")
                 .send(modalInteraction.channel.get())
         }
+    }
+
+    class M4(name: String): ModalContextManager(name) {
+        override fun ex(smce: ModalSubmitEvent, c: Context) {
+            val modalInteraction = smce.modalInteraction
+            val opX = modalInteraction.getTextInputValueByCustomId("cxid")
+            val opY = modalInteraction.getTextInputValueByCustomId("cyid")
+            val opZoom = modalInteraction.getTextInputValueByCustomId("czoomid")
+
+            // transform optionals to strings
+            val x = opX.orElse("n")
+            val y = opY.orElse("n")
+            val zoomStr = opZoom.orElse("n")
+
+            // check if the arguments are numbers
+            val xInt = try {
+                x.toInt()
+            } catch (e: NumberFormatException) {
+                throw IllegalArgumentException("Le x de la case n'est pas un nombre")
+            }
+            val yInt = try {
+                y.toInt()
+            } catch (e: NumberFormatException) {
+                throw IllegalArgumentException("Le y de la case n'est pas un nombre")
+            }
+            val zoomInt = try {
+                zoomStr.toInt()
+            } catch (e: NumberFormatException) {
+                throw IllegalArgumentException("Le zoom n'est pas un nombre")
+            }
+
+            val player = c.players.player.player
+            val world = player.world
+
+            // check if the arguments are in the right range
+            if (xInt < 0 || xInt > world.mapWidth) {
+                throw IllegalArgumentException("Le x de la case n'est pas dans la carte")
+            }
+            if (yInt < 0 || yInt > world.mapHeight) {
+                throw IllegalArgumentException("Le y de la case n'est pas dans la carte")
+            }
+
+            // check if zoom is < 60 and > 0
+            if (zoomInt < 1 || zoomInt > 60) {
+                throw IllegalArgumentException("Le zoom doit être compris entre 1 et 60 (et rester dans la carte !)")
+            }
+
+            // send the zoom on the map
+            val later = modalInteraction.respondLater()
+
+            val image = world.zoomWithCity(xInt, yInt, zoomInt)
+
+            later.thenAccept {
+                it.addEmbed(
+                    EmbedBuilder()
+                        .setTitle("Zoom sur la carte")
+                        .setImage(image)
+                )
+                    .update()
+            }
+        }
+    }
+
+    class M5(name: String): ModalContextManager(name) {
+        override fun ex(smce: ModalSubmitEvent, c: Context) {
+            val opInt = smce.interaction.asModalInteraction()
+            if (!opInt.isPresent) {
+                throw IllegalStateException("Interaction is not a modal interaction")
+            }
+
+            // get optionals text inputs from modal interaction
+            val modalInteraction = opInt.get()
+            val opX = modalInteraction.getTextInputValueByCustomId("cxid")
+            val opY = modalInteraction.getTextInputValueByCustomId("cyid")
+
+            // transform optionals to strings
+            val x = opX.orElse("n")
+            val y = opY.orElse("n")
+            val xInt = try {
+                x.toInt()
+            } catch (e: NumberFormatException) {
+                throw IllegalArgumentException("Le x de la case n'est pas un nombre")
+            }
+            val yInt = try {
+                y.toInt()
+            } catch (e: NumberFormatException) {
+                throw IllegalArgumentException("Le y de la case n'est pas un nombre")
+            }
+
+            val player = c.players.player.player
+            val world = player.world
+
+            if (xInt < 0 || xInt > world.mapWidth) {
+                throw IllegalArgumentException("Le x de la case n'est pas dans la carte")
+            }
+            if (yInt < 0 || yInt > world.mapHeight) {
+                throw IllegalArgumentException("Le y de la case n'est pas dans la carte")
+            }
+
+            val biome = if (world.isDirt(xInt, yInt)) {
+                "la terre"
+            } else {
+                "l'eau"
+            }
+
+            modalInteraction.createImmediateResponder()
+                .addEmbed(
+                    EmbedBuilder()
+                        .setTitle("Type de case de [$xInt:$yInt]")
+                        .setDescription("🌱 La case est de $biome")
+                        .setColor(Color.BLUE)
+                )
+                .respond()
+        }
 
     }
 
@@ -561,20 +675,17 @@ class MapCommand : Command(
                     .addButton(
                         "Zoomer",
                         "Zoomer sur une carte"
-                    ) { zoom: ButtonClickEvent, c2, b2 ->
-                        val id = generateUniqueID()
-                        val idX = generateUniqueID()
-                        val idY = generateUniqueID()
-                        val idZoom = generateUniqueID()
+                    ) { zoom: ButtonClickEvent, c2, _ ->
+                        val id = generateUniqueID().toString()
 
                         zoom.buttonInteraction
                             .respondWithModal(
-                                id.toString(),
+                                id,
                                 "Informations pour zoomer sur la carte",
                                 ActionRow.of(
                                     TextInput.create(
                                         TextInputStyle.SHORT,
-                                        idX.toString(),
+                                        "cxid",
                                         "Le x de la case",
                                         true
                                     )
@@ -582,7 +693,7 @@ class MapCommand : Command(
                                 ActionRow.of(
                                     TextInput.create(
                                         TextInputStyle.SHORT,
-                                        idY.toString(),
+                                        "cyid",
                                         "Le y de la case",
                                         true
                                     )
@@ -590,82 +701,27 @@ class MapCommand : Command(
                                 ActionRow.of(
                                     TextInput.create(
                                         TextInputStyle.SHORT,
-                                        idZoom.toString(),
+                                        "czoomid",
                                         "Zoom (1-60) = hauteur/2",
                                         true
                                     )
                                 )
                             )
 
-                        modalManager.add(id) { messageComponentCreateEvent: ModalSubmitEvent ->
-                            val modalInteraction = messageComponentCreateEvent.modalInteraction
-                            val opX = modalInteraction.getTextInputValueByCustomId(idX.toString())
-                            val opY = modalInteraction.getTextInputValueByCustomId(idY.toString())
-                            val opZoom = modalInteraction.getTextInputValueByCustomId(idZoom.toString())
-
-                            // transform optionals to strings
-                            val x = opX.orElse("n")
-                            val y = opY.orElse("n")
-                            val zoomStr = opZoom.orElse("n")
-
-                            // check if the arguments are numbers
-                            val xInt = try {
-                                x.toInt()
-                            } catch (e: NumberFormatException) {
-                                throw IllegalArgumentException("Le x de la case n'est pas un nombre")
-                            }
-                            val yInt = try {
-                                y.toInt()
-                            } catch (e: NumberFormatException) {
-                                throw IllegalArgumentException("Le y de la case n'est pas un nombre")
-                            }
-                            val zoomInt = try {
-                                zoomStr.toInt()
-                            } catch (e: NumberFormatException) {
-                                throw IllegalArgumentException("Le zoom n'est pas un nombre")
-                            }
-
-                            val player = getAccount(slashCommand)
-                            val world = player.world
-
-                            // check if the arguments are in the right range
-                            if (xInt < 0 || xInt > world.mapWidth) {
-                                throw IllegalArgumentException("Le x de la case n'est pas dans la carte")
-                            }
-                            if (yInt < 0 || yInt > world.mapHeight) {
-                                throw IllegalArgumentException("Le y de la case n'est pas dans la carte")
-                            }
-
-                            // check if zoom is < 60 and > 0
-                            if (zoomInt < 1 || zoomInt > 60) {
-                                throw IllegalArgumentException("Le zoom doit être compris entre 1 et 60 (et rester dans la carte !)")
-                            }
-
-                            // send the zoom on the map
-                            val later = modalInteraction.respondLater()
-
-                            val image = world.zoomWithCity(xInt, yInt, zoomInt)
-
-                            later.thenAccept {
-                                it.addEmbed(
-                                    EmbedBuilder()
-                                        .setTitle("Zoom sur la carte")
-                                        .setImage(image)
-                                )
-                                    .update()
-                            }
-                        }
+                        c2.modal(
+                            M4(id)
+                        )
                     }
                     .addButton(
                         "Type de case",
                         "Le biome d'une case et les informations"
-                    ) { mcce: ButtonClickEvent, c2, b2 ->
-                        val id = generateUniqueID()
+                    ) { mcce: ButtonClickEvent, c2, _ ->
+                        val id = generateUniqueID().toString()
                         val idX = generateUniqueID()
                         val idY = generateUniqueID()
                         mcce.buttonInteraction
                             .respondWithModal(
-                                id.toString(), "Type de case",
+                                id, "Type de case",
                                 ActionRow.of(
                                     TextInput.create(
                                         TextInputStyle.SHORT,
@@ -684,56 +740,9 @@ class MapCommand : Command(
                                 )
                             )
 
-                        modalManager.add(id) { messageComponentCreateEvent: ModalSubmitEvent ->
-                            val opInt = messageComponentCreateEvent.interaction.asModalInteraction()
-                            if (!opInt.isPresent) {
-                                throw IllegalStateException("Interaction is not a modal interaction")
-                            }
-
-                            // get optionals text inputs from modal interaction
-                            val modalInteraction = opInt.get()
-                            val opX = modalInteraction.getTextInputValueByCustomId(idX.toString())
-                            val opY = modalInteraction.getTextInputValueByCustomId(idY.toString())
-
-                            // transform optionals to strings
-                            val x = opX.orElse("n")
-                            val y = opY.orElse("n")
-                            val xInt = try {
-                                x.toInt()
-                            } catch (e: NumberFormatException) {
-                                throw IllegalArgumentException("Le x de la case n'est pas un nombre")
-                            }
-                            val yInt = try {
-                                y.toInt()
-                            } catch (e: NumberFormatException) {
-                                throw IllegalArgumentException("Le y de la case n'est pas un nombre")
-                            }
-
-                            val player = getAccount(slashCommand)
-                            val world = player.world
-
-                            if (xInt < 0 || xInt > world.mapWidth) {
-                                throw IllegalArgumentException("Le x de la case n'est pas dans la carte")
-                            }
-                            if (yInt < 0 || yInt > world.mapHeight) {
-                                throw IllegalArgumentException("Le y de la case n'est pas dans la carte")
-                            }
-
-                            val biome = if (world.isDirt(xInt, yInt)) {
-                                "la terre"
-                            } else {
-                                "l'eau"
-                            }
-
-                            modalInteraction.createImmediateResponder()
-                                .addEmbed(
-                                    EmbedBuilder()
-                                        .setTitle("Type de case de [$xInt:$yInt]")
-                                        .setDescription("🌱 La case est de $biome")
-                                        .setColor(Color.BLUE)
-                                )
-                                .respond()
-                        }
+                        c2.modal(
+                            M5(id)
+                        )
                     }
                     .modif(messageComponentCreateEvent)
             }
