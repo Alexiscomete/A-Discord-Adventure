@@ -224,58 +224,20 @@ class ConfigCommand : Command(
         }
     }
 
-    class M4(name: String, val place: Place) : ModalContextManager(name) {
+    class ModalModif(name: String, val place: Place, private val col: String) : ModalContextManager(name) {
         override fun ex(smce: ModalSubmitEvent, c: Context) {
-            val opName =
-                smce.modalInteraction.getTextInputValueByCustomId("cnameid")
+            val op = smce.modalInteraction.getTextInputValueByCustomId("c${col}id")
 
-            if (!opName.isPresent) {
-                throw IllegalArgumentException("Le nom n'a pas été rempli")
+            if (!op.isPresent) {
+                throw IllegalArgumentException("Le champ n'a pas été rempli")
             }
 
-            place["nameRP"] = opName.get()
+            place[col] = op.get()
 
             smce.modalInteraction.createImmediateResponder()
-                .setContent("Le nom RP de la ville a été modifié avec succès !")
+                .setContent("Modifié avec succès !")
                 .respond()
         }
-
-    }
-
-    class M5(name: String, val place: Place) : ModalContextManager(name) {
-        override fun ex(smce: ModalSubmitEvent, c: Context) {
-            val opDescription =
-                smce.modalInteraction.getTextInputValueByCustomId("cdescid")
-
-            if (!opDescription.isPresent) {
-                throw IllegalArgumentException("La description n'a pas été remplie")
-            }
-
-            place["description"] = opDescription.get()
-
-            smce.modalInteraction.createImmediateResponder()
-                .setContent("La description de la ville a été modifiée avec succès !")
-                .respond()
-        }
-
-    }
-
-    class M6(name: String, val place: Place) : ModalContextManager(name) {
-        override fun ex(smce: ModalSubmitEvent, c: Context) {
-            val opWelcome =
-                smce.modalInteraction.getTextInputValueByCustomId("cwelcomeid")
-
-            if (!opWelcome.isPresent) {
-                throw IllegalArgumentException("Le message de bienvenue n'a pas été rempli")
-            }
-
-            place["welcome"] = opWelcome.get()
-
-            smce.modalInteraction.createImmediateResponder()
-                .setContent("Le message de bienvenue a été modifié avec succès !")
-                .respond()
-        }
-
     }
 
     override fun execute(slashCommand: SlashCommandInteraction) {
@@ -569,9 +531,10 @@ class ConfigCommand : Command(
                                         val id = generateUniqueID()
 
                                         c3.modal(
-                                            M4(
+                                            ModalModif(
                                                 id.toString(),
-                                                place
+                                                place,
+                                                "nameRP"
                                             )
                                         )
 
@@ -581,7 +544,7 @@ class ConfigCommand : Command(
                                             ActionRow.of(
                                                 TextInput.create(
                                                     TextInputStyle.SHORT,
-                                                    "cnameid",
+                                                    "cnameRPid",
                                                     "Nom de la ville",
                                                     true
                                                 )
@@ -595,9 +558,10 @@ class ConfigCommand : Command(
                                         val id = generateUniqueID()
 
                                         c3.modal(
-                                            M5(
+                                            ModalModif(
                                                 id.toString(),
-                                                place
+                                                place,
+                                                "description"
                                             )
                                         )
 
@@ -607,7 +571,7 @@ class ConfigCommand : Command(
                                             ActionRow.of(
                                                 TextInput.create(
                                                     TextInputStyle.PARAGRAPH,
-                                                    "cdescid",
+                                                    "cdescriptionid",
                                                     "Description de la ville",
                                                     true
                                                 )
@@ -621,9 +585,10 @@ class ConfigCommand : Command(
                                         val id = generateUniqueID()
 
                                         c3.modal(
-                                            M6(
+                                            ModalModif(
                                                 id.toString(),
-                                                place
+                                                place,
+                                                "welcome"
                                             )
                                         )
 
