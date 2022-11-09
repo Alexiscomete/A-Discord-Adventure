@@ -12,6 +12,10 @@ data class Players(val player: PlayerWithAccount, val otherPlayers: List<PlayerW
 val contexts = mutableMapOf<Players, Context>()
 
 fun contextForOrNull(player: PlayerWithAccount, otherPlayers: List<PlayerWithAccount>): Context? {
+    // print all contexts
+    for (context in contexts) {
+        println(context)
+    }
     return contexts[Players(player, otherPlayers)]
 }
 
@@ -21,6 +25,7 @@ fun contextFor(player: PlayerWithAccount, otherPlayers: List<PlayerWithAccount> 
             val players = Players(player, otherPlayers)
             Context(players)
                 .also {
+                    println("New context for $players")
                     contexts[players] = it
                 }
         }
@@ -57,6 +62,7 @@ class Context(val players: Players, canParallel: Boolean = false) : ContextManag
     private var messages: MessagesContextManager? = null
 
     fun buttons(buttons: ButtonsContextManager, canParallel:Boolean=false): Context {
+        println("Buttons: $buttons")
         if (!canParallel) {
             clear()
         }

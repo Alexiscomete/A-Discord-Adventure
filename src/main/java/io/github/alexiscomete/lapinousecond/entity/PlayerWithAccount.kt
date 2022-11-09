@@ -12,4 +12,19 @@ class PlayerWithAccount(val user: User) {
     operator fun set(key: String, value: String) {
         player[key] = value
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as PlayerWithAccount
+
+        return (user.id == other.user.id)
+    }
+
+    override fun hashCode(): Int {
+        var result = user.hashCode()
+        result = 31 * result + player.hashCode()
+        return result
+    }
 }

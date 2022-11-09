@@ -35,6 +35,7 @@ class MenuBuilder(name: String, description: String, color: Color, val context: 
 
         arrayListOfButton.add(Button.success(id.toString(), name))
         manager.hash[id.toString()] = whenUsed
+        context.buttons(manager)
         return this
     }
 
