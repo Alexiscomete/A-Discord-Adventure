@@ -8,4 +8,12 @@ class ButtonsContextManager(var hash: HashMap<String, (ButtonClickEvent, Context
     override fun canApply(string: String): Boolean {
         return hash.containsKey(string)
     }
+
+    override fun toString(): String {
+        var string = "ButtonsContextManager{"
+        for (key in hash.keys) {
+            string += "$key, "
+        }
+        return string.substring(0, string.length - 2) + "}"
+    }
 }

@@ -10,4 +10,8 @@ abstract class SelectMenuContextManager(val name: String) : ContextManager {
     }
 
     abstract fun ex(smce: SelectMenuChooseEvent, c: Context)
+
+    override fun toString(): String {
+        return "SelectMenuContextManager{$name}"
+    }
 }

@@ -10,4 +10,8 @@ abstract class ModalContextManager(val name: String) : ContextManager {
     }
 
     abstract fun ex(smce: ModalSubmitEvent, c: Context)
+
+    override fun toString(): String {
+        return "ModalContextManager{$name}"
+    }
 }

@@ -96,7 +96,7 @@ class Context(val players: Players, canParallel: Boolean = false) : ContextManag
         return this
     }
 
-    fun clear() {
+    private fun clear() {
         buttons = null
         selectMenu = null
         multiContext = null
@@ -133,22 +133,6 @@ class Context(val players: Players, canParallel: Boolean = false) : ContextManag
         return false
     }
 
-    fun apply(string: String, event: SelectMenuChooseEvent) {
-        if (multiContext != null) {
-            if (multiContext!!.canApply(string)) {
-                multiContext!!.apply(string, event)
-                return
-            }
-        }
-        if (selectMenu != null) {
-            if (selectMenu!!.canApply(string)) {
-                selectMenu!!.ex(event, this)
-                return
-            }
-        }
-        throw IllegalStateException("Cannot apply $string")
-    }
-
     fun apply(string: String, event: ButtonClickEvent) {
         if (multiContext != null) {
             if (multiContext!!.canApply(string)) {
@@ -166,7 +150,23 @@ class Context(val players: Players, canParallel: Boolean = false) : ContextManag
                 return
             }
         }
-        throw IllegalStateException("Cannot apply $string")
+        throw IllegalStateException("Cannot apply $string. ${if (buttons != null) buttons.toString() else "No buttons"}, ${if (multiContext != null) multiContext.toString() else "No multiContext"}")
+    }
+
+    fun apply(string: String, event: SelectMenuChooseEvent) {
+        if (multiContext != null) {
+            if (multiContext!!.canApply(string)) {
+                multiContext!!.apply(string, event)
+                return
+            }
+        }
+        if (selectMenu != null) {
+            if (selectMenu!!.canApply(string)) {
+                selectMenu!!.ex(event, this)
+                return
+            }
+        }
+        throw IllegalStateException("Cannot apply $string. ${if (selectMenu != null) selectMenu.toString() else "No selectMenu"}, ${if (multiContext != null) multiContext.toString() else "No multiContext"}")
     }
 
     fun apply(customId: String, p0: ModalSubmitEvent) {
@@ -182,7 +182,7 @@ class Context(val players: Players, canParallel: Boolean = false) : ContextManag
                 return
             }
         }
-        throw IllegalStateException("Cannot apply $customId")
+        throw IllegalStateException("Cannot apply $customId. ${if (modal != null) modal.toString() else "No modal"}, ${if (multiContext != null) multiContext.toString() else "No multiContext"}")
     }
 
     fun apply(string: String, event: MessageCreateEvent) {
@@ -198,6 +198,10 @@ class Context(val players: Players, canParallel: Boolean = false) : ContextManag
                 return
             }
         }
-        throw IllegalStateException("Cannot apply $string")
+        throw IllegalStateException("Cannot apply $string. ${if (messages != null) messages.toString() else "No messages"}, ${if (multiContext != null) multiContext.toString() else "No multiContext"}")
+    }
+
+    override fun toString(): String {
+        return "Context(players=$players, buttons=$buttons, selectMenu=$selectMenu, multiContext=$multiContext, modal=$modal, messages=$messages)"
     }
 }

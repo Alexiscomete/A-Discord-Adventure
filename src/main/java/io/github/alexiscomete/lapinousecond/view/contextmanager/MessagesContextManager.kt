@@ -10,4 +10,8 @@ abstract class MessagesContextManager(private val textChannel: TextChannel): Con
     }
 
     abstract fun ex(s: MessageCreateEvent, c: Context)
+
+    override fun toString(): String {
+        return "MessagesContextManager{${textChannel.idAsString}}"
+    }
 }
