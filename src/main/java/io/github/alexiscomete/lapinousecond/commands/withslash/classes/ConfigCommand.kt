@@ -627,58 +627,6 @@ class ConfigCommand : Command(
         }
     }
 
-    //TODO : optimiser les classes qui servent à rien
-    class M7(name: String, private val server: ServerBot) : ModalContextManager(name) {
-        override fun ex(smce: ModalSubmitEvent, c: Context) {
-            val opName = smce.modalInteraction.getTextInputValueByCustomId("cnameid")
-
-            if (!opName.isPresent) {
-                throw IllegalArgumentException("Le nom n'a pas été rempli")
-            }
-
-            getUniquePlace(server)["name"] = opName.get()
-
-            smce.modalInteraction.createImmediateResponder()
-                .setContent("Le nom RP de la ville a été modifié avec succès !")
-                .respond()
-        }
-
-    }
-
-    class M8(name: String, private val server: ServerBot) : ModalContextManager(name) {
-        override fun ex(smce: ModalSubmitEvent, c: Context) {
-            val opDescription = smce.modalInteraction.getTextInputValueByCustomId("cdescid")
-
-            if (!opDescription.isPresent) {
-                throw IllegalArgumentException("La description n'a pas été remplie")
-            }
-
-            getUniquePlace(server)["description"] = opDescription.get()
-
-            smce.modalInteraction.createImmediateResponder()
-                .setContent("La description de la ville a été modifiée avec succès !")
-                .respond()
-        }
-
-    }
-
-    class M9(name: String, private val server: ServerBot) : ModalContextManager(name) {
-        override fun ex(smce: ModalSubmitEvent, c: Context) {
-            val opWelcome = smce.modalInteraction.getTextInputValueByCustomId("cwelcomeid")
-
-            if (!opWelcome.isPresent) {
-                throw IllegalArgumentException("Le message de bienvenue n'a pas été rempli")
-            }
-
-            getUniquePlace(server)["welcome"] = opWelcome.get()
-
-            smce.modalInteraction.createImmediateResponder()
-                .setContent("Le message de bienvenue a été modifié avec succès !")
-                .respond()
-        }
-
-    }
-
     private fun modifServer(
         server: ServerBot,
         context: Context,
@@ -707,9 +655,10 @@ class ConfigCommand : Command(
                 val id = generateUniqueID()
 
                 c1.modal(
-                    M7(
+                    ModalModif(
                         id.toString(),
-                        server
+                        getUniquePlace(server),
+                        "nameRP"
                     )
                 )
 
@@ -717,7 +666,7 @@ class ConfigCommand : Command(
                     id.toString(),
                     "Mise à jour du nom RP de la ville",
                     ActionRow.of(
-                        TextInput.create(TextInputStyle.SHORT, "cnameid", "Nom de la ville", true)
+                        TextInput.create(TextInputStyle.SHORT, "cnameRPid", "Nom de la ville", true)
                     )
                 )
             }
@@ -726,12 +675,12 @@ class ConfigCommand : Command(
                 "Modifiable à tout moment, la description de votre ville est la deuxième chose que voix une personne quand il regarde le lieu."
             ) { description, c1, _ ->
                 val id = generateUniqueID()
-                val idDescription = generateUniqueID()
 
                 c1.modal(
-                    M8(
+                    ModalModif(
                         id.toString(),
-                        server
+                        getUniquePlace(server),
+                        "description"
                     )
                 )
 
@@ -741,7 +690,7 @@ class ConfigCommand : Command(
                     ActionRow.of(
                         TextInput.create(
                             TextInputStyle.PARAGRAPH,
-                            idDescription.toString(),
+                            "cdescriptionid",
                             "Description de la ville",
                             true
                         )
@@ -753,12 +702,12 @@ class ConfigCommand : Command(
                 "Modifiable à tout moment, le message de bienvenue est nécessaire pour mettre l'ambiance : ville magique ? Tech ? Abandonné ? Repaire de Pirates ?"
             ) { welcome, c1, _ ->
                 val id = generateUniqueID()
-                val idWelcome = generateUniqueID()
 
                 c1.modal(
-                    M9(
+                    ModalModif(
                         id.toString(),
-                        server
+                        getUniquePlace(server),
+                        "welcome"
                     )
                 )
 
@@ -766,7 +715,12 @@ class ConfigCommand : Command(
                     id.toString(),
                     "Mise à jour du message de bienvenue",
                     ActionRow.of(
-                        TextInput.create(TextInputStyle.PARAGRAPH, idWelcome.toString(), "Message de bienvenue", true)
+                        TextInput.create(
+                            TextInputStyle.PARAGRAPH,
+                            "cwelcomeid",
+                            "Message de bienvenue",
+                            true
+                        )
                     )
                 )
             }
