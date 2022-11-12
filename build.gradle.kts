@@ -11,6 +11,13 @@ plugins {
 repositories {
     mavenLocal()
     mavenCentral()
+    maven{
+        url = uri("https://maven.pkg.github.com/Alexiscomete/procedural_generation")
+        credentials {
+            username = project.findProperty("gpr.user") as String? ?: System.getenv("USERNAME")
+            password = project.findProperty("gpr.key") as String? ?: System.getenv("TOKEN")
+        }
+    }
 }
 
 dependencies {
@@ -18,6 +25,7 @@ dependencies {
     implementation("org.xerial:sqlite-jdbc:3.36.0.3")
     implementation("org.json:json:20220320")
     implementation("org.jetbrains.kotlin:kotlin-stdlib:1.7.0")
+    implementation("procedural_generation:lib:1.0-SNAPSHOT")
 }
 
 application {
