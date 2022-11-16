@@ -24,7 +24,7 @@ dependencies {
     implementation("org.xerial:sqlite-jdbc:3.36.0.3")
     implementation("org.json:json:20220320")
     implementation("org.jetbrains.kotlin:kotlin-stdlib:1.7.0")
-    implementation("com.github.Alexiscomete:procedural_generation:Tagtest6")
+    implementation("com.github.Alexiscomete:procedural_generation:Tagtest8")
 }
 
 application {
