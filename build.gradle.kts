@@ -24,7 +24,7 @@ dependencies {
     implementation("org.xerial:sqlite-jdbc:3.36.0.3")
     implementation("org.json:json:20220320")
     implementation("org.jetbrains.kotlin:kotlin-stdlib:1.7.0")
-    implementation("com.github.Alexiscomete:procedural_generation:Tagtest8")
+    implementation("com.github.Alexiscomete:procedural_generation:Tagtest9")
 }
 
 application {
@@ -34,7 +34,7 @@ application {
 group = "io.github.alexiscomete.lapinoudsecond"
 version = "1.0-SNAPSHOT"
 description = "A-Discord-Adventure"
-java.sourceCompatibility = JavaVersion.VERSION_11
+java.sourceCompatibility = JavaVersion.VERSION_17
 
 tasks.jar {
     manifest {
