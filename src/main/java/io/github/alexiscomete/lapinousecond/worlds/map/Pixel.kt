@@ -5,16 +5,13 @@ import java.awt.image.BufferedImage
 import java.util.*
 
 open class Pixel(val x: Int, val y: Int, xMax: Int, yMax: Int, image: BufferedImage) {
-    val xImage: Int
-    val yImage: Int
-    val color: Color
     val isDirt: Boolean
 
     init {
-        xImage = x * image.getWidth(null) / xMax
-        yImage = y * image.getHeight(null) / yMax
+        val xImage = x * image.getWidth(null) / xMax
+        val yImage = y * image.getHeight(null) / yMax
         // permet de récupérer la couleur du pixel sur l'image
-        color = Color(image.getRGB(xImage, yImage))
+        val color = Color(image.getRGB(xImage, yImage))
         // permet de savoir si le pixel est un sol ou non
         isDirt = color.blue <= (color.red.toFloat() + color.green.toFloat()).toInt() / 1.5
     }
