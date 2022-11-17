@@ -65,7 +65,6 @@ enum class WorldEnum(
     val desc: String,
     val defaultX: Int,
     val defaultY: Int,
-    mapPath: String,
     val mapWidth: Int,
     val mapHeight: Int,
 ) {
@@ -76,7 +75,6 @@ enum class WorldEnum(
         "Ce monde regroupe tous les serveurs discord qui ne sont pas sur le drapeau. (ex : Wiki, projet, etc.)",
         250,
         250,
-        "NORMAL.png",
         500,
         500,
     ),
@@ -87,7 +85,6 @@ enum class WorldEnum(
         "Le serveur discord a un territoire sur le drapeau du Dibistan ? Alors c'est le monde du drapeau !",
         449,
         75,
-        "DIBIMAP.png",
         528,
         272,
     ),
@@ -98,12 +95,11 @@ enum class WorldEnum(
         "Ce monde est réservé au tutoriel du jeu",
         50,
         25,
-        "TUTO.png",
         100,
         50,
     );
 
-    class ZoneToAdapt(var x: Int, var y: Int, var width: Int, var height: Int, val maxX: Int, val maxY: Int) {
+    class ZoneToAdapt(var x: Int, var y: Int, var width: Int, var height: Int, maxX: Int, maxY: Int) {
         init {
             if (x < 0) {
                 x = 0
@@ -136,15 +132,6 @@ enum class WorldEnum(
 
     val START_X = 1
     val START_Y = 1
-
-    private val mapFile: BufferedImage? = try {
-        ImageIO.read(
-            WorldEnum::class.java.classLoader.getResourceAsStream(mapPath)
-        )
-    } catch (e: IOException) {
-        e.printStackTrace()
-        null
-    }
 
     /**
      * It takes two integers, x and y, and returns a Pixel object
