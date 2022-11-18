@@ -3,12 +3,16 @@ package io.github.alexiscomete.lapinousecond.worlds
 import io.github.alexiscomete.lapinousecond.entity.Player
 import io.github.alexiscomete.lapinousecond.worlds.map.Node
 import io.github.alexiscomete.lapinousecond.worlds.map.PixelManager
+import procedural_generation.noise.ComplexNoiseBuilder
+import procedural_generation.noise.NoiseMapBuilder
+import procedural_generation.noise.nodes.*
 import java.awt.Color
 import java.awt.Font
 import java.awt.Image
 import java.awt.image.BufferedImage
 import kotlin.math.pow
 import kotlin.math.sqrt
+
 
 /**
  * Converts a given Image into a BufferedImage
@@ -40,6 +44,40 @@ fun bigger(image: BufferedImage, sizeMultiplier: Int): BufferedImage {
             image.width * sizeMultiplier, image.height * sizeMultiplier, BufferedImage.SCALE_SMOOTH
         )
     )
+}
+
+fun getMapWithNames(
+    places: ArrayList<Place>, zone: WorldEnum.ZoneToAdapt, image: BufferedImage
+) {
+    val g = image.createGraphics()
+    g.color = Color(0, 255, 0)
+    // set the text size
+    g.font = Font("Arial", Font.BOLD, image.width / 80)
+    val size = image.width / 80
+    for (place in places) {
+        if (place.getX().isPresent && place.getY().isPresent) {
+            // coos on image (x, y) after resizing (x and y are not the same as the image's coos)
+            val x = (place.getX().get() - zone.x) * image.width / zone.width
+            val y = (place.getY().get() - zone.y) * image.height / zone.height
+            // draw a point
+            g.fillOval(x, y, (size * 0.7).toInt(), (size * 0.7).toInt())
+            // draw the name
+            try {
+                g.drawString(place.getString("nameRP"), (x + 1.1 * size).toInt(), y)
+            } catch (ignored: Exception) {
+            }
+            // draw the x and y coordinates
+            try {
+                g.drawString(
+                    "(${place.getX().get()}, ${place.getY().get()})",
+                    (x + 1.1 * size).toInt(),
+                    (y + 1.1 * size).toInt()
+                )
+            } catch (ignored: Exception) {
+            }
+        }
+    }
+    g.dispose()
 }
 
 /**
@@ -76,7 +114,92 @@ enum class WorldEnum(
         250,
         500,
         500,
-        WorldProcedural()
+        WorldProcedural(
+            ComplexNoiseBuilder(
+                ValueOperationNodeBuilder(
+                    ValueOperationNodeBuilder(
+                        AddNodeBuilder(
+                            ChangeLocationNodeBuilder(
+                                ChangeSeedNodeBuilder(
+                                    Operation.ADD,
+                                    4,
+                                    NoiseMapBuilder(1.0)
+                                ),
+                                Operation.DIVIDE,
+                                Operation.DIVIDE,
+                                1000.0,
+                                1000.0
+                            ),
+                            ChangeLocationNodeBuilder(
+                                ChangeSeedNodeBuilder(
+                                    Operation.ADD,
+                                    3,
+                                    NoiseMapBuilder(1.0)
+                                ),
+                                Operation.DIVIDE,
+                                Operation.DIVIDE,
+                                100.0,
+                                100.0
+                            ),
+                            ChangeLocationNodeBuilder(
+                                ChangeSeedNodeBuilder(
+                                    Operation.ADD,
+                                    2,
+                                    NoiseMapBuilder(5.0)
+                                ),
+                                Operation.DIVIDE,
+                                Operation.DIVIDE,
+                                10.0,
+                                10.0
+                            ),
+                            NoiseMapBuilder(1.0),
+                            ChangeSeedNodeBuilder(
+                                Operation.ADD,
+                                1,
+                                NoiseMapBuilder(1.0)
+                            ),
+                            ChangeLocationNodeBuilder(
+                                ChangeSeedNodeBuilder(
+                                    Operation.ADD,
+                                    5,
+                                    NoiseMapBuilder(0.5)
+                                ),
+                                Operation.MULTIPLY,
+                                Operation.MULTIPLY,
+                                10.0,
+                                10.0
+                            ),
+                            ChangeLocationNodeBuilder(
+                                ChangeSeedNodeBuilder(
+                                    Operation.ADD,
+                                    6,
+                                    NoiseMapBuilder(0.5)
+                                ),
+                                Operation.MULTIPLY,
+                                Operation.MULTIPLY,
+                                100.0,
+                                100.0
+                            ),
+                            ChangeLocationNodeBuilder(
+                                ChangeSeedNodeBuilder(
+                                    Operation.ADD,
+                                    7,
+                                    NoiseMapBuilder(0.2)
+                                ),
+                                Operation.MULTIPLY,
+                                Operation.MULTIPLY,
+                                1000.0,
+                                1000.0
+                            )
+                        ),
+                        ValueOperation.POWER_SYMMETRICAL,
+                        2.0
+                    ),
+                    ValueOperation.REMOVE_POURCENT,
+                    0.4
+                )
+            ).build(60)
+        )
     ),
     DIBIMAP(
         "Serveur de territoire",
@@ -101,7 +224,7 @@ enum class WorldEnum(
         WorldImage("TUTO.png")
     );
 
-    class ZoneToAdapt(var x: Int, var y: Int, var width: Int, var height: Int, maxX: Int, maxY: Int) {
+    class ZoneToAdapt(var x: Int, var y: Int, var width: Int, var height: Int, val maxX: Int, val maxY: Int) {
         init {
             if (x < 0) {
                 x = 0
@@ -154,7 +277,7 @@ enum class WorldEnum(
      * @return A boolean value
      */
     fun isDirt(x: Int, y: Int): Boolean {
-        return getPixel(x, y).isDirt
+        return getPixel(x, y).isLanded
     }
 
     /**
@@ -167,19 +290,7 @@ enum class WorldEnum(
      * @return A subimage of the mapFile.
      */
     private fun zoom(xArg: Int, yArg: Int, widthArg: Int, heightArg: Int): BufferedImage {
-        return zoom(ZoneToAdapt(xArg, yArg, widthArg, heightArg, mapWidth, mapHeight), mapFile!!)
-    }
-
-    /**
-     * "Zoom in on the map at the given coordinates by the given amount."
-     *
-     * @param x The x coordinate of the top left corner of the image.
-     * @param y The y coordinate of the center of the image.
-     * @param zoom The zoom level.
-     * @return A BufferedImage
-     */
-    fun zoom(x: Int, y: Int, zoom: Int): BufferedImage {
-        return zoom(x - zoom * 2, y - zoom, zoom * 4, zoom * 2)
+        return zoom(ZoneToAdapt(xArg, yArg, widthArg, heightArg, mapWidth, mapHeight))
     }
 
     /**
@@ -191,8 +302,8 @@ enum class WorldEnum(
      * @param bi The image to zoom
      * @return A BufferedImage
      */
-    fun zoom(x: Int, y: Int, zoom: Int, bi: BufferedImage): BufferedImage {
-        return zoom(ZoneToAdapt(x - zoom * 2, y - zoom, zoom * 4, zoom * 2, mapWidth, mapHeight), bi)
+    fun zoom(x: Int, y: Int, zoom: Int): BufferedImage {
+        return zoom(ZoneToAdapt(x - zoom * 2, y - zoom, zoom * 4, zoom * 2, mapWidth, mapHeight))
     }
 
     /**
@@ -203,17 +314,8 @@ enum class WorldEnum(
      * @param bi the image to be zoomed
      * @return A BufferedImage
      */
-    private fun zoom(zone: ZoneToAdapt, bi: BufferedImage): BufferedImage {
-        val x = zone.x
-        val y = zone.y
-        val width = zone.width
-        val height = zone.height
-        return bi.getSubimage(
-            x * bi.getWidth(null) / mapWidth,
-            y * bi.getHeight(null) / mapHeight,
-            width * bi.getWidth(null) / mapWidth,
-            height * bi.getHeight(null) / mapHeight
-        )
+    private fun zoom(zone: ZoneToAdapt): BufferedImage {
+        return worldManager.zoom(zone)
     }
 
     /**
@@ -231,7 +333,7 @@ enum class WorldEnum(
             image.setRGB(player["place_${progName}_x"].toInt(), player["place_${progName}_y"].toInt(), Color.RED.rgb)
         }
 
-        image = zoom(x, y, zoom, image)
+        image = zoom(x, y, zoom)
         image = bigger(image, 10)
 
         val places = Place.getPlacesWithWorld(progName)
@@ -261,41 +363,6 @@ enum class WorldEnum(
         )
 
         return image
-    }
-
-    // return an image with the places' names on it
-    private fun getMapWithNames(
-        places: ArrayList<Place>, zone: ZoneToAdapt, image: BufferedImage
-    ) {
-        val g = image.createGraphics()
-        g.color = Color(0, 255, 0)
-        // set the text size
-        g.font = Font("Arial", Font.BOLD, image.width / 80)
-        val size = image.width / 80
-        for (place in places) {
-            if (place.getX().isPresent && place.getY().isPresent) {
-                // coos on image (x, y) after resizing (x and y are not the same as the image's coos)
-                val x = (place.getX().get() - zone.x) * image.width / zone.width
-                val y = (place.getY().get() - zone.y) * image.height / zone.height
-                // draw a point
-                g.fillOval(x, y, (size * 0.7).toInt(), (size * 0.7).toInt())
-                // draw the name
-                try {
-                    g.drawString(place.getString("nameRP"), (x + 1.1 * size).toInt(), y)
-                } catch (ignored: Exception) {
-                }
-                // draw the x and y coordinates
-                try {
-                    g.drawString(
-                        "(${place.getX().get()}, ${place.getY().get()})",
-                        (x + 1.1 * size).toInt(),
-                        (y + 1.1 * size).toInt()
-                    )
-                } catch (ignored: Exception) {
-                }
-            }
-        }
-        g.dispose()
     }
 
     // --------------------

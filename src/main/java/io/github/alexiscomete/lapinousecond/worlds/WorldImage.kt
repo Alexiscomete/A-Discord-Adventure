@@ -25,4 +25,17 @@ class WorldImage(mapPath: String) : WorldManager {
         // permet de savoir si le pixel est un sol ou non
         return color.blue <= (color.red.toFloat() + color.green.toFloat()).toInt() / 1.5
     }
+
+    override fun zoom(zoneToAdapt: WorldEnum.ZoneToAdapt): BufferedImage {
+        val x = zoneToAdapt.x
+        val y = zoneToAdapt.y
+        val width = zoneToAdapt.width
+        val height = zoneToAdapt.height
+        return mapFile!!.getSubimage(
+            x * mapFile.getWidth(null) / zoneToAdapt.maxX,
+            y * mapFile.getHeight(null) / zoneToAdapt.maxY,
+            width * mapFile.getWidth(null) / zoneToAdapt.maxX,
+            height * mapFile.getHeight(null) / zoneToAdapt.maxY
+        )
+    }
 }
