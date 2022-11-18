@@ -80,6 +80,19 @@ fun getMapWithNames(
     g.dispose()
 }
 
+fun strictZoom(zoneToAdapt: WorldEnum.ZoneToAdapt, image: BufferedImage): BufferedImage {
+    val x = zoneToAdapt.x
+    val y = zoneToAdapt.y
+    val width = zoneToAdapt.width
+    val height = zoneToAdapt.height
+    return image.getSubimage(
+        x * image.getWidth(null) / zoneToAdapt.maxX,
+        y * image.getHeight(null) / zoneToAdapt.maxY,
+        width * image.getWidth(null) / zoneToAdapt.maxX,
+        height * image.getHeight(null) / zoneToAdapt.maxY
+    )
+}
+
 /**
  * Clone a buffered image
  * Source : https://stackoverflow.com/questions/3514158/how-do-you-clone-a-bufferedimage
@@ -328,41 +341,7 @@ enum class WorldEnum(
      * @return A BufferedImage
      */
     fun zoomWithCity(x: Int, y: Int, zoom: Int, player: Player? = null): BufferedImage {
-        var image = cloneBufferedImage(mapFile!!)
-        if (player != null) {
-            image.setRGB(player["place_${progName}_x"].toInt(), player["place_${progName}_y"].toInt(), Color.RED.rgb)
-        }
-
-        image = zoom(x, y, zoom)
-        image = bigger(image, 10)
-
-        val places = Place.getPlacesWithWorld(progName)
-        println(places.size)
-
-        places.removeIf { place: Place ->
-            !place.getX().isPresent || !place.getY().isPresent
-                    || place.getX().get() < x - zoom * 2
-                    || place.getX().get() > x + zoom * 2
-                    || place.getY().get() < y - zoom
-                    || place.getY().get() > y + zoom
-        }
-
-        println(places.size)
-
-        getMapWithNames(
-            places,
-            ZoneToAdapt(
-                x - zoom * 2,
-                y - zoom,
-                zoom * 4,
-                zoom * 2,
-                mapWidth,
-                mapHeight
-            ),
-            image
-        )
-
-        return image
+        return worldManager.zoomWithCity(ZoneToAdapt(x - zoom * 2, y - zoom, zoom * 4, zoom * 2, mapWidth, mapHeight), progName, player)
     }
 
     // --------------------
@@ -472,7 +451,7 @@ enum class WorldEnum(
     }
 
     fun drawPath(path: ArrayList<PixelManager>): BufferedImage {
-        val img = cloneBufferedImage(mapFile!!)
+        val img = cloneBufferedImage()
         for (p in path) {
             img.setRGB(p.xImage, p.yImage, Color.RED.rgb)
         }

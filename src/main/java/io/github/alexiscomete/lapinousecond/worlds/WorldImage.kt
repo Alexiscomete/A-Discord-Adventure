@@ -1,5 +1,6 @@
 package io.github.alexiscomete.lapinousecond.worlds
 
+import io.github.alexiscomete.lapinousecond.entity.Player
 import java.awt.Color
 import java.awt.image.BufferedImage
 import java.io.IOException
@@ -37,5 +38,36 @@ class WorldImage(mapPath: String) : WorldManager {
             width * mapFile.getWidth(null) / zoneToAdapt.maxX,
             height * mapFile.getHeight(null) / zoneToAdapt.maxY
         )
+    }
+
+    override fun zoomWithCity(zoneToAdapt: WorldEnum.ZoneToAdapt, progName: String, player: Player?): BufferedImage {
+        var image = cloneBufferedImage(mapFile!!)
+        if (player != null) {
+            image.setRGB(player["place_${progName}_x"].toInt(), player["place_${progName}_y"].toInt(), Color.RED.rgb)
+        }
+
+        image = strictZoom(zoneToAdapt, image)
+        image = bigger(image, 10)
+
+        val places = Place.getPlacesWithWorld(progName)
+        println(places.size)
+
+        places.removeIf { place: Place ->
+            !place.getX().isPresent || !place.getY().isPresent
+                    || place.getX().get() < zoneToAdapt.x
+                    || place.getX().get() > zoneToAdapt.x + zoneToAdapt.width
+                    || place.getY().get() < zoneToAdapt.y
+                    || place.getY().get() > zoneToAdapt.y + zoneToAdapt.height
+        }
+
+        println(places.size)
+
+        getMapWithNames(
+            places,
+            zoneToAdapt,
+            image
+        )
+
+        return image
     }
 }
