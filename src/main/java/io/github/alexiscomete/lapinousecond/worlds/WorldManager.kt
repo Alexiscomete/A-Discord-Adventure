@@ -7,4 +7,5 @@ interface WorldManager {
     fun isLand(x: Int, y: Int): Boolean
     fun zoom(zoneToAdapt: WorldEnum.ZoneToAdapt): BufferedImage
     fun zoomWithCity(zoneToAdapt: WorldEnum.ZoneToAdapt, progName: String, player: Player? = null): BufferedImage
+    fun uniqueTotalImage(): BufferedImage
 }

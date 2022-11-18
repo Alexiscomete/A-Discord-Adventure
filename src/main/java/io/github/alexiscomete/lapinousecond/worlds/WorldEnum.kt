@@ -211,7 +211,9 @@ enum class WorldEnum(
                     ValueOperation.REMOVE_POURCENT,
                     0.4
                 )
-            ).build(60)
+            ).build(60),
+            500,
+            500
         )
     ),
     DIBIMAP(
@@ -341,7 +343,11 @@ enum class WorldEnum(
      * @return A BufferedImage
      */
     fun zoomWithCity(x: Int, y: Int, zoom: Int, player: Player? = null): BufferedImage {
-        return worldManager.zoomWithCity(ZoneToAdapt(x - zoom * 2, y - zoom, zoom * 4, zoom * 2, mapWidth, mapHeight), progName, player)
+        return worldManager.zoomWithCity(
+            ZoneToAdapt(x - zoom * 2, y - zoom, zoom * 4, zoom * 2, mapWidth, mapHeight),
+            progName,
+            player
+        )
     }
 
     // --------------------
@@ -451,7 +457,7 @@ enum class WorldEnum(
     }
 
     fun drawPath(path: ArrayList<PixelManager>): BufferedImage {
-        val img = cloneBufferedImage()
+        val img = worldManager.uniqueTotalImage()
         for (p in path) {
             img.setRGB(p.xImage, p.yImage, Color.RED.rgb)
         }

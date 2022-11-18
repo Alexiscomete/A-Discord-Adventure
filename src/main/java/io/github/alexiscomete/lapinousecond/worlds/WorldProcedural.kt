@@ -5,7 +5,7 @@ import procedural_generation.noise.ComplexNoise
 import java.awt.Color
 import java.awt.image.BufferedImage
 
-class WorldProcedural(private val complexNoise: ComplexNoise) : WorldManager {
+class WorldProcedural(private val complexNoise: ComplexNoise, private val maxX: Int, private val maxY: Int) : WorldManager {
     override fun isLand(x: Int, y: Int): Boolean {
         return complexNoise.getValue(x.toDouble(), y.toDouble()) > 0.5
     }
@@ -25,14 +25,7 @@ class WorldProcedural(private val complexNoise: ComplexNoise) : WorldManager {
 
     override fun zoomWithCity(zoneToAdapt: WorldEnum.ZoneToAdapt, progName: String, player: Player?): BufferedImage {
         // generate the image
-        var image = BufferedImage(zoneToAdapt.maxX, zoneToAdapt.maxY, BufferedImage.TYPE_INT_RGB)
-        // fill the image
-        for (x in 0 until zoneToAdapt.maxX) {
-            for (y in 0 until zoneToAdapt.maxY) {
-                val color = if (isLand(x, y)) 0 else 0xFFFFFF
-                image.setRGB(x, y, color)
-            }
-        }
+        var image = uniqueTotalImage()
         // add the player
         if (player != null) {
             image.setRGB(player["place_${progName}_x"].toInt(), player["place_${progName}_y"].toInt(), Color.RED.rgb)
@@ -59,6 +52,19 @@ class WorldProcedural(private val complexNoise: ComplexNoise) : WorldManager {
             image
         )
 
+        return image
+    }
+
+    override fun uniqueTotalImage(): BufferedImage {
+        // generate the image
+        val image = BufferedImage(maxX, maxY, BufferedImage.TYPE_INT_RGB)
+        // fill the image
+        for (x in 0 until maxX) {
+            for (y in 0 until maxY) {
+                val color = if (isLand(x, y)) 0 else 0xFFFFFF
+                image.setRGB(x, y, color)
+            }
+        }
         return image
     }
 }

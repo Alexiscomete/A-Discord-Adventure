@@ -70,4 +70,8 @@ class WorldImage(mapPath: String) : WorldManager {
 
         return image
     }
+
+    override fun uniqueTotalImage(): BufferedImage {
+        return cloneBufferedImage(mapFile!!)
+    }
 }
