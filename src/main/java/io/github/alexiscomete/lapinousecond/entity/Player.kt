@@ -12,7 +12,7 @@ import io.github.alexiscomete.lapinousecond.view.LangageEnum
 import io.github.alexiscomete.lapinousecond.view.answerManager
 import io.github.alexiscomete.lapinousecond.worlds.Place
 import io.github.alexiscomete.lapinousecond.worlds.WorldEnum
-import io.github.alexiscomete.lapinousecond.worlds.map.Pixel
+import io.github.alexiscomete.lapinousecond.worlds.map.PixelManager
 import io.github.alexiscomete.lapinousecond.worlds.places
 
 val PLAYERS = Table("players")
@@ -91,14 +91,14 @@ open class Player(id: Long) : CacheGetSet(id, PLAYERS), Owner {
         }
 
 
-    fun setPath(path: ArrayList<Pixel>, type: String) {
+    fun setPath(path: ArrayList<PixelManager>, type: String) {
         savePath(path)
         this["place_path_type"] = type
         this["place_path_start"] = System.currentTimeMillis().toString()
         this["place_DIBIMAP_type"] = "path"
     }
 
-    private fun getPath(): ArrayList<Pixel> {
+    private fun getPath(): ArrayList<PixelManager> {
         val currentPath = stringSaveToPath()
         if (currentPath.isEmpty()) {
             this["place_DIBIMAP_type"] = "unknown"
@@ -109,7 +109,7 @@ open class Player(id: Long) : CacheGetSet(id, PLAYERS), Owner {
         // le temps en ms pour 1 pixel est de 10000, il faut enlever tous les pixels déjà parcourus de la liste puis la sauvegarder
         val numberOfPixel = (currentTime - startTime) / 10000
         // les pixels à enlever sont au début de la liste, j'ai besoin que des pixels restants
-        val remainingPath = ArrayList<Pixel>()
+        val remainingPath = ArrayList<PixelManager>()
         for (i in numberOfPixel.toInt() until currentPath.size) {
             remainingPath.add(currentPath[i])
         }
@@ -118,7 +118,7 @@ open class Player(id: Long) : CacheGetSet(id, PLAYERS), Owner {
         return remainingPath
     }
 
-    private fun savePath(remainingPath: ArrayList<Pixel>) {
+    private fun savePath(remainingPath: ArrayList<PixelManager>) {
         val pathStr = StringBuilder()
         for (pixel in remainingPath) {
             pathStr.append(pixel.x)
@@ -129,9 +129,9 @@ open class Player(id: Long) : CacheGetSet(id, PLAYERS), Owner {
         this["place_path"] = pathStr.toString()
     }
 
-    private fun stringSaveToPath(): ArrayList<Pixel> {
+    private fun stringSaveToPath(): ArrayList<PixelManager> {
         val pathStr = getString("place_path")
-        val path = ArrayList<Pixel>()
+        val path = ArrayList<PixelManager>()
         if (pathStr != "") {
             val pathSplit = pathStr.split(";")
             for (i in pathSplit.indices) {

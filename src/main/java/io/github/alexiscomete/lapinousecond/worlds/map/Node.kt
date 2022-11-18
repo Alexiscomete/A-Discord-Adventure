@@ -1,9 +1,10 @@
 package io.github.alexiscomete.lapinousecond.worlds.map
 
+import io.github.alexiscomete.lapinousecond.worlds.WorldManager
 import java.awt.image.BufferedImage
 
-class Node(x: Int, y: Int, xMax: Int, yMax: Int, image: BufferedImage, var cost: Double, var heuristic: Double) :
-    Pixel(x, y, xMax, yMax, image) {
+class Node(x: Int, y: Int, worldManager: WorldManager, var cost: Double, var heuristic: Double) :
+    PixelManager(x, y, worldManager) {
     var parent: Node? = null
 
     operator fun compareTo(o: Any): Int {

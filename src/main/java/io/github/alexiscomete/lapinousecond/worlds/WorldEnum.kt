@@ -2,13 +2,11 @@ package io.github.alexiscomete.lapinousecond.worlds
 
 import io.github.alexiscomete.lapinousecond.entity.Player
 import io.github.alexiscomete.lapinousecond.worlds.map.Node
-import io.github.alexiscomete.lapinousecond.worlds.map.Pixel
+import io.github.alexiscomete.lapinousecond.worlds.map.PixelManager
 import java.awt.Color
 import java.awt.Font
 import java.awt.Image
 import java.awt.image.BufferedImage
-import java.io.IOException
-import javax.imageio.ImageIO
 import kotlin.math.pow
 import kotlin.math.sqrt
 
@@ -67,6 +65,7 @@ enum class WorldEnum(
     val defaultY: Int,
     val mapWidth: Int,
     val mapHeight: Int,
+    val worldManager: WorldManager
 ) {
     NORMAL(
         "Serveur normal",
@@ -77,6 +76,7 @@ enum class WorldEnum(
         250,
         500,
         500,
+        WorldProcedural()
     ),
     DIBIMAP(
         "Serveur de territoire",
@@ -87,6 +87,7 @@ enum class WorldEnum(
         75,
         528,
         272,
+        WorldImage("DIBIMAP.png")
     ),
     TUTO(
         "Serveur du tutoriel",
@@ -97,6 +98,7 @@ enum class WorldEnum(
         25,
         100,
         50,
+        WorldImage("TUTO.png")
     );
 
     class ZoneToAdapt(var x: Int, var y: Int, var width: Int, var height: Int, maxX: Int, maxY: Int) {
@@ -140,8 +142,8 @@ enum class WorldEnum(
      * @param y The y coordinate of the pixel you want to get.
      * @return A Pixel object
      */
-    fun getPixel(x: Int, y: Int): Pixel {
-        return Pixel(x, y, mapWidth, mapHeight, mapFile!!)
+    fun getPixel(x: Int, y: Int): PixelManager {
+        return PixelManager(x, y, worldManager)
     }
 
     /**
@@ -301,9 +303,9 @@ enum class WorldEnum(
     // --------------------
 
     // return the path from one pixel to another
-    fun findPath(start: Node, end: Node): ArrayList<Pixel> {
+    fun findPath(start: Node, end: Node): ArrayList<PixelManager> {
 
-        require(start.isDirt == end.isDirt) { "start and end must be on the same type of tile" }
+        require(start.isLanded == end.isLanded) { "start and end must be on the same type of tile" }
 
         val closedList = ArrayList<Node>()
         val openList = ArrayList<Node>()
@@ -318,7 +320,7 @@ enum class WorldEnum(
                 }
             }
             if (current == end) {
-                val path = ArrayList<Pixel>()
+                val path = ArrayList<PixelManager>()
                 while (current.parent != null) {
                     path.add(current)
                     current = current.parent!!
@@ -365,7 +367,7 @@ enum class WorldEnum(
         if (isInMap(pixel.x, pixel.y + 1)) nodes2.add(getNode(pixel.x, pixel.y + 1, nodes))
         if (isInMap(pixel.x + 1, pixel.y + 1)) nodes2.add(getNode(pixel.x + 1, pixel.y + 1, nodes))
         // pour chaque pixel on l'enlève si ce n'est pas du même type que le pixel courant
-        nodes2.removeIf { n: Node? -> n!!.isDirt != pixel.isDirt }
+        nodes2.removeIf { n: Node? -> n!!.isLanded != pixel.isLanded }
         return nodes2
     }
 
@@ -391,18 +393,18 @@ enum class WorldEnum(
      * @return The node that is being returned is the node that is being searched for.
      */
     fun getNode(x: Int, y: Int, nodes: ArrayList<Node>): Node {
-        val n = Node(x, y, mapWidth, mapHeight, mapFile!!, 0.0, 0.0)
+        val n = Node(x, y, worldManager, 0.0, 0.0)
         return if (nodes.contains(n)) {
             nodes[nodes.indexOf(n)]
         } else n
     }
 
     // distance between two pixels
-    private fun distance(a: Pixel, b: Pixel): Double {
+    private fun distance(a: PixelManager, b: PixelManager): Double {
         return sqrt((a.x - b.x).toDouble().pow(2.0) + (a.y - b.y).toDouble().pow(2.0))
     }
 
-    fun drawPath(path: ArrayList<Pixel>): BufferedImage {
+    fun drawPath(path: ArrayList<PixelManager>): BufferedImage {
         val img = cloneBufferedImage(mapFile!!)
         for (p in path) {
             img.setRGB(p.xImage, p.yImage, Color.RED.rgb)
