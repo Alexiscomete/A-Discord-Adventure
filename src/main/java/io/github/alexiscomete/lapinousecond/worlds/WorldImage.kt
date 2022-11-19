@@ -74,4 +74,12 @@ class WorldImage(mapPath: String) : WorldManager {
     override fun uniqueTotalImage(): BufferedImage {
         return cloneBufferedImage(mapFile!!)
     }
+
+    override fun xImage(x: Int): Int {
+        return x * mapFile!!.getWidth(null) / xMax
+    }
+
+    override fun yImage(y: Int): Int {
+        return y * mapFile!!.getHeight(null) / yMax
+    }
 }

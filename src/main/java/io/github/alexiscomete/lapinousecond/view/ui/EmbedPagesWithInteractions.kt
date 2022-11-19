@@ -46,7 +46,7 @@ class EmbedPagesWithInteractions<U>(
     private fun component(u: U, index: Int): Button {
         println("Component $index")
         //TODO
-        manager.hash[index.toString()] = { event, context, manager ->
+        manager.hash[index.toString()] = { event, context, _ ->
             whenSelected(u, event, context)
         }
         return Button.success(index.toString(), index.toString())

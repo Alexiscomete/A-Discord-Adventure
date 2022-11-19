@@ -29,7 +29,6 @@ fun getAccount(id: Long): Player {
 fun getAccount(user: User): PlayerWithAccount {
     try {
         return PlayerWithAccount(user)
-            ?: throw IllegalStateException("Vous devez avoir un compte pour utiliser cette commande. Utilisez /start")
     } catch (e: Exception) {
         throw IllegalStateException("Vous devez avoir un compte pour utiliser cette commande. Utilisez /start")
     }

@@ -67,4 +67,12 @@ class WorldProcedural(private val complexNoise: ComplexNoise, private val maxX: 
         }
         return image
     }
+
+    override fun xImage(x: Int): Int {
+        return x
+    }
+
+    override fun yImage(y: Int): Int {
+        return y
+    }
 }

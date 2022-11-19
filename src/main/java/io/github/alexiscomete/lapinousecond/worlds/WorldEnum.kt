@@ -459,7 +459,7 @@ enum class WorldEnum(
     fun drawPath(path: ArrayList<PixelManager>): BufferedImage {
         val img = worldManager.uniqueTotalImage()
         for (p in path) {
-            img.setRGB(p.xImage, p.yImage, Color.RED.rgb)
+            img.setRGB(worldManager.xImage(p.x), worldManager.yImage(p.y), Color.RED.rgb)
         }
         return img
     }

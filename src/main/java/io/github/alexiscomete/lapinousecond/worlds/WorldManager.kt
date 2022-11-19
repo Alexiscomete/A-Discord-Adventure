@@ -8,4 +8,6 @@ interface WorldManager {
     fun zoom(zoneToAdapt: WorldEnum.ZoneToAdapt): BufferedImage
     fun zoomWithCity(zoneToAdapt: WorldEnum.ZoneToAdapt, progName: String, player: Player? = null): BufferedImage
     fun uniqueTotalImage(): BufferedImage
+    fun xImage(x: Int): Int
+    fun yImage(y: Int): Int
 }

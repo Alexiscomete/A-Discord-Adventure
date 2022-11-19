@@ -85,7 +85,7 @@ class Building : CacheGetSet, BuildMethods, Owner {
 
     private fun inBuildCompleteInfos(player: Context): MenuBuilder {
         return MenuBuilder(title(), descriptionShort(), Color.DARK_GRAY, player)
-            .addButton("Donner de l'argent", "Permet de donner de l'argent à ce bâtiment") { it, c1, b1 ->
+            .addButton("Donner de l'argent", "Permet de donner de l'argent à ce bâtiment") { _, _, _ ->
                 TODO("todo")
             }
     }
