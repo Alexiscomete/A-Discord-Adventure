@@ -1,5 +1,6 @@
 package io.github.alexiscomete.lapinousecond.view.ui
 
+import io.github.alexiscomete.lapinousecond.entity.Player
 import java.awt.image.BufferedImage
 
 interface PlayerUI {
@@ -22,4 +23,5 @@ interface PlayerUI {
     fun getInteractions(): Map<String, InteractionUI>
     fun getMessages(): List<String>
     fun getDialogues(): List<Dialogue>
+    fun getPlayer(): Player
 }
