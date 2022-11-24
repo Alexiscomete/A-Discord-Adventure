@@ -7,5 +7,4 @@ interface InteractionUI {
     fun canBeExecutedWithoutArgument(): Boolean
     fun getId(): String
     fun setId(id: String): InteractionUI
-
 }
