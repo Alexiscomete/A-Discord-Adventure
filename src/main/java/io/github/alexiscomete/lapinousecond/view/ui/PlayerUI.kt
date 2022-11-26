@@ -5,6 +5,7 @@ import java.awt.image.BufferedImage
 
 interface PlayerUI {
     fun addMessage(message: String): PlayerUI
+    fun addMessage(title: String, content: String): PlayerUI
     fun addDialogue(dialogue: Dialogue): PlayerUI
     fun addInteraction(id: String, interaction: InteractionUI): PlayerUI
     fun respondToInteraction(id: String): PlayerUI
@@ -17,9 +18,11 @@ interface PlayerUI {
     fun hasInteraction(id: String): Boolean
     fun hasDialogue(): Boolean
     fun hasMessage(): Boolean
-    fun hasImage(): Boolean
+    fun hasBufferedImage(): Boolean
+    fun hasLinkedImage(): Boolean
     fun getInteraction(id: String): InteractionUI?
-    fun getImage(): BufferedImage?
+    fun getBufferedImage(): BufferedImage
+    fun getLinkedImage(): String
     fun getInteractions(): Map<String, InteractionUI>
     fun getMessages(): List<String>
     fun getDialogues(): List<Dialogue>
