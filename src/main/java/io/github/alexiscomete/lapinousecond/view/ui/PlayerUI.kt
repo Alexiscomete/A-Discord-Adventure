@@ -4,8 +4,7 @@ import io.github.alexiscomete.lapinousecond.entity.Player
 import java.awt.image.BufferedImage
 
 interface PlayerUI {
-    fun addMessage(message: String): PlayerUI
-    fun addMessage(title: String, content: String): PlayerUI
+    fun addMessage(message: Message): PlayerUI
     fun addDialogue(dialogue: Dialogue): PlayerUI
     fun addInteraction(id: String, interaction: InteractionUI): PlayerUI
     fun respondToInteraction(id: String): PlayerUI

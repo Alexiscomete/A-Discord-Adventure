@@ -7,4 +7,8 @@ interface InteractionUI {
     fun canBeExecutedWithoutArgument(): Boolean
     fun getId(): String
     fun setId(id: String): InteractionUI
+    fun getTitle(): String
+    fun setTitle(title: String): InteractionUI
+    fun getDescription(): String?
+    fun setDescription(description: String?): InteractionUI
 }

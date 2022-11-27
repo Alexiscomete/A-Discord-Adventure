@@ -40,38 +40,74 @@ class DiscordPlayerUI(private val player: Player, val interaction: Interaction) 
     private var linkedImage: String? = null
     private var bufferedImage: BufferedImage? = null
 
+    // messages
+    private val messages = mutableListOf<Message>()
 
-    override fun addMessage(message: String): PlayerUI {
-        TODO("Not yet implemented")
-    }
+    // dialogues
+    private val dialogues = mutableListOf<Dialogue>()
 
-    override fun addMessage(title: String, content: String): PlayerUI {
-        TODO("Not yet implemented")
+    // interactions
+    private val mainManager = mutableMapOf<String, InteractionManager>()
+    private val dialogueManager = mutableMapOf<String, InteractionManager>()
+    private val interactions = mutableListOf(mainManager)
+
+
+    override fun addMessage(message: Message): PlayerUI {
+        messages.add(message)
+        return this
     }
 
     override fun addDialogue(dialogue: Dialogue): PlayerUI {
-        TODO("Not yet implemented")
+        dialogues.add(dialogue)
+        interactions.add(dialogueManager)
+        return this
     }
 
     override fun addInteraction(id: String, interaction: InteractionUI): PlayerUI {
-        TODO("Not yet implemented")
+        mainManager[id] = InteractionManager(id, interaction.getTitle(), interaction.getDescription(), { ui ->
+            ui.respondToInteraction(id)
+        }) { ui, argument ->
+            ui.respondToInteractionWithArgument(id, argument)
+        }
+        return this
     }
 
     override fun respondToInteraction(id: String): PlayerUI {
-        TODO("Not yet implemented")
+        for (interaction in interactions) {
+            if (interaction.containsKey(id)) {
+                interaction[id]?.execute(this)
+                return this
+            }
+        }
+        return this
     }
 
     override fun respondToInteractionWithArgument(id: String, argument: String): PlayerUI {
-        TODO("Not yet implemented")
+        for (interaction in interactions) {
+            if (interaction.containsKey(id)) {
+                interaction[id]?.executeWithArgument(this, argument)
+                return this
+            }
+        }
+        return this
     }
 
     override fun removeInteraction(id: String): PlayerUI {
-        TODO("Not yet implemented")
+        for (interaction in interactions) {
+            if (interaction.containsKey(id)) {
+                interaction.remove(id)
+                return this
+            }
+        }
+        return this
     }
 
     override fun clear(): PlayerUI {
         bufferedImage = null
         linkedImage = null
+        messages.clear()
+        dialogues.clear()
+        mainManager.clear()
         return this
     }
 
