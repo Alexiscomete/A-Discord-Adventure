@@ -1,8 +1,10 @@
 package io.github.alexiscomete.lapinousecond.view.ui
 
 import io.github.alexiscomete.lapinousecond.entity.Player
+import org.javacord.api.entity.message.embed.EmbedBuilder
 import org.javacord.api.interaction.Interaction
 import org.javacord.api.interaction.InteractionBase
+import org.javacord.api.interaction.MessageComponentInteractionBase
 import java.awt.image.BufferedImage
 
 class DiscordPlayerUI(private val player: Player, val interaction: Interaction) : PlayerUI {
@@ -13,12 +15,24 @@ class DiscordPlayerUI(private val player: Player, val interaction: Interaction) 
 
     }
 
-    fun update() {
+    fun update(messageComponentInteractionBase: MessageComponentInteractionBase) {
 
     }
 
     fun send(interactionBase: InteractionBase) {
-
+        // note : max 10 embeds and 6000 characters
+        val sum = 0
+        val mainEmbed = EmbedBuilder()
+        if (bufferedImage != null) {
+            mainEmbed.setImage(bufferedImage)
+        } else if (linkedImage != null) {
+            mainEmbed.setImage(linkedImage)
+        }
+        val embeds = mutableListOf<EmbedBuilder>()
+        embeds.add(mainEmbed)
+        interactionBase.createImmediateResponder()
+            .addEmbeds(embeds)
+            .respond()
     }
 
     // --- Content ---
@@ -63,11 +77,11 @@ class DiscordPlayerUI(private val player: Player, val interaction: Interaction) 
 
     override fun updateOrSend(): PlayerUI {
         if (interaction.asModalInteraction().isPresent) {
-            send()
+            send(interaction.asModalInteraction().get())
         } else if (interaction.asSlashCommandInteraction().isPresent) {
-            send()
+            send(interaction.asSlashCommandInteraction().get())
         } else if (interaction.asMessageComponentInteraction().isPresent) {
-            update()
+            update(interaction.asMessageComponentInteraction().get())
         } else {
             update()
         }
