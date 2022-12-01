@@ -6,8 +6,13 @@ class InteractionManager(
     val id: String = generateUniqueID().toString(),
     val title: String,
     val description: String? = null,
-    val todoWhen: (PlayerUI) -> Unit,
-    val todoWhenWithArgument: (PlayerUI, String) -> Unit,
+    val interactionUI: InteractionUI,
+    val todoWhen: (PlayerUI) -> Unit = {
+        interactionUI.execute(it)
+    },
+    val todoWhenWithArgument: (PlayerUI, String) -> Unit = { ui, argument ->
+        interactionUI.executeWithArgument(ui, argument)
+    }
 ) {
     fun execute(ui: PlayerUI) {
         todoWhen(ui)

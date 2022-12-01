@@ -64,11 +64,7 @@ class DiscordPlayerUI(private val player: Player, val interaction: Interaction) 
     }
 
     override fun addInteraction(id: String, interaction: InteractionUI): PlayerUI {
-        mainManager[id] = InteractionManager(id, interaction.getTitle(), interaction.getDescription(), { ui ->
-            ui.respondToInteraction(id)
-        }) { ui, argument ->
-            ui.respondToInteractionWithArgument(id, argument)
-        }
+        mainManager[id] = InteractionManager(id, interaction.getTitle(), interaction.getDescription(), interaction)
         return this
     }
 
@@ -135,15 +131,20 @@ class DiscordPlayerUI(private val player: Player, val interaction: Interaction) 
     }
 
     override fun hasInteraction(id: String): Boolean {
-        TODO("Not yet implemented")
+        for (interaction in interactions) {
+            if (interaction.containsKey(id)) {
+                return true
+            }
+        }
+        return false
     }
 
     override fun hasDialogue(): Boolean {
-        TODO("Not yet implemented")
+        return dialogues.isNotEmpty()
     }
 
     override fun hasMessage(): Boolean {
-        TODO("Not yet implemented")
+        return messages.isNotEmpty()
     }
 
     override fun hasBufferedImage(): Boolean {
@@ -155,7 +156,12 @@ class DiscordPlayerUI(private val player: Player, val interaction: Interaction) 
     }
 
     override fun getInteraction(id: String): InteractionUI? {
-        TODO("Not yet implemented")
+        for (interaction in interactions) {
+            if (interaction.containsKey(id)) {
+                return interaction[id]!!.interactionUI
+            }
+        }
+        return null
     }
 
     override fun getBufferedImage(): BufferedImage {
@@ -167,15 +173,25 @@ class DiscordPlayerUI(private val player: Player, val interaction: Interaction) 
     }
 
     override fun getInteractions(): Map<String, InteractionUI> {
-        TODO("Not yet implemented")
+        val map = mutableMapOf<String, InteractionUI>()
+        for (interaction in interactions) {
+            for (key in interaction.keys) {
+                map[key] = interaction[key]!!.interactionUI
+            }
+        }
+        return map
     }
 
     override fun getMessages(): List<String> {
-        TODO("Not yet implemented")
+        val list = mutableListOf<String>()
+        for (message in messages) {
+            list.add(message.toString())
+        }
+        return list
     }
 
     override fun getDialogues(): List<Dialogue> {
-        TODO("Not yet implemented")
+        return dialogues
     }
 
     override fun getPlayer(): Player {
