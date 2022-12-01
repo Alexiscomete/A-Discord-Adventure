@@ -28,8 +28,24 @@ class DiscordPlayerUI(private val player: Player, val interaction: Interaction) 
         } else if (linkedImage != null) {
             mainEmbed.setImage(linkedImage)
         }
-        val embeds = mutableListOf<EmbedBuilder>()
-        embeds.add(mainEmbed)
+        val embeds = mutableListOf(mainEmbed)
+        if (messages.isNotEmpty()) {
+            val messageEmbed = EmbedBuilder()
+            messages.forEach {
+                // si rate limit alors envoyer en mp
+                // 1. 150 caractères pour le titre et 300 pour le contenu. Si le titre est null, ignorer
+                if (it.title == null) {
+                    if (it.content.length > 300) {
+                        // TODO : envoyer en mp
+                    } else {
+                        // TODO
+                    }
+                }
+
+                // TODO
+            }
+            embeds.add(messageEmbed)
+        }
         interactionBase.createImmediateResponder()
             .addEmbeds(embeds)
             .respond()
@@ -47,8 +63,8 @@ class DiscordPlayerUI(private val player: Player, val interaction: Interaction) 
     private val dialogues = mutableListOf<Dialogue>()
 
     // interactions
-    private val mainManager = mutableMapOf<String, InteractionManager>()
-    private val dialogueManager = mutableMapOf<String, InteractionManager>()
+    private val mainManager = mutableMapOf<String, InteractionUI>()
+    private val dialogueManager = mutableMapOf<String, InteractionUI>()
     private val interactions = mutableListOf(mainManager)
 
 
@@ -64,7 +80,7 @@ class DiscordPlayerUI(private val player: Player, val interaction: Interaction) 
     }
 
     override fun addInteraction(id: String, interaction: InteractionUI): PlayerUI {
-        mainManager[id] = InteractionManager(id, interaction.getTitle(), interaction.getDescription(), interaction)
+        mainManager[id] = interaction
         return this
     }
 
@@ -158,7 +174,7 @@ class DiscordPlayerUI(private val player: Player, val interaction: Interaction) 
     override fun getInteraction(id: String): InteractionUI? {
         for (interaction in interactions) {
             if (interaction.containsKey(id)) {
-                return interaction[id]!!.interactionUI
+                return interaction[id]
             }
         }
         return null
@@ -176,7 +192,7 @@ class DiscordPlayerUI(private val player: Player, val interaction: Interaction) 
         val map = mutableMapOf<String, InteractionUI>()
         for (interaction in interactions) {
             for (key in interaction.keys) {
-                map[key] = interaction[key]!!.interactionUI
+                map[key] = interaction[key]!!
             }
         }
         return map
