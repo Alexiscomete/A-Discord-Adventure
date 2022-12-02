@@ -2,6 +2,8 @@ package io.github.alexiscomete.lapinousecond.view
 
 import io.github.alexiscomete.lapinousecond.entity.PlayerWithAccount
 import io.github.alexiscomete.lapinousecond.view.contextmanager.*
+import io.github.alexiscomete.lapinousecond.view.ui.InteractionUI
+import io.github.alexiscomete.lapinousecond.view.ui.PlayerUI
 import org.javacord.api.event.interaction.ButtonClickEvent
 import org.javacord.api.event.interaction.ModalSubmitEvent
 import org.javacord.api.event.interaction.SelectMenuChooseEvent
@@ -60,6 +62,7 @@ class Context(val players: Players, canParallel: Boolean = false) : ContextManag
     private var multiContext: Context? = null
     private var modal: ModalContextManager? = null
     private var messages: MessagesContextManager? = null
+    private var ui: PlayerUI? = null
 
     fun buttons(buttons: ButtonsContextManager, canParallel:Boolean=false): Context {
         println("Buttons: $buttons")
@@ -102,12 +105,21 @@ class Context(val players: Players, canParallel: Boolean = false) : ContextManag
         return this
     }
 
+    fun ui(ui: PlayerUI, canParallel:Boolean=false): Context {
+        if (!canParallel) {
+            clear()
+        }
+        this.ui = ui
+        return this
+    }
+
     private fun clear() {
         buttons = null
         selectMenu = null
         multiContext = null
         modal = null
         messages = null
+        ui = null
     }
 
     override fun canApply(string: String): Boolean {
@@ -136,6 +148,11 @@ class Context(val players: Players, canParallel: Boolean = false) : ContextManag
                 return true
             }
         }
+        if (ui != null) {
+            if (ui!!.hasInteraction(string)) {
+                return true
+            }
+        }
         return false
     }
 
@@ -143,6 +160,12 @@ class Context(val players: Players, canParallel: Boolean = false) : ContextManag
         if (multiContext != null) {
             if (multiContext!!.canApply(string)) {
                 multiContext!!.apply(string, event)
+                return
+            }
+        }
+        if (ui != null) {
+            if (ui!!.hasInteraction(string)) {
+                ui!!.respondToInteraction(string)
                 return
             }
         }

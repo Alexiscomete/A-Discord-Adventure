@@ -1,7 +1,9 @@
 package io.github.alexiscomete.lapinousecond.view.ui
 
+import io.github.alexiscomete.lapinousecond.commands.withslash.getAccount
 import io.github.alexiscomete.lapinousecond.entity.Player
 import io.github.alexiscomete.lapinousecond.view.contextFor
+import io.github.alexiscomete.lapinousecond.view.contextmanager.ButtonsContextManager
 import org.javacord.api.entity.message.component.ActionRow
 import org.javacord.api.entity.message.component.Button
 import org.javacord.api.entity.message.embed.EmbedBuilder
@@ -63,6 +65,8 @@ class DiscordPlayerUI(private val player: Player, val interaction: Interaction) 
                     )
                 )
                 .respond()
+            val context = contextFor(getAccount(interactionBase.user))
+            context.ui(this)
 
         } else if (dialogues.isNotEmpty()) {
             val dialogueEmbed = EmbedBuilder()
