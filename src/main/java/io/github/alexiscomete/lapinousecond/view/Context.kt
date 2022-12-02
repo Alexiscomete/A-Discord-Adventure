@@ -2,6 +2,7 @@ package io.github.alexiscomete.lapinousecond.view
 
 import io.github.alexiscomete.lapinousecond.entity.PlayerWithAccount
 import io.github.alexiscomete.lapinousecond.view.contextmanager.*
+import io.github.alexiscomete.lapinousecond.view.ui.DiscordPlayerUI
 import io.github.alexiscomete.lapinousecond.view.ui.InteractionUI
 import io.github.alexiscomete.lapinousecond.view.ui.PlayerUI
 import org.javacord.api.event.interaction.ButtonClickEvent
@@ -62,7 +63,7 @@ class Context(val players: Players, canParallel: Boolean = false) : ContextManag
     private var multiContext: Context? = null
     private var modal: ModalContextManager? = null
     private var messages: MessagesContextManager? = null
-    private var ui: PlayerUI? = null
+    private var ui: DiscordPlayerUI? = null
 
     fun buttons(buttons: ButtonsContextManager, canParallel:Boolean=false): Context {
         println("Buttons: $buttons")
@@ -105,7 +106,7 @@ class Context(val players: Players, canParallel: Boolean = false) : ContextManag
         return this
     }
 
-    fun ui(ui: PlayerUI, canParallel:Boolean=false): Context {
+    fun ui(ui: DiscordPlayerUI, canParallel:Boolean=false): Context {
         if (!canParallel) {
             clear()
         }
@@ -165,6 +166,7 @@ class Context(val players: Players, canParallel: Boolean = false) : ContextManag
         }
         if (ui != null) {
             if (ui!!.hasInteraction(string)) {
+                ui!!.interaction = event.interaction
                 ui!!.respondToInteraction(string)
                 return
             }

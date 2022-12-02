@@ -3,7 +3,6 @@ package io.github.alexiscomete.lapinousecond.view.ui
 import io.github.alexiscomete.lapinousecond.commands.withslash.getAccount
 import io.github.alexiscomete.lapinousecond.entity.Player
 import io.github.alexiscomete.lapinousecond.view.contextFor
-import io.github.alexiscomete.lapinousecond.view.contextmanager.ButtonsContextManager
 import org.javacord.api.entity.message.component.ActionRow
 import org.javacord.api.entity.message.component.Button
 import org.javacord.api.entity.message.embed.EmbedBuilder
@@ -12,7 +11,7 @@ import org.javacord.api.interaction.InteractionBase
 import org.javacord.api.interaction.MessageComponentInteractionBase
 import java.awt.image.BufferedImage
 
-class DiscordPlayerUI(private val player: Player, val interaction: Interaction) : PlayerUI {
+class DiscordPlayerUI(private val player: Player, var interaction: Interaction) : PlayerUI {
 
     // --- methods ---
 
@@ -61,19 +60,32 @@ class DiscordPlayerUI(private val player: Player, val interaction: Interaction) 
                 .addEmbeds(messageEmbed)
                 .addComponents(
                     ActionRow.of(
-                        Button.primary("suite_messages", "Voir les messages suivants")
+                        Button.primary("just_update", "Messages suivants / actualiser")
                     )
                 )
                 .respond()
             val context = contextFor(getAccount(interactionBase.user))
             context.ui(this)
-
+            return
         } else if (dialogues.isNotEmpty()) {
-            val dialogueEmbed = EmbedBuilder()
-            dialogues.forEach { _ ->
-                // TODO
+            val dialogue = dialogues.first()
+            val messageEmbed = EmbedBuilder()
+                .setTitle(dialogue.title)
+                .setDescription(dialogue.content)
+            if (dialogue.image != null) {
+                messageEmbed.setImage(dialogue.image)
             }
-            embeds.add(dialogueEmbed)
+            interactionBase.createImmediateResponder()
+                .addEmbeds(messageEmbed)
+                .addComponents(
+                    ActionRow.of(
+                        Button.primary("just_update", "Actualiser")
+                    )
+                )
+                .respond()
+            val context = contextFor(getAccount(interactionBase.user))
+            context.ui(this)
+            return
         } else {
             val mainEmbed = EmbedBuilder()
             if (bufferedImage != null) {
@@ -127,6 +139,9 @@ class DiscordPlayerUI(private val player: Player, val interaction: Interaction) 
                 interaction[id]?.execute(this)
                 return this
             }
+        }
+        if (id == "just_update") {
+            updateOrSend()
         }
         return this
     }
