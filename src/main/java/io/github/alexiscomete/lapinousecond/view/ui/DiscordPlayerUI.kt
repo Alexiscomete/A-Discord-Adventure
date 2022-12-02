@@ -1,6 +1,9 @@
 package io.github.alexiscomete.lapinousecond.view.ui
 
 import io.github.alexiscomete.lapinousecond.entity.Player
+import io.github.alexiscomete.lapinousecond.view.contextFor
+import org.javacord.api.entity.message.component.ActionRow
+import org.javacord.api.entity.message.component.Button
 import org.javacord.api.entity.message.embed.EmbedBuilder
 import org.javacord.api.interaction.Interaction
 import org.javacord.api.interaction.InteractionBase
@@ -21,30 +24,60 @@ class DiscordPlayerUI(private val player: Player, val interaction: Interaction) 
 
     fun send(interactionBase: InteractionBase) {
         // note : max 10 embeds and 6000 characters
-        val sum = 0
-        val mainEmbed = EmbedBuilder()
-        if (bufferedImage != null) {
-            mainEmbed.setImage(bufferedImage)
-        } else if (linkedImage != null) {
-            mainEmbed.setImage(linkedImage)
-        }
-        val embeds = mutableListOf(mainEmbed)
+        val embeds = mutableListOf<EmbedBuilder>()
         if (messages.isNotEmpty()) {
             val messageEmbed = EmbedBuilder()
-            messages.forEach {
-                // si rate limit alors envoyer en mp
-                // 1. 150 caractères pour le titre et 300 pour le contenu. Si le titre est null, ignorer
-                if (it.title == null) {
-                    if (it.content.length > 300) {
-                        // TODO : envoyer en mp
-                    } else {
-                        // TODO
+                .setTitle("Vous avez reçu des messages")
+            var canSendInMp = true
+            var currentDescription = ""
+            // pour les 11 derniers messages
+            for (i in messages.size - 1 downTo messages.size - 11) {
+                if (i < 0) break
+                val message = messages[i]
+                if (message.title != null) {
+                    if (message.title!!.length < 180 && message.content.length < 400) {
+                        messageEmbed.addField(message.title!!, message.content)
+                        messages.removeAt(i)
+                    } else if (canSendInMp) {
+                        canSendInMp = false
+                        interactionBase.user.sendMessage(message.title + "\n" + message.content)
+                        messages.removeAt(i)
+                    }
+                } else {
+                    if (message.content.length < 400) {
+                        currentDescription += message.content + "\n"
+                        messageEmbed.setDescription(currentDescription)
+                        messages.removeAt(i)
+                    } else if (canSendInMp) {
+                        canSendInMp = false
+                        interactionBase.user.sendMessage(message.content)
+                        messages.removeAt(i)
                     }
                 }
+            }
+            interactionBase.createImmediateResponder()
+                .addEmbeds(messageEmbed)
+                .addComponents(
+                    ActionRow.of(
+                        Button.primary("suite_messages", "Voir les messages suivants")
+                    )
+                )
+                .respond()
 
+        } else if (dialogues.isNotEmpty()) {
+            val dialogueEmbed = EmbedBuilder()
+            dialogues.forEach { _ ->
                 // TODO
             }
-            embeds.add(messageEmbed)
+            embeds.add(dialogueEmbed)
+        } else {
+            val mainEmbed = EmbedBuilder()
+            if (bufferedImage != null) {
+                mainEmbed.setImage(bufferedImage)
+            } else if (linkedImage != null) {
+                mainEmbed.setImage(linkedImage)
+            }
+            embeds.add(mainEmbed)
         }
         interactionBase.createImmediateResponder()
             .addEmbeds(embeds)
