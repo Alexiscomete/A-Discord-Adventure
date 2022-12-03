@@ -23,6 +23,35 @@ class DiscordPlayerUI(private val player: Player, var interaction: Interaction) 
 
     }
 
+    fun showDialogue(interactionBase: InteractionBase) {
+        val messageEmbedBuilder = EmbedBuilder()
+            .setAuthor(if (dialogueTitle != null) dialogueTitle else "Dialogue")
+            .setDescription(dialoguePart!!.getContent())
+        val author = dialoguePart!!.getAuthor()
+        messageEmbedBuilder.setTitle(author.getName())
+        if (author.hasImageAvatar()) {
+            messageEmbedBuilder.setThumbnail(author.getImageAvatar())
+        } else if (author.hasLinkAvatar()) {
+            messageEmbedBuilder.setThumbnail(author.getLinkAvatar())
+        }
+        messageEmbedBuilder.setTimestampToNow()
+        val lowLevelComponents = mutableListOf<Button>()
+        if (!dialoguePart!!.isLast()) {
+            lowLevelComponents.add(Button.primary("next_dialogue", "Suite..."))
+        }
+        if (!dialoguePart!!.isFirst()) {
+            lowLevelComponents.add(Button.primary("previous_dialogue", "Retour..."))
+        }
+        lowLevelComponents.add(Button.primary("end_dialogue", "Passer le dialogue"))
+        val actionRow = ActionRow.of(*lowLevelComponents.toTypedArray())
+        interactionBase.createImmediateResponder()
+            .addEmbeds(messageEmbedBuilder)
+            .addComponents(actionRow)
+            .respond()
+        val context = contextFor(getAccount(interactionBase.user))
+        context.ui(this)
+    }
+
     fun send(interactionBase: InteractionBase) {
         // note : max 10 embeds and 6000 characters
         val embeds = mutableListOf<EmbedBuilder>()
@@ -68,44 +97,27 @@ class DiscordPlayerUI(private val player: Player, var interaction: Interaction) 
             context.ui(this)
             return
         } else if (dialoguePart != null) {
-            val messageEmbedBuilder = EmbedBuilder()
-                .setAuthor(if (dialogueTitle != null) dialogueTitle else "Dialogue")
-                .setDescription(dialoguePart!!.getContent())
-            val author = dialoguePart!!.getAuthor()
-            messageEmbedBuilder.setTitle(author.getName())
-            if (author.hasImageAvatar()) {
-                messageEmbedBuilder.setThumbnail(author.getImageAvatar())
-            } else if (author.hasLinkAvatar()) {
-                messageEmbedBuilder.setImage(author.getLinkAvatar())
-            }
-            messageEmbedBuilder.setTimestampToNow()
-            val lowLevelComponents = mutableListOf<Button>()
-            if (!dialoguePart!!.isLast()) {
-                lowLevelComponents.add(Button.primary("next_dialogue", "Suite..."))
-            }
-            if (!dialoguePart!!.isFirst()) {
-                lowLevelComponents.add(Button.primary("previous_dialogue", "Retour..."))
-            }
-            lowLevelComponents.add(Button.primary("end_dialogue", "Passer le dialogue"))
-            val actionRow = ActionRow.of(*lowLevelComponents.toTypedArray())
-            interactionBase.createImmediateResponder()
-                .addEmbeds(messageEmbedBuilder)
-                .addComponents(actionRow)
-                .respond()
+            showDialogue(interactionBase)
+            return
         } else if (dialogues.isNotEmpty()) {
             val dialogue = dialogues.first()
-
-            interactionBase.createImmediateResponder()
-                .addEmbeds(messageEmbed)
-                .addComponents(
-                    ActionRow.of(
-                        Button.primary("just_update", "Actualiser")
+            dialoguePart = dialogue.getFirst()
+            dialogueTitle = dialogue.getTitle()
+            dialogues.removeAt(0)
+            if (dialoguePart != null) {
+                showDialogue(interactionBase)
+                return
+            } else {
+                interactionBase.createImmediateResponder()
+                    .setContent("Le dialogue est vide")
+                    .addComponents(
+                        ActionRow.of(
+                            Button.primary("just_update", "Actualiser")
+                        )
                     )
-                )
-                .respond()
-            val context = contextFor(getAccount(interactionBase.user))
-            context.ui(this)
-            return
+                    .respond()
+                return
+            }
         } else {
             val mainEmbed = EmbedBuilder()
             if (bufferedImage != null) {
