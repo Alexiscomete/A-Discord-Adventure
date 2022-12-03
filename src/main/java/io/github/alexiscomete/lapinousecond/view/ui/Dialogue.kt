@@ -12,4 +12,6 @@ interface Dialogue {
     fun getPart(index: Int): DialoguePart?
     fun removePart(index: Int): Dialogue
     fun addPart(index: Int, part: DialoguePart): Dialogue
+    fun setTitle(title: String): Dialogue
+    fun getTitle(): String
 }

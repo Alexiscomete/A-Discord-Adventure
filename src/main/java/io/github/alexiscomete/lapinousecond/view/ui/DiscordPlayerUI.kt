@@ -67,14 +67,34 @@ class DiscordPlayerUI(private val player: Player, var interaction: Interaction) 
             val context = contextFor(getAccount(interactionBase.user))
             context.ui(this)
             return
+        } else if (dialoguePart != null) {
+            val messageEmbedBuilder = EmbedBuilder()
+                .setAuthor(if (dialogueTitle != null) dialogueTitle else "Dialogue")
+                .setDescription(dialoguePart!!.getContent())
+            val author = dialoguePart!!.getAuthor()
+            messageEmbedBuilder.setTitle(author.getName())
+            if (author.hasImageAvatar()) {
+                messageEmbedBuilder.setThumbnail(author.getImageAvatar())
+            } else if (author.hasLinkAvatar()) {
+                messageEmbedBuilder.setImage(author.getLinkAvatar())
+            }
+            messageEmbedBuilder.setTimestampToNow()
+            val lowLevelComponents = mutableListOf<Button>()
+            if (!dialoguePart!!.isLast()) {
+                lowLevelComponents.add(Button.primary("next_dialogue", "Suite..."))
+            }
+            if (!dialoguePart!!.isFirst()) {
+                lowLevelComponents.add(Button.primary("previous_dialogue", "Retour..."))
+            }
+            lowLevelComponents.add(Button.primary("end_dialogue", "Passer le dialogue"))
+            val actionRow = ActionRow.of(*lowLevelComponents.toTypedArray())
+            interactionBase.createImmediateResponder()
+                .addEmbeds(messageEmbedBuilder)
+                .addComponents(actionRow)
+                .respond()
         } else if (dialogues.isNotEmpty()) {
             val dialogue = dialogues.first()
-            val messageEmbed = EmbedBuilder()
-                .setTitle(dialogue.title)
-                .setDescription(dialogue.content)
-            if (dialogue.image != null) {
-                messageEmbed.setImage(dialogue.image)
-            }
+
             interactionBase.createImmediateResponder()
                 .addEmbeds(messageEmbed)
                 .addComponents(
@@ -110,6 +130,8 @@ class DiscordPlayerUI(private val player: Player, var interaction: Interaction) 
 
     // dialogues
     private val dialogues = mutableListOf<Dialogue>()
+    private var dialoguePart: DialoguePart? = null
+    private var dialogueTitle: String? = null
 
     // interactions
     private val mainManager = mutableMapOf<String, InteractionUI>()

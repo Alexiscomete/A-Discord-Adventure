@@ -1,15 +1,16 @@
 package io.github.alexiscomete.lapinousecond.view.ui
 
 class DialogueReader(
-    private val dialogue: Dialogue,
+    val dialogue: Dialogue,
     private val onEnd: () -> Unit,
-    private val maxCharOnOnePart: Int = -1
+    private val maxCharOnOnePart: Int = -1,
+    private val maxParts: Int = -1
 ) {
     private var currentParts = run {
         val parts = mutableListOf<DialoguePart>()
         var currentPart = dialogue.getFirst()
         var currentWeight = 0
-        while (currentPart != null && (maxCharOnOnePart == -1 || currentWeight + currentPart.weight() < maxCharOnOnePart)) {
+        while (currentPart != null && (maxCharOnOnePart == -1 || currentWeight + currentPart.weight() < maxCharOnOnePart) && (maxParts == -1 || parts.size < maxParts)) {
             parts.add(currentPart)
             currentWeight += currentPart.weight()
             currentPart = currentPart.next()
@@ -45,7 +46,7 @@ class DialogueReader(
             val parts = mutableListOf<DialoguePart>()
             var currentPart = currentMin
             var currentWeight = 0
-            while (currentPart != null && (maxCharOnOnePart == -1 || currentWeight + currentPart.weight() < maxCharOnOnePart)) {
+            while (currentPart != null && (maxCharOnOnePart == -1 || currentWeight + currentPart.weight() < maxCharOnOnePart) && (maxParts == -1 || parts.size < maxParts)) {
                 parts.add(currentPart)
                 currentWeight += currentPart.weight()
                 currentPart = currentPart.next()
@@ -64,7 +65,7 @@ class DialogueReader(
             val parts = mutableListOf<DialoguePart>()
             var currentPart = currentMax
             var currentWeight = 0
-            while (currentPart != null && (maxCharOnOnePart == -1 || currentWeight + currentPart.weight() < maxCharOnOnePart)) {
+            while (currentPart != null && (maxCharOnOnePart == -1 || currentWeight + currentPart.weight() < maxCharOnOnePart) && (maxParts == -1 || parts.size < maxParts)) {
                 parts.add(currentPart)
                 currentWeight += currentPart.weight()
                 currentPart = currentPart.before()
