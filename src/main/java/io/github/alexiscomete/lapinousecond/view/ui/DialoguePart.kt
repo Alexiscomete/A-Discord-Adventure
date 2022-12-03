@@ -13,4 +13,5 @@ interface DialoguePart {
     fun setTitle(title: String): DialoguePart
     fun setBefore(before: DialoguePart?): DialoguePart
     fun setNext(next: DialoguePart?): DialoguePart
+    fun weight(): Int
 }
