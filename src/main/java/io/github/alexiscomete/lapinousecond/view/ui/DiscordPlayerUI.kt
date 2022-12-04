@@ -19,11 +19,88 @@ class DiscordPlayerUI(private val player: Player, var interaction: Interaction) 
 
     }
 
-    fun update(messageComponentInteractionBase: MessageComponentInteractionBase) {
-
+    private fun update(messageComponentInteractionBase: MessageComponentInteractionBase) {
+        // note : max 10 embeds and 6000 characters
+        val embeds = mutableListOf<EmbedBuilder>()
+        if (messages.isNotEmpty()) {
+            val messageEmbed = EmbedBuilder()
+                .setTitle("Vous avez reçu des messages")
+            var canSendInMp = true
+            var currentDescription = ""
+            // pour les 11 derniers messages
+            for (i in messages.size - 1 downTo messages.size - 11) {
+                if (i < 0) break
+                val message = messages[i]
+                if (message.title != null) {
+                    if (message.title!!.length < 180 && message.content.length < 400) {
+                        messageEmbed.addField(message.title!!, message.content)
+                        messages.removeAt(i)
+                    } else if (canSendInMp) {
+                        canSendInMp = false
+                        messageComponentInteractionBase.user.sendMessage(message.title + "\n" + message.content)
+                        messages.removeAt(i)
+                    }
+                } else {
+                    if (message.content.length < 400) {
+                        currentDescription += message.content + "\n"
+                        messageEmbed.setDescription(currentDescription)
+                        messages.removeAt(i)
+                    } else if (canSendInMp) {
+                        canSendInMp = false
+                        messageComponentInteractionBase.user.sendMessage(message.content)
+                        messages.removeAt(i)
+                    }
+                }
+            }
+            messageComponentInteractionBase.createImmediateResponder()
+                .addEmbeds(messageEmbed)
+                .addComponents(
+                    ActionRow.of(
+                        Button.primary("just_update", "Messages suivants / actualiser")
+                    )
+                )
+                .respond()
+            val context = contextFor(getAccount(messageComponentInteractionBase.user))
+            context.ui(this)
+            return
+        } else if (dialoguePart != null) {
+            showDialogueUpdate(messageComponentInteractionBase)
+            return
+        } else if (dialogues.isNotEmpty()) {
+            val dialogue = dialogues.first()
+            dialoguePart = dialogue.getFirst()
+            dialogueTitle = dialogue.getTitle()
+            dialogues.removeAt(0)
+            if (dialoguePart != null) {
+                showDialogue(messageComponentInteractionBase)
+                return
+            } else {
+                messageComponentInteractionBase.createOriginalMessageUpdater()
+                    .setContent("Le dialogue est vide")
+                    .addComponents(
+                        ActionRow.of(
+                            Button.primary("just_update", "Actualiser")
+                        )
+                    )
+                    .update()
+                return
+            }
+        }
+        val mainEmbed = EmbedBuilder()
+        if (bufferedImage != null) {
+            mainEmbed.setImage(bufferedImage)
+        } else if (linkedImage != null) {
+            mainEmbed.setImage(linkedImage)
+        }
+        embeds.add(mainEmbed)
+        messageComponentInteractionBase.createOriginalMessageUpdater()
+            .removeAllEmbeds()
+            .removeAllComponents()
+            .addEmbeds(embeds)
+            .update()
     }
 
-    fun showDialogue(interactionBase: InteractionBase) {
+    private fun showDialogue(interactionBase: InteractionBase) {
         val messageEmbedBuilder = EmbedBuilder()
             .setAuthor(if (dialogueTitle != null) dialogueTitle else "Dialogue")
             .setDescription(dialoguePart!!.getContent())
@@ -52,7 +129,36 @@ class DiscordPlayerUI(private val player: Player, var interaction: Interaction) 
         context.ui(this)
     }
 
-    fun send(interactionBase: InteractionBase) {
+    private fun showDialogueUpdate(messageComponentInteractionBase: MessageComponentInteractionBase) {
+        val messageEmbedBuilder = EmbedBuilder()
+            .setAuthor(if (dialogueTitle != null) dialogueTitle else "Dialogue")
+            .setDescription(dialoguePart!!.getContent())
+        val author = dialoguePart!!.getAuthor()
+        messageEmbedBuilder.setTitle(author.getName())
+        if (author.hasImageAvatar()) {
+            messageEmbedBuilder.setThumbnail(author.getImageAvatar())
+        } else if (author.hasLinkAvatar()) {
+            messageEmbedBuilder.setThumbnail(author.getLinkAvatar())
+        }
+        messageEmbedBuilder.setTimestampToNow()
+        val lowLevelComponents = mutableListOf<Button>()
+        if (!dialoguePart!!.isLast()) {
+            lowLevelComponents.add(Button.primary("next_dialogue", "Suite..."))
+        }
+        if (!dialoguePart!!.isFirst()) {
+            lowLevelComponents.add(Button.primary("previous_dialogue", "Retour..."))
+        }
+        lowLevelComponents.add(Button.primary("end_dialogue", "Passer le dialogue"))
+        val actionRow = ActionRow.of(*lowLevelComponents.toTypedArray())
+        messageComponentInteractionBase.createOriginalMessageUpdater()
+            .addEmbeds(messageEmbedBuilder)
+            .addComponents(actionRow)
+            .update()
+        val context = contextFor(getAccount(messageComponentInteractionBase.user))
+        context.ui(this)
+    }
+
+    private fun send(interactionBase: InteractionBase) {
         // note : max 10 embeds and 6000 characters
         val embeds = mutableListOf<EmbedBuilder>()
         if (messages.isNotEmpty()) {
@@ -118,15 +224,14 @@ class DiscordPlayerUI(private val player: Player, var interaction: Interaction) 
                     .respond()
                 return
             }
-        } else {
-            val mainEmbed = EmbedBuilder()
-            if (bufferedImage != null) {
-                mainEmbed.setImage(bufferedImage)
-            } else if (linkedImage != null) {
-                mainEmbed.setImage(linkedImage)
-            }
-            embeds.add(mainEmbed)
         }
+        val mainEmbed = EmbedBuilder()
+        if (bufferedImage != null) {
+            mainEmbed.setImage(bufferedImage)
+        } else if (linkedImage != null) {
+            mainEmbed.setImage(linkedImage)
+        }
+        embeds.add(mainEmbed)
         interactionBase.createImmediateResponder()
             .addEmbeds(embeds)
             .respond()
@@ -174,7 +279,17 @@ class DiscordPlayerUI(private val player: Player, var interaction: Interaction) 
                 return this
             }
         }
-        if (id == "just_update") {
+        if (id.contains("end_dialogue")) {
+            dialoguePart = null
+            dialogueTitle = null
+        }
+        if (id.contains("next_dialogue")) {
+            dialoguePart = dialoguePart!!.next()
+        }
+        if (id.contains("previous_dialogue")) {
+            dialoguePart = dialoguePart!!.before()
+        }
+        if (id.contains("just_update")) {
             updateOrSend()
         }
         return this
@@ -186,6 +301,9 @@ class DiscordPlayerUI(private val player: Player, var interaction: Interaction) 
                 interaction[id]?.executeWithArgument(this, argument)
                 return this
             }
+        }
+        if (id.contains("just_update")) {
+            updateOrSend()
         }
         return this
     }

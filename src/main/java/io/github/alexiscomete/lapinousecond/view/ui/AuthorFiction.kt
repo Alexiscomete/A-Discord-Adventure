@@ -1,9 +1,8 @@
 package io.github.alexiscomete.lapinousecond.view.ui
 
-import org.javacord.api.entity.user.User
 import java.awt.image.BufferedImage
 
-class AuthorFiction(user: User, private var playerName: String, var avatar: String? = null, var image: BufferedImage? = null) : Author {
+class AuthorFiction(private var playerName: String, var avatar: String? = null, var image: BufferedImage? = null) : Author {
     override fun getName(): String {
         return playerName
     }
