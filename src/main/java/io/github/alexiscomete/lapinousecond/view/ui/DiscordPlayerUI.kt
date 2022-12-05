@@ -15,43 +15,11 @@ class DiscordPlayerUI(private val player: Player, var interaction: Interaction) 
 
     // --- methods ---
 
-    fun update() {
-
-    }
-
     private fun update(messageComponentInteractionBase: MessageComponentInteractionBase) {
         // note : max 10 embeds and 6000 characters
         val embeds = mutableListOf<EmbedBuilder>()
         if (messages.isNotEmpty()) {
-            val messageEmbed = EmbedBuilder()
-                .setTitle("Vous avez reçu des messages")
-            var canSendInMp = true
-            var currentDescription = ""
-            // pour les 11 derniers messages
-            for (i in messages.size - 1 downTo messages.size - 11) {
-                if (i < 0) break
-                val message = messages[i]
-                if (message.title != null) {
-                    if (message.title!!.length < 180 && message.content.length < 400) {
-                        messageEmbed.addField(message.title!!, message.content)
-                        messages.removeAt(i)
-                    } else if (canSendInMp) {
-                        canSendInMp = false
-                        messageComponentInteractionBase.user.sendMessage(message.title + "\n" + message.content)
-                        messages.removeAt(i)
-                    }
-                } else {
-                    if (message.content.length < 400) {
-                        currentDescription += message.content + "\n"
-                        messageEmbed.setDescription(currentDescription)
-                        messages.removeAt(i)
-                    } else if (canSendInMp) {
-                        canSendInMp = false
-                        messageComponentInteractionBase.user.sendMessage(message.content)
-                        messages.removeAt(i)
-                    }
-                }
-            }
+            val messageEmbed = messages(messageComponentInteractionBase)
             messageComponentInteractionBase.createOriginalMessageUpdater()
                 .removeAllEmbeds()
                 .removeAllComponents()
@@ -102,6 +70,39 @@ class DiscordPlayerUI(private val player: Player, var interaction: Interaction) 
             .update()
     }
 
+    private fun messages(interactionBase: InteractionBase): EmbedBuilder? {
+        val messageEmbed = EmbedBuilder()
+            .setTitle("Vous avez reçu des messages")
+        var canSendInMp = true
+        var currentDescription = ""
+        // pour les 11 derniers messages
+        for (i in messages.size - 1 downTo messages.size - 11) {
+            if (i < 0) break
+            val message = messages[i]
+            if (message.title != null) {
+                if (message.title!!.length < 180 && message.content.length < 400) {
+                    messageEmbed.addField(message.title!!, message.content)
+                    messages.removeAt(i)
+                } else if (canSendInMp) {
+                    canSendInMp = false
+                    interactionBase.user.sendMessage(message.title + "\n" + message.content)
+                    messages.removeAt(i)
+                }
+            } else {
+                if (message.content.length < 400) {
+                    currentDescription += message.content + "\n"
+                    messageEmbed.setDescription(currentDescription)
+                    messages.removeAt(i)
+                } else if (canSendInMp) {
+                    canSendInMp = false
+                    interactionBase.user.sendMessage(message.content)
+                    messages.removeAt(i)
+                }
+            }
+        }
+        return messageEmbed
+    }
+
     private fun showDialogue(interactionBase: InteractionBase) {
         val (messageEmbedBuilder, actionRow) = dialogue()
         interactionBase.createImmediateResponder()
@@ -150,35 +151,7 @@ class DiscordPlayerUI(private val player: Player, var interaction: Interaction) 
         // note : max 10 embeds and 6000 characters
         val embeds = mutableListOf<EmbedBuilder>()
         if (messages.isNotEmpty()) {
-            val messageEmbed = EmbedBuilder()
-                .setTitle("Vous avez reçu des messages")
-            var canSendInMp = true
-            var currentDescription = ""
-            // pour les 11 derniers messages
-            for (i in messages.size - 1 downTo messages.size - 11) {
-                if (i < 0) break
-                val message = messages[i]
-                if (message.title != null) {
-                    if (message.title!!.length < 180 && message.content.length < 400) {
-                        messageEmbed.addField(message.title!!, message.content)
-                        messages.removeAt(i)
-                    } else if (canSendInMp) {
-                        canSendInMp = false
-                        interactionBase.user.sendMessage(message.title + "\n" + message.content)
-                        messages.removeAt(i)
-                    }
-                } else {
-                    if (message.content.length < 400) {
-                        currentDescription += message.content + "\n"
-                        messageEmbed.setDescription(currentDescription)
-                        messages.removeAt(i)
-                    } else if (canSendInMp) {
-                        canSendInMp = false
-                        interactionBase.user.sendMessage(message.content)
-                        messages.removeAt(i)
-                    }
-                }
-            }
+            val messageEmbed = messages(interactionBase)
             interactionBase.createImmediateResponder()
                 .addEmbeds(messageEmbed)
                 .addComponents(
@@ -322,8 +295,6 @@ class DiscordPlayerUI(private val player: Player, var interaction: Interaction) 
             send(interaction.asSlashCommandInteraction().get())
         } else if (interaction.asMessageComponentInteraction().isPresent) {
             update(interaction.asMessageComponentInteraction().get())
-        } else {
-            update()
         }
         return this
     }
