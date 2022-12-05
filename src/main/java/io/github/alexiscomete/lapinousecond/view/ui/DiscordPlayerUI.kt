@@ -52,14 +52,16 @@ class DiscordPlayerUI(private val player: Player, var interaction: Interaction) 
                     }
                 }
             }
-            messageComponentInteractionBase.createImmediateResponder()
+            messageComponentInteractionBase.createOriginalMessageUpdater()
+                .removeAllEmbeds()
+                .removeAllComponents()
                 .addEmbeds(messageEmbed)
                 .addComponents(
                     ActionRow.of(
                         Button.primary("just_update", "Messages suivants / actualiser")
                     )
                 )
-                .respond()
+                .update()
             val context = contextFor(getAccount(messageComponentInteractionBase.user))
             context.ui(this)
             return
@@ -101,26 +103,7 @@ class DiscordPlayerUI(private val player: Player, var interaction: Interaction) 
     }
 
     private fun showDialogue(interactionBase: InteractionBase) {
-        val messageEmbedBuilder = EmbedBuilder()
-            .setAuthor(if (dialogueTitle != null) dialogueTitle else "Dialogue")
-            .setDescription(dialoguePart!!.getContent())
-        val author = dialoguePart!!.getAuthor()
-        messageEmbedBuilder.setTitle(author.getName())
-        if (author.hasImageAvatar()) {
-            messageEmbedBuilder.setThumbnail(author.getImageAvatar())
-        } else if (author.hasLinkAvatar()) {
-            messageEmbedBuilder.setThumbnail(author.getLinkAvatar())
-        }
-        messageEmbedBuilder.setTimestampToNow()
-        val lowLevelComponents = mutableListOf<Button>()
-        if (!dialoguePart!!.isLast()) {
-            lowLevelComponents.add(Button.primary("next_dialogue", "Suite..."))
-        }
-        if (!dialoguePart!!.isFirst()) {
-            lowLevelComponents.add(Button.primary("previous_dialogue", "Retour..."))
-        }
-        lowLevelComponents.add(Button.primary("end_dialogue", "Passer le dialogue"))
-        val actionRow = ActionRow.of(*lowLevelComponents.toTypedArray())
+        val (messageEmbedBuilder, actionRow) = dialogue()
         interactionBase.createImmediateResponder()
             .addEmbeds(messageEmbedBuilder)
             .addComponents(actionRow)
@@ -130,6 +113,16 @@ class DiscordPlayerUI(private val player: Player, var interaction: Interaction) 
     }
 
     private fun showDialogueUpdate(messageComponentInteractionBase: MessageComponentInteractionBase) {
+        val (messageEmbedBuilder, actionRow) = dialogue()
+        messageComponentInteractionBase.createOriginalMessageUpdater()
+            .addEmbeds(messageEmbedBuilder)
+            .addComponents(actionRow)
+            .update()
+        val context = contextFor(getAccount(messageComponentInteractionBase.user))
+        context.ui(this)
+    }
+
+    private fun dialogue(): Pair<EmbedBuilder, ActionRow> {
         val messageEmbedBuilder = EmbedBuilder()
             .setAuthor(if (dialogueTitle != null) dialogueTitle else "Dialogue")
             .setDescription(dialoguePart!!.getContent())
@@ -150,12 +143,7 @@ class DiscordPlayerUI(private val player: Player, var interaction: Interaction) 
         }
         lowLevelComponents.add(Button.primary("end_dialogue", "Passer le dialogue"))
         val actionRow = ActionRow.of(*lowLevelComponents.toTypedArray())
-        messageComponentInteractionBase.createOriginalMessageUpdater()
-            .addEmbeds(messageEmbedBuilder)
-            .addComponents(actionRow)
-            .update()
-        val context = contextFor(getAccount(messageComponentInteractionBase.user))
-        context.ui(this)
+        return Pair(messageEmbedBuilder, actionRow)
     }
 
     private fun send(interactionBase: InteractionBase) {
