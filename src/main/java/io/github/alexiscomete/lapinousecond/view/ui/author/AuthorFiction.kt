@@ -1,6 +1,5 @@
 package io.github.alexiscomete.lapinousecond.view.ui.author
 
-import io.github.alexiscomete.lapinousecond.view.ui.author.Author
 import java.awt.image.BufferedImage
 
 class AuthorFiction(
