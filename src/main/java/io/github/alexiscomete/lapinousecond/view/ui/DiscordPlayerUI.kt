@@ -3,6 +3,8 @@ package io.github.alexiscomete.lapinousecond.view.ui
 import io.github.alexiscomete.lapinousecond.commands.withslash.getAccount
 import io.github.alexiscomete.lapinousecond.entity.Player
 import io.github.alexiscomete.lapinousecond.view.contextFor
+import io.github.alexiscomete.lapinousecond.view.ui.dialogue.Dialogue
+import io.github.alexiscomete.lapinousecond.view.ui.dialogue.DialoguePart
 import org.javacord.api.entity.message.component.ActionRow
 import org.javacord.api.entity.message.component.Button
 import org.javacord.api.entity.message.embed.EmbedBuilder

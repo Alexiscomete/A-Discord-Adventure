@@ -1,6 +1,7 @@
 package io.github.alexiscomete.lapinousecond.view.ui
 
 import io.github.alexiscomete.lapinousecond.entity.Player
+import io.github.alexiscomete.lapinousecond.view.ui.dialogue.Dialogue
 import java.awt.image.BufferedImage
 
 interface PlayerUI {
