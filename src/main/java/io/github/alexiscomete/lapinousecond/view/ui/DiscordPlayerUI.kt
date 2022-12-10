@@ -56,13 +56,33 @@ class DiscordPlayerUI(private val player: Player, var interaction: Interaction) 
                     .update()
                 return
             }
+        }else if (longCustomUI != null) {
+            val mainEmbed = EmbedBuilder()
+            if (longCustomUI!!.getTitle() != null) {
+                mainEmbed.setTitle(longCustomUI!!.getTitle())
+            }
+            if (longCustomUI!!.getDescription() != null) {
+                mainEmbed.setDescription(longCustomUI!!.getDescription())
+            }
+            if (longCustomUI!!.getUnderString() != null) {
+                mainEmbed.setFooter(longCustomUI!!.getUnderString())
+            }
+            if (longCustomUI!!.getBufferedImage() != null) {
+                mainEmbed.setImage(longCustomUI!!.getBufferedImage())
+            } else if (longCustomUI!!.getLinkedImage() != null) {
+                mainEmbed.setImage(longCustomUI!!.getLinkedImage())
+            }
+            embeds.add(mainEmbed)
+            messageComponentInteractionBase.createOriginalMessageUpdater()
+                .addEmbeds(embeds)
+                .update()
+            return
         }
         val mainEmbed = EmbedBuilder()
-        embeds.add(mainEmbed)
+            .setTitle("Rien à afficher")
+            .setDescription("Vous n'avez rien à afficher")
         messageComponentInteractionBase.createOriginalMessageUpdater()
-            .removeAllEmbeds()
-            .removeAllComponents()
-            .addEmbeds(embeds)
+            .addEmbeds(mainEmbed)
             .update()
     }
 
@@ -181,11 +201,33 @@ class DiscordPlayerUI(private val player: Player, var interaction: Interaction) 
                     .respond()
                 return
             }
+        } else if (longCustomUI != null) {
+            val mainEmbed = EmbedBuilder()
+            if (longCustomUI!!.getTitle() != null) {
+                mainEmbed.setTitle(longCustomUI!!.getTitle())
+            }
+            if (longCustomUI!!.getDescription() != null) {
+                mainEmbed.setDescription(longCustomUI!!.getDescription())
+            }
+            if (longCustomUI!!.getUnderString() != null) {
+                mainEmbed.setFooter(longCustomUI!!.getUnderString())
+            }
+            if (longCustomUI!!.getBufferedImage() != null) {
+                mainEmbed.setImage(longCustomUI!!.getBufferedImage())
+            } else if (longCustomUI!!.getLinkedImage() != null) {
+                mainEmbed.setImage(longCustomUI!!.getLinkedImage())
+            }
+            embeds.add(mainEmbed)
+            interactionBase.createImmediateResponder()
+                .addEmbeds(embeds)
+                .respond()
+            return
         }
         val mainEmbed = EmbedBuilder()
-        embeds.add(mainEmbed)
+            .setTitle("Rien à afficher")
+            .setDescription("Vous n'avez rien à afficher")
         interactionBase.createImmediateResponder()
-            .addEmbeds(embeds)
+            .addEmbeds(mainEmbed)
             .respond()
     }
 
@@ -203,8 +245,7 @@ class DiscordPlayerUI(private val player: Player, var interaction: Interaction) 
     private val interactions = mutableListOf(mainManager)
 
     // long customId
-    private var longCustomId: LongCustomUI? = null
-
+    private var longCustomUI: LongCustomUI? = null
 
     override fun addMessage(message: Message): PlayerUI {
         messages.add(message)
@@ -339,11 +380,11 @@ class DiscordPlayerUI(private val player: Player, var interaction: Interaction) 
     }
 
     override fun getLongCustomUI(): LongCustomUI? {
-        return longCustomId
+        return longCustomUI
     }
 
     override fun setLongCustomUI(longCustomUI: LongCustomUI?): PlayerUI {
-        longCustomId = longCustomUI
+        this.longCustomUI = longCustomUI
         return this
     }
 }
