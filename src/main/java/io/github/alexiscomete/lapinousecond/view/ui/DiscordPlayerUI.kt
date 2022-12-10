@@ -11,7 +11,6 @@ import org.javacord.api.entity.message.embed.EmbedBuilder
 import org.javacord.api.interaction.Interaction
 import org.javacord.api.interaction.InteractionBase
 import org.javacord.api.interaction.MessageComponentInteractionBase
-import java.awt.image.BufferedImage
 
 class DiscordPlayerUI(private val player: Player, var interaction: Interaction) : PlayerUI {
 
@@ -59,11 +58,6 @@ class DiscordPlayerUI(private val player: Player, var interaction: Interaction) 
             }
         }
         val mainEmbed = EmbedBuilder()
-        if (bufferedImage != null) {
-            mainEmbed.setImage(bufferedImage)
-        } else if (linkedImage != null) {
-            mainEmbed.setImage(linkedImage)
-        }
         embeds.add(mainEmbed)
         messageComponentInteractionBase.createOriginalMessageUpdater()
             .removeAllEmbeds()
@@ -189,21 +183,11 @@ class DiscordPlayerUI(private val player: Player, var interaction: Interaction) 
             }
         }
         val mainEmbed = EmbedBuilder()
-        if (bufferedImage != null) {
-            mainEmbed.setImage(bufferedImage)
-        } else if (linkedImage != null) {
-            mainEmbed.setImage(linkedImage)
-        }
         embeds.add(mainEmbed)
         interactionBase.createImmediateResponder()
             .addEmbeds(embeds)
             .respond()
     }
-
-    // --- Content ---
-    // images
-    private var linkedImage: String? = null
-    private var bufferedImage: BufferedImage? = null
 
     // messages
     private val messages = mutableListOf<Message>()
@@ -217,6 +201,9 @@ class DiscordPlayerUI(private val player: Player, var interaction: Interaction) 
     private val mainManager = mutableMapOf<String, InteractionUI>()
     private val dialogueManager = mutableMapOf<String, InteractionUI>()
     private val interactions = mutableListOf(mainManager)
+
+    // long customId
+    private var longCustomId: LongCustomUI? = null
 
 
     override fun addMessage(message: Message): PlayerUI {
@@ -282,8 +269,6 @@ class DiscordPlayerUI(private val player: Player, var interaction: Interaction) 
     }
 
     override fun clear(): PlayerUI {
-        bufferedImage = null
-        linkedImage = null
         messages.clear()
         dialogues.clear()
         mainManager.clear()
@@ -298,16 +283,6 @@ class DiscordPlayerUI(private val player: Player, var interaction: Interaction) 
         } else if (interaction.asMessageComponentInteraction().isPresent) {
             update(interaction.asMessageComponentInteraction().get())
         }
-        return this
-    }
-
-    override fun setImage(image: BufferedImage): PlayerUI {
-        bufferedImage = image
-        return this
-    }
-
-    override fun setImage(link: String): PlayerUI {
-        linkedImage = link
         return this
     }
 
@@ -328,14 +303,6 @@ class DiscordPlayerUI(private val player: Player, var interaction: Interaction) 
         return messages.isNotEmpty()
     }
 
-    override fun hasBufferedImage(): Boolean {
-        return bufferedImage != null
-    }
-
-    override fun hasLinkedImage(): Boolean {
-        return linkedImage != null
-    }
-
     override fun getInteraction(id: String): InteractionUI? {
         for (interaction in interactions) {
             if (interaction.containsKey(id)) {
@@ -343,14 +310,6 @@ class DiscordPlayerUI(private val player: Player, var interaction: Interaction) 
             }
         }
         return null
-    }
-
-    override fun getBufferedImage(): BufferedImage {
-        return bufferedImage!!
-    }
-
-    override fun getLinkedImage(): String {
-        return linkedImage!!
     }
 
     override fun getInteractions(): Map<String, InteractionUI> {
@@ -377,5 +336,14 @@ class DiscordPlayerUI(private val player: Player, var interaction: Interaction) 
 
     override fun getPlayer(): Player {
         return player
+    }
+
+    override fun getLongCustomUI(): LongCustomUI? {
+        return longCustomId
+    }
+
+    override fun setLongCustomUI(longCustomUI: LongCustomUI?): PlayerUI {
+        longCustomId = longCustomUI
+        return this
     }
 }

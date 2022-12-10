@@ -13,18 +13,14 @@ interface PlayerUI {
     fun removeInteraction(id: String): PlayerUI
     fun clear(): PlayerUI
     fun updateOrSend(): PlayerUI
-    fun setImage(image: BufferedImage): PlayerUI
-    fun setImage(link: String): PlayerUI
     fun hasInteraction(id: String): Boolean
     fun hasDialogue(): Boolean
     fun hasMessage(): Boolean
-    fun hasBufferedImage(): Boolean
-    fun hasLinkedImage(): Boolean
     fun getInteraction(id: String): InteractionUI?
-    fun getBufferedImage(): BufferedImage
-    fun getLinkedImage(): String
     fun getInteractions(): Map<String, InteractionUI>
     fun getMessages(): List<String>
     fun getDialogues(): List<Dialogue>
     fun getPlayer(): Player
+    fun getLongCustomUI(): LongCustomUI?
+    fun setLongCustomUI(longCustomUI: LongCustomUI?): PlayerUI
 }
