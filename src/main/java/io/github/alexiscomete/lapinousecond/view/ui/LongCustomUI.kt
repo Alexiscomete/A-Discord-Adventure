@@ -23,6 +23,13 @@ interface LongCustomUI {
     fun getUnderString(): String?
     fun setUnderString(underString: String?): LongCustomUI
 
+    // InteractionUICustomUI
+    fun getInteractionUICustomUIs(): List<InteractionUICustomUI>
+    fun setInteractionUICustomUIs(interactionUICustomUIs: List<InteractionUICustomUI>): LongCustomUI
+    fun addInteractionUICustomUI(interactionUICustomUI: InteractionUICustomUI): LongCustomUI
 
+    // every UI
+    fun getEveryUI(): EveryUI
+    fun setEveryUI(everyUI: EveryUI): LongCustomUI
 
 }
