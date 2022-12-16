@@ -7,6 +7,7 @@ import io.github.alexiscomete.lapinousecond.view.ui.dialogue.Dialogue
 import io.github.alexiscomete.lapinousecond.view.ui.dialogue.DialoguePart
 import org.javacord.api.entity.message.component.ActionRow
 import org.javacord.api.entity.message.component.Button
+import org.javacord.api.entity.message.component.HighLevelComponent
 import org.javacord.api.entity.message.embed.EmbedBuilder
 import org.javacord.api.interaction.Interaction
 import org.javacord.api.interaction.InteractionBase
@@ -220,6 +221,7 @@ class DiscordPlayerUI(private val player: Player, var interaction: Interaction) 
             embeds.add(mainEmbed)
             interactionBase.createImmediateResponder()
                 .addEmbeds(embeds)
+                .addComponents(*getComponents(longCustomUI!!))
                 .respond()
             return
         }
@@ -230,6 +232,58 @@ class DiscordPlayerUI(private val player: Player, var interaction: Interaction) 
             .addEmbeds(mainEmbed)
             .respond()
     }
+
+    private fun getComponents(longCustomUI: LongCustomUI): Array<HighLevelComponent> {
+        val components = mutableListOf<HighLevelComponent>()
+        for (element in longCustomUI.getInteractionUICustomUILists()) {
+            val lowLevelComponents = mutableListOf<Button>()
+            for (interactionUICustomUI in element) {
+                lowLevelComponents.add(
+                    when (interactionUICustomUI.getCustomInteractionStyle()) {
+                        InteractionStyle.NORMAL -> Button.primary(
+                            interactionUICustomUI.getId(),
+                            interactionUICustomUI.getTitle()
+                        )
+                        InteractionStyle.DANGER -> Button.danger(
+                            interactionUICustomUI.getId(),
+                            interactionUICustomUI.getTitle()
+                        )
+                        InteractionStyle.SUCCESS -> Button.success(
+                            interactionUICustomUI.getId(),
+                            interactionUICustomUI.getTitle()
+                        )
+                        InteractionStyle.SECONDARY -> Button.secondary(
+                            interactionUICustomUI.getId(),
+                            interactionUICustomUI.getTitle()
+                        )
+                        InteractionStyle.NORMAL_DISABLED -> Button.primary(
+                            interactionUICustomUI.getId(),
+                            interactionUICustomUI.getTitle(),
+                            true
+                        )
+                        InteractionStyle.DANGER_DISABLED -> Button.danger(
+                            interactionUICustomUI.getId(),
+                            interactionUICustomUI.getTitle(),
+                            true
+                        )
+                        InteractionStyle.SUCCESS_DISABLED -> Button.success(
+                            interactionUICustomUI.getId(),
+                            interactionUICustomUI.getTitle(),
+                            true
+                        )
+                        InteractionStyle.SECONDARY_DISABLED -> Button.secondary(
+                            interactionUICustomUI.getId(),
+                            interactionUICustomUI.getTitle(),
+                            true
+                        )
+                    }
+                )
+            }
+            components.add(ActionRow.of(*lowLevelComponents.toTypedArray()))
+        }
+        return components.toTypedArray()
+    }
+
 
     // messages
     private val messages = mutableListOf<Message>()
