@@ -5,6 +5,7 @@ import io.github.alexiscomete.lapinousecond.entity.Player
 import io.github.alexiscomete.lapinousecond.view.contextFor
 import io.github.alexiscomete.lapinousecond.view.ui.dialogue.Dialogue
 import io.github.alexiscomete.lapinousecond.view.ui.dialogue.DialoguePart
+import org.javacord.api.entity.message.MessageFlag
 import org.javacord.api.entity.message.component.ActionRow
 import org.javacord.api.entity.message.component.Button
 import org.javacord.api.entity.message.component.HighLevelComponent
@@ -75,7 +76,11 @@ class DiscordPlayerUI(private val player: Player, var interaction: Interaction) 
             }
             embeds.add(mainEmbed)
             messageComponentInteractionBase.createOriginalMessageUpdater()
+                .removeAllComponents()
+                .removeAllEmbeds()
                 .addEmbeds(embeds)
+                .addComponents(*getComponents(longCustomUI!!))
+                .setFlags(MessageFlag.EPHEMERAL)
                 .update()
             return
         }
@@ -222,6 +227,7 @@ class DiscordPlayerUI(private val player: Player, var interaction: Interaction) 
             interactionBase.createImmediateResponder()
                 .addEmbeds(embeds)
                 .addComponents(*getComponents(longCustomUI!!))
+                .setFlags(MessageFlag.EPHEMERAL)
                 .respond()
             return
         }
