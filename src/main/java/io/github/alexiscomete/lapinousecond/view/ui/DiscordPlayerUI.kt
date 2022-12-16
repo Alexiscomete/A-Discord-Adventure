@@ -299,11 +299,6 @@ class DiscordPlayerUI(private val player: Player, var interaction: Interaction) 
     private var dialoguePart: DialoguePart? = null
     private var dialogueTitle: String? = null
 
-    // interactions
-    private val mainManager = mutableMapOf<String, InteractionUI>()
-    private val dialogueManager = mutableMapOf<String, InteractionUI>()
-    private val interactions = mutableListOf(mainManager)
-
     // long customId
     private var longCustomUI: LongCustomUI? = null
 
@@ -314,22 +309,10 @@ class DiscordPlayerUI(private val player: Player, var interaction: Interaction) 
 
     override fun addDialogue(dialogue: Dialogue): PlayerUI {
         dialogues.add(dialogue)
-        interactions.add(dialogueManager)
-        return this
-    }
-
-    override fun addInteraction(id: String, interaction: InteractionUI): PlayerUI {
-        mainManager[id] = interaction
         return this
     }
 
     override fun respondToInteraction(id: String): PlayerUI {
-        for (interaction in interactions) {
-            if (interaction.containsKey(id)) {
-                interaction[id]?.execute(this)
-                return this
-            }
-        }
         if (id.contains("end_dialogue")) {
             dialoguePart = null
             dialogueTitle = null
@@ -347,24 +330,8 @@ class DiscordPlayerUI(private val player: Player, var interaction: Interaction) 
     }
 
     override fun respondToInteractionWithArgument(id: String, argument: String): PlayerUI {
-        for (interaction in interactions) {
-            if (interaction.containsKey(id)) {
-                interaction[id]?.executeWithArgument(this, argument)
-                return this
-            }
-        }
         if (id.contains("just_update")) {
             updateOrSend()
-        }
-        return this
-    }
-
-    override fun removeInteraction(id: String): PlayerUI {
-        for (interaction in interactions) {
-            if (interaction.containsKey(id)) {
-                interaction.remove(id)
-                return this
-            }
         }
         return this
     }
@@ -372,7 +339,6 @@ class DiscordPlayerUI(private val player: Player, var interaction: Interaction) 
     override fun clear(): PlayerUI {
         messages.clear()
         dialogues.clear()
-        mainManager.clear()
         return this
     }
 
@@ -387,40 +353,12 @@ class DiscordPlayerUI(private val player: Player, var interaction: Interaction) 
         return this
     }
 
-    override fun hasInteraction(id: String): Boolean {
-        for (interaction in interactions) {
-            if (interaction.containsKey(id)) {
-                return true
-            }
-        }
-        return false
-    }
-
     override fun hasDialogue(): Boolean {
         return dialogues.isNotEmpty()
     }
 
     override fun hasMessage(): Boolean {
         return messages.isNotEmpty()
-    }
-
-    override fun getInteraction(id: String): InteractionUI? {
-        for (interaction in interactions) {
-            if (interaction.containsKey(id)) {
-                return interaction[id]
-            }
-        }
-        return null
-    }
-
-    override fun getInteractions(): Map<String, InteractionUI> {
-        val map = mutableMapOf<String, InteractionUI>()
-        for (interaction in interactions) {
-            for (key in interaction.keys) {
-                map[key] = interaction[key]!!
-            }
-        }
-        return map
     }
 
     override fun getMessages(): List<String> {
