@@ -14,6 +14,7 @@ import io.github.alexiscomete.lapinousecond.view.ui.EmbedPages
 import io.github.alexiscomete.lapinousecond.view.ui.MenuBuilder
 import io.github.alexiscomete.lapinousecond.view.contextmanager.SelectMenuContextManager
 import io.github.alexiscomete.lapinousecond.view.ui.DiscordPlayerUI
+import io.github.alexiscomete.lapinousecond.view.ui.longuis.PixelByPixelUI
 import io.github.alexiscomete.lapinousecond.view.ui.longuis.TestingUI
 import io.github.alexiscomete.lapinousecond.worlds.WorldEnum
 import io.github.alexiscomete.lapinousecond.worlds.bigger
@@ -512,7 +513,13 @@ class MapCommand : Command(
                     ) { buttonClickEvent: ButtonClickEvent, contextUI, _ ->
                         // TODO : faire le mode pixel par pixel !!!!!!!!!!! voire issue #106
                         val ui = DiscordPlayerUI(context, buttonClickEvent.interaction)
-                        ui.setLongCustomUI(TestingUI(ui))
+                        ui.setLongCustomUI(PixelByPixelUI(
+                            ui,
+                            null,
+                            null,
+                            0,
+                            0
+                        ))
                         ui.updateOrSend()
                         contextUI.ui(ui)
                     }
