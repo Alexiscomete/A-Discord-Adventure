@@ -18,4 +18,5 @@ interface PlayerUI {
     fun getPlayer(): Player
     fun getLongCustomUI(): LongCustomUI?
     fun setLongCustomUI(longCustomUI: LongCustomUI?): PlayerUI
+    fun canExecute(id: String): Boolean
 }

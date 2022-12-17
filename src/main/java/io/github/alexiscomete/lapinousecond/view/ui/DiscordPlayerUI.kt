@@ -339,7 +339,7 @@ class DiscordPlayerUI(private val player: Player, var interaction: Interaction) 
             updateOrSend()
             return this
         }
-        if (longCustomUI!!.hasInteractionID(id)) {
+        if (longCustomUI?.hasInteractionID(id) == true) {
             longCustomUI!!.respondToInteraction(id, argument)
             updateOrSend()
             return this
@@ -354,6 +354,10 @@ class DiscordPlayerUI(private val player: Player, var interaction: Interaction) 
         }
         updateOrSend()
         return this
+    }
+
+    override fun canExecute(id: String): Boolean {
+        return longCustomUI?.hasInteractionID(id) == true || id.contains("just_update") || id.contains("end_dialogue") || id.contains("next_dialogue") || id.contains("previous_dialogue")
     }
 
     override fun clear(): PlayerUI {
