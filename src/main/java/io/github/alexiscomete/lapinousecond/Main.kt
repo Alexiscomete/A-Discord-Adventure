@@ -1,7 +1,7 @@
 package io.github.alexiscomete.lapinousecond
 
-import io.github.alexiscomete.lapinousecond.commands.withslash.ListenerSlashCommands
-import io.github.alexiscomete.lapinousecond.commands.withslash.loadAllS
+import io.github.alexiscomete.lapinousecond.view.discord.commands.ListenerSlashCommands
+import io.github.alexiscomete.lapinousecond.view.discord.commands.loadAllS
 import io.github.alexiscomete.lapinousecond.view.manager.ButtonsManager
 import io.github.alexiscomete.lapinousecond.view.manager.MessagesManager
 import io.github.alexiscomete.lapinousecond.view.manager.ModalManager

@@ -1,8 +1,9 @@
 package io.github.alexiscomete.lapinousecond.view.ui
 
-import io.github.alexiscomete.lapinousecond.commands.withslash.getAccount
 import io.github.alexiscomete.lapinousecond.entity.Player
+import io.github.alexiscomete.lapinousecond.view.Context
 import io.github.alexiscomete.lapinousecond.view.contextFor
+import io.github.alexiscomete.lapinousecond.view.discord.commands.getAccount
 import io.github.alexiscomete.lapinousecond.view.ui.dialogue.Dialogue
 import io.github.alexiscomete.lapinousecond.view.ui.dialogue.DialoguePart
 import org.javacord.api.entity.message.MessageFlag
@@ -14,7 +15,7 @@ import org.javacord.api.interaction.Interaction
 import org.javacord.api.interaction.InteractionBase
 import org.javacord.api.interaction.MessageComponentInteractionBase
 
-class DiscordPlayerUI(private val player: Player, var interaction: Interaction) : PlayerUI {
+class DiscordPlayerUI(private val context: Context, var interaction: Interaction) : PlayerUI {
 
     // --- methods ---
 
@@ -398,7 +399,7 @@ class DiscordPlayerUI(private val player: Player, var interaction: Interaction) 
     }
 
     override fun getPlayer(): Player {
-        return player
+        return context.players.player.player
     }
 
     override fun getLongCustomUI(): LongCustomUI? {

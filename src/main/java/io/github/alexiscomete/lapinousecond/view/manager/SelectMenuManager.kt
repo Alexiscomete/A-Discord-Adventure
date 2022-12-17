@@ -1,6 +1,6 @@
 package io.github.alexiscomete.lapinousecond.view.manager
 
-import io.github.alexiscomete.lapinousecond.commands.withslash.getAccount
+import io.github.alexiscomete.lapinousecond.view.discord.commands.getAccount
 import io.github.alexiscomete.lapinousecond.view.contextFor
 import org.javacord.api.entity.message.MessageFlag
 import org.javacord.api.event.interaction.SelectMenuChooseEvent
