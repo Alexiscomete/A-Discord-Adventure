@@ -313,26 +313,46 @@ class DiscordPlayerUI(private val player: Player, var interaction: Interaction) 
     }
 
     override fun respondToInteraction(id: String): PlayerUI {
+        if (id.contains("just_update")) {
+            updateOrSend()
+            return this
+        }
+        if (longCustomUI!!.hasInteractionID(id)) {
+            longCustomUI!!.respondToInteraction(id)
+            updateOrSend()
+            return this
+        }
         if (id.contains("end_dialogue")) {
             dialoguePart = null
             dialogueTitle = null
-        }
-        if (id.contains("next_dialogue")) {
+        }else if (id.contains("next_dialogue")) {
             dialoguePart = dialoguePart!!.next()
-        }
-        if (id.contains("previous_dialogue")) {
+        }else if (id.contains("previous_dialogue")) {
             dialoguePart = dialoguePart!!.before()
         }
-        if (id.contains("just_update")) {
-            updateOrSend()
-        }
+        updateOrSend()
         return this
     }
 
-    override fun respondToInteractionWithArgument(id: String, argument: String): PlayerUI {
+    override fun respondToInteraction(id: String, argument: String): PlayerUI {
         if (id.contains("just_update")) {
             updateOrSend()
+            return this
         }
+        if (longCustomUI!!.hasInteractionID(id)) {
+            longCustomUI!!.respondToInteraction(id, argument)
+            updateOrSend()
+            return this
+        }
+        if (id.contains("end_dialogue")) {
+            dialoguePart = null
+            dialogueTitle = null
+        }else if (id.contains("next_dialogue")) {
+            dialoguePart = dialoguePart!!.next()
+        }else if (id.contains("previous_dialogue")) {
+            dialoguePart = dialoguePart!!.before()
+        }
+        updateOrSend()
         return this
     }
 

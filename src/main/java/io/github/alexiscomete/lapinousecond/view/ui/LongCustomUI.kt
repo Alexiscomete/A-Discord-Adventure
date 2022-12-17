@@ -28,6 +28,9 @@ interface LongCustomUI {
     fun setInteractionUICustomUIs(interactionUICustomUIs: List<List<InteractionUICustomUI>>): LongCustomUI
     fun addInteractionUICustomUI(interactionUICustomUI: InteractionUICustomUI): LongCustomUI
     fun addInteractionUICustomUIs(interactionUICustomUIs: List<InteractionUICustomUI>): LongCustomUI
+    fun hasInteractionID(id: String): Boolean
+    fun respondToInteraction(id: String): LongCustomUI
+    fun respondToInteraction(id: String, argument: String): LongCustomUI
 
     // every UI
     fun getPlayerUI(): PlayerUI

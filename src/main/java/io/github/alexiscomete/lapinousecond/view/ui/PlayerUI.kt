@@ -8,7 +8,7 @@ interface PlayerUI {
     fun addMessage(message: Message): PlayerUI
     fun addDialogue(dialogue: Dialogue): PlayerUI
     fun respondToInteraction(id: String): PlayerUI
-    fun respondToInteractionWithArgument(id: String, argument: String): PlayerUI
+    fun respondToInteraction(id: String, argument: String): PlayerUI
     fun clear(): PlayerUI
     fun updateOrSend(): PlayerUI
     fun hasDialogue(): Boolean
