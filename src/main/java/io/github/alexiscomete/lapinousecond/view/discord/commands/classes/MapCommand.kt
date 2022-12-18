@@ -1,8 +1,5 @@
 package io.github.alexiscomete.lapinousecond.view.discord.commands.classes
 
-import io.github.alexiscomete.lapinousecond.view.discord.commands.Command
-import io.github.alexiscomete.lapinousecond.view.discord.commands.ExecutableWithArguments
-import io.github.alexiscomete.lapinousecond.view.discord.commands.getAccount
 import io.github.alexiscomete.lapinousecond.entity.Player
 import io.github.alexiscomete.lapinousecond.entity.PlayerWithAccount
 import io.github.alexiscomete.lapinousecond.resources.Resource
@@ -10,12 +7,14 @@ import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
 import io.github.alexiscomete.lapinousecond.view.Context
 import io.github.alexiscomete.lapinousecond.view.contextFor
 import io.github.alexiscomete.lapinousecond.view.contextmanager.ModalContextManager
+import io.github.alexiscomete.lapinousecond.view.contextmanager.SelectMenuContextManager
+import io.github.alexiscomete.lapinousecond.view.discord.commands.Command
+import io.github.alexiscomete.lapinousecond.view.discord.commands.ExecutableWithArguments
+import io.github.alexiscomete.lapinousecond.view.discord.commands.getAccount
+import io.github.alexiscomete.lapinousecond.view.ui.DiscordPlayerUI
 import io.github.alexiscomete.lapinousecond.view.ui.EmbedPages
 import io.github.alexiscomete.lapinousecond.view.ui.MenuBuilder
-import io.github.alexiscomete.lapinousecond.view.contextmanager.SelectMenuContextManager
-import io.github.alexiscomete.lapinousecond.view.ui.DiscordPlayerUI
 import io.github.alexiscomete.lapinousecond.view.ui.longuis.PixelByPixelUI
-import io.github.alexiscomete.lapinousecond.view.ui.longuis.TestingUI
 import io.github.alexiscomete.lapinousecond.worlds.WorldEnum
 import io.github.alexiscomete.lapinousecond.worlds.bigger
 import io.github.alexiscomete.lapinousecond.worlds.map.FilesMapEnum

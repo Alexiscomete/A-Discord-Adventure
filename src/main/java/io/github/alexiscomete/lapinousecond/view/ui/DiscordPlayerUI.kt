@@ -71,18 +71,42 @@ class DiscordPlayerUI(private val context: Context, var interaction: Interaction
                 mainEmbed.setFooter(longCustomUI!!.getUnderString())
             }
             if (longCustomUI!!.getBufferedImage() != null) {
+                println("Buffered image not null")
                 mainEmbed.setImage(longCustomUI!!.getBufferedImage())
+                val later = messageComponentInteractionBase.respondLater()
+                later.thenAccept {
+                    embeds.add(mainEmbed)
+                    it
+                        .removeAllComponents()
+                        .removeAllEmbeds()
+                        .addEmbeds(embeds)
+                        .addComponents(*getComponents(longCustomUI!!))
+                        .setFlags(MessageFlag.EPHEMERAL)
+                        .update()
+                }
             } else if (longCustomUI!!.getLinkedImage() != null) {
                 mainEmbed.setImage(longCustomUI!!.getLinkedImage())
+                val later = messageComponentInteractionBase.respondLater()
+                later.thenAccept {
+                    embeds.add(mainEmbed)
+                    it
+                        .removeAllComponents()
+                        .removeAllEmbeds()
+                        .addEmbeds(embeds)
+                        .addComponents(*getComponents(longCustomUI!!))
+                        .setFlags(MessageFlag.EPHEMERAL)
+                        .update()
+                }
+            } else {
+                embeds.add(mainEmbed)
+                messageComponentInteractionBase.createOriginalMessageUpdater()
+                    .removeAllComponents()
+                    .removeAllEmbeds()
+                    .addEmbeds(embeds)
+                    .addComponents(*getComponents(longCustomUI!!))
+                    .setFlags(MessageFlag.EPHEMERAL)
+                    .update()
             }
-            embeds.add(mainEmbed)
-            messageComponentInteractionBase.createOriginalMessageUpdater()
-                .removeAllComponents()
-                .removeAllEmbeds()
-                .addEmbeds(embeds)
-                .addComponents(*getComponents(longCustomUI!!))
-                .setFlags(MessageFlag.EPHEMERAL)
-                .update()
             return
         }
         val mainEmbed = EmbedBuilder()
@@ -219,7 +243,9 @@ class DiscordPlayerUI(private val context: Context, var interaction: Interaction
             if (longCustomUI!!.getUnderString() != null) {
                 mainEmbed.setFooter(longCustomUI!!.getUnderString())
             }
+            print("test")
             if (longCustomUI!!.getBufferedImage() != null) {
+                print("image")
                 mainEmbed.setImage(longCustomUI!!.getBufferedImage())
             } else if (longCustomUI!!.getLinkedImage() != null) {
                 mainEmbed.setImage(longCustomUI!!.getLinkedImage())
