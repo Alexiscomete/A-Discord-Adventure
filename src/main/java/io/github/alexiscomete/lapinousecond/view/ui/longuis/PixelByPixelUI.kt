@@ -60,9 +60,15 @@ class PixelByPixelUI(
 
     private var interactionUICustomUILists: List<List<InteractionUICustomUI>> = listOf(
         listOf(
+            DisabledUI(
+                this,
+                InteractionStyle.NORMAL_DISABLED,
+                "none0",
+                " "
+            ),
             SimpleInteractionUICustomUI(
                 "up",
-                "🔼",
+                "⬆",
                 "Move up",
                 this,
                 InteractionStyle.NORMAL,
@@ -73,11 +79,17 @@ class PixelByPixelUI(
                     y--
                 },
             ),
+            DisabledUI(
+                this,
+                InteractionStyle.NORMAL_DISABLED,
+                "none2",
+                " "
+            ),
         ),
         listOf(
             SimpleInteractionUICustomUI(
                 "left",
-                "◀",
+                "⬅",
                 "Move left",
                 this,
                 InteractionStyle.NORMAL,
@@ -90,28 +102,28 @@ class PixelByPixelUI(
             ),
             SimpleInteractionUICustomUI(
                 "down",
-                "🔽",
+                "⬇",
                 "Move down",
                 this,
                 InteractionStyle.NORMAL,
                 {
-                    x++
+                    y++
                 },
                 { _, _ ->
-                    x++
+                    y++
                 },
             ),
             SimpleInteractionUICustomUI(
                 "right",
-                "▶",
+                "➡",
                 "Move right",
                 this,
                 InteractionStyle.NORMAL,
                 {
-                    y++
+                    x++
                 },
                 { _, _ ->
-                    y++
+                    x++
                 },
             )
         ),

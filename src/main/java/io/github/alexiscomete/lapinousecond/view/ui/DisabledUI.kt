@@ -3,7 +3,9 @@ package io.github.alexiscomete.lapinousecond.view.ui
 class DisabledUI(
     private var customUI: LongCustomUI,
     private val customInteractionStyle: InteractionStyle,
-    ) : InteractionUICustomUI {
+    private var id: String,
+    private var title: String,
+) : InteractionUICustomUI {
     override fun getCustomUI(): LongCustomUI {
         return customUI
     }
@@ -14,46 +16,48 @@ class DisabledUI(
     }
 
     override fun getCustomInteractionStyle(): InteractionStyle {
-        TODO("Not yet implemented")
+        return customInteractionStyle
     }
 
     override fun execute(ui: PlayerUI): InteractionUI {
-        TODO("Not yet implemented")
+        return this
     }
 
     override fun executeWithArgument(ui: PlayerUI, argument: String): InteractionUI {
-        TODO("Not yet implemented")
+        return this
     }
 
     override fun canBeExecutedWithArgument(): Boolean {
-        TODO("Not yet implemented")
+        return false
     }
 
     override fun canBeExecutedWithoutArgument(): Boolean {
-        TODO("Not yet implemented")
+        return false
     }
 
     override fun getId(): String {
-        TODO("Not yet implemented")
+        return id
     }
 
     override fun setId(id: String): InteractionUI {
-        TODO("Not yet implemented")
+        this.id = id
+        return this
     }
 
     override fun getTitle(): String {
-        TODO("Not yet implemented")
+        return title
     }
 
     override fun setTitle(title: String): InteractionUI {
-        TODO("Not yet implemented")
+        this.title = title
+        return this
     }
 
     override fun getDescription(): String? {
-        TODO("Not yet implemented")
+        return null
     }
 
     override fun setDescription(description: String?): InteractionUI {
-        TODO("Not yet implemented")
+        return this
     }
 }
