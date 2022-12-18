@@ -1,18 +1,36 @@
 package io.github.alexiscomete.lapinousecond.view.ui.longuis
 
 import io.github.alexiscomete.lapinousecond.view.ui.*
+import io.github.alexiscomete.lapinousecond.worlds.WorldEnum
 import java.awt.image.BufferedImage
 
 class PixelByPixelUI(
     private var playerUI: PlayerUI,
     private var image: BufferedImage?,
     private var linkedImage: String?,
-    private var x: Int,
-    private var y: Int,
 ) : LongCustomUI {
 
     private var title: String = "Pixel by pixel"
     private var description = "Move with buttons"
+    private val player
+        get() = playerUI.getPlayer()
+    private val worldStr
+        get() = player["world"]
+
+    private val world
+        get() = WorldEnum.valueOf(worldStr)
+
+    private var x: Int
+        get() = player["place_${worldStr}_x"].toInt()
+        set(value) {
+            player["place_${worldStr}_x"] = value.toString()
+        }
+
+    private var y: Int
+        get() = player["place_${worldStr}_y"].toInt()
+        set(value) {
+            player["place_${worldStr}_y"] = value.toString()
+        }
 
     override fun getTitle(): String {
         return title

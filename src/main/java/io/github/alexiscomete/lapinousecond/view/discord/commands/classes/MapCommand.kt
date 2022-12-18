@@ -236,7 +236,7 @@ class MapCommand : Command(
 
     }
 
-    class M2(name: String): ModalContextManager(name) {
+    class M2(name: String) : ModalContextManager(name) {
         override fun ex(smce: ModalSubmitEvent, c: Context) {
 
             // get optionals text inputs from modal interaction
@@ -313,7 +313,7 @@ class MapCommand : Command(
         }
     }
 
-    class M4(name: String): ModalContextManager(name) {
+    class M4(name: String) : ModalContextManager(name) {
         override fun ex(smce: ModalSubmitEvent, c: Context) {
             val modalInteraction = smce.modalInteraction
             val opX = modalInteraction.getTextInputValueByCustomId("cxid")
@@ -374,7 +374,7 @@ class MapCommand : Command(
         }
     }
 
-    class M5(name: String): ModalContextManager(name) {
+    class M5(name: String) : ModalContextManager(name) {
         override fun ex(smce: ModalSubmitEvent, c: Context) {
             val opInt = smce.interaction.asModalInteraction()
             if (!opInt.isPresent) {
@@ -511,15 +511,14 @@ class MapCommand : Command(
                         "Pixel par pixel",
                         "Mode de déplacement maîtrisable."
                     ) { buttonClickEvent: ButtonClickEvent, contextUI, _ ->
-                        // TODO : faire le mode pixel par pixel !!!!!!!!!!! voire issue #106
                         val ui = DiscordPlayerUI(context, buttonClickEvent.interaction)
-                        ui.setLongCustomUI(PixelByPixelUI(
-                            ui,
-                            null,
-                            null,
-                            0,
-                            0
-                        ))
+                        ui.setLongCustomUI(
+                            PixelByPixelUI(
+                                ui,
+                                null,
+                                null
+                            )
+                        )
                         ui.updateOrSend()
                         contextUI.ui(ui)
                     }
