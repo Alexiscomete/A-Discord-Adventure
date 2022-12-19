@@ -73,7 +73,8 @@ class DiscordPlayerUI(private val context: Context, var interaction: Interaction
             if (longCustomUI!!.getBufferedImage() != null) {
                 println("Buffered image not null")
                 mainEmbed.setImage(longCustomUI!!.getBufferedImage())
-                val later = messageComponentInteractionBase.respondLater()
+                val later = messageComponentInteractionBase
+                    .respondLater(true)
                 later.thenAccept {
                     embeds.add(mainEmbed)
                     it
@@ -86,7 +87,8 @@ class DiscordPlayerUI(private val context: Context, var interaction: Interaction
                 }
             } else if (longCustomUI!!.getLinkedImage() != null) {
                 mainEmbed.setImage(longCustomUI!!.getLinkedImage())
-                val later = messageComponentInteractionBase.respondLater()
+                val later = messageComponentInteractionBase
+                    .respondLater(true)
                 later.thenAccept {
                     embeds.add(mainEmbed)
                     it
