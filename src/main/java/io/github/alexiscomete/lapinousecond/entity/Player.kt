@@ -93,18 +93,18 @@ open class Player(id: Long) : CacheGetSet(id, PLAYERS), Owner {
 
     fun setPath(path: ArrayList<PixelManager>, type: String) {
         savePath(path)
-        this["place_path_type"] = type
-        this["place_path_start"] = System.currentTimeMillis().toString()
-        this["place_DIBIMAP_type"] = "path"
+        this["place_${this["world"]}_path_type"] = type
+        this["place_${this["world"]}_path_start"] = System.currentTimeMillis().toString()
+        this["place_${this["world"]}_type"] = "path"
     }
 
     private fun getPath(): ArrayList<PixelManager> {
         val currentPath = stringSaveToPath()
         if (currentPath.isEmpty()) {
-            this["place_DIBIMAP_type"] = "unknown"
+            this["place_${this["world"]}_type"] = "unknown"
             return ArrayList()
         }
-        val startTime = getString("place_path_start").toLong()
+        val startTime = getString("place_${this["world"]}_path_start").toLong()
         val currentTime = System.currentTimeMillis()
         // le temps en ms pour 1 pixel est de 10000, il faut enlever tous les pixels déjà parcourus de la liste puis la sauvegarder
         val numberOfPixel = (currentTime - startTime) / 10000
@@ -114,7 +114,7 @@ open class Player(id: Long) : CacheGetSet(id, PLAYERS), Owner {
             remainingPath.add(currentPath[i])
         }
         savePath(remainingPath)
-        this["place_path_start"] = System.currentTimeMillis().toString()
+        this["place_${this["world"]}_path_start"] = System.currentTimeMillis().toString()
         return remainingPath
     }
 
@@ -126,11 +126,11 @@ open class Player(id: Long) : CacheGetSet(id, PLAYERS), Owner {
             pathStr.append(pixel.y)
             pathStr.append(";")
         }
-        this["place_path"] = pathStr.toString()
+        this["place_${this["world"]}_path"] = pathStr.toString()
     }
 
     private fun stringSaveToPath(): ArrayList<PixelManager> {
-        val pathStr = getString("place_path")
+        val pathStr = getString("place_${this["world"]}_path")
         val path = ArrayList<PixelManager>()
         if (pathStr != "") {
             val pathSplit = pathStr.split(";")
