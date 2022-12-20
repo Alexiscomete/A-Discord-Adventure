@@ -5,9 +5,22 @@ import procedural_generation.noise.ComplexNoise
 import java.awt.Color
 import java.awt.image.BufferedImage
 
-class WorldProcedural(private val complexNoise: ComplexNoise, private val maxX: Int, private val maxY: Int) : WorldManager {
+class WorldProcedural(
+    private val complexNoise: ComplexNoise,
+    private val maxX: Int,
+    private val maxY: Int
+) : WorldManager {
     override fun isLand(x: Int, y: Int): Boolean {
         return complexNoise.getValue(x.toDouble(), y.toDouble()) > 0.5
+    }
+
+    override fun isLand(x: Double, y: Double): Boolean {
+        return complexNoise.getValue(x, y) > 0.5
+    }
+
+    override fun isLand(x: Int, y: Int, zoom: Zooms): Boolean {
+        val (x1, y1) = zoom.zoomOutTo(Zooms.ZOOM_OUT, x.toDouble(), y.toDouble())
+        return isLand(x1, y1)
     }
 
     override fun zoom(zoneToAdapt: WorldEnum.ZoneToAdapt): BufferedImage {
