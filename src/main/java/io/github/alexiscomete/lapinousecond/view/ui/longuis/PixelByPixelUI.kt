@@ -12,6 +12,8 @@ class PixelByPixelUI(
 
     private var title: String = "Pixel by pixel"
     private var description = "Move with buttons"
+    private var currentZoomCoefficient: Int = 1
+
     private val player
         get() = playerUI.getPlayer()
     private val worldStr
@@ -91,10 +93,10 @@ class PixelByPixelUI(
                 this,
                 InteractionStyle.NORMAL,
                 {
-                    y--
+                    y -= currentZoomCoefficient
                 },
                 { _, _ ->
-                    y--
+                    y -= currentZoomCoefficient
                 },
             ),
             DisabledUI(
@@ -112,10 +114,10 @@ class PixelByPixelUI(
                 this,
                 InteractionStyle.NORMAL,
                 {
-                    x--
+                    x -= currentZoomCoefficient
                 },
                 { _, _ ->
-                    x--
+                    x -= currentZoomCoefficient
                 },
             ),
             SimpleInteractionUICustomUI(
@@ -125,10 +127,10 @@ class PixelByPixelUI(
                 this,
                 InteractionStyle.NORMAL,
                 {
-                    y++
+                    y += currentZoomCoefficient
                 },
                 { _, _ ->
-                    y++
+                    y += currentZoomCoefficient
                 },
             ),
             SimpleInteractionUICustomUI(
@@ -138,10 +140,10 @@ class PixelByPixelUI(
                 this,
                 InteractionStyle.NORMAL,
                 {
-                    x++
+                    x += currentZoomCoefficient
                 },
                 { _, _ ->
-                    x++
+                    x += currentZoomCoefficient
                 },
             )
         ),
