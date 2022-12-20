@@ -21,7 +21,6 @@ class DiscordPlayerUI(private val context: Context, var interaction: Interaction
 
     private fun update(messageComponentInteractionBase: MessageComponentInteractionBase) {
         // note : max 10 embeds and 6000 characters
-        val embeds = mutableListOf<EmbedBuilder>()
         if (messages.isNotEmpty()) {
             val messageEmbed = messages(messageComponentInteractionBase)
             messageComponentInteractionBase.createOriginalMessageUpdater()
@@ -59,7 +58,7 @@ class DiscordPlayerUI(private val context: Context, var interaction: Interaction
                     .update()
                 return
             }
-        }else if (longCustomUI != null) {
+        } else if (longCustomUI != null) {
             val mainEmbed = EmbedBuilder()
             if (longCustomUI!!.getTitle() != null) {
                 mainEmbed.setTitle(longCustomUI!!.getTitle())
@@ -71,16 +70,14 @@ class DiscordPlayerUI(private val context: Context, var interaction: Interaction
                 mainEmbed.setFooter(longCustomUI!!.getUnderString())
             }
             if (longCustomUI!!.getBufferedImage() != null) {
-                println("Buffered image not null")
                 mainEmbed.setImage(longCustomUI!!.getBufferedImage())
                 val later = messageComponentInteractionBase
                     .respondLater(true)
                 later.thenAccept {
-                    embeds.add(mainEmbed)
                     it
                         .removeAllComponents()
                         .removeAllEmbeds()
-                        .addEmbeds(embeds)
+                        .addEmbeds(mainEmbed)
                         .addComponents(*getComponents(longCustomUI!!))
                         .setFlags(MessageFlag.EPHEMERAL)
                         .update()
@@ -90,21 +87,19 @@ class DiscordPlayerUI(private val context: Context, var interaction: Interaction
                 val later = messageComponentInteractionBase
                     .respondLater(true)
                 later.thenAccept {
-                    embeds.add(mainEmbed)
                     it
                         .removeAllComponents()
                         .removeAllEmbeds()
-                        .addEmbeds(embeds)
+                        .addEmbeds(mainEmbed)
                         .addComponents(*getComponents(longCustomUI!!))
                         .setFlags(MessageFlag.EPHEMERAL)
                         .update()
                 }
             } else {
-                embeds.add(mainEmbed)
                 messageComponentInteractionBase.createOriginalMessageUpdater()
                     .removeAllComponents()
                     .removeAllEmbeds()
-                    .addEmbeds(embeds)
+                    .addEmbeds(mainEmbed)
                     .addComponents(*getComponents(longCustomUI!!))
                     .setFlags(MessageFlag.EPHEMERAL)
                     .update()
@@ -279,33 +274,40 @@ class DiscordPlayerUI(private val context: Context, var interaction: Interaction
                             interactionUICustomUI.getId(),
                             interactionUICustomUI.getTitle()
                         )
+
                         InteractionStyle.DANGER -> Button.danger(
                             interactionUICustomUI.getId(),
                             interactionUICustomUI.getTitle()
                         )
+
                         InteractionStyle.SUCCESS -> Button.success(
                             interactionUICustomUI.getId(),
                             interactionUICustomUI.getTitle()
                         )
+
                         InteractionStyle.SECONDARY -> Button.secondary(
                             interactionUICustomUI.getId(),
                             interactionUICustomUI.getTitle()
                         )
+
                         InteractionStyle.NORMAL_DISABLED -> Button.primary(
                             interactionUICustomUI.getId(),
                             interactionUICustomUI.getTitle(),
                             true
                         )
+
                         InteractionStyle.DANGER_DISABLED -> Button.danger(
                             interactionUICustomUI.getId(),
                             interactionUICustomUI.getTitle(),
                             true
                         )
+
                         InteractionStyle.SUCCESS_DISABLED -> Button.success(
                             interactionUICustomUI.getId(),
                             interactionUICustomUI.getTitle(),
                             true
                         )
+
                         InteractionStyle.SECONDARY_DISABLED -> Button.secondary(
                             interactionUICustomUI.getId(),
                             interactionUICustomUI.getTitle(),
@@ -354,9 +356,9 @@ class DiscordPlayerUI(private val context: Context, var interaction: Interaction
         if (id.contains("end_dialogue")) {
             dialoguePart = null
             dialogueTitle = null
-        }else if (id.contains("next_dialogue")) {
+        } else if (id.contains("next_dialogue")) {
             dialoguePart = dialoguePart!!.next()
-        }else if (id.contains("previous_dialogue")) {
+        } else if (id.contains("previous_dialogue")) {
             dialoguePart = dialoguePart!!.before()
         }
         updateOrSend()
@@ -376,9 +378,9 @@ class DiscordPlayerUI(private val context: Context, var interaction: Interaction
         if (id.contains("end_dialogue")) {
             dialoguePart = null
             dialogueTitle = null
-        }else if (id.contains("next_dialogue")) {
+        } else if (id.contains("next_dialogue")) {
             dialoguePart = dialoguePart!!.next()
-        }else if (id.contains("previous_dialogue")) {
+        } else if (id.contains("previous_dialogue")) {
             dialoguePart = dialoguePart!!.before()
         }
         updateOrSend()
@@ -386,7 +388,9 @@ class DiscordPlayerUI(private val context: Context, var interaction: Interaction
     }
 
     override fun canExecute(id: String): Boolean {
-        return longCustomUI?.hasInteractionID(id) == true || id.contains("just_update") || id.contains("end_dialogue") || id.contains("next_dialogue") || id.contains("previous_dialogue")
+        return longCustomUI?.hasInteractionID(id) == true || id.contains("just_update") || id.contains("end_dialogue") || id.contains(
+            "next_dialogue"
+        ) || id.contains("previous_dialogue")
     }
 
     override fun clear(): PlayerUI {
