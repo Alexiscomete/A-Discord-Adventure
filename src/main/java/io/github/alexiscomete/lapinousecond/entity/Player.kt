@@ -101,9 +101,10 @@ open class Player(id: Long) : CacheGetSet(id, PLAYERS), Owner {
     private fun getPath(): ArrayList<PixelManager> {
         val currentPath = stringSaveToPath()
         if (currentPath.isEmpty()) {
-            this["place_${this["world"]}_type"] = "unknown"
+            this["place_${this["world"]}_type"] = "coos"
             return ArrayList()
         }
+        val lastPixel = currentPath[currentPath.size - 1]
         val startTime = getString("place_${this["world"]}_path_start").toLong()
         val currentTime = System.currentTimeMillis()
         // le temps en ms pour 1 pixel est de 10000, il faut enlever tous les pixels déjà parcourus de la liste puis la sauvegarder
@@ -114,6 +115,11 @@ open class Player(id: Long) : CacheGetSet(id, PLAYERS), Owner {
             remainingPath.add(currentPath[i])
         }
         savePath(remainingPath)
+        if (remainingPath.size < 2) {
+            this["place_${this["world"]}_type"] = "coos"
+            this["place_${this["world"]}_x"] = lastPixel.x.toString()
+            this["place_${this["world"]}_y"] = lastPixel.y.toString()
+        }
         this["place_${this["world"]}_path_start"] = System.currentTimeMillis().toString()
         return remainingPath
     }
@@ -135,9 +141,11 @@ open class Player(id: Long) : CacheGetSet(id, PLAYERS), Owner {
         if (pathStr != "") {
             val pathSplit = pathStr.split(";")
             for (i in pathSplit.indices) {
-                val pixelSplit = pathSplit[i].split(",")
-                val world = WorldEnum.valueOf(getString("world"))
-                path.add(world.getPixel(pixelSplit[0].toInt(), pixelSplit[1].toInt()))
+                if (pathSplit[i] != "") {
+                    val pixelSplit = pathSplit[i].split(",")
+                    val world = WorldEnum.valueOf(getString("world"))
+                    path.add(world.getPixel(pixelSplit[0].toInt(), pixelSplit[1].toInt()))
+                }
             }
         }
         return path
@@ -164,9 +172,15 @@ open class Player(id: Long) : CacheGetSet(id, PLAYERS), Owner {
 
             "path" -> {
                 val path = getPath()
-                val firstPixel = path[0]
-                val lastPixel = path[path.size - 1]
-                "Vous êtes dans le monde ${world}, sur un chemin. Le premier pixel est (${firstPixel.x}, ${firstPixel.y}), le dernier pixel est (${lastPixel.x}, ${lastPixel.y})"
+                if (path.isEmpty()) {
+                    val x = this["place_${world}_x"]
+                    val y = this["place_${world}_y"]
+                    "Vous êtes dans le monde ${world}, sur des coordonnées ($x, $y)"
+                } else {
+                    val firstPixel = path[0]
+                    val lastPixel = path[path.size - 1]
+                    "Vous êtes dans le monde ${world}, sur un chemin. Le premier pixel est (${firstPixel.x}, ${firstPixel.y}), le dernier pixel est (${lastPixel.x}, ${lastPixel.y})"
+                }
             }
 
             "city" -> {

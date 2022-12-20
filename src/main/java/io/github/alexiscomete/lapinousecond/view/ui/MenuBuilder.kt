@@ -25,7 +25,6 @@ class MenuBuilder(name: String, description: String, color: Color, val context: 
         .setTitle(name)
         .setDescription(description)
         .setColor(color)
-        .setImage("https://www.wallpaperbetter.com/wallpaper/211/502/486/ringed-planet-in-the-blue-nebula-2K-wallpaper-middle-size.jpg")
 
     private val arrayListOfButton = ArrayList<LowLevelComponent>()
 
