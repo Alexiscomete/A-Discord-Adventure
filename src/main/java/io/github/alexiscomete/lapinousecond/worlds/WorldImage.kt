@@ -59,7 +59,7 @@ class WorldImage(
         return isLand(x1, y1)
     }
 
-    override fun zoom(zoneToAdapt: WorldEnum.ZoneToAdapt): BufferedImage {
+    override fun zoom(zoneToAdapt: ZoneToAdapt): BufferedImage {
         val x = zoneToAdapt.x
         val y = zoneToAdapt.y
         val width = zoneToAdapt.width
@@ -72,7 +72,7 @@ class WorldImage(
         )
     }
 
-    override fun zoomWithCity(zoneToAdapt: WorldEnum.ZoneToAdapt, progName: String, player: Player?): BufferedImage {
+    override fun zoomWithCity(zoneToAdapt: ZoneToAdapt, progName: String, player: Player?): BufferedImage {
         var image = cloneBufferedImage(mapFile!!)
         if (player != null) {
             image.setRGB(player["place_${progName}_x"].toInt(), player["place_${progName}_y"].toInt(), Color.RED.rgb)

@@ -23,7 +23,7 @@ class WorldProcedural(
         return isLand(x1, y1)
     }
 
-    override fun zoom(zoneToAdapt: WorldEnum.ZoneToAdapt): BufferedImage {
+    override fun zoom(zoneToAdapt: ZoneToAdapt): BufferedImage {
         // generate the image
         val image = BufferedImage(zoneToAdapt.width, zoneToAdapt.height, BufferedImage.TYPE_INT_RGB)
         // fill the image
@@ -36,7 +36,7 @@ class WorldProcedural(
         return image
     }
 
-    override fun zoomWithCity(zoneToAdapt: WorldEnum.ZoneToAdapt, progName: String, player: Player?): BufferedImage {
+    override fun zoomWithCity(zoneToAdapt: ZoneToAdapt, progName: String, player: Player?): BufferedImage {
         // generate the image
         var image = uniqueTotalImage()
         // add the player

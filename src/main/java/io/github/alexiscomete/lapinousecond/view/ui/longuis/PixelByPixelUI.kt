@@ -62,7 +62,7 @@ class PixelByPixelUI(
     }
 
     override fun getBufferedImage(): BufferedImage {
-        return world.zoomWithCity(x, y, 30, player)
+        return world.zoomWithDecorElements(x, y, 30, player)
     }
 
     override fun setBufferedImage(bufferedImage: BufferedImage?): LongCustomUI {

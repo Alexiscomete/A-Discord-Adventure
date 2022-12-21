@@ -47,7 +47,7 @@ fun bigger(image: BufferedImage, sizeMultiplier: Int): BufferedImage {
 }
 
 fun getMapWithNames(
-    places: ArrayList<Place>, zone: WorldEnum.ZoneToAdapt, image: BufferedImage
+    places: ArrayList<Place>, zone: ZoneToAdapt, image: BufferedImage
 ) {
     val g = image.createGraphics()
     g.color = Color(0, 255, 0)
@@ -80,7 +80,7 @@ fun getMapWithNames(
     g.dispose()
 }
 
-fun strictZoom(zoneToAdapt: WorldEnum.ZoneToAdapt, image: BufferedImage): BufferedImage {
+fun strictZoom(zoneToAdapt: ZoneToAdapt, image: BufferedImage): BufferedImage {
     val x = zoneToAdapt.x
     val y = zoneToAdapt.y
     val width = zoneToAdapt.width
@@ -105,6 +105,37 @@ fun cloneBufferedImage(bi: BufferedImage): BufferedImage {
     val isAlphaPremultiplied = cm.isAlphaPremultiplied
     val raster = bi.copyData(bi.raster.createCompatibleWritableRaster())
     return BufferedImage(cm, raster, isAlphaPremultiplied, null)
+}
+
+class ZoneToAdapt(var x: Int, var y: Int, var width: Int, var height: Int, val maxX: Int, val maxY: Int, val zoom: Zooms) {
+    init {
+        if (x < 0) {
+            x = 0
+            // change the value of width if it is too big for the map
+            if (width > maxX) {
+                width = maxX
+            }
+        } else if (x + width > maxX) {
+            x = maxX - width
+            if (x < 0) {
+                x = 0
+                width = maxX
+            }
+        }
+        if (y < 0) {
+            y = 0
+            // change the value of height if it is too big for the map
+            if (height > maxY) {
+                height = maxY
+            }
+        } else if (y + height > maxY) {
+            y = maxY - height
+            if (y < 0) {
+                y = 0
+                height = maxY
+            }
+        }
+    }
 }
 
 enum class WorldEnum(
@@ -239,37 +270,6 @@ enum class WorldEnum(
         WorldImage("TUTO.png")
     );
 
-    class ZoneToAdapt(var x: Int, var y: Int, var width: Int, var height: Int, val maxX: Int, val maxY: Int) {
-        init {
-            if (x < 0) {
-                x = 0
-                // change the value of width if it is too big for the map
-                if (width > maxX) {
-                    width = maxX
-                }
-            } else if (x + width > maxX) {
-                x = maxX - width
-                if (x < 0) {
-                    x = 0
-                    width = maxX
-                }
-            }
-            if (y < 0) {
-                y = 0
-                // change the value of height if it is too big for the map
-                if (height > maxY) {
-                    height = maxY
-                }
-            } else if (y + height > maxY) {
-                y = maxY - height
-                if (y < 0) {
-                    y = 0
-                    height = maxY
-                }
-            }
-        }
-    }
-
     val START_X = 1
     val START_Y = 1
 
@@ -304,8 +304,8 @@ enum class WorldEnum(
      * @param heightArg The height of the area to be zoomed in on.
      * @return A subimage of the mapFile.
      */
-    private fun zoom(xArg: Int, yArg: Int, widthArg: Int, heightArg: Int): BufferedImage {
-        return zoom(ZoneToAdapt(xArg, yArg, widthArg, heightArg, mapWidth, mapHeight))
+    private fun zoom(xArg: Int, yArg: Int, widthArg: Int, heightArg: Int, zooms: Zooms): BufferedImage {
+        return zoom(ZoneToAdapt(xArg, yArg, widthArg, heightArg, mapWidth, mapHeight, zooms))
     }
 
     /**
@@ -314,11 +314,10 @@ enum class WorldEnum(
      * @param x The x coordinate of the center of the zoomed area
      * @param y The y coordinate of the center of the zoomed area
      * @param zoom the zoom level, 1 is the default, 2 is twice as big, etc.
-     * @param bi The image to zoom
      * @return A BufferedImage
      */
-    fun zoom(x: Int, y: Int, zoom: Int): BufferedImage {
-        return zoom(ZoneToAdapt(x - zoom * 2, y - zoom, zoom * 4, zoom * 2, mapWidth, mapHeight))
+    fun zoom(x: Int, y: Int, zoom: Int, zooms: Zooms): BufferedImage {
+        return zoom(ZoneToAdapt(x - zoom * 2, y - zoom, zoom * 4, zoom * 2, mapWidth, mapHeight, zooms))
     }
 
     /**
@@ -326,7 +325,6 @@ enum class WorldEnum(
      * buffered image, with the zoomed in area being the zone
      *
      * @param zone ZoneToAdapt
-     * @param bi the image to be zoomed
      * @return A BufferedImage
      */
     private fun zoom(zone: ZoneToAdapt): BufferedImage {
@@ -342,9 +340,9 @@ enum class WorldEnum(
      * @param player The player that is viewing the map.
      * @return A BufferedImage
      */
-    fun zoomWithCity(x: Int, y: Int, zoom: Int, player: Player? = null): BufferedImage {
+    fun zoomWithDecorElements(x: Int, y: Int, zoom: Int, zooms: Zooms, player: Player? = null): BufferedImage {
         return worldManager.zoomWithCity(
-            ZoneToAdapt(x - zoom * 2, y - zoom, zoom * 4, zoom * 2, mapWidth, mapHeight),
+            ZoneToAdapt(x - zoom * 2, y - zoom, zoom * 4, zoom * 2, mapWidth, mapHeight, zooms),
             progName,
             player
         )

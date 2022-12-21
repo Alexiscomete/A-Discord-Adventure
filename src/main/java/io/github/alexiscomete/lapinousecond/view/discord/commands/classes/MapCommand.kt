@@ -360,7 +360,7 @@ class MapCommand : Command(
             // send the zoom on the map
             val later = modalInteraction.respondLater()
 
-            val image = world.zoomWithCity(xInt, yInt, zoomInt)
+            val image = world.zoomWithDecorElements(xInt, yInt, zoomInt)
 
             later.thenAccept {
                 it.addEmbed(
@@ -603,7 +603,7 @@ class MapCommand : Command(
                         val biome = if (world.isDirt(xInt, yInt)) "la terre" else "l'eau"
 
                         val later = buttonClickEvent.buttonInteraction.respondLater()
-                        val image = world.zoomWithCity(xInt, yInt, 30, player)
+                        val image = world.zoomWithDecorElements(xInt, yInt, 30, player)
 
                         later.thenAccept {
                             if (player["tuto"] == "6") {
