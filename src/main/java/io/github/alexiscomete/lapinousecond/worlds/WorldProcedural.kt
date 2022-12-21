@@ -29,7 +29,7 @@ class WorldProcedural(
         // fill the image
         for (x in 0 until zoneToAdapt.width) {
             for (y in 0 until zoneToAdapt.height) {
-                val color = if (isLand(x + zoneToAdapt.x, y + zoneToAdapt.y)) 0 else 0xFFFFFF
+                val color = if (isLand(x + zoneToAdapt.x, y + zoneToAdapt.y)) 0x704A40 else 0x4D759D
                 image.setRGB(x, y, color)
             }
         }
@@ -37,6 +37,7 @@ class WorldProcedural(
     }
 
     override fun zoomWithDecorElements(zoneToAdapt: ZoneToAdapt, progName: String, player: Player?): BufferedImage {
+        // TODO : restructurer pour le zoom
         // generate the image
         var image = uniqueTotalImage()
         // add the player
@@ -74,7 +75,7 @@ class WorldProcedural(
         // fill the image
         for (x in 0 until maxX) {
             for (y in 0 until maxY) {
-                val color = if (isLand(x, y)) 0 else 0xFFFFFF
+                val color = if (isLand(x, y)) 0x704A40 else 0x4D759D
                 image.setRGB(x, y, color)
             }
         }

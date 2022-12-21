@@ -168,46 +168,46 @@ enum class WorldEnum(
                                 ChangeSeedNodeBuilder(
                                     Operation.ADD,
                                     4,
-                                    NoiseMapBuilder(1.0)
+                                    NoiseMapBuilder(5.0)
                                 ),
                                 Operation.DIVIDE,
                                 Operation.DIVIDE,
-                                1000.0,
-                                1000.0
+                                2.5,
+                                2.5
                             ),
                             ChangeLocationNodeBuilder(
                                 ChangeSeedNodeBuilder(
                                     Operation.ADD,
                                     3,
-                                    NoiseMapBuilder(1.0)
+                                    NoiseMapBuilder(4.0)
                                 ),
                                 Operation.DIVIDE,
                                 Operation.DIVIDE,
-                                100.0,
-                                100.0
+                                2.0,
+                                2.0
                             ),
                             ChangeLocationNodeBuilder(
                                 ChangeSeedNodeBuilder(
                                     Operation.ADD,
                                     2,
-                                    NoiseMapBuilder(5.0)
+                                    NoiseMapBuilder(1.0)
                                 ),
                                 Operation.DIVIDE,
                                 Operation.DIVIDE,
-                                10.0,
-                                10.0
+                                2.0,
+                                2.0
                             ),
-                            NoiseMapBuilder(1.0),
+                            NoiseMapBuilder(0.5),
                             ChangeSeedNodeBuilder(
                                 Operation.ADD,
                                 1,
-                                NoiseMapBuilder(1.0)
+                                NoiseMapBuilder(0.5)
                             ),
                             ChangeLocationNodeBuilder(
                                 ChangeSeedNodeBuilder(
                                     Operation.ADD,
                                     5,
-                                    NoiseMapBuilder(0.5)
+                                    NoiseMapBuilder(0.3)
                                 ),
                                 Operation.MULTIPLY,
                                 Operation.MULTIPLY,
@@ -218,7 +218,7 @@ enum class WorldEnum(
                                 ChangeSeedNodeBuilder(
                                     Operation.ADD,
                                     6,
-                                    NoiseMapBuilder(0.5)
+                                    NoiseMapBuilder(0.3)
                                 ),
                                 Operation.MULTIPLY,
                                 Operation.MULTIPLY,

@@ -73,6 +73,7 @@ class WorldImage(
     }
 
     override fun zoomWithDecorElements(zoneToAdapt: ZoneToAdapt, progName: String, player: Player?): BufferedImage {
+        // TODO : restructurer pour le zoom
         var image = cloneBufferedImage(mapFile!!)
         if (player != null) {
             image.setRGB(player["place_${progName}_x"].toInt(), player["place_${progName}_y"].toInt(), Color.RED.rgb)
