@@ -36,7 +36,7 @@ class WorldProcedural(
         return image
     }
 
-    override fun zoomWithCity(zoneToAdapt: ZoneToAdapt, progName: String, player: Player?): BufferedImage {
+    override fun zoomWithDecorElements(zoneToAdapt: ZoneToAdapt, progName: String, player: Player?): BufferedImage {
         // generate the image
         var image = uniqueTotalImage()
         // add the player

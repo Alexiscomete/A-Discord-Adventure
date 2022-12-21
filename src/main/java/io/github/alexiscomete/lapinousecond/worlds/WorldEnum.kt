@@ -109,6 +109,7 @@ fun cloneBufferedImage(bi: BufferedImage): BufferedImage {
 
 class ZoneToAdapt(var x: Int, var y: Int, var width: Int, var height: Int, val maxX: Int, val maxY: Int, val zoom: Zooms) {
     init {
+        val (maxX, maxY) = Zooms.ZOOM_OUT.zoomInTo(zoom, maxX, maxY)
         if (x < 0) {
             x = 0
             // change the value of width if it is too big for the map
@@ -341,7 +342,7 @@ enum class WorldEnum(
      * @return A BufferedImage
      */
     fun zoomWithDecorElements(x: Int, y: Int, zoom: Int, zooms: Zooms, player: Player? = null): BufferedImage {
-        return worldManager.zoomWithCity(
+        return worldManager.zoomWithDecorElements(
             ZoneToAdapt(x - zoom * 2, y - zoom, zoom * 4, zoom * 2, mapWidth, mapHeight, zooms),
             progName,
             player

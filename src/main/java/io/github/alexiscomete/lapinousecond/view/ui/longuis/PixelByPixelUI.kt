@@ -2,6 +2,7 @@ package io.github.alexiscomete.lapinousecond.view.ui.longuis
 
 import io.github.alexiscomete.lapinousecond.view.ui.*
 import io.github.alexiscomete.lapinousecond.worlds.WorldEnum
+import io.github.alexiscomete.lapinousecond.worlds.Zooms
 import java.awt.image.BufferedImage
 
 class PixelByPixelUI(
@@ -62,7 +63,13 @@ class PixelByPixelUI(
     }
 
     override fun getBufferedImage(): BufferedImage {
-        return world.zoomWithDecorElements(x, y, 30, player)
+        val zoom = player["place_${worldStr}_zoom"]
+        val zooms = try {
+            Zooms.valueOf(zoom)
+        } catch (e: Exception) {
+            Zooms.ZOOM_OUT
+        }
+        return world.zoomWithDecorElements(x, y, 30, zooms, player)
     }
 
     override fun setBufferedImage(bufferedImage: BufferedImage?): LongCustomUI {

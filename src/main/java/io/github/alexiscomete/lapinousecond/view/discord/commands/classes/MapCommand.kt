@@ -16,6 +16,7 @@ import io.github.alexiscomete.lapinousecond.view.ui.EmbedPages
 import io.github.alexiscomete.lapinousecond.view.ui.MenuBuilder
 import io.github.alexiscomete.lapinousecond.view.ui.longuis.PixelByPixelUI
 import io.github.alexiscomete.lapinousecond.worlds.WorldEnum
+import io.github.alexiscomete.lapinousecond.worlds.Zooms
 import io.github.alexiscomete.lapinousecond.worlds.bigger
 import io.github.alexiscomete.lapinousecond.worlds.map.FilesMapEnum
 import org.javacord.api.entity.message.MessageBuilder
@@ -335,7 +336,7 @@ class MapCommand : Command(
             } catch (e: NumberFormatException) {
                 throw IllegalArgumentException("Le y de la case n'est pas un nombre")
             }
-            val zoomInt = try {
+            var zoomInt = try {
                 zoomStr.toInt()
             } catch (e: NumberFormatException) {
                 throw IllegalArgumentException("Le zoom n'est pas un nombre")
@@ -357,10 +358,30 @@ class MapCommand : Command(
                 throw IllegalArgumentException("Le zoom doit être compris entre 1 et 60 (et rester dans la carte !)")
             }
 
+            var zooms = Zooms.ZOOM_OUT
+            if (zoomInt < 9) {
+                when (zoomInt) {
+                    2 -> {
+                        zooms = Zooms.ZOOM_ZONES_DETAILS
+                        zoomInt = 60
+                    }
+                    1 -> {
+                        zooms = Zooms.ZOOM_IN
+                        zoomInt = 60
+                    }
+                    else -> {
+                        zooms = Zooms.ZOOM_ZONES
+                        zoomInt *= 7
+                    }
+                }
+            }
+
+            val (xInt2, yInt2) = Zooms.ZOOM_OUT.zoomInTo(zooms, xInt, yInt)
+
             // send the zoom on the map
             val later = modalInteraction.respondLater()
 
-            val image = world.zoomWithDecorElements(xInt, yInt, zoomInt)
+            val image = world.zoomWithDecorElements(xInt2, yInt2, zoomInt, zooms)
 
             later.thenAccept {
                 it.addEmbed(
@@ -598,12 +619,18 @@ class MapCommand : Command(
 
                         val x = player["place_${worldStr}_x"]
                         val y = player["place_${worldStr}_y"]
+                        val zoom = player["place_${worldStr}_zoom"]
+                        val zooms = try {
+                            Zooms.valueOf(zoom)
+                        } catch (e: Exception) {
+                            Zooms.ZOOM_OUT
+                        }
                         val xInt = x.toInt()
                         val yInt = y.toInt()
                         val biome = if (world.isDirt(xInt, yInt)) "la terre" else "l'eau"
 
                         val later = buttonClickEvent.buttonInteraction.respondLater()
-                        val image = world.zoomWithDecorElements(xInt, yInt, 30, player)
+                        val image = world.zoomWithDecorElements(xInt, yInt, 30, zooms, player)
 
                         later.thenAccept {
                             if (player["tuto"] == "6") {
