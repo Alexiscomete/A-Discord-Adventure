@@ -511,6 +511,24 @@ class MapCommand : Command(
                     ) { buttonClickEvent: ButtonClickEvent, c2, _ ->
                         val id = generateUniqueID().toString()
 
+                        val player = c2.players.player.player
+                        val world = player["world"]
+                        val type = player["place_${world}_type"]
+                        if (type == "") {
+                            player["place_${world}_type"] = "coos"
+                        } else if (type != "coos") {
+                            throw IllegalArgumentException("Vous n'êtes pas sur des coordonnées")
+                        }
+                        val zooms = try {
+                            Zooms.valueOf(player["place_${world}_zoom"])
+                        } catch (e: IllegalArgumentException) {
+                            player["place_${world}_zoom"] = "ZOOM_OUT"
+                            Zooms.ZOOM_OUT
+                        }
+                        if (zooms != Zooms.ZOOM_OUT) {
+                            throw IllegalArgumentException("Vous n'êtes pas sur le zoom de base, vous ne pouvez pas utiliser cette commande actuellement. Utilisez le déplacement pixel par pixel pour dézoomer")
+                        }
+
                         buttonClickEvent.buttonInteraction.respondWithModal(
                             id, "Sur quel pixel se rendre ?",
                             ActionRow.of(
@@ -531,7 +549,18 @@ class MapCommand : Command(
                         "Pixel par pixel",
                         "Mode de déplacement maîtrisable."
                     ) { buttonClickEvent: ButtonClickEvent, contextUI, _ ->
-                        val ui = DiscordPlayerUI(context, buttonClickEvent.interaction)
+
+                        val player = contextUI.players.player.player
+                        val world = player["world"]
+                        val type = player["place_${world}_type"]
+
+                        if (type == "") {
+                            player["place_${world}_type"] = "coos"
+                        } else if (type != "coos") {
+                            throw IllegalArgumentException("Non disponible pour le moment dans les villes et autres lieux sans coordonnées")
+                        }
+
+                        val ui = DiscordPlayerUI(contextUI, buttonClickEvent.interaction)
                         ui.setLongCustomUI(
                             PixelByPixelUI(
                                 ui,

@@ -13,7 +13,6 @@ class PixelByPixelUI(
 
     private var title: String = "Pixel by pixel"
     private var description = "Move with buttons"
-    private var currentZoomCoefficient: Int = 1
 
     private val player
         get() = playerUI.getPlayer()
@@ -33,6 +32,23 @@ class PixelByPixelUI(
         get() = player["place_${worldStr}_y"].toInt()
         set(value) {
             player["place_${worldStr}_y"] = value.toString()
+        }
+
+    private var zooms: Zooms = try {
+        Zooms.valueOf(player["place_${worldStr}_zoom"])
+    } catch (e: Exception) {
+        Zooms.ZOOM_OUT
+    }
+        set(value) {
+            val (nextX, nextY) = try {
+                zooms.zoomInTo(value, x, y)
+            } catch (e: Exception) {
+                zooms.zoomOutTo(value, x, y)
+            }
+            x = nextX
+            y = nextY
+            field = value
+            player["place_${worldStr}_zoom"] = value.name
         }
 
     override fun getTitle(): String {
@@ -63,12 +79,6 @@ class PixelByPixelUI(
     }
 
     override fun getBufferedImage(): BufferedImage {
-        val zoom = player["place_${worldStr}_zoom"]
-        val zooms = try {
-            Zooms.valueOf(zoom)
-        } catch (e: Exception) {
-            Zooms.ZOOM_OUT
-        }
         return world.zoomWithDecorElements(x, y, 30, zooms, player)
     }
 
@@ -87,11 +97,24 @@ class PixelByPixelUI(
 
     private var interactionUICustomUILists: List<List<InteractionUICustomUI>> = listOf(
         listOf(
-            DisabledUI(
+            SimpleInteractionUICustomUI(
+                "zoom_in",
+                "🔍",
+                "Zoom in",
                 this,
-                InteractionStyle.NORMAL_DISABLED,
-                "none0",
-                " "
+                InteractionStyle.SECONDARY,
+                {
+                    zooms = zooms.next ?: run {
+                        playerUI.addMessage(Message("Le monde microscopique n'est pas encore implémenté", "Problème"))
+                        zooms
+                    }
+                },
+                { _, _ ->
+                    zooms = zooms.next ?: run {
+                        playerUI.addMessage(Message("Le monde microscopique n'est pas encore implémenté", "Problème"))
+                        zooms
+                    }
+                }
             ),
             SimpleInteractionUICustomUI(
                 "up",
@@ -100,17 +123,30 @@ class PixelByPixelUI(
                 this,
                 InteractionStyle.NORMAL,
                 {
-                    y -= currentZoomCoefficient
+                    y--
                 },
                 { _, _ ->
-                    y -= currentZoomCoefficient
+                    y--
                 },
             ),
-            DisabledUI(
+            SimpleInteractionUICustomUI(
+                "zoom_out",
+                "🚁",
+                "Zoom out",
                 this,
-                InteractionStyle.NORMAL_DISABLED,
-                "none2",
-                " "
+                InteractionStyle.SECONDARY,
+                {
+                    zooms = zooms.before ?: run {
+                        playerUI.addMessage(Message("Le monde des géants n'est pas encore implémenté", "Problème"))
+                        zooms
+                    }
+                },
+                { _, _ ->
+                    zooms = zooms.before ?: run {
+                        playerUI.addMessage(Message("Le monde des géants n'est pas encore implémenté", "Problème"))
+                        zooms
+                    }
+                }
             ),
         ),
         listOf(
@@ -121,10 +157,10 @@ class PixelByPixelUI(
                 this,
                 InteractionStyle.NORMAL,
                 {
-                    x -= currentZoomCoefficient
+                    x--
                 },
                 { _, _ ->
-                    x -= currentZoomCoefficient
+                    x--
                 },
             ),
             SimpleInteractionUICustomUI(
@@ -134,10 +170,10 @@ class PixelByPixelUI(
                 this,
                 InteractionStyle.NORMAL,
                 {
-                    y += currentZoomCoefficient
+                    y++
                 },
                 { _, _ ->
-                    y += currentZoomCoefficient
+                    y++
                 },
             ),
             SimpleInteractionUICustomUI(
@@ -147,10 +183,10 @@ class PixelByPixelUI(
                 this,
                 InteractionStyle.NORMAL,
                 {
-                    x += currentZoomCoefficient
+                    x++
                 },
                 { _, _ ->
-                    x += currentZoomCoefficient
+                    x++
                 },
             )
         ),
