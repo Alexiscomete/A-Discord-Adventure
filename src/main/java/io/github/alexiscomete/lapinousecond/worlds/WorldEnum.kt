@@ -52,18 +52,21 @@ fun getMapWithNames(
     val g = image.createGraphics()
     g.color = Color(0, 255, 0)
     // set the text size
-    g.font = Font("Arial", Font.BOLD, image.width / 80)
     val size = image.width / 80
+    g.font = Font("Arial", Font.BOLD, size)
     for (place in places) {
         if (place.getX().isPresent && place.getY().isPresent) {
             // coos on image (x, y) after resizing (x and y are not the same as the image's coos)
-            val x = (place.getX().get() - zone.x) * image.width / zone.width
-            val y = (place.getY().get() - zone.y) * image.height / zone.height
+            val (placeX, placeY) = Zooms.ZOOM_OUT.zoomInTo(
+                zone.zoom, place.getX().get(), place.getY().get()
+            )
+            val x = (placeX - zone.x) * image.width / zone.width
+            val y = (placeY - zone.y) * image.height / zone.height
             // draw a point
             g.fillOval(x, y, (size * 0.7).toInt(), (size * 0.7).toInt())
             // draw the name
             try {
-                g.drawString(place.getString("nameRP"), (x + 1.1 * size).toInt(), y)
+                g.drawString(place["nameRP"], (x + 1.1 * size).toInt(), y)
             } catch (ignored: Exception) {
             }
             // draw the x and y coordinates
