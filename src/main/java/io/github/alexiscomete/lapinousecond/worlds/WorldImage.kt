@@ -60,41 +60,63 @@ class WorldImage(
     }
 
     override fun zoom(zoneToAdapt: ZoneToAdapt): BufferedImage {
-        val x = zoneToAdapt.x
-        val y = zoneToAdapt.y
-        val width = zoneToAdapt.width
-        val height = zoneToAdapt.height
-        return mapFile!!.getSubimage(
-            x * mapFile.getWidth(null) / zoneToAdapt.maxX,
-            y * mapFile.getHeight(null) / zoneToAdapt.maxY,
-            width * mapFile.getWidth(null) / zoneToAdapt.maxX,
-            height * mapFile.getHeight(null) / zoneToAdapt.maxY
-        )
+        // generate the image
+        val image = BufferedImage(zoneToAdapt.width, zoneToAdapt.height, BufferedImage.TYPE_INT_RGB)
+        // fill the image
+        for (x in zoneToAdapt.x until zoneToAdapt.x + zoneToAdapt.width) {
+            for (y in zoneToAdapt.y until zoneToAdapt.y + zoneToAdapt.height) {
+                val color = if (isLand(x + zoneToAdapt.x, y + zoneToAdapt.y, zoneToAdapt.zoom)) 0x704A40 else 0x4D759D
+                image.setRGB(x - zoneToAdapt.x, y - zoneToAdapt.y, color)
+            }
+        }
+        return image
     }
 
     override fun zoomWithDecorElements(zoneToAdapt: ZoneToAdapt, progName: String, player: Player?): BufferedImage {
-        // TODO : restructurer pour le zoom
-        var image = cloneBufferedImage(mapFile!!)
+        // generate the image
+        var image = zoom(zoneToAdapt)
+        // add the player
         if (player != null) {
-            image.setRGB(player["place_${progName}_x"].toInt(), player["place_${progName}_y"].toInt(), Color.RED.rgb)
+            if (player["place_${progName}_zoom"] != zoneToAdapt.zoom.name) {
+                val (x, y) = try {
+                    zoneToAdapt.zoom.zoomInTo(
+                        Zooms.valueOf(player["place_${progName}_zoom"]),
+                        player["place_${progName}_x"].toInt(),
+                        player["place_${progName}_y"].toInt()
+                    )
+                } catch (e: Exception) {
+                    zoneToAdapt.zoom.zoomOutTo(
+                        Zooms.valueOf(player["place_${progName}_zoom"]),
+                        player["place_${progName}_x"].toInt(),
+                        player["place_${progName}_y"].toInt()
+                    )
+                }
+                image.setRGB(x - zoneToAdapt.x, y - zoneToAdapt.y, Color.RED.rgb)
+            } else {
+                image.setRGB(
+                    player["place_${progName}_x"].toInt() - zoneToAdapt.x,
+                    player["place_${progName}_y"].toInt() - zoneToAdapt.y,
+                    Color.RED.rgb
+                )
+            }
         }
 
-        image = strictZoom(zoneToAdapt, image)
         image = bigger(image, 10)
 
         val places = Place.getPlacesWithWorld(progName)
-        println(places.size)
 
         places.removeIf { place: Place ->
-            !place.getX().isPresent || !place.getY().isPresent || place.getX().get() < zoneToAdapt.x || place.getX()
-                .get() > zoneToAdapt.x + zoneToAdapt.width || place.getY().get() < zoneToAdapt.y || place.getY()
-                .get() > zoneToAdapt.y + zoneToAdapt.height
+            if (!place.getX().isPresent || !place.getY().isPresent) {
+                return@removeIf true
+            }
+            val (x, y) = Zooms.ZOOM_OUT.zoomInTo(zoneToAdapt.zoom, place.getX().get(), place.getY().get())
+            (x < zoneToAdapt.x || x > zoneToAdapt.x + zoneToAdapt.width || y < zoneToAdapt.y || y > zoneToAdapt.y + zoneToAdapt.height)
         }
 
-        println(places.size)
-
         getMapWithNames(
-            places, zoneToAdapt, image
+            places,
+            zoneToAdapt,
+            image
         )
 
         return image

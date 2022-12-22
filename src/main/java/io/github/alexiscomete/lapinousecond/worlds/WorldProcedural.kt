@@ -43,13 +43,25 @@ class WorldProcedural(
         if (player != null) {
             if (player["place_${progName}_zoom"] != zoneToAdapt.zoom.name) {
                 val (x, y) = try {
-                    zoneToAdapt.zoom.zoomInTo(Zooms.valueOf(player["place_${progName}_zoom"]), player["place_${progName}_x"].toInt(), player["place_${progName}_y"].toInt())
+                    zoneToAdapt.zoom.zoomInTo(
+                        Zooms.valueOf(player["place_${progName}_zoom"]),
+                        player["place_${progName}_x"].toInt(),
+                        player["place_${progName}_y"].toInt()
+                    )
                 } catch (e: Exception) {
-                    zoneToAdapt.zoom.zoomOutTo(Zooms.valueOf(player["place_${progName}_zoom"]), player["place_${progName}_x"].toInt(), player["place_${progName}_y"].toInt())
+                    zoneToAdapt.zoom.zoomOutTo(
+                        Zooms.valueOf(player["place_${progName}_zoom"]),
+                        player["place_${progName}_x"].toInt(),
+                        player["place_${progName}_y"].toInt()
+                    )
                 }
                 image.setRGB(x - zoneToAdapt.x, y - zoneToAdapt.y, Color.RED.rgb)
             } else {
-                image.setRGB(player["place_${progName}_x"].toInt() - zoneToAdapt.x, player["place_${progName}_y"].toInt() - zoneToAdapt.y, Color.RED.rgb)
+                image.setRGB(
+                    player["place_${progName}_x"].toInt() - zoneToAdapt.x,
+                    player["place_${progName}_y"].toInt() - zoneToAdapt.y,
+                    Color.RED.rgb
+                )
             }
         }
 
