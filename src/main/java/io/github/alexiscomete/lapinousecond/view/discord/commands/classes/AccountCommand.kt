@@ -30,6 +30,7 @@ fun toSpawn(p: Player) {
     p["place_TUTO_x"] = WorldEnum.TUTO.defaultX.toString()
     p["place_TUTO_y"] = WorldEnum.TUTO.defaultY.toString()
     p["place_TUTO_type"] = "coos"
+    p["place_TUTO_zoom"] = "ZOOM_OUT"
 }
 
 class AccountCommandBase : Command(

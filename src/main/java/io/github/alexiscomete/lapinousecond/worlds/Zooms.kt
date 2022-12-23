@@ -1,7 +1,7 @@
 package io.github.alexiscomete.lapinousecond.worlds
 
 enum class Zooms(
-    val zoom: Int,
+    private val zoom: Int,
     val before: Zooms?
 ) {
     ZOOM_OUT(1, null),
@@ -18,23 +18,25 @@ enum class Zooms(
     }
 
     fun zoomInTo(zooms: Zooms, x: Int, y: Int): Pair<Int, Int> {
+        println("Zooms: ${zooms.name}; this: ${this.name}; (x, y) = ($x, $y)")
         if (zooms == this) {
             return Pair(x * zoom, y * zoom)
         }
-        return next!!.zoomInTo(zooms, x * zoom, y * zoom)
+        return next?.zoomInTo(zooms, x * zoom, y * zoom) ?: throw Exception("Zooms not found")
     }
 
     fun zoomOutTo(zooms: Zooms, x: Int, y: Int): Pair<Int, Int> {
+        println("Zooms: ${zooms.name}; this: ${this.name}; (x, y) = ($x, $y)")
         if (zooms == this) {
             return Pair(x / zoom, y / zoom)
         }
-        return before!!.zoomOutTo(zooms, x / zoom, y / zoom)
+        return before?.zoomOutTo(zooms, x / zoom, y / zoom) ?: throw Exception("Zooms not found")
     }
 
     fun zoomOutTo(zooms: Zooms, x: Double, y: Double): Pair<Double, Double> {
         if (zooms == this) {
             return Pair(x / zoom, y / zoom)
         }
-        return before!!.zoomOutTo(zooms, x / zoom, y / zoom)
+        return before?.zoomOutTo(zooms, x / zoom, y / zoom) ?: throw Exception("Zooms not found")
     }
 }
