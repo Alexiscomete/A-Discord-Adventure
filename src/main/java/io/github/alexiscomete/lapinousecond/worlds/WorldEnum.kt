@@ -83,19 +83,6 @@ fun getMapWithNames(
     g.dispose()
 }
 
-fun strictZoom(zoneToAdapt: ZoneToAdapt, image: BufferedImage): BufferedImage {
-    val x = zoneToAdapt.x
-    val y = zoneToAdapt.y
-    val width = zoneToAdapt.width
-    val height = zoneToAdapt.height
-    return image.getSubimage(
-        x * image.getWidth(null) / zoneToAdapt.maxX,
-        y * image.getHeight(null) / zoneToAdapt.maxY,
-        width * image.getWidth(null) / zoneToAdapt.maxX,
-        height * image.getHeight(null) / zoneToAdapt.maxY
-    )
-}
-
 /**
  * Clone a buffered image
  * Source : https://stackoverflow.com/questions/3514158/how-do-you-clone-a-bufferedimage
@@ -110,9 +97,11 @@ fun cloneBufferedImage(bi: BufferedImage): BufferedImage {
     return BufferedImage(cm, raster, isAlphaPremultiplied, null)
 }
 
-class ZoneToAdapt(var x: Int, var y: Int, var width: Int, var height: Int, val maxX: Int, val maxY: Int, val zoom: Zooms) {
+data class ZoneToAdapt(var x: Int, var y: Int, var width: Int, var height: Int, private var maxX: Int, private var maxY: Int, val zoom: Zooms) {
     init {
         val (maxX, maxY) = Zooms.ZOOM_OUT.zoomInTo(zoom, maxX, maxY)
+        this.maxX = maxX
+        this.maxY = maxY
         if (x < 0) {
             x = 0
             // change the value of width if it is too big for the map
@@ -297,31 +286,6 @@ enum class WorldEnum(
      */
     fun isDirt(x: Int, y: Int): Boolean {
         return getPixel(x, y).isLanded
-    }
-
-    /**
-     * Zoom on the map
-     *
-     * @param xArg The x coordinate of the top left corner of the rectangle to be zoomed in on.
-     * @param yArg The y coordinate of the top left corner of the rectangle to be zoomed in on.
-     * @param widthArg The width of the area you want to zoom in on.
-     * @param heightArg The height of the area to be zoomed in on.
-     * @return A subimage of the mapFile.
-     */
-    private fun zoom(xArg: Int, yArg: Int, widthArg: Int, heightArg: Int, zooms: Zooms): BufferedImage {
-        return zoom(ZoneToAdapt(xArg, yArg, widthArg, heightArg, mapWidth, mapHeight, zooms))
-    }
-
-    /**
-     * "Given a point and a zoom level, return a BufferedImage of the map centered on that point at that zoom level."
-     *
-     * @param x The x coordinate of the center of the zoomed area
-     * @param y The y coordinate of the center of the zoomed area
-     * @param zoom the zoom level, 1 is the default, 2 is twice as big, etc.
-     * @return A BufferedImage
-     */
-    fun zoom(x: Int, y: Int, zoom: Int, zooms: Zooms): BufferedImage {
-        return zoom(ZoneToAdapt(x - zoom * 2, y - zoom, zoom * 4, zoom * 2, mapWidth, mapHeight, zooms))
     }
 
     /**
