@@ -45,6 +45,7 @@ class PixelByPixelUI(
             val (nextX, nextY) = try {
                 zooms.zoomInTo(value, x, y)
             } catch (e: Exception) {
+                println("Zooms In failed")
                 zooms.zoomOutTo(value, x, y)
             }
             println("New zooms: ${value.name}")
