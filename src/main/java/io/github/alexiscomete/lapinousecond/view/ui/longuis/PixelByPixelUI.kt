@@ -49,7 +49,6 @@ class PixelByPixelUI(
             }
             x = nextX
             y = nextY
-            field = value
             player["place_${worldStr}_zoom"] = value.name
         }
 
