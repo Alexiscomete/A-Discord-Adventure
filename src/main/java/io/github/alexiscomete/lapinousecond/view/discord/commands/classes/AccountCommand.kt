@@ -66,8 +66,6 @@ fun getUser(id: Long): String? {
 
 fun getUserData(id: Long): UserData {
     val userData = getUser(id)
-    println("Data :")
-    println(userData)
     if (userData != null) {
         val jsonObject = JSONObject(userData)
         val back = jsonObject.getJSONObject("back")

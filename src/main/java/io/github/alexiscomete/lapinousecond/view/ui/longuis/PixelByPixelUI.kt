@@ -41,14 +41,11 @@ class PixelByPixelUI(
             Zooms.ZOOM_OUT
         }
         set(value) {
-            println("Current zooms: ${zooms.name}")
             val (nextX, nextY) = try {
                 zooms.zoomInTo(value, x, y)
             } catch (e: Exception) {
-                println("Zooms In failed")
                 zooms.zoomOutTo(value, x, y)
             }
-            println("New zooms: ${value.name}")
             x = nextX
             y = nextY
             player["place_${worldStr}_zoom"] = value.name

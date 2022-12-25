@@ -123,7 +123,6 @@ class Building : CacheGetSet, BuildMethods, Owner {
             val inputStream = Building::class.java.classLoader.getResourceAsStream("config_buildings.json")
             println(inputStream)
             jsonObject = if (inputStream == null) {
-                println("eeee")
                 JSONObject("{}")
             } else {
                 val sc = Scanner(inputStream)

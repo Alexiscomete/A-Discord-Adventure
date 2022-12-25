@@ -18,7 +18,6 @@ enum class Zooms(
     }
 
     fun zoomInTo(zooms: Zooms, x: Int, y: Int, starting: Boolean = true): Pair<Int, Int> {
-        println("Zooms: ${zooms.name}; this: ${this.name}; Current is (x, y) = ($x, $y) and next is (x * $zoom, y * $zoom) = (${x * zoom}, ${y * zoom})")
         if (zooms == this) {
             return Pair(x * zoom, y * zoom)
         }
@@ -29,7 +28,6 @@ enum class Zooms(
     }
 
     fun zoomOutTo(zooms: Zooms, x: Int, y: Int): Pair<Int, Int> {
-        println("Zooms: ${zooms.name}; this: ${this.name}; Current is (x, y) = ($x, $y) and next is (x / $zoom, y / $zoom) = (${x / zoom}, ${y / zoom})")
         if (zooms == this) {
             return Pair(x, y)
         }

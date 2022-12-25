@@ -659,7 +659,6 @@ class MarketCommand : Command(
                             )
                             .update()
                     }, { it, c2, _ ->
-                        println("offre")
                         val result =
                             saveManager.executeQuery("SELECT id FROM offers", true) ?: throw IllegalStateException(
                                 "No offers"
@@ -669,7 +668,6 @@ class MarketCommand : Command(
                             offers.add(Offer(result.getLong("id")))
                         }
                         result.close()
-                        println("offers : $offers")
                         val embedBuilder = EmbedBuilder()
                             .setTitle("Offres")
                             .setDescription("Voici les offres disponibles. Le bouton correspondant vous permet d'accepter une offre et ainsi **acheter les ressources**")
@@ -715,7 +713,6 @@ class MarketCommand : Command(
                                 .update()
                         }
                         embedPagesWithInteractions.register()
-                        println("registered")
                         it.buttonInteraction
                             .createOriginalMessageUpdater()
                             .removeAllEmbeds()

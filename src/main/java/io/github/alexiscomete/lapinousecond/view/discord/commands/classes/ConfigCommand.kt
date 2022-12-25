@@ -264,7 +264,6 @@ class ConfigCommand : Command(
 
                     when (world) {
                         WorldEnum.NORMAL -> {
-                            println("Normal")
                             val id = generateUniqueID()
                             val idNameRP = generateUniqueID()
                             val idDescription = generateUniqueID()

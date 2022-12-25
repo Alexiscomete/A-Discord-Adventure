@@ -28,7 +28,6 @@ fun contextFor(player: PlayerWithAccount, otherPlayers: List<PlayerWithAccount> 
             val players = Players(player, otherPlayers)
             Context(players)
                 .also {
-                    println("New context for $players")
                     contexts[players] = it
                 }
         }

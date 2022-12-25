@@ -79,7 +79,6 @@ enum class Buildings(private val getBuildingM: (Building) -> BuildingInteraction
             return try {
                 val type: String = saveManager.typeOf(save1.toLong(), "buildings")
                 if (type == "") {
-                    println("null")
                     return null
                 }
                 val buildings = valueOf(type.uppercase())

@@ -240,9 +240,7 @@ class DiscordPlayerUI(private val context: Context, var interaction: Interaction
             if (longCustomUI!!.getUnderString() != null) {
                 mainEmbed.setFooter(longCustomUI!!.getUnderString())
             }
-            print("test")
             if (longCustomUI!!.getBufferedImage() != null) {
-                print("image")
                 mainEmbed.setImage(longCustomUI!!.getBufferedImage())
             } else if (longCustomUI!!.getLinkedImage() != null) {
                 mainEmbed.setImage(longCustomUI!!.getLinkedImage())

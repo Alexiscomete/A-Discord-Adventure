@@ -256,8 +256,6 @@ class InteractCommandBase : Command(
                         .respond()
                 }
 
-                println("place: $place")
-
                 MenuBuilder(
                     "Interactions dans la ville ${place["nameRP"]}",
                     "Liste de toutes vos possibilités dans la version actuelle du bot.",

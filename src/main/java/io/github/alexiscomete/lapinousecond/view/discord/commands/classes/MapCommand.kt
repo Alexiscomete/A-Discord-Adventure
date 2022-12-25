@@ -659,7 +659,6 @@ class MapCommand : Command(
                         val biome = if (world.isDirt(xInt, yInt)) "la terre" else "l'eau"
 
                         val later = buttonClickEvent.buttonInteraction.respondLater()
-                        println(zooms.name)
                         val image = world.zoomWithDecorElements(xInt, yInt, 30, zooms, player)
 
                         later.thenAccept {

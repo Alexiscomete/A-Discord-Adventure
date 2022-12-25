@@ -160,8 +160,6 @@ class SaveManager(path: String) {
         }
         values.append(")")
         keys.append(")")
-        println(values.toString())
-        println(keys.toString())
         try {
             st!!.executeUpdate("INSERT INTO $where $keys VALUES $values")
         } catch (e: SQLException) {
