@@ -1,7 +1,6 @@
 package io.github.alexiscomete.lapinousecond.worlds.buildings
 
 import io.github.alexiscomete.lapinousecond.entity.Owner
-import io.github.alexiscomete.lapinousecond.view.ui.MenuBuilder
 import io.github.alexiscomete.lapinousecond.resources.Resource
 import io.github.alexiscomete.lapinousecond.useful.ProgressionBar
 import io.github.alexiscomete.lapinousecond.useful.managesave.CacheCustom
@@ -9,6 +8,7 @@ import io.github.alexiscomete.lapinousecond.useful.managesave.CacheGetSet
 import io.github.alexiscomete.lapinousecond.useful.managesave.Table
 import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
 import io.github.alexiscomete.lapinousecond.view.Context
+import io.github.alexiscomete.lapinousecond.view.ui.MenuBuilder
 import io.github.alexiscomete.lapinousecond.worlds.Place
 import org.json.JSONObject
 import java.awt.Color
@@ -47,7 +47,7 @@ class Building : CacheGetSet, BuildMethods, Owner {
         buildingsString += ";$id"
         place["buildings"] = buildingsString
         set("collect_target", buildings1.basePrice.toString())
-        set("type", buildings1.name_)
+        set("type", buildings1.name.lowercase())
         set("build_status", "building")
         set("owner_type", owner.ownerType)
         set("owner", owner.ownerString)

@@ -6,47 +6,44 @@ import io.github.alexiscomete.lapinousecond.worlds.buildings.evolution.Evolution
 import io.github.alexiscomete.lapinousecond.worlds.buildings.interactions.*
 import org.json.JSONObject
 
-enum class Buildings(private val getBuildingM: (Building) -> BuildingInteraction, val name_: String) {
-    ARMURERIE({ building: Building -> Armurerie(building) }, "armurerie"
-    ),
-    ARRET_BUS(
-        { building: Building -> ArretBus(building) }, "arret_bus"
-    ),
+enum class Buildings(private val getBuildingM: (Building) -> BuildingInteraction) {
+    ARMURERIE({ building: Building -> Armurerie(building) }),
+    ARRET_BUS({ building: Building -> ArretBus(building) }),
     AUBERGE(
-        { building: Building -> Auberge(building) }, "auberge"
+        { building: Building -> Auberge(building) }
     ),
     BANQUE(
-        { building: Building -> Banque(building) }, "banque"
+        { building: Building -> Banque(building) }
     ),
     BAR(
-        { building: Building -> Bar(building) }, "bar"
+        { building: Building -> Bar(building) },
     ),
     BIBLIOTHEQUE(
-        { building: Building -> Bibliotheque(building) }, "bibliotheque"
+        { building: Building -> Bibliotheque(building) },
     ),
     BOULANGERIE(
-        { building: Building -> Boulangerie(building) }, "boulangerie"
+        { building: Building -> Boulangerie(building) },
     ),
     BOUTIQUE(
-        { building: Building -> Boutique(building) }, "boutique"
+        { building: Building -> Boutique(building) },
     ),
     CASINO(
-        { building: Building -> Casino(building) }, "casino"
+        { building: Building -> Casino(building) },
     ),
     HOPITAL(
-        { building: Building -> Hopital(building) }, "hopital"
+        { building: Building -> Hopital(building) },
     ),
     JOURNAL(
-        { building: Building -> Journal(building) }, "journal"
+        { building: Building -> Journal(building) },
     ),
     MAIRIE(
-        { building: Building -> Mairie(building) }, "mairie"
+        { building: Building -> Mairie(building) },
     ),
     MAISON(
-        { building: Building -> Maison(building) }, "maison"
+        { building: Building -> Maison(building) },
     ),
     PHARMACIE(
-        { building: Building -> Pharmacie(building) }, "pharmacie"
+        { building: Building -> Pharmacie(building) },
     );
 
     var basePrice = 0.0
@@ -57,7 +54,7 @@ enum class Buildings(private val getBuildingM: (Building) -> BuildingInteraction
     var buildingAutorisations: BuildingAutorisations? = null
 
     init {
-        Building.jsonObject?.let { setModelWithJson(it.getJSONObject(name_)) }
+        Building.jsonObject?.let { setModelWithJson(it.getJSONObject(name.lowercase())) }
     }
 
     private fun setModelWithJson(jsonObject: JSONObject) {

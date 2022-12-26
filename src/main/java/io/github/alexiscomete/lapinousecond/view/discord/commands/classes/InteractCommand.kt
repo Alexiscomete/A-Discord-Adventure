@@ -400,7 +400,7 @@ class InteractCommandBase : Command(
                                         for (i in start until max) {
                                             val buildType = buildsTypesL[i]
                                             builder.addField(
-                                                buildType.name_,
+                                                buildType.name.lowercase(),
                                                 buildType.basePrice.toString() + " " + Resource.RABBIT_COIN.name_ + " (Peut être construit : " + buildType.isBuild + ")"
                                             )
                                         }
