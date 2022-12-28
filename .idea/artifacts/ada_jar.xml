@@ -23,7 +23,7 @@
       <element id="extracted-dir" path="$USER_HOME$/jars/json-20211205.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/squareup/okhttp3/okhttp/4.9.3/okhttp-4.9.3.jar" path-in-jar="/" />
       <element id="file-copy" path="$PROJECT_DIR$/src/main/resources/answers.json" />
-      <element id="file-copy" path="$PROJECT_DIR$/src/main/resources/DIBIMAP.png" />
+      <element id="file-copy" path="$PROJECT_DIR$/../procedural_generation/lib/src/test/java/procedural_generation/DIBIMAP.png" />
       <element id="file-copy" path="$PROJECT_DIR$/src/main/resources/buildings_config.json" />
       <element id="directory" name="META-INF">
         <element id="file-copy" path="$PROJECT_DIR$/src/main/resources/META-INF/MANIFEST.MF" />
