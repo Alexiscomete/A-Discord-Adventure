@@ -3,7 +3,7 @@ package io.github.alexiscomete.lapinousecond.worlds.map
 import io.github.alexiscomete.lapinousecond.worlds.WorldManager
 
 open class PixelManager(val x: Int, val y: Int, protected val worldManager: WorldManager) {
-    val isLanded = worldManager.isLand(x, y)
+    val isLanded = worldManager.isLand(x.toDouble(), y.toDouble())
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is PixelManager) return false

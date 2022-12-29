@@ -10,6 +10,8 @@ import java.awt.Color
 import java.awt.Font
 import java.awt.Image
 import java.awt.image.BufferedImage
+import java.io.IOException
+import javax.imageio.ImageIO
 import kotlin.math.pow
 import kotlin.math.sqrt
 
@@ -97,7 +99,15 @@ fun cloneBufferedImage(bi: BufferedImage): BufferedImage {
     return BufferedImage(cm, raster, isAlphaPremultiplied, null)
 }
 
-data class ZoneToAdapt(var x: Int, var y: Int, var width: Int, var height: Int, private var maxX: Int, private var maxY: Int, val zoom: Zooms) {
+data class ZoneToAdapt(
+    var x: Int,
+    var y: Int,
+    var width: Int,
+    var height: Int,
+    private var maxX: Int,
+    private var maxY: Int,
+    val zoom: Zooms
+) {
     init {
         val (maxX, maxY) = Zooms.ZOOM_OUT.zoomInTo(zoom, maxX, maxY)
         this.maxX = maxX
@@ -131,6 +141,99 @@ data class ZoneToAdapt(var x: Int, var y: Int, var width: Int, var height: Int, 
     }
 }
 
+fun getImage(path: String): BufferedImage {
+    return try {
+        val image = ImageIO.read(WorldEnum::class.java.classLoader.getResourceAsStream("$path.png"))
+            ?: throw IOException("Image not found")
+        image
+    } catch (e: IOException) {
+        throw RuntimeException(e)
+    }
+}
+
+val builder = ValueOperationNodeBuilder(
+    ValueOperationNodeBuilder(
+        AddNodeBuilder(
+            ChangeLocationNodeBuilder(
+                ChangeSeedNodeBuilder(
+                    Operation.ADD,
+                    4,
+                    NoiseMapBuilder(5.0)
+                ),
+                Operation.DIVIDE,
+                Operation.DIVIDE,
+                2.5,
+                2.5
+            ),
+            ChangeLocationNodeBuilder(
+                ChangeSeedNodeBuilder(
+                    Operation.ADD,
+                    3,
+                    NoiseMapBuilder(4.0)
+                ),
+                Operation.DIVIDE,
+                Operation.DIVIDE,
+                2.0,
+                2.0
+            ),
+            ChangeLocationNodeBuilder(
+                ChangeSeedNodeBuilder(
+                    Operation.ADD,
+                    2,
+                    NoiseMapBuilder(1.0)
+                ),
+                Operation.DIVIDE,
+                Operation.DIVIDE,
+                2.0,
+                2.0
+            ),
+            NoiseMapBuilder(0.5),
+            ChangeSeedNodeBuilder(
+                Operation.ADD,
+                1,
+                NoiseMapBuilder(0.5)
+            ),
+            ChangeLocationNodeBuilder(
+                ChangeSeedNodeBuilder(
+                    Operation.ADD,
+                    5,
+                    NoiseMapBuilder(0.3)
+                ),
+                Operation.MULTIPLY,
+                Operation.MULTIPLY,
+                10.0,
+                10.0
+            ),
+            ChangeLocationNodeBuilder(
+                ChangeSeedNodeBuilder(
+                    Operation.ADD,
+                    6,
+                    NoiseMapBuilder(0.3)
+                ),
+                Operation.MULTIPLY,
+                Operation.MULTIPLY,
+                100.0,
+                100.0
+            ),
+            ChangeLocationNodeBuilder(
+                ChangeSeedNodeBuilder(
+                    Operation.ADD,
+                    7,
+                    NoiseMapBuilder(0.2)
+                ),
+                Operation.MULTIPLY,
+                Operation.MULTIPLY,
+                1000.0,
+                1000.0
+            )
+        ),
+        ValueOperation.POWER_SYMMETRICAL,
+        2.0
+    ),
+    ValueOperation.REMOVE_POURCENT,
+    0.4
+)
+
 enum class WorldEnum(
     val typeOfServer: String,
     val nameRP: String,
@@ -153,88 +256,7 @@ enum class WorldEnum(
         500,
         WorldProcedural(
             ComplexNoiseBuilder(
-                ValueOperationNodeBuilder(
-                    ValueOperationNodeBuilder(
-                        AddNodeBuilder(
-                            ChangeLocationNodeBuilder(
-                                ChangeSeedNodeBuilder(
-                                    Operation.ADD,
-                                    4,
-                                    NoiseMapBuilder(5.0)
-                                ),
-                                Operation.DIVIDE,
-                                Operation.DIVIDE,
-                                2.5,
-                                2.5
-                            ),
-                            ChangeLocationNodeBuilder(
-                                ChangeSeedNodeBuilder(
-                                    Operation.ADD,
-                                    3,
-                                    NoiseMapBuilder(4.0)
-                                ),
-                                Operation.DIVIDE,
-                                Operation.DIVIDE,
-                                2.0,
-                                2.0
-                            ),
-                            ChangeLocationNodeBuilder(
-                                ChangeSeedNodeBuilder(
-                                    Operation.ADD,
-                                    2,
-                                    NoiseMapBuilder(1.0)
-                                ),
-                                Operation.DIVIDE,
-                                Operation.DIVIDE,
-                                2.0,
-                                2.0
-                            ),
-                            NoiseMapBuilder(0.5),
-                            ChangeSeedNodeBuilder(
-                                Operation.ADD,
-                                1,
-                                NoiseMapBuilder(0.5)
-                            ),
-                            ChangeLocationNodeBuilder(
-                                ChangeSeedNodeBuilder(
-                                    Operation.ADD,
-                                    5,
-                                    NoiseMapBuilder(0.3)
-                                ),
-                                Operation.MULTIPLY,
-                                Operation.MULTIPLY,
-                                10.0,
-                                10.0
-                            ),
-                            ChangeLocationNodeBuilder(
-                                ChangeSeedNodeBuilder(
-                                    Operation.ADD,
-                                    6,
-                                    NoiseMapBuilder(0.3)
-                                ),
-                                Operation.MULTIPLY,
-                                Operation.MULTIPLY,
-                                100.0,
-                                100.0
-                            ),
-                            ChangeLocationNodeBuilder(
-                                ChangeSeedNodeBuilder(
-                                    Operation.ADD,
-                                    7,
-                                    NoiseMapBuilder(0.2)
-                                ),
-                                Operation.MULTIPLY,
-                                Operation.MULTIPLY,
-                                1000.0,
-                                1000.0
-                            )
-                        ),
-                        ValueOperation.POWER_SYMMETRICAL,
-                        2.0
-                    ),
-                    ValueOperation.REMOVE_POURCENT,
-                    0.4
-                )
+                builder
             ).build(60),
             500,
             500
@@ -249,7 +271,22 @@ enum class WorldEnum(
         75,
         528,
         272,
-        WorldImage("DIBIMAP.png")
+        WorldProcedural(
+            ComplexNoiseBuilder(
+                AddNodeBuilder(
+                    builder,
+                    ImageMaskNodeBuilder(
+                        getImage("DIBIMAP"),
+                        5.0,
+                        Color(0x704A40),
+                        Color(0x4D759D),
+                        6
+                    )
+                )
+            ).build(80),
+            528,
+            272
+        )
     ),
     TUTO(
         "Serveur du tutoriel",
@@ -260,7 +297,22 @@ enum class WorldEnum(
         25,
         100,
         50,
-        WorldImage("TUTO.png")
+        WorldProcedural(
+            ComplexNoiseBuilder(
+                AddNodeBuilder(
+                    builder,
+                    ImageMaskNodeBuilder(
+                        getImage("TUTO"),
+                        5.0,
+                        Color(0x704A40),
+                        Color(0x4D759D),
+                        6
+                    )
+                )
+            ).build(50),
+            100,
+            50
+        )
     );
 
     val START_X = 1

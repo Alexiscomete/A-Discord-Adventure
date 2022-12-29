@@ -10,9 +10,6 @@ class WorldProcedural(
     private val maxX: Int,
     private val maxY: Int
 ) : WorldManager {
-    override fun isLand(x: Int, y: Int): Boolean {
-        return complexNoise.getValue(x.toDouble(), y.toDouble()) > 0.5
-    }
 
     override fun isLand(x: Double, y: Double): Boolean {
         return complexNoise.getValue(x, y) > 0.5
@@ -95,7 +92,7 @@ class WorldProcedural(
         // fill the image
         for (x in 0 until maxX) {
             for (y in 0 until maxY) {
-                val color = if (isLand(x, y)) 0x704A40 else 0x4D759D
+                val color = if (isLand(x.toDouble(), y.toDouble())) 0x704A40 else 0x4D759D
                 image.setRGB(x, y, color)
             }
         }
@@ -108,5 +105,14 @@ class WorldProcedural(
 
     override fun yImage(y: Int): Int {
         return y
+    }
+
+    override fun getHeight(x: Double, y: Double): Double {
+        return complexNoise.getValue(x, y)
+    }
+
+    override fun getHeight(x: Int, y: Int, zoom: Zooms): Double {
+        val (x1, y1) = zoom.zoomOutTo(Zooms.ZOOM_OUT, x.toDouble(), y.toDouble())
+        return getHeight(x1, y1)
     }
 }
