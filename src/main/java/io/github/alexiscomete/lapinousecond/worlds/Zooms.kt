@@ -18,8 +18,13 @@ enum class Zooms(
     }
 
     fun zoomInTo(zooms: Zooms, x: Int, y: Int, starting: Boolean = true): Pair<Int, Int> {
+        println("zoomInTo $zooms $x $y $starting")
         if (zooms == this) {
-            return Pair(x * zoom, y * zoom)
+            return if (starting) {
+                Pair(x, y)
+            } else {
+                Pair(x * zoom, y * zoom)
+            }
         }
         if (starting) {
             return next?.zoomInTo(zooms, x, y, false) ?: throw Exception("Zooms not found")

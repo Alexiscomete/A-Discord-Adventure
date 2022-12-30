@@ -26,8 +26,7 @@ class WorldProcedural(
         // fill the image
         for (x in zoneToAdapt.x until zoneToAdapt.x + zoneToAdapt.width) {
             for (y in zoneToAdapt.y until zoneToAdapt.y + zoneToAdapt.height) {
-                val color = if (isLand(x + zoneToAdapt.x, y + zoneToAdapt.y, zoneToAdapt.zoom)) 0x704A40 else 0x4D759D
-                image.setRGB(x - zoneToAdapt.x, y - zoneToAdapt.y, color)
+                image.setRGB(x - zoneToAdapt.x, y - zoneToAdapt.y, color(x + zoneToAdapt.x, y + zoneToAdapt.y, zoneToAdapt.zoom))
             }
         }
         return image
@@ -36,6 +35,7 @@ class WorldProcedural(
     override fun zoomWithDecorElements(zoneToAdapt: ZoneToAdapt, progName: String, player: Player?): BufferedImage {
         // generate the image
         var image = zoom(zoneToAdapt)
+        println(zoneToAdapt)
         // add the player
         if (player != null) {
             if (player["place_${progName}_zoom"] == "") {
@@ -92,8 +92,7 @@ class WorldProcedural(
         // fill the image
         for (x in 0 until maxX) {
             for (y in 0 until maxY) {
-                val color = if (isLand(x.toDouble(), y.toDouble())) 0x704A40 else 0x4D759D
-                image.setRGB(x, y, color)
+                image.setRGB(x, y, color(x, y, Zooms.ZOOM_OUT))
             }
         }
         return image
@@ -114,5 +113,11 @@ class WorldProcedural(
     override fun getHeight(x: Int, y: Int, zoom: Zooms): Double {
         val (x1, y1) = zoom.zoomOutTo(Zooms.ZOOM_OUT, x.toDouble(), y.toDouble())
         return getHeight(x1, y1)
+    }
+
+    fun color(x: Int, y: Int, zooms: Zooms): Int {
+        return if (isLand(x, y, zooms)) {
+            if (getHeight(x, y, zooms) > 0.51) 0x00FF00 else 0x704A40
+        } else 0x4D759D
     }
 }
