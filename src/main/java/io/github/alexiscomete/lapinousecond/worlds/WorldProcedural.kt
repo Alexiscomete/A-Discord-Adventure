@@ -26,7 +26,7 @@ class WorldProcedural(
         // fill the image
         for (x in zoneToAdapt.x until zoneToAdapt.x + zoneToAdapt.width) {
             for (y in zoneToAdapt.y until zoneToAdapt.y + zoneToAdapt.height) {
-                image.setRGB(x - zoneToAdapt.x, y - zoneToAdapt.y, color(x + zoneToAdapt.x, y + zoneToAdapt.y, zoneToAdapt.zoom))
+                image.setRGB(x - zoneToAdapt.x, y - zoneToAdapt.y, findColor(x + zoneToAdapt.x, y + zoneToAdapt.y, zoneToAdapt.zoom))
             }
         }
         return image
@@ -92,7 +92,7 @@ class WorldProcedural(
         // fill the image
         for (x in 0 until maxX) {
             for (y in 0 until maxY) {
-                image.setRGB(x, y, color(x, y, Zooms.ZOOM_OUT))
+                image.setRGB(x, y, findColor(x, y, Zooms.ZOOM_OUT))
             }
         }
         return image
@@ -115,9 +115,27 @@ class WorldProcedural(
         return getHeight(x1, y1)
     }
 
-    fun color(x: Int, y: Int, zooms: Zooms): Int {
-        return if (isLand(x, y, zooms)) {
-            if (getHeight(x, y, zooms) > 0.51) 0x00FF00 else 0x704A40
-        } else 0x4D759D
+    private fun findColor(x: Int, y: Int, zooms: Zooms): Int {
+        val color: Int = (getHeight(x, y, zooms) * 255).toInt()
+        var blue = 0
+        var green = 0
+        var red = 0
+        if (color > 127) {
+            if (color > 128) {
+                green = 255 - color
+                if (color > 191) {
+                    red = 255 - color
+                    if (color > 224) {
+                        blue = color
+                        green = color
+                    }
+                }
+            } else {
+                return Color(245, 245, 66).rgb
+            }
+        } else {
+            blue = color
+        }
+        return Color(red, green, blue).rgb
     }
 }
