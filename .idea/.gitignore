@@ -2,3 +2,7 @@
 /shelf/
 /workspace.xml
 out/artifacts/ada_jar/
+out/
+target/
+build/
+.idea/
