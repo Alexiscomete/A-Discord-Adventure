@@ -26,7 +26,7 @@ class WorldProcedural(
         // fill the image
         for (x in zoneToAdapt.x until zoneToAdapt.x + zoneToAdapt.width) {
             for (y in zoneToAdapt.y until zoneToAdapt.y + zoneToAdapt.height) {
-                image.setRGB(x - zoneToAdapt.x, y - zoneToAdapt.y, findColor(x + zoneToAdapt.x, y + zoneToAdapt.y, zoneToAdapt.zoom))
+                image.setRGB(x - zoneToAdapt.x, y - zoneToAdapt.y, findColor(x, y, zoneToAdapt.zoom))
             }
         }
         return image
@@ -112,7 +112,6 @@ class WorldProcedural(
 
     override fun getHeight(x: Int, y: Int, zoom: Zooms): Double {
         val (x1, y1) = zoom.zoomOutTo(Zooms.ZOOM_OUT, x.toDouble(), y.toDouble())
-        println("x: $x, y: $y, x1: $x1, y1: $y1")
         return getHeight(x1, y1)
     }
 
