@@ -18,7 +18,6 @@ enum class Zooms(
     }
 
     fun zoomInTo(zooms: Zooms, x: Int, y: Int, starting: Boolean = true): Pair<Int, Int> {
-        println("zoomInTo $zooms $x $y $starting")
         if (zooms == this) {
             return if (starting) {
                 Pair(x, y)

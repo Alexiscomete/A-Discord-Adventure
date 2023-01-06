@@ -112,6 +112,7 @@ class WorldProcedural(
 
     override fun getHeight(x: Int, y: Int, zoom: Zooms): Double {
         val (x1, y1) = zoom.zoomOutTo(Zooms.ZOOM_OUT, x.toDouble(), y.toDouble())
+        println("x: $x, y: $y, x1: $x1, y1: $y1")
         return getHeight(x1, y1)
     }
 

@@ -20,11 +20,11 @@ repositories {
 }
 
 dependencies {
-    implementation("org.javacord:javacord:3.6.0")
-    implementation("org.xerial:sqlite-jdbc:3.36.0.3")
-    implementation("org.json:json:20220320")
+    implementation("org.javacord:javacord:3.7.0")
+    implementation("org.xerial:sqlite-jdbc:3.40.0.0")
+    implementation("org.json:json:20220924")
     implementation("org.jetbrains.kotlin:kotlin-stdlib:1.7.0")
-    implementation("com.github.Alexiscomete:procedural_generation:1-ALPHA.1")
+    implementation("com.github.Alexiscomete:procedural_generation:1-ALPHA.2")
 }
 
 application {
