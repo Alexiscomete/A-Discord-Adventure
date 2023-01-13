@@ -6,8 +6,8 @@ enum class Zooms(
 ) {
     ZOOM_OUT(1, null),
     ZOOM_ZONES(7, ZOOM_OUT),
-    ZOOM_ZONES_DETAILS(5, ZOOM_ZONES),
-    ZOOM_IN(20, ZOOM_ZONES_DETAILS);
+    ZOOM_ZONES_DETAILS(20, ZOOM_ZONES),
+    ZOOM_IN(50, ZOOM_ZONES_DETAILS);
 
     var next: Zooms? = null
 

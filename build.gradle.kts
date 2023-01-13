@@ -25,10 +25,15 @@ dependencies {
     implementation("org.json:json:20220924")
     implementation("org.jetbrains.kotlin:kotlin-stdlib:1.7.0")
     implementation("com.github.Alexiscomete:procedural_generation:1-ALPHA.2")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
 }
 
 application {
     mainClass.set("io.github.alexiscomete.lapinousecond.MainKt")
+}
+
+tasks.test {
+    useJUnitPlatform()
 }
 
 group = "io.github.alexiscomete.lapinoudsecond"
