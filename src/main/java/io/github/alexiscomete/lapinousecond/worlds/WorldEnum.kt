@@ -16,49 +16,43 @@ import kotlin.math.pow
 import kotlin.math.sqrt
 
 var complexNoiseBuilderForCaves = ComplexNoiseBuilder(
-    ChangeLocationNodeBuilder(
+    ValueOperationNodeBuilder(
         ValueOperationNodeBuilder(
-            ValueOperationNodeBuilder(
-                AddNodeBuilder(
-                    NoiseMapBuilder(1.0),
+            AddNodeBuilder(
+                NoiseMapBuilder(2.0),
+                ChangeSeedNodeBuilder(
+                    Operation.ADD,
+                    1,
+                    NoiseMapBuilder(2.0)
+                ),
+                ChangeLocationNodeBuilder(
                     ChangeSeedNodeBuilder(
                         Operation.ADD,
-                        1,
+                        5,
                         NoiseMapBuilder(1.0)
                     ),
-                    ChangeLocationNodeBuilder(
-                        ChangeSeedNodeBuilder(
-                            Operation.ADD,
-                            5,
-                            NoiseMapBuilder(2.0)
-                        ),
-                        Operation.MULTIPLY,
-                        Operation.MULTIPLY,
-                        10.0,
-                        10.0
-                    ),
-                    ChangeLocationNodeBuilder(
-                        ChangeSeedNodeBuilder(
-                            Operation.ADD,
-                            6,
-                            NoiseMapBuilder(0.5)
-                        ),
-                        Operation.MULTIPLY,
-                        Operation.MULTIPLY,
-                        100.0,
-                        100.0
-                    )
+                    Operation.MULTIPLY,
+                    Operation.MULTIPLY,
+                    10.0,
+                    10.0
                 ),
-                ValueOperation.ABS,
-                0.5
+                ChangeLocationNodeBuilder(
+                    ChangeSeedNodeBuilder(
+                        Operation.ADD,
+                        6,
+                        NoiseMapBuilder(0.5)
+                    ),
+                    Operation.MULTIPLY,
+                    Operation.MULTIPLY,
+                    100.0,
+                    100.0
+                )
             ),
-            ValueOperation.REMOVE_POURCENT,
-            0.4
+            ValueOperation.ABS,
+            0.5
         ),
-        Operation.MULTIPLY,
-        Operation.MULTIPLY,
-        6000.0,
-        6000.0
+        ValueOperation.REMOVE_POURCENT,
+        0.4
     )
 )
 

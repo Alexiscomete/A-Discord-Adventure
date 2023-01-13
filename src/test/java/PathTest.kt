@@ -1,6 +1,5 @@
 import io.github.alexiscomete.lapinousecond.worlds.WorldEnum
 import io.github.alexiscomete.lapinousecond.worlds.WorldProcedural
-import io.github.alexiscomete.lapinousecond.worlds.Zooms
 import org.junit.jupiter.api.Test
 import java.awt.Color
 import java.awt.image.BufferedImage
@@ -15,7 +14,7 @@ class PathTest {
         val noiseImage = BufferedImage(3000, 3000, BufferedImage.TYPE_INT_RGB)
         for (x in 0 until 3000) {
             for (y in 0 until 3000) {
-                val color = ((WorldEnum.TUTO.worldManager as WorldProcedural).isPath(300000 + x, 300000 + y, Zooms.ZOOM_IN))
+                val color = ((WorldEnum.TUTO.worldManager as WorldProcedural).isPath(x.toDouble(), y.toDouble()))
                 var blue = 255 - 100
                 var green = 255 - 100
                 var red = 255 - 100
