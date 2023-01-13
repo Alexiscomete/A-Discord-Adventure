@@ -11,6 +11,8 @@ class WorldProcedural(
     private val maxY: Int
 ) : WorldManager {
 
+    val path = complexNoiseBuilderForCaves.build(80)
+
     override fun isLand(x: Double, y: Double): Boolean {
         return complexNoise.getValue(x, y) > 0.5
     }
@@ -115,6 +117,15 @@ class WorldProcedural(
         return getHeight(x1, y1)
     }
 
+    fun isPath(x: Int, y: Int, zoom: Zooms): Boolean {
+        val (x1, y1) = zoom.zoomOutTo(Zooms.ZOOM_OUT, x.toDouble(), y.toDouble())
+        return isPath(x1, y1)
+    }
+
+    private fun isPath(x: Double, y: Double): Boolean {
+        return path.getValue(x, y) < 0.5
+    }
+
     private fun findColor(x: Int, y: Int, zooms: Zooms): Int {
         val color: Int = (getHeight(x, y, zooms) * 255).toInt()
         var blue = 0
@@ -122,6 +133,11 @@ class WorldProcedural(
         var red = 0
         if (color > 127) {
             if (color > 128) {
+
+                if (zooms == Zooms.ZOOM_IN && isPath(x, y, zooms)) {
+                    return Color(255, 178, 79).rgb
+                }
+
                 green = 255 - color
                 if (color > 191) {
                     red = 255 - color
