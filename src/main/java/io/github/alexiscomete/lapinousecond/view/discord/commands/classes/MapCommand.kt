@@ -2,7 +2,7 @@ package io.github.alexiscomete.lapinousecond.view.discord.commands.classes
 
 import io.github.alexiscomete.lapinousecond.entity.Player
 import io.github.alexiscomete.lapinousecond.entity.PlayerWithAccount
-import io.github.alexiscomete.lapinousecond.resources.Resource
+import io.github.alexiscomete.lapinousecond.entity.resources.Resource
 import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
 import io.github.alexiscomete.lapinousecond.view.Context
 import io.github.alexiscomete.lapinousecond.view.contextFor
@@ -37,7 +37,7 @@ private fun verifyBal(player: Player) {
 
     val balDouble = bal.toDouble()
     if (balDouble < 100.0) {
-        throw IllegalStateException("La guilde des lapins de transports demande 100.0 ${Resource.RABBIT_COIN.name_} pour voyager dans un autre monde")
+        throw IllegalStateException("La guilde des lapins de transports demande 100.0 ${Resource.RABBIT_COIN.show} pour voyager dans un autre monde")
     }
 }
 
@@ -52,7 +52,7 @@ class Select(name: String, val worlds: List<WorldEnum>) : SelectMenuContextManag
 
         MenuBuilder(
             "Confirmer",
-            "Confirmez-vous le voyage vers ce monde pour 100 ${Resource.RABBIT_COIN.name_} ?",
+            "Confirmez-vous le voyage vers ce monde pour 100 ${Resource.RABBIT_COIN.show} ?",
             Color.orange,
             c
         )
@@ -194,7 +194,7 @@ class MapCommand : Command(
                 }
                 .addButton(
                     "Argent",
-                    "Vous allez dépenser $priceToTravel ${Resource.RABBIT_COIN.name_} pour aller jusqu'à ce pixel"
+                    "Vous allez dépenser $priceToTravel ${Resource.RABBIT_COIN.show} pour aller jusqu'à ce pixel"
                 ) { moneyB, c3, _ ->
                     MenuBuilder(
                         "Confirmer",
@@ -496,7 +496,7 @@ class MapCommand : Command(
                             options.add(SelectMenuOption.create(i.toString(), zoneDel.toString()))
                         }
                         val id = generateUniqueID()
-                        val actionRow = ActionRow.of(SelectMenu.create(id.toString(), "Monde où aller", options))
+                        val actionRow = ActionRow.of(SelectMenu.createStringMenu(id.toString(), "Monde où aller", options))
 
                         context.selectMenu(Select(id.toString(), worlds))
 

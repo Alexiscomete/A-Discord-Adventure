@@ -7,7 +7,7 @@ import io.github.alexiscomete.lapinousecond.view.discord.commands.getAccount
 import io.github.alexiscomete.lapinousecond.entity.Player
 import io.github.alexiscomete.lapinousecond.view.ui.EmbedPagesWithInteractions
 import io.github.alexiscomete.lapinousecond.view.ui.MenuBuilder
-import io.github.alexiscomete.lapinousecond.resources.Resource
+import io.github.alexiscomete.lapinousecond.entity.resources.Resource
 import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
 import io.github.alexiscomete.lapinousecond.useful.managesave.saveManager
 import io.github.alexiscomete.lapinousecond.view.Context
@@ -58,7 +58,7 @@ class InteractCommandBase : Command(
             building.addMoney(money)
 
             smce.modalInteraction.createImmediateResponder()
-                .setContent("Vous avez donné $money ${Resource.RABBIT_COIN.name_} au bâtiment ${building["nameRP"]} ! <@${building["owner"]}> peut vous remerciez !")
+                .setContent("Vous avez donné $money ${Resource.RABBIT_COIN.show} au bâtiment ${building["nameRP"]} ! <@${building["owner"]}> peut vous remerciez !")
                 .respond()
         }
 
@@ -401,7 +401,7 @@ class InteractCommandBase : Command(
                                             val buildType = buildsTypesL[i]
                                             builder.addField(
                                                 buildType.name.lowercase(),
-                                                buildType.basePrice.toString() + " " + Resource.RABBIT_COIN.name_ + " (Peut être construit : " + buildType.isBuild + ")"
+                                                buildType.basePrice.toString() + " " + Resource.RABBIT_COIN.show + " (Peut être construit : " + buildType.isBuild + ")"
                                             )
                                         }
                                     },

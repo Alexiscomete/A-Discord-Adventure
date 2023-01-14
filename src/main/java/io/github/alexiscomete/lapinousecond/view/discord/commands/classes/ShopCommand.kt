@@ -4,8 +4,8 @@ import io.github.alexiscomete.lapinousecond.view.discord.commands.Command
 import io.github.alexiscomete.lapinousecond.view.discord.commands.ExecutableWithArguments
 import io.github.alexiscomete.lapinousecond.view.discord.commands.SubCommand
 import io.github.alexiscomete.lapinousecond.view.discord.commands.getAccount
-import io.github.alexiscomete.lapinousecond.resources.Resource
-import io.github.alexiscomete.lapinousecond.resources.ResourceManager
+import io.github.alexiscomete.lapinousecond.entity.resources.Resource
+import io.github.alexiscomete.lapinousecond.entity.resources.ResourceManager
 import org.javacord.api.entity.message.embed.EmbedBuilder
 import org.javacord.api.interaction.*
 import java.awt.Color
@@ -55,7 +55,7 @@ class ShopBuyCommand :
                 run {
                     val arrayList = arrayListOf<SlashCommandOptionChoice>()
                     Resource.values().forEach {
-                        arrayList.add(SlashCommandOptionChoice.create(it.progName, it.name))
+                        arrayList.add(SlashCommandOptionChoice.create(it.name, it.name))
                     }
                     return@run arrayList
                 }
@@ -97,10 +97,10 @@ class ShopBuyCommand :
             }
             player.updateResources()
             slashCommand.createImmediateResponder()
-                .setContent("Achat réussi ! Vous avez payé ${price.toInt()} ${Resource.RABBIT_COIN.name_}")
+                .setContent("Achat réussi ! Vous avez payé ${price.toInt()} ${Resource.RABBIT_COIN.show}")
                 .respond()
         } else {
-            throw IllegalStateException("La transaction de " + price + " ${Resource.RABBIT_COIN.name_} pour " + quantity + " " + resource.name_ + " n'a pas pu être effectuée car vous n'aviez pas assez de ${Resource.RABBIT_COIN.name_}")
+            throw IllegalStateException("La transaction de " + price + " ${Resource.RABBIT_COIN.show} pour " + quantity + " " + resource.show + " n'a pas pu être effectuée car vous n'aviez pas assez de ${Resource.RABBIT_COIN.show}")
         }
 
     }
@@ -120,7 +120,7 @@ class ShopSellCommand :
                 run {
                     val arrayList = arrayListOf<SlashCommandOptionChoice>()
                     Resource.values().forEach {
-                        arrayList.add(SlashCommandOptionChoice.create(it.progName, it.name))
+                        arrayList.add(SlashCommandOptionChoice.create(it.name, it.name))
                     }
                     return@run arrayList
                 }
@@ -163,10 +163,10 @@ class ShopSellCommand :
                 resourceManager.quantity = resourceManager.quantity - quantity
                 player.updateResources()
                 slashCommand.createImmediateResponder()
-                    .setContent("Vente réussie ! Vous avez gagné ${price.toInt()} ${Resource.RABBIT_COIN.name_}")
+                    .setContent("Vente réussie ! Vous avez gagné ${price.toInt()} ${Resource.RABBIT_COIN.show}")
                     .respond()
             } else {
-                throw IllegalStateException("La transaction de " + quantity + " " + resource.name_ + " pour " + price + " ${Resource.RABBIT_COIN.name_} n'a pas pu être effectuée car vous n'aviez pas assez de " + resource.name_)
+                throw IllegalStateException("La transaction de " + quantity + " " + resource.show + " pour " + price + " ${Resource.RABBIT_COIN.show} n'a pas pu être effectuée car vous n'aviez pas assez de " + resource.show)
             }
         }
     }
@@ -190,7 +190,7 @@ class ShopListCommand :
         for (r in Resource.values()) {
             stringBuilder
                 .append("\n")
-                .append(r.name_)
+                .append(r.show)
                 .append(" -> `")
                 .append(round(r.price * BUY_COEF * 1000) / 1000)
                 .append("`; `")
@@ -198,7 +198,7 @@ class ShopListCommand :
                 .append("`; `")
                 .append(r.price)
                 .append("`; `")
-                .append(r.progName)
+                .append(r.name)
                 .append("`")
         }
         val embedBuilder = EmbedBuilder()
@@ -228,7 +228,7 @@ class ShopInfoCommand :
                 run {
                     val arrayList = arrayListOf<SlashCommandOptionChoice>()
                     Resource.values().forEach {
-                        arrayList.add(SlashCommandOptionChoice.create(it.progName, it.name))
+                        arrayList.add(SlashCommandOptionChoice.create(it.name, it.name))
                     }
                     return@run arrayList
                 }
@@ -250,11 +250,11 @@ class ShopInfoCommand :
         val quantity = resourceManager?.quantity ?: 0
         val embedBuilder = EmbedBuilder()
             .setFooter("Quantité sur vous : $quantity")
-            .addField("Prix d'achat", (resource.price * BUY_COEF).toString() + Resource.RABBIT_COIN.name_, true)
-            .addField("Prix de vente", (resource.price * SELL_COEF).toString() + Resource.RABBIT_COIN.name_, true)
-            .addField("Prix réel", resource.price.toString() + Resource.RABBIT_COIN.name_, true)
+            .addField("Prix d'achat", (resource.price * BUY_COEF).toString() + Resource.RABBIT_COIN.show, true)
+            .addField("Prix de vente", (resource.price * SELL_COEF).toString() + Resource.RABBIT_COIN.show, true)
+            .addField("Prix réel", resource.price.toString() + Resource.RABBIT_COIN.show, true)
             .setColor(Color.GREEN)
-            .setTitle(resource.name_ + " " + resource.progName)
+            .setTitle(resource.show + " " + resource.name)
         val responder = slashCommand.createImmediateResponder()
             .addEmbed(embedBuilder)
         responder.respond()

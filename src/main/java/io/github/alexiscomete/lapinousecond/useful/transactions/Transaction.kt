@@ -1,7 +1,7 @@
 package io.github.alexiscomete.lapinousecond.useful.transactions
 
 import io.github.alexiscomete.lapinousecond.entity.Player
-import io.github.alexiscomete.lapinousecond.resources.Resource
+import io.github.alexiscomete.lapinousecond.entity.resources.Resource
 
 interface Transaction {
     val who: Player

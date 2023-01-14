@@ -3,7 +3,7 @@ package io.github.alexiscomete.lapinousecond.entity
 import io.github.alexiscomete.lapinousecond.useful.managesave.CacheCustom
 import io.github.alexiscomete.lapinousecond.useful.managesave.CacheGetSet
 import io.github.alexiscomete.lapinousecond.useful.managesave.Table
-import io.github.alexiscomete.lapinousecond.resources.Resource
+import io.github.alexiscomete.lapinousecond.entity.resources.Resource
 
 val COMPANY = (Table("company"))
 val companies = CacheCustom(COMPANY) { id: Long ->

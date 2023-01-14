@@ -9,7 +9,7 @@ import io.github.alexiscomete.lapinousecond.entity.players
 import io.github.alexiscomete.lapinousecond.view.ui.EmbedPagesWithInteractions
 import io.github.alexiscomete.lapinousecond.view.ui.MenuBuilder
 import io.github.alexiscomete.lapinousecond.messagesManager
-import io.github.alexiscomete.lapinousecond.resources.Resource
+import io.github.alexiscomete.lapinousecond.entity.resources.Resource
 import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
 import io.github.alexiscomete.lapinousecond.useful.managesave.saveManager
 import io.github.alexiscomete.lapinousecond.useful.transactions.*
@@ -131,7 +131,7 @@ class MarketCommand : Command(
             // accept, cancel are used to count the number of users who select each button
             MenuBuilder(
                 "Suite de l'échange",
-                "La personne avec qui vous échangez a proposé $quantity ${resource.name_}",
+                "La personne avec qui vous échangez a proposé $quantity ${resource.show}",
                 Color.YELLOW,
                 c3
             )
@@ -319,19 +319,19 @@ class MarketCommand : Command(
 
             val p = c.players.player.player
             if (!p.hasResource(resource, quantityDouble)) {
-                throw IllegalArgumentException("Vous n'avez pas assez de ${resource.progName}")
+                throw IllegalArgumentException("Vous n'avez pas assez de ${resource.name}")
             }
             p.removeResource(resource, quantityDouble)
             val offerId = generateUniqueID()
             offers.add(offerId)
             val offer = Offer(offerId)
             offer["who"] = p.id.toString()
-            offer["what"] = resource.progName
+            offer["what"] = resource.name
             offer["amount"] = quantityDouble.toString()
             offer["amountRB"] = costDouble.toString()
 
             smce.modalInteraction.createImmediateResponder()
-                .setContent("Votre offre a bien été enregistrée :  $costDouble ${Resource.RABBIT_COIN.name_} -> $quantityDouble ${resource.progName}")
+                .setContent("Votre offre a bien été enregistrée :  $costDouble ${Resource.RABBIT_COIN.show} -> $quantityDouble ${resource.name}")
                 .respond()
         }
     }
@@ -374,19 +374,19 @@ class MarketCommand : Command(
 
             val p = c.players.player.player
             if (!p.hasMoney(costDouble)) {
-                throw IllegalArgumentException("Vous n'avez pas assez de ${Resource.RABBIT_COIN.name_}")
+                throw IllegalArgumentException("Vous n'avez pas assez de ${Resource.RABBIT_COIN.show}")
             }
             p.removeMoney(costDouble)
             val researchId = generateUniqueID()
             researches.add(researchId)
             val research = Research(researchId)
             research["who"] = p.id.toString()
-            research["what"] = resource.progName
+            research["what"] = resource.name
             research["amount"] = quantityDouble.toString()
             research["amountRB"] = costDouble.toString()
 
             smce.modalInteraction.createImmediateResponder()
-                .setContent("Votre recherche a bien été enregistrée :  $quantityDouble ${resource.progName} -> $costDouble ${Resource.RABBIT_COIN.name_}")
+                .setContent("Votre recherche a bien été enregistrée :  $quantityDouble ${resource.name} -> $costDouble ${Resource.RABBIT_COIN.show}")
                 .respond()
         }
     }
@@ -429,20 +429,20 @@ class MarketCommand : Command(
 
             val p = c.players.player.player
             if (!p.hasResource(resource, quantityDouble)) {
-                throw IllegalArgumentException("Vous n'avez pas assez de ${resource.progName}")
+                throw IllegalArgumentException("Vous n'avez pas assez de ${resource.name}")
             }
             p.removeResource(resource, quantityDouble)
             val auctionId = generateUniqueID()
             auctions.add(auctionId)
             val auction = Auction(auctionId)
             auction["who"] = p.id.toString()
-            auction["what"] = resource.progName
+            auction["what"] = resource.name
             auction["amount"] = quantityDouble.toString()
             auction["amountRB"] = costDouble.toString()
             auction["whoMax"] = p.id.toString()
 
             smce.modalInteraction.createImmediateResponder()
-                .setContent("Votre enchère a bien été enregistrée :  $costDouble ${Resource.RABBIT_COIN.name_} -> $quantityDouble ${resource.progName}")
+                .setContent("Votre enchère a bien été enregistrée :  $costDouble ${Resource.RABBIT_COIN.show} -> $quantityDouble ${resource.name}")
                 .respond()
         }
 
@@ -619,7 +619,7 @@ class MarketCommand : Command(
                                     val offer = offerArrayList[i]
                                     builder.addInlineField(
                                         "Offre ${i - start + 1}",
-                                        "${offer.amountRB} -> ${offer.amount} ${offer.what.name_}"
+                                        "${offer.amountRB} -> ${offer.amount} ${offer.what.show}"
                                     )
                                 }
                             },
@@ -680,7 +680,7 @@ class MarketCommand : Command(
                                     val offer = offerArrayList[i]
                                     builder.addInlineField(
                                         "Offre ${i - start + 1} de <@${offer.who.id}>",
-                                        "${offer.amountRB} -> ${offer.amount} ${offer.what.name_}"
+                                        "${offer.amountRB} -> ${offer.amount} ${offer.what.show}"
                                     )
                                 }
                             },
@@ -791,7 +791,7 @@ class MarketCommand : Command(
                                     val research = researchArrayList[i]
                                     builder.addInlineField(
                                         "Offre ${i - start + 1}",
-                                        "${research.amountRB} -> ${research.amount} ${research.what.name_}"
+                                        "${research.amountRB} -> ${research.amount} ${research.what.show}"
                                     )
                                 }
                             },
@@ -852,7 +852,7 @@ class MarketCommand : Command(
                                     val research = researchArrayList[i]
                                     builder.addInlineField(
                                         "Recherche ${i - start} par <@${research.who.id}>",
-                                        "${research.amount} ${research.what.name_} -> ${research.amountRB}"
+                                        "${research.amount} ${research.what.show} -> ${research.amountRB}"
                                     )
                                 }
                             },
@@ -869,7 +869,7 @@ class MarketCommand : Command(
                                 throw IllegalArgumentException("Vous ne pouvez pas répondre à votre propre recherche")
                             }
                             if (!player2.hasResource(research.what, research.amount)) {
-                                throw IllegalArgumentException("Vous n'avez pas assez de ${research.what.name_} pour répondre à cette recherche")
+                                throw IllegalArgumentException("Vous n'avez pas assez de ${research.what.show} pour répondre à cette recherche")
                             }
                             player2.removeResource(research.what, research.amount)
                             research.who.addResource(research.what, research.amount)
@@ -959,7 +959,7 @@ class MarketCommand : Command(
                                 val auction = auctionArrayList[i]
                                 builder.addInlineField(
                                     "Enchère ${i - start + 1}",
-                                    "${auction.amountRB} -> ${auction.amount} ${auction.what.name_}"
+                                    "${auction.amountRB} -> ${auction.amount} ${auction.what.show}"
                                 )
                             }
                         },
@@ -1025,7 +1025,7 @@ class MarketCommand : Command(
                                 val research = auctionArrayList[i]
                                 builder.addInlineField(
                                     "Enchère ${i - start} par <@${research.who.id}>",
-                                    "${research.amountRB} de <@${research.whoMax.id}> -> ${research.amount} ${research.what.name_} "
+                                    "${research.amountRB} de <@${research.whoMax.id}> -> ${research.amount} ${research.what.show} "
                                 )
                             }
                         },
@@ -1042,7 +1042,7 @@ class MarketCommand : Command(
                             throw IllegalArgumentException("Vous ne pouvez pas répondre à votre propre enchère")
                         }
                         if (!player2.hasMoney(auction.amountRB + 100.0)) {
-                            throw IllegalArgumentException("Vous n'avez pas assez d'argent pour répondre à cette enchère (il faut enchérir de 100 ${Resource.RABBIT_COIN.name_})")
+                            throw IllegalArgumentException("Vous n'avez pas assez d'argent pour répondre à cette enchère (il faut enchérir de 100 ${Resource.RABBIT_COIN.show})")
                         }
                         player2.removeMoney(auction.amountRB + 100.0)
                         auction.whoMax.addMoney(auction.amountRB)
@@ -1053,7 +1053,7 @@ class MarketCommand : Command(
                             .createOriginalMessageUpdater()
                             .removeAllEmbeds()
                             .removeAllComponents()
-                            .setContent("Vous avez répondu à l'enchère de ${auction.amountRB} ${Resource.RABBIT_COIN.name_}")
+                            .setContent("Vous avez répondu à l'enchère de ${auction.amountRB} ${Resource.RABBIT_COIN.show}")
                             .update()
                     }
                     embedPagesWithInteractions.register()

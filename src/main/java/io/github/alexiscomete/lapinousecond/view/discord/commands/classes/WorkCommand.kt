@@ -5,9 +5,9 @@ import io.github.alexiscomete.lapinousecond.view.discord.commands.ExecutableWith
 import io.github.alexiscomete.lapinousecond.view.discord.commands.SubCommand
 import io.github.alexiscomete.lapinousecond.view.discord.commands.getAccount
 import io.github.alexiscomete.lapinousecond.entity.Player
-import io.github.alexiscomete.lapinousecond.resources.Resource
-import io.github.alexiscomete.lapinousecond.resources.ResourceManager
-import io.github.alexiscomete.lapinousecond.resources.WorkEnum
+import io.github.alexiscomete.lapinousecond.entity.resources.Resource
+import io.github.alexiscomete.lapinousecond.entity.resources.ResourceManager
+import io.github.alexiscomete.lapinousecond.entity.resources.WorkEnum
 import io.github.alexiscomete.lapinousecond.roles.Role
 import io.github.alexiscomete.lapinousecond.roles.RolesEnum
 import org.javacord.api.entity.message.embed.EmbedBuilder
@@ -96,7 +96,7 @@ private fun setRoles(
             if (find != null) {
                 if (find.isReady) {
                     roles.append(role.name_).append(" : ").append(role.salary)
-                        .append(" ${Resource.RABBIT_COIN.name_} \n")
+                        .append(" ${Resource.RABBIT_COIN.show} \n")
                     find.currentCooldown = (System.currentTimeMillis() / 1000)
                     totalRoles += role.salary.toDouble()
                 } else {
@@ -105,7 +105,7 @@ private fun setRoles(
                 }
             } else {
                 roles.append(role.name_).append(" : ").append(role.salary)
-                    .append(" ${Resource.RABBIT_COIN.name_} \n")
+                    .append(" ${Resource.RABBIT_COIN.show} \n")
                 totalRoles += role.salary.toDouble()
                 val r = Role(role)
                 r.currentCooldown = (System.currentTimeMillis() / 1000)

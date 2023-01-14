@@ -1,10 +1,10 @@
-package io.github.alexiscomete.lapinousecond.resources
+package io.github.alexiscomete.lapinousecond.entity.resources
 
 class ResourceManager(val resource: Resource, var quantity: Int) {
 
     override fun toString(): String {
         // pour sauvegarder dans la base de données
-        return resource.progName + ":" + quantity
+        return resource.name + ":" + quantity
     }
 
     companion object {

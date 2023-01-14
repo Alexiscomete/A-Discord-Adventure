@@ -1,4 +1,4 @@
-package io.github.alexiscomete.lapinousecond.resources
+package io.github.alexiscomete.lapinousecond.entity.resources
 
 enum class WorkEnum(
     val type: String,
@@ -10,7 +10,7 @@ enum class WorkEnum(
 ) {
     WORK1(
         "default",
-        "*Vous aidez quelqu'un à trouver le salon 'memes', vous gagnez rc ${Resource.RABBIT_COIN.name_} !*",
+        "*Vous aidez quelqu'un à trouver le salon 'memes', vous gagnez rc ${Resource.RABBIT_COIN.show} !*",
         15,
         35,
         null,
@@ -18,7 +18,7 @@ enum class WorkEnum(
     ),
     WORK2(
         "default",
-        "*Vous aider un bot à se rappeler de son préfix, vous gagnez rc ${Resource.RABBIT_COIN.name_} !*",
+        "*Vous aider un bot à se rappeler de son préfix, vous gagnez rc ${Resource.RABBIT_COIN.show} !*",
         16,
         45,
         null,
@@ -26,7 +26,7 @@ enum class WorkEnum(
     ),
     WORK3(
         "default",
-        "*Vous trouvez billet de train pour un autre serveur que vous rendez à son propriétaire, il vous récompense avec rc ${Resource.RABBIT_COIN.name_} ...*",
+        "*Vous trouvez billet de train pour un autre serveur que vous rendez à son propriétaire, il vous récompense avec rc ${Resource.RABBIT_COIN.show} ...*",
         15,
         36,
         null,
@@ -34,7 +34,7 @@ enum class WorkEnum(
     ),
     WOOD1(
         "default",
-        "Vous coupez du bois dans une forêt proche. Vous revenez avec rc ${Resource.WOOD.name_}",
+        "Vous coupez du bois dans une forêt proche. Vous revenez avec rc ${Resource.WOOD.show}",
         100,
         200,
         Resource.WOOD,
@@ -42,7 +42,7 @@ enum class WorkEnum(
     ),
     STONE1(
         "default",
-        "Vous allez récupérer rc ${Resource.STONE.name_} sur une colline",
+        "Vous allez récupérer rc ${Resource.STONE.show} sur une colline",
         80,
         150,
         Resource.STONE,
@@ -50,13 +50,13 @@ enum class WorkEnum(
     ),
     BRANCH1(
         "default",
-        "Vous récupérez rc ${Resource.BRANCH.name_} mortes dans la forêt",
+        "Vous récupérez rc ${Resource.BRANCH.show} mortes dans la forêt",
         50,
         250,
         Resource.BRANCH,
         15
     ),
-    BRANCH2("default", "Vous cassez rc ${Resource.BRANCH.name_} sur des arbres.", 150, 250, Resource.BRANCH, 15), DIAMOND1(
+    BRANCH2("default", "Vous cassez rc ${Resource.BRANCH.show} sur des arbres.", 150, 250, Resource.BRANCH, 15), DIAMOND1(
         "default",
         "En allant minez vous trouvez rc diamant(s) ...",
         1,

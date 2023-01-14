@@ -7,7 +7,7 @@ import io.github.alexiscomete.lapinousecond.view.discord.commands.SubCommand
 import io.github.alexiscomete.lapinousecond.view.discord.commands.getAccount
 import io.github.alexiscomete.lapinousecond.entity.Player
 import io.github.alexiscomete.lapinousecond.entity.players
-import io.github.alexiscomete.lapinousecond.resources.Resource
+import io.github.alexiscomete.lapinousecond.entity.resources.Resource
 import io.github.alexiscomete.lapinousecond.useful.managesave.saveManager
 import org.javacord.api.entity.message.embed.EmbedBuilder
 import org.javacord.api.interaction.SlashCommandInteraction
@@ -168,7 +168,7 @@ class InvCommandResources : SubCommand(
         val re = StringBuilder().append("Cliquez sur une resource pour voir son nom\n")
         for (reM in player.resourceManagers.values) {
             re
-                .append(reM.resource.name_)
+                .append(reM.resource.show)
                 .append(" ")
                 .append(reM.quantity)
                 .append("\n")
@@ -177,7 +177,7 @@ class InvCommandResources : SubCommand(
         embed
             .setTitle("Inventaire : ressources, items, argent")
             .setColor(Color.ORANGE)
-            .addField("Rabbitcoins", player["bal"] + Resource.RABBIT_COIN.name_, true)
+            .addField("Rabbitcoins", player["bal"] + Resource.RABBIT_COIN.show, true)
             .addField("Ressources", re.toString())
             .setThumbnail("https://cdn.discordapp.com/attachments/854322477152337920/924612939879702588/unknown.png")
 
@@ -215,7 +215,7 @@ class InvCommandTop : SubCommand(
         val pl: Player = who(slashCommand)
 
         val embed = EmbedBuilder()
-            .setTitle("Classement des joueurs en fonction du nombre de ${Resource.RABBIT_COIN.name_}")
+            .setTitle("Classement des joueurs en fonction du nombre de ${Resource.RABBIT_COIN.show}")
             .setColor(Color.ORANGE)
             .setTimestampToNow()
 
@@ -256,7 +256,7 @@ class InvCommandTop : SubCommand(
         var top = ""
         for (player in playerArrayList) {
             val user = api.getUserById(player.id).join()
-            top = "${user.name} ${player["bal"]} ${Resource.RABBIT_COIN.name_}\n${top}"
+            top = "${user.name} ${player["bal"]} ${Resource.RABBIT_COIN.show}\n${top}"
         }
 
         embed
