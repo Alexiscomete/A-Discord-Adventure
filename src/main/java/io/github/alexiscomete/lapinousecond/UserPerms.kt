@@ -1,8 +1,8 @@
 package io.github.alexiscomete.lapinousecond
 
 import io.github.alexiscomete.lapinousecond.useful.managesave.CacheGetSet
-import io.github.alexiscomete.lapinousecond.useful.managesave.SaveManager
 import io.github.alexiscomete.lapinousecond.useful.managesave.Table
+import io.github.alexiscomete.lapinousecond.useful.managesave.toBoolean
 
 val PERMS = Table("perms")
 
@@ -23,19 +23,19 @@ class UserPerms(
     //on regarde les permissions grâce au CacheGetSet
     init {
         if (this["play"] != "") {
-            play = SaveManager.toBoolean(this["play"].toInt())
+            play = toBoolean(this["play"].toInt())
             isDefault = false
         }
         if (this["create_server"] != "") {
-            createServer = SaveManager.toBoolean(this["create_server"].toInt())
+            createServer = toBoolean(this["create_server"].toInt())
             isDefault = false
         }
         if (this["manage_perms"] != "") {
-            managePerms = SaveManager.toBoolean(this["manage_perms"].toInt())
+            managePerms = toBoolean(this["manage_perms"].toInt())
             isDefault = false
         }
         if (this["manage_roles"] != "") {
-            manageRoles = SaveManager.toBoolean(this["manage_roles"].toInt())
+            manageRoles = toBoolean(this["manage_roles"].toInt())
             isDefault = false
         }
     }

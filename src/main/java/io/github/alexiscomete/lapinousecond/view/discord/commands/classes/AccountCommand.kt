@@ -2,15 +2,15 @@ package io.github.alexiscomete.lapinousecond.view.discord.commands.classes
 
 import io.github.alexiscomete.lapinousecond.PERMS
 import io.github.alexiscomete.lapinousecond.UserPerms
-import io.github.alexiscomete.lapinousecond.view.discord.commands.getAccount
 import io.github.alexiscomete.lapinousecond.config
 import io.github.alexiscomete.lapinousecond.entity.Player
 import io.github.alexiscomete.lapinousecond.entity.players
-import io.github.alexiscomete.lapinousecond.useful.managesave.SaveManager
+import io.github.alexiscomete.lapinousecond.useful.managesave.fromBooleanToString
 import io.github.alexiscomete.lapinousecond.useful.managesave.saveManager
 import io.github.alexiscomete.lapinousecond.view.discord.commands.Command
 import io.github.alexiscomete.lapinousecond.view.discord.commands.ExecutableWithArguments
 import io.github.alexiscomete.lapinousecond.view.discord.commands.SubCommand
+import io.github.alexiscomete.lapinousecond.view.discord.commands.getAccount
 import io.github.alexiscomete.lapinousecond.worlds.WorldEnum
 import org.javacord.api.entity.message.embed.EmbedBuilder
 import org.javacord.api.interaction.SlashCommandInteraction
@@ -163,8 +163,8 @@ class AccountCommandStart : SubCommand(
             players.hashMap[user.id] = p
             p["x"] = userData.x.toString()
             p["y"] = userData.y.toString()
-            p["has_account"] = SaveManager.toBooleanString(userData.hasAccount())
-            p["is_verify"] = SaveManager.toBooleanString(userData.isVerify)
+            p["has_account"] = fromBooleanToString(userData.hasAccount())
+            p["is_verify"] = fromBooleanToString(userData.isVerify)
             p["bal"] = "0.0"
         }
         toSpawn(p)
@@ -259,10 +259,10 @@ class AccountCommandPerms : SubCommand(
         if (userPerms.isDefault) {
             val what = HashMap<String, String>()
             what["id"] = user.id.toString()
-            what["play"] = SaveManager.toBooleanString(userPerms.play)
-            what["create_server"] = SaveManager.toBooleanString(userPerms.createServer)
-            what["manager_perms"] = SaveManager.toBooleanString(userPerms.managePerms)
-            what["manager_roles"] = SaveManager.toBooleanString(userPerms.manageRoles)
+            what["play"] = fromBooleanToString(userPerms.play)
+            what["create_server"] = fromBooleanToString(userPerms.createServer)
+            what["manager_perms"] = fromBooleanToString(userPerms.managePerms)
+            what["manager_roles"] = fromBooleanToString(userPerms.manageRoles)
             saveManager.insert("perms", what)
         }
         if (permission.equals("manage_perms", ignoreCase = true) && !slashCommand.user.isBotOwner) {
@@ -273,7 +273,7 @@ class AccountCommandPerms : SubCommand(
             PERMS,
             user.id,
             permission,
-            SaveManager.toBooleanString(value)
+            fromBooleanToString(value)
         )
 
         slashCommand.createImmediateResponder()

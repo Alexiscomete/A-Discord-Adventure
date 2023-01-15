@@ -3,8 +3,12 @@ package io.github.alexiscomete.lapinousecond.useful.managesave
 import java.util.*
 
 open class CacheGetSet(open val id: Long, private val table: Table) {
+    private var isDeleted: Boolean = false
     private val cache = HashMap<String, String>()
     open fun getString(row: String): String {
+        if (isDeleted) {
+            throw IllegalStateException("This object is deleted")
+        }
         return if (cache.containsKey(row)) {
             cache[row]!!
         } else {
@@ -15,11 +19,17 @@ open class CacheGetSet(open val id: Long, private val table: Table) {
     }
 
     operator fun set(row: String, value: String) {
+        if (isDeleted) {
+            throw IllegalStateException("This object is deleted")
+        }
         cache[row] = value
         save?.setValue(table, id, row, value, "TEXT")
     }
 
     fun getArray(row: String): Array<String> {
+        if (isDeleted) {
+            throw IllegalStateException("This object is deleted")
+        }
         return getString(row).split(";".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
     }
 
@@ -35,6 +45,14 @@ open class CacheGetSet(open val id: Long, private val table: Table) {
     }
 
     operator fun get(s: String): String {
+        if (isDeleted) {
+            throw IllegalStateException("This object is deleted")
+        }
         return getString(s)
+    }
+
+    fun delete() {
+        save?.delete(table, id)
+        isDeleted = true
     }
 }

@@ -13,6 +13,14 @@ var saveManager: SaveManager
         save = value
     }
 
+fun toBoolean(s: Int): Boolean {
+    return s == 1
+}
+
+fun fromBooleanToString(b: Boolean): String {
+    return if (b) "1" else "0"
+}
+
 class SaveManager(path: String) {
     private var co: Connection? = null
     private var st: Statement? = null
@@ -209,7 +217,11 @@ class SaveManager(path: String) {
     /**
      * Thanks to https://stackoverflow.com/questions/9696572/queries-returning-multiple-result-sets
      */
-    fun executeMultipleQueryKey(statement: PreparedStatement, bo: Boolean = false, key: String = "id"): ArrayList<Long> {
+    fun executeMultipleQueryKey(
+        statement: PreparedStatement,
+        bo: Boolean = false,
+        key: String = "id"
+    ): ArrayList<Long> {
         val ids = ArrayList<Long>()
         try {
             val isResultSet = statement.execute()
@@ -246,7 +258,7 @@ class SaveManager(path: String) {
      * @param log If true, it will print the stack trace if an error occurs.
      * @return A string
      */
-    fun getString(table: Table, row: String, type: String, id: Long, log: Boolean): String {
+    fun getString(table: Table, row: String, type: String, id: Long, log: Boolean = false): String {
         execute("ALTER TABLE " + table.name + " ADD COLUMN " + row + " " + type, false)
         val resultSet: ResultSet
         var str: String? = ""
@@ -265,13 +277,14 @@ class SaveManager(path: String) {
         return str
     }
 
-    companion object {
-        fun toBoolean(s: Int): Boolean {
-            return s == 1
-        }
-
-        fun toBooleanString(b: Boolean): String {
-            return if (b) "1" else "0"
-        }
+    /**
+     * Delete an element from a table
+     *
+     * @param table The table you want to delete from
+     * @param id The id of the row you want to delete
+     * @param log If true, it will print the stack trace if an error occurs.
+     */
+    fun delete(table: Table, id: Long, log: Boolean = false) {
+        execute("DELETE FROM " + table.name + " WHERE id=" + id, log)
     }
 }
