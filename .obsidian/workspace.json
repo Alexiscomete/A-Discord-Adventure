@@ -1,0 +1,160 @@
+{
+  "main": {
+    "id": "725e0cf60de053c5",
+    "type": "split",
+    "children": [
+      {
+        "id": "c25f3ff9072fab10",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "28088d378accb822",
+            "type": "leaf",
+            "state": {
+              "type": "canvas",
+              "state": {
+                "file": "src/main/java/io/github/alexiscomete/lapinousecond/entity/items/itemstree.canvas",
+                "viewState": {
+                  "x": 292.59692392661225,
+                  "y": -99.56734247528985,
+                  "zoom": -0.49999999999999994,
+                  "snapToGrid": false
+                }
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "2e54ef3c38d96e0b",
+    "type": "split",
+    "children": [
+      {
+        "id": "a3de8b5fbfdcb6ce",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "aba97ec3bddbf427",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "b27c2a80cbd2ec0d",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "c18a756343abdcc3",
+            "type": "leaf",
+            "state": {
+              "type": "starred",
+              "state": {}
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 361
+  },
+  "right": {
+    "id": "093a1e09cf00cbde",
+    "type": "split",
+    "children": [
+      {
+        "id": "3510f4b479c0e9f4",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "9586041f78f32232",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "src/main/java/io/github/alexiscomete/lapinousecond/entity/items/itemstree.canvas",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "001acf7266b31512",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "src/main/java/io/github/alexiscomete/lapinousecond/entity/items/itemstree.canvas",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "50495dc501a31bc9",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true
+              }
+            }
+          },
+          {
+            "id": "d809ffe87f15477f",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "src/main/java/io/github/alexiscomete/lapinousecond/entity/items/itemstree.canvas"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Ouvrir le sélecteur rapide": false,
+      "graph:Ouvrir la vue graphique": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Ouvrir la note quotidienne": false,
+      "templates:Insérer le modèle": false,
+      "command-palette:Ouvrir la palette de commandes": false
+    }
+  },
+  "active": "28088d378accb822",
+  "lastOpenFiles": [
+    "src/main/java/io/github/alexiscomete/lapinousecond/entity/items/items.md",
+    "src/main/java/io/github/alexiscomete/lapinousecond/entity/items/itemstree.canvas",
+    "README.md",
+    "paths.png"
+  ]
+}

@@ -1,0 +1,41 @@
+{
+	"nodes":[
+		{"id":"2e9b25c38ed7569f","x":-127,"y":-29,"width":88,"height":60,"color":"4","type":"text","text":"Item"},
+		{"id":"269a8cde8bda7ee8","x":139,"y":132,"width":134,"height":61,"color":"4","type":"text","text":"Equipement"},
+		{"id":"67aa190538bfa3f9","x":472,"y":350,"width":85,"height":60,"color":"4","type":"text","text":"Passif"},
+		{"id":"148e3154ec360d2f","x":472,"y":223,"width":113,"height":60,"color":"4","type":"text","text":"Défense"},
+		{"id":"411e45cf00d2d314","x":689,"y":300,"width":119,"height":60,"type":"text","text":"Armure"},
+		{"id":"37e475c4359f59b3","x":689,"y":163,"width":119,"height":60,"type":"text","text":"Bouclier"},
+		{"id":"2da6b93c0dd4e1ed","x":472,"y":-29,"width":134,"height":60,"color":"4","type":"text","text":"Amélioration"},
+		{"id":"4c4c0bbb4b8dc6e9","x":139,"y":350,"width":156,"height":60,"color":"4","type":"text","text":"Objet de quête"},
+		{"id":"83e54fb070b47275","x":689,"y":463,"width":77,"height":60,"type":"text","text":"Arc"},
+		{"id":"825b1626e4f4daae","x":139,"y":-168,"width":156,"height":60,"color":"4","type":"text","text":"Consommables"},
+		{"id":"cc50df5db830a18d","x":699,"y":-107,"width":125,"height":60,"color":"4","type":"text","text":"Permanente"},
+		{"id":"7416fbf779d0536a","x":699,"y":31,"width":125,"height":60,"color":"4","type":"text","text":"Temporaire"},
+		{"id":"d31535aa5311f86c","x":472,"y":493,"width":85,"height":60,"color":"4","type":"text","text":"Arme"},
+		{"id":"d03536c65434274c","x":689,"y":553,"width":77,"height":60,"type":"text","text":"Epée"},
+		{"id":"851c79e039cb33aa","x":139,"y":-308,"width":78,"height":60,"type":"text","text":"Autre"},
+		{"id":"cb031e374f412843","x":472,"y":-308,"width":174,"height":60,"type":"text","text":"Objets magiques"},
+		{"id":"98e09ca992c073d8","x":139,"y":-432,"width":156,"height":60,"color":"4","type":"text","text":"Pour les crafts"}
+	],
+	"edges":[
+		{"id":"296400b48191f992","fromNode":"2e9b25c38ed7569f","fromSide":"right","toNode":"269a8cde8bda7ee8","toSide":"left"},
+		{"id":"04e1dd04413cad0f","fromNode":"269a8cde8bda7ee8","fromSide":"right","toNode":"d31535aa5311f86c","toSide":"left"},
+		{"id":"53824a9016c9fb5f","fromNode":"d31535aa5311f86c","fromSide":"right","toNode":"d03536c65434274c","toSide":"left"},
+		{"id":"6aa07cd45494fbf1","fromNode":"d31535aa5311f86c","fromSide":"right","toNode":"83e54fb070b47275","toSide":"left"},
+		{"id":"bdbdd70b86f3e00f","fromNode":"269a8cde8bda7ee8","fromSide":"right","toNode":"67aa190538bfa3f9","toSide":"left"},
+		{"id":"7d45253905b48c12","fromNode":"269a8cde8bda7ee8","fromSide":"right","toNode":"148e3154ec360d2f","toSide":"left"},
+		{"id":"b976eff0e7637c68","fromNode":"148e3154ec360d2f","fromSide":"right","toNode":"411e45cf00d2d314","toSide":"left"},
+		{"id":"132000c603a38677","fromNode":"148e3154ec360d2f","fromSide":"right","toNode":"37e475c4359f59b3","toSide":"left"},
+		{"id":"2ab2a1d6b25ec00b","fromNode":"2e9b25c38ed7569f","fromSide":"right","toNode":"2da6b93c0dd4e1ed","toSide":"left"},
+		{"id":"55f8fb63e4bd7497","fromNode":"269a8cde8bda7ee8","fromSide":"right","toNode":"2da6b93c0dd4e1ed","toSide":"left","color":"3"},
+		{"id":"4e323f5fe7c9b255","fromNode":"2da6b93c0dd4e1ed","fromSide":"right","toNode":"cc50df5db830a18d","toSide":"left"},
+		{"id":"6faa49965c543b44","fromNode":"2da6b93c0dd4e1ed","fromSide":"right","toNode":"7416fbf779d0536a","toSide":"left"},
+		{"id":"fb5a1cd1091fa895","fromNode":"2e9b25c38ed7569f","fromSide":"right","toNode":"4c4c0bbb4b8dc6e9","toSide":"left"},
+		{"id":"6f0069c6337c356f","fromNode":"2e9b25c38ed7569f","fromSide":"right","toNode":"825b1626e4f4daae","toSide":"left"},
+		{"id":"f587a693f7d1efdb","fromNode":"2e9b25c38ed7569f","fromSide":"right","toNode":"851c79e039cb33aa","toSide":"left"},
+		{"id":"943e34152a37291a","fromNode":"cb031e374f412843","fromSide":"bottom","toNode":"825b1626e4f4daae","toSide":"right"},
+		{"id":"6801920ffe727496","fromNode":"cb031e374f412843","fromSide":"bottom","toNode":"2da6b93c0dd4e1ed","toSide":"top"},
+		{"id":"d8989acc57db1c29","fromNode":"2e9b25c38ed7569f","fromSide":"right","toNode":"98e09ca992c073d8","toSide":"left"}
+	]
+}
