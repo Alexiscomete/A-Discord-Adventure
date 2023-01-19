@@ -41,3 +41,11 @@ C'est la solution la plus compliquée, mais elle permet de faire évoluer les it
 ### Solution 2 bis : composition inversée
 
 Item devient la classe principale qui interagit avec ItemSave. Il est aussi possible de ne pas faire item save et de faire en sorte que l'item soit indépendant de sa sauvegarde. Cela rend par contre la sauvegarde plus difficile.
+
+### Solution 3 : mix de tout ça
+
+- `Item` la classe abstraite principale SQL
+- Les autres classes sont implémentées à partir de `Item`
+- Des interfaces sont créées de façon indépendante pour les fonctions
+
+Je vais prendre cette solution.
