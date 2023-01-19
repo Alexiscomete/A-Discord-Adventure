@@ -5,7 +5,7 @@
 
 - Les items doivent avoir un arbre des types (ex: `Item` -> `Weapon` -> `Sword` -> `Wooden Sword` -> `...`)
   - Chaque type ajoute des propriétés à l'item et des fonctionnalités, donc des fonctions
-  - Réfléchir : évolution des items ?
+  - Pas besoin de faire évoluer les items : les crafts et les améliorations suffisent
 - Les items doivent être stockés dans un inventaire
   - Inventaire de taille fixe
   - Inventaire de taille variable
@@ -25,7 +25,7 @@
 - `Weapon` est une classe abstraite
 - etc ...
 
-C'est la solution la plus simple, mais à elle toute seule elle ne permet pas de faire évoluer les items sauf en créant un nouvel item à chaque fois.
+C'est la solution la plus simple, mais elle ne permet pas de faire de l'héritage multiple (ce qu'il est possible de faire avec des interfaces).
 
 ### Solution 2 : composition
 
@@ -36,10 +36,8 @@ Composition de `Item` :
 - `ItemSave` : contient les données de l'item en SQL avec un pointeur vers l'item
 - `Item` : contient les fonctions de l'item et un pointeur vers l'item en SQL avec en plus des données facilement accessibles
 
-C'est la solution la plus compliquée, mais elle permet de faire évoluer les items. Cependant, il est difficile de récupérer la classe la plus extérieure d'un item et donc de faire des actions sur l'item.
+C'est la solution la plus compliquée, mais elle permet de faire évoluer les items. Cependant, il est difficile de récupérer la classe la plus extérieure d'un item et donc de faire des actions celui-ci.
 
-### Solution 3 : SQL simple
+### Solution 2 bis : composition inversée
 
-- `Item` est une classe
-
-Ne permets pas de faire évoluer les items facilement, mais permet de récupérer facilement la classe de l'item. Solution très simple, mais pas très élégante. Une solution pour faire évoluer les items serait de faire différents états et de "switcher" entre les eux. Le fichier risque de devenir lourd et pas simplement modifiable.
+Item devient la classe principale qui interagit avec ItemSave. Il est aussi possible de ne pas faire item save et de faire en sorte que l'item soit indépendant de sa sauvegarde. Cela rend par contre la sauvegarde plus difficile.
