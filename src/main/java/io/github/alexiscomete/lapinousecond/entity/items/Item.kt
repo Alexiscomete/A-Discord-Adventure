@@ -1,5 +1,6 @@
 package io.github.alexiscomete.lapinousecond.entity.items
 
+import io.github.alexiscomete.lapinousecond.entity.players
 import io.github.alexiscomete.lapinousecond.useful.managesave.CacheCustom
 import io.github.alexiscomete.lapinousecond.useful.managesave.CacheGetSet
 import io.github.alexiscomete.lapinousecond.useful.managesave.Table
@@ -21,4 +22,19 @@ abstract class Item(id: Long) : CacheGetSet(id, ITEMS) {
         set(value) {
             this["name"] = value
         }
+    var containsItems: ContainsItems
+        get() = run {
+            val containsItemsType = this["containsItemsType"]
+            if (containsItemsType == "player") {
+                val playerId = this["containsItemsId"].toLong()
+                players[playerId]!!
+            } else {
+                throw IllegalStateException("Unknown containsItems type")
+            }
+        }
+        set(value) {
+            this["containsItemsType"] = value.ownerType
+            this["containsItemsId"] = value.ownerString
+        }
+
 }

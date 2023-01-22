@@ -1,11 +1,14 @@
 package io.github.alexiscomete.lapinousecond.entity
 
+import io.github.alexiscomete.lapinousecond.entity.items.ContainsItems
+import io.github.alexiscomete.lapinousecond.entity.items.Item
 import io.github.alexiscomete.lapinousecond.entity.resources.Resource
 import io.github.alexiscomete.lapinousecond.entity.resources.ResourceManager
 import io.github.alexiscomete.lapinousecond.roles.Role
 import io.github.alexiscomete.lapinousecond.useful.managesave.CacheCustom
 import io.github.alexiscomete.lapinousecond.useful.managesave.CacheGetSet
 import io.github.alexiscomete.lapinousecond.useful.managesave.Table
+import io.github.alexiscomete.lapinousecond.useful.managesave.saveManager
 import io.github.alexiscomete.lapinousecond.view.AnswerEnum
 import io.github.alexiscomete.lapinousecond.view.LangageEnum
 import io.github.alexiscomete.lapinousecond.view.answerManager
@@ -17,12 +20,19 @@ import io.github.alexiscomete.lapinousecond.worlds.places
 val PLAYERS = Table("players")
 val players = CacheCustom(PLAYERS) { id: Long -> Player(id) }
 
-open class Player(id: Long) : CacheGetSet(id, PLAYERS), Owner {
+open class Player(id: Long) : CacheGetSet(id, PLAYERS), Owner, ContainsItems {
+
     var workTime: Long
         private set
     val roles: ArrayList<Role>
     val resourceManagers: HashMap<Resource, ResourceManager>
     val level: Level = Level(this, "xp")
+
+    init {
+        workTime = 0
+        roles = ArrayList()
+        resourceManagers = ResourceManager.stringToArray(this["ressources"])
+    }
 
     fun updateWorkTime() {
         workTime = System.currentTimeMillis()
@@ -190,6 +200,20 @@ open class Player(id: Long) : CacheGetSet(id, PLAYERS), Owner {
     override val ownerString: String
         get() = id.toString()
 
+    override fun getAllItems(): List<Item> {
+        // query of all items in the inventory of the player
+        val query = "SELECT * FROM items WHERE containsItemsType = 'player' AND containsItemsId = '${id}'"
+        val preparedStatement = saveManager.preparedStatement(query)
+        val result = saveManager.executeMultipleQueryKey(preparedStatement)
+        // list of all items
+        val items = ArrayList<Item>()
+        // for each item, we create an item object and add it to the list
+        for (itemId in result) {
+            items.add(items[itemId.toInt()])
+        }
+        return items
+    }
+
 
     override fun getMoney(): Double {
         return this["bal"].toDouble()
@@ -268,10 +292,4 @@ open class Player(id: Long) : CacheGetSet(id, PLAYERS), Owner {
             }
             WorldEnum.valueOf(w)
         }
-
-    init {
-        workTime = 0
-        roles = ArrayList()
-        resourceManagers = ResourceManager.stringToArray(this["ressources"])
-    }
 }
