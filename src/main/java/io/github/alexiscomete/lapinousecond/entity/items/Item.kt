@@ -36,5 +36,4 @@ abstract class Item(id: Long) : CacheGetSet(id, ITEMS) {
             this["containsItemsType"] = value.ownerType
             this["containsItemsId"] = value.ownerString
         }
-
 }
