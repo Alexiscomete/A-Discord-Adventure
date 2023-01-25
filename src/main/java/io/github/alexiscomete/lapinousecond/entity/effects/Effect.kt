@@ -1,4 +1,5 @@
 package io.github.alexiscomete.lapinousecond.entity.effects
 
-class Effect {
+open class Effect(type: EffectEnum, level: Int) {
+    open fun canBeRemovedAutomatically(): Boolean = false
 }
