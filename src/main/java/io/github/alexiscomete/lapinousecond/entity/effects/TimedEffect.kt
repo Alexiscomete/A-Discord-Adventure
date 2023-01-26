@@ -5,9 +5,7 @@ open class TimedEffect(type: EffectEnum, level: Int, val duration: Long) : Effec
     var beginTime = System.currentTimeMillis()
 
     open fun tick() {
-        if (remainingDuration > 0) {
-            remainingDuration--
-        }
+        remainingDuration--
     }
 
     open fun update() {
