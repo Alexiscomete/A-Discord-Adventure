@@ -15,10 +15,6 @@ data class Players(val player: PlayerWithAccount, val otherPlayers: List<PlayerW
 val contexts = mutableMapOf<Players, Context>()
 
 fun contextForOrNull(player: PlayerWithAccount, otherPlayers: List<PlayerWithAccount>): Context? {
-    // print all contexts
-    for (context in contexts) {
-        println(context)
-    }
     return contexts[Players(player, otherPlayers)]
 }
 
@@ -65,7 +61,6 @@ class Context(val players: Players, canParallel: Boolean = false) : ContextManag
     private var ui: DiscordPlayerUI? = null
 
     fun buttons(buttons: ButtonsContextManager, canParallel:Boolean=false): Context {
-        println("Buttons: $buttons")
         if (!canParallel) {
             clear()
         }

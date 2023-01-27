@@ -158,7 +158,7 @@ class AccountCommandStart : SubCommand(
             saveManager.insert("players", what)
             p = players[user.id]
             if (p == null) {
-                throw IllegalStateException("Player not found")
+                throw IllegalStateException("Erreur lors de la création du joueur. Réessayez ...")
             }
             players.hashMap[user.id] = p
             p["x"] = userData.x.toString()
