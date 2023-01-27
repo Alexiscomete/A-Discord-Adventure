@@ -143,7 +143,7 @@ class MapCommand : Command(
             }
 
             if (x < 0 || x > world.mapWidth || y < 0 || y > world.mapHeight) {
-                throw IllegalArgumentException("x or y is out of bounds (bounds are ${world.mapWidth}x${world.mapHeight})")
+                throw IllegalArgumentException("La coordonnée x ou la coordonnée y est en dehors du monde ... attention au vide ! (Le monde a une taille de ${world.mapWidth}x${world.mapHeight})")
             }
 
             // Etape : calcul du trajet et affichage du prix en temps ou en argent

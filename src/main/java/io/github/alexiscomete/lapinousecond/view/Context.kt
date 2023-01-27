@@ -157,7 +157,7 @@ class Context(val players: Players, canParallel: Boolean = false) : ContextManag
             }
             return
         }
-        throw IllegalStateException("Cannot apply $string. ${if (buttons != null) buttons.toString() else "No buttons"}, ${if (multiContext != null) multiContext.toString() else "No multiContext"}")
+        throw IllegalStateException("Cannot apply $string. ${if (buttons != null) buttons.toString() else "No buttons"}, ${if (multiContext != null) multiContext.toString() else "No multiContext"} => Cette interaction n'est plus valide, recommencez : le bot supprime les anciennes interactions de sa mémoire afin de ne pas se mélanger les pinceaux")
     }
 
     fun apply(string: String, event: SelectMenuChooseEvent) {
@@ -173,7 +173,7 @@ class Context(val players: Players, canParallel: Boolean = false) : ContextManag
                 return
             }
         }
-        throw IllegalStateException("Cannot apply $string. ${if (selectMenu != null) selectMenu.toString() else "No selectMenu"}, ${if (multiContext != null) multiContext.toString() else "No multiContext"}")
+        throw IllegalStateException("Cannot apply $string. ${if (selectMenu != null) selectMenu.toString() else "No selectMenu"}, ${if (multiContext != null) multiContext.toString() else "No multiContext"} => Cette interaction n'est plus valide, recommencez : le bot supprime les anciennes interactions de sa mémoire afin de ne pas se mélanger les pinceaux")
     }
 
     fun apply(customId: String, p0: ModalSubmitEvent) {
@@ -189,7 +189,7 @@ class Context(val players: Players, canParallel: Boolean = false) : ContextManag
                 return
             }
         }
-        throw IllegalStateException("Cannot apply $customId. ${if (modal != null) modal.toString() else "No modal"}, ${if (multiContext != null) multiContext.toString() else "No multiContext"}")
+        throw IllegalStateException("Cannot apply $customId. ${if (modal != null) modal.toString() else "No modal"}, ${if (multiContext != null) multiContext.toString() else "No multiContext"} => Cette interaction n'est plus valide, recommencez : le bot supprime les anciennes interactions de sa mémoire afin de ne pas se mélanger les pinceaux")
     }
 
     fun apply(string: String, event: MessageCreateEvent) {
@@ -205,7 +205,7 @@ class Context(val players: Players, canParallel: Boolean = false) : ContextManag
                 return
             }
         }
-        throw IllegalStateException("Cannot apply $string. ${if (messages != null) messages.toString() else "No messages"}, ${if (multiContext != null) multiContext.toString() else "No multiContext"}")
+        throw IllegalStateException("Cannot apply $string. ${if (messages != null) messages.toString() else "No messages"}, ${if (multiContext != null) multiContext.toString() else "No multiContext"} => Cette interaction n'est plus valide, recommencez : le bot supprime les anciennes interactions de sa mémoire afin de ne pas se mélanger les pinceaux")
     }
 
     override fun toString(): String {
