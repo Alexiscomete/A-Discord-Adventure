@@ -168,6 +168,9 @@ class AccountCommandStart : SubCommand(
             p["bal"] = "0.0"
         }
         toSpawn(p)
+        if (slashCommand.server.isPresent) {
+            p["serv"] = slashCommand.server.get().id.toString()
+        }
         p["tuto"] = "1"
         val embed = EmbedBuilder()
             .setColor(Color.CYAN)

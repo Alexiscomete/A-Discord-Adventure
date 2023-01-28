@@ -4,15 +4,21 @@ class ProgressionBar(
     private var indicator: String,
     private var fill: String,
     private var nFill: String,
-    var max_value: Double,
+    var maxValue: Double,
     var value: Double,
     var numberChars: Int
 ) {
 
     val bar: String
         get() {
+            if (value < 0) {
+                value = 0.0
+            }
+            if (maxValue < 0) {
+                maxValue = 1.0
+            }
             val min = partMin
-            return "`" + before(min) + indicator + after(numberChars - min) + "`"
+            return "`${before(min)}$indicator${after(numberChars - min)}`"
         }
 
     private fun before(n: Int): String {
@@ -24,5 +30,5 @@ class ProgressionBar(
     }
 
     private val partMin: Int
-        get() = (value / max_value * numberChars).toInt()
+        get() = ((value / maxValue) * numberChars).toInt()
 }
