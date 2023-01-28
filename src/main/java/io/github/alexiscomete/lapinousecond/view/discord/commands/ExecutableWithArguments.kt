@@ -53,10 +53,12 @@ interface ExecutableWithArguments {
                 return servers[serv.id]
                     ?: throw IllegalStateException("L'owner du server ou un admin doit utiliser le /config pour configurer le serveur")
             } else {
-                throw IllegalStateException("Utilisez cette commande dans un salon du serveur actuel : " + p["serv"].toLong())
+                throw WrongServerException("Utilisez cette commande dans un salon du serveur actuel : " + p["serv"].toLong() + ". Astuce : pour changer de serveur déplacez vous dans une ville située dans le serveur voulu avec /map. Si vous êtes actuellement dans le tuto, relisez les instructions.")
             }
         } else {
             throw IllegalStateException("Vous devez être dans un serveur discord pour utiliser cette commande. Voici votre serveur actuel : " + p["serv"].toLong())
         }
     }
 }
+
+class WrongServerException(message: String) : Exception(message)

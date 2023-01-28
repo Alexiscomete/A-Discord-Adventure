@@ -1,15 +1,12 @@
 package io.github.alexiscomete.lapinousecond.view.discord.commands.classes
 
-import io.github.alexiscomete.lapinousecond.view.discord.commands.Command
-import io.github.alexiscomete.lapinousecond.view.discord.commands.ExecutableWithArguments
-import io.github.alexiscomete.lapinousecond.view.discord.commands.SubCommand
-import io.github.alexiscomete.lapinousecond.view.discord.commands.getAccount
 import io.github.alexiscomete.lapinousecond.entity.Player
 import io.github.alexiscomete.lapinousecond.entity.resources.Resource
 import io.github.alexiscomete.lapinousecond.entity.resources.ResourceManager
 import io.github.alexiscomete.lapinousecond.entity.resources.WorkEnum
 import io.github.alexiscomete.lapinousecond.roles.Role
 import io.github.alexiscomete.lapinousecond.roles.RolesEnum
+import io.github.alexiscomete.lapinousecond.view.discord.commands.*
 import org.javacord.api.entity.message.embed.EmbedBuilder
 import org.javacord.api.interaction.SlashCommandInteraction
 import org.javacord.api.interaction.callback.InteractionImmediateResponseBuilder
@@ -170,12 +167,16 @@ class WorkCommandAll :
 
     override fun execute(slashCommand: SlashCommandInteraction) {
         val player = getAccount(slashCommand)
-        getCurrentServerBot(slashCommand)
         val embedBuilder = EmbedBuilder()
             .setColor(Color.ORANGE)
             .setAuthor(slashCommand.user)
         val response = slashCommand.createImmediateResponder()
-        setRoles(slashCommand, player, embedBuilder)
+        try {
+            getCurrentServerBot(slashCommand)
+            setRoles(slashCommand, player, embedBuilder)
+        } catch (e: WrongServerException) {
+            embedBuilder.setFooter("Vous n'êtes pas sur le bon serveur discord donc votre commande a été redirigée vers la commande `/work resources`")
+        }
         setWork(player, embedBuilder, response)
         response
             .addEmbed(embedBuilder)
