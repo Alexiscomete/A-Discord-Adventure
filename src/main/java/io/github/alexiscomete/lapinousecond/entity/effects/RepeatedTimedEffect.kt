@@ -19,10 +19,27 @@ class RepeatedTimedEffect(type: EffectEnum, level: Int, duration: Long, private 
     }
 
     override fun update() {
-        val currentTime = System.currentTimeMillis()
-        val timeElapsed = currentTime - beginTime
-        remainingDuration -= timeElapsed
-        beginTime = currentTime
+        if (remainingDuration > 0) {
+            super.update()
+            if (remainingDuration < 0) {
+                remainingTimeBetween += remainingDuration
+                remainingDuration = 0
+                if (remainingTimeBetween <= 0) {
+                    numberOfRepeats--
+                    remainingTimeBetween = timeBetween
+                    start()
+                }
+            }
+        } else {
+            if (remainingTimeBetween > 0) {
+                remainingTimeBetween -= System.currentTimeMillis() - beginTime
+            }
+            if (remainingTimeBetween <= 0) {
+                numberOfRepeats--
+                remainingTimeBetween = timeBetween
+                start()
+            }
+        }
     }
 
     override fun canBeRemovedAutomatically(): Boolean {

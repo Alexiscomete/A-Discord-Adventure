@@ -10,8 +10,7 @@ open class TimedEffect(type: EffectEnum, level: Int, val duration: Long) : Effec
 
     open fun update() {
         val currentTime = System.currentTimeMillis()
-        val timeElapsed = currentTime - beginTime
-        remainingDuration -= timeElapsed
+        remainingDuration -= currentTime - beginTime
         beginTime = currentTime
     }
 
