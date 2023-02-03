@@ -2,6 +2,7 @@ package io.github.alexiscomete.lapinousecond.entity
 
 import io.github.alexiscomete.lapinousecond.useful.ProgressionBar
 import io.github.alexiscomete.lapinousecond.useful.managesave.CacheGetSet
+import kotlin.math.roundToInt
 
 class Level(
     val entity: CacheGetSet,
@@ -86,9 +87,9 @@ class Level(
             "🟡",
             "🟨",
             "⬜",
-            xpForNextLevel,
+            totalXpForNextLevel,
             xpInCurrentLevel,
             15
-        ).bar + " **$level** ($xpInCurrentLevel/$xpForNextLevel)"
+        ).bar + " **$level** (${(xpInCurrentLevel * 10000.0).roundToInt() / 10000.0}/${(totalXpForNextLevel * 10000.0).roundToInt() / 10000.0})"
     }
 }
