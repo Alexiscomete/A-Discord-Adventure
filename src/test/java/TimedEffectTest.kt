@@ -18,7 +18,7 @@ class TimedEffectTest {
         effect.tick()
         assertEquals(0, effect.remainingDuration)
         effect.tick()
-        assertEquals(0, effect.remainingDuration)
+        assertEquals(-1, effect.remainingDuration)
         assertEquals(true, effect.isFinished())
         assertEquals(true, effect.canBeRemovedAutomatically())
 
@@ -43,6 +43,7 @@ class TimedEffectTest {
             assertEquals(false, effect.canBeRemovedAutomatically())
             effect.tick()
             assertEquals(0, effect.remainingDuration)
+            effect.tick()
         }
         assertEquals(true, effect.canBeRemovedAutomatically())
     }
