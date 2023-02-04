@@ -1,9 +1,6 @@
 package io.github.alexiscomete.lapinousecond.view.manager
 
-import io.github.alexiscomete.lapinousecond.messagesManager
-import io.github.alexiscomete.lapinousecond.worlds.ServerBot
 import org.javacord.api.entity.channel.TextChannel
-import org.javacord.api.entity.message.embed.EmbedBuilder
 import org.javacord.api.event.message.MessageCreateEvent
 import org.javacord.api.listener.message.MessageCreateListener
 import java.util.function.Consumer
@@ -11,7 +8,7 @@ import java.util.function.Consumer
 class MessagesManager : MessageCreateListener {
     private val consumers = HashMap<TextChannel, HashMap<Long, Consumer<MessageCreateEvent>>>()
     override fun onMessageCreate(messageCreateEvent: MessageCreateEvent) {
-        if (consumers.containsKey(messageCreateEvent.channel) && !messageCreateEvent.message.content.startsWith("-")) {
+        if (consumers.containsKey(messageCreateEvent.channel)) {
             val hashMap = consumers[messageCreateEvent.channel]!!
             if (messageCreateEvent.messageAuthor.isUser && hashMap.containsKey(messageCreateEvent.messageAuthor.id)) {
                 val messageCreateEventConsumer = hashMap[messageCreateEvent.messageAuthor.id]!!
@@ -35,49 +32,4 @@ class MessagesManager : MessageCreateListener {
         }
     }
 
-    fun setValueAndRetry(
-        textChannel: TextChannel,
-        id: Long,
-        prog_name: String,
-        message: String,
-        len: Int,
-        serverBot: ServerBot,
-        ex: Runnable
-    ) {
-        messagesManager.addListener(textChannel, id, object : Consumer<MessageCreateEvent> {
-            override fun accept(msgE: MessageCreateEvent) {
-                if (msgE.messageContent.length <= len) {
-                    serverBot[prog_name] = msgE.messageContent
-                    msgE.message.reply(message)
-                    ex.run()
-                } else {
-                    textChannel.sendMessage("Taille maximale : " + len + ". Votre taille : " + msgE.messageContent.length)
-                    messagesManager.addListener(textChannel, id, this)
-                }
-            }
-        })
-    }
-
-    fun setValueAndRetry(
-        textChannel: TextChannel,
-        id: Long,
-        prog_name: String,
-        embedBuilder: EmbedBuilder,
-        len: Int,
-        serverBot: ServerBot,
-        ex: Runnable
-    ) {
-        messagesManager.addListener(textChannel, id, object : Consumer<MessageCreateEvent> {
-            override fun accept(msgE: MessageCreateEvent) {
-                if (msgE.messageContent.length <= len) {
-                    serverBot[prog_name] = msgE.messageContent
-                    msgE.message.reply(embedBuilder)
-                    ex.run()
-                } else {
-                    textChannel.sendMessage("Taille maximale : " + len + ". Votre taille : " + msgE.messageContent.length)
-                    messagesManager.addListener(textChannel, id, this)
-                }
-            }
-        })
-    }
 }
