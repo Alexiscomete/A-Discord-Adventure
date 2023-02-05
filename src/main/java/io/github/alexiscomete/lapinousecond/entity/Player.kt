@@ -27,6 +27,7 @@ open class Player(id: Long) : CacheGetSet(id, PLAYERS), Owner, ContainsItems {
     val roles: ArrayList<Role>
     val resourceManagers: HashMap<Resource, ResourceManager>
     val level: Level = Level(this, "xp")
+    var lastLevelUpdate = System.currentTimeMillis()
 
     init {
         workTime = 0

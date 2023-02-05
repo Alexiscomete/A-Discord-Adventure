@@ -1,5 +1,6 @@
 package io.github.alexiscomete.lapinousecond.view.manager
 
+import io.github.alexiscomete.lapinousecond.entity.players
 import org.javacord.api.entity.channel.TextChannel
 import org.javacord.api.event.message.MessageCreateEvent
 import org.javacord.api.listener.message.MessageCreateListener
@@ -8,15 +9,29 @@ import java.util.function.Consumer
 class MessagesManager : MessageCreateListener {
     private val consumers = HashMap<TextChannel, HashMap<Long, Consumer<MessageCreateEvent>>>()
     override fun onMessageCreate(messageCreateEvent: MessageCreateEvent) {
-        if (consumers.containsKey(messageCreateEvent.channel)) {
-            val hashMap = consumers[messageCreateEvent.channel]!!
-            if (messageCreateEvent.messageAuthor.isUser && hashMap.containsKey(messageCreateEvent.messageAuthor.id)) {
-                val messageCreateEventConsumer = hashMap[messageCreateEvent.messageAuthor.id]!!
-                hashMap.remove(messageCreateEvent.messageAuthor.id)
+        if (messageCreateEvent.messageAuthor.isUser) {
+            if (consumers.containsKey(messageCreateEvent.channel)) {
+                val hashMap = consumers[messageCreateEvent.channel]!!
+                if (hashMap.containsKey(messageCreateEvent.messageAuthor.id)) {
+                    val messageCreateEventConsumer = hashMap[messageCreateEvent.messageAuthor.id]!!
+                    hashMap.remove(messageCreateEvent.messageAuthor.id)
+                    try {
+                        messageCreateEventConsumer.accept(messageCreateEvent)
+                    } catch (e: Exception) {
+                        messageCreateEvent.message.reply("Une erreur est survenue : " + e.message)
+                    }
+                }
+            } else {
                 try {
-                    messageCreateEventConsumer.accept(messageCreateEvent)
-                } catch (e: Exception) {
-                    messageCreateEvent.message.reply("Une erreur est survenue : " + e.message)
+                    val player = players[messageCreateEvent.messageAuthor.id]
+                    if (player != null) {
+                        if (player.lastLevelUpdate + 15000 < System.currentTimeMillis()) {
+                            player.level.addXp(0.2)
+                            player.lastLevelUpdate = System.currentTimeMillis()
+                        }
+                    }
+                } catch (_: Exception) {
+
                 }
             }
         }
