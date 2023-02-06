@@ -60,8 +60,14 @@ class Level(
     val xpInCurrentLevel
         get() = xpInCurrentLevel(if (entity[field] == "") 0.0 else entity[field].toDouble())
 
-    fun addXp(xp: Double) {
+    fun addXp(xp: Double) : Pair<Int, Int>? {
+        val currentLevel = level
         entity[field] = ((if (entity[field] == "") 0.0 else entity[field].toDouble()) + xp).toString()
+        val newLevel = level
+        if (currentLevel != newLevel) {
+            return Pair(currentLevel, newLevel)
+        }
+        return null
     }
 
     fun removeXp(xp: Double) {

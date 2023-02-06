@@ -34,4 +34,3 @@ Comme vous pouvez le constater, le bot discord est open source sous license MIT.
 ## Star History
 
 [![Star History Chart](https://api.star-history.com/svg?repos=Alexiscomete/A-Discord-Adventure&type=Date)](https://star-history.com/#Alexiscomete/A-Discord-Adventure&Date)
-

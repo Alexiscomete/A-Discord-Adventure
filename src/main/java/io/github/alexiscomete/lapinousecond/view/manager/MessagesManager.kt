@@ -26,8 +26,11 @@ class MessagesManager : MessageCreateListener {
                     val player = players[messageCreateEvent.messageAuthor.id]
                     if (player != null) {
                         if (player.lastLevelUpdate + 15000 < System.currentTimeMillis()) {
-                            player.level.addXp(0.2)
+                            val pair = player.level.addXp(0.2)
                             player.lastLevelUpdate = System.currentTimeMillis()
+                            if (pair != null) {
+                                messageCreateEvent.message.reply("Tu es passé du niveau " + pair.first + " au niveau " + pair.second + " !")
+                            }
                         }
                     }
                 } catch (_: Exception) {
