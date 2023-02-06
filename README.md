@@ -26,3 +26,12 @@ Le nom du bot est Lapinou second.
 L'histoire n'est pas encore complète, mais le but final du jeu sera de trouver le **Wumpus d'or**.
 
 Récolter des ressources, vendre, trouver des items, se battre, ...
+
+# Le repo github
+
+Comme vous pouvez le constater, le bot discord est open source sous license MIT. Vous pouvez donc librement le réutiliser et vous en inspirer. Malgré tout, si vous réutilisez le code du bot, citer le projet et le code d'origine est apprécié.
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=Alexiscomete/A-Discord-Adventure&type=Date)](https://star-history.com/#Alexiscomete/A-Discord-Adventure&Date)
+
