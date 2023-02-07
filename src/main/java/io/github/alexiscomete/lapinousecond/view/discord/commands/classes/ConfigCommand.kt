@@ -87,8 +87,8 @@ class ConfigCommand : Command(
             var x: Int
             var y: Int
             do {
-                y = (1..world.mapWidth).random()
-                x = (1..world.mapHeight).random()
+                x = (1..world.mapWidth).random()
+                y = (1..world.mapHeight).random()
             } while (world.isDirt(x, y))
 
             place["x"] = x.toString()

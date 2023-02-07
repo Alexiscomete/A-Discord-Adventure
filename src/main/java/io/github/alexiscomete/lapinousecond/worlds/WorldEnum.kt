@@ -290,16 +290,16 @@ enum class WorldEnum(
         "Monde du chaos",
         "NORMAL",
         "Ce monde regroupe tous les serveurs discord qui ne sont pas sur le drapeau. (ex : Wiki, projet, etc.)",
-        250,
-        250,
-        500,
-        500,
+        150,
+        150,
+        300,
+        300,
         WorldProcedural(
             ComplexNoiseBuilder(
                 builder
             ).build(60),
-            500,
-            500
+            300,
+            300
         )
     ),
     DIBIMAP(
