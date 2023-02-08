@@ -35,8 +35,8 @@ enum class DibimapServer(val serverId: Long = 0, val zones: List<Zone> = listOf(
     COEUR_HISTORIQUE(905024934517047307, listOf(Zone(1, 1, 110, 50)), "Coeur Historique"),
     CONTREES_MAGMATIQUES(
         941423362339659826, listOf(
-            Zone(147, 291, 210, 430),
-            Zone(211, 336, 290, 430)
+            Zone(291, 147, 430, 210),
+            Zone(336, 211, 430, 290)
         ), "Contrées Magmatiques"
     ),
     SALINS(905082424055173171, listOf(Zone(291, 120, 430, 146)), "Salins"),
