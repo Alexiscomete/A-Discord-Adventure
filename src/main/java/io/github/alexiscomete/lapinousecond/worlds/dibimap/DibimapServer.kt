@@ -30,7 +30,7 @@ fun checkById(id: Long) {
     throw IllegalArgumentException("No server with id $id")
 }
 
-enum class DibimapServer(val serverId: Long = 0, val zones: List<Zone> = listOf(), val name_: String = "") {
+enum class DibimapServer(val serverId: Long = 0, val zones: List<Zone> = listOf(), val displayName: String = "") {
     LIGNE224(906247039703195658, listOf(Zone(1, 224, WorldEnum.DIBIMAP.mapWidth, 224)), "Ligne 224"),
     COEUR_HISTORIQUE(905024934517047307, listOf(Zone(1, 1, 110, 50)), "Coeur Historique"),
     CONTREES_MAGMATIQUES(
@@ -56,6 +56,6 @@ enum class DibimapServer(val serverId: Long = 0, val zones: List<Zone> = listOf(
     }
 
     override fun toString(): String {
-        return "zones " + zones.joinToString { it.toString() + ", " } + " sur le serveur $name_"
+        return "zones " + zones.joinToString { it.toString() + ", " } + " sur le serveur $displayName"
     }
 }

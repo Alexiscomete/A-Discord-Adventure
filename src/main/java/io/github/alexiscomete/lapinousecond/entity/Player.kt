@@ -1,5 +1,8 @@
 package io.github.alexiscomete.lapinousecond.entity
 
+import io.github.alexiscomete.lapinousecond.entity.effects.Effect
+import io.github.alexiscomete.lapinousecond.entity.effects.EffectEnum
+import io.github.alexiscomete.lapinousecond.entity.effects.TimedEffect
 import io.github.alexiscomete.lapinousecond.entity.items.ContainsItems
 import io.github.alexiscomete.lapinousecond.entity.items.Item
 import io.github.alexiscomete.lapinousecond.entity.resources.Resource
@@ -293,4 +296,42 @@ open class Player(id: Long) : CacheGetSet(id, PLAYERS), Owner, ContainsItems {
             }
             WorldEnum.valueOf(w)
         }
+
+    private val effects = ArrayList<Effect>()
+
+    fun getEffectLevel(effect: EffectEnum): Int {
+        var level = 0
+        for (currentEffect in effects) {
+            if (currentEffect.type == effect) {
+                if (currentEffect is TimedEffect && currentEffect.isFinished()) {
+                    continue
+                }
+                level += currentEffect.level
+            }
+        }
+        return level
+    }
+
+    fun updateAndRemoveEffects() {
+        for (effect in effects) {
+            if (effect is TimedEffect) {
+                effect.update()
+                if (effect.canBeRemovedAutomatically()) {
+                    effects.remove(effect)
+                }
+            }
+        }
+    }
+
+    fun addEffect(effect: Effect) {
+        effects.add(effect)
+    }
+
+    fun removeEffects(effect: EffectEnum) {
+        for (currentEffect in effects) {
+            if (currentEffect.type == effect) {
+                effects.remove(currentEffect)
+            }
+        }
+    }
 }
