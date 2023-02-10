@@ -90,11 +90,12 @@ open class Player(id: Long) : CacheGetSet(id, PLAYERS), Owner, ContainsItems {
         }
 
 
-    fun setPath(path: ArrayList<PixelManager>, type: String) {
+    fun setPath(path: ArrayList<PixelManager>, type: String, speed: Long) {
         savePath(path)
         this["place_${this["world"]}_path_type"] = type
         this["place_${this["world"]}_path_start"] = System.currentTimeMillis().toString()
         this["place_${this["world"]}_type"] = "path"
+        this["place_${this["world"]}_speed"] = speed.toString()
     }
 
     private fun getPath(): ArrayList<PixelManager> {
@@ -105,9 +106,14 @@ open class Player(id: Long) : CacheGetSet(id, PLAYERS), Owner, ContainsItems {
         }
         val lastPixel = currentPath[currentPath.size - 1]
         val startTime = getString("place_${this["world"]}_path_start").toLong()
+        val timeForOnePixel = try {
+            getString("place_${this["world"]}_speed").toLong()
+        } catch (e: NumberFormatException) {
+            1000L
+        }
         val currentTime = System.currentTimeMillis()
-        // le temps en ms pour 1 pixel est de 10000, il faut enlever tous les pixels déjà parcourus de la liste puis la sauvegarder
-        val numberOfPixel = (currentTime - startTime) / 10000
+        // le temps en ms pour 1 pixel est de timeForOnePixel, il faut enlever tous les pixels déjà parcourus de la liste puis la sauvegarder
+        val numberOfPixel = (currentTime - startTime) / timeForOnePixel
         // les pixels à enlever sont au début de la liste, j'ai besoin que des pixels restants
         val remainingPath = ArrayList<PixelManager>()
         for (i in numberOfPixel.toInt() until currentPath.size) {
@@ -300,6 +306,7 @@ open class Player(id: Long) : CacheGetSet(id, PLAYERS), Owner, ContainsItems {
     private val effects = ArrayList<Effect>()
 
     fun getEffectLevel(effect: EffectEnum): Int {
+        updateAndRemoveEffects()
         var level = 0
         for (currentEffect in effects) {
             if (currentEffect.type == effect) {

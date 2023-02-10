@@ -2,6 +2,8 @@ package io.github.alexiscomete.lapinousecond.view.discord.commands.classes
 
 import io.github.alexiscomete.lapinousecond.entity.Player
 import io.github.alexiscomete.lapinousecond.entity.PlayerWithAccount
+import io.github.alexiscomete.lapinousecond.entity.effects.priceToTravelWithEffect
+import io.github.alexiscomete.lapinousecond.entity.effects.timeMillisForOnePixel
 import io.github.alexiscomete.lapinousecond.entity.resources.Resource
 import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
 import io.github.alexiscomete.lapinousecond.view.Context
@@ -155,8 +157,9 @@ class MapCommand : Command(
             val path = world.findPath(nodePlayer, nodeDest)
             val image = bigger(world.drawPath(path), 3)
 
-            val timeMillisToTravel = path.size * 10000L
-            val priceToTravel = path.size * 0.5
+            val timeMillisOnePixel = timeMillisForOnePixel(player)
+            val timeMillisToTravel = timeMillisOnePixel * path.size
+            val priceToTravel = priceToTravelWithEffect(player, path.size)
 
             MenuBuilder(
                 "Comment voyager ?",
@@ -167,7 +170,7 @@ class MapCommand : Command(
                 .setImage(image)
                 .addButton(
                     "Temps",
-                    "Vous allez prendre $timeMillisToTravel ms pour aller jusqu'à ce pixel"
+                    "Vous allez prendre $timeMillisToTravel ms pour aller jusqu'à ce pixel. Attention : les effets peuvent ne pas fonctionner si ils ne sont pas actifs à l'arrivée."
                 ) { timeB, c3, _ ->
                     MenuBuilder(
                         "Confirmer",
@@ -176,7 +179,7 @@ class MapCommand : Command(
                         c3
                     )
                         .addButton("Oui", "Oui je veux aller jusqu'à ce pixel") { it, _, _ ->
-                            player.setPath(path, "default_time")
+                            player.setPath(path, "default_time", timeMillisOnePixel)
                             it.buttonInteraction.createOriginalMessageUpdater()
                                 .removeAllComponents()
                                 .removeAllEmbeds()
@@ -194,7 +197,7 @@ class MapCommand : Command(
                 }
                 .addButton(
                     "Argent",
-                    "Vous allez dépenser $priceToTravel ${Resource.RABBIT_COIN.show} pour aller jusqu'à ce pixel"
+                    "Vous allez dépenser $priceToTravel ${Resource.RABBIT_COIN.show} pour aller jusqu'à ce pixel. Les effets sont pris en compte."
                 ) { moneyB, c3, _ ->
                     MenuBuilder(
                         "Confirmer",
