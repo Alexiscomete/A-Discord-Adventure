@@ -7,7 +7,6 @@ import java.awt.image.BufferedImage
 
 class PixelByPixelUI(
     private var playerUI: PlayerUI,
-    private var image: BufferedImage?,
     private var linkedImage: String?,
 ) : LongCustomUI {
 
@@ -83,7 +82,6 @@ class PixelByPixelUI(
     }
 
     override fun setBufferedImage(bufferedImage: BufferedImage?): LongCustomUI {
-        this.image = bufferedImage
         return this
     }
 

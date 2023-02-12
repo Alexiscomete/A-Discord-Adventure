@@ -29,7 +29,7 @@ class MessagesManager : MessageCreateListener {
                             val pair = player.level.addXp(0.2)
                             player.lastLevelUpdate = System.currentTimeMillis()
                             if (pair != null) {
-                                messageCreateEvent.message.reply("Tu es passé du niveau " + pair.first + " au niveau " + pair.second + " !")
+                                messageCreateEvent.message.reply("Tu es passé du niveau " + pair.first + " au niveau " + pair.second + " ! *Pour désactiver ce message, interdisez au bot de parler dans ce salon*")
                             }
                         }
                     }

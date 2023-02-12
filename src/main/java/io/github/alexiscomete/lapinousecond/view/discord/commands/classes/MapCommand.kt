@@ -567,7 +567,6 @@ class MapCommand : Command(
                         ui.setLongCustomUI(
                             PixelByPixelUI(
                                 ui,
-                                null,
                                 null
                             )
                         )
