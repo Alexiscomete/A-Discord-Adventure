@@ -3,14 +3,11 @@ package io.github.alexiscomete.lapinousecond.view.ui.longuis.inv
 import io.github.alexiscomete.lapinousecond.view.ui.InteractionUICustomUI
 import io.github.alexiscomete.lapinousecond.view.ui.LongCustomUI
 import io.github.alexiscomete.lapinousecond.view.ui.PlayerUI
+import io.github.alexiscomete.lapinousecond.view.ui.longuis.StaticUI
 import java.awt.image.BufferedImage
 
-class InvEffectsUI : LongCustomUI {
+class InvEffectsUI : StaticUI() {
     override fun getTitle(): String? {
-        TODO("Not yet implemented")
-    }
-
-    override fun setTitle(title: String?): LongCustomUI {
         TODO("Not yet implemented")
     }
 
@@ -18,15 +15,7 @@ class InvEffectsUI : LongCustomUI {
         TODO("Not yet implemented")
     }
 
-    override fun setDescription(description: String?): LongCustomUI {
-        TODO("Not yet implemented")
-    }
-
     override fun getLinkedImage(): String? {
-        TODO("Not yet implemented")
-    }
-
-    override fun setLinkedImage(linkedImage: String?): LongCustomUI {
         TODO("Not yet implemented")
     }
 
@@ -34,31 +23,11 @@ class InvEffectsUI : LongCustomUI {
         TODO("Not yet implemented")
     }
 
-    override fun setBufferedImage(bufferedImage: BufferedImage?): LongCustomUI {
-        TODO("Not yet implemented")
-    }
-
     override fun getUnderString(): String? {
         TODO("Not yet implemented")
     }
 
-    override fun setUnderString(underString: String?): LongCustomUI {
-        TODO("Not yet implemented")
-    }
-
     override fun getInteractionUICustomUILists(): List<List<InteractionUICustomUI>> {
-        TODO("Not yet implemented")
-    }
-
-    override fun setInteractionUICustomUIs(interactionUICustomUIs: List<List<InteractionUICustomUI>>): LongCustomUI {
-        TODO("Not yet implemented")
-    }
-
-    override fun addInteractionUICustomUI(interactionUICustomUI: InteractionUICustomUI): LongCustomUI {
-        TODO("Not yet implemented")
-    }
-
-    override fun addInteractionUICustomUIs(interactionUICustomUIs: List<InteractionUICustomUI>): LongCustomUI {
         TODO("Not yet implemented")
     }
 
@@ -75,10 +44,6 @@ class InvEffectsUI : LongCustomUI {
     }
 
     override fun getPlayerUI(): PlayerUI {
-        TODO("Not yet implemented")
-    }
-
-    override fun setPlayerUI(everyUI: PlayerUI): LongCustomUI {
         TODO("Not yet implemented")
     }
 }
