@@ -25,6 +25,10 @@ class TestingUI(
         return this
     }
 
+    override fun getFields(): List<Pair<String, String>>? {
+        return null
+    }
+
     override fun getLinkedImage(): String? {
         return null
     }

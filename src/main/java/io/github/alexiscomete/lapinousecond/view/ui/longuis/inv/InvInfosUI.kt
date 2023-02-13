@@ -15,6 +15,10 @@ class InvInfosUI : StaticUI() {
         TODO("Not yet implemented")
     }
 
+    override fun getFields(): List<Pair<String, String>>? {
+        TODO("Not yet implemented")
+    }
+
     override fun getLinkedImage(): String {
         return "https://cdn.discordapp.com/attachments/854322477152337920/924612939879702588/unknown.png"
     }

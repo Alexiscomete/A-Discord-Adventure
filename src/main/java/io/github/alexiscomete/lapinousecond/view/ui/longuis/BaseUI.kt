@@ -5,25 +5,34 @@ import io.github.alexiscomete.lapinousecond.view.ui.LongCustomUI
 import io.github.alexiscomete.lapinousecond.view.ui.PlayerUI
 import java.awt.image.BufferedImage
 
-abstract class BaseUI(private var linkedImage: String?, private var bufferedImage: BufferedImage?) : LongCustomUI {
+abstract class BaseUI(
+    private var linkedImage: String?,
+    private var bufferedImage: BufferedImage?,
+    private var title: String?,
+    private var description: String?,
+) : LongCustomUI {
 
     private val defaultImage = linkedImage
     private val defaultBufferedImage = bufferedImage
+    private val defaultTitle = title
+    private val defaultDescription = description
 
     override fun getTitle(): String? {
-        TODO("Not yet implemented")
+        return title
     }
 
     override fun setTitle(title: String?): LongCustomUI {
-        TODO("Not yet implemented")
+        this.title = title ?: defaultTitle
+        return this
     }
 
     override fun getDescription(): String? {
-        TODO("Not yet implemented")
+        return description
     }
 
     override fun setDescription(description: String?): LongCustomUI {
-        TODO("Not yet implemented")
+        this.description = description ?: defaultDescription
+        return this
     }
 
     override fun getLinkedImage(): String? {

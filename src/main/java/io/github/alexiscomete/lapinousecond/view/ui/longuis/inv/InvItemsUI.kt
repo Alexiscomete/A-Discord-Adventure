@@ -15,6 +15,10 @@ class InvItemsUI : StaticUI() {
         TODO("Not yet implemented")
     }
 
+    override fun getFields(): List<Pair<String, String>>? {
+        TODO("Not yet implemented")
+    }
+
     override fun getLinkedImage(): String? {
         TODO("Not yet implemented")
     }

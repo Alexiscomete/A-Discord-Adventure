@@ -1,6 +1,6 @@
 package io.github.alexiscomete.lapinousecond.view.ui
 
-class DisabledUI(
+class DisabledInteractionUI(
     private var customUI: LongCustomUI,
     private val customInteractionStyle: InteractionStyle,
     private var id: String,

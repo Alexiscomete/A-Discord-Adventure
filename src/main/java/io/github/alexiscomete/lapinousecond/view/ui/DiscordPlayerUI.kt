@@ -69,6 +69,11 @@ class DiscordPlayerUI(private val context: Context, var interaction: Interaction
             if (longCustomUI!!.getUnderString() != null) {
                 mainEmbed.setFooter(longCustomUI!!.getUnderString())
             }
+            if (longCustomUI!!.getFields() != null) {
+                for (field in longCustomUI!!.getFields()!!) {
+                    mainEmbed.addField(field.first, field.second)
+                }
+            }
             if (longCustomUI!!.getBufferedImage() != null) {
                 mainEmbed.setImage(longCustomUI!!.getBufferedImage())
                 val later = messageComponentInteractionBase
@@ -239,6 +244,11 @@ class DiscordPlayerUI(private val context: Context, var interaction: Interaction
             }
             if (longCustomUI!!.getUnderString() != null) {
                 mainEmbed.setFooter(longCustomUI!!.getUnderString())
+            }
+            if (longCustomUI!!.getFields() != null) {
+                for (field in longCustomUI!!.getFields()!!) {
+                    mainEmbed.addField(field.first, field.second)
+                }
             }
             if (longCustomUI!!.getBufferedImage() != null) {
                 mainEmbed.setImage(longCustomUI!!.getBufferedImage())

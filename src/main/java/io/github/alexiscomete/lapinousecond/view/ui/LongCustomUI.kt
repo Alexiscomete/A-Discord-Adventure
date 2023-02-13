@@ -12,6 +12,9 @@ interface LongCustomUI {
     fun getDescription(): String?
     fun setDescription(description: String?): LongCustomUI
 
+    // fields
+    fun getFields(): List<Pair<String, String>>?
+
     // image
     // TODO : change to pixels to be more flexible ?
     fun getLinkedImage(): String?
