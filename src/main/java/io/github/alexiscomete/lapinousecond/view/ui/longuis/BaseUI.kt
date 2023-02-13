@@ -10,12 +10,15 @@ abstract class BaseUI(
     private var bufferedImage: BufferedImage?,
     private var title: String?,
     private var description: String?,
+    private var playerUI: PlayerUI,
+    private var underString: String?
 ) : LongCustomUI {
 
     private val defaultImage = linkedImage
     private val defaultBufferedImage = bufferedImage
     private val defaultTitle = title
     private val defaultDescription = description
+    private val defaultUnderString = underString
 
     override fun getTitle(): String? {
         return title
@@ -54,11 +57,12 @@ abstract class BaseUI(
     }
 
     override fun getUnderString(): String? {
-        TODO("Not yet implemented")
+        return underString
     }
 
     override fun setUnderString(underString: String?): LongCustomUI {
-        TODO("Not yet implemented")
+        this.underString = underString ?: defaultUnderString
+        return this
     }
 
     override fun getInteractionUICustomUILists(): List<List<InteractionUICustomUI>> {
@@ -90,10 +94,11 @@ abstract class BaseUI(
     }
 
     override fun getPlayerUI(): PlayerUI {
-        TODO("Not yet implemented")
+        return playerUI
     }
 
     override fun setPlayerUI(everyUI: PlayerUI): LongCustomUI {
-        TODO("Not yet implemented")
+        this.playerUI = everyUI
+        return this
     }
 }
