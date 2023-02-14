@@ -11,7 +11,8 @@ abstract class BaseUI(
     private var title: String?,
     private var description: String?,
     private var playerUI: PlayerUI,
-    private var underString: String?
+    private var underString: String?,
+    private var interactionUICustomUILists: List<List<InteractionUICustomUI>>
 ) : LongCustomUI {
 
     private val defaultImage = linkedImage
@@ -66,31 +67,36 @@ abstract class BaseUI(
     }
 
     override fun getInteractionUICustomUILists(): List<List<InteractionUICustomUI>> {
-        TODO("Not yet implemented")
+        return interactionUICustomUILists
     }
 
     override fun setInteractionUICustomUIs(interactionUICustomUIs: List<List<InteractionUICustomUI>>): LongCustomUI {
-        TODO("Not yet implemented")
+        this.interactionUICustomUILists = interactionUICustomUIs
+        return this
     }
 
     override fun addInteractionUICustomUI(interactionUICustomUI: InteractionUICustomUI): LongCustomUI {
-        TODO("Not yet implemented")
+        interactionUICustomUILists = interactionUICustomUILists.plus(listOf(listOf(interactionUICustomUI)))
+        return this
     }
 
     override fun addInteractionUICustomUIs(interactionUICustomUIs: List<InteractionUICustomUI>): LongCustomUI {
-        TODO("Not yet implemented")
+        interactionUICustomUILists = interactionUICustomUILists.plus(listOf(interactionUICustomUIs))
+        return this
     }
 
     override fun hasInteractionID(id: String): Boolean {
-        TODO("Not yet implemented")
+        return interactionUICustomUILists.flatten().any { it.getId() == id }
     }
 
     override fun respondToInteraction(id: String): LongCustomUI {
-        TODO("Not yet implemented")
+        interactionUICustomUILists.flatten().first { it.getId() == id }.execute(playerUI)
+        return this
     }
 
     override fun respondToInteraction(id: String, argument: String): LongCustomUI {
-        TODO("Not yet implemented")
+        interactionUICustomUILists.flatten().first { it.getId() == id }.executeWithArgument(playerUI, argument)
+        return this
     }
 
     override fun getPlayerUI(): PlayerUI {
