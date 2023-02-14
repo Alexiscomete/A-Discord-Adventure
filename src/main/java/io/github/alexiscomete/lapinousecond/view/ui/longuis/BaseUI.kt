@@ -10,10 +10,13 @@ abstract class BaseUI(
     private var bufferedImage: BufferedImage?,
     private var title: String?,
     private var description: String?,
-    private var playerUI: PlayerUI,
     private var underString: String?,
-    private var interactionUICustomUILists: List<List<InteractionUICustomUI>>
-) : LongCustomUI {
+    interactionUICustomUILists: List<List<InteractionUICustomUI>>,
+    playerUI: PlayerUI
+) : BaseRespondUI(
+    interactionUICustomUILists,
+    playerUI
+) {
 
     private val defaultImage = linkedImage
     private val defaultBufferedImage = bufferedImage
@@ -66,10 +69,6 @@ abstract class BaseUI(
         return this
     }
 
-    override fun getInteractionUICustomUILists(): List<List<InteractionUICustomUI>> {
-        return interactionUICustomUILists
-    }
-
     override fun setInteractionUICustomUIs(interactionUICustomUIs: List<List<InteractionUICustomUI>>): LongCustomUI {
         this.interactionUICustomUILists = interactionUICustomUIs
         return this
@@ -83,24 +82,6 @@ abstract class BaseUI(
     override fun addInteractionUICustomUIs(interactionUICustomUIs: List<InteractionUICustomUI>): LongCustomUI {
         interactionUICustomUILists = interactionUICustomUILists.plus(listOf(interactionUICustomUIs))
         return this
-    }
-
-    override fun hasInteractionID(id: String): Boolean {
-        return interactionUICustomUILists.flatten().any { it.getId() == id }
-    }
-
-    override fun respondToInteraction(id: String): LongCustomUI {
-        interactionUICustomUILists.flatten().first { it.getId() == id }.execute(playerUI)
-        return this
-    }
-
-    override fun respondToInteraction(id: String, argument: String): LongCustomUI {
-        interactionUICustomUILists.flatten().first { it.getId() == id }.executeWithArgument(playerUI, argument)
-        return this
-    }
-
-    override fun getPlayerUI(): PlayerUI {
-        return playerUI
     }
 
     override fun setPlayerUI(everyUI: PlayerUI): LongCustomUI {

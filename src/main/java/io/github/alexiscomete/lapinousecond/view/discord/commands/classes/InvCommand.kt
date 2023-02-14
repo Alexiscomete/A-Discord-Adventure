@@ -75,16 +75,6 @@ class InvCommandInfos : SubCommand(
         val builder =
             EmbedBuilder()
                 .setDescription("Serveur actuel : ${if (player["serv"] == "") "serveur inconnu, utilisez -hub" else player["serv"]}")
-                .setAuthor(slashCommand.user)
-                .addField(
-                    "Pixel", """
-     Compte sur l'ORU : ${if (player["has_account"] == "1") "oui" else "non"}
-     Vérification : ${if (player["is_verify"] == "1") "oui" else "non"}
-     Pixel : ${if (player["x"] == "" || player["x"].toInt() == -1) "pixel inconnu" else "[" + player["x"] + ":" + player["y"] + "]"}
-     """.trimIndent(), true
-                )
-                .addField("Position", player.positionToString())
-                .addField("Niveau", player.level.toString())
 
         slashCommand.createImmediateResponder()
             .addEmbed(builder)

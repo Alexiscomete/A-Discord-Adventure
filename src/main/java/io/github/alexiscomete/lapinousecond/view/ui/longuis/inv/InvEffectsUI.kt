@@ -6,7 +6,10 @@ import io.github.alexiscomete.lapinousecond.view.ui.PlayerUI
 import io.github.alexiscomete.lapinousecond.view.ui.longuis.StaticUI
 import java.awt.image.BufferedImage
 
-class InvEffectsUI : StaticUI() {
+class InvEffectsUI(playerUI: PlayerUI) : StaticUI(
+    interactionUICustomUILists = listOf(),
+    playerUI
+) {
     override fun getTitle(): String? {
         TODO("Not yet implemented")
     }

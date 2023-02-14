@@ -5,7 +5,13 @@ import io.github.alexiscomete.lapinousecond.view.ui.LongCustomUI
 import io.github.alexiscomete.lapinousecond.view.ui.PlayerUI
 import java.awt.image.BufferedImage
 
-abstract class StaticUI : LongCustomUI {
+abstract class StaticUI(
+    interactionUICustomUILists: List<List<InteractionUICustomUI>>,
+    playerUI: PlayerUI
+) : BaseRespondUI(
+    interactionUICustomUILists,
+    playerUI
+) {
     override fun setBufferedImage(bufferedImage: BufferedImage?): LongCustomUI {
         return this
     }

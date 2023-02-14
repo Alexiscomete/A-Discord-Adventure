@@ -6,17 +6,29 @@ import io.github.alexiscomete.lapinousecond.view.ui.PlayerUI
 import io.github.alexiscomete.lapinousecond.view.ui.longuis.StaticUI
 import java.awt.image.BufferedImage
 
-class InvInfosUI : StaticUI() {
+class InvInfosUI(playerUI: PlayerUI) : StaticUI(
+    interactionUICustomUILists = listOf(),
+    playerUI
+) {
     override fun getTitle(): String {
         return "Informations sur le joueur"
     }
 
-    override fun getDescription(): String? {
-        TODO("Not yet implemented")
+    override fun getDescription(): String {
+        return "Serveur actuel : ${if (playerUI.getPlayer()["serv"] == "") "serveur inconnu, utilisez -hub" else playerUI.getPlayer()["serv"]}"
     }
 
-    override fun getFields(): List<Pair<String, String>>? {
-        TODO("Not yet implemented")
+    override fun getFields(): List<Pair<String, String>> {
+        val player = playerUI.getPlayer()
+        return listOf(
+            Pair("Position", player.positionToString()),
+            Pair("Niveau", player.level.toString()),
+            Pair("Pixel", """
+     Compte sur le bot de Sylicium : ${if (player["has_account"] == "1") "oui" else "non"}
+     Vérification : ${if (player["is_verify"] == "1") "oui" else "non"}
+     Pixel : ${if (player["x"] == "" || player["x"].toInt() == -1) "pixel inconnu" else "[" + player["x"] + ":" + player["y"] + "]"}
+     """.trimIndent())
+        )
     }
 
     override fun getLinkedImage(): String {
@@ -24,30 +36,10 @@ class InvInfosUI : StaticUI() {
     }
 
     override fun getBufferedImage(): BufferedImage? {
-        TODO("Not yet implemented")
+        return null
     }
 
     override fun getUnderString(): String {
         return "<t:${System.currentTimeMillis()}>"
-    }
-
-    override fun getInteractionUICustomUILists(): List<List<InteractionUICustomUI>> {
-        TODO("Not yet implemented")
-    }
-
-    override fun hasInteractionID(id: String): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override fun respondToInteraction(id: String): LongCustomUI {
-        TODO("Not yet implemented")
-    }
-
-    override fun respondToInteraction(id: String, argument: String): LongCustomUI {
-        TODO("Not yet implemented")
-    }
-
-    override fun getPlayerUI(): PlayerUI {
-        TODO("Not yet implemented")
     }
 }
