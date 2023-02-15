@@ -5,28 +5,28 @@ import io.github.alexiscomete.lapinousecond.view.ui.LongCustomUI
 import io.github.alexiscomete.lapinousecond.view.ui.PlayerUI
 
 abstract class BaseRespondUI(
-    protected var interactionUICustomUILists: List<List<InteractionUICustomUI>>,
-    protected var playerUI: PlayerUI
+    protected var interactions: List<List<InteractionUICustomUI>>,
+    protected var currentUI: PlayerUI
 ) : LongCustomUI {
     override fun getInteractionUICustomUILists(): List<List<InteractionUICustomUI>> {
-        return interactionUICustomUILists
+        return interactions
     }
 
     override fun hasInteractionID(id: String): Boolean {
-        return interactionUICustomUILists.flatten().any { it.getId() == id }
+        return interactions.flatten().any { it.getId() == id }
     }
 
     override fun respondToInteraction(id: String): LongCustomUI {
-        interactionUICustomUILists.flatten().first { it.getId() == id }.execute(playerUI)
+        interactions.flatten().first { it.getId() == id }.execute(currentUI)
         return this
     }
 
     override fun respondToInteraction(id: String, argument: String): LongCustomUI {
-        interactionUICustomUILists.flatten().first { it.getId() == id }.executeWithArgument(playerUI, argument)
+        interactions.flatten().first { it.getId() == id }.executeWithArgument(currentUI, argument)
         return this
     }
 
     override fun getPlayerUI(): PlayerUI {
-        return playerUI
+        return currentUI
     }
 }

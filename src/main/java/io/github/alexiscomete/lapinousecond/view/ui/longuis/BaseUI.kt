@@ -70,22 +70,22 @@ abstract class BaseUI(
     }
 
     override fun setInteractionUICustomUIs(interactionUICustomUIs: List<List<InteractionUICustomUI>>): LongCustomUI {
-        this.interactionUICustomUILists = interactionUICustomUIs
+        this.interactions = interactionUICustomUIs
         return this
     }
 
     override fun addInteractionUICustomUI(interactionUICustomUI: InteractionUICustomUI): LongCustomUI {
-        interactionUICustomUILists = interactionUICustomUILists.plus(listOf(listOf(interactionUICustomUI)))
+        interactions = interactions.plus(listOf(listOf(interactionUICustomUI)))
         return this
     }
 
     override fun addInteractionUICustomUIs(interactionUICustomUIs: List<InteractionUICustomUI>): LongCustomUI {
-        interactionUICustomUILists = interactionUICustomUILists.plus(listOf(interactionUICustomUIs))
+        interactions = interactions.plus(listOf(interactionUICustomUIs))
         return this
     }
 
     override fun setPlayerUI(everyUI: PlayerUI): LongCustomUI {
-        this.playerUI = everyUI
+        this.currentUI = everyUI
         return this
     }
 }

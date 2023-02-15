@@ -13,11 +13,11 @@ class InvInfosUI(playerUI: PlayerUI) : StaticUI(
     }
 
     override fun getDescription(): String {
-        return "Serveur actuel : ${if (playerUI.getPlayer()["serv"] == "") "serveur inconnu, utilisez -hub" else playerUI.getPlayer()["serv"]}"
+        return "Serveur actuel : ${if (currentUI.getPlayer()["serv"] == "") "serveur inconnu, utilisez -hub" else currentUI.getPlayer()["serv"]}"
     }
 
     override fun getFields(): List<Pair<String, String>> {
-        val player = playerUI.getPlayer()
+        val player = currentUI.getPlayer()
         return listOf(
             Pair("Position", player.positionToString()),
             Pair("Niveau", player.level.toString()),
