@@ -2,14 +2,19 @@ package io.github.alexiscomete.lapinousecond.view.discord.commands.classes
 
 import io.github.alexiscomete.lapinousecond.api
 import io.github.alexiscomete.lapinousecond.entity.Player
+import io.github.alexiscomete.lapinousecond.entity.PlayerWithAccount
 import io.github.alexiscomete.lapinousecond.entity.players
 import io.github.alexiscomete.lapinousecond.entity.resources.Resource
 import io.github.alexiscomete.lapinousecond.useful.managesave.saveManager
+import io.github.alexiscomete.lapinousecond.view.contextFor
 import io.github.alexiscomete.lapinousecond.view.discord.commands.Command
 import io.github.alexiscomete.lapinousecond.view.discord.commands.ExecutableWithArguments
 import io.github.alexiscomete.lapinousecond.view.discord.commands.SubCommand
 import io.github.alexiscomete.lapinousecond.view.discord.commands.getAccount
+import io.github.alexiscomete.lapinousecond.view.ui.DiscordPlayerUI
+import io.github.alexiscomete.lapinousecond.view.ui.longuis.inv.InvInfosUI
 import org.javacord.api.entity.message.embed.EmbedBuilder
+import org.javacord.api.interaction.Interaction
 import org.javacord.api.interaction.SlashCommandInteraction
 import org.javacord.api.interaction.SlashCommandOption
 import org.javacord.api.interaction.SlashCommandOptionType
@@ -69,16 +74,15 @@ class InvCommandInfos : SubCommand(
         get() = null
 
     override fun execute(slashCommand: SlashCommandInteraction) {
-
-        val player = who(slashCommand)
-
-        val builder =
-            EmbedBuilder()
-                .setDescription("Serveur actuel : ${if (player["serv"] == "") "serveur inconnu, utilisez -hub" else player["serv"]}")
-
-        slashCommand.createImmediateResponder()
-            .addEmbed(builder)
-            .respond()
+        val context = contextFor(PlayerWithAccount(slashCommand.user))
+        val ui = DiscordPlayerUI(context, slashCommand as Interaction)
+        ui.setLongCustomUI(
+            InvInfosUI(
+                ui
+            )
+        )
+        ui.updateOrSend()
+        context.ui(ui)
     }
 }
 

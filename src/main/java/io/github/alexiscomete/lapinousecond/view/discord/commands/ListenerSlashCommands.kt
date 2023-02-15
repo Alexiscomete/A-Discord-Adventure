@@ -32,7 +32,7 @@ class ListenerSlashCommands : SlashCommandCreateListener {
                 if (serverTextChannelOp.isPresent) {
                     val sC = serverTextChannelOp.get()
                     if (s.id == 904736069080186981L && sC.id != 914268153796771950L) {
-                        throw IllegalStateException("Dans ce server uniquement, il est interdit d'utiliser cette commande ici")
+                        throw IllegalStateException("Dans ce serveur uniquement, il est interdit d'utiliser cette commande ici")
                     }
                     val name = sC.asServerTextChannel().get().name
                     // je pense que limiter les salons est important, venture permet d'inclure adventure et aventure

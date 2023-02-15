@@ -14,6 +14,7 @@ import org.javacord.api.entity.message.embed.EmbedBuilder
 import org.javacord.api.interaction.Interaction
 import org.javacord.api.interaction.InteractionBase
 import org.javacord.api.interaction.MessageComponentInteractionBase
+import org.javacord.api.interaction.SlashCommandInteraction
 
 class DiscordPlayerUI(private val context: Context, var interaction: Interaction) : PlayerUI {
 
