@@ -2,16 +2,30 @@ package io.github.alexiscomete.lapinousecond.view.ui
 
 import io.github.alexiscomete.lapinousecond.view.Context
 import io.github.alexiscomete.lapinousecond.view.contextmanager.ButtonsContextManager
+import io.github.alexiscomete.lapinousecond.view.ui.longuis.BaseUI
 import org.javacord.api.entity.message.component.ActionRow
 import org.javacord.api.entity.message.component.Button
 import org.javacord.api.entity.message.embed.EmbedBuilder
 import org.javacord.api.event.interaction.ButtonClickEvent
+import java.awt.image.BufferedImage
 
 open class EmbedPages<U>(
-    protected val builder: EmbedBuilder,
+    linkedImage: String?,
+    bufferedImage: BufferedImage?,
+    title: String?,
+    description: String?,
+    underString: String?,
     protected val uArrayList: ArrayList<U>,
     protected val uAddContent: AddContent<U>,
-    protected val context: Context
+    context: PlayerUI
+) : BaseUI(
+    linkedImage,
+    bufferedImage,
+    title,
+    description,
+    underString,
+    listOf(),
+    context
 ) {
     protected var level = 0
     protected val idLast = "last"
@@ -23,6 +37,10 @@ open class EmbedPages<U>(
         )
     )
     open val number = 10
+
+    init {
+        uAddContent.add(builder, 0, number.coerceAtMost(uArrayList.size - level), uArrayList)
+    }
 
     protected open fun next(
         messageComponentCreateEvent: ButtonClickEvent,
@@ -85,11 +103,11 @@ open class EmbedPages<U>(
         context.buttons(manager)
     }
 
-    init {
-        uAddContent.add(builder, 0, number.coerceAtMost(uArrayList.size - level), uArrayList)
-    }
-
     fun interface AddContent<U> {
         fun add(embedBuilder: EmbedBuilder, min: Int, num: Int, uArrayList: ArrayList<U>)
+    }
+
+    override fun getFields(): List<Pair<String, String>>? {
+        TODO("Not yet implemented")
     }
 }

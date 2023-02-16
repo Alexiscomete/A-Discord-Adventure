@@ -155,7 +155,7 @@ class InvCommandResources : SubCommand(
 
         val embed = EmbedBuilder()
 
-        val re = StringBuilder().append("Cliquez sur une resource pour voir son nom\n")
+        val re = StringBuilder().append("Cliquez sur une resource (emoji) pour voir son nom\n")
         for (reM in player.resourceManagers.values) {
             re
                 .append(reM.resource.show)
@@ -165,7 +165,7 @@ class InvCommandResources : SubCommand(
         }
 
         embed
-            .setTitle("Inventaire : ressources, items, argent")
+            .setTitle("Inventaire : ressources et argent")
             .setColor(Color.ORANGE)
             .addField("Rabbitcoins", player["bal"] + Resource.RABBIT_COIN.show, true)
             .addField("Ressources", re.toString())
