@@ -5,17 +5,24 @@ import io.github.alexiscomete.lapinousecond.view.contextmanager.ButtonsContextMa
 import org.javacord.api.entity.message.component.ActionRow
 import org.javacord.api.entity.message.component.Button
 import org.javacord.api.entity.message.component.LowLevelComponent
-import org.javacord.api.entity.message.embed.EmbedBuilder
 import org.javacord.api.event.interaction.ButtonClickEvent
+import java.awt.image.BufferedImage
 
 class EmbedPagesWithInteractions<U>(
-    builder: EmbedBuilder,
     uArrayList: ArrayList<U>,
     uAddContent: AddContent<U>,
-    context: Context,
-    val whenSelected: (U, ButtonClickEvent, Context) -> Unit
+    val whenSelected: (U, ButtonClickEvent, Context) -> Unit,
+    linkedImage: String?,
+    bufferedImage: BufferedImage?,
+    title: String?,
+    description: String?,
+    context: PlayerUI
 ) : EmbedPages<U>(
-    builder,
+    linkedImage,
+    bufferedImage,
+    title,
+    description,
+    "Cliquez sur les numéros pour interagir avec un élément",
     uArrayList,
     uAddContent,
     context
@@ -23,8 +30,7 @@ class EmbedPagesWithInteractions<U>(
     override val number = 5
 
     init {
-        uAddContent.add(builder, 0, number.coerceAtMost(uArrayList.size - level), uArrayList)
-        builder.setFooter("Cliquez sur les numéros pour interagir avec un élément")
+        uAddContent.add(0, number.coerceAtMost(uArrayList.size - level), uArrayList)
     }
 
     val buttons: ArrayList<LowLevelComponent>
@@ -55,7 +61,6 @@ class EmbedPagesWithInteractions<U>(
     override fun next(messageComponentCreateEvent: ButtonClickEvent, context: Context, manager: ButtonsContextManager) {
         if (level + number < uArrayList.size) {
             level += number
-            builder.removeAllFields()
             uAddContent.add(builder, level, number.coerceAtMost(uArrayList.size - level), uArrayList)
             messageComponentCreateEvent.buttonInteraction.createOriginalMessageUpdater()
                 .removeAllComponents()
@@ -69,8 +74,7 @@ class EmbedPagesWithInteractions<U>(
     override fun last(messageComponentCreateEvent: ButtonClickEvent, context: Context, manager: ButtonsContextManager) {
         if (level > number - 1) {
             level -= number
-            builder.removeAllFields()
-            uAddContent.add(builder, level, number.coerceAtMost(uArrayList.size - level), uArrayList)
+            uAddContent.add(level, number.coerceAtMost(uArrayList.size - level), uArrayList)
             messageComponentCreateEvent.buttonInteraction.createOriginalMessageUpdater()
                 .removeAllComponents()
                 .removeAllEmbeds()
