@@ -368,10 +368,12 @@ class MapCommand : Command(
                         zooms = Zooms.ZOOM_ZONES_DETAILS
                         zoomInt = 60
                     }
+
                     1 -> {
                         zooms = Zooms.ZOOM_IN
                         zoomInt = 60
                     }
+
                     else -> {
                         zooms = Zooms.ZOOM_ZONES
                         zoomInt *= 7
@@ -499,7 +501,8 @@ class MapCommand : Command(
                             options.add(SelectMenuOption.create(i.toString(), zoneDel.toString()))
                         }
                         val id = generateUniqueID()
-                        val actionRow = ActionRow.of(SelectMenu.createStringMenu(id.toString(), "Monde où aller", options))
+                        val actionRow =
+                            ActionRow.of(SelectMenu.createStringMenu(id.toString(), "Monde où aller", options))
 
                         context.selectMenu(Select(id.toString(), worlds))
 
@@ -611,32 +614,38 @@ class MapCommand : Command(
                     .addButton(
                         "Liste des cartes",
                         "Toutes les cartes permanentes du jeu ... remerciez Darki"
-                    ) { buttonClickEvent: ButtonClickEvent, _, _ ->
+                    ) { buttonClickEvent: ButtonClickEvent, context: Context, _ ->
                         val maps = arrayListOf(*FilesMapEnum.values())
-                        val embed = EmbedBuilder()
-                        val embedPages = EmbedPages(
-                            embed,
-                            maps,
-                            { embedBuilder: EmbedBuilder, i: Int, i1: Int, filesMapEnums: ArrayList<FilesMapEnum> ->
-                                for (j in i until i + i1) {
-                                    val map = filesMapEnums[j]
-                                    embedBuilder.addField(
-                                        map.name,
-                                        map.description + "\n" + map.urlOfMap + "\n de : " + map.author,
-                                        false
-                                    )
-                                }
-                            },
-                            context
+                        val ui = DiscordPlayerUI(context, buttonClickEvent.interaction)
+                        ui.setLongCustomUI(
+                            EmbedPages(
+                                null,
+                                null,
+                                "Liste des cartes",
+                                "Toutes les cartes permanentes du jeu ... remerciez Darki",
+                                null,
+                                maps,
+                                { i: Int, i1: Int, filesMapEnums: ArrayList<FilesMapEnum> ->
+                                    val pairs = ArrayList<Pair<String, String>>()
+                                    for (j in i until i + i1) {
+                                        val map = filesMapEnums[j]
+                                        pairs.add(
+                                            Pair(
+                                                map.name,
+                                                map.description + "\n" + map.urlOfMap + "\n de : " + map.author
+                                            )
+                                        )
+                                    }
+                                    if (pairs.size == 0) {
+                                        return@EmbedPages null
+                                    }
+                                    return@EmbedPages pairs
+                                },
+                                ui
+                            )
                         )
-                        embedPages.register()
-                        buttonClickEvent.buttonInteraction.createOriginalMessageUpdater()
-                            .removeAllComponents()
-                            .removeAllEmbeds()
-                            .setContent("Liste des cartes")
-                            .addEmbed(embed)
-                            .addComponents(embedPages.components)
-                            .update()
+                        ui.updateOrSend()
+                        context.ui(ui)
                     }
                     .addButton(
                         "Ma position",

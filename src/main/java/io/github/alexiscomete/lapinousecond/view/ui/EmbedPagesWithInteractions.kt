@@ -23,7 +23,7 @@ class EmbedPagesWithInteractions<U>(
 ) {
     override val number = 5
 
-    val buttons: List<InteractionUICustomUI>
+    private val buttons: List<InteractionUICustomUI>
         get() {
             val buttons = mutableListOf<InteractionUICustomUI>()
             for (i in pageLevel until pageLevel + number.coerceAtMost(uArrayList.size - pageLevel)) {
@@ -45,14 +45,24 @@ class EmbedPagesWithInteractions<U>(
     override fun next(playerUI: PlayerUI) {
         if (pageLevel + number < uArrayList.size) {
             pageLevel += number
-            uContentOf.getContent(pageLevel, number.coerceAtMost(uArrayList.size - pageLevel), uArrayList)
+            setInteractionUICustomUIs(
+                listOf(
+                    buttons,
+                    components
+                )
+            )
         }
     }
 
     override fun last(playerUI: PlayerUI) {
         if (pageLevel > number - 1) {
             pageLevel -= number
-            uContentOf.getContent(pageLevel, number.coerceAtMost(uArrayList.size - pageLevel), uArrayList)
+            setInteractionUICustomUIs(
+                listOf(
+                    buttons,
+                    components
+                )
+            )
         }
     }
 
