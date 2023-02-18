@@ -1,6 +1,5 @@
 package io.github.alexiscomete.lapinousecond.view.ui
 
-import io.github.alexiscomete.lapinousecond.view.contextmanager.ButtonsContextManager
 import io.github.alexiscomete.lapinousecond.view.ui.longuis.BaseUI
 import java.awt.image.BufferedImage
 
@@ -11,7 +10,7 @@ open class EmbedPages<U>(
     description: String?,
     underString: String?,
     protected val uArrayList: ArrayList<U>,
-    protected val uAddContent: AddContent<U>,
+    protected val uContentOf: ContentOf<U>,
     context: PlayerUI
 ) : BaseUI(
     linkedImage,
@@ -22,56 +21,33 @@ open class EmbedPages<U>(
     listOf(),
     context
 ) {
-    protected var level = 0
+    protected var pageLevel = 0
     private val idLast = "last"
     private val idNext = "next"
-    protected val manager = ButtonsContextManager(
-        hashMapOf(
-            idLast to ::last,
-            idNext to ::next
-        )
-    )
     open val number = 10
-
-    init {
-        uAddContent.add(0, number.coerceAtMost(uArrayList.size - level), uArrayList)
-    }
 
     protected open fun next(
         playerUI: PlayerUI
     ) {
         // check if the button is valid : it must have enough elements to go to the next page
-        if (level + number < uArrayList.size) {
-            level += number
-            uAddContent.add(level, number.coerceAtMost(uArrayList.size - level), uArrayList)
-            messageComponentCreateEvent.buttonInteraction.createOriginalMessageUpdater()
-                .removeAllComponents()
-                .removeAllEmbeds()
-                .addEmbed(builder)
-                .addComponents(components)
-                .update()
+        if (pageLevel + number < uArrayList.size) {
+            pageLevel += number
+            setInteractionUICustomUIs(listOf(components))
         }
     }
 
     protected open fun last(
         playerUI: PlayerUI
     ) {
-        if (level > number - 1) {
-            level -= number
-            uAddContent.add(level, number.coerceAtMost(uArrayList.size - level), uArrayList)
-            messageComponentCreateEvent.buttonInteraction.createOriginalMessageUpdater()
-                .removeAllComponents()
-                .removeAllEmbeds()
-                .addEmbed(builder)
-                .addComponents(components)
-                .update()
+        if (pageLevel > number - 1) {
+            pageLevel -= number
+            setInteractionUICustomUIs(listOf(components))
         }
     }
 
-    // TODO
     open val components: List<InteractionUICustomUI>
         get() =
-            if (level > 0 && level + number < uArrayList.size) {
+            if (pageLevel > 0 && pageLevel + number < uArrayList.size) {
                 listOf(
                     SimpleInteractionUICustomUI(
                         idLast,
@@ -92,7 +68,7 @@ open class EmbedPages<U>(
                         null
                     )
                 )
-            } else if (level > 0) {
+            } else if (pageLevel > 0) {
                 listOf(
                     SimpleInteractionUICustomUI(
                         idLast,
@@ -104,7 +80,7 @@ open class EmbedPages<U>(
                         null
                     )
                 )
-            } else if (level + number < uArrayList.size) {
+            } else if (pageLevel + number < uArrayList.size) {
                 listOf(
                     SimpleInteractionUICustomUI(
                         idNext,
@@ -135,10 +111,10 @@ open class EmbedPages<U>(
     }
 
     override fun getFields(): List<Pair<String, String>>? {
-        TODO("Not yet implemented")
+        return uContentOf.getContent(pageLevel, number.coerceAtMost(uArrayList.size - pageLevel), uArrayList)
     }
 
-    fun interface AddContent<U> {
-        fun add(min: Int, num: Int, uArrayList: ArrayList<U>)
+    fun interface ContentOf<U> {
+        fun getContent(min: Int, num: Int, uArrayList: ArrayList<U>): List<Pair<String, String>>?
     }
 }
