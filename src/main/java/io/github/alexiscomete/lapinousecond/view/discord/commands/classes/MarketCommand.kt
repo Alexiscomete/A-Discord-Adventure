@@ -1,15 +1,10 @@
 package io.github.alexiscomete.lapinousecond.view.discord.commands.classes
 
-import io.github.alexiscomete.lapinousecond.view.discord.commands.Command
-import io.github.alexiscomete.lapinousecond.view.discord.commands.ExecutableWithArguments
-import io.github.alexiscomete.lapinousecond.view.discord.commands.getAccount
 import io.github.alexiscomete.lapinousecond.entity.Owner
 import io.github.alexiscomete.lapinousecond.entity.Player
 import io.github.alexiscomete.lapinousecond.entity.players
-import io.github.alexiscomete.lapinousecond.view.ui.EmbedPagesWithInteractions
-import io.github.alexiscomete.lapinousecond.view.ui.MenuBuilder
-import io.github.alexiscomete.lapinousecond.messagesManager
 import io.github.alexiscomete.lapinousecond.entity.resources.Resource
+import io.github.alexiscomete.lapinousecond.messagesManager
 import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
 import io.github.alexiscomete.lapinousecond.useful.managesave.saveManager
 import io.github.alexiscomete.lapinousecond.useful.transactions.*
@@ -17,6 +12,10 @@ import io.github.alexiscomete.lapinousecond.view.Context
 import io.github.alexiscomete.lapinousecond.view.contextFor
 import io.github.alexiscomete.lapinousecond.view.contextmanager.ButtonsContextManager
 import io.github.alexiscomete.lapinousecond.view.contextmanager.ModalContextManager
+import io.github.alexiscomete.lapinousecond.view.discord.commands.Command
+import io.github.alexiscomete.lapinousecond.view.discord.commands.ExecutableWithArguments
+import io.github.alexiscomete.lapinousecond.view.discord.commands.getAccount
+import io.github.alexiscomete.lapinousecond.view.ui.*
 import org.javacord.api.entity.message.component.ActionRow
 import org.javacord.api.entity.message.component.TextInput
 import org.javacord.api.entity.message.component.TextInputStyle
@@ -281,7 +280,7 @@ class MarketCommand : Command(
         }
     }
 
-    class M4(name: String): ModalContextManager(name) {
+    class M4(name: String) : ModalContextManager(name) {
         override fun ex(smce: ModalSubmitEvent, c: Context) {
             val modalInteraction = smce.modalInteraction
             val opResource = modalInteraction.getTextInputValueByCustomId("citemid")
@@ -336,7 +335,7 @@ class MarketCommand : Command(
         }
     }
 
-    class M6(name: String): ModalContextManager(name) {
+    class M6(name: String) : ModalContextManager(name) {
         override fun ex(smce: ModalSubmitEvent, c: Context) {
             val modalInteraction = smce.modalInteraction
             val opResource = modalInteraction.getTextInputValueByCustomId("citemid")
@@ -391,7 +390,7 @@ class MarketCommand : Command(
         }
     }
 
-    class M7(name: String): ModalContextManager(name) {
+    class M7(name: String) : ModalContextManager(name) {
         override fun ex(smce: ModalSubmitEvent, c: Context) {
             val modalInteraction = smce.modalInteraction
             val opResource = modalInteraction.getTextInputValueByCustomId("citemid")
@@ -607,57 +606,48 @@ class MarketCommand : Command(
                             offers.add(Offer(result.getLong("id")))
                         }
                         result.close()
-                        val embedBuilder = EmbedBuilder()
-                            .setTitle("Vos offres")
-                            .setDescription("Vous avez ${offers.size} offres en cours. Vous pouvez **supprimer** une offre en cliquant sur le bouton correspondant et ainsi **récupérer vos ressources**")
-                            .setColor(Color.GREEN)
-                        val embedPagesWithInteractions = EmbedPagesWithInteractions(
-                            embedBuilder,
+                        val ui = DiscordPlayerUI(context, it.interaction)
+                        ui.setLongCustomUI(EmbedPagesWithInteractions(
                             offers,
-                            { builder: EmbedBuilder, start: Int, num: Int, offerArrayList: ArrayList<Offer> ->
+                            { start: Int, num: Int, offerArrayList: ArrayList<Offer> ->
+                                val pairs = arrayListOf<Pair<String, String>>()
                                 for (i in start until start + num) {
                                     val offer = offerArrayList[i]
-                                    builder.addInlineField(
-                                        "Offre ${i - start + 1}",
-                                        "${offer.amountRB} -> ${offer.amount} ${offer.what.show}"
+                                    pairs.add(
+                                        Pair(
+                                            "Offre ${i - start + 1}",
+                                            "${offer.amountRB} -> ${offer.amount} ${offer.what.show}"
+                                        )
                                     )
                                 }
+                                return@EmbedPagesWithInteractions pairs
                             },
-                            c2
-                        ) { offer: Offer, buttonClickEvent: ButtonClickEvent, _ ->
-                            val player2 = getAccount(slashCommand)
-                            // On vérifie si l'offre existe encore dans la base de données
-                            val resultSet =
-                                saveManager.executeQuery("SELECT id FROM offers WHERE id = ${offer.id}", true)
-                            if (resultSet == null || !resultSet.next()) {
-                                throw IllegalStateException("L'offre n'existe plus")
-                            }
-                            if (offer.who.id != player2.id) {
-                                throw IllegalArgumentException("Cette offre ne vous appartient pas. Vous ne pouvez pas la supprimer et elle ne devrait pas apparaître dans cette liste")
-                            }
-                            // give back resources
-                            player2.addResource(offer.what, offer.amount)
-                            // remove the offer from the database
-                            saveManager.execute("DELETE FROM offers WHERE id = ${offer.id}", true)
-                            // respond
-                            buttonClickEvent.buttonInteraction
-                                .createOriginalMessageUpdater()
-                                .removeAllEmbeds()
-                                .removeAllComponents()
-                                .setContent("Vous avez supprimé l'offre ${offer.id} et récupéré vos ressources")
-                                .update()
-                        }
-                        embedPagesWithInteractions.register()
-                        it.buttonInteraction
-                            .createOriginalMessageUpdater()
-                            .removeAllEmbeds()
-                            .removeAllComponents()
-                            .addEmbed(embedBuilder)
-                            .addComponents(
-                                embedPagesWithInteractions.components,
-                                ActionRow.of(embedPagesWithInteractions.buttons)
-                            )
-                            .update()
+                            { offer: Offer, playerUI: PlayerUI ->
+                                val player2 = getAccount(slashCommand)
+                                // On vérifie si l'offre existe encore dans la base de données
+                                val resultSet =
+                                    saveManager.executeQuery("SELECT id FROM offers WHERE id = ${offer.id}", true)
+                                if (resultSet == null || !resultSet.next()) {
+                                    throw IllegalStateException("L'offre n'existe plus")
+                                }
+                                if (offer.who.id != player2.id) {
+                                    throw IllegalArgumentException("Cette offre ne vous appartient pas. Vous ne pouvez pas la supprimer et elle ne devrait pas apparaître dans cette liste")
+                                }
+                                // give back resources
+                                player2.addResource(offer.what, offer.amount)
+                                // remove the offer from the database
+                                saveManager.execute("DELETE FROM offers WHERE id = ${offer.id}", true)
+                                // respond
+                                playerUI.addMessage(Message("Vous avez supprimé l'offre ${offer.id} et récupéré vos ressources"))
+                            },
+                            null,
+                            null,
+                            "Vos offres",
+                            "Vous avez ${offers.size} offres en cours. Vous pouvez **supprimer** une offre en cliquant sur le bouton correspondant et ainsi **récupérer vos ressources**",
+                            ui
+                        ))
+                        ui.updateOrSend()
+                        context.ui(ui)
                     }, { it, c2, _ ->
                         val result =
                             saveManager.executeQuery("SELECT id FROM offers", true) ?: throw IllegalStateException(
