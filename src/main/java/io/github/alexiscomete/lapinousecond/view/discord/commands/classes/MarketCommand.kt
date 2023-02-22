@@ -753,7 +753,7 @@ class MarketCommand : Command(
                     "recherche",
                     messageComponentCreateEvent,
                     c1,
-                    { it, c2, _ ->
+                    { it, _, _ ->
                         val result = saveManager.executeQuery(
                             "SELECT id FROM researches WHERE who = ${messageComponentCreateEvent.buttonInteraction.user.id}",
                             true
@@ -810,7 +810,7 @@ class MarketCommand : Command(
                         )
                         ui.updateOrSend()
                         context.ui(ui)
-                    }, { it, c2, _ ->
+                    }, { it, _, _ ->
                         val result =
                             saveManager.executeQuery("SELECT id FROM researches", true) ?: throw IllegalStateException(
                                 "No researches found"
@@ -913,7 +913,7 @@ class MarketCommand : Command(
                 "Enchères",
                 "Ici trouvez les objets les plus rares et chers"
             ) { messageComponentCreateEvent: ButtonClickEvent, c1, _ ->
-                askWhat("enchère", messageComponentCreateEvent, c1, { it, c2, _ ->
+                askWhat("enchère", messageComponentCreateEvent, c1, { it, _, _ ->
                     val result = saveManager.executeQuery(
                         "SELECT id FROM auctions WHERE who = ${messageComponentCreateEvent.buttonInteraction.user.id}",
                         true

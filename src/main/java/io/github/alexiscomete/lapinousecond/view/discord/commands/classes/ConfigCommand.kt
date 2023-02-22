@@ -8,8 +8,7 @@ import io.github.alexiscomete.lapinousecond.useful.managesave.saveManager
 import io.github.alexiscomete.lapinousecond.view.Context
 import io.github.alexiscomete.lapinousecond.view.contextFor
 import io.github.alexiscomete.lapinousecond.view.contextmanager.ModalContextManager
-import io.github.alexiscomete.lapinousecond.view.ui.EmbedPagesWithInteractions
-import io.github.alexiscomete.lapinousecond.view.ui.MenuBuilder
+import io.github.alexiscomete.lapinousecond.view.ui.*
 import io.github.alexiscomete.lapinousecond.worlds.*
 import io.github.alexiscomete.lapinousecond.worlds.dibimap.checkById
 import io.github.alexiscomete.lapinousecond.worlds.dibimap.getValueById
@@ -369,13 +368,12 @@ class ConfigCommand : Command(
                 WorldEnum.DIBIMAP -> {
                     checkById(serverId)
 
-                    fun fillEmbed(builder: EmbedBuilder, start: Int, num: Int, placesArray: ArrayList<Place>) {
-                        for (i in start until start + num) {
+                    fun fillEmbed(start: Int, num: Int, placesArray: ArrayList<Place>): List<Pair<String, String>> {
+                        return (start until start + num).map { i ->
                             val place = placesArray[i]
-                            builder.addField(
+                            Pair(
                                 place["nameRP"],
-                                "Coordonnées : ${place["x"]}, ${place["y"]}",
-                                true
+                                "Coordonnées : ${place["x"]}, ${place["y"]}"
                             )
                         }
                     }
@@ -455,37 +453,27 @@ class ConfigCommand : Command(
                             val placesPlace = arrayListOf(*placesLong.map { places[it]!! }.toTypedArray())
 
                             // 2. Afficher la liste des villes au joueur dans un embed avec interactions
-                            val embedBuilder = EmbedBuilder()
-                                .setTitle("Liste des villes")
-                                .setDescription("Sélectionnez une ville à supprimer")
-                                .setColor(Color.GREEN)
-
-                            val em = EmbedPagesWithInteractions(
-                                embedBuilder,
+                            val ui = DiscordPlayerUI(context, remove.interaction)
+                            ui.setLongCustomUI(EmbedPagesWithInteractions(
                                 placesPlace,
                                 ::fillEmbed,
-                                c1
-                            ) { place: Place, buttonClickEvent: ButtonClickEvent, _ ->
-                                // 3. Récupérer la ville sélectionnée
-                                // 4. Supprimer la ville
-                                server.removePlace(place.id)
-                                saveManager.execute("DELETE FROM places WHERE id = ${place.id}")
-                                // TODO : supprimer la ville côté joueur et le tp
-                                // 5. Envoyer un message de succès
-                                buttonClickEvent.buttonInteraction.createOriginalMessageUpdater()
-                                    .setContent("La ville a été supprimée avec succès !")
-                                    .removeAllEmbeds()
-                                    .removeAllComponents()
-                                    .update()
-                            }
-
-                            em.register()
-                            remove.buttonInteraction.createOriginalMessageUpdater()
-                                .removeAllEmbeds()
-                                .removeAllComponents()
-                                .addComponents(em.components, ActionRow.of(em.buttons))
-                                .addEmbed(embedBuilder)
-                                .update()
+                                { place: Place, playerUI: PlayerUI ->
+                                    // 3. Récupérer la ville sélectionnée
+                                    // 4. Supprimer la ville
+                                    server.removePlace(place.id)
+                                    saveManager.execute("DELETE FROM places WHERE id = ${place.id}")
+                                    // TODO : supprimer la ville côté joueur et le tp
+                                    // 5. Envoyer un message de succès
+                                    playerUI.addMessage(Message("La ville a été supprimée avec succès !"))
+                                },
+                                null,
+                                null,
+                                "Liste des villes",
+                                "Sélectionnez une ville à supprimer",
+                                ui
+                            ))
+                            ui.updateOrSend()
+                            c1.ui(ui)
                         }
                         .addButton("Modifier une ville", "Permet de modifier une ville sur la carte") { city, c1, _ ->
                             /**
