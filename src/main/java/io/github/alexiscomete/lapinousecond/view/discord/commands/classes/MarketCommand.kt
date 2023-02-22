@@ -19,7 +19,6 @@ import io.github.alexiscomete.lapinousecond.view.ui.*
 import org.javacord.api.entity.message.component.ActionRow
 import org.javacord.api.entity.message.component.TextInput
 import org.javacord.api.entity.message.component.TextInputStyle
-import org.javacord.api.entity.message.embed.EmbedBuilder
 import org.javacord.api.event.interaction.ButtonClickEvent
 import org.javacord.api.event.interaction.ModalSubmitEvent
 import org.javacord.api.interaction.SlashCommandInteraction
@@ -704,7 +703,8 @@ class MarketCommand : Command(
                                 "Offres",
                                 "Voici les offres disponibles. Le bouton correspondant vous permet d'accepter une offre et ainsi **acheter les ressources**",
                                 ui
-                            ))
+                            )
+                        )
                         ui.updateOrSend()
                         context.ui(ui)
                     }) { event, c2, _ ->
@@ -764,43 +764,50 @@ class MarketCommand : Command(
                         }
                         result.close()
                         val ui = DiscordPlayerUI(context, it.interaction)
-                        ui.setLongCustomUI(EmbedPagesWithInteractions(
-                            researches,
-                            { start: Int, num: Int, researchArrayList: ArrayList<Research> ->
-                                val pairs = arrayListOf<Pair<String, String>>()
-                                for (i in start until start + num) {
-                                    val research = researchArrayList[i]
-                                    pairs.add(Pair(
-                                        "Offre ${i - start + 1}",
-                                        "${research.amountRB} -> ${research.amount} ${research.what.show}"
-                                    ))
-                                }
-                                return@EmbedPagesWithInteractions pairs
-                            },
-                            { offer: Research, playerUI: PlayerUI ->
-                                val player2 = getAccount(slashCommand)
-                                // On vérifie si l'offre existe encore dans la base de données
-                                val resultSet =
-                                    saveManager.executeQuery("SELECT id FROM researches WHERE id = ${offer.id}", true)
-                                if (resultSet == null || !resultSet.next()) {
-                                    throw IllegalStateException("La recherche n'existe plus")
-                                }
-                                if (offer.who.id != player2.id) {
-                                    throw IllegalArgumentException("Cette recherche ne vous appartient pas. Vous ne pouvez pas la supprimer et elle ne devrait pas apparaître dans cette liste")
-                                }
-                                // give back resources
-                                player2.addMoney(offer.amountRB)
-                                // remove the offer from the database
-                                saveManager.execute("DELETE FROM researches WHERE id = ${offer.id}", true)
-                                // respond
-                                playerUI.addMessage(Message("Vous avez supprimé la recherche ${offer.id} et récupéré votre argent"))
-                            },
-                            null,
-                            null,
-                            "Vos recherches",
-                            "Vous avez ${researches.size} recherches en cours. Vous pouvez **supprimer** une recherche en cliquant sur le bouton correspondant et ainsi **récupérer votre argent**",
-                            ui
-                        ))
+                        ui.setLongCustomUI(
+                            EmbedPagesWithInteractions(
+                                researches,
+                                { start: Int, num: Int, researchArrayList: ArrayList<Research> ->
+                                    val pairs = arrayListOf<Pair<String, String>>()
+                                    for (i in start until start + num) {
+                                        val research = researchArrayList[i]
+                                        pairs.add(
+                                            Pair(
+                                                "Offre ${i - start + 1}",
+                                                "${research.amountRB} -> ${research.amount} ${research.what.show}"
+                                            )
+                                        )
+                                    }
+                                    return@EmbedPagesWithInteractions pairs
+                                },
+                                { offer: Research, playerUI: PlayerUI ->
+                                    val player2 = getAccount(slashCommand)
+                                    // On vérifie si l'offre existe encore dans la base de données
+                                    val resultSet =
+                                        saveManager.executeQuery(
+                                            "SELECT id FROM researches WHERE id = ${offer.id}",
+                                            true
+                                        )
+                                    if (resultSet == null || !resultSet.next()) {
+                                        throw IllegalStateException("La recherche n'existe plus")
+                                    }
+                                    if (offer.who.id != player2.id) {
+                                        throw IllegalArgumentException("Cette recherche ne vous appartient pas. Vous ne pouvez pas la supprimer et elle ne devrait pas apparaître dans cette liste")
+                                    }
+                                    // give back resources
+                                    player2.addMoney(offer.amountRB)
+                                    // remove the offer from the database
+                                    saveManager.execute("DELETE FROM researches WHERE id = ${offer.id}", true)
+                                    // respond
+                                    playerUI.addMessage(Message("Vous avez supprimé la recherche ${offer.id} et récupéré votre argent"))
+                                },
+                                null,
+                                null,
+                                "Vos recherches",
+                                "Vous avez ${researches.size} recherches en cours. Vous pouvez **supprimer** une recherche en cliquant sur le bouton correspondant et ainsi **récupérer votre argent**",
+                                ui
+                            )
+                        )
                         ui.updateOrSend()
                         context.ui(ui)
                     }, { it, c2, _ ->
@@ -813,61 +820,57 @@ class MarketCommand : Command(
                             researches.add(Research(result.getLong("id")))
                         }
                         result.close()
-                        val embedBuilder = EmbedBuilder()
-                            .setTitle("Les recherches")
-                            .setDescription("Voici les recherches en cours")
-                            .setColor(Color.ORANGE)
-                        val embedPagesWithInteractions = EmbedPagesWithInteractions(
-                            embedBuilder,
-                            researches,
-                            { builder: EmbedBuilder, start: Int, num: Int, researchArrayList: ArrayList<Research> ->
-                                for (i in start until start + num) {
-                                    val research = researchArrayList[i]
-                                    builder.addInlineField(
-                                        "Recherche ${i - start} par <@${research.who.id}>",
-                                        "${research.amount} ${research.what.show} -> ${research.amountRB}"
-                                    )
-                                }
-                            },
-                            c2
-                        ) { research: Research, buttonClickEvent: ButtonClickEvent, _ ->
-                            val player2 = getAccount(slashCommand)
-                            // On vérifie si l'offre existe encore dans la base de données
-                            val resultSet =
-                                saveManager.executeQuery("SELECT id FROM researches WHERE id = ${research.id}", true)
-                            if (resultSet == null || !resultSet.next()) {
-                                throw IllegalStateException("La recherche n'existe plus")
-                            }
-                            if (research.who.id == player2.id) {
-                                throw IllegalArgumentException("Vous ne pouvez pas répondre à votre propre recherche")
-                            }
-                            if (!player2.hasResource(research.what, research.amount)) {
-                                throw IllegalArgumentException("Vous n'avez pas assez de ${research.what.show} pour répondre à cette recherche")
-                            }
-                            player2.removeResource(research.what, research.amount)
-                            research.who.addResource(research.what, research.amount)
-                            research.who.addMoney(research.amountRB)
-                            // remove the research from the database
-                            saveManager.execute("DELETE FROM researches WHERE id = ${research.id}", true)
-                            // respond
-                            buttonClickEvent.buttonInteraction
-                                .createOriginalMessageUpdater()
-                                .removeAllEmbeds()
-                                .removeAllComponents()
-                                .setContent("Vous avez répondu à la recherche de <@${research.who.id}>")
-                                .update()
-                        }
-                        embedPagesWithInteractions.register()
-                        it.buttonInteraction
-                            .createOriginalMessageUpdater()
-                            .removeAllEmbeds()
-                            .removeAllComponents()
-                            .addEmbed(embedBuilder)
-                            .addComponents(
-                                embedPagesWithInteractions.components,
-                                ActionRow.of(embedPagesWithInteractions.buttons)
+                        val ui = DiscordPlayerUI(context, it.interaction)
+                        ui.setLongCustomUI(
+                            EmbedPagesWithInteractions(
+                                researches,
+                                { start: Int, num: Int, researchArrayList: ArrayList<Research> ->
+                                    val pairs = arrayListOf<Pair<String, String>>()
+                                    for (i in start until start + num) {
+                                        val research = researchArrayList[i]
+                                        pairs.add(
+                                            Pair(
+                                                "Recherche ${i - start} par <@${research.who.id}>",
+                                                "${research.amount} ${research.what.show} -> ${research.amountRB}"
+                                            )
+                                        )
+                                    }
+                                    return@EmbedPagesWithInteractions pairs
+                                },
+                                { research: Research, playerUI: PlayerUI ->
+                                    val player2 = getAccount(slashCommand)
+                                    // On vérifie si l'offre existe encore dans la base de données
+                                    val resultSet =
+                                        saveManager.executeQuery(
+                                            "SELECT id FROM researches WHERE id = ${research.id}",
+                                            true
+                                        )
+                                    if (resultSet == null || !resultSet.next()) {
+                                        throw IllegalStateException("La recherche n'existe plus")
+                                    }
+                                    if (research.who.id == player2.id) {
+                                        throw IllegalArgumentException("Vous ne pouvez pas répondre à votre propre recherche")
+                                    }
+                                    if (!player2.hasResource(research.what, research.amount)) {
+                                        throw IllegalArgumentException("Vous n'avez pas assez de ${research.what.show} pour répondre à cette recherche")
+                                    }
+                                    player2.removeResource(research.what, research.amount)
+                                    research.who.addResource(research.what, research.amount)
+                                    research.who.addMoney(research.amountRB)
+                                    // remove the research from the database
+                                    saveManager.execute("DELETE FROM researches WHERE id = ${research.id}", true)
+                                    // respond
+                                    playerUI.addMessage(Message("Vous avez répondu à la recherche ${research.id}"))
+                                },
+                                null,
+                                null,
+                                "Les recherches",
+                                "Voici les recherches en cours",
+                                ui
                             )
-                            .update()
+                        )
+                        ui.updateOrSend()
+                        context.ui(ui)
                     }) { event, c2, _ ->
                     val id = generateUniqueID().toString()
 
@@ -920,62 +923,55 @@ class MarketCommand : Command(
                         auctions.add(Auction(result.getLong("id")))
                     }
                     result.close()
-                    val embedBuilder = EmbedBuilder()
-                        .setTitle("Vos enchères")
-                        .setDescription("Vous avez ${auctions.size} offres en cours. Vous pouvez **supprimer** une offre en cliquant sur le bouton correspondant et ainsi **récupérer vos ressources**")
-                        .setColor(Color.GREEN)
-                    val embedPagesWithInteractions = EmbedPagesWithInteractions(
-                        embedBuilder,
-                        auctions,
-                        { builder: EmbedBuilder, start: Int, num: Int, auctionArrayList: ArrayList<Auction> ->
-                            for (i in start until start + num) {
-                                val auction = auctionArrayList[i]
-                                builder.addInlineField(
-                                    "Enchère ${i - start + 1}",
-                                    "${auction.amountRB} -> ${auction.amount} ${auction.what.show}"
-                                )
-                            }
-                        },
-                        c2
-                    ) { auction: Auction, buttonClickEvent: ButtonClickEvent, _ ->
-                        val player2 = getAccount(slashCommand)
-                        // On vérifie si l'enchère existe encore dans la base de données
-                        val resultSet =
-                            saveManager.executeQuery("SELECT id FROM auctions WHERE id = ${auction.id}", true)
-                        if (resultSet == null || !resultSet.next()) {
-                            throw IllegalStateException("L'enchère n'existe plus")
-                        }
-                        if (auction.who.id != player2.id) {
-                            throw IllegalArgumentException("Cette enchère ne vous appartient pas. Vous ne pouvez pas la terminer et elle ne devrait pas apparaître dans cette liste")
-                        }
-                        if (auction.who.id == auction.whoMax.id) {
-                            throw IllegalArgumentException("Vous êtes le meilleur enchérisseur. Vous ne pouvez pas terminer cette enchère")
-                        }
-                        // give the auction money
-                        player2.addMoney(auction.amountRB)
-                        // and the resources
-                        auction.whoMax.addResource(auction.what, auction.amount)
-                        // remove the auction from the database
-                        saveManager.execute("DELETE FROM auctions WHERE id = ${auction.id}", true)
-                        // respond
-                        buttonClickEvent.buttonInteraction
-                            .createOriginalMessageUpdater()
-                            .removeAllEmbeds()
-                            .removeAllComponents()
-                            .setContent("Vous avez terminé l'enchère ${auction.id} et récupéré l'argent")
-                            .update()
-                    }
-                    embedPagesWithInteractions.register()
-                    it.buttonInteraction
-                        .createOriginalMessageUpdater()
-                        .removeAllEmbeds()
-                        .removeAllComponents()
-                        .addEmbed(embedBuilder)
-                        .addComponents(
-                            embedPagesWithInteractions.components,
-                            ActionRow.of(embedPagesWithInteractions.buttons)
+                    val ui = DiscordPlayerUI(context, it.interaction)
+                    ui.setLongCustomUI(
+                        EmbedPagesWithInteractions(
+                            auctions,
+                            { start: Int, num: Int, auctionArrayList: ArrayList<Auction> ->
+                                val pairs = arrayListOf<Pair<String, String>>()
+                                for (i in start until start + num) {
+                                    val auction = auctionArrayList[i]
+                                    pairs.add(
+                                        Pair(
+                                            "Enchère ${i - start + 1}",
+                                            "${auction.amountRB} -> ${auction.amount} ${auction.what.show}"
+                                        )
+                                    )
+                                }
+                                return@EmbedPagesWithInteractions pairs
+                            },
+                            { auction: Auction, playerUI: PlayerUI ->
+                                val player2 = getAccount(slashCommand)
+                                // On vérifie si l'enchère existe encore dans la base de données
+                                val resultSet =
+                                    saveManager.executeQuery("SELECT id FROM auctions WHERE id = ${auction.id}", true)
+                                if (resultSet == null || !resultSet.next()) {
+                                    throw IllegalStateException("L'enchère n'existe plus")
+                                }
+                                if (auction.who.id != player2.id) {
+                                    throw IllegalArgumentException("Cette enchère ne vous appartient pas. Vous ne pouvez pas la terminer et elle ne devrait pas apparaître dans cette liste")
+                                }
+                                if (auction.who.id == auction.whoMax.id) {
+                                    throw IllegalArgumentException("Vous êtes le meilleur enchérisseur. Vous ne pouvez pas terminer cette enchère")
+                                }
+                                // give the auction money
+                                player2.addMoney(auction.amountRB)
+                                // and the resources
+                                auction.whoMax.addResource(auction.what, auction.amount)
+                                // remove the auction from the database
+                                saveManager.execute("DELETE FROM auctions WHERE id = ${auction.id}", true)
+                                // respond
+                                playerUI.addMessage(Message("Vous avez terminé l'enchère ${auction.id} et récupéré l'argent"))
+                            },
+                            null,
+                            null,
+                            "Vos enchères",
+                            "Vous avez ${auctions.size} offres en cours. Vous pouvez **supprimer** une offre en cliquant sur le bouton correspondant et ainsi **récupérer vos ressources**",
+                            ui
                         )
-                        .update()
+                    )
+                    ui.updateOrSend()
+                    context.ui(ui)
                 }, { it, _, _ ->
                     val result =
                         saveManager.executeQuery("SELECT id FROM auctions", true) ?: throw IllegalStateException(
@@ -986,60 +982,53 @@ class MarketCommand : Command(
                         auctions.add(Auction(result.getLong("id")))
                     }
                     result.close()
-                    val embedBuilder = EmbedBuilder()
-                        .setTitle("Les enchères")
-                        .setDescription("Voici les enchères en cours. Les objets rares sont ici !")
-                        .setColor(Color.ORANGE)
-                    val embedPagesWithInteractions = EmbedPagesWithInteractions(
-                        embedBuilder,
-                        auctions,
-                        { builder: EmbedBuilder, start: Int, num: Int, auctionArrayList: ArrayList<Auction> ->
-                            for (i in start until start + num) {
-                                val research = auctionArrayList[i]
-                                builder.addInlineField(
-                                    "Enchère ${i - start} par <@${research.who.id}>",
-                                    "${research.amountRB} de <@${research.whoMax.id}> -> ${research.amount} ${research.what.show} "
-                                )
-                            }
-                        },
-                        c1
-                    ) { auction: Auction, buttonClickEvent: ButtonClickEvent, _ ->
-                        val player2 = getAccount(slashCommand)
-                        // On vérifie si l'offre existe encore dans la base de données
-                        val resultSet =
-                            saveManager.executeQuery("SELECT id FROM auctions WHERE id = ${auction.id}", true)
-                        if (resultSet == null || !resultSet.next()) {
-                            throw IllegalStateException("L'enchère n'existe plus")
-                        }
-                        if (auction.who.id == player2.id || auction.whoMax.id == player2.id) {
-                            throw IllegalArgumentException("Vous ne pouvez pas répondre à votre propre enchère")
-                        }
-                        if (!player2.hasMoney(auction.amountRB + 100.0)) {
-                            throw IllegalArgumentException("Vous n'avez pas assez d'argent pour répondre à cette enchère (il faut enchérir de 100 ${Resource.RABBIT_COIN.show})")
-                        }
-                        player2.removeMoney(auction.amountRB + 100.0)
-                        auction.whoMax.addMoney(auction.amountRB)
-                        auction["whoMax"] = player2.id.toString()
-                        auction["amountRB"] = (auction.amountRB + 100.0).toString()
-                        // respond
-                        buttonClickEvent.buttonInteraction
-                            .createOriginalMessageUpdater()
-                            .removeAllEmbeds()
-                            .removeAllComponents()
-                            .setContent("Vous avez répondu à l'enchère de ${auction.amountRB} ${Resource.RABBIT_COIN.show}")
-                            .update()
-                    }
-                    embedPagesWithInteractions.register()
-                    it.buttonInteraction
-                        .createOriginalMessageUpdater()
-                        .removeAllEmbeds()
-                        .removeAllComponents()
-                        .addEmbed(embedBuilder)
-                        .addComponents(
-                            embedPagesWithInteractions.components,
-                            ActionRow.of(embedPagesWithInteractions.buttons)
+                    val ui = DiscordPlayerUI(context, it.interaction)
+                    ui.setLongCustomUI(
+                        EmbedPagesWithInteractions(
+                            auctions,
+                            { start: Int, num: Int, auctionArrayList: ArrayList<Auction> ->
+                                val pairs = arrayListOf<Pair<String, String>>()
+                                for (i in start until start + num) {
+                                    val research = auctionArrayList[i]
+                                    pairs.add(
+                                        Pair(
+                                            "Enchère ${i - start} par <@${research.who.id}>",
+                                            "${research.amountRB} de <@${research.whoMax.id}> -> ${research.amount} ${research.what.show} "
+                                        )
+                                    )
+                                }
+                                return@EmbedPagesWithInteractions pairs
+                            },
+                            { auction: Auction, playerUI: PlayerUI ->
+                                val player2 = getAccount(slashCommand)
+                                // On vérifie si l'offre existe encore dans la base de données
+                                val resultSet =
+                                    saveManager.executeQuery("SELECT id FROM auctions WHERE id = ${auction.id}", true)
+                                if (resultSet == null || !resultSet.next()) {
+                                    throw IllegalStateException("L'enchère n'existe plus")
+                                }
+                                if (auction.who.id == player2.id || auction.whoMax.id == player2.id) {
+                                    throw IllegalArgumentException("Vous ne pouvez pas répondre à votre propre enchère")
+                                }
+                                if (!player2.hasMoney(auction.amountRB + 100.0)) {
+                                    throw IllegalArgumentException("Vous n'avez pas assez d'argent pour répondre à cette enchère (il faut enchérir de 100 ${Resource.RABBIT_COIN.show})")
+                                }
+                                player2.removeMoney(auction.amountRB + 100.0)
+                                auction.whoMax.addMoney(auction.amountRB)
+                                auction["whoMax"] = player2.id.toString()
+                                auction["amountRB"] = (auction.amountRB + 100.0).toString()
+                                // respond
+                                playerUI.addMessage(Message("Vous avez répondu à l'enchère de ${auction.amountRB} ${Resource.RABBIT_COIN.show}"))
+                            },
+                            null,
+                            null,
+                            "Les enchères",
+                            "Voici les enchères en cours. Les objets rares sont ici !",
+                            ui
                         )
-                        .update()
+                    )
+                    ui.updateOrSend()
+                    context.ui(ui)
                 }) { event, c2, _ ->
                     val id = generateUniqueID().toString()
 
