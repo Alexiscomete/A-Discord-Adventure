@@ -1,13 +1,13 @@
 package io.github.alexiscomete.lapinousecond.view.discord.commands.classes
 
-import io.github.alexiscomete.lapinousecond.view.discord.commands.Command
-import io.github.alexiscomete.lapinousecond.view.discord.commands.ExecutableWithArguments
-import io.github.alexiscomete.lapinousecond.view.discord.commands.getAccount
 import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
 import io.github.alexiscomete.lapinousecond.useful.managesave.saveManager
 import io.github.alexiscomete.lapinousecond.view.Context
 import io.github.alexiscomete.lapinousecond.view.contextFor
 import io.github.alexiscomete.lapinousecond.view.contextmanager.ModalContextManager
+import io.github.alexiscomete.lapinousecond.view.discord.commands.Command
+import io.github.alexiscomete.lapinousecond.view.discord.commands.ExecutableWithArguments
+import io.github.alexiscomete.lapinousecond.view.discord.commands.getAccount
 import io.github.alexiscomete.lapinousecond.view.ui.*
 import io.github.alexiscomete.lapinousecond.worlds.*
 import io.github.alexiscomete.lapinousecond.worlds.dibimap.checkById
@@ -16,10 +16,8 @@ import io.github.alexiscomete.lapinousecond.worlds.dibimap.isDibimap
 import org.javacord.api.entity.message.component.ActionRow
 import org.javacord.api.entity.message.component.TextInput
 import org.javacord.api.entity.message.component.TextInputStyle
-import org.javacord.api.entity.message.embed.EmbedBuilder
 import org.javacord.api.entity.permission.PermissionType
 import org.javacord.api.entity.server.Server
-import org.javacord.api.event.interaction.ButtonClickEvent
 import org.javacord.api.event.interaction.ModalSubmitEvent
 import org.javacord.api.interaction.SlashCommandInteraction
 import java.awt.Color
@@ -454,24 +452,26 @@ class ConfigCommand : Command(
 
                             // 2. Afficher la liste des villes au joueur dans un embed avec interactions
                             val ui = DiscordPlayerUI(context, remove.interaction)
-                            ui.setLongCustomUI(EmbedPagesWithInteractions(
-                                placesPlace,
-                                ::fillEmbed,
-                                { place: Place, playerUI: PlayerUI ->
-                                    // 3. Récupérer la ville sélectionnée
-                                    // 4. Supprimer la ville
-                                    server.removePlace(place.id)
-                                    saveManager.execute("DELETE FROM places WHERE id = ${place.id}")
-                                    // TODO : supprimer la ville côté joueur et le tp
-                                    // 5. Envoyer un message de succès
-                                    playerUI.addMessage(Message("La ville a été supprimée avec succès !"))
-                                },
-                                null,
-                                null,
-                                "Liste des villes",
-                                "Sélectionnez une ville à supprimer",
-                                ui
-                            ))
+                            ui.setLongCustomUI(
+                                EmbedPagesWithInteractions(
+                                    placesPlace,
+                                    ::fillEmbed,
+                                    { place: Place, playerUI: PlayerUI ->
+                                        // 3. Récupérer la ville sélectionnée
+                                        // 4. Supprimer la ville
+                                        server.removePlace(place.id)
+                                        saveManager.execute("DELETE FROM places WHERE id = ${place.id}")
+                                        // TODO : supprimer la ville côté joueur et le tp
+                                        // 5. Envoyer un message de succès
+                                        playerUI.addMessage(Message("La ville a été supprimée avec succès !"))
+                                    },
+                                    null,
+                                    null,
+                                    "Liste des villes",
+                                    "Sélectionnez une ville à supprimer",
+                                    ui
+                                )
+                            )
                             ui.updateOrSend()
                             c1.ui(ui)
                         }
@@ -491,117 +491,114 @@ class ConfigCommand : Command(
                             val placesPlace = arrayListOf(*placesLong.map { places[it]!! }.toTypedArray())
 
                             // 2. Afficher la liste des villes au joueur dans un embed avec interactions
-                            val embedBuilder = EmbedBuilder()
-                                .setTitle("Liste des villes")
-                                .setDescription("Sélectionnez une ville à modifier")
-                                .setColor(Color.GREEN)
+                            val ui = DiscordPlayerUI(context, city.interaction)
+                            ui.setLongCustomUI(
+                                EmbedPagesWithInteractions(
+                                    placesPlace,
+                                    ::fillEmbed,
+                                    { place: Place, _: PlayerUI ->
+                                        // 3. Récupérer la ville sélectionnée
+                                        // 4. Afficher les options de modification
 
-                            val em = EmbedPagesWithInteractions(
-                                embedBuilder,
-                                placesPlace,
-                                ::fillEmbed,
-                                c1
-                            ) { place: Place, buttonClickEvent: ButtonClickEvent, c2 ->
-                                // 3. Récupérer la ville sélectionnée
-                                // 4. Afficher les options de modification
+                                        val menu = MenuBuilder(
+                                            "Modification de la ville ${place["nameRP"]}",
+                                            "Sélectionner ce qu'il faut modifier :",
+                                            Color.YELLOW,
+                                            c1
+                                        )
+                                            .addButton(
+                                                "Modifier le nom RP du lieu",
+                                                "Modifiable à tout moment, le nom de votre ville est personnalisable."
+                                            ) { name, c3, _ ->
+                                                val id = generateUniqueID()
 
-                                MenuBuilder(
-                                    "Modification de la ville ${place["nameRP"]}",
-                                    "Sélectionner ce qu'il faut modifier :",
-                                    Color.YELLOW,
-                                    c2
+                                                c3.modal(
+                                                    ModalModif(
+                                                        id.toString(),
+                                                        place,
+                                                        "nameRP"
+                                                    )
+                                                )
+
+                                                name.buttonInteraction.respondWithModal(
+                                                    id.toString(),
+                                                    "Mise à jour du nom RP de la ville",
+                                                    ActionRow.of(
+                                                        TextInput.create(
+                                                            TextInputStyle.SHORT,
+                                                            "cnameRPid",
+                                                            "Nom de la ville",
+                                                            true
+                                                        )
+                                                    )
+                                                )
+                                            }
+                                            .addButton(
+                                                "Modifier la description du lieu",
+                                                "Modifiable à tout moment, la description de votre ville est la deuxième chose que voix une personne quand il regarde le lieu."
+                                            ) { description, c3, _ ->
+                                                val id = generateUniqueID()
+
+                                                c3.modal(
+                                                    ModalModif(
+                                                        id.toString(),
+                                                        place,
+                                                        "description"
+                                                    )
+                                                )
+
+                                                description.buttonInteraction.respondWithModal(
+                                                    id.toString(),
+                                                    "Mise à jour de la description de la ville",
+                                                    ActionRow.of(
+                                                        TextInput.create(
+                                                            TextInputStyle.PARAGRAPH,
+                                                            "cdescriptionid",
+                                                            "Description de la ville",
+                                                            true
+                                                        )
+                                                    )
+                                                )
+                                            }
+                                            .addButton(
+                                                "Modifier le message de bienvenue",
+                                                "Modifiable à tout moment, le message de bienvenue est nécessaire pour mettre l'ambiance : ville magique ? Tech ? Abandonné ? Repaire de Pirates ?"
+                                            ) { welcome, c3, _ ->
+                                                val id = generateUniqueID()
+
+                                                c3.modal(
+                                                    ModalModif(
+                                                        id.toString(),
+                                                        place,
+                                                        "welcome"
+                                                    )
+                                                )
+
+                                                welcome.buttonInteraction.respondWithModal(
+                                                    id.toString(),
+                                                    "Mise à jour du message de bienvenue",
+                                                    ActionRow.of(
+                                                        TextInput.create(
+                                                            TextInputStyle.PARAGRAPH,
+                                                            "cwelcomeid",
+                                                            "Message de bienvenue",
+                                                            true
+                                                        )
+                                                    )
+                                                )
+                                            }
+                                            .messageBuilder()
+                                        menu.send(slashCommand.channel.get())
+                                    },
+                                    null,
+                                    null,
+                                    "Liste des villes",
+                                    "Sélectionnez une ville à modifier",
+                                    ui
                                 )
-                                    .addButton(
-                                        "Modifier le nom RP du lieu",
-                                        "Modifiable à tout moment, le nom de votre ville est personnalisable."
-                                    ) { name, c3, _ ->
-                                        val id = generateUniqueID()
-
-                                        c3.modal(
-                                            ModalModif(
-                                                id.toString(),
-                                                place,
-                                                "nameRP"
-                                            )
-                                        )
-
-                                        name.buttonInteraction.respondWithModal(
-                                            id.toString(),
-                                            "Mise à jour du nom RP de la ville",
-                                            ActionRow.of(
-                                                TextInput.create(
-                                                    TextInputStyle.SHORT,
-                                                    "cnameRPid",
-                                                    "Nom de la ville",
-                                                    true
-                                                )
-                                            )
-                                        )
-                                    }
-                                    .addButton(
-                                        "Modifier la description du lieu",
-                                        "Modifiable à tout moment, la description de votre ville est la deuxième chose que voix une personne quand il regarde le lieu."
-                                    ) { description, c3, _ ->
-                                        val id = generateUniqueID()
-
-                                        c3.modal(
-                                            ModalModif(
-                                                id.toString(),
-                                                place,
-                                                "description"
-                                            )
-                                        )
-
-                                        description.buttonInteraction.respondWithModal(
-                                            id.toString(),
-                                            "Mise à jour de la description de la ville",
-                                            ActionRow.of(
-                                                TextInput.create(
-                                                    TextInputStyle.PARAGRAPH,
-                                                    "cdescriptionid",
-                                                    "Description de la ville",
-                                                    true
-                                                )
-                                            )
-                                        )
-                                    }
-                                    .addButton(
-                                        "Modifier le message de bienvenue",
-                                        "Modifiable à tout moment, le message de bienvenue est nécessaire pour mettre l'ambiance : ville magique ? Tech ? Abandonné ? Repaire de Pirates ?"
-                                    ) { welcome, c3, _ ->
-                                        val id = generateUniqueID()
-
-                                        c3.modal(
-                                            ModalModif(
-                                                id.toString(),
-                                                place,
-                                                "welcome"
-                                            )
-                                        )
-
-                                        welcome.buttonInteraction.respondWithModal(
-                                            id.toString(),
-                                            "Mise à jour du message de bienvenue",
-                                            ActionRow.of(
-                                                TextInput.create(
-                                                    TextInputStyle.PARAGRAPH,
-                                                    "cwelcomeid",
-                                                    "Message de bienvenue",
-                                                    true
-                                                )
-                                            )
-                                        )
-                                    }
-                                    .modif(buttonClickEvent)
-                            }
-
-                            em.register()
-                            city.buttonInteraction.createOriginalMessageUpdater()
-                                .removeAllEmbeds()
-                                .removeAllComponents()
-                                .addComponents(em.components, ActionRow.of(em.buttons))
-                                .addEmbed(embedBuilder)
-                                .update()
+                            )
+                            ui.updateOrSend()
+                            c1.ui(ui)
                         }
                         .responder(slashCommand)
 

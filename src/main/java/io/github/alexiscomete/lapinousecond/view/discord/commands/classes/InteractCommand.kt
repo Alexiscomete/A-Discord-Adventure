@@ -1,18 +1,17 @@
 package io.github.alexiscomete.lapinousecond.view.discord.commands.classes
 
 import io.github.alexiscomete.lapinousecond.api
-import io.github.alexiscomete.lapinousecond.view.discord.commands.Command
-import io.github.alexiscomete.lapinousecond.view.discord.commands.ExecutableWithArguments
-import io.github.alexiscomete.lapinousecond.view.discord.commands.getAccount
 import io.github.alexiscomete.lapinousecond.entity.Player
-import io.github.alexiscomete.lapinousecond.view.ui.EmbedPagesWithInteractions
-import io.github.alexiscomete.lapinousecond.view.ui.MenuBuilder
 import io.github.alexiscomete.lapinousecond.entity.resources.Resource
 import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
 import io.github.alexiscomete.lapinousecond.useful.managesave.saveManager
 import io.github.alexiscomete.lapinousecond.view.Context
 import io.github.alexiscomete.lapinousecond.view.contextFor
 import io.github.alexiscomete.lapinousecond.view.contextmanager.ModalContextManager
+import io.github.alexiscomete.lapinousecond.view.discord.commands.Command
+import io.github.alexiscomete.lapinousecond.view.discord.commands.ExecutableWithArguments
+import io.github.alexiscomete.lapinousecond.view.discord.commands.getAccount
+import io.github.alexiscomete.lapinousecond.view.ui.*
 import io.github.alexiscomete.lapinousecond.worlds.WorldEnum
 import io.github.alexiscomete.lapinousecond.worlds.buildings.Building
 import io.github.alexiscomete.lapinousecond.worlds.buildings.Buildings
@@ -27,6 +26,7 @@ import org.javacord.api.entity.server.invite.Invite
 import org.javacord.api.entity.server.invite.InviteBuilder
 import org.javacord.api.event.interaction.ButtonClickEvent
 import org.javacord.api.event.interaction.ModalSubmitEvent
+import org.javacord.api.interaction.Interaction
 import org.javacord.api.interaction.SlashCommandInteraction
 import java.awt.Color
 
@@ -182,16 +182,13 @@ class InteractCommandBase : Command(
                  * @param building Building - The building that the player is entering
                  * @param buttonClickEvent The event that triggered the button click.
                  */
-                fun enterInBuilding(building: Building, buttonClickEvent: ButtonClickEvent) {
+                fun enterInBuilding(building: Building, buttonClickEvent: PlayerUI) {
                     player["place_${world.progName}_type"] = "building"
                     player["place_${world.progName}_building_id"] = building.id.toString()
-                    buttonClickEvent.buttonInteraction.createImmediateResponder()
-                        .setContent("Vous êtes maintenant dans le bâtiment ${building["nameRP"]} !")
-                        .setFlags(MessageFlag.EPHEMERAL)
-                        .respond()
+                    buttonClickEvent.addMessage(Message("Vous êtes maintenant dans le bâtiment ${building["nameRP"]} !"))
                 }
 
-                fun helpBuilding(building: Building, buttonClickEvent: ButtonClickEvent) {
+                fun helpBuilding(building: Building, buttonClickEvent: PlayerUI) {
                     // Etape 1 : demander au joueur le montant à entrer en montrant le montant nécessaire
                     // Etape 2 : vérifier que le joueur a assez d'argent et que le montant ne dépasse pas le montant nécessaire
                     // Etape 3 : retirer l'argent du joueur et ajouter l'argent au bâtiment
@@ -221,39 +218,38 @@ class InteractCommandBase : Command(
                 }
 
                 fun sendBuildingsInEmbed(
-                    embedBuilder: EmbedBuilder,
+                    title: String,
+                    description: String,
                     buildings: ArrayList<Building>,
-                    it: ButtonClickEvent
+                    context: Context,
+                    city: Interaction
                 ) {
-                    val embedPagesWithInteractions = EmbedPagesWithInteractions(
-                        embedBuilder,
-                        buildings,
-                        { builder: EmbedBuilder, start: Int, max: Int, buildingsL: ArrayList<Building> ->
-                            for (i in start until max) {
-                                val building = buildingsL[i]
-                                builder.addField(
-                                    building.title(),
-                                    building.descriptionShort()
-                                )
-                            }
-                        },
-                        context
-                    ) { building: Building, buttonClickEvent: ButtonClickEvent, _: Context ->
-                        if (building["build_status"] == "building") {
-                            helpBuilding(building, buttonClickEvent)
-                        } else {
-                            enterInBuilding(building, buttonClickEvent)
-                        }
-                    }
-                    embedPagesWithInteractions.register()
-                    it.buttonInteraction.createImmediateResponder()
-                        .addEmbed(embedBuilder)
-                        .addComponents(
-                            ActionRow.of(embedPagesWithInteractions.buttons),
-                            embedPagesWithInteractions.components
+                    val ui = DiscordPlayerUI(context, city)
+                    ui.setLongCustomUI(
+                        EmbedPagesWithInteractions(
+                            buildings,
+                            { start: Int, max: Int, buildingsL: ArrayList<Building> ->
+                                return@EmbedPagesWithInteractions (start until max).map { i ->
+                                    val building = buildingsL[i]
+                                    Pair(building.title(), building.descriptionShort())
+                                }
+                            },
+                            { building: Building, playerUI: PlayerUI ->
+                                if (building["build_status"] == "building") {
+                                    helpBuilding(building, playerUI)
+                                } else {
+                                    enterInBuilding(building, playerUI)
+                                }
+                            },
+                            null,
+                            null,
+                            title,
+                            description,
+                            ui
                         )
-                        .setFlags(MessageFlag.EPHEMERAL)
-                        .respond()
+                    )
+                    ui.updateOrSend()
+                    context.ui(ui)
                 }
 
                 MenuBuilder(
