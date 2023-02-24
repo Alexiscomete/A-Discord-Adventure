@@ -12,6 +12,7 @@ import io.github.alexiscomete.lapinousecond.view.discord.commands.Command
 import io.github.alexiscomete.lapinousecond.view.discord.commands.ExecutableWithArguments
 import io.github.alexiscomete.lapinousecond.view.discord.commands.getAccount
 import io.github.alexiscomete.lapinousecond.view.ui.*
+import io.github.alexiscomete.lapinousecond.view.ui.longuis.MenuBuilderUI
 import io.github.alexiscomete.lapinousecond.worlds.WorldEnum
 import io.github.alexiscomete.lapinousecond.worlds.buildings.Building
 import io.github.alexiscomete.lapinousecond.worlds.buildings.Buildings
@@ -292,11 +293,13 @@ class InteractCommandBase : Command(
                                 "Vous pouvez voir les bâtiments de la ville ${place["nameRP"]} en cliquant sur ce bouton et interagir avec eux"
                             ) { it, _, _ ->
                                 val buildings = Buildings.loadBuildings(place["buildings"])
-                                val embedBuilder = EmbedBuilder()
-                                    .setTitle("Bâtiments de la ville ${place["nameRP"]}")
-                                    .setDescription("Liste de tous les bâtiments de la ville ${place["nameRP"]}.")
-                                    .setColor(Color.BLUE)
-                                sendBuildingsInEmbed(embedBuilder, buildings, it)
+                                sendBuildingsInEmbed(
+                                    "Bâtiments de la ville ${place["nameRP"]}",
+                                    "Liste de tous les bâtiments de la ville ${place["nameRP"]}.",
+                                    buildings,
+                                    c1,
+                                    it.interaction
+                                )
                             }
                             .addButton(
                                 "Vos bâtiments",
@@ -318,35 +321,32 @@ class InteractCommandBase : Command(
                                         { building: Building, playerUI: PlayerUI ->
                                             if (building["build_status"] == "building") {
                                                 // annuler ou aider le bâtiment
-                                                MenuBuilder(
-                                                    "Bâtiment ${building["nameRP"]}",
-                                                    "Que voulez-vous faire avec le bâtiment ${building["nameRP"]} ?",
-                                                    Color.BLUE,
-                                                    c3
+                                                playerUI.setLongCustomUI(
+                                                    MenuBuilderUI(
+                                                        "Bâtiment ${building["nameRP"]}",
+                                                        "Que voulez-vous faire avec le bâtiment ${building["nameRP"]} ?",
+                                                        playerUI
+                                                    )
+                                                        .addButton(
+                                                            "Annuler le bâtiment",
+                                                            "Vous annulez le bâtiment ${building["nameRP"]}"
+                                                        ) { playerUI1: PlayerUI ->
+                                                            // on le retire de la bdd
+                                                            saveManager.execute(
+                                                                "DELETE FROM buildings WHERE id = ${building.id}",
+                                                                true
+                                                            )
+                                                            playerUI1.addMessage(Message("Vous avez annulé le bâtiment !"))
+                                                        }
+                                                        .addButton(
+                                                            "Aider le bâtiment",
+                                                            "Vous aidez le bâtiment ${building["nameRP"]}"
+                                                        ) { playerUI1: PlayerUI ->
+                                                            helpBuilding(building, playerUI1)
+                                                        }
                                                 )
-                                                    .addButton(
-                                                        "Annuler le bâtiment",
-                                                        "Vous annulez le bâtiment ${building["nameRP"]}"
-                                                    ) { it, _, _ ->
-                                                        // on le retire de la bdd
-                                                        saveManager.execute(
-                                                            "DELETE FROM buildings WHERE id = ${building.id}",
-                                                            true
-                                                        )
-                                                        it.buttonInteraction.createImmediateResponder()
-                                                            .setContent("Vous avez annulé le bâtiment !")
-                                                            .setFlags(MessageFlag.EPHEMERAL)
-                                                            .respond()
-                                                    }
-                                                    .addButton(
-                                                        "Aider le bâtiment",
-                                                        "Vous aidez le bâtiment ${building["nameRP"]}"
-                                                    ) { it, _, _ ->
-                                                        helpBuilding(building, it)
-                                                    }
-                                                    .modif(buttonClickEvent)
                                             } else {
-                                                enterInBuilding(building, buttonClickEvent)
+                                                enterInBuilding(building, playerUI)
                                             }
                                         },
                                         null,
@@ -362,15 +362,17 @@ class InteractCommandBase : Command(
                             .addButton(
                                 "Bâtiments en construction",
                                 "Vous pouvez voir les bâtiments en construction dans la ville en cliquant sur ce bouton et interagir avec eux"
-                            ) { it, _, _ ->
+                            ) { it, eyufg, _ ->
                                 val buildings = Buildings.loadBuildings(place["buildings"])
                                 // remove if not in construction
                                 buildings.removeIf { building -> building["build_status"] != "building" }
-                                val embedBuilder = EmbedBuilder()
-                                    .setTitle("Bâtiments en construction de la ville ${place["nameRP"]}")
-                                    .setDescription("Liste de tous les bâtiments en construction de la ville ${place["nameRP"]}.")
-                                    .setColor(Color.BLUE)
-                                sendBuildingsInEmbed(embedBuilder, buildings, it)
+                                sendBuildingsInEmbed(
+                                    "Bâtiments en construction de la ville ${place["nameRP"]}",
+                                    "Liste de tous les bâtiments en construction de la ville ${place["nameRP"]}.",
+                                    buildings,
+                                    eyufg,
+                                    it.interaction
+                                )
                             }
                             .addButton(
                                 "Construire un bâtiment",
