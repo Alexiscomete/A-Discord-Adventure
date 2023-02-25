@@ -4,6 +4,7 @@ import io.github.alexiscomete.lapinousecond.view.ui.interactionui.InteractionSty
 import io.github.alexiscomete.lapinousecond.view.ui.interactionui.InteractionUICustomUI
 import io.github.alexiscomete.lapinousecond.view.ui.interactionui.SimpleInteractionUICustomUI
 import io.github.alexiscomete.lapinousecond.view.ui.playerui.PlayerUI
+import io.github.alexiscomete.lapinousecond.view.ui.playerui.Question
 import java.awt.image.BufferedImage
 
 class TestingUI(
@@ -86,14 +87,14 @@ class TestingUI(
         return id.contains("test") || id.contains("count")
     }
 
-    override fun respondToInteraction(id: String): LongCustomUI {
+    override fun respondToInteraction(id: String): Question? {
         count++
-        return this
+        return null
     }
 
-    override fun respondToInteraction(id: String, argument: String): LongCustomUI {
+    override fun respondToInteraction(id: String, argument: String): Question? {
         count++
-        return this
+        return null
     }
 
     override fun getPlayerUI(): PlayerUI {

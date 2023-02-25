@@ -2,22 +2,21 @@ package io.github.alexiscomete.lapinousecond.view.ui.interactionui
 
 import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
 import io.github.alexiscomete.lapinousecond.view.ui.playerui.PlayerUI
+import io.github.alexiscomete.lapinousecond.view.ui.playerui.Question
 
 class InteractionManager(
     private var id: String = generateUniqueID().toString(),
     private var title: String,
     private var description: String? = null,
-    val todoWhen: (PlayerUI) -> Unit,
-    val todoWhenWithArgument: (PlayerUI, String) -> Unit
+    val todoWhen: (PlayerUI) -> Question?,
+    val todoWhenWithArgument: (PlayerUI, String) -> Question?
 ) : InteractionUI {
-    override fun execute(ui: PlayerUI): InteractionUI {
-        todoWhen(ui)
-        return this
+    override fun execute(ui: PlayerUI): Question? {
+        return todoWhen(ui)
     }
 
-    override fun executeWithArgument(ui: PlayerUI, argument: String): InteractionUI {
-        todoWhenWithArgument(ui, argument)
-        return this
+    override fun executeWithArgument(ui: PlayerUI, argument: String): Question? {
+        return todoWhenWithArgument(ui, argument)
     }
 
     override fun canBeExecutedWithArgument(): Boolean {

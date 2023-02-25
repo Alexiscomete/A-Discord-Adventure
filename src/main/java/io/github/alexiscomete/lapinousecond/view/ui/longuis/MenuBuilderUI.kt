@@ -4,6 +4,7 @@ import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
 import io.github.alexiscomete.lapinousecond.view.ui.interactionui.InteractionStyle
 import io.github.alexiscomete.lapinousecond.view.ui.playerui.PlayerUI
 import io.github.alexiscomete.lapinousecond.view.ui.interactionui.SimpleInteractionUICustomUI
+import io.github.alexiscomete.lapinousecond.view.ui.playerui.Question
 import java.awt.image.BufferedImage
 
 class MenuBuilderUI(val name: String, val description: String, playerUI: PlayerUI) : StaticUI(listOf(), playerUI) {
@@ -13,7 +14,7 @@ class MenuBuilderUI(val name: String, val description: String, playerUI: PlayerU
     private val arrayListOfButton = arrayListOf<Pair<String, String>>()
 
     fun addButton(
-        name: String, description: String, whenUsed: (PlayerUI) -> Unit
+        name: String, description: String, whenUsed: (PlayerUI) -> Question?
     ): MenuBuilderUI {
 
         val id = generateUniqueID()

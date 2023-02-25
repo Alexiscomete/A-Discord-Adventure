@@ -2,6 +2,7 @@ package io.github.alexiscomete.lapinousecond.view.ui.longuis
 
 import io.github.alexiscomete.lapinousecond.view.ui.playerui.PlayerUI
 import io.github.alexiscomete.lapinousecond.view.ui.interactionui.InteractionUICustomUI
+import io.github.alexiscomete.lapinousecond.view.ui.playerui.Question
 import java.awt.image.BufferedImage
 
 interface LongCustomUI {
@@ -34,8 +35,8 @@ interface LongCustomUI {
     fun addInteractionUICustomUI(interactionUICustomUI: InteractionUICustomUI): LongCustomUI
     fun addInteractionUICustomUIs(interactionUICustomUIs: List<InteractionUICustomUI>): LongCustomUI
     fun hasInteractionID(id: String): Boolean
-    fun respondToInteraction(id: String): LongCustomUI
-    fun respondToInteraction(id: String, argument: String): LongCustomUI
+    fun respondToInteraction(id: String): Question?
+    fun respondToInteraction(id: String, argument: String): Question?
 
     // every UI
     fun getPlayerUI(): PlayerUI

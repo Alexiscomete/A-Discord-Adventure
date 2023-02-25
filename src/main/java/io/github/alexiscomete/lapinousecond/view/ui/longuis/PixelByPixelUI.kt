@@ -1,11 +1,11 @@
 package io.github.alexiscomete.lapinousecond.view.ui.longuis
 
-import io.github.alexiscomete.lapinousecond.view.ui.*
 import io.github.alexiscomete.lapinousecond.view.ui.interactionui.InteractionStyle
 import io.github.alexiscomete.lapinousecond.view.ui.interactionui.InteractionUICustomUI
 import io.github.alexiscomete.lapinousecond.view.ui.interactionui.SimpleInteractionUICustomUI
 import io.github.alexiscomete.lapinousecond.view.ui.playerui.Message
 import io.github.alexiscomete.lapinousecond.view.ui.playerui.PlayerUI
+import io.github.alexiscomete.lapinousecond.view.ui.playerui.Question
 import io.github.alexiscomete.lapinousecond.worlds.WorldEnum
 import io.github.alexiscomete.lapinousecond.worlds.Zooms
 import java.awt.image.BufferedImage
@@ -115,12 +115,14 @@ class PixelByPixelUI(
                         playerUI.addMessage(Message("Le monde microscopique n'est pas encore implémenté", "Problème"))
                         zooms
                     }
+                    return@SimpleInteractionUICustomUI null
                 },
                 { _, _ ->
                     zooms = zooms.next ?: run {
                         playerUI.addMessage(Message("Le monde microscopique n'est pas encore implémenté", "Problème"))
                         zooms
                     }
+                    return@SimpleInteractionUICustomUI null
                 }
             ),
             SimpleInteractionUICustomUI(
@@ -131,9 +133,11 @@ class PixelByPixelUI(
                 InteractionStyle.NORMAL,
                 {
                     y--
+                    return@SimpleInteractionUICustomUI null
                 },
                 { _, _ ->
                     y--
+                    return@SimpleInteractionUICustomUI null
                 },
             ),
             SimpleInteractionUICustomUI(
@@ -147,12 +151,14 @@ class PixelByPixelUI(
                         playerUI.addMessage(Message("Le monde des géants n'est pas encore implémenté", "Problème"))
                         zooms
                     }
+                    return@SimpleInteractionUICustomUI null
                 },
                 { _, _ ->
                     zooms = zooms.before ?: run {
                         playerUI.addMessage(Message("Le monde des géants n'est pas encore implémenté", "Problème"))
                         zooms
                     }
+                    return@SimpleInteractionUICustomUI null
                 }
             ),
         ),
@@ -165,9 +171,11 @@ class PixelByPixelUI(
                 InteractionStyle.NORMAL,
                 {
                     x--
+                    return@SimpleInteractionUICustomUI null
                 },
                 { _, _ ->
                     x--
+                    return@SimpleInteractionUICustomUI null
                 },
             ),
             SimpleInteractionUICustomUI(
@@ -178,9 +186,11 @@ class PixelByPixelUI(
                 InteractionStyle.NORMAL,
                 {
                     y++
+                    return@SimpleInteractionUICustomUI null
                 },
                 { _, _ ->
                     y++
+                    return@SimpleInteractionUICustomUI null
                 },
             ),
             SimpleInteractionUICustomUI(
@@ -191,9 +201,11 @@ class PixelByPixelUI(
                 InteractionStyle.NORMAL,
                 {
                     x++
+                    return@SimpleInteractionUICustomUI null
                 },
                 { _, _ ->
                     x++
+                    return@SimpleInteractionUICustomUI null
                 },
             )
         ),
@@ -222,14 +234,14 @@ class PixelByPixelUI(
         return interactionUICustomUILists.flatten().any { it.getId() == id }
     }
 
-    override fun respondToInteraction(id: String): LongCustomUI {
+    override fun respondToInteraction(id: String): Question? {
         interactionUICustomUILists.flatten().first { it.getId() == id }.execute(playerUI)
-        return this
+        return null
     }
 
-    override fun respondToInteraction(id: String, argument: String): LongCustomUI {
+    override fun respondToInteraction(id: String, argument: String): Question? {
         interactionUICustomUILists.flatten().first { it.getId() == id }.executeWithArgument(playerUI, argument)
-        return this
+        return null
     }
 
     override fun getPlayerUI(): PlayerUI {

@@ -4,12 +4,13 @@ import io.github.alexiscomete.lapinousecond.view.ui.playerui.PlayerUI
 import io.github.alexiscomete.lapinousecond.view.ui.interactionui.InteractionStyle
 import io.github.alexiscomete.lapinousecond.view.ui.interactionui.InteractionUICustomUI
 import io.github.alexiscomete.lapinousecond.view.ui.interactionui.SimpleInteractionUICustomUI
+import io.github.alexiscomete.lapinousecond.view.ui.playerui.Question
 import java.awt.image.BufferedImage
 
 class EmbedPagesWithInteractions<U>(
     uArrayList: ArrayList<U>,
     uContentOf: ContentOf<U>,
-    val whenSelected: (U, PlayerUI) -> Unit,
+    val whenSelected: (U, PlayerUI) -> Question?,
     linkedImage: String?,
     bufferedImage: BufferedImage?,
     title: String?,
@@ -46,7 +47,7 @@ class EmbedPagesWithInteractions<U>(
             return buttons
         }
 
-    override fun next(playerUI: PlayerUI) {
+    override fun next(playerUI: PlayerUI) : Question?{
         if (pageLevel + number < uArrayList.size) {
             pageLevel += number
             setInteractionUICustomUIs(
@@ -56,9 +57,10 @@ class EmbedPagesWithInteractions<U>(
                 )
             )
         }
+        return null
     }
 
-    override fun last(playerUI: PlayerUI) {
+    override fun last(playerUI: PlayerUI) : Question?{
         if (pageLevel > number - 1) {
             pageLevel -= number
             setInteractionUICustomUIs(
@@ -68,6 +70,7 @@ class EmbedPagesWithInteractions<U>(
                 )
             )
         }
+        return null
     }
 
 }

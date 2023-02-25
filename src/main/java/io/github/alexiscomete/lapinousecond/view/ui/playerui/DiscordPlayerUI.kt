@@ -4,7 +4,6 @@ import io.github.alexiscomete.lapinousecond.entity.Player
 import io.github.alexiscomete.lapinousecond.view.Context
 import io.github.alexiscomete.lapinousecond.view.contextFor
 import io.github.alexiscomete.lapinousecond.view.discord.commands.getAccount
-import io.github.alexiscomete.lapinousecond.view.ui.playerui.Message
 import io.github.alexiscomete.lapinousecond.view.ui.dialogue.Dialogue
 import io.github.alexiscomete.lapinousecond.view.ui.dialogue.DialoguePart
 import io.github.alexiscomete.lapinousecond.view.ui.interactionui.InteractionStyle

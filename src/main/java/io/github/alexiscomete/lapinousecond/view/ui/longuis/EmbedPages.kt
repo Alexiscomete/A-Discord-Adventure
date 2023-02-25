@@ -5,6 +5,7 @@ import io.github.alexiscomete.lapinousecond.view.ui.playerui.PlayerUI
 import io.github.alexiscomete.lapinousecond.view.ui.interactionui.DisabledInteractionUI
 import io.github.alexiscomete.lapinousecond.view.ui.interactionui.InteractionUICustomUI
 import io.github.alexiscomete.lapinousecond.view.ui.interactionui.SimpleInteractionUICustomUI
+import io.github.alexiscomete.lapinousecond.view.ui.playerui.Question
 import java.awt.image.BufferedImage
 
 open class EmbedPages<U>(
@@ -32,21 +33,23 @@ open class EmbedPages<U>(
 
     protected open fun next(
         playerUI: PlayerUI
-    ) {
+    ) : Question? {
         // check if the button is valid : it must have enough elements to go to the next page
         if (pageLevel + number < uArrayList.size) {
             pageLevel += number
             setInteractionUICustomUIs(listOf(components))
         }
+        return null
     }
 
     protected open fun last(
         playerUI: PlayerUI
-    ) {
+    ) : Question? {
         if (pageLevel > number - 1) {
             pageLevel -= number
             setInteractionUICustomUIs(listOf(components))
         }
+        return null
     }
 
     open val components: List<InteractionUICustomUI>
@@ -108,11 +111,6 @@ open class EmbedPages<U>(
                 )
 
             }
-
-
-    fun register() {
-        TODO("Not yet implemented")
-    }
 
     override fun getFields(): List<Pair<String, String>>? {
         return uContentOf.getContent(pageLevel, number.coerceAtMost(uArrayList.size - pageLevel), uArrayList)

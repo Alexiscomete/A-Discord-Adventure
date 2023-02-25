@@ -2,6 +2,7 @@ package io.github.alexiscomete.lapinousecond.view.ui.interactionui
 
 import io.github.alexiscomete.lapinousecond.view.ui.longuis.LongCustomUI
 import io.github.alexiscomete.lapinousecond.view.ui.playerui.PlayerUI
+import io.github.alexiscomete.lapinousecond.view.ui.playerui.Question
 
 class DisabledInteractionUI(
     private var customUI: LongCustomUI,
@@ -22,12 +23,12 @@ class DisabledInteractionUI(
         return customInteractionStyle
     }
 
-    override fun execute(ui: PlayerUI): InteractionUI {
-        return this
+    override fun execute(ui: PlayerUI): Question? {
+        return null
     }
 
-    override fun executeWithArgument(ui: PlayerUI, argument: String): InteractionUI {
-        return this
+    override fun executeWithArgument(ui: PlayerUI, argument: String): Question? {
+        return null
     }
 
     override fun canBeExecutedWithArgument(): Boolean {

@@ -2,6 +2,7 @@ package io.github.alexiscomete.lapinousecond.view.ui.interactionui
 
 import io.github.alexiscomete.lapinousecond.view.ui.longuis.LongCustomUI
 import io.github.alexiscomete.lapinousecond.view.ui.playerui.PlayerUI
+import io.github.alexiscomete.lapinousecond.view.ui.playerui.Question
 
 class SimpleInteractionUICustomUI(
     private var id: String,
@@ -9,8 +10,8 @@ class SimpleInteractionUICustomUI(
     private var description: String?,
     private var customUI: LongCustomUI,
     private val customInteractionStyle: InteractionStyle,
-    private var executeWithoutArg: ((PlayerUI) -> Unit)?,
-    private var executeWithArg: ((PlayerUI, String) -> Unit)?
+    private var executeWithoutArg: ((PlayerUI) -> Question?)?,
+    private var executeWithArg: ((PlayerUI, String) -> Question?)?
 ) : InteractionUICustomUI {
     override fun getCustomUI(): LongCustomUI {
         return customUI
@@ -25,18 +26,18 @@ class SimpleInteractionUICustomUI(
         return customInteractionStyle
     }
 
-    override fun execute(ui: PlayerUI): InteractionUI {
+    override fun execute(ui: PlayerUI): Question? {
         if (canBeExecutedWithoutArgument()) {
-            executeWithoutArg?.invoke(ui)
+            return executeWithoutArg?.invoke(ui)
         }
-        return this
+        return null
     }
 
-    override fun executeWithArgument(ui: PlayerUI, argument: String): InteractionUI {
+    override fun executeWithArgument(ui: PlayerUI, argument: String): Question? {
         if (canBeExecutedWithArgument()) {
-            executeWithArg?.invoke(ui, argument)
+            return executeWithArg?.invoke(ui, argument)
         }
-        return this
+        return null
     }
 
     override fun canBeExecutedWithArgument(): Boolean {

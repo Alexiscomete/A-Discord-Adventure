@@ -1,7 +1,6 @@
 package io.github.alexiscomete.lapinousecond.view.ui.playerui
 
 import io.github.alexiscomete.lapinousecond.entity.Player
-import io.github.alexiscomete.lapinousecond.view.ui.playerui.Message
 import io.github.alexiscomete.lapinousecond.view.ui.dialogue.Dialogue
 import io.github.alexiscomete.lapinousecond.view.ui.longuis.LongCustomUI
 

@@ -15,7 +15,6 @@ import io.github.alexiscomete.lapinousecond.view.contextmanager.ModalContextMana
 import io.github.alexiscomete.lapinousecond.view.discord.commands.Command
 import io.github.alexiscomete.lapinousecond.view.discord.commands.ExecutableWithArguments
 import io.github.alexiscomete.lapinousecond.view.discord.commands.getAccount
-import io.github.alexiscomete.lapinousecond.view.ui.*
 import io.github.alexiscomete.lapinousecond.view.ui.longuis.EmbedPagesWithInteractions
 import io.github.alexiscomete.lapinousecond.view.ui.old.MenuBuilder
 import io.github.alexiscomete.lapinousecond.view.ui.playerui.DiscordPlayerUI

@@ -1,10 +1,11 @@
 package io.github.alexiscomete.lapinousecond.view.ui.interactionui
 
 import io.github.alexiscomete.lapinousecond.view.ui.playerui.PlayerUI
+import io.github.alexiscomete.lapinousecond.view.ui.playerui.Question
 
 interface InteractionUI {
-    fun execute(ui: PlayerUI): InteractionUI
-    fun executeWithArgument(ui: PlayerUI, argument: String): InteractionUI
+    fun execute(ui: PlayerUI): Question?
+    fun executeWithArgument(ui: PlayerUI, argument: String): Question?
     fun canBeExecutedWithArgument(): Boolean
     fun canBeExecutedWithoutArgument(): Boolean
     fun getId(): String
