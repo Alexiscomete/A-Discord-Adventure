@@ -1,6 +1,6 @@
 package io.github.alexiscomete.lapinousecond.view.ui.longuis.inv
 
-import io.github.alexiscomete.lapinousecond.view.ui.PlayerUI
+import io.github.alexiscomete.lapinousecond.view.ui.playerui.PlayerUI
 import io.github.alexiscomete.lapinousecond.view.ui.longuis.StaticUI
 import java.awt.image.BufferedImage
 

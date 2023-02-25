@@ -1,11 +1,14 @@
-package io.github.alexiscomete.lapinousecond.view.ui
+package io.github.alexiscomete.lapinousecond.view.ui.playerui
 
 import io.github.alexiscomete.lapinousecond.entity.Player
 import io.github.alexiscomete.lapinousecond.view.Context
 import io.github.alexiscomete.lapinousecond.view.contextFor
 import io.github.alexiscomete.lapinousecond.view.discord.commands.getAccount
+import io.github.alexiscomete.lapinousecond.view.ui.playerui.Message
 import io.github.alexiscomete.lapinousecond.view.ui.dialogue.Dialogue
 import io.github.alexiscomete.lapinousecond.view.ui.dialogue.DialoguePart
+import io.github.alexiscomete.lapinousecond.view.ui.interactionui.InteractionStyle
+import io.github.alexiscomete.lapinousecond.view.ui.longuis.LongCustomUI
 import org.javacord.api.entity.message.MessageFlag
 import org.javacord.api.entity.message.component.ActionRow
 import org.javacord.api.entity.message.component.Button
@@ -14,7 +17,6 @@ import org.javacord.api.entity.message.embed.EmbedBuilder
 import org.javacord.api.interaction.Interaction
 import org.javacord.api.interaction.InteractionBase
 import org.javacord.api.interaction.MessageComponentInteractionBase
-import org.javacord.api.interaction.SlashCommandInteraction
 
 class DiscordPlayerUI(private val context: Context, var interaction: Interaction) : PlayerUI {
 

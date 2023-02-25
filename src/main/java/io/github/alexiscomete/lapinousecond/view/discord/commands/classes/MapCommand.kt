@@ -13,9 +13,9 @@ import io.github.alexiscomete.lapinousecond.view.contextmanager.SelectMenuContex
 import io.github.alexiscomete.lapinousecond.view.discord.commands.Command
 import io.github.alexiscomete.lapinousecond.view.discord.commands.ExecutableWithArguments
 import io.github.alexiscomete.lapinousecond.view.discord.commands.getAccount
-import io.github.alexiscomete.lapinousecond.view.ui.DiscordPlayerUI
-import io.github.alexiscomete.lapinousecond.view.ui.EmbedPages
-import io.github.alexiscomete.lapinousecond.view.ui.MenuBuilder
+import io.github.alexiscomete.lapinousecond.view.ui.playerui.DiscordPlayerUI
+import io.github.alexiscomete.lapinousecond.view.ui.longuis.EmbedPages
+import io.github.alexiscomete.lapinousecond.view.ui.old.MenuBuilder
 import io.github.alexiscomete.lapinousecond.view.ui.longuis.PixelByPixelUI
 import io.github.alexiscomete.lapinousecond.worlds.WorldEnum
 import io.github.alexiscomete.lapinousecond.worlds.Zooms

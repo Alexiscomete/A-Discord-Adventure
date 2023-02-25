@@ -1,4 +1,4 @@
-package io.github.alexiscomete.lapinousecond.view.ui
+package io.github.alexiscomete.lapinousecond.view.ui.playerui
 
 data class Message(
     var content: String,

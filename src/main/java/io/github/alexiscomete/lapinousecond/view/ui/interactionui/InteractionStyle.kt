@@ -1,4 +1,4 @@
-package io.github.alexiscomete.lapinousecond.view.ui
+package io.github.alexiscomete.lapinousecond.view.ui.interactionui
 
 enum class InteractionStyle {
     NORMAL,

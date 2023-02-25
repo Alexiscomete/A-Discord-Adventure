@@ -1,8 +1,9 @@
-package io.github.alexiscomete.lapinousecond.view.ui
+package io.github.alexiscomete.lapinousecond.view.ui.playerui
 
 import io.github.alexiscomete.lapinousecond.entity.Player
+import io.github.alexiscomete.lapinousecond.view.ui.playerui.Message
 import io.github.alexiscomete.lapinousecond.view.ui.dialogue.Dialogue
-import java.awt.image.BufferedImage
+import io.github.alexiscomete.lapinousecond.view.ui.longuis.LongCustomUI
 
 interface PlayerUI {
     fun addMessage(message: Message): PlayerUI

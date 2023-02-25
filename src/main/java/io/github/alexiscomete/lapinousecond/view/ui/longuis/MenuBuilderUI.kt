@@ -1,9 +1,9 @@
 package io.github.alexiscomete.lapinousecond.view.ui.longuis
 
 import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
-import io.github.alexiscomete.lapinousecond.view.ui.InteractionStyle
-import io.github.alexiscomete.lapinousecond.view.ui.PlayerUI
-import io.github.alexiscomete.lapinousecond.view.ui.SimpleInteractionUICustomUI
+import io.github.alexiscomete.lapinousecond.view.ui.interactionui.InteractionStyle
+import io.github.alexiscomete.lapinousecond.view.ui.playerui.PlayerUI
+import io.github.alexiscomete.lapinousecond.view.ui.interactionui.SimpleInteractionUICustomUI
 import java.awt.image.BufferedImage
 
 class MenuBuilderUI(val name: String, val description: String, playerUI: PlayerUI) : StaticUI(listOf(), playerUI) {

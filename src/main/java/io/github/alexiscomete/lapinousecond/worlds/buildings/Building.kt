@@ -8,7 +8,7 @@ import io.github.alexiscomete.lapinousecond.useful.managesave.CacheGetSet
 import io.github.alexiscomete.lapinousecond.useful.managesave.Table
 import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
 import io.github.alexiscomete.lapinousecond.view.Context
-import io.github.alexiscomete.lapinousecond.view.ui.MenuBuilder
+import io.github.alexiscomete.lapinousecond.view.ui.old.MenuBuilder
 import io.github.alexiscomete.lapinousecond.worlds.Place
 import org.json.JSONObject
 import java.awt.Color

@@ -1,7 +1,7 @@
 package io.github.alexiscomete.lapinousecond.worlds.buildings
 
 import io.github.alexiscomete.lapinousecond.view.Context
-import io.github.alexiscomete.lapinousecond.view.ui.MenuBuilder
+import io.github.alexiscomete.lapinousecond.view.ui.old.MenuBuilder
 
 interface BuildMethods {
     fun getCompleteInfos(p: Context): MenuBuilder

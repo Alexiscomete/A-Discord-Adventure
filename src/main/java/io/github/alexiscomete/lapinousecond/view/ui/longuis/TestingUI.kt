@@ -1,6 +1,9 @@
 package io.github.alexiscomete.lapinousecond.view.ui.longuis
 
-import io.github.alexiscomete.lapinousecond.view.ui.*
+import io.github.alexiscomete.lapinousecond.view.ui.interactionui.InteractionStyle
+import io.github.alexiscomete.lapinousecond.view.ui.interactionui.InteractionUICustomUI
+import io.github.alexiscomete.lapinousecond.view.ui.interactionui.SimpleInteractionUICustomUI
+import io.github.alexiscomete.lapinousecond.view.ui.playerui.PlayerUI
 import java.awt.image.BufferedImage
 
 class TestingUI(

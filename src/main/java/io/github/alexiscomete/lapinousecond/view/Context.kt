@@ -2,9 +2,7 @@ package io.github.alexiscomete.lapinousecond.view
 
 import io.github.alexiscomete.lapinousecond.entity.PlayerWithAccount
 import io.github.alexiscomete.lapinousecond.view.contextmanager.*
-import io.github.alexiscomete.lapinousecond.view.ui.DiscordPlayerUI
-import io.github.alexiscomete.lapinousecond.view.ui.InteractionUI
-import io.github.alexiscomete.lapinousecond.view.ui.PlayerUI
+import io.github.alexiscomete.lapinousecond.view.ui.playerui.DiscordPlayerUI
 import org.javacord.api.event.interaction.ButtonClickEvent
 import org.javacord.api.event.interaction.ModalSubmitEvent
 import org.javacord.api.event.interaction.SelectMenuChooseEvent

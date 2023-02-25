@@ -1,6 +1,10 @@
-package io.github.alexiscomete.lapinousecond.view.ui
+package io.github.alexiscomete.lapinousecond.view.ui.longuis
 
-import io.github.alexiscomete.lapinousecond.view.ui.longuis.BaseUI
+import io.github.alexiscomete.lapinousecond.view.ui.interactionui.InteractionStyle
+import io.github.alexiscomete.lapinousecond.view.ui.playerui.PlayerUI
+import io.github.alexiscomete.lapinousecond.view.ui.interactionui.DisabledInteractionUI
+import io.github.alexiscomete.lapinousecond.view.ui.interactionui.InteractionUICustomUI
+import io.github.alexiscomete.lapinousecond.view.ui.interactionui.SimpleInteractionUICustomUI
 import java.awt.image.BufferedImage
 
 open class EmbedPages<U>(

@@ -1,4 +1,7 @@
-package io.github.alexiscomete.lapinousecond.view.ui
+package io.github.alexiscomete.lapinousecond.view.ui.interactionui
+
+import io.github.alexiscomete.lapinousecond.view.ui.longuis.LongCustomUI
+import io.github.alexiscomete.lapinousecond.view.ui.playerui.PlayerUI
 
 class DisabledInteractionUI(
     private var customUI: LongCustomUI,

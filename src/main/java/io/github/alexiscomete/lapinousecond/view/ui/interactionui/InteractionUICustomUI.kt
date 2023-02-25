@@ -1,4 +1,6 @@
-package io.github.alexiscomete.lapinousecond.view.ui
+package io.github.alexiscomete.lapinousecond.view.ui.interactionui
+
+import io.github.alexiscomete.lapinousecond.view.ui.longuis.LongCustomUI
 
 interface InteractionUICustomUI : InteractionUI {
     fun getCustomUI(): LongCustomUI

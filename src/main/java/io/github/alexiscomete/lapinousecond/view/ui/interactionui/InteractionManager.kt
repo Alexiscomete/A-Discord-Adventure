@@ -1,6 +1,7 @@
-package io.github.alexiscomete.lapinousecond.view.ui
+package io.github.alexiscomete.lapinousecond.view.ui.interactionui
 
 import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
+import io.github.alexiscomete.lapinousecond.view.ui.playerui.PlayerUI
 
 class InteractionManager(
     private var id: String = generateUniqueID().toString(),

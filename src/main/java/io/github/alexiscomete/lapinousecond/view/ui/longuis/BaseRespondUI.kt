@@ -1,8 +1,7 @@
 package io.github.alexiscomete.lapinousecond.view.ui.longuis
 
-import io.github.alexiscomete.lapinousecond.view.ui.InteractionUICustomUI
-import io.github.alexiscomete.lapinousecond.view.ui.LongCustomUI
-import io.github.alexiscomete.lapinousecond.view.ui.PlayerUI
+import io.github.alexiscomete.lapinousecond.view.ui.interactionui.InteractionUICustomUI
+import io.github.alexiscomete.lapinousecond.view.ui.playerui.PlayerUI
 
 abstract class BaseRespondUI(
     protected var interactions: List<List<InteractionUICustomUI>>,

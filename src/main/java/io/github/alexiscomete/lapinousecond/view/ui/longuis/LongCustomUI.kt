@@ -1,5 +1,7 @@
-package io.github.alexiscomete.lapinousecond.view.ui
+package io.github.alexiscomete.lapinousecond.view.ui.longuis
 
+import io.github.alexiscomete.lapinousecond.view.ui.playerui.PlayerUI
+import io.github.alexiscomete.lapinousecond.view.ui.interactionui.InteractionUICustomUI
 import java.awt.image.BufferedImage
 
 interface LongCustomUI {

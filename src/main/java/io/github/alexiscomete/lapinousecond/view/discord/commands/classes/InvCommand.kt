@@ -11,7 +11,7 @@ import io.github.alexiscomete.lapinousecond.view.discord.commands.Command
 import io.github.alexiscomete.lapinousecond.view.discord.commands.ExecutableWithArguments
 import io.github.alexiscomete.lapinousecond.view.discord.commands.SubCommand
 import io.github.alexiscomete.lapinousecond.view.discord.commands.getAccount
-import io.github.alexiscomete.lapinousecond.view.ui.DiscordPlayerUI
+import io.github.alexiscomete.lapinousecond.view.ui.playerui.DiscordPlayerUI
 import io.github.alexiscomete.lapinousecond.view.ui.longuis.inv.InvInfosUI
 import org.javacord.api.entity.message.embed.EmbedBuilder
 import org.javacord.api.interaction.Interaction

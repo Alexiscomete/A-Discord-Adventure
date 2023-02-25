@@ -1,4 +1,4 @@
-package io.github.alexiscomete.lapinousecond.view.ui
+package io.github.alexiscomete.lapinousecond.view.ui.old
 
 import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
 import io.github.alexiscomete.lapinousecond.view.Context
@@ -16,6 +16,7 @@ import org.javacord.api.interaction.SlashCommandInteraction
 import java.awt.Color
 import java.awt.image.BufferedImage
 
+@Deprecated("Use MenuBuilderUI instead", ReplaceWith("MenuBuilderUI"), DeprecationLevel.WARNING)
 class MenuBuilder(name: String, description: String, color: Color, val context: Context) {
 
     private var ephemeral = false
