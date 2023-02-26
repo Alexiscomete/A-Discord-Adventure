@@ -643,6 +643,7 @@ class MarketCommand : Command(
                                     saveManager.execute("DELETE FROM offers WHERE id = ${offer.id}", true)
                                     // respond
                                     playerUI.addMessage(Message("Vous avez supprimé l'offre ${offer.id} et récupéré vos ressources"))
+                                    return@EmbedPagesWithInteractions null
                                 },
                                 null,
                                 null,
@@ -701,6 +702,7 @@ class MarketCommand : Command(
                                     saveManager.execute("DELETE FROM offers WHERE id = ${offer.id}", true)
                                     // respond
                                     playerUI.addMessage(Message("Vous avez acheté l'offre ${offer.id} de <@${offer.who.id}>"))
+                                    return@EmbedPagesWithInteractions null
                                 },
                                 null,
                                 null,
@@ -804,6 +806,7 @@ class MarketCommand : Command(
                                     saveManager.execute("DELETE FROM researches WHERE id = ${offer.id}", true)
                                     // respond
                                     playerUI.addMessage(Message("Vous avez supprimé la recherche ${offer.id} et récupéré votre argent"))
+                                    return@EmbedPagesWithInteractions null
                                 },
                                 null,
                                 null,
@@ -865,6 +868,7 @@ class MarketCommand : Command(
                                     saveManager.execute("DELETE FROM researches WHERE id = ${research.id}", true)
                                     // respond
                                     playerUI.addMessage(Message("Vous avez répondu à la recherche ${research.id}"))
+                                    return@EmbedPagesWithInteractions null
                                 },
                                 null,
                                 null,
@@ -966,6 +970,7 @@ class MarketCommand : Command(
                                 saveManager.execute("DELETE FROM auctions WHERE id = ${auction.id}", true)
                                 // respond
                                 playerUI.addMessage(Message("Vous avez terminé l'enchère ${auction.id} et récupéré l'argent"))
+                                return@EmbedPagesWithInteractions null
                             },
                             null,
                             null,
@@ -1023,6 +1028,7 @@ class MarketCommand : Command(
                                 auction["amountRB"] = (auction.amountRB + 100.0).toString()
                                 // respond
                                 playerUI.addMessage(Message("Vous avez répondu à l'enchère de ${auction.amountRB} ${Resource.RABBIT_COIN.show}"))
+                                return@EmbedPagesWithInteractions null
                             },
                             null,
                             null,

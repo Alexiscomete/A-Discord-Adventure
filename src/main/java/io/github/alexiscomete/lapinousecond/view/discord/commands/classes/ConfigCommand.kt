@@ -468,6 +468,7 @@ class ConfigCommand : Command(
                                         // TODO : supprimer la ville côté joueur et le tp
                                         // 5. Envoyer un message de succès
                                         playerUI.addMessage(Message("La ville a été supprimée avec succès !"))
+                                        return@EmbedPagesWithInteractions null
                                     },
                                     null,
                                     null,
@@ -593,6 +594,7 @@ class ConfigCommand : Command(
                                             }
                                             .messageBuilder()
                                         menu.send(slashCommand.channel.get())
+                                        return@EmbedPagesWithInteractions null
                                     },
                                     null,
                                     null,

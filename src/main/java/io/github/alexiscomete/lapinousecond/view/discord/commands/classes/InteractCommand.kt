@@ -15,9 +15,7 @@ import io.github.alexiscomete.lapinousecond.view.ui.*
 import io.github.alexiscomete.lapinousecond.view.ui.longuis.EmbedPagesWithInteractions
 import io.github.alexiscomete.lapinousecond.view.ui.longuis.MenuBuilderUI
 import io.github.alexiscomete.lapinousecond.view.ui.old.MenuBuilder
-import io.github.alexiscomete.lapinousecond.view.ui.playerui.DiscordPlayerUI
-import io.github.alexiscomete.lapinousecond.view.ui.playerui.Message
-import io.github.alexiscomete.lapinousecond.view.ui.playerui.PlayerUI
+import io.github.alexiscomete.lapinousecond.view.ui.playerui.*
 import io.github.alexiscomete.lapinousecond.worlds.WorldEnum
 import io.github.alexiscomete.lapinousecond.worlds.buildings.Building
 import io.github.alexiscomete.lapinousecond.worlds.buildings.Buildings
@@ -192,7 +190,7 @@ class InteractCommandBase : Command(
                     buttonClickEvent.addMessage(Message("Vous êtes maintenant dans le bâtiment ${building["nameRP"]} !"))
                 }
 
-                fun helpBuilding(building: Building, buttonClickEvent: PlayerUI) {
+                fun helpBuilding(building: Building, buttonClickEvent: PlayerUI) : Question {
                     // Etape 1 : demander au joueur le montant à entrer en montrant le montant nécessaire
                     // Etape 2 : vérifier que le joueur a assez d'argent et que le montant ne dépasse pas le montant nécessaire
                     // Etape 3 : retirer l'argent du joueur et ajouter l'argent au bâtiment
@@ -200,25 +198,16 @@ class InteractCommandBase : Command(
                     // Etape 1
                     val id = generateUniqueID()
 
-                    buttonClickEvent.buttonInteraction.respondWithModal(
-                        id.toString(),
+                    return Question(
                         "Actuellement ${building["collect_value"]} / ${building["collect_target"]} rb",
-                        ActionRow.of(
-                            TextInput.create(
-                                TextInputStyle.SHORT,
-                                "cmoneyid",
-                                "Montant à donner"
-                            )
+                        QuestionField(
+                            "Montant à donner",
+                            shortAnswer = true,
+                            required = true
                         )
-                    )
-
-                    context.modal(
-                        M1(
-                            id.toString(),
-                            player,
-                            building
-                        )
-                    )
+                    ) {
+                        TODO("Not yet implemented, use M1")
+                    }
                 }
 
                 fun sendBuildingsInEmbed(
@@ -243,6 +232,7 @@ class InteractCommandBase : Command(
                                     helpBuilding(building, playerUI)
                                 } else {
                                     enterInBuilding(building, playerUI)
+                                    null
                                 }
                             },
                             null,
@@ -341,6 +331,7 @@ class InteractCommandBase : Command(
                                                                 true
                                                             )
                                                             playerUI1.addMessage(Message("Vous avez annulé le bâtiment !"))
+                                                            return@addButton null
                                                         }
                                                         .addButton(
                                                             "Aider le bâtiment",
@@ -352,6 +343,7 @@ class InteractCommandBase : Command(
                                             } else {
                                                 enterInBuilding(building, playerUI)
                                             }
+                                            return@EmbedPagesWithInteractions null
                                         },
                                         null,
                                         null,
@@ -407,6 +399,7 @@ class InteractCommandBase : Command(
                                                         building2.descriptionShort()
                                                     )
                                                 )
+                                                return@EmbedPagesWithInteractions null
                                             } else {
                                                 throw IllegalArgumentException("Vous ne pouvez pas construire ce bâtiment")
                                             }
