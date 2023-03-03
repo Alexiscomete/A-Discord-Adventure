@@ -1,12 +1,14 @@
 package io.github.alexiscomete.lapinousecond.view
 
 import io.github.alexiscomete.lapinousecond.entity.PlayerWithAccount
-import io.github.alexiscomete.lapinousecond.view.contextmanager.*
+import io.github.alexiscomete.lapinousecond.view.contextmanager.ButtonsContextManager
+import io.github.alexiscomete.lapinousecond.view.contextmanager.ContextManager
+import io.github.alexiscomete.lapinousecond.view.contextmanager.ModalContextManager
+import io.github.alexiscomete.lapinousecond.view.contextmanager.SelectMenuContextManager
 import io.github.alexiscomete.lapinousecond.view.ui.playerui.DiscordPlayerUI
 import org.javacord.api.event.interaction.ButtonClickEvent
 import org.javacord.api.event.interaction.ModalSubmitEvent
 import org.javacord.api.event.interaction.SelectMenuChooseEvent
-import org.javacord.api.event.message.MessageCreateEvent
 
 data class Players(val player: PlayerWithAccount, val otherPlayers: List<PlayerWithAccount> = listOf())
 
@@ -55,10 +57,9 @@ class Context(val players: Players, canParallel: Boolean = false) : ContextManag
     private var selectMenu: SelectMenuContextManager? = null
     private var multiContext: Context? = null
     private var modal: ModalContextManager? = null
-    private var messages: MessagesContextManager? = null
     private var ui: DiscordPlayerUI? = null
 
-    fun buttons(buttons: ButtonsContextManager, canParallel:Boolean=false): Context {
+    fun buttons(buttons: ButtonsContextManager, canParallel: Boolean = false): Context {
         if (!canParallel) {
             clear()
         }
@@ -66,7 +67,7 @@ class Context(val players: Players, canParallel: Boolean = false) : ContextManag
         return this
     }
 
-    fun selectMenu(selectMenu: SelectMenuContextManager, canParallel:Boolean=false): Context {
+    fun selectMenu(selectMenu: SelectMenuContextManager, canParallel: Boolean = false): Context {
         if (!canParallel) {
             clear()
         }
@@ -74,7 +75,7 @@ class Context(val players: Players, canParallel: Boolean = false) : ContextManag
         return this
     }
 
-    fun multiContext(multiContext: Context, canParallel:Boolean=false): Context {
+    fun multiContext(multiContext: Context, canParallel: Boolean = false): Context {
         if (!canParallel) {
             clear()
         }
@@ -82,7 +83,7 @@ class Context(val players: Players, canParallel: Boolean = false) : ContextManag
         return this
     }
 
-    fun modal(modal: ModalContextManager, canParallel:Boolean=false): Context {
+    fun modal(modal: ModalContextManager, canParallel: Boolean = false): Context {
         if (!canParallel) {
             clear()
         }
@@ -90,15 +91,7 @@ class Context(val players: Players, canParallel: Boolean = false) : ContextManag
         return this
     }
 
-    fun messages(messages: MessagesContextManager, canParallel:Boolean=false): Context {
-        if (!canParallel) {
-            clear()
-        }
-        this.messages = messages
-        return this
-    }
-
-    fun ui(ui: DiscordPlayerUI, canParallel:Boolean=false): Context {
+    fun ui(ui: DiscordPlayerUI, canParallel: Boolean = false): Context {
         if (!canParallel) {
             clear()
         }
@@ -111,7 +104,6 @@ class Context(val players: Players, canParallel: Boolean = false) : ContextManag
         selectMenu = null
         multiContext = null
         modal = null
-        messages = null
         ui = null
     }
 
@@ -126,9 +118,6 @@ class Context(val players: Players, canParallel: Boolean = false) : ContextManag
             return true
         }
         if (modal != null && modal!!.canApply(string)) {
-            return true
-        }
-        if (messages != null && messages!!.canApply(string)) {
             return true
         }
         if (ui != null && ui!!.canExecute(string)) {
@@ -159,11 +148,14 @@ class Context(val players: Players, canParallel: Boolean = false) : ContextManag
     }
 
     fun apply(string: String, event: SelectMenuChooseEvent) {
-        if (multiContext != null) {
-            if (multiContext!!.canApply(string)) {
-                multiContext!!.apply(string, event)
-                return
-            }
+        if (multiContext != null && multiContext!!.canApply(string)) {
+            multiContext!!.apply(string, event)
+            return
+        }
+        if (ui != null && ui!!.canExecute(string)) {
+            ui!!.interaction = event.interaction
+            ui!!.respondToInteraction(string)
+            return
         }
         if (selectMenu != null) {
             if (selectMenu!!.canApply(string)) {
@@ -190,23 +182,7 @@ class Context(val players: Players, canParallel: Boolean = false) : ContextManag
         throw IllegalStateException("Cannot apply $customId. ${if (modal != null) modal.toString() else "No modal"}, ${if (multiContext != null) multiContext.toString() else "No multiContext"} => Cette interaction n'est plus valide, recommencez : le bot supprime les anciennes interactions de sa mémoire afin de ne pas se mélanger les pinceaux")
     }
 
-    fun apply(string: String, event: MessageCreateEvent) {
-        if (multiContext != null) {
-            if (multiContext!!.canApply(string)) {
-                multiContext!!.apply(string, event)
-                return
-            }
-        }
-        if (messages != null) {
-            if (messages!!.canApply(string)) {
-                messages!!.ex(event, this)
-                return
-            }
-        }
-        throw IllegalStateException("Cannot apply $string. ${if (messages != null) messages.toString() else "No messages"}, ${if (multiContext != null) multiContext.toString() else "No multiContext"} => Cette interaction n'est plus valide, recommencez : le bot supprime les anciennes interactions de sa mémoire afin de ne pas se mélanger les pinceaux")
-    }
-
     override fun toString(): String {
-        return "Context(players=$players, buttons=$buttons, selectMenu=$selectMenu, multiContext=$multiContext, modal=$modal, messages=$messages)"
+        return "Context(players=$players, buttons=$buttons, selectMenu=$selectMenu, multiContext=$multiContext, modal=$modal)"
     }
 }

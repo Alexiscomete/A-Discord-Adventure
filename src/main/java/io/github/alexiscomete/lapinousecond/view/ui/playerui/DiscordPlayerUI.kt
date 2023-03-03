@@ -354,81 +354,102 @@ class DiscordPlayerUI(private val context: Context, var interaction: Interaction
         return this
     }
 
+    private fun sendQuestion(question: Question) {
+        val fields = mutableListOf(
+            ActionRow.of(
+                TextInput.create(
+                    (if (question.field0.shortAnswer) TextInputStyle.SHORT else TextInputStyle.PARAGRAPH),
+                    "question_field0",
+                    question.field0.title,
+                    question.field0.required
+                )
+            )
+        )
+        if (question.field1 != null) {
+            fields.add(
+                ActionRow.of(
+                    TextInput.create(
+                        (if (question.field1.shortAnswer) TextInputStyle.SHORT else TextInputStyle.PARAGRAPH),
+                        "question_field1",
+                        question.field1.title,
+                        question.field1.required
+                    )
+                )
+            )
+        }
+        if (question.field2 != null) {
+            fields.add(
+                ActionRow.of(
+                    TextInput.create(
+                        (if (question.field2.shortAnswer) TextInputStyle.SHORT else TextInputStyle.PARAGRAPH),
+                        "question_field2",
+                        question.field2.title,
+                        question.field2.required
+                    )
+                )
+            )
+        }
+        if (question.field3 != null) {
+            fields.add(
+                ActionRow.of(
+                    TextInput.create(
+                        (if (question.field3.shortAnswer) TextInputStyle.SHORT else TextInputStyle.PARAGRAPH),
+                        "question_field3",
+                        question.field3.title,
+                        question.field3.required
+                    )
+                )
+            )
+        }
+        interaction.respondWithModal(
+            "modal_question",
+            question.name,
+            fields as List<HighLevelComponent>?
+        )
+    }
+
     override fun respondToInteraction(id: String): PlayerUI {
         if (id.contains("just_update")) {
             updateOrSend()
+            return this
+        }
+        if (interaction.asModalInteraction().isPresent) {
+            if (currentQuestion == null) {
+                updateOrSend()
+            } else {
+                val question = currentQuestion!!.doAfter()
+                if (question == null) {
+                    updateOrSend()
+                    currentQuestion = null
+                } else {
+                    currentQuestion = question
+                    interaction.asModalInteraction().get().createImmediateResponder()
+                        .addEmbeds(
+                            EmbedBuilder()
+                                .setTitle("Votre réponse a été reçue")
+                                .setDescription("Mais nous avons besoin de d'autres informations pour continuer")
+                        )
+                        .addComponents(
+                            ActionRow.of(
+                                Button.primary("send_question", "Actualiser")
+                            )
+                        )
+                        .respond()
+                }
+            }
+            return this
+        }
+        if (id.contains("send_question") && currentQuestion != null) {
+            sendQuestion(currentQuestion!!)
             return this
         }
         if (longCustomUI!!.hasInteractionID(id)) {
             val question = longCustomUI!!.respondToInteraction(id)
             if (question == null) {
                 updateOrSend()
-            } else if (interaction.asModalInteraction().isPresent) {
-                interaction.asModalInteraction().get().createImmediateResponder()
-                    .addEmbeds(
-                        EmbedBuilder()
-                            .setTitle("Votre réponse a été reçue")
-                            .setDescription("Mais nous avons besoin de d'autres informations pour continuer")
-                    )
-                    .addComponents(
-                        ActionRow.of(
-                            Button.primary("just_update", "Actualiser")
-                        )
-                    )
-                    .respond()
             } else {
                 currentQuestion = question
-                val fields = mutableListOf(
-                    ActionRow.of(
-                        TextInput.create(
-                            (if (question.field0.shortAnswer) TextInputStyle.SHORT else TextInputStyle.PARAGRAPH),
-                            "question_field0",
-                            question.field0.title,
-                            question.field0.required
-                        )
-                    )
-                )
-                if (question.field1 != null) {
-                    fields.add(
-                        ActionRow.of(
-                            TextInput.create(
-                                (if (question.field1.shortAnswer) TextInputStyle.SHORT else TextInputStyle.PARAGRAPH),
-                                "question_field1",
-                                question.field1.title,
-                                question.field1.required
-                            )
-                        )
-                    )
-                }
-                if (question.field2 != null) {
-                    fields.add(
-                        ActionRow.of(
-                            TextInput.create(
-                                (if (question.field2.shortAnswer) TextInputStyle.SHORT else TextInputStyle.PARAGRAPH),
-                                "question_field2",
-                                question.field2.title,
-                                question.field2.required
-                            )
-                        )
-                    )
-                }
-                if (question.field3 != null) {
-                    fields.add(
-                        ActionRow.of(
-                            TextInput.create(
-                                (if (question.field3.shortAnswer) TextInputStyle.SHORT else TextInputStyle.PARAGRAPH),
-                                "question_field3",
-                                question.field3.title,
-                                question.field3.required
-                            )
-                        )
-                    )
-                }
-                interaction.respondWithModal(
-                    "modal_question",
-                    question.name,
-                    fields as List<HighLevelComponent>?
-                )
+                sendQuestion(question)
             }
             return this
         }
@@ -467,9 +488,13 @@ class DiscordPlayerUI(private val context: Context, var interaction: Interaction
     }
 
     override fun canExecute(id: String): Boolean {
-        return longCustomUI?.hasInteractionID(id) == true || id.contains("just_update") || id.contains("end_dialogue") || id.contains(
-            "next_dialogue"
-        ) || id.contains("previous_dialogue")
+        return longCustomUI?.hasInteractionID(id) == true
+                || id.contains("just_update")
+                || id.contains("end_dialogue")
+                || id.contains("next_dialogue")
+                || id.contains("previous_dialogue")
+                || id.contains("send_question")
+                || id.contains("modal_question")
     }
 
     override fun clear(): PlayerUI {
