@@ -417,7 +417,24 @@ class DiscordPlayerUI(private val context: Context, var interaction: Interaction
             if (currentQuestion == null) {
                 updateOrSend()
             } else {
-                val question = currentQuestion!!.doAfter()
+                val modal = interaction.asModalInteraction().get()
+                val f1 = modal.getTextInputValueByCustomId("question_field0")
+                val f2 = modal.getTextInputValueByCustomId("question_field1")
+                val f3 = modal.getTextInputValueByCustomId("question_field2")
+                val f4 = modal.getTextInputValueByCustomId("question_field3")
+                if (f1.isPresent) {
+                    currentQuestion!!.field0.answer = f1.get()
+                }
+                if (f2.isPresent && currentQuestion!!.field1 != null) {
+                    currentQuestion!!.field1!!.answer = f2.get()
+                }
+                if (f3.isPresent && currentQuestion!!.field2 != null) {
+                    currentQuestion!!.field2!!.answer = f3.get()
+                }
+                if (f4.isPresent && currentQuestion!!.field3 != null) {
+                    currentQuestion!!.field3!!.answer = f4.get()
+                }
+                val question = currentQuestion!!.doAfter(currentQuestion!!)
                 if (question == null) {
                     updateOrSend()
                     currentQuestion = null

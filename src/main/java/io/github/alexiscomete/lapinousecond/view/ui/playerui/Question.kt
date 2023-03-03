@@ -6,5 +6,5 @@ class Question(
     val field1: QuestionField? = null,
     val field2: QuestionField? = null,
     val field3: QuestionField? = null,
-    val doAfter: () -> Question?
+    val doAfter: (Question) -> Question?
 )

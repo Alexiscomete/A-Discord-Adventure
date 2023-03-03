@@ -5,5 +5,5 @@ class QuestionField(
     val shortAnswer: Boolean,
     val required: Boolean
 ) {
-    val answer: String = ""
+    var answer: String = ""
 }

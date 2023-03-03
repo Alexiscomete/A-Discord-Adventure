@@ -3,7 +3,6 @@ package io.github.alexiscomete.lapinousecond.view.discord.commands.classes
 import io.github.alexiscomete.lapinousecond.api
 import io.github.alexiscomete.lapinousecond.entity.Player
 import io.github.alexiscomete.lapinousecond.entity.resources.Resource
-import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
 import io.github.alexiscomete.lapinousecond.useful.managesave.saveManager
 import io.github.alexiscomete.lapinousecond.view.Context
 import io.github.alexiscomete.lapinousecond.view.contextFor
@@ -11,7 +10,6 @@ import io.github.alexiscomete.lapinousecond.view.contextmanager.ModalContextMana
 import io.github.alexiscomete.lapinousecond.view.discord.commands.Command
 import io.github.alexiscomete.lapinousecond.view.discord.commands.ExecutableWithArguments
 import io.github.alexiscomete.lapinousecond.view.discord.commands.getAccount
-import io.github.alexiscomete.lapinousecond.view.ui.*
 import io.github.alexiscomete.lapinousecond.view.ui.longuis.EmbedPagesWithInteractions
 import io.github.alexiscomete.lapinousecond.view.ui.longuis.MenuBuilderUI
 import io.github.alexiscomete.lapinousecond.view.ui.old.MenuBuilder
@@ -22,9 +20,6 @@ import io.github.alexiscomete.lapinousecond.worlds.buildings.Buildings
 import io.github.alexiscomete.lapinousecond.worlds.buildings.Buildings.Companion.load
 import io.github.alexiscomete.lapinousecond.worlds.places
 import org.javacord.api.entity.message.MessageFlag
-import org.javacord.api.entity.message.component.ActionRow
-import org.javacord.api.entity.message.component.TextInput
-import org.javacord.api.entity.message.component.TextInputStyle
 import org.javacord.api.entity.server.invite.Invite
 import org.javacord.api.entity.server.invite.InviteBuilder
 import org.javacord.api.event.interaction.ModalSubmitEvent
@@ -190,13 +185,12 @@ class InteractCommandBase : Command(
                     buttonClickEvent.addMessage(Message("Vous êtes maintenant dans le bâtiment ${building["nameRP"]} !"))
                 }
 
-                fun helpBuilding(building: Building, buttonClickEvent: PlayerUI) : Question {
+                fun helpBuilding(building: Building, playerUI: PlayerUI): Question {
                     // Etape 1 : demander au joueur le montant à entrer en montrant le montant nécessaire
                     // Etape 2 : vérifier que le joueur a assez d'argent et que le montant ne dépasse pas le montant nécessaire
                     // Etape 3 : retirer l'argent du joueur et ajouter l'argent au bâtiment
 
                     // Etape 1
-                    val id = generateUniqueID()
 
                     return Question(
                         "Actuellement ${building["collect_value"]} / ${building["collect_target"]} rb",
@@ -206,7 +200,31 @@ class InteractCommandBase : Command(
                             required = true
                         )
                     ) {
-                        TODO("Not yet implemented, use M1")
+                        // Etape 2
+                        val opMoney = it.field0.answer
+                        if (opMoney != "") {
+                            throw IllegalArgumentException("Money not found")
+                        }
+
+                        var money = opMoney.toDouble()
+                        if (money > player.getMoney()) {
+                            throw IllegalArgumentException("You don't have enough money")
+                        }
+
+                        if (money > building["collect_target"].toDouble() - building["collect_value"].toDouble()) {
+                            money = (building["collect_target"].toDouble() - building["collect_value"].toDouble())
+                        }
+
+                        // Etape 3
+                        player.removeMoney(money)
+                        building.addMoney(money)
+
+                        playerUI.addMessage(
+                            Message(
+                                "Vous avez donné $money ${Resource.RABBIT_COIN.show} au bâtiment ${building["nameRP"]} ! <@${building["owner"]}> peut vous remerciez !"
+                            )
+                        )
+                        return@Question null
                     }
                 }
 
