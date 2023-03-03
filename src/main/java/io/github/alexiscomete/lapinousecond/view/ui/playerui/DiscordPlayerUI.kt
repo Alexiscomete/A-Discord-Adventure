@@ -9,9 +9,7 @@ import io.github.alexiscomete.lapinousecond.view.ui.dialogue.DialoguePart
 import io.github.alexiscomete.lapinousecond.view.ui.interactionui.InteractionStyle
 import io.github.alexiscomete.lapinousecond.view.ui.longuis.LongCustomUI
 import org.javacord.api.entity.message.MessageFlag
-import org.javacord.api.entity.message.component.ActionRow
-import org.javacord.api.entity.message.component.Button
-import org.javacord.api.entity.message.component.HighLevelComponent
+import org.javacord.api.entity.message.component.*
 import org.javacord.api.entity.message.embed.EmbedBuilder
 import org.javacord.api.interaction.Interaction
 import org.javacord.api.interaction.InteractionBase
@@ -343,6 +341,9 @@ class DiscordPlayerUI(private val context: Context, var interaction: Interaction
     // long customId
     private var longCustomUI: LongCustomUI? = null
 
+    // question
+    private var currentQuestion: Question? = null
+
     override fun addMessage(message: Message): PlayerUI {
         messages.add(message)
         return this
@@ -359,8 +360,76 @@ class DiscordPlayerUI(private val context: Context, var interaction: Interaction
             return this
         }
         if (longCustomUI!!.hasInteractionID(id)) {
-            longCustomUI!!.respondToInteraction(id)
-            updateOrSend()
+            val question = longCustomUI!!.respondToInteraction(id)
+            if (question == null) {
+                updateOrSend()
+            } else if (interaction.asModalInteraction().isPresent) {
+                interaction.asModalInteraction().get().createImmediateResponder()
+                    .addEmbeds(
+                        EmbedBuilder()
+                            .setTitle("Votre réponse a été reçue")
+                            .setDescription("Mais nous avons besoin de d'autres informations pour continuer")
+                    )
+                    .addComponents(
+                        ActionRow.of(
+                            Button.primary("just_update", "Actualiser")
+                        )
+                    )
+                    .respond()
+            } else {
+                currentQuestion = question
+                val fields = mutableListOf(
+                    ActionRow.of(
+                        TextInput.create(
+                            (if (question.field0.shortAnswer) TextInputStyle.SHORT else TextInputStyle.PARAGRAPH),
+                            "question_field0",
+                            question.field0.title,
+                            question.field0.required
+                        )
+                    )
+                )
+                if (question.field1 != null) {
+                    fields.add(
+                        ActionRow.of(
+                            TextInput.create(
+                                (if (question.field1.shortAnswer) TextInputStyle.SHORT else TextInputStyle.PARAGRAPH),
+                                "question_field1",
+                                question.field1.title,
+                                question.field1.required
+                            )
+                        )
+                    )
+                }
+                if (question.field2 != null) {
+                    fields.add(
+                        ActionRow.of(
+                            TextInput.create(
+                                (if (question.field2.shortAnswer) TextInputStyle.SHORT else TextInputStyle.PARAGRAPH),
+                                "question_field2",
+                                question.field2.title,
+                                question.field2.required
+                            )
+                        )
+                    )
+                }
+                if (question.field3 != null) {
+                    fields.add(
+                        ActionRow.of(
+                            TextInput.create(
+                                (if (question.field3.shortAnswer) TextInputStyle.SHORT else TextInputStyle.PARAGRAPH),
+                                "question_field3",
+                                question.field3.title,
+                                question.field3.required
+                            )
+                        )
+                    )
+                }
+                interaction.respondWithModal(
+                    "modal_question",
+                    question.name,
+                    fields as List<HighLevelComponent>?
+                )
+            }
             return this
         }
         if (id.contains("end_dialogue")) {
