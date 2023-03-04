@@ -33,34 +33,6 @@ class InteractCommandBase : Command(
     "interact"
 ), ExecutableWithArguments {
 
-    class M1(name: String, val player: Player, val building: Building) : ModalContextManager(name) {
-        override fun ex(smce: ModalSubmitEvent, c: Context) {
-            // Etape 2
-            val opMoney = smce.modalInteraction.getTextInputValueByCustomId("cmoneyid")
-            if (!opMoney.isPresent) {
-                throw IllegalArgumentException("Money not found")
-            }
-
-            var money = opMoney.get().toDouble()
-            if (money > player.getMoney()) {
-                throw IllegalArgumentException("You don't have enough money")
-            }
-
-            if (money > building["collect_target"].toDouble() - building["collect_value"].toDouble()) {
-                money = (building["collect_target"].toDouble() - building["collect_value"].toDouble())
-            }
-
-            // Etape 3
-            player.removeMoney(money)
-            building.addMoney(money)
-
-            smce.modalInteraction.createImmediateResponder()
-                .setContent("Vous avez donné $money ${Resource.RABBIT_COIN.show} au bâtiment ${building["nameRP"]} ! <@${building["owner"]}> peut vous remerciez !")
-                .respond()
-        }
-
-    }
-
     override val fullName: String
         get() = "interact"
     override val botPerms: Array<String>

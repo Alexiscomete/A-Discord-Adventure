@@ -11,8 +11,9 @@ import io.github.alexiscomete.lapinousecond.view.discord.commands.Command
 import io.github.alexiscomete.lapinousecond.view.discord.commands.ExecutableWithArguments
 import io.github.alexiscomete.lapinousecond.view.discord.commands.SubCommand
 import io.github.alexiscomete.lapinousecond.view.discord.commands.getAccount
-import io.github.alexiscomete.lapinousecond.view.ui.playerui.DiscordPlayerUI
 import io.github.alexiscomete.lapinousecond.view.ui.longuis.inv.InvInfosUI
+import io.github.alexiscomete.lapinousecond.view.ui.longuis.inv.InvResourcesUI
+import io.github.alexiscomete.lapinousecond.view.ui.playerui.DiscordPlayerUI
 import org.javacord.api.entity.message.embed.EmbedBuilder
 import org.javacord.api.interaction.Interaction
 import org.javacord.api.interaction.SlashCommandInteraction
@@ -140,47 +141,15 @@ class InvCommandResources : SubCommand(
         get() = null
 
     override fun execute(slashCommand: SlashCommandInteraction) {
-        val player: Player = who(slashCommand)
-
-        var content = ""
-
-        val tuto = player["tuto"].toInt()
-        if (tuto == 1) {
-            content += "> (Aurimezi) : Vide ?! Comment tu as fait pour acheter un inventaire sans argent ?\n\n> (Vous) : Je ne me souviens de rien. Depuis quand un inventaire parle ?\n\n> (Aurimezi) : Bon je crois que je vais devoir un peu te guider ...\n\nUtilisez `/work all`\n"
-            player["tuto"] = "3"
-        } else if (tuto == 4) {
-            content += "> (Aurimezi) : Ca fait du bien de ne pas se sentir vide ... maintenant achetons ou vendons des ressources. Regardons ce qu'on a au magasin\n\nUtilisez `/shop list`\n"
-            player["tuto"] = "5"
-        }
-
-        val embed = EmbedBuilder()
-
-        val re = StringBuilder().append("Cliquez sur une resource (emoji) pour voir son nom\n")
-        for (reM in player.resourceManagers.values) {
-            re
-                .append(reM.resource.show)
-                .append(" ")
-                .append(reM.quantity)
-                .append("\n")
-        }
-
-        embed
-            .setTitle("Inventaire : ressources et argent")
-            .setColor(Color.ORANGE)
-            .addField("Rabbitcoins", player["bal"] + Resource.RABBIT_COIN.show, true)
-            .addField("Ressources", re.toString())
-            .setThumbnail("https://cdn.discordapp.com/attachments/854322477152337920/924612939879702588/unknown.png")
-
-        if (content == "") {
-            slashCommand.createImmediateResponder()
-                .addEmbed(embed)
-                .respond()
-        } else {
-            slashCommand.createImmediateResponder()
-                .addEmbed(embed)
-                .setContent(content)
-                .respond()
-        }
+        val context = contextFor(PlayerWithAccount(slashCommand.user))
+        val ui = DiscordPlayerUI(context, slashCommand as Interaction)
+        ui.setLongCustomUI(
+            InvResourcesUI(
+                ui
+            )
+        )
+        ui.updateOrSend()
+        context.ui(ui)
     }
 }
 
