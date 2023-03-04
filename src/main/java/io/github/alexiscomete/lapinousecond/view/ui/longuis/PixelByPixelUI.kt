@@ -108,7 +108,6 @@ class PixelByPixelUI(
                 "zoom_in",
                 "🔍",
                 "Zoom in",
-                this,
                 InteractionStyle.SECONDARY,
                 {
                     zooms = zooms.next ?: run {
@@ -116,35 +115,31 @@ class PixelByPixelUI(
                         zooms
                     }
                     return@SimpleInteractionUICustomUI null
-                },
-                { _, _ ->
-                    zooms = zooms.next ?: run {
-                        playerUI.addMessage(Message("Le monde microscopique n'est pas encore implémenté", "Problème"))
-                        zooms
-                    }
-                    return@SimpleInteractionUICustomUI null
                 }
-            ),
+            ) { _, _ ->
+                zooms = zooms.next ?: run {
+                    playerUI.addMessage(Message("Le monde microscopique n'est pas encore implémenté", "Problème"))
+                    zooms
+                }
+                return@SimpleInteractionUICustomUI null
+            },
             SimpleInteractionUICustomUI(
                 "up",
                 "⬆",
                 "Move up",
-                this,
                 InteractionStyle.NORMAL,
                 {
                     y--
                     return@SimpleInteractionUICustomUI null
                 },
-                { _, _ ->
-                    y--
-                    return@SimpleInteractionUICustomUI null
-                },
-            ),
+            ) { _, _ ->
+                y--
+                return@SimpleInteractionUICustomUI null
+            },
             SimpleInteractionUICustomUI(
                 "zoom_out",
                 "🚁",
                 "Zoom out",
-                this,
                 InteractionStyle.SECONDARY,
                 {
                     zooms = zooms.before ?: run {
@@ -152,62 +147,55 @@ class PixelByPixelUI(
                         zooms
                     }
                     return@SimpleInteractionUICustomUI null
-                },
-                { _, _ ->
-                    zooms = zooms.before ?: run {
-                        playerUI.addMessage(Message("Le monde des géants n'est pas encore implémenté", "Problème"))
-                        zooms
-                    }
-                    return@SimpleInteractionUICustomUI null
                 }
-            ),
+            ) { _, _ ->
+                zooms = zooms.before ?: run {
+                    playerUI.addMessage(Message("Le monde des géants n'est pas encore implémenté", "Problème"))
+                    zooms
+                }
+                return@SimpleInteractionUICustomUI null
+            },
         ),
         listOf(
             SimpleInteractionUICustomUI(
                 "left",
                 "⬅",
                 "Move left",
-                this,
                 InteractionStyle.NORMAL,
                 {
                     x--
                     return@SimpleInteractionUICustomUI null
                 },
-                { _, _ ->
-                    x--
-                    return@SimpleInteractionUICustomUI null
-                },
-            ),
+            ) { _, _ ->
+                x--
+                return@SimpleInteractionUICustomUI null
+            },
             SimpleInteractionUICustomUI(
                 "down",
                 "⬇",
                 "Move down",
-                this,
                 InteractionStyle.NORMAL,
                 {
                     y++
                     return@SimpleInteractionUICustomUI null
                 },
-                { _, _ ->
-                    y++
-                    return@SimpleInteractionUICustomUI null
-                },
-            ),
+            ) { _, _ ->
+                y++
+                return@SimpleInteractionUICustomUI null
+            },
             SimpleInteractionUICustomUI(
                 "right",
                 "➡",
                 "Move right",
-                this,
                 InteractionStyle.NORMAL,
                 {
                     x++
                     return@SimpleInteractionUICustomUI null
                 },
-                { _, _ ->
-                    x++
-                    return@SimpleInteractionUICustomUI null
-                },
-            )
+            ) { _, _ ->
+                x++
+                return@SimpleInteractionUICustomUI null
+            }
         ),
     )
 

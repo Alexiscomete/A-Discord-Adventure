@@ -1,33 +1,53 @@
 package io.github.alexiscomete.lapinousecond.view.ui.longuis.inv
 
 import io.github.alexiscomete.lapinousecond.entity.resources.Resource
-import io.github.alexiscomete.lapinousecond.view.ui.playerui.PlayerUI
+import io.github.alexiscomete.lapinousecond.view.ui.interactionui.InteractionStyle
+import io.github.alexiscomete.lapinousecond.view.ui.interactionui.SimpleInteractionUICustomUI
 import io.github.alexiscomete.lapinousecond.view.ui.longuis.StaticUI
 import io.github.alexiscomete.lapinousecond.view.ui.playerui.Message
+import io.github.alexiscomete.lapinousecond.view.ui.playerui.PlayerUI
 import java.awt.image.BufferedImage
 
 class InvResourcesUI(playerUI: PlayerUI) : StaticUI(
-    interactionUICustomUILists = listOf(),
+    interactionUICustomUILists = listOf(
+        listOf(
+            SimpleInteractionUICustomUI(
+                "inv_infos",
+                "Informations",
+                "Ouvrir l'inventaire des informations",
+                InteractionStyle.NORMAL,
+                {
+                    playerUI.setLongCustomUI(InvInfosUI(playerUI));
+                    return@SimpleInteractionUICustomUI null
+                },
+                null
+            )
+        )
+    ),
     playerUI
 ) {
     override fun getTitle(): String {
         val tuto = currentUI.getPlayer()["tuto"].toInt()
         if (tuto == 1) {
             currentUI.addMessage(
-                Message("> (Aurimezi) : Vide ?! Comment tu as fait pour acheter un inventaire sans argent ?\n" +
-                        "\n" +
-                        "> (Vous) : Je ne me souviens de rien. Depuis quand un inventaire parle ?\n" +
-                        "\n" +
-                        "> (Aurimezi) : Bon je crois que je vais devoir un peu te guider ...\n" +
-                        "\n" +
-                        "Utilisez `/work all`\n")
+                Message(
+                    "> (Aurimezi) : Vide ?! Comment tu as fait pour acheter un inventaire sans argent ?\n" +
+                            "\n" +
+                            "> (Vous) : Je ne me souviens de rien. Depuis quand un inventaire parle ?\n" +
+                            "\n" +
+                            "> (Aurimezi) : Bon je crois que je vais devoir un peu te guider ...\n" +
+                            "\n" +
+                            "Utilisez `/work all`\n"
+                )
             )
             currentUI.getPlayer()["tuto"] = "3"
         } else if (tuto == 4) {
             currentUI.addMessage(
-                Message("> (Aurimezi) : Ca fait du bien de ne pas se sentir vide ... maintenant achetons ou vendons des ressources. Regardons ce qu'on a au magasin\n" +
-                        "\n" +
-                        "Utilisez `/shop list`\n")
+                Message(
+                    "> (Aurimezi) : Ca fait du bien de ne pas se sentir vide ... maintenant achetons ou vendons des ressources. Regardons ce qu'on a au magasin\n" +
+                            "\n" +
+                            "Utilisez `/shop list`\n"
+                )
             )
             currentUI.getPlayer()["tuto"] = "5"
         }
@@ -62,6 +82,6 @@ class InvResourcesUI(playerUI: PlayerUI) : StaticUI(
     }
 
     override fun getUnderString(): String? {
-        TODO("Not yet implemented")
+        return null
     }
 }

@@ -37,7 +37,6 @@ class EmbedPagesWithInteractions<U>(
                         (i - pageLevel + 1).toString(),
                         (i - pageLevel + 1).toString(),
                         "Cliquez pour interagir avec l'élément n°${i + 1} de la liste",
-                        this,
                         InteractionStyle.NORMAL,
                         { ui -> whenSelected(uArrayList[i], ui) },
                         null

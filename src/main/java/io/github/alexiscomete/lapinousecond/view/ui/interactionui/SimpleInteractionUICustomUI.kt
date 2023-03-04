@@ -1,6 +1,5 @@
 package io.github.alexiscomete.lapinousecond.view.ui.interactionui
 
-import io.github.alexiscomete.lapinousecond.view.ui.longuis.LongCustomUI
 import io.github.alexiscomete.lapinousecond.view.ui.playerui.PlayerUI
 import io.github.alexiscomete.lapinousecond.view.ui.playerui.Question
 
@@ -8,19 +7,10 @@ class SimpleInteractionUICustomUI(
     private var id: String,
     private var title: String,
     private var description: String?,
-    private var customUI: LongCustomUI,
     private val customInteractionStyle: InteractionStyle,
     private var executeWithoutArg: ((PlayerUI) -> Question?)?,
     private var executeWithArg: ((PlayerUI, String) -> Question?)?
 ) : InteractionUICustomUI {
-    override fun getCustomUI(): LongCustomUI {
-        return customUI
-    }
-
-    override fun setCustomUI(customUI: LongCustomUI): InteractionUICustomUI {
-        this.customUI = customUI
-        return this
-    }
 
     override fun getCustomInteractionStyle(): InteractionStyle {
         return customInteractionStyle

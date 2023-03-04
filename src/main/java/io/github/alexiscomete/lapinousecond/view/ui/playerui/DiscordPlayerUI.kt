@@ -14,6 +14,7 @@ import org.javacord.api.entity.message.embed.EmbedBuilder
 import org.javacord.api.interaction.Interaction
 import org.javacord.api.interaction.InteractionBase
 import org.javacord.api.interaction.MessageComponentInteractionBase
+import java.awt.Color
 
 class DiscordPlayerUI(private val context: Context, var interaction: Interaction) : PlayerUI {
 
@@ -21,7 +22,7 @@ class DiscordPlayerUI(private val context: Context, var interaction: Interaction
 
     private fun update(messageComponentInteractionBase: MessageComponentInteractionBase) {
         // note : max 10 embeds and 6000 characters
-        if (messages.isNotEmpty()) {
+        if (context.messages.isNotEmpty()) {
             val messageEmbed = messages(messageComponentInteractionBase)
             messageComponentInteractionBase.createOriginalMessageUpdater()
                 .removeAllEmbeds()
@@ -60,6 +61,7 @@ class DiscordPlayerUI(private val context: Context, var interaction: Interaction
             }
         } else if (longCustomUI != null) {
             val mainEmbed = EmbedBuilder()
+                .setColor(Color.ORANGE)
             if (longCustomUI!!.getTitle() != null) {
                 mainEmbed.setTitle(longCustomUI!!.getTitle())
             }
@@ -125,27 +127,27 @@ class DiscordPlayerUI(private val context: Context, var interaction: Interaction
         var canSendInMp = true
         var currentDescription = ""
         // pour les 11 derniers messages
-        for (i in messages.size - 1 downTo messages.size - 11) {
+        for (i in context.messages.size - 1 downTo context.messages.size - 11) {
             if (i < 0) break
-            val message = messages[i]
+            val message = context.messages[i]
             if (message.title != null) {
                 if (message.title!!.length < 180 && message.content.length < 400) {
                     messageEmbed.addField(message.title!!, message.content)
-                    messages.removeAt(i)
+                    context.messages.removeAt(i)
                 } else if (canSendInMp) {
                     canSendInMp = false
                     interactionBase.user.sendMessage(message.title + "\n" + message.content)
-                    messages.removeAt(i)
+                    context.messages.removeAt(i)
                 }
             } else {
                 if (message.content.length < 400) {
                     currentDescription += message.content + "\n"
                     messageEmbed.setDescription(currentDescription)
-                    messages.removeAt(i)
+                    context.messages.removeAt(i)
                 } else if (canSendInMp) {
                     canSendInMp = false
                     interactionBase.user.sendMessage(message.content)
-                    messages.removeAt(i)
+                    context.messages.removeAt(i)
                 }
             }
         }
@@ -199,7 +201,7 @@ class DiscordPlayerUI(private val context: Context, var interaction: Interaction
     private fun send(interactionBase: InteractionBase) {
         // note : max 10 embeds and 6000 characters
         val embeds = mutableListOf<EmbedBuilder>()
-        if (messages.isNotEmpty()) {
+        if (context.messages.isNotEmpty()) {
             val messageEmbed = messages(interactionBase)
             interactionBase.createImmediateResponder()
                 .addEmbeds(messageEmbed)
@@ -236,6 +238,7 @@ class DiscordPlayerUI(private val context: Context, var interaction: Interaction
             }
         } else if (longCustomUI != null) {
             val mainEmbed = EmbedBuilder()
+                .setColor(Color.ORANGE)
             if (longCustomUI!!.getTitle() != null) {
                 mainEmbed.setTitle(longCustomUI!!.getTitle())
             }
@@ -329,9 +332,7 @@ class DiscordPlayerUI(private val context: Context, var interaction: Interaction
         return components.toTypedArray()
     }
 
-
-    // messages
-    private val messages = mutableListOf<Message>()
+    // messages are in Context
 
     // dialogues
     private val dialogues = mutableListOf<Dialogue>()
@@ -345,7 +346,7 @@ class DiscordPlayerUI(private val context: Context, var interaction: Interaction
     private var currentQuestion: Question? = null
 
     override fun addMessage(message: Message): PlayerUI {
-        messages.add(message)
+        context.messages.add(message)
         return this
     }
 
@@ -515,7 +516,7 @@ class DiscordPlayerUI(private val context: Context, var interaction: Interaction
     }
 
     override fun clear(): PlayerUI {
-        messages.clear()
+        context.messages.clear()
         dialogues.clear()
         return this
     }
@@ -536,12 +537,12 @@ class DiscordPlayerUI(private val context: Context, var interaction: Interaction
     }
 
     override fun hasMessage(): Boolean {
-        return messages.isNotEmpty()
+        return context.messages.isNotEmpty()
     }
 
     override fun getMessages(): List<String> {
         val list = mutableListOf<String>()
-        for (message in messages) {
+        for (message in context.messages) {
             list.add(message.toString())
         }
         return list

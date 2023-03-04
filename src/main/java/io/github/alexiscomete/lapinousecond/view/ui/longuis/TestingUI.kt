@@ -63,7 +63,6 @@ class TestingUI(
                 "count",
                 "Count",
                 "Test",
-                this,
                 InteractionStyle.NORMAL,
                 null,
                 null

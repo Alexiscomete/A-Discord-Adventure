@@ -60,7 +60,6 @@ open class EmbedPages<U>(
                         idLast,
                         "⬅ Page précédente",
                         "Page suivant dans le menu",
-                        this,
                         InteractionStyle.NORMAL,
                         ::last,
                         null
@@ -69,7 +68,6 @@ open class EmbedPages<U>(
                         idNext,
                         "Page suivante ➡",
                         "Page suivant dans le menu",
-                        this,
                         InteractionStyle.NORMAL,
                         ::next,
                         null
@@ -81,7 +79,6 @@ open class EmbedPages<U>(
                         idLast,
                         "⬅ Page précédente",
                         "Page suivant dans le menu",
-                        this,
                         InteractionStyle.NORMAL,
                         ::last,
                         null
@@ -93,7 +90,6 @@ open class EmbedPages<U>(
                         idNext,
                         "Page suivante ➡",
                         "Page suivant dans le menu",
-                        this,
                         InteractionStyle.NORMAL,
                         ::next,
                         null

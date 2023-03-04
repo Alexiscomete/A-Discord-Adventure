@@ -6,6 +6,7 @@ import io.github.alexiscomete.lapinousecond.view.contextmanager.ContextManager
 import io.github.alexiscomete.lapinousecond.view.contextmanager.ModalContextManager
 import io.github.alexiscomete.lapinousecond.view.contextmanager.SelectMenuContextManager
 import io.github.alexiscomete.lapinousecond.view.ui.playerui.DiscordPlayerUI
+import io.github.alexiscomete.lapinousecond.view.ui.playerui.Message
 import org.javacord.api.event.interaction.ButtonClickEvent
 import org.javacord.api.event.interaction.ModalSubmitEvent
 import org.javacord.api.event.interaction.SelectMenuChooseEvent
@@ -58,6 +59,8 @@ class Context(val players: Players, canParallel: Boolean = false) : ContextManag
     private var multiContext: Context? = null
     private var modal: ModalContextManager? = null
     private var ui: DiscordPlayerUI? = null
+
+    val messages = mutableListOf<Message>()
 
     fun buttons(buttons: ButtonsContextManager, canParallel: Boolean = false): Context {
         if (!canParallel) {

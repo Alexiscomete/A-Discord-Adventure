@@ -10,14 +10,6 @@ class DisabledInteractionUI(
     private var id: String,
     private var title: String,
 ) : InteractionUICustomUI {
-    override fun getCustomUI(): LongCustomUI {
-        return customUI
-    }
-
-    override fun setCustomUI(customUI: LongCustomUI): InteractionUICustomUI {
-        this.customUI = customUI
-        return this
-    }
 
     override fun getCustomInteractionStyle(): InteractionStyle {
         return customInteractionStyle

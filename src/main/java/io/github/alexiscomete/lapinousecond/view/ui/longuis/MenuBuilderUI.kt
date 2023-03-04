@@ -21,7 +21,7 @@ class MenuBuilderUI(private val name: String, private val description: String, p
 
         addInteractionUICustomUI(
             SimpleInteractionUICustomUI(
-                id.toString(), name, description, this, InteractionStyle.NORMAL, whenUsed, null
+                id.toString(), name, description, InteractionStyle.NORMAL, whenUsed, null
             )
         )
 

@@ -1,11 +1,27 @@
 package io.github.alexiscomete.lapinousecond.view.ui.longuis.inv
 
+import io.github.alexiscomete.lapinousecond.view.ui.interactionui.InteractionStyle
+import io.github.alexiscomete.lapinousecond.view.ui.interactionui.SimpleInteractionUICustomUI
 import io.github.alexiscomete.lapinousecond.view.ui.playerui.PlayerUI
 import io.github.alexiscomete.lapinousecond.view.ui.longuis.StaticUI
 import java.awt.image.BufferedImage
 
 class InvInfosUI(playerUI: PlayerUI) : StaticUI(
-    interactionUICustomUILists = listOf(),
+    interactionUICustomUILists = listOf(
+        listOf(
+            SimpleInteractionUICustomUI(
+                "inv_resources",
+                "Ressources",
+                "Ouvrir l'inventaire des ressources",
+                InteractionStyle.NORMAL,
+                {
+                    playerUI.setLongCustomUI(InvResourcesUI(playerUI));
+                    return@SimpleInteractionUICustomUI null
+                },
+                null
+            )
+        )
+    ),
     playerUI
 ) {
     override fun getTitle(): String {
