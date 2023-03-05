@@ -12,6 +12,7 @@ import io.github.alexiscomete.lapinousecond.view.discord.commands.ExecutableWith
 import io.github.alexiscomete.lapinousecond.view.discord.commands.SubCommand
 import io.github.alexiscomete.lapinousecond.view.discord.commands.getAccount
 import io.github.alexiscomete.lapinousecond.view.ui.longuis.inv.InvInfosUI
+import io.github.alexiscomete.lapinousecond.view.ui.longuis.inv.InvItemsUI
 import io.github.alexiscomete.lapinousecond.view.ui.longuis.inv.InvResourcesUI
 import io.github.alexiscomete.lapinousecond.view.ui.playerui.DiscordPlayerUI
 import org.javacord.api.entity.message.embed.EmbedBuilder
@@ -105,21 +106,15 @@ class InvCommandItems : SubCommand(
         get() = null
 
     override fun execute(slashCommand: SlashCommandInteraction) {
-
-        //val player = who(slashCommand)
-
-        val embed = EmbedBuilder()
-            .setTitle("Items")
-            .setTimestampToNow()
-            .setFooter("Les items sont utilisables et ne fusionnent pas dans l'inventaire contrairement aux ressources")
-            .setColor(Color.BLUE)
-            .setThumbnail("https://cdn.discordapp.com/attachments/854322477152337920/924612939879702588/unknown.png")
-
-        embed.setDescription("Le système d'items n'est pas encore implémenté")
-
-        slashCommand.createImmediateResponder()
-            .addEmbed(embed)
-            .respond()
+        val context = contextFor(PlayerWithAccount(slashCommand.user))
+        val ui = DiscordPlayerUI(context, slashCommand as Interaction)
+        ui.setLongCustomUI(
+            InvItemsUI(
+                ui
+            )
+        )
+        ui.updateOrSend()
+        context.ui(ui)
     }
 }
 

@@ -19,6 +19,17 @@ class InvInfosUI(playerUI: PlayerUI) : StaticUI(
                     return@SimpleInteractionUICustomUI null
                 },
                 null
+            ),
+            SimpleInteractionUICustomUI(
+                "inv_items",
+                "Items",
+                "Ouvrir l'inventaire des items",
+                InteractionStyle.NORMAL,
+                {
+                    playerUI.setLongCustomUI(InvItemsUI(playerUI));
+                    return@SimpleInteractionUICustomUI null
+                },
+                null
             )
         )
     ),
@@ -53,7 +64,7 @@ class InvInfosUI(playerUI: PlayerUI) : StaticUI(
         return null
     }
 
-    override fun getUnderString(): String {
-        return "<t:${System.currentTimeMillis()}>"
+    override fun getUnderString(): String? {
+        return null
     }
 }

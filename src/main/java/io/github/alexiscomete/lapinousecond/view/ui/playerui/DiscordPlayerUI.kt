@@ -62,6 +62,7 @@ class DiscordPlayerUI(private val context: Context, var interaction: Interaction
         } else if (longCustomUI != null) {
             val mainEmbed = EmbedBuilder()
                 .setColor(Color.ORANGE)
+                .setTimestampToNow()
             if (longCustomUI!!.getTitle() != null) {
                 mainEmbed.setTitle(longCustomUI!!.getTitle())
             }
@@ -239,6 +240,7 @@ class DiscordPlayerUI(private val context: Context, var interaction: Interaction
         } else if (longCustomUI != null) {
             val mainEmbed = EmbedBuilder()
                 .setColor(Color.ORANGE)
+                .setTimestampToNow()
             if (longCustomUI!!.getTitle() != null) {
                 mainEmbed.setTitle(longCustomUI!!.getTitle())
             }

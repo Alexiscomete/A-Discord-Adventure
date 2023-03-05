@@ -21,6 +21,17 @@ class InvResourcesUI(playerUI: PlayerUI) : StaticUI(
                     return@SimpleInteractionUICustomUI null
                 },
                 null
+            ),
+            SimpleInteractionUICustomUI(
+                "inv_items",
+                "Items",
+                "Ouvrir l'inventaire des items",
+                InteractionStyle.NORMAL,
+                {
+                    playerUI.setLongCustomUI(InvItemsUI(playerUI));
+                    return@SimpleInteractionUICustomUI null
+                },
+                null
             )
         )
     ),
