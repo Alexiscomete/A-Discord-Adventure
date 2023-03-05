@@ -15,7 +15,7 @@ open class EmbedPages<U>(
     description: String?,
     underString: String?,
     protected val uArrayList: ArrayList<U>,
-    protected val uContentOf: ContentOf<U>,
+    protected val uContentOf: (min: Int, num: Int, uArrayList: ArrayList<U>) -> List<Pair<String, String>>,
     context: PlayerUI
 ) : BaseUI(
     linkedImage,
@@ -108,11 +108,7 @@ open class EmbedPages<U>(
 
             }
 
-    override fun getFields(): List<Pair<String, String>>? {
-        return uContentOf.getContent(pageLevel, number.coerceAtMost(uArrayList.size - pageLevel), uArrayList)
-    }
-
-    fun interface ContentOf<U> {
-        fun getContent(min: Int, num: Int, uArrayList: ArrayList<U>): List<Pair<String, String>>?
+    override fun getFields(): List<Pair<String, String>> {
+        return uContentOf(pageLevel, number.coerceAtMost(uArrayList.size - pageLevel), uArrayList)
     }
 }

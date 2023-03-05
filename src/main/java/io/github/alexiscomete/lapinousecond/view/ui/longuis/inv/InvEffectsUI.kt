@@ -1,34 +1,27 @@
 package io.github.alexiscomete.lapinousecond.view.ui.longuis.inv
 
+import io.github.alexiscomete.lapinousecond.view.ui.longuis.EmbedPages
 import io.github.alexiscomete.lapinousecond.view.ui.playerui.PlayerUI
 import io.github.alexiscomete.lapinousecond.view.ui.longuis.StaticUI
 import java.awt.image.BufferedImage
 
-class InvEffectsUI(playerUI: PlayerUI) : StaticUI(
-    interactionUICustomUILists = listOf(),
+class InvEffectsUI(playerUI: PlayerUI) : EmbedPages<InvEffectUIPart>(
+    null,
+    null,
+    "Inventaire des effets",
+    "Les effets peuvent exister en plusieurs exemplaires car les niveaux sont cumulables.",
+    "Chaque catégorie correspond à un effet avec à chaque fois le niveau total et les différentes pairs de temps et de niveau.",
+    run {
+        return@run ArrayList<InvEffectUIPart>()
+    },
+    {
+
+    },
     playerUI
 ) {
-    override fun getTitle(): String? {
-        TODO("Not yet implemented")
-    }
-
-    override fun getDescription(): String? {
-        TODO("Not yet implemented")
-    }
 
     override fun getFields(): List<Pair<String, String>>? {
-        TODO("Not yet implemented")
-    }
-
-    override fun getLinkedImage(): String? {
-        TODO("Not yet implemented")
-    }
-
-    override fun getBufferedImage(): BufferedImage? {
-        TODO("Not yet implemented")
-    }
-
-    override fun getUnderString(): String? {
-        TODO("Not yet implemented")
+        // TODO
+        return null
     }
 }

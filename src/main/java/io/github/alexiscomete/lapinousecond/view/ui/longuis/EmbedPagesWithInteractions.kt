@@ -9,7 +9,7 @@ import java.awt.image.BufferedImage
 
 class EmbedPagesWithInteractions<U>(
     uArrayList: ArrayList<U>,
-    uContentOf: ContentOf<U>,
+    uContentOf: (min: Int, num: Int, uArrayList: ArrayList<U>) -> List<Pair<String, String>>,
     val whenSelected: (U, PlayerUI) -> Question?,
     linkedImage: String?,
     bufferedImage: BufferedImage?,
