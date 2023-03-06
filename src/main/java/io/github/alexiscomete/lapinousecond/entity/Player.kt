@@ -319,6 +319,10 @@ open class Player(id: Long) : CacheGetSet(id, PLAYERS), Owner, ContainsItems {
         return level
     }
 
+    fun getEffectsCopy(): ArrayList<Effect> {
+        return ArrayList(effects)
+    }
+
     fun updateAndRemoveEffects() {
         for (effect in effects) {
             if (effect is TimedEffect) {
