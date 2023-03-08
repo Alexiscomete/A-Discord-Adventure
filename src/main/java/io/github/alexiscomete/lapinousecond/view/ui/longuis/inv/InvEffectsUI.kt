@@ -1,6 +1,8 @@
 package io.github.alexiscomete.lapinousecond.view.ui.longuis.inv
 
 import io.github.alexiscomete.lapinousecond.entity.effects.EffectEnum
+import io.github.alexiscomete.lapinousecond.view.ui.interactionui.InteractionStyle
+import io.github.alexiscomete.lapinousecond.view.ui.interactionui.SimpleInteractionUICustomUI
 import io.github.alexiscomete.lapinousecond.view.ui.longuis.EmbedPages
 import io.github.alexiscomete.lapinousecond.view.ui.playerui.PlayerUI
 
@@ -23,4 +25,42 @@ class InvEffectsUI(playerUI: PlayerUI) : EmbedPages<InvEffectUIPart>(
         invEffectUIParts.subList(i, i1).map { it.getPair() }
     },
     playerUI
-)
+) {
+    override fun addComponents() {
+        setInteractionUICustomUIs(listOf(components, listOf(
+            SimpleInteractionUICustomUI(
+                "inv_resources",
+                "Ressources",
+                "Ouvrir l'inventaire des ressources",
+                InteractionStyle.NORMAL,
+                {
+                    currentUI.setLongCustomUI(InvResourcesUI(currentUI))
+                    return@SimpleInteractionUICustomUI null
+                },
+                null
+            ),
+            SimpleInteractionUICustomUI(
+                "inv_infos",
+                "Informations",
+                "Ouvrir l'inventaire des informations",
+                InteractionStyle.NORMAL,
+                {
+                    currentUI.setLongCustomUI(InvInfosUI(currentUI))
+                    return@SimpleInteractionUICustomUI null
+                },
+                null
+            ),
+            SimpleInteractionUICustomUI(
+                "inv_items",
+                "Items",
+                "Ouvrir l'inventaire des items",
+                InteractionStyle.NORMAL,
+                {
+                    currentUI.setLongCustomUI(InvItemsUI(currentUI))
+                    return@SimpleInteractionUICustomUI null
+                },
+                null
+            )
+        )))
+    }
+}

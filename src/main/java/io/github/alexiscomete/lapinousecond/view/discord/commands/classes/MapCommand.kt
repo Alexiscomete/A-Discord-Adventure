@@ -637,7 +637,7 @@ class MapCommand : Command(
                                         )
                                     }
                                     if (pairs.size == 0) {
-                                        return@EmbedPages null
+                                        return@EmbedPages listOf(Pair("Aucune carte", "Aucune carte"))
                                     }
                                     return@EmbedPages pairs
                                 },

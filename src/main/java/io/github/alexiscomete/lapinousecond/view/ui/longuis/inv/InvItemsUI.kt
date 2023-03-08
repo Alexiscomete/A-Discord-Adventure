@@ -15,7 +15,7 @@ class InvItemsUI(playerUI: PlayerUI) : StaticUI(
                 "Ouvrir l'inventaire des ressources",
                 InteractionStyle.NORMAL,
                 {
-                    playerUI.setLongCustomUI(InvResourcesUI(playerUI));
+                    playerUI.setLongCustomUI(InvResourcesUI(playerUI))
                     return@SimpleInteractionUICustomUI null
                 },
                 null
@@ -26,7 +26,18 @@ class InvItemsUI(playerUI: PlayerUI) : StaticUI(
                 "Ouvrir l'inventaire des informations",
                 InteractionStyle.NORMAL,
                 {
-                    playerUI.setLongCustomUI(InvInfosUI(playerUI));
+                    playerUI.setLongCustomUI(InvInfosUI(playerUI))
+                    return@SimpleInteractionUICustomUI null
+                },
+                null
+            ),
+            SimpleInteractionUICustomUI(
+                "inv_effects",
+                "Effets",
+                "Ouvrir la liste des effets en cours",
+                InteractionStyle.NORMAL,
+                {
+                    playerUI.setLongCustomUI(InvEffectsUI(playerUI))
                     return@SimpleInteractionUICustomUI null
                 },
                 null

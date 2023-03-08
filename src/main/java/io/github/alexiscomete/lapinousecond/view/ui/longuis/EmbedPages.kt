@@ -37,7 +37,7 @@ open class EmbedPages<U>(
         // check if the button is valid : it must have enough elements to go to the next page
         if (pageLevel + number < uArrayList.size) {
             pageLevel += number
-            setInteractionUICustomUIs(listOf(components))
+            addComponents()
         }
         return null
     }
@@ -47,9 +47,13 @@ open class EmbedPages<U>(
     ) : Question? {
         if (pageLevel > number - 1) {
             pageLevel -= number
-            setInteractionUICustomUIs(listOf(components))
+            addComponents()
         }
         return null
+    }
+
+    protected open fun addComponents() {
+        setInteractionUICustomUIs(listOf(components))
     }
 
     open val components: List<InteractionUICustomUI>
