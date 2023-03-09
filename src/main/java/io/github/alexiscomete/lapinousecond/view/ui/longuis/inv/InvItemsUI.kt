@@ -1,74 +1,70 @@
 package io.github.alexiscomete.lapinousecond.view.ui.longuis.inv
 
+import io.github.alexiscomete.lapinousecond.entity.items.Item
 import io.github.alexiscomete.lapinousecond.view.ui.interactionui.InteractionStyle
 import io.github.alexiscomete.lapinousecond.view.ui.interactionui.SimpleInteractionUICustomUI
+import io.github.alexiscomete.lapinousecond.view.ui.longuis.EmbedPagesWithInteractions
 import io.github.alexiscomete.lapinousecond.view.ui.playerui.PlayerUI
-import io.github.alexiscomete.lapinousecond.view.ui.longuis.StaticUI
-import java.awt.image.BufferedImage
 
-class InvItemsUI(playerUI: PlayerUI) : StaticUI(
-    interactionUICustomUILists = listOf(
-        listOf(
-            SimpleInteractionUICustomUI(
-                "inv_resources",
-                "Ressources",
-                "Ouvrir l'inventaire des ressources",
-                InteractionStyle.NORMAL,
-                {
-                    playerUI.setLongCustomUI(InvResourcesUI(playerUI))
-                    return@SimpleInteractionUICustomUI null
-                },
-                null
-            ),
-            SimpleInteractionUICustomUI(
-                "inv_infos",
-                "Informations",
-                "Ouvrir l'inventaire des informations",
-                InteractionStyle.NORMAL,
-                {
-                    playerUI.setLongCustomUI(InvInfosUI(playerUI))
-                    return@SimpleInteractionUICustomUI null
-                },
-                null
-            ),
-            SimpleInteractionUICustomUI(
-                "inv_effects",
-                "Effets",
-                "Ouvrir la liste des effets en cours",
-                InteractionStyle.NORMAL,
-                {
-                    playerUI.setLongCustomUI(InvEffectsUI(playerUI))
-                    return@SimpleInteractionUICustomUI null
-                },
-                null
-            )
-        )
-    ),
+class InvItemsUI(playerUI: PlayerUI) : EmbedPagesWithInteractions<Item>(
+    run {
+        //TODO
+        return@run arrayListOf<Item>()
+    },
+    { i: Int, i1: Int, items: ArrayList<Item> ->
+        //TODO
+        listOf()
+    },
+    { u: Item, player: PlayerUI ->
+        null
+    },
+    "https://cdn.discordapp.com/attachments/854322477152337920/924612939879702588/unknown.png",
+    null,
+    "Inventaire de vos items",
+    "Le système d'items n'est pas encore implémenté. Les items sont utilisables et ne fusionnent pas dans l'inventaire contrairement aux ressources.",
     playerUI
 ) {
-    override fun getTitle(): String {
-        return "Inventaire de vos items"
-    }
-
-    override fun getDescription(): String {
-        // TODO
-        return "Le système d'items n'est pas encore implémenté"
-    }
-
-    override fun getFields(): List<Pair<String, String>>? {
-        // TODO
-        return null
-    }
-
-    override fun getLinkedImage(): String {
-        return "https://cdn.discordapp.com/attachments/854322477152337920/924612939879702588/unknown.png"
-    }
-
-    override fun getBufferedImage(): BufferedImage? {
-        return null
-    }
-
-    override fun getUnderString(): String {
-        return "Les items sont utilisables et ne fusionnent pas dans l'inventaire contrairement aux ressources"
+    override fun addComponents() {
+        setInteractionUICustomUIs(
+            listOf(
+                buttons,
+                components,
+                listOf(
+                    SimpleInteractionUICustomUI(
+                        "inv_resources",
+                        "Ressources",
+                        "Ouvrir l'inventaire des ressources",
+                        InteractionStyle.NORMAL,
+                        {
+                            currentUI.setLongCustomUI(InvResourcesUI(currentUI))
+                            return@SimpleInteractionUICustomUI null
+                        },
+                        null
+                    ),
+                    SimpleInteractionUICustomUI(
+                        "inv_infos",
+                        "Informations",
+                        "Ouvrir l'inventaire des informations",
+                        InteractionStyle.NORMAL,
+                        {
+                            currentUI.setLongCustomUI(InvInfosUI(currentUI))
+                            return@SimpleInteractionUICustomUI null
+                        },
+                        null
+                    ),
+                    SimpleInteractionUICustomUI(
+                        "inv_effects",
+                        "Effets",
+                        "Ouvrir la liste des effets en cours",
+                        InteractionStyle.NORMAL,
+                        {
+                            currentUI.setLongCustomUI(InvEffectsUI(currentUI))
+                            return@SimpleInteractionUICustomUI null
+                        },
+                        null
+                    )
+                )
+            )
+        )
     }
 }

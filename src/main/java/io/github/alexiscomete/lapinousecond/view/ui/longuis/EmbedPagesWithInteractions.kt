@@ -7,7 +7,7 @@ import io.github.alexiscomete.lapinousecond.view.ui.interactionui.SimpleInteract
 import io.github.alexiscomete.lapinousecond.view.ui.playerui.Question
 import java.awt.image.BufferedImage
 
-class EmbedPagesWithInteractions<U>(
+open class EmbedPagesWithInteractions<U>(
     uArrayList: ArrayList<U>,
     uContentOf: (min: Int, num: Int, uArrayList: ArrayList<U>) -> List<Pair<String, String>>,
     val whenSelected: (U, PlayerUI) -> Question?,
@@ -28,7 +28,16 @@ class EmbedPagesWithInteractions<U>(
 ) {
     override val number = 5
 
-    private val buttons: List<InteractionUICustomUI>
+    override fun addComponents() {
+        setInteractionUICustomUIs(
+            listOf(
+                buttons,
+                components
+            )
+        )
+    }
+
+    protected val buttons: List<InteractionUICustomUI>
         get() {
             val buttons = mutableListOf<InteractionUICustomUI>()
             for (i in pageLevel until pageLevel + number.coerceAtMost(uArrayList.size - pageLevel)) {
@@ -45,31 +54,5 @@ class EmbedPagesWithInteractions<U>(
             }
             return buttons
         }
-
-    override fun next(playerUI: PlayerUI) : Question?{
-        if (pageLevel + number < uArrayList.size) {
-            pageLevel += number
-            setInteractionUICustomUIs(
-                listOf(
-                    buttons,
-                    components
-                )
-            )
-        }
-        return null
-    }
-
-    override fun last(playerUI: PlayerUI) : Question?{
-        if (pageLevel > number - 1) {
-            pageLevel -= number
-            setInteractionUICustomUIs(
-                listOf(
-                    buttons,
-                    components
-                )
-            )
-        }
-        return null
-    }
 
 }

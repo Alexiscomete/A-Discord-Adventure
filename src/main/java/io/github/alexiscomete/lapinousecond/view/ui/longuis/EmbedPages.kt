@@ -31,6 +31,10 @@ open class EmbedPages<U>(
     private val idNext = "next"
     open val number = 10
 
+    init {
+        addComponents()
+    }
+
     protected open fun next(
         playerUI: PlayerUI
     ) : Question? {
