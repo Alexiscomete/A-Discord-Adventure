@@ -13,7 +13,7 @@ class InvItemsUI(playerUI: PlayerUI) : EmbedPagesWithInteractions<Item>(
     },
     { i: Int, i1: Int, items: ArrayList<Item> ->
         //TODO
-        listOf()
+        listOf(Pair("Aucun item", "Aucun item"))
     },
     { u: Item, player: PlayerUI ->
         null
@@ -25,46 +25,56 @@ class InvItemsUI(playerUI: PlayerUI) : EmbedPagesWithInteractions<Item>(
     playerUI
 ) {
     override fun addComponents() {
-        setInteractionUICustomUIs(
-            listOf(
-                buttons,
-                components,
-                listOf(
-                    SimpleInteractionUICustomUI(
-                        "inv_resources",
-                        "Ressources",
-                        "Ouvrir l'inventaire des ressources",
-                        InteractionStyle.NORMAL,
-                        {
-                            currentUI.setLongCustomUI(InvResourcesUI(currentUI))
-                            return@SimpleInteractionUICustomUI null
-                        },
-                        null
-                    ),
-                    SimpleInteractionUICustomUI(
-                        "inv_infos",
-                        "Informations",
-                        "Ouvrir l'inventaire des informations",
-                        InteractionStyle.NORMAL,
-                        {
-                            currentUI.setLongCustomUI(InvInfosUI(currentUI))
-                            return@SimpleInteractionUICustomUI null
-                        },
-                        null
-                    ),
-                    SimpleInteractionUICustomUI(
-                        "inv_effects",
-                        "Effets",
-                        "Ouvrir la liste des effets en cours",
-                        InteractionStyle.NORMAL,
-                        {
-                            currentUI.setLongCustomUI(InvEffectsUI(currentUI))
-                            return@SimpleInteractionUICustomUI null
-                        },
-                        null
-                    )
-                )
+        val bu = listOf(
+            SimpleInteractionUICustomUI(
+                "inv_resources",
+                "Ressources",
+                "Ouvrir l'inventaire des ressources",
+                InteractionStyle.NORMAL,
+                {
+                    currentUI.setLongCustomUI(InvResourcesUI(currentUI))
+                    return@SimpleInteractionUICustomUI null
+                },
+                null
+            ),
+            SimpleInteractionUICustomUI(
+                "inv_infos",
+                "Informations",
+                "Ouvrir l'inventaire des informations",
+                InteractionStyle.NORMAL,
+                {
+                    currentUI.setLongCustomUI(InvInfosUI(currentUI))
+                    return@SimpleInteractionUICustomUI null
+                },
+                null
+            ),
+            SimpleInteractionUICustomUI(
+                "inv_effects",
+                "Effets",
+                "Ouvrir la liste des effets en cours",
+                InteractionStyle.NORMAL,
+                {
+                    currentUI.setLongCustomUI(InvEffectsUI(currentUI))
+                    return@SimpleInteractionUICustomUI null
+                },
+                null
             )
         )
+        if (buttons.isEmpty()) {
+            setInteractionUICustomUIs(
+                listOf(
+                    components,
+                    bu
+                )
+            )
+        } else {
+            setInteractionUICustomUIs(
+                listOf(
+                    buttons,
+                    components,
+                    bu
+                )
+            )
+        }
     }
 }
