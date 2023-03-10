@@ -1,5 +1,6 @@
 package io.github.alexiscomete.lapinousecond.entity.items
 
+import io.github.alexiscomete.lapinousecond.entity.items.items.StrasbourgSausage
 import io.github.alexiscomete.lapinousecond.entity.players
 import io.github.alexiscomete.lapinousecond.useful.managesave.CacheCustom
 import io.github.alexiscomete.lapinousecond.useful.managesave.CacheGetSet
@@ -7,12 +8,11 @@ import io.github.alexiscomete.lapinousecond.useful.managesave.Table
 import io.github.alexiscomete.lapinousecond.useful.managesave.save
 
 val ITEMS = Table("items")
-val items = CacheCustom<Item>(ITEMS) { id: Long ->
-    val type = save!!.getString(ITEMS, "type", "TEXT", id, false)
-    if (type == "normal") {
-        NormalItem(id)
-    } else {
-        throw IllegalStateException("Unknown item type")
+val items = CacheCustom(ITEMS) { id: Long ->
+    when (save!!.getString(ITEMS, "type", "TEXT", id, false)) {
+        "normal" -> NormalItem(id)
+        "StrasbourgSausage" -> StrasbourgSausage(id)
+        else -> throw IllegalStateException("Unknown item type")
     }
 }
 
