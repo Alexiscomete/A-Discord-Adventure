@@ -8,12 +8,11 @@ import io.github.alexiscomete.lapinousecond.view.ui.playerui.PlayerUI
 
 class InvItemsUI(playerUI: PlayerUI) : EmbedPagesWithInteractions<Item>(
     run {
-        //TODO
-        return@run arrayListOf<Item>()
+        return@run playerUI.getPlayer().getAllItems()
     },
     { i: Int, i1: Int, items: ArrayList<Item> ->
-        //TODO
-        listOf(Pair("Aucun item", "Aucun item"))
+        val pairs = items.subList(i, i1).map { Pair(it.name + " (" + it.id.toString() + ")", it.description) }
+        pairs.ifEmpty { listOf(Pair("Aucun item", "Revenez plus tard")) }
     },
     { u: Item, player: PlayerUI ->
         null

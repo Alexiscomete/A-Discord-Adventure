@@ -22,6 +22,13 @@ abstract class Item(id: Long) : CacheGetSet(id, ITEMS) {
         set(value) {
             this["name"] = value
         }
+
+    var description: String
+        get() = this["description"]
+        set(value) {
+            this["description"] = value
+        }
+
     var containsItems: ContainsItems
         get() = run {
             val containsItemsType = this["containsItemsType"]

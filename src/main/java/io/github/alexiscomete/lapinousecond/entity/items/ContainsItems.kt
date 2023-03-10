@@ -5,4 +5,5 @@ interface ContainsItems {
     val ownerString: String
 
     fun getAllItems(): List<Item>
+    fun addItem(item: Item)
 }

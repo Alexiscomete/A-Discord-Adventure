@@ -210,7 +210,7 @@ open class Player(id: Long) : CacheGetSet(id, PLAYERS), Owner, ContainsItems {
     override val ownerString: String
         get() = id.toString()
 
-    override fun getAllItems(): List<Item> {
+    override fun getAllItems(): ArrayList<Item> {
         // query of all items in the inventory of the player
         val query = "SELECT * FROM items WHERE containsItemsType = 'player' AND containsItemsId = '${id}'"
         val preparedStatement = saveManager.preparedStatement(query)
@@ -224,6 +224,11 @@ open class Player(id: Long) : CacheGetSet(id, PLAYERS), Owner, ContainsItems {
         return items
     }
 
+    override fun addItem(item: Item) {
+        // query to add an item to the inventory of the player
+        item["containsItemsType"] = "player"
+        item["containsItemsId"] = id.toString()
+    }
 
     override fun getMoney(): Double {
         return this["bal"].toDouble()
