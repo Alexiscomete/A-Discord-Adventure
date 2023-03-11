@@ -20,7 +20,7 @@ class InvItemsUI(playerUI: PlayerUI) : EmbedPagesWithInteractions<Item>(
     "https://cdn.discordapp.com/attachments/854322477152337920/924612939879702588/unknown.png",
     null,
     "Inventaire de vos items",
-    "Le système d'items n'est pas encore implémenté. Les items sont utilisables et ne fusionnent pas dans l'inventaire contrairement aux ressources.",
+    "Les items sont utilisables et ne fusionnent pas dans l'inventaire contrairement aux ressources.",
     playerUI
 ) {
     override fun addComponents() {

@@ -8,7 +8,7 @@ import io.github.alexiscomete.lapinousecond.useful.managesave.Table
 import io.github.alexiscomete.lapinousecond.useful.managesave.save
 
 val ITEMS = Table("items")
-val items = CacheCustom(ITEMS) { id: Long ->
+val itemsCacheCustom = CacheCustom(ITEMS) { id: Long ->
     when (save!!.getString(ITEMS, "type", "TEXT", id, false)) {
         "normal" -> NormalItem(id)
         "StrasbourgSausage" -> StrasbourgSausage(id)
