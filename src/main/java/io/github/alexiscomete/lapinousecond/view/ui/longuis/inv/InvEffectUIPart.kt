@@ -7,7 +7,7 @@ import io.github.alexiscomete.lapinousecond.entity.effects.TimedEffect
 class InvEffectUIPart(
     private val effectType: EffectEnum
 ) {
-    private var description = ""
+    private var description = "niveau (temps restant)"
     private var totalLevel = 0
 
     fun add(effect: Effect) {

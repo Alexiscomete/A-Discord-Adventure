@@ -5,12 +5,14 @@ import io.github.alexiscomete.lapinousecond.entity.effects.EffectEnum
 import io.github.alexiscomete.lapinousecond.entity.effects.TimedEffect
 import io.github.alexiscomete.lapinousecond.entity.items.ContainsItems
 import io.github.alexiscomete.lapinousecond.entity.items.Item
-import io.github.alexiscomete.lapinousecond.entity.items.items.StrasbourgSausage
 import io.github.alexiscomete.lapinousecond.entity.items.itemsCacheCustom
 import io.github.alexiscomete.lapinousecond.entity.resources.Resource
 import io.github.alexiscomete.lapinousecond.entity.resources.ResourceManager
 import io.github.alexiscomete.lapinousecond.roles.Role
-import io.github.alexiscomete.lapinousecond.useful.managesave.*
+import io.github.alexiscomete.lapinousecond.useful.managesave.CacheCustom
+import io.github.alexiscomete.lapinousecond.useful.managesave.CacheGetSet
+import io.github.alexiscomete.lapinousecond.useful.managesave.Table
+import io.github.alexiscomete.lapinousecond.useful.managesave.saveManager
 import io.github.alexiscomete.lapinousecond.view.AnswerEnum
 import io.github.alexiscomete.lapinousecond.view.LangageEnum
 import io.github.alexiscomete.lapinousecond.view.answerManager
@@ -30,6 +32,7 @@ open class Player(id: Long) : CacheGetSet(id, PLAYERS), Owner, ContainsItems {
     val resourceManagers: HashMap<Resource, ResourceManager>
     val level: Level = Level(this, "xp")
     var lastLevelUpdate = 0L
+    private val effects = ArrayList<Effect>()
 
     init {
         workTime = 0
@@ -37,9 +40,8 @@ open class Player(id: Long) : CacheGetSet(id, PLAYERS), Owner, ContainsItems {
         resourceManagers = ResourceManager.stringToArray(this["ressources"])
         
         //temporary
-        val idTemp = generateUniqueID()
-        itemsCacheCustom.add(idTemp)
-        addItem(StrasbourgSausage(idTemp))
+        addEffect(Effect(EffectEnum.SPEED_TRAVELING, 1))
+        addEffect(Effect(EffectEnum.COST_TRAVELING, 1))
     }
 
     fun updateWorkTime() {
@@ -311,8 +313,6 @@ open class Player(id: Long) : CacheGetSet(id, PLAYERS), Owner, ContainsItems {
             }
             WorldEnum.valueOf(w)
         }
-
-    private val effects = ArrayList<Effect>()
 
     fun getEffectLevel(effect: EffectEnum): Int {
         updateAndRemoveEffects()
