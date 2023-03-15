@@ -127,11 +127,9 @@ class WorldProcedural(
         var red = 0
         if (color > 127) {
             if (color > 128) {
-
                 if (zooms == Zooms.ZOOM_IN && isPath(x.toDouble(), y.toDouble())) {
                     return Color(255, 178, 79).rgb
                 }
-
                 green = 255 - color
                 if (color > 191) {
                     red = 255 - color
