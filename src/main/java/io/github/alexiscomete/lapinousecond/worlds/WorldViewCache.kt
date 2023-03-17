@@ -1,11 +1,16 @@
 package io.github.alexiscomete.lapinousecond.worlds
 
-import procedural_generation.World
+import io.github.alexiscomete.lapinousecond.worlds.map.CachePixel
 
 class WorldViewCache(
-    val world: World, cacheSize: Int,
+    val world: WorldManager, cacheSize: Int,
     val viewWidth: Int, viewHeight: Int,
-    var x: Int, y: Int
+    var x: Int, y: Int,
+    val zoom: Zooms
 ) {
-
+    var cache1 = CachePixel(
+        x, y,
+        world.getHeight(x, y, zoom),
+    )
+    var cache2 = cache1
 }
