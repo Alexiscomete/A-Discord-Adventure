@@ -1,5 +1,7 @@
 package io.github.alexiscomete.lapinousecond.worlds.interactions
 
+import java.awt.Graphics2D
+
 interface InteractionSprite {
     var x: Int
     var y: Int
@@ -13,5 +15,5 @@ interface InteractionSprite {
     fun onHover(interactionScene: InteractionScene)
     fun onLeave(interactionScene: InteractionScene)
 
-    fun draw(interactionScene: InteractionScene)
+    fun drawOn(interactionScene: Graphics2D)
 }
