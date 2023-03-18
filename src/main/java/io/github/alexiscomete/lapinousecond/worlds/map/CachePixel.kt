@@ -1,8 +1,5 @@
 package io.github.alexiscomete.lapinousecond.worlds.map
 
-import io.github.alexiscomete.lapinousecond.worlds.WorldManager
-import io.github.alexiscomete.lapinousecond.worlds.Zooms
-
 class CachePixel(
     val x: Int, val y: Int,
     val height: Double,
