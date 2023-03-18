@@ -83,6 +83,41 @@ class WorldViewCache(
     }
 
     fun addDown() {
+        val len = cache1.x - cache2.x + 1
+        val y = cache2.y + 1
+        val x = cache2.x
+        cache2.addToDown(generateLineDown(x, y, zoom, len))
+        cache2 = cache2.down!!
+    }
 
+    fun addUp() {
+        val len = cache1.x - cache2.x + 1
+        val y = cache1.y - 1
+        val x = cache1.x
+        cache2.addToUp(generateLineUp(x, y, zoom, len))
+        cache2 = cache2.up!!
+    }
+
+    fun addLeft() {
+        val len = cache1.y - cache2.y + 1
+        val y = cache1.y
+        val x = cache1.x - 1
+        cache2.addToLeft(generateLineLeft(x, y, zoom, len))
+        cache2 = cache2.left!!
+    }
+
+    fun addRight() {
+        val len = cache1.y - cache2.y + 1
+        val y = cache2.y
+        val x = cache2.x + 1
+        cache2.addToRight(generateLineRight(x, y, zoom, len))
+        cache2 = cache2.right!!
+    }
+
+    fun deleteDown() {
+        with(cache1) {
+            cache1 = up!!
+            deleteToDown()
+        }
     }
 }
