@@ -163,5 +163,38 @@ class WorldViewCache(
         }
     }
 
+    // Get a pixel at a position
 
+    fun getPixel(x: Int, y: Int): CachePixel {
+        var cache = cache1
+        repeat(y) {
+            cache = cache.down!!
+        }
+        repeat(x) {
+            cache = cache.right!!
+        }
+        return cache
+    }
+
+    // Move
+
+    fun moveUp() {
+        addUp()
+        deleteDown()
+    }
+
+    fun moveDown() {
+        addDown()
+        deleteUp()
+    }
+
+    fun moveLeft() {
+        addLeft()
+        deleteRight()
+    }
+
+    fun moveRight() {
+        addRight()
+        deleteLeft()
+    }
 }
