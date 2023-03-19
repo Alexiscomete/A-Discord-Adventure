@@ -3,7 +3,7 @@ package io.github.alexiscomete.lapinousecond.worlds
 import io.github.alexiscomete.lapinousecond.worlds.map.CachePixel
 
 class WorldViewCache(
-    val world: WorldManager, cacheSize: Int,
+    val world: WorldManager,
     val viewWidth: Int, viewHeight: Int,
     var x: Int, y: Int,
     val zoom: Zooms
@@ -12,7 +12,24 @@ class WorldViewCache(
         x, y,
         world.getHeight(x, y, zoom),
     )
+        private set
     var cache2 = cache1
+        private set
+
+    init {
+        repeat(viewWidth - 1) {
+            cache2 = CachePixel(
+                x + it + 1, y,
+                world.getHeight(x + it + 1, y, zoom),
+                left = cache2
+            )
+        }
+        repeat(viewHeight - 1) {
+            addDown()
+        }
+    }
+
+    // Generate a line
 
     fun generateLineDown(x: Int, y: Int, zoom: Zooms, size: Int): CachePixel {
         var cache = CachePixel(
@@ -82,6 +99,8 @@ class WorldViewCache(
         return cache
     }
 
+    // Add a line
+
     fun addDown() {
         val len = cache1.x - cache2.x + 1
         val y = cache2.y + 1
@@ -114,10 +133,35 @@ class WorldViewCache(
         cache2 = cache2.right!!
     }
 
+    // Delete a line
+
     fun deleteDown() {
+        with(cache2) {
+            cache2 = up!!
+            deleteToLeft()
+        }
+    }
+
+    fun deleteUp() {
         with(cache1) {
-            cache1 = up!!
+            cache1 = down!!
+            deleteToRight()
+        }
+    }
+
+    fun deleteLeft() {
+        with(cache1) {
+            cache1 = right!!
             deleteToDown()
         }
     }
+
+    fun deleteRight() {
+        with(cache2) {
+            cache2 = left!!
+            deleteToUp()
+        }
+    }
+
+
 }
