@@ -4,7 +4,7 @@ import io.github.alexiscomete.lapinousecond.worlds.map.CachePixel
 
 class WorldViewCache(
     val world: WorldManager,
-    val viewWidth: Int, viewHeight: Int,
+    viewWidth: Int, viewHeight: Int,
     var x: Int, y: Int,
     val zoom: Zooms
 ) {
