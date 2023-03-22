@@ -109,4 +109,29 @@ class CachePixel(
         cachePixel.left = this
         cachePixel.up?.let { up?.addToRight(it) }
     }
+
+    var toStringTab = Array(11) { Array(11) { " " } }
+
+    override fun toString(): String {
+        // Step 1 : create at tab of 11x11 pixels with the current pixel in the middle
+        toStringRec(4, this)
+        return toStringTab.joinToString("\n") { it.joinToString("") }
+    }
+
+    fun setTab(x: Int, y: Int, value: String) {
+        try {
+            toStringTab[x - this.x + 5][y - this.y + 5] = value
+        } catch (e: Exception) {
+
+        }
+    }
+
+    fun toStringRec(remainingSteps: Int, cacheToUse: CachePixel) {
+        if (remainingSteps <= 0) return
+        cacheToUse.setTab(x, y, "u")
+        up?.toStringRec(remainingSteps - 1, cacheToUse)
+        down?.toStringRec(remainingSteps - 1, cacheToUse)
+        left?.toStringRec(remainingSteps - 1, cacheToUse)
+        right?.toStringRec(remainingSteps - 1, cacheToUse)
+    }
 }
