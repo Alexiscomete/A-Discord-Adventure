@@ -110,7 +110,7 @@ class WorldViewCache(
         val len = cache2.x - cache1.x + 1
         val y = cache2.y + 1
         val x = cache2.x
-        cache2.addToDown(generateLineLeft(x, y, zoom, len))
+        cache2.addToDown(generateLineRight(x, y, zoom, len))
         cache2 = cache2.down!!
     }
 
@@ -118,7 +118,7 @@ class WorldViewCache(
         val len = cache2.x - cache1.x + 1
         val y = cache1.y - 1
         val x = cache1.x
-        cache2.addToUp(generateLineRight(x, y, zoom, len))
+        cache2.addToUp(generateLineLeft(x, y, zoom, len))
         cache2 = cache2.up!!
     }
 
@@ -126,7 +126,7 @@ class WorldViewCache(
         val len = cache2.y - cache1.y + 1
         val y = cache1.y
         val x = cache1.x - 1
-        cache2.addToLeft(generateLineDown(x, y, zoom, len))
+        cache2.addToLeft(generateLineUp(x, y, zoom, len))
         cache2 = cache2.left!!
     }
 
@@ -134,7 +134,7 @@ class WorldViewCache(
         val len = cache2.y - cache1.y + 1
         val y = cache2.y
         val x = cache2.x + 1
-        cache2.addToRight(generateLineUp(x, y, zoom, len))
+        cache2.addToRight(generateLineDown(x, y, zoom, len))
         cache2 = cache2.right!!
     }
 

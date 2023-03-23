@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test
 class CacheTest {
     @Test
     fun testCacheMove() {
-        val view = WorldViewCache(WorldManagerTest(), 20, 20, 0, 0, Zooms.ZOOM_IN)
+        val view = WorldViewCache(WorldManagerTest(), 10, 10, 0, 0, Zooms.ZOOM_IN)
         printView(view)
         view.moveUp()
         printView(view)
