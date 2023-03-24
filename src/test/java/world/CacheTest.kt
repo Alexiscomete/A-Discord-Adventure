@@ -21,7 +21,7 @@ class CacheTest {
 
     @Test
     fun testCacheMove() {
-        val view = WorldViewCache(WorldManagerTest(), 5, 5, 0, 0, Zooms.ZOOM_IN)
+        val view = WorldViewCache(WorldManagerTest(), 10, 10, 0, 0, Zooms.ZOOM_IN)
         printView(view)
         view.moveUp()
         printView(view)
@@ -44,12 +44,12 @@ class CacheTest {
         repeat(view.cache2.y - view.cache1.y + 1) {
             var cache2 = cache
             repeat(view.cache2.x - view.cache1.x + 1) {
-                print(if (cache2.height > 0.5) "X" else " ")
+                print(if (cache2.height > 0.5) "X" else ".")
                 print(" ")
-                cache2 = cache2.right!!
+                cache2 = cache2.right?: cache2
             }
             println()
-            cache = cache.down!!
+            cache = cache.down?: cache
         }
         println()
     }

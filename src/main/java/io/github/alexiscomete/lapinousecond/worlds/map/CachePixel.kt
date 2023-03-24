@@ -115,6 +115,7 @@ class CachePixel(
 
     override fun toString(): String {
         // Step 1 : create at tab of 11x11 pixels with the current pixel in the middle
+        println("Creating tab...")
         setTab(x, y, "C")
         toStringStat = true
         down?.toStringRecTrue(19, this, x, y + 1)
@@ -122,10 +123,10 @@ class CachePixel(
         right?.toStringRecTrue(19, this, x + 1, y)
         up?.toStringRecTrue(19, this, x, y - 1)
         toStringStat = false
-        down?.toStringRecFalse(20, this, x, y + 1)
-        left?.toStringRecFalse(20, this, x - 1, y)
-        right?.toStringRecFalse(20, this, x + 1, y)
-        up?.toStringRecFalse(20, this, x, y - 1)
+        down?.toStringRecFalse(22, this, x, y + 1)
+        left?.toStringRecFalse(22, this, x - 1, y)
+        right?.toStringRecFalse(22, this, x + 1, y)
+        up?.toStringRecFalse(22, this, x, y - 1)
         return toStringTab.joinToString("\n") { it.joinToString("") }
     }
 
@@ -138,8 +139,19 @@ class CachePixel(
     }
 
     private fun toStringRecTrue(remainingSteps: Int, cacheToUse: CachePixel, x: Int, y: Int) {
+        if (x == 0 && y == 0) println("Remaining steps : $remainingSteps")
         if (remainingSteps <= 0 || toStringStat) return
-        cacheToUse.setTab(x, y, "U")
+        if (x == 0 && y == 0) {
+            if (this.x == 0 && this.y == 0) {
+                cacheToUse.setTab(x, y, "M")
+            } else {
+                cacheToUse.setTab(x, y, "O")
+            }
+        }else if (this.x == 0 && this.y == 0) {
+            cacheToUse.setTab(x, y, "0")
+        } else {
+            cacheToUse.setTab(x, y, "U")
+        }
         toStringStat = true
         down?.toStringRecTrue(remainingSteps - 1, cacheToUse, x, y + 1)
         left?.toStringRecTrue(remainingSteps - 1, cacheToUse, x - 1, y)

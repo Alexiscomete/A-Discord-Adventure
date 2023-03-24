@@ -5,74 +5,74 @@ import io.github.alexiscomete.lapinousecond.worlds.map.CachePixel
 // Generate a line
 
 fun generateLineDown(x: Int, y: Int, zoom: Zooms, size: Int, world: WorldManager): CachePixel {
+    val startY = y + size - 1
     var cache = CachePixel(
-        x, size + y - 1,
+        x, startY,
         world.getHeight(x, y, zoom),
     )
-    repeat(
-        size - 1
-    ) {
+    for (currentY in startY - 1 downTo y) {
         cache.up = CachePixel(
-            x, size + y - it - 1,
-            world.getHeight(x, size + y - it - 1, zoom),
+            x, currentY,
+            world.getHeight(x, currentY, zoom),
             down = cache
         )
         cache = cache.up!!
     }
+    assert(cache.x == x && cache.y == y)
     return cache
 }
 
 fun generateLineUp(x: Int, y: Int, zoom: Zooms, size: Int, world: WorldManager): CachePixel {
+    val startY = y - size + 1
     var cache = CachePixel(
-        x, y,
+        x, startY,
         world.getHeight(x, y, zoom),
     )
-    repeat(
-        size - 1
-    ) {
+    for (currentY in startY + 1 .. y) {
         cache.down = CachePixel(
-            x, y + it + 1,
-            world.getHeight(x, y + it + 1, zoom),
+            x, currentY,
+            world.getHeight(x, currentY, zoom),
             up = cache
         )
         cache = cache.down!!
     }
+    assert(cache.x == x && cache.y == y)
     return cache
 }
 
 fun generateLineLeft(x: Int, y: Int, zoom: Zooms, size: Int, world: WorldManager): CachePixel {
+    val startX = x - size + 1
     var cache = CachePixel(
-        x, y,
+        startX, y,
         world.getHeight(x, y, zoom),
     )
-    repeat(
-        size - 1
-    ) {
+    for (currentX in startX + 1 .. x) {
         cache.right = CachePixel(
-            x + it + 1, y,
-            world.getHeight(x + it + 1, y, zoom),
+            currentX, y,
+            world.getHeight(currentX, y, zoom),
             left = cache
         )
         cache = cache.right!!
     }
+    assert(cache.x == x && cache.y == y)
     return cache
 }
 
 fun generateLineRight(x: Int, y: Int, zoom: Zooms, size: Int, world: WorldManager): CachePixel {
+    val startX = x + size - 1
     var cache = CachePixel(
-        size + x - 1, y,
+        startX, y,
         world.getHeight(size + x - 1, y, zoom),
     )
-    repeat(
-        size - 1
-    ) {
+    for (currentX in startX - 1 downTo x) {
         cache.left = CachePixel(
-            size + x - it - 1, y,
-            world.getHeight(size + x - it - 1, y, zoom),
+            currentX, y,
+            world.getHeight(currentX, y, zoom),
             right = cache
         )
         cache = cache.left!!
     }
+    assert(cache.x == x && cache.y == y)
     return cache
 }
 
@@ -80,7 +80,7 @@ class WorldViewCache(
     val world: WorldManager,
     viewWidth: Int, viewHeight: Int,
     x: Int, y: Int,
-    val zoom: Zooms
+    private val zoom: Zooms
 ) {
     var cache1 = CachePixel(
         x, y,
@@ -110,7 +110,7 @@ class WorldViewCache(
         val len = cache2.x - cache1.x + 1
         val y = cache2.y + 1
         val x = cache2.x
-        cache2.addToDown(generateLineRight(x, y, zoom, len, world))
+        cache2.addToDown(generateLineLeft(x, y, zoom, len, world))
         cache2 = cache2.down!!
     }
 
@@ -118,7 +118,7 @@ class WorldViewCache(
         val len = cache2.x - cache1.x + 1
         val y = cache1.y - 1
         val x = cache1.x
-        cache2.addToUp(generateLineLeft(x, y, zoom, len, world))
+        cache2.addToUp(generateLineRight(x, y, zoom, len, world))
         cache2 = cache2.up!!
     }
 
@@ -126,7 +126,7 @@ class WorldViewCache(
         val len = cache2.y - cache1.y + 1
         val y = cache1.y
         val x = cache1.x - 1
-        cache2.addToLeft(generateLineUp(x, y, zoom, len, world))
+        cache2.addToLeft(generateLineDown(x, y, zoom, len, world))
         cache2 = cache2.left!!
     }
 
@@ -134,7 +134,7 @@ class WorldViewCache(
         val len = cache2.y - cache1.y + 1
         val y = cache2.y
         val x = cache2.x + 1
-        cache2.addToRight(generateLineDown(x, y, zoom, len, world))
+        cache2.addToRight(generateLineUp(x, y, zoom, len, world))
         cache2 = cache2.right!!
     }
 
