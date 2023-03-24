@@ -118,16 +118,16 @@ class WorldViewCache(
         val len = cache2.x - cache1.x + 1
         val y = cache1.y - 1
         val x = cache1.x
-        cache2.addToUp(generateLineRight(x, y, zoom, len, world))
-        cache2 = cache2.up!!
+        cache1.addToUp(generateLineRight(x, y, zoom, len, world))
+        cache1 = cache1.up!!
     }
 
     fun addLeft() {
         val len = cache2.y - cache1.y + 1
         val y = cache1.y
         val x = cache1.x - 1
-        cache2.addToLeft(generateLineDown(x, y, zoom, len, world))
-        cache2 = cache2.left!!
+        cache1.addToLeft(generateLineDown(x, y, zoom, len, world))
+        cache1 = cache1.left!!
     }
 
     fun addRight() {
