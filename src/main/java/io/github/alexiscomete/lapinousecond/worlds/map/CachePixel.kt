@@ -111,22 +111,22 @@ class CachePixel(
     }
 
     private var toStringTab = Array(21) { Array(21) { "." } }
-    private var toStringStat = false
+    private var toStringStat = 0
 
     override fun toString(): String {
         // Step 1 : create at tab of 11x11 pixels with the current pixel in the middle
         println("Creating tab...")
         setTab(x, y, "C")
-        toStringStat = true
+        toStringStat = 30
         down?.toStringRecTrue(19, this, x, y + 1)
         left?.toStringRecTrue(19, this, x - 1, y)
         right?.toStringRecTrue(19, this, x + 1, y)
         up?.toStringRecTrue(19, this, x, y - 1)
-        toStringStat = false
-        down?.toStringRecFalse(22, this, x, y + 1)
-        left?.toStringRecFalse(22, this, x - 1, y)
-        right?.toStringRecFalse(22, this, x + 1, y)
-        up?.toStringRecFalse(22, this, x, y - 1)
+        toStringStat = 0
+        down?.toStringRecFalse(this, x, y + 1)
+        left?.toStringRecFalse(this, x - 1, y)
+        right?.toStringRecFalse(this, x + 1, y)
+        up?.toStringRecFalse(this, x, y - 1)
         return toStringTab.joinToString("\n") { it.joinToString("") }
     }
 
@@ -134,37 +134,37 @@ class CachePixel(
         try {
             toStringTab[y - this.y + 10][x - this.x + 10] = value
         } catch (e: Exception) {
-            println("Error at ${x - this.x + 5} ${y - this.y + 5}")
+            println("Error at ${x - this.x + 10} ${y - this.y + 10}")
         }
     }
 
     private fun toStringRecTrue(remainingSteps: Int, cacheToUse: CachePixel, x: Int, y: Int) {
         if (x == 0 && y == 0) println("Remaining steps : $remainingSteps")
-        if (remainingSteps <= 0 || toStringStat) return
+        if (remainingSteps <= toStringStat) return
         if (x == 0 && y == 0) {
             if (this.x == 0 && this.y == 0) {
                 cacheToUse.setTab(x, y, "M")
             } else {
                 cacheToUse.setTab(x, y, "O")
             }
-        }else if (this.x == 0 && this.y == 0) {
+        } else if (this.x == 0 && this.y == 0) {
             cacheToUse.setTab(x, y, "0")
         } else {
             cacheToUse.setTab(x, y, "U")
         }
-        toStringStat = true
+        toStringStat = remainingSteps
         down?.toStringRecTrue(remainingSteps - 1, cacheToUse, x, y + 1)
         left?.toStringRecTrue(remainingSteps - 1, cacheToUse, x - 1, y)
         right?.toStringRecTrue(remainingSteps - 1, cacheToUse, x + 1, y)
         up?.toStringRecTrue(remainingSteps - 1, cacheToUse, x, y - 1)
     }
 
-    private fun toStringRecFalse(remainingSteps: Int, cacheToUse: CachePixel, x: Int, y: Int) {
-        if (remainingSteps <= 0 || !toStringStat) return
-        toStringStat = false
-        down?.toStringRecFalse(remainingSteps - 1, cacheToUse, x, y + 1)
-        left?.toStringRecFalse(remainingSteps - 1, cacheToUse, x - 1, y)
-        right?.toStringRecFalse(remainingSteps - 1, cacheToUse, x + 1, y)
-        up?.toStringRecFalse(remainingSteps - 1, cacheToUse, x, y - 1)
+    private fun toStringRecFalse(cacheToUse: CachePixel, x: Int, y: Int) {
+        if (toStringStat == 0) return
+        toStringStat = 0
+        down?.toStringRecFalse(cacheToUse, x, y + 1)
+        left?.toStringRecFalse(cacheToUse, x - 1, y)
+        right?.toStringRecFalse(cacheToUse, x + 1, y)
+        up?.toStringRecFalse(cacheToUse, x, y - 1)
     }
 }
