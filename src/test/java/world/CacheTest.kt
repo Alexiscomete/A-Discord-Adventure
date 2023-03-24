@@ -1,13 +1,27 @@
 package world
 
-import io.github.alexiscomete.lapinousecond.worlds.WorldViewCache
-import io.github.alexiscomete.lapinousecond.worlds.Zooms
+import io.github.alexiscomete.lapinousecond.worlds.*
 import org.junit.jupiter.api.Test
 
 class CacheTest {
+
+    @Test
+    fun testCacheGenerate() {
+        val lineDown = generateLineDown(0, 0, Zooms.ZOOM_IN, 5, WorldManagerTest())
+        val lineUp = generateLineUp(0, 0, Zooms.ZOOM_IN, 5, WorldManagerTest())
+        val lineLeft = generateLineLeft(0, 0, Zooms.ZOOM_IN, 5, WorldManagerTest())
+        val lineRight = generateLineRight(0, 0, Zooms.ZOOM_IN, 5, WorldManagerTest())
+        // print line
+        println(lineDown)
+        println(lineUp)
+        println(lineLeft)
+        println(lineRight)
+        println(lineDown)
+    }
+
     @Test
     fun testCacheMove() {
-        val view = WorldViewCache(WorldManagerTest(), 10, 10, 0, 0, Zooms.ZOOM_IN)
+        val view = WorldViewCache(WorldManagerTest(), 5, 5, 0, 0, Zooms.ZOOM_IN)
         printView(view)
         view.moveUp()
         printView(view)
