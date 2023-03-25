@@ -7,7 +7,12 @@ enum class FilesMapEnum(val nameOfMap: String, val urlOfMap: String, val author:
     BASE_TUTO("base_tuto", "", "Alexiscomete", "Carte du tuto avant le traitement ! Oui elle ressemble à rien"),
     PIXEL_TUTO("pixel_tuto", "", "Alexiscomete", "Carte du tuto utilisée dans le jeu"),
     HELP_TUTO("help_tuto", "", "Alexiscomete", "Carte d'aide du tuto avec quadrillage fourni"),
-    BASE_NORMAL("base_normal", "", "Alexiscomete", "J'ai honte de cette base avant traitement ... un jour elle changera"),
+    BASE_NORMAL(
+        "base_normal",
+        "",
+        "Alexiscomete",
+        "J'ai honte de cette base avant traitement ... un jour elle changera"
+    ),
     PIXEL_NORMAL("pixel_normal", "", "Alexiscomete", "Carte utilisée dans le jeu"),
     HELP_NORMAL("help_normal", "", "Alexiscomete", "Carte d'aide avec quadrillage fourni"),
     DIBISTAN("dibistan", "", "Darki", "Carte \"officielle\" du Dibistan"),

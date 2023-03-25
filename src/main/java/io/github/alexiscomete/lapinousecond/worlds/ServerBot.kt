@@ -9,7 +9,7 @@ val servers = CacheCustom(SERVERS) { id: Long -> ServerBot(id) }
 
 /**
  * Représente un serveur discord dans la base de données
- * Pour créer un server utilisez le CacheCustom
+ * Pour créer un serveur utilisez le CacheCustom
  * @param id l'identifiant discord du serveur
  */
 class ServerBot(id: Long) : CacheGetSet(id, SERVERS) {
