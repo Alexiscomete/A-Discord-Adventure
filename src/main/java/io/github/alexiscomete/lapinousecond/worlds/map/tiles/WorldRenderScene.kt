@@ -1,9 +1,10 @@
-package io.github.alexiscomete.lapinousecond.worlds.map.tiles.interactions
+package io.github.alexiscomete.lapinousecond.worlds.map.tiles
 
+import io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.InteractionSpriteManager
 import java.awt.Graphics2D
 import kotlin.concurrent.thread
 
-class InteractionScene {
+class WorldRenderScene {
 
     val spritesManagers = mutableListOf<InteractionSpriteManager>()
 

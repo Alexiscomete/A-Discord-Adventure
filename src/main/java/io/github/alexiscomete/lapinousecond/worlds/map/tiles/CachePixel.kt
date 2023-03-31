@@ -11,7 +11,7 @@ class CachePixel(
 
     // --- Part 1 = delete ---
 
-    fun delete() {
+    private fun delete() {
         up?.down = null
         down?.up = null
         left?.right = null
@@ -123,10 +123,10 @@ class CachePixel(
         right?.toStringRecTrue(19, this, x + 1, y)
         up?.toStringRecTrue(19, this, x, y - 1)
         toStringStat = 0
-        down?.toStringRecFalse(this, x, y + 1)
-        left?.toStringRecFalse(this, x - 1, y)
-        right?.toStringRecFalse(this, x + 1, y)
-        up?.toStringRecFalse(this, x, y - 1)
+        down?.toStringRecFalse()
+        left?.toStringRecFalse()
+        right?.toStringRecFalse()
+        up?.toStringRecFalse()
         return toStringTab.joinToString("\n") { it.joinToString("") }
     }
 
@@ -159,12 +159,12 @@ class CachePixel(
         up?.toStringRecTrue(remainingSteps - 1, cacheToUse, x, y - 1)
     }
 
-    private fun toStringRecFalse(cacheToUse: CachePixel, x: Int, y: Int) {
+    private fun toStringRecFalse() {
         if (toStringStat == 0) return
         toStringStat = 0
-        down?.toStringRecFalse(cacheToUse, x, y + 1)
-        left?.toStringRecFalse(cacheToUse, x - 1, y)
-        right?.toStringRecFalse(cacheToUse, x + 1, y)
-        up?.toStringRecFalse(cacheToUse, x, y - 1)
+        down?.toStringRecFalse()
+        left?.toStringRecFalse()
+        right?.toStringRecFalse()
+        up?.toStringRecFalse()
     }
 }
