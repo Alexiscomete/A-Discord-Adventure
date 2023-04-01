@@ -77,6 +77,7 @@ fun generateLineRight(x: Int, y: Int, zoom: Zooms, size: Int, world: WorldManage
     return cache
 }
 
+@Deprecated("Use the new cache system")
 class WorldViewCache(
     val world: WorldManager,
     viewWidth: Int, viewHeight: Int,

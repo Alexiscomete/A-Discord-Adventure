@@ -1,5 +1,6 @@
 package io.github.alexiscomete.lapinousecond.worlds.map.tiles
 
+@Deprecated("Use the new cache system")
 class CachePixel(
     val x: Int, val y: Int,
     val height: Double,
