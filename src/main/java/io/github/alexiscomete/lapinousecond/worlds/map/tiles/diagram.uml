@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement />
+  <nodes>
+    <node x="28.0" y="65.5">io.github.alexiscomete.lapinousecond.worlds.map.tiles.ViewManager</node>
+    <node x="106.0" y="385.5">io.github.alexiscomete.lapinousecond.worlds.map.tiles.MapTile</node>
+    <node x="241.0" y="385.5">io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.InteractionSpriteManager</node>
+    <node x="-104.5" y="185.5">io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.MoveSprite</node>
+    <node x="-69.0" y="265.5">io.github.alexiscomete.lapinousecond.worlds.map.tiles.WorldViewCacheKt</node>
+    <node x="-89.5" y="385.5">io.github.alexiscomete.lapinousecond.worlds.map.tiles.WorldRenderScene</node>
+    <node x="119.5" y="265.5">io.github.alexiscomete.lapinousecond.worlds.map.tiles.Tile</node>
+    <node x="37.5" y="185.5">io.github.alexiscomete.lapinousecond.worlds.map.tiles.WorldViewCache</node>
+    <node x="-87.0" y="65.5">io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.Sprite</node>
+    <node x="-102.0" y="-14.5">io.github.alexiscomete.lapinousecond.worlds.map.tiles.CachePixel</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.MapTile" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.Tile" relationship="REALIZATION">
+      <point x="0.0" y="-14.5" />
+      <point x="0.0" y="14.5" />
+    </edge>
+    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.MoveSprite" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.Sprite" relationship="INTERFACE_GENERALIZATION">
+      <point x="0.0" y="-14.5" />
+      <point x="0.0" y="14.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Compact" zoom="1.5" showDependencies="false" x="346.0" y="400.0" />
+  <SelectedNodes>
+    <node>io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.InteractionSpriteManager</node>
+  </SelectedNodes>
+  <Categories />
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+
