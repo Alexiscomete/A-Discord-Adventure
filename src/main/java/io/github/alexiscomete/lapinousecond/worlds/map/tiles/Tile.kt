@@ -8,6 +8,7 @@ interface Tile {
     fun delete()
 
     var displayState: Int // 0 = normal, 1 or more = render in progress
+
     fun renderRecursive(remainingSteps: Int, worldRenderScene: WorldRenderScene, xToUse: Int, yToUse: Int)
 
     /**
