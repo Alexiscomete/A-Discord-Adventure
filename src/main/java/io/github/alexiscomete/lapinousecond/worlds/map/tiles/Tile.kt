@@ -4,10 +4,12 @@ interface Tile {
 
     val x: Int
     val y: Int
+    var up: Tile?
+    var down: Tile?
+    var left: Tile?
+    var right: Tile?
 
     fun delete()
-
-    var displayState: Int // 0 = normal, 1 or more = render in progress
 
     fun renderRecursive(remainingSteps: Int, worldRenderScene: WorldRenderScene, xToUse: Int, yToUse: Int)
 
@@ -17,5 +19,5 @@ interface Tile {
      * @see CachePixel.toStringRecFalse
      */
     fun resetRecursive()
-    fun render()
+    fun render(worldRenderScene: WorldRenderScene)
 }

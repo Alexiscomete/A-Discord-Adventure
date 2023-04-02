@@ -1,7 +1,8 @@
 package io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles
 
-import io.github.alexiscomete.lapinousecond.worlds.map.tiles.Tile
-
+/**
+ * Permet de gérer les groupes de tiles qui forment une structure. Par exemple, cela peut être un pont, un portail de téléportation, une maison, etc.
+ */
 interface MultiTilesManager {
     fun load()
 
@@ -9,6 +10,8 @@ interface MultiTilesManager {
      * Permet d'obtenir la Tile de base à la position x, y dans l'objet complex. Si la position n'est pas dans l'objet complex, une erreur est levée. Cette méthode peut-être utilisée notamment pour créer un lien entre l'extérieur de l'objet complex et l'intérieur.
      */
     fun baseTileAt(x: Int, y: Int): ComplexTile
+
+    fun hasTileAt(x: Int, y: Int): Boolean
 
     /**
      * Permet de savoir si l'objet complex peut être supprimé. Si toutes les tiles de l'objet complex sont non chargées, alors l'objet complex peut être supprimé.
