@@ -13,4 +13,5 @@ interface WorldManager {
     fun yImage(y: Int): Int
     fun getHeight(x: Double, y: Double): Double
     fun getHeight(x: Int, y: Int, zoom: Zooms): Double
+    fun isPath(x: Double, y: Double): Boolean
 }

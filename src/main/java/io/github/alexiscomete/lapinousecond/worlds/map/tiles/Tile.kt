@@ -11,7 +11,7 @@ interface Tile {
     var left: Tile?
     var right: Tile?
 
-    fun delete()
+    fun delete(worldRenderScene: WorldRenderScene)
 
     fun renderRecursive(remainingSteps: Int, worldRenderScene: WorldRenderScene, xToUse: Int, yToUse: Int)
 

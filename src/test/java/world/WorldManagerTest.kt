@@ -43,4 +43,8 @@ class WorldManagerTest : WorldManager {
     override fun getHeight(x: Int, y: Int, zoom: Zooms): Double {
         return Random().nextDouble()
     }
+
+    override fun isPath(x: Double, y: Double): Boolean {
+        return false
+    }
 }

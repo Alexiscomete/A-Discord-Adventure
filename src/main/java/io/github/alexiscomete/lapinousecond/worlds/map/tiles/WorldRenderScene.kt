@@ -17,9 +17,10 @@ class WorldRenderScene(
 
     private val spritesManagers = mutableListOf<InteractionSpriteManager>()
     private val multiTilesManagers = mutableListOf<MultiTilesManager>()
-    private var currentTile = getOrGenerateTileAt(x, y)
 
-    private var dicoTiles = mutableMapOf<Pair<Int, Int>, Tile>()
+    var dicoTiles = mutableMapOf<Pair<Int, Int>, Tile>()
+        private set
+    private var currentTile = getOrGenerateTileAt(x, y)
 
     fun renderAll() {
         canvas.resetCanvas(Pair(61, 31))
@@ -54,6 +55,13 @@ class WorldRenderScene(
         var tile: Tile? = null
         multiTilesManagers.forEach { if (it.hasTileAt(x, y)) tile = it.baseTileAt(x, y) }
         if (tile != null) return tile!!
-        return dicoTiles.getOrPut(Pair(x, y)) { MapTile(x, y) }
+        return dicoTiles.getOrPut(Pair(x, y)) {
+            if (zoomLevel == Zooms.ZOOM_IN) {
+                val coos = zoomLevel.zoomOutTo(Zooms.ZOOM_OUT, x.toDouble(), y.toDouble())
+                MapTile(x, y, world.getHeight(x, y, zoomLevel), world.isPath(coos.first, coos.second))
+            } else {
+                MapTile(x, y, world.getHeight(x, y, zoomLevel))
+            }
+        }
     }
 }

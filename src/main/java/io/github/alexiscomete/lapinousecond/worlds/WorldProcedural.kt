@@ -116,7 +116,7 @@ class WorldProcedural(
         return getHeight(x1, y1)
     }
 
-    fun isPath(x: Double, y: Double): Boolean {
+    override fun isPath(x: Double, y: Double): Boolean {
         return path.getValue(x, y) < 0.55
     }
 
