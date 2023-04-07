@@ -1,5 +1,7 @@
 package io.github.alexiscomete.lapinousecond.worlds.map.tiles
 
+import java.awt.Color
+
 interface Tile {
 
     val x: Int
@@ -14,10 +16,14 @@ interface Tile {
     fun renderRecursive(remainingSteps: Int, worldRenderScene: WorldRenderScene, xToUse: Int, yToUse: Int)
 
     /**
-     * Aucun argument requis
-     *
-     * @see CachePixel.toStringRecFalse
+     * Aucun argument requis. Permet de réinitialiser les états de chaque tuile.
      */
     fun resetRecursive()
-    fun render(worldRenderScene: WorldRenderScene)
+    fun render(worldRenderScene: WorldRenderScene, x: Int, y: Int)
+
+    fun letter(): Char
+
+    fun color(): Color
+
+    fun isWalkable(): Boolean
 }

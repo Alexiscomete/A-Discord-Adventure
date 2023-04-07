@@ -61,7 +61,7 @@ class MapTile(
         right?.resetRecursive()
     }
 
-    override fun render(worldRenderScene: WorldRenderScene) {
+    override fun render(worldRenderScene: WorldRenderScene, x: Int, y: Int) {
         renderRecursive(30, worldRenderScene, x, y)
     }
 }

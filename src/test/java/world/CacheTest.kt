@@ -1,66 +1,49 @@
 package world
 
-import io.github.alexiscomete.lapinousecond.worlds.*
-import io.github.alexiscomete.lapinousecond.worlds.map.tiles.*
-import io.github.alexiscomete.lapinousecond.worlds.tiles.*
+import io.github.alexiscomete.lapinousecond.worlds.Zooms
+import io.github.alexiscomete.lapinousecond.worlds.map.tiles.WorldRenderScene
+import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.TerminalWorldCanvas
 import org.junit.jupiter.api.Test
 
 class CacheTest {
-    @Test
-    fun testCacheGenerate() {
-        val lineDown = generateLineDown(0, 0, Zooms.ZOOM_IN, 5, WorldManagerTest())
-        val lineUp = generateLineUp(0, 0, Zooms.ZOOM_IN, 5, WorldManagerTest())
-        val lineLeft = generateLineLeft(0, 0, Zooms.ZOOM_IN, 5, WorldManagerTest())
-        val lineRight = generateLineRight(0, 0, Zooms.ZOOM_IN, 5, WorldManagerTest())
-        // print line
-        println(lineDown)
-        println(lineUp)
-        println(lineLeft)
-        println(lineRight)
-        println(lineDown)
-    }
 
     @Test
     fun testCacheMove() {
-        val view = WorldViewCache(WorldManagerTest(), 10, 10, 0, 0, Zooms.ZOOM_IN)
-        printView(view)
+        val canvas = TerminalWorldCanvas()
+        val view = WorldRenderScene(canvas, 10, 10, Zooms.ZOOM_IN, WorldManagerTest())
+        view.renderAll()
+        canvas.printlnCanvas()
         view.moveUp()
-        printView(view)
+        view.renderAll()
+        canvas.printlnCanvas()
         view.moveUp()
-        printView(view)
+        view.renderAll()
+        canvas.printlnCanvas()
         view.moveUp()
-        printView(view)
+        view.renderAll()
+        canvas.printlnCanvas()
         view.moveUp()
-        printView(view)
+        view.renderAll()
+        canvas.printlnCanvas()
         view.moveDown()
-        printView(view)
+        view.renderAll()
+        canvas.printlnCanvas()
         view.moveDown()
-        printView(view)
+        view.renderAll()
+        canvas.printlnCanvas()
         view.moveDown()
-        printView(view)
+        view.renderAll()
+        canvas.printlnCanvas()
     }
-}
-
-private fun printView(view: WorldViewCache) {
-    var cache = view.cache1
-    repeat(view.cache2.y - view.cache1.y + 1) {
-        var cache2 = cache
-        repeat(view.cache2.x - view.cache1.x + 1) {
-            print(if (cache2.height > 0.5) "X" else ".")
-            print(" ")
-            cache2 = cache2.right ?: cache2
-        }
-        println()
-        cache = cache.down ?: cache
-    }
-    println()
 }
 
 fun main() {
-    val view = WorldViewCache(WorldManagerTest(), 10, 10, 0, 0, Zooms.ZOOM_IN)
+    val canvas = TerminalWorldCanvas()
+    val view = WorldRenderScene(canvas, 10, 10, Zooms.ZOOM_IN, WorldManagerTest())
     var input = ""
     while (input != "quit") {
-        printView(view)
+        view.renderAll()
+        canvas.printlnCanvas()
         input = readlnOrNull() ?: ""
         when (input) {
             "z" -> view.moveUp()
