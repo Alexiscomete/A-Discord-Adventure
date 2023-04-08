@@ -120,6 +120,10 @@ class WorldProcedural(
         return path.getValue(x, y) < 0.55
     }
 
+    override fun pathLevel(x: Double, y: Double): Double {
+        return path.getValue(x, y)
+    }
+
     private fun findColor(x: Int, y: Int, zooms: Zooms): Int {
         val color: Int = (getHeight(x, y, zooms) * 255).toInt()
         var blue = 0

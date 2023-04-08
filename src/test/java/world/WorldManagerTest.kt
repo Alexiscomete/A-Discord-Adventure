@@ -47,4 +47,8 @@ class WorldManagerTest : WorldManager {
     override fun isPath(x: Double, y: Double): Boolean {
         return false
     }
+
+    override fun pathLevel(x: Double, y: Double): Double {
+        return 0.0
+    }
 }

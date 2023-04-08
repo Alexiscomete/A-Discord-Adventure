@@ -5,47 +5,52 @@ import java.awt.Color
 
 class TreeFoliage(
     override val x: Int,
-    override val y: Int
+    override val y: Int,
+    steps: Int,
 ) : BaseTileGroup() {
     override var up: Tile? = run {
         // get a random number : 0, 1, 2
-        val random = (0..2).random()
-        if (random == 0) {
+        if (steps == 0) {
             null
         } else {
-            TreeFoliage(x, y - 1)
+            val random = (0..2).random()
+            if (random == 0) {
+                null
+            } else {
+                TreeFoliage(x, y - 1, steps - 1)
+            }
         }
     }
-    override var down: Tile? = run {
-        // get a random number : 0, 1, 2
-        val random = (0..2).random()
-        if (random == 0) {
-            null
-        } else {
-            TreeFoliage(x, y + 1)
-        }
-    }
+    override var down: Tile? = null
     override var left: Tile? = run {
         // get a random number : 0, 1, 2
-        val random = (0..2).random()
-        if (random == 0) {
+        if (steps == 0) {
             null
         } else {
-            TreeFoliage(x - 1, y)
+            val random = (0..2).random()
+            if (random == 0) {
+                null
+            } else {
+                TreeFoliage(x - 1, y, steps - 1)
+            }
         }
     }
     override var right: Tile? = run {
         // get a random number : 0, 1, 2
-        val random = (0..2).random()
-        if (random == 0) {
+        if (steps == 0) {
             null
         } else {
-            TreeFoliage(x + 1, y)
+            val random = (0..2).random()
+            if (random == 0) {
+                null
+            } else {
+                TreeFoliage(x + 1, y, steps - 1)
+            }
         }
     }
 
     override fun letter(): Char {
-        return '*'
+        return '@'
     }
 
     override fun color(): Color {

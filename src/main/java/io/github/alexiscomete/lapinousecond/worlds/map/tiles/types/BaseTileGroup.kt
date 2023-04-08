@@ -21,7 +21,6 @@ abstract class BaseTileGroup : Tile {
     override fun renderRecursive(remainingSteps: Int, worldRenderScene: WorldRenderScene, xToUse: Int, yToUse: Int) {
         if (remainingSteps < currentState) return
         currentState = remainingSteps
-        worldRenderScene.canvas.drawTile(this, xToUse, yToUse)
         up?.renderRecursive(
             remainingSteps - 1,
             worldRenderScene,
@@ -46,7 +45,7 @@ abstract class BaseTileGroup : Tile {
             xToUse + 1,
             yToUse
         )
-
+        worldRenderScene.canvas.drawTile(this, xToUse, yToUse)
     }
 
     override fun resetRecursive(worldRenderScene: WorldRenderScene) {
