@@ -1,5 +1,6 @@
 package world
 
+import io.github.alexiscomete.lapinousecond.worlds.WorldEnum
 import io.github.alexiscomete.lapinousecond.worlds.Zooms
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.WorldRenderScene
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.TerminalWorldCanvas
@@ -39,7 +40,7 @@ class CacheTest {
 
 fun main() {
     val canvas = TerminalWorldCanvas()
-    val view = WorldRenderScene(canvas, 10, 10, Zooms.ZOOM_IN, WorldManagerTest())
+    val view = WorldRenderScene(canvas, 10, 10, Zooms.ZOOM_IN, WorldEnum.NORMAL.worldManager)
     var input = ""
     while (input != "quit") {
         view.renderAll()

@@ -5,12 +5,13 @@ import io.github.alexiscomete.lapinousecond.worlds.Zooms
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.MultiTilesManager
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.WorldCanvas
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.InteractionSpriteManager
+import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.MapTile
 import kotlin.concurrent.thread
 
 class WorldRenderScene(
     val canvas: WorldCanvas,
-    private var x: Int,
-    private var y: Int,
+    x: Int,
+    y: Int,
     private val zoomLevel: Zooms,
     val world: WorldManager
 ) {
@@ -32,22 +33,22 @@ class WorldRenderScene(
     }
 
     fun moveUp() {
-        val next = currentTile.up ?: getOrGenerateTileAt(x, y - 1)
+        val next = currentTile.up ?: getOrGenerateTileAt(currentTile.x, currentTile.y - 1)
         if (next.isWalkable()) currentTile = next
     }
 
     fun moveDown() {
-        val next = currentTile.down ?: getOrGenerateTileAt(x, y + 1)
+        val next = currentTile.down ?: getOrGenerateTileAt(currentTile.x, currentTile.y + 1)
         if (next.isWalkable()) currentTile = next
     }
 
     fun moveLeft() {
-        val next = currentTile.left ?: getOrGenerateTileAt(x - 1, y)
+        val next = currentTile.left ?: getOrGenerateTileAt(currentTile.x - 1, currentTile.y)
         if (next.isWalkable()) currentTile = next
     }
 
     fun moveRight() {
-        val next = currentTile.right ?: getOrGenerateTileAt(x + 1, y)
+        val next = currentTile.right ?: getOrGenerateTileAt(currentTile.x + 1, currentTile.y)
         if (next.isWalkable()) currentTile = next
     }
 
@@ -57,8 +58,7 @@ class WorldRenderScene(
         if (tile != null) return tile!!
         return dicoTiles.getOrPut(Pair(x, y)) {
             if (zoomLevel == Zooms.ZOOM_IN) {
-                val coos = zoomLevel.zoomOutTo(Zooms.ZOOM_OUT, x.toDouble(), y.toDouble())
-                MapTile(x, y, world.getHeight(x, y, zoomLevel), world.isPath(coos.first, coos.second))
+                MapTile(x, y, world.getHeight(x, y, zoomLevel), world.isPath(x.toDouble(), y.toDouble()))
             } else {
                 MapTile(x, y, world.getHeight(x, y, zoomLevel))
             }
