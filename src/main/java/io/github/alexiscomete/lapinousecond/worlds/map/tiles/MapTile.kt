@@ -24,7 +24,7 @@ class MapTile(
         right = null
     }
 
-    private var currentState: Int = 1
+    private var currentState: Int = 0
 
     override fun renderRecursive(remainingSteps: Int, worldRenderScene: WorldRenderScene, xToUse: Int, yToUse: Int) {
         if (remainingSteps < currentState) return
@@ -57,17 +57,18 @@ class MapTile(
 
     }
 
-    override fun resetRecursive() {
+    override fun resetRecursive(worldRenderScene: WorldRenderScene) {
         if (currentState == 0) return
         currentState = 0
-        up?.resetRecursive()
-        down?.resetRecursive()
-        left?.resetRecursive()
-        right?.resetRecursive()
+        (up ?: worldRenderScene.getOrGenerateTileAt(x, y - 1)).resetRecursive(worldRenderScene)
+        (down ?: worldRenderScene.getOrGenerateTileAt(x, y + 1)).resetRecursive(worldRenderScene)
+        (left ?: worldRenderScene.getOrGenerateTileAt(x - 1, y)).resetRecursive(worldRenderScene)
+        (right ?: worldRenderScene.getOrGenerateTileAt(x + 1, y)).resetRecursive(worldRenderScene)
     }
 
     override fun render(worldRenderScene: WorldRenderScene, x: Int, y: Int) {
         renderRecursive(15, worldRenderScene, x, y)
+        resetRecursive(worldRenderScene)
     }
 
     override fun letter(): Char {

@@ -18,7 +18,7 @@ interface Tile {
     /**
      * Aucun argument requis. Permet de réinitialiser les états de chaque tuile.
      */
-    fun resetRecursive()
+    fun resetRecursive(worldRenderScene: WorldRenderScene)
     fun render(worldRenderScene: WorldRenderScene, x: Int, y: Int)
 
     fun letter(): Char
