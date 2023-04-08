@@ -24,7 +24,7 @@ class MapTile(
         right = null
     }
 
-    private var currentState: Int = 0
+    private var currentState: Int = 1
 
     override fun renderRecursive(remainingSteps: Int, worldRenderScene: WorldRenderScene, xToUse: Int, yToUse: Int) {
         if (remainingSteps < currentState) return
@@ -67,12 +67,12 @@ class MapTile(
     }
 
     override fun render(worldRenderScene: WorldRenderScene, x: Int, y: Int) {
-        renderRecursive(30, worldRenderScene, x, y)
+        renderRecursive(15, worldRenderScene, x, y)
     }
 
     override fun letter(): Char {
         return when(height) {
-            in 0.0..0.3 -> '≈'
+            in 0.0..0.3 -> '@'
             in 0.3..0.5 -> '~'
             in 0.5..0.7 -> if (isPath) '#' else ','
             in 0.7..1.0 -> if (isPath) '#' else '^'

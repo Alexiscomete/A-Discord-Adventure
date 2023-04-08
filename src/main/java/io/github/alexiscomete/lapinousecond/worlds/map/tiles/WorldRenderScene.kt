@@ -23,8 +23,8 @@ class WorldRenderScene(
     private var currentTile = getOrGenerateTileAt(x, y)
 
     fun renderAll() {
-        canvas.resetCanvas(Pair(61, 31))
-        currentTile.render(this, 30, 15)
+        canvas.resetCanvas(Pair(31, 31))
+        currentTile.render(this, 15, 15)
         //spritesManagers.forEach { it.getAllElements().forEach { sprite -> sprite.drawOn(image) } }
         thread {
             spritesManagers.forEach { it.updateAfter() }
