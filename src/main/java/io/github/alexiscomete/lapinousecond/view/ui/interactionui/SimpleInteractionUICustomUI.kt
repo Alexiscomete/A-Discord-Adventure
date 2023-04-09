@@ -9,7 +9,7 @@ class SimpleInteractionUICustomUI(
     private var description: String?,
     private val customInteractionStyle: InteractionStyle,
     private var executeWithoutArg: ((PlayerUI) -> Question?)?,
-    private var executeWithArg: ((PlayerUI, String) -> Question?)?
+    private var executeWithArg: ((PlayerUI, String) -> Question?)? = null
 ) : InteractionUICustomUI {
 
     override fun getCustomInteractionStyle(): InteractionStyle {

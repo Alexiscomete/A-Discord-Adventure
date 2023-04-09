@@ -26,31 +26,48 @@ class MapTile(
         right = null
     }
 
-    private var currentState: Int = 0
+    var currentState: Int = 0
+        private set
 
     override fun renderRecursive(remainingSteps: Int, worldRenderScene: WorldRenderScene, xToUse: Int, yToUse: Int) {
         if (remainingSteps < currentState) return
         currentState = remainingSteps
         worldRenderScene.canvas.drawTile(this, xToUse, yToUse)
-        (up ?: worldRenderScene.getOrGenerateTileAt(x, y - 1)).renderRecursive(
+        (up ?: run {
+            val tile = worldRenderScene.getOrGenerateTileAt(x, y - 1)
+            up = tile
+            tile
+        }).renderRecursive(
             remainingSteps - 1,
             worldRenderScene,
             xToUse,
             yToUse - 1
         )
-        (down ?: worldRenderScene.getOrGenerateTileAt(x, y + 1)).renderRecursive(
+        (down ?: run {
+            worldRenderScene.getOrGenerateTileAt(x, y + 1).also {
+                down = it
+            }
+        }).renderRecursive(
             remainingSteps - 1,
             worldRenderScene,
             xToUse,
             yToUse + 1
         )
-        (left ?: worldRenderScene.getOrGenerateTileAt(x - 1, y)).renderRecursive(
+        (left ?: run {
+            worldRenderScene.getOrGenerateTileAt(x - 1, y).also {
+                left = it
+            }
+        }).renderRecursive(
             remainingSteps - 1,
             worldRenderScene,
             xToUse - 1,
             yToUse
         )
-        (right ?: worldRenderScene.getOrGenerateTileAt(x + 1, y)).renderRecursive(
+        (right ?: run {
+            worldRenderScene.getOrGenerateTileAt(x + 1, y).also {
+                right = it
+            }
+        }).renderRecursive(
             remainingSteps - 1,
             worldRenderScene,
             xToUse + 1,
@@ -59,22 +76,16 @@ class MapTile(
 
     }
 
-    override fun resetRecursive(worldRenderScene: WorldRenderScene) {
-        if (currentState == 0) return
+    fun resetRender() {
         currentState = 0
-        (up ?: worldRenderScene.getOrGenerateTileAt(x, y - 1)).resetRecursive(worldRenderScene)
-        (down ?: worldRenderScene.getOrGenerateTileAt(x, y + 1)).resetRecursive(worldRenderScene)
-        (left ?: worldRenderScene.getOrGenerateTileAt(x - 1, y)).resetRecursive(worldRenderScene)
-        (right ?: worldRenderScene.getOrGenerateTileAt(x + 1, y)).resetRecursive(worldRenderScene)
     }
 
     override fun render(worldRenderScene: WorldRenderScene, x: Int, y: Int) {
-        renderRecursive(15, worldRenderScene, x, y)
-        resetRecursive(worldRenderScene)
+        renderRecursive(17, worldRenderScene, x, y)
     }
 
     override fun letter(): Char {
-        return when(height) {
+        return when (height) {
             in 0.0..0.3 -> '@'
             in 0.3..0.5 -> '~'
             in 0.5..0.7 -> if (isPath) '#' else ','

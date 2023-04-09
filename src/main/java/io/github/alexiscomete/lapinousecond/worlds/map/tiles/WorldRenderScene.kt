@@ -5,6 +5,7 @@ import io.github.alexiscomete.lapinousecond.worlds.Zooms
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.MultiTilesManager
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.WorldCanvas
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.InteractionSpriteManager
+import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.BaseTileGroup
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.MapTile
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.TreeTrunk
 import kotlin.concurrent.thread
@@ -27,6 +28,23 @@ class WorldRenderScene(
     fun renderAll() {
         canvas.resetCanvas(Pair(31, 31))
         currentTile.render(this, 15, 15)
+        val toDelete = mutableListOf<Tile>()
+        for (tile in dicoTiles.values) {
+            if (tile is BaseTileGroup) {
+                if (tile.currentState == 0) {
+                    toDelete.add(tile)
+                } else {
+                    tile.resetRecursive()
+                }
+            } else if (tile is MapTile) {
+                if (tile.currentState == 0) {
+                    toDelete.add(tile)
+                } else {
+                    tile.resetRender()
+                }
+            }
+        }
+        toDelete.forEach { it.delete(this) }
         //spritesManagers.forEach { it.getAllElements().forEach { sprite -> sprite.drawOn(image) } }
         thread {
             spritesManagers.forEach { it.updateAfter() }

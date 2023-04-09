@@ -8,11 +8,13 @@ import io.github.alexiscomete.lapinousecond.view.ui.playerui.PlayerUI
 import io.github.alexiscomete.lapinousecond.view.ui.playerui.Question
 import io.github.alexiscomete.lapinousecond.worlds.WorldEnum
 import io.github.alexiscomete.lapinousecond.worlds.Zooms
+import io.github.alexiscomete.lapinousecond.worlds.map.tiles.WorldRenderScene
+import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.ImageWorldCanvas
 import java.awt.image.BufferedImage
 
 class PixelByPixelUI(
     private var playerUI: PlayerUI,
-    private var linkedImage: String?,
+    private var linkedImage: String?
 ) : LongCustomUI {
 
     private var title: String = "Pixel by pixel"
@@ -55,6 +57,15 @@ class PixelByPixelUI(
             player["place_${worldStr}_zoom"] = value.name
         }
 
+    private val canvas = ImageWorldCanvas()
+    private var worldRenderScene: WorldRenderScene = WorldRenderScene(
+        canvas,
+        x,
+        y,
+        zooms,
+        world.worldManager
+    )
+
     override fun getTitle(): String {
         return title
     }
@@ -87,6 +98,7 @@ class PixelByPixelUI(
     }
 
     override fun getBufferedImage(): BufferedImage {
+        worldRenderScene.renderAll()
         return world.zoomWithDecorElements(x, y, 30, zooms, player)
     }
 
@@ -114,15 +126,16 @@ class PixelByPixelUI(
                         playerUI.addMessage(Message("Le monde microscopique n'est pas encore implémenté", "Problème"))
                         zooms
                     }
+                    worldRenderScene = WorldRenderScene(
+                        canvas,
+                        x,
+                        y,
+                        zooms,
+                        world.worldManager
+                    )
                     return@SimpleInteractionUICustomUI null
                 }
-            ) { _, _ ->
-                zooms = zooms.next ?: run {
-                    playerUI.addMessage(Message("Le monde microscopique n'est pas encore implémenté", "Problème"))
-                    zooms
-                }
-                return@SimpleInteractionUICustomUI null
-            },
+            ),
             SimpleInteractionUICustomUI(
                 "up",
                 "⬆",
@@ -130,12 +143,10 @@ class PixelByPixelUI(
                 InteractionStyle.NORMAL,
                 {
                     y--
+                    worldRenderScene.moveUp()
                     return@SimpleInteractionUICustomUI null
                 },
-            ) { _, _ ->
-                y--
-                return@SimpleInteractionUICustomUI null
-            },
+            ),
             SimpleInteractionUICustomUI(
                 "zoom_out",
                 "🚁",
@@ -146,15 +157,16 @@ class PixelByPixelUI(
                         playerUI.addMessage(Message("Le monde des géants n'est pas encore implémenté", "Problème"))
                         zooms
                     }
+                    worldRenderScene = WorldRenderScene(
+                        canvas,
+                        x,
+                        y,
+                        zooms,
+                        world.worldManager
+                    )
                     return@SimpleInteractionUICustomUI null
                 }
-            ) { _, _ ->
-                zooms = zooms.before ?: run {
-                    playerUI.addMessage(Message("Le monde des géants n'est pas encore implémenté", "Problème"))
-                    zooms
-                }
-                return@SimpleInteractionUICustomUI null
-            },
+            ),
         ),
         listOf(
             SimpleInteractionUICustomUI(
@@ -164,12 +176,10 @@ class PixelByPixelUI(
                 InteractionStyle.NORMAL,
                 {
                     x--
+                    worldRenderScene.moveLeft()
                     return@SimpleInteractionUICustomUI null
                 },
-            ) { _, _ ->
-                x--
-                return@SimpleInteractionUICustomUI null
-            },
+            ),
             SimpleInteractionUICustomUI(
                 "down",
                 "⬇",
@@ -177,12 +187,10 @@ class PixelByPixelUI(
                 InteractionStyle.NORMAL,
                 {
                     y++
+                    worldRenderScene.moveDown()
                     return@SimpleInteractionUICustomUI null
                 },
-            ) { _, _ ->
-                y++
-                return@SimpleInteractionUICustomUI null
-            },
+            ),
             SimpleInteractionUICustomUI(
                 "right",
                 "➡",
@@ -190,12 +198,10 @@ class PixelByPixelUI(
                 InteractionStyle.NORMAL,
                 {
                     x++
+                    worldRenderScene.moveRight()
                     return@SimpleInteractionUICustomUI null
                 },
-            ) { _, _ ->
-                x++
-                return@SimpleInteractionUICustomUI null
-            }
+            )
         ),
     )
 

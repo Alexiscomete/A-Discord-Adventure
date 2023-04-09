@@ -7,7 +7,9 @@ class TreeTrunk(
     override val x: Int,
     override val y: Int,
     steps: Int,
-) : BaseTileGroup() {
+) : BaseTileGroup(
+    priority = 1
+) {
 
     override var up: Tile? = run {
         // get a random number : 0, 1, 2

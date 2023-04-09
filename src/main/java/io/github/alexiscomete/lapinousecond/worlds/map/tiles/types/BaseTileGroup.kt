@@ -3,9 +3,14 @@ package io.github.alexiscomete.lapinousecond.worlds.map.tiles.types
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.Tile
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.WorldRenderScene
 
-abstract class BaseTileGroup : Tile {
+abstract class BaseTileGroup(
+    val priority: Int = 0,
+) : Tile {
     override fun delete(worldRenderScene: WorldRenderScene) {
-        worldRenderScene.dicoTiles.remove(Pair(x, y))
+        val value = worldRenderScene.dicoTiles[Pair(x, y)]
+        if (value == this) {
+            worldRenderScene.dicoTiles.remove(Pair(x, y))
+        }
         up?.delete(worldRenderScene)
         down?.delete(worldRenderScene)
         left?.delete(worldRenderScene)
@@ -16,7 +21,8 @@ abstract class BaseTileGroup : Tile {
         right = null
     }
 
-    private var currentState: Int = 0
+    var currentState: Int = 0
+        private set
 
     override fun renderRecursive(remainingSteps: Int, worldRenderScene: WorldRenderScene, xToUse: Int, yToUse: Int) {
         if (remainingSteps < currentState) return
@@ -45,20 +51,35 @@ abstract class BaseTileGroup : Tile {
             xToUse + 1,
             yToUse
         )
-        worldRenderScene.canvas.drawTile(this, xToUse, yToUse)
+        worldRenderScene.canvas.drawTile(this, xToUse, yToUse, priority)
     }
 
-    override fun resetRecursive(worldRenderScene: WorldRenderScene) {
+    fun resetRecursive() {
         if (currentState == 0) return
         currentState = 0
-        up?.resetRecursive(worldRenderScene)
-        down?.resetRecursive(worldRenderScene)
-        left?.resetRecursive(worldRenderScene)
-        right?.resetRecursive(worldRenderScene)
+        up?.also {
+            if (it is BaseTileGroup) {
+                it.resetRecursive()
+            }
+        }
+        down?.also {
+            if (it is BaseTileGroup) {
+                it.resetRecursive()
+            }
+        }
+        left?.also {
+            if (it is BaseTileGroup) {
+                it.resetRecursive()
+            }
+        }
+        right?.also {
+            if (it is BaseTileGroup) {
+                it.resetRecursive()
+            }
+        }
     }
 
     override fun render(worldRenderScene: WorldRenderScene, x: Int, y: Int) {
         renderRecursive(15, worldRenderScene, x, y)
-        resetRecursive(worldRenderScene)
     }
 }
