@@ -3,1027 +3,794 @@
   <ID>JAVA</ID>
   <OriginalElement />
   <nodes>
-    <node x="7248.5" y="4379.5">io.github.alexiscomete.lapinousecond.view.discord.commands.Command</node>
-    <node x="5795.0" y="5367.5">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.ConfigCommand.M1</node>
-    <node x="-233.5" y="4818.0">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.HelpCommandMain</node>
-    <node x="2846.5" y="4818.0">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.WorkCommandAll</node>
-    <node x="4252.0" y="2960.0">io.github.alexiscomete.lapinousecond.worlds.map.PixelManager</node>
-    <node x="551.0" y="5310.5">io.github.alexiscomete.lapinousecond.worlds.ZoneToAdapt</node>
-    <node x="3578.5" y="3063.0">io.github.alexiscomete.lapinousecond.worlds.buildings.autorisations.BuildingAutorisation</node>
-    <node x="7285.5" y="2949.0">io.github.alexiscomete.lapinousecond.resources.WorkEnum</node>
-    <node x="659.0" y="934.0">io.github.alexiscomete.lapinousecond.view.ui.LongCustomUI</node>
-    <node x="246.5" y="3983.0">io.github.alexiscomete.lapinousecond.ItemsEnum.Companion</node>
-    <node x="4099.0" y="3603.0">io.github.alexiscomete.lapinousecond.roles.RolesEnum</node>
-    <node x="3403.0" y="3005.5">io.github.alexiscomete.lapinousecond.useful.transactions.Offer</node>
-    <node x="4458.0" y="4804.0">io.github.alexiscomete.lapinousecond.view.contextmanager.ModalContextManager</node>
-    <node x="417.0" y="2276.5">io.github.alexiscomete.lapinousecond.view.ui.author.Author</node>
-    <node x="5252.5" y="2767.0">io.github.alexiscomete.lapinousecond.worlds.buildings.Building</node>
-    <node x="5084.0" y="3600.0">io.github.alexiscomete.lapinousecond.worlds.buildings.interactions.Armurerie</node>
-    <node x="5248.5" y="4392.5">io.github.alexiscomete.lapinousecond.view.ui.InteractionStyle</node>
-    <node x="1709.5" y="3670.0">io.github.alexiscomete.lapinousecond.worlds.buildings.autorisations.AutList</node>
-    <node x="457.0" y="459.0">io.github.alexiscomete.lapinousecond.view.ui.DisabledUI</node>
-    <node x="5045.5" y="4376.0">io.github.alexiscomete.lapinousecond.view.ui.Message</node>
-    <node x="5538.0" y="5352.0">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.ConfigCommand.ModalModif</node>
-    <node x="6138.0" y="5338.0">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.InteractCommandBase.M1</node>
-    <node x="5018.0" y="5368.0">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.MapCommand.M5</node>
-    <node x="6964.5" y="4406.5">io.github.alexiscomete.lapinousecond.view.manager.ModalManager</node>
-    <node x="5384.0" y="3600.0">io.github.alexiscomete.lapinousecond.worlds.buildings.interactions.Pharmacie</node>
-    <node x="3361.0" y="2263.0">io.github.alexiscomete.lapinousecond.useful.managesave.CacheGetSet</node>
-    <node x="1420.0" y="3689.0">io.github.alexiscomete.lapinousecond.worlds.buildings.Buildings.Companion</node>
-    <node x="1724.0" y="4169.0">io.github.alexiscomete.lapinousecond.worlds.buildings.autorisations.BuildingAutorisations.Companion</node>
-    <node x="7597.0" y="4863.0">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.AccountCommandBase</node>
-    <node x="46.5" y="4818.0">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.AccountCommandPerms</node>
-    <node x="-239.0" y="4378.5">io.github.alexiscomete.lapinousecond.view.discord.commands.SubCommand</node>
-    <node x="3043.0" y="2991.5">io.github.alexiscomete.lapinousecond.useful.transactions.Auction</node>
-    <node x="1378.0" y="5368.0">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.MarketCommand.M2</node>
-    <node x="687.5" y="2946.0">io.github.alexiscomete.lapinousecond.view.ui.author.AuthorDiscord</node>
-    <node x="7813.0" y="4863.0">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.InvCommandBase</node>
-    <node x="6844.0" y="3600.0">io.github.alexiscomete.lapinousecond.worlds.buildings.interactions.Boulangerie</node>
-    <node x="6373.5" y="3048.0">io.github.alexiscomete.lapinousecond.worlds.buildings.BuildingInteraction</node>
-    <node x="1433.5" y="3983.0">io.github.alexiscomete.lapinousecond.worlds.buildings.autorisations.ChoicePlaceAutorisation</node>
-    <node x="5684.0" y="3600.0">io.github.alexiscomete.lapinousecond.worlds.buildings.interactions.Bar</node>
-    <node x="7388.0" y="4863.0">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.HelpCommandBase</node>
-    <node x="5984.0" y="3600.0">io.github.alexiscomete.lapinousecond.worlds.buildings.interactions.Banque</node>
-    <node x="5494.5" y="4406.5">io.github.alexiscomete.lapinousecond.view.manager.ButtonsManager</node>
-    <node x="7195.5" y="5367.5">io.github.alexiscomete.lapinousecond.useful.managesave.Table</node>
-    <node x="3418.5" y="4365.5">io.github.alexiscomete.lapinousecond.view.discord.commands.ExecutableWithArguments</node>
-    <node x="6106.0" y="4818.0">io.github.alexiscomete.lapinousecond.view.contextmanager.ButtonsContextManager</node>
-    <node x="5763.5" y="4423.0">io.github.alexiscomete.lapinousecond.view.contextmanager.ContextManager</node>
-    <node x="2400.0" y="2960.0">io.github.alexiscomete.lapinousecond.worlds.dibimap.DibimapServer</node>
-    <node x="4532.0" y="3002.0">io.github.alexiscomete.lapinousecond.view.LangageEnum</node>
-    <node x="-187.0" y="934.0">io.github.alexiscomete.lapinousecond.view.ui.PlayerUI</node>
-    <node x="2538.0" y="5368.0">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.MarketCommand.M6</node>
-    <node x="3686.5" y="4818.0">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.InvCommandResources</node>
-    <node x="4089.5" y="3969.0">io.github.alexiscomete.lapinousecond.roles.RolesEnum.Companion</node>
-    <node x="3195.5" y="4376.0">io.github.alexiscomete.lapinousecond.view.AnswerEnum</node>
-    <node x="2278.0" y="5368.0">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.MarketCommand.M3</node>
-    <node x="4238.0" y="5368.0">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.MapCommand.M2</node>
-    <node x="-130.0" y="4155.0">io.github.alexiscomete.lapinousecond.view.discord.commands.Sub</node>
-    <node x="5106.5" y="4819.0">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.MapCommand</node>
-    <node x="7742.5" y="3600.0">io.github.alexiscomete.lapinousecond.worlds.PlaceZones</node>
-    <node x="2518.5" y="3686.5">io.github.alexiscomete.lapinousecond.worlds.buildings.autorisations.AllAutorisation</node>
-    <node x="5677.0" y="4804.0">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.ConfigCommand</node>
-    <node x="5384.5" y="4819.5">io.github.alexiscomete.lapinousecond.view.contextmanager.MessagesContextManager</node>
-    <node x="1173.5" y="946.5">io.github.alexiscomete.lapinousecond.view.ui.dialogue.Dialogue</node>
-    <node x="606.5" y="4818.0">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.AccountCommandStart</node>
-    <node x="4697.5" y="3602.0">io.github.alexiscomete.lapinousecond.useful.ProgressionBar</node>
-    <node x="3126.5" y="4818.0">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.AccountCommandVerify</node>
-    <node x="6503.0" y="3969.0">io.github.alexiscomete.lapinousecond.resources.ResourceManager.Companion</node>
-    <node x="6906.5" y="4818.0">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.InteractCommandBase</node>
-    <node x="1705.0" y="3969.0">io.github.alexiscomete.lapinousecond.worlds.buildings.autorisations.BuildingAutorisations</node>
-    <node x="7924.0" y="2922.0">io.github.alexiscomete.lapinousecond.entity.OwnerInfinity</node>
-    <node x="6405.0" y="5367.5">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.ConfigCommand.M3</node>
-    <node x="7652.0" y="4378.5">io.github.alexiscomete.lapinousecond.view.discord.commands.SubCommandGroup</node>
-    <node x="2286.5" y="4819.0">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.ShopBuyCommand</node>
-    <node x="3047.5" y="3642.0">io.github.alexiscomete.lapinousecond.worlds.map.Node</node>
-    <node x="1061.0" y="2265.0">io.github.alexiscomete.lapinousecond.worlds.WorldManager</node>
-    <node x="6084.0" y="2922.0">io.github.alexiscomete.lapinousecond.entity.Company</node>
-    <node x="7339.5" y="5325.0">io.github.alexiscomete.lapinousecond.useful.managesave.SaveLocation</node>
-    <node x="1512.0" y="2876.0">io.github.alexiscomete.lapinousecond.view.ui.EmbedPages</node>
-    <node x="6144.0" y="2278.0">io.github.alexiscomete.lapinousecond.worlds.buildings.BuildMethods</node>
-    <node x="858.0" y="5368.0">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.MarketCommand.M1</node>
-    <node x="6584.5" y="3659.0">io.github.alexiscomete.lapinousecond.resources.ResourceManager</node>
-    <node x="7185.5" y="4863.0">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.WorkCommandBase</node>
-    <node x="3808.0" y="2736.0">io.github.alexiscomete.lapinousecond.worlds.WorldEnum</node>
-    <node x="3963.5" y="4805.0">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.MarketCommand</node>
-    <node x="1029.5" y="3614.0">io.github.alexiscomete.lapinousecond.view.ui.EmbedPagesWithInteractions</node>
-    <node x="3142.0" y="3894.0">io.github.alexiscomete.lapinousecond.Item</node>
-    <node x="3786.0" y="5324.5">io.github.alexiscomete.lapinousecond.view.manager.MessagesManager</node>
-    <node x="3364.5" y="3689.0">io.github.alexiscomete.lapinousecond.useful.managesave.SaveManager.Companion</node>
-    <node x="1907.0" y="5352.5">io.github.alexiscomete.lapinousecond.view.Players</node>
-    <node x="3406.5" y="4817.0">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.InvCommandInfos</node>
-    <node x="6624.0" y="4804.0">io.github.alexiscomete.lapinousecond.view.contextmanager.SelectMenuContextManager</node>
-    <node x="7960.5" y="3600.0">io.github.alexiscomete.lapinousecond.worlds.PlaceForTest</node>
-    <node x="3608.0" y="3703.0">io.github.alexiscomete.lapinousecond.worlds.buildings.Building.Companion</node>
-    <node x="3578.5" y="3966.5">io.github.alexiscomete.lapinousecond.worlds.buildings.autorisations.Inhabitants</node>
-    <node x="2731.0" y="3600.0">io.github.alexiscomete.lapinousecond.view.ui.dialogue.DialogueReader</node>
-    <node x="144.5" y="5283.0">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.MarketCommand.Wait23</node>
-    <node x="367.5" y="2918.0">io.github.alexiscomete.lapinousecond.view.ui.author.AuthorFiction</node>
-    <node x="1061.0" y="2948.5">io.github.alexiscomete.lapinousecond.worlds.WorldProcedural</node>
-    <node x="2695.5" y="2935.0">io.github.alexiscomete.lapinousecond.worlds.buildings.Buildings</node>
-    <node x="7064.0" y="2236.5">io.github.alexiscomete.lapinousecond.entity.Owner</node>
-    <node x="7836.5" y="3969.0">io.github.alexiscomete.lapinousecond.worlds.PlaceForTest.Companion</node>
-    <node x="1166.5" y="4818.0">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.WorkCommandResources</node>
-    <node x="4498.0" y="5368.0">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.MapCommand.M1</node>
-    <node x="7614.5" y="2810.0">io.github.alexiscomete.lapinousecond.entity.Level</node>
-    <node x="-235.0" y="2932.0">io.github.alexiscomete.lapinousecond.worlds.Zone</node>
-    <node x="477.5" y="3642.0">io.github.alexiscomete.lapinousecond.ItemsEnum</node>
-    <node x="4758.0" y="5368.0">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.MapCommand.M4</node>
-    <node x="-231.0" y="3600.0">io.github.alexiscomete.lapinousecond.worlds.Zooms</node>
-    <node x="644.5" y="1431.0">io.github.alexiscomete.lapinousecond.view.ui.longuis.PixelByPixelUI</node>
-    <node x="-147.0" y="-382.0">io.github.alexiscomete.lapinousecond.view.ui.InteractionUI</node>
-    <node x="2295.0" y="3686.5">io.github.alexiscomete.lapinousecond.worlds.buildings.autorisations.TypeAutorisation</node>
-    <node x="89.0" y="459.0">io.github.alexiscomete.lapinousecond.view.ui.SimpleInteractionUICustomUI</node>
-    <node x="4715.5" y="4662.0">io.github.alexiscomete.lapinousecond.view.Context</node>
-    <node x="7004.0" y="2848.0">io.github.alexiscomete.lapinousecond.worlds.Place</node>
-    <node x="8011.5" y="4380.0">io.github.alexiscomete.lapinousecond.roles.Role</node>
-    <node x="7430.5" y="3689.0">io.github.alexiscomete.lapinousecond.worlds.Place.Companion</node>
-    <node x="71.5" y="2248.5">io.github.alexiscomete.lapinousecond.view.ui.dialogue.DialoguePart</node>
-    <node x="5651.5" y="2935.0">io.github.alexiscomete.lapinousecond.view.ui.MenuBuilder</node>
-    <node x="6284.0" y="3600.0">io.github.alexiscomete.lapinousecond.worlds.buildings.interactions.Auberge</node>
-    <node x="2974.0" y="4392.5">io.github.alexiscomete.lapinousecond.worlds.buildings.evolution.Evolution</node>
-    <node x="1941.0" y="2948.5">io.github.alexiscomete.lapinousecond.worlds.WorldImage</node>
-    <node x="493.0" y="3983.0">io.github.alexiscomete.lapinousecond.ItemsEnum.GetItem</node>
-    <node x="1446.5" y="4818.0">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.InvCommandItems</node>
-    <node x="3183.0" y="2321.0">io.github.alexiscomete.lapinousecond.useful.transactions.Transaction</node>
-    <node x="2795.5" y="5294.0">io.github.alexiscomete.lapinousecond.worlds.map.FilesMapEnum</node>
-    <node x="1638.0" y="5368.0">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.MarketCommand.M4</node>
-    <node x="6612.5" y="2684.0">io.github.alexiscomete.lapinousecond.entity.Player</node>
-    <node x="886.5" y="4819.0">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.ShopSellCommand</node>
-    <node x="8006.0" y="4863.0">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.ShopCommandBase</node>
-    <node x="1726.5" y="4819.0">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.ShopInfoCommand</node>
-    <node x="326.5" y="4818.0">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.InvCommandTop</node>
-    <node x="7144.0" y="3600.0">io.github.alexiscomete.lapinousecond.worlds.buildings.interactions.Bibliotheque</node>
-    <node x="-234.0" y="1473.0">io.github.alexiscomete.lapinousecond.view.ui.DiscordPlayerUI</node>
-    <node x="1118.0" y="5368.0">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.MarketCommand.M7</node>
-    <node x="2920.0" y="2305.0">io.github.alexiscomete.lapinousecond.useful.managesave.CacheCustom</node>
-    <node x="3436.5" y="5366.5">io.github.alexiscomete.lapinousecond.view.manager.SelectMenuManager</node>
-    <node x="4760.5" y="2880.0">io.github.alexiscomete.lapinousecond.useful.managesave.SaveManager</node>
-    <node x="3107.0" y="5352.5">io.github.alexiscomete.lapinousecond.view.AnswerManager</node>
-    <node x="708.0" y="3703.0">io.github.alexiscomete.lapinousecond.view.ui.EmbedPages.AddContent</node>
-    <node x="3223.0" y="3005.5">io.github.alexiscomete.lapinousecond.useful.transactions.Research</node>
-    <node x="6819.0" y="5366.5">io.github.alexiscomete.lapinousecond.view.discord.commands.ListenerSlashCommands</node>
-    <node x="4404.0" y="3600.0">io.github.alexiscomete.lapinousecond.worlds.buildings.interactions.ArretBus</node>
-    <node x="129.0" y="109.0">io.github.alexiscomete.lapinousecond.view.ui.InteractionUICustomUI</node>
-    <node x="164.5" y="1515.0">io.github.alexiscomete.lapinousecond.view.ui.longuis.TestingUI</node>
-    <node x="7925.0" y="5298.0">io.github.alexiscomete.lapinousecond.entity.PlayerWithAccount</node>
-    <node x="2566.5" y="4818.0">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.WorkCommandRoles</node>
-    <node x="2006.5" y="4819.0">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.ShopListCommand</node>
-    <node x="168.0" y="3703.0">io.github.alexiscomete.lapinousecond.worlds.Zone.Companion</node>
-    <node x="-31.0" y="2904.0">io.github.alexiscomete.lapinousecond.view.ui.dialogue.PartOfDialogue</node>
-    <node x="7646.0" y="5297.0">io.github.alexiscomete.lapinousecond.resources.Resource</node>
-    <node x="1133.5" y="1596.0">io.github.alexiscomete.lapinousecond.view.ui.dialogue.DialogueBase</node>
-    <node x="5278.0" y="5367.5">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.ConfigCommand.M2</node>
-    <node x="-234.0" y="-50.0">io.github.alexiscomete.lapinousecond.view.ui.InteractionManager</node>
-    <node x="3804.0" y="3600.0">io.github.alexiscomete.lapinousecond.worlds.buildings.interactions.Boutique</node>
+    <node x="21.5" y="125.5">io.github.alexiscomete.lapinousecond.view.discord.commands.ExecutableWithArguments</node>
+    <node x="1526.5" y="1345.5">io.github.alexiscomete.lapinousecond.worlds.PlaceForTest.Companion</node>
+    <node x="1433.5" y="845.5">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.MarketCommand.M4</node>
+    <node x="401.0" y="1630.5">io.github.alexiscomete.lapinousecond.worlds.buildings.interactions.Bar</node>
+    <node x="1293.5" y="925.5">io.github.alexiscomete.lapinousecond.view.ui.dialogue.DialogueReader</node>
+    <node x="946.5" y="294.5">io.github.alexiscomete.lapinousecond.worlds.buildings.Buildings</node>
+    <node x="1141.0" y="185.5">io.github.alexiscomete.lapinousecond.view.ui.dialogue.DialogueBase</node>
+    <node x="1577.0" y="745.5">io.github.alexiscomete.lapinousecond.worlds.dibimap.DibimapServer</node>
+    <node x="780.0" y="1785.5">io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.interactions.ProceduralInteractionElementsManager</node>
+    <node x="359.5" y="765.5">io.github.alexiscomete.lapinousecond.worlds.buildings.autorisations.BuildingAutorisation</node>
+    <node x="955.0" y="845.5">io.github.alexiscomete.lapinousecond.view.ui.dialogue.PartOfDialogue</node>
+    <node x="1272.5" y="1692.5">io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.TreeTrunk</node>
+    <node x="32.0" y="-14.5">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.InteractCommandBase</node>
+    <node x="1068.0" y="745.5">io.github.alexiscomete.lapinousecond.entity.Level</node>
+    <node x="1808.0" y="785.5">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.MarketCommand</node>
+    <node x="1266.5" y="565.5">io.github.alexiscomete.lapinousecond.view.discord.commands.ListenerSlashCommands</node>
+    <node x="1371.0" y="1005.5">io.github.alexiscomete.lapinousecond.view.contextmanager.ModalContextManager</node>
+    <node x="399.5" y="1110.5">io.github.alexiscomete.lapinousecond.worlds.buildings.autorisations.AllAutorisation</node>
+    <node x="1022.0" y="565.5">io.github.alexiscomete.lapinousecond.worlds.ZoneToAdapt</node>
+    <node x="1043.5" y="1705.5">io.github.alexiscomete.lapinousecond.worlds.map.tiles.WorldRenderScene</node>
+    <node x="551.0" y="1423.5">io.github.alexiscomete.lapinousecond.worlds.buildings.interactions.Boulangerie</node>
+    <node x="1310.0" y="845.5">io.github.alexiscomete.lapinousecond.roles.Role</node>
+    <node x="1587.5" y="1105.5">io.github.alexiscomete.lapinousecond.useful.transactions.Offer</node>
+    <node x="1383.5" y="225.5">io.github.alexiscomete.lapinousecond.view.Players</node>
+    <node x="906.5" y="225.5">io.github.alexiscomete.lapinousecond.worlds.buildings.Buildings.Companion</node>
+    <node x="788.0" y="565.5">io.github.alexiscomete.lapinousecond.useful.managesave.SaveLocation</node>
+    <node x="1928.0" y="1345.5">io.github.alexiscomete.lapinousecond.worlds.Place</node>
+    <node x="1544.0" y="565.5">io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.InteractionSpriteManager</node>
+    <node x="830.0" y="1325.5">io.github.alexiscomete.lapinousecond.view.discord.commands.Command</node>
+    <node x="1433.5" y="1425.5">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.MapCommand.M5</node>
+    <node x="563.5" y="1110.5">io.github.alexiscomete.lapinousecond.worlds.buildings.autorisations.Inhabitants</node>
+    <node x="305.0" y="565.5">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.WorkCommandAll</node>
+    <node x="798.5" y="1405.5">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.WorkCommandBase</node>
+    <node x="1193.5" y="845.5">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.MarketCommand.M1</node>
+    <node x="2086.5" y="1185.5">io.github.alexiscomete.lapinousecond.worlds.buildings.Building.Companion</node>
+    <node x="706.5" y="334.5">io.github.alexiscomete.lapinousecond.roles.RolesEnum</node>
+    <node x="1593.5" y="885.5">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.MarketCommand.M7</node>
+    <node x="280.5" y="505.5">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.ShopInfoCommand</node>
+    <node x="2563.0" y="65.5">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.ShopListCommand</node>
+    <node x="2421.5" y="1125.5">io.github.alexiscomete.lapinousecond.entity.OwnerInfinity</node>
+    <node x="1601.0" y="185.5">io.github.alexiscomete.lapinousecond.useful.managesave.SaveManager</node>
+    <node x="536.0" y="1492.5">io.github.alexiscomete.lapinousecond.worlds.buildings.interactions.Armurerie</node>
+    <node x="1819.5" y="565.5">io.github.alexiscomete.lapinousecond.view.manager.SelectMenuManager</node>
+    <node x="676.0" y="185.5">io.github.alexiscomete.lapinousecond.useful.ProgressionBar</node>
+    <node x="1904.0" y="1265.5">io.github.alexiscomete.lapinousecond.useful.managesave.CacheGetSet</node>
+    <node x="2378.0" y="625.5">io.github.alexiscomete.lapinousecond.view.discord.commands.SubCommand</node>
+    <node x="1253.5" y="1385.5">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.MapCommand.M4</node>
+    <node x="988.5" y="385.5">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.InvCommandResources</node>
+    <node x="661.5" y="834.5">io.github.alexiscomete.lapinousecond.worlds.buildings.autorisations.TypeAutorisation</node>
+    <node x="763.0" y="425.5">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.InvCommandItems</node>
+    <node x="1213.5" y="1085.5">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.ConfigCommand.M2</node>
+    <node x="439.5" y="1041.5">io.github.alexiscomete.lapinousecond.worlds.buildings.autorisations.ChoicePlaceAutorisation</node>
+    <node x="766.5" y="1714.5">io.github.alexiscomete.lapinousecond.worlds.Zone</node>
+    <node x="2105.0" y="1125.5">io.github.alexiscomete.lapinousecond.entity.Player</node>
+    <node x="2146.0" y="1474.5">io.github.alexiscomete.lapinousecond.worlds.map.PixelManager</node>
+    <node x="1982.5" y="1574.5">io.github.alexiscomete.lapinousecond.view.ui.author.AuthorFiction</node>
+    <node x="1232.5" y="1554.5">io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.BaseTileGroup</node>
+    <node x="886.0" y="1485.5">io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.Sprite</node>
+    <node x="1841.5" y="965.5">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.MarketCommand.Wait23</node>
+    <node x="1009.0" y="1085.5">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.ConfigCommand</node>
+    <node x="2033.5" y="785.5">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.MarketCommand.M3</node>
+    <node x="1414.5" y="1554.5">io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.MapTile</node>
+    <node x="1815.5" y="1632.5">io.github.alexiscomete.lapinousecond.view.Context</node>
+    <node x="2346.5" y="1345.5">io.github.alexiscomete.lapinousecond.worlds.Place.Companion</node>
+    <node x="1741.5" y="1065.5">io.github.alexiscomete.lapinousecond.worlds.Zooms</node>
+    <node x="2093.5" y="1005.5">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.MarketCommand.M2</node>
+    <node x="1591.5" y="1563.5">io.github.alexiscomete.lapinousecond.view.contextmanager.MessagesContextManager</node>
+    <node x="606.0" y="745.5">io.github.alexiscomete.lapinousecond.worlds.WorldEnum</node>
+    <node x="2098.0" y="1265.5">io.github.alexiscomete.lapinousecond.worlds.buildings.Building</node>
+    <node x="2776.0" y="25.5">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.WorkCommandRoles</node>
+    <node x="670.5" y="925.5">io.github.alexiscomete.lapinousecond.worlds.WorldProcedural</node>
+    <node x="926.0" y="1623.5">io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.MoveSprite</node>
+    <node x="1913.0" y="1065.5">io.github.alexiscomete.lapinousecond.entity.Company</node>
+    <node x="710.5" y="994.5">io.github.alexiscomete.lapinousecond.worlds.WorldManager</node>
+    <node x="1551.5" y="1425.5">io.github.alexiscomete.lapinousecond.view.contextmanager.ContextManager</node>
+    <node x="1248.0" y="345.5">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.InvCommandTop</node>
+    <node x="522.5" y="1705.5">io.github.alexiscomete.lapinousecond.view.AnswerEnum</node>
+    <node x="321.0" y="1285.5">io.github.alexiscomete.lapinousecond.worlds.buildings.BuildMethods</node>
+    <node x="504.5" y="465.5">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.AccountCommandPerms</node>
+    <node x="544.5" y="565.5">io.github.alexiscomete.lapinousecond.view.manager.MessagesManager</node>
+    <node x="2358.0" y="805.5">io.github.alexiscomete.lapinousecond.view.discord.commands.SubCommandGroup</node>
+    <node x="650.0" y="1561.5">io.github.alexiscomete.lapinousecond.worlds.buildings.interactions.Banque</node>
+    <node x="726.5" y="1645.5">io.github.alexiscomete.lapinousecond.worlds.Zone.Companion</node>
+    <node x="2064.0" y="565.5">io.github.alexiscomete.lapinousecond.entity.PlayerWithAccount</node>
+    <node x="1053.5" y="1005.5">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.ConfigCommand.M1</node>
+    <node x="1591.5" y="1632.5">io.github.alexiscomete.lapinousecond.view.contextmanager.ButtonsContextManager</node>
+    <node x="2263.0" y="1125.5">io.github.alexiscomete.lapinousecond.entity.Owner</node>
+    <node x="1024.0" y="1185.5">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.ConfigCommand.ModalModif</node>
+    <node x="606.0" y="1325.5">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.InvCommandBase</node>
+    <node x="431.5" y="385.5">io.github.alexiscomete.lapinousecond.view.manager.ButtonsManager</node>
+    <node x="1233.5" y="1325.5">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.MapCommand.M2</node>
+    <node x="2126.0" y="185.5">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.AccountCommandVerify</node>
+    <node x="479.5" y="972.5">io.github.alexiscomete.lapinousecond.worlds.buildings.autorisations.BuildingAutorisations.Companion</node>
+    <node x="2106.0" y="1405.5">io.github.alexiscomete.lapinousecond.worlds.map.Node</node>
+    <node x="-239.0" y="685.5">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.WorkCommandResources</node>
+    <node x="401.0" y="1492.5">io.github.alexiscomete.lapinousecond.worlds.buildings.interactions.Pharmacie</node>
+    <node x="361.0" y="1354.5">io.github.alexiscomete.lapinousecond.worlds.buildings.BuildingInteraction</node>
+    <node x="1693.5" y="925.5">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.MarketCommand.M6</node>
+    <node x="1073.5" y="1245.5">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.MapCommand.M1</node>
+    <node x="1067.0" y="1623.5">io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.DrawSprite</node>
+    <node x="1181.0" y="254.5">io.github.alexiscomete.lapinousecond.view.ui.dialogue.Dialogue</node>
+    <node x="1889.5" y="225.5">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.AccountCommandStart</node>
+    <node x="1005.0" y="1492.5">io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.interactions.InteractionSprite</node>
+    <node x="435.5" y="305.5">io.github.alexiscomete.lapinousecond.view.manager.ModalManager</node>
+    <node x="399.5" y="834.5">io.github.alexiscomete.lapinousecond.worlds.buildings.autorisations.AutList</node>
+    <node x="1908.5" y="1425.5">io.github.alexiscomete.lapinousecond.worlds.PlaceZones</node>
+    <node x="1579.5" y="1265.5">io.github.alexiscomete.lapinousecond.useful.transactions.Auction</node>
+    <node x="1567.5" y="1185.5">io.github.alexiscomete.lapinousecond.useful.transactions.Transaction</node>
+    <node x="666.5" y="265.5">io.github.alexiscomete.lapinousecond.roles.RolesEnum.Companion</node>
+    <node x="754.0" y="1085.5">io.github.alexiscomete.lapinousecond.worlds.buildings.evolution.Evolution</node>
+    <node x="441.5" y="225.5">io.github.alexiscomete.lapinousecond.view.ui.longuis.PixelByPixelUI</node>
+    <node x="1438.0" y="1725.5">io.github.alexiscomete.lapinousecond.worlds.map.FilesMapEnum</node>
+    <node x="1724.5" y="1345.5">io.github.alexiscomete.lapinousecond.worlds.PlaceForTest</node>
+    <node x="579.0" y="1265.5">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.ShopCommandBase</node>
+    <node x="1682.5" y="265.5">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.ShopSellCommand</node>
+    <node x="1934.0" y="865.5">io.github.alexiscomete.lapinousecond.view.ui.longuis.TestingUI</node>
+    <node x="1036.0" y="1325.5">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.MapCommand</node>
+    <node x="2412.0" y="725.5">io.github.alexiscomete.lapinousecond.view.discord.commands.Sub</node>
+    <node x="42.0" y="625.5">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.ShopBuyCommand</node>
+    <node x="1591.5" y="1494.5">io.github.alexiscomete.lapinousecond.view.contextmanager.SelectMenuContextManager</node>
+    <node x="601.0" y="1205.5">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.HelpCommandBase</node>
+    <node x="1192.5" y="1485.5">io.github.alexiscomete.lapinousecond.worlds.map.tiles.Tile</node>
+    <node x="669.0" y="1492.5">io.github.alexiscomete.lapinousecond.worlds.buildings.interactions.Boutique</node>
+    <node x="790.0" y="745.5">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.AccountCommandBase</node>
+    <node x="1648.5" y="1725.5">io.github.alexiscomete.lapinousecond.useful.managesave.Table</node>
+    <node x="401.0" y="1561.5">io.github.alexiscomete.lapinousecond.worlds.buildings.interactions.Auberge</node>
+    <node x="1756.0" y="1185.5">io.github.alexiscomete.lapinousecond.useful.transactions.Research</node>
+    <node x="401.0" y="1423.5">io.github.alexiscomete.lapinousecond.worlds.buildings.interactions.Bibliotheque</node>
+    <node x="1272.5" y="1623.5">io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.TreeFoliage</node>
+    <node x="2145.5" y="1574.5">io.github.alexiscomete.lapinousecond.view.ui.author.AuthorDiscord</node>
+    <node x="1299.0" y="-14.5">io.github.alexiscomete.lapinousecond.view.LangageEnum</node>
+    <node x="995.0" y="914.5">io.github.alexiscomete.lapinousecond.view.ui.dialogue.DialoguePart</node>
+    <node x="526.0" y="1561.5">io.github.alexiscomete.lapinousecond.worlds.buildings.interactions.ArretBus</node>
+    <node x="2364.5" y="125.5">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.InvCommandInfos</node>
+    <node x="1985.0" y="1665.5">io.github.alexiscomete.lapinousecond.useful.managesave.CacheCustom</node>
+    <node x="1942.5" y="1505.5">io.github.alexiscomete.lapinousecond.view.ui.author.Author</node>
+    <node x="1460.0" y="305.5">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.HelpCommandMain</node>
+    <node x="439.5" y="903.5">io.github.alexiscomete.lapinousecond.worlds.buildings.autorisations.BuildingAutorisations</node>
+    <node x="1273.5" y="1145.5">io.github.alexiscomete.lapinousecond.view.discord.commands.classes.ConfigCommand.M3</node>
+    <node x="1492.5" y="-14.5">io.github.alexiscomete.lapinousecond.view.AnswerManager</node>
   </nodes>
   <notes />
   <edges>
     <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.MarketCommand.M3" target="io.github.alexiscomete.lapinousecond.view.contextmanager.ModalContextManager" relationship="GENERALIZATION">
-      <point x="60.0" y="-45.0" />
-      <point x="2457.0" y="5233.0" />
-      <point x="4577.0" y="5233.0" />
-      <point x="0.0" y="89.0" />
+      <point x="-0.0" y="14.5" />
+      <point x="2069.0" y="1020.0000000000001" />
+      <point x="98.0" y="1.1368683772161603E-13" />
+    </edge>
+    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.BaseTileGroup" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.Tile" relationship="REALIZATION">
+      <point x="-68.0" y="-14.5" />
+      <point x="5.5" y="14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.MarketCommand.M4" target="io.github.alexiscomete.lapinousecond.view.contextmanager.ModalContextManager" relationship="GENERALIZATION">
-      <point x="60.0" y="-45.0" />
-      <point x="1817.0" y="5233.0" />
-      <point x="4577.0" y="5233.0" />
-      <point x="0.0" y="89.0" />
+      <point x="0.0" y="14.5" />
+      <point x="0.0" y="-14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.InvCommandResources" target="io.github.alexiscomete.lapinousecond.view.discord.commands.ExecutableWithArguments" relationship="REALIZATION">
-      <point x="60.0" y="-75.0" />
-      <point x="3877.0" y="4593.0" />
-      <point x="3597.0" y="4593.0" />
-      <point x="0.0" y="87.5" />
+      <point x="-0.0" y="-14.5" />
+      <point x="1089.0" y="143.95454545454544" />
+      <point x="107.5" y="3.954545454545439" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.worlds.buildings.interactions.Auberge" target="io.github.alexiscomete.lapinousecond.worlds.buildings.BuildingInteraction" relationship="GENERALIZATION">
-      <point x="0.0" y="-133.0" />
-      <point x="6417.0" y="3573.0" />
-      <point x="6477.0" y="3573.0" />
-      <point x="0.0" y="45.0" />
+      <point x="-0.0" y="-14.5" />
+      <point x="453.5" y="1546.5" />
+      <point x="377.0" y="1546.5" />
+      <point x="-68.5" y="14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.MarketCommand.M6" target="io.github.alexiscomete.lapinousecond.view.contextmanager.ModalContextManager" relationship="GENERALIZATION">
-      <point x="60.0" y="-45.0" />
-      <point x="2717.0" y="5233.0" />
-      <point x="4577.0" y="5233.0" />
-      <point x="0.0" y="89.0" />
+      <point x="-0.0" y="14.5" />
+      <point x="1729.0" y="1015.1666666666667" />
+      <point x="98.0" y="-4.8333333333332575" />
+    </edge>
+    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.TreeFoliage" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.BaseTileGroup" relationship="GENERALIZATION">
+      <point x="-31.0" y="-14.5" />
+      <point x="0.0" y="14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.MarketCommand.M7" target="io.github.alexiscomete.lapinousecond.view.contextmanager.ModalContextManager" relationship="GENERALIZATION">
-      <point x="59.33333333333326" y="-45.0" />
-      <point x="1296.3333333333333" y="5233.0" />
-      <point x="4577.0" y="5233.0" />
-      <point x="0.0" y="89.0" />
-    </edge>
-    <edge source="io.github.alexiscomete.lapinousecond.view.ui.InteractionUICustomUI" target="io.github.alexiscomete.lapinousecond.view.ui.InteractionUI" relationship="INTERFACE_GENERALIZATION">
-      <point x="0.0" y="-44.0" />
-      <point x="257.0" y="-67.0" />
-      <point x="97.0" y="-67.0" />
-      <point x="80.0" y="115.0" />
+      <point x="-0.0" y="14.5" />
+      <point x="1629.0" y="1010.3333333333334" />
+      <point x="98.0" y="-9.666666666666629" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.entity.Company" target="io.github.alexiscomete.lapinousecond.useful.managesave.CacheGetSet" relationship="GENERALIZATION">
-      <point x="-60.0" y="-171.0" />
-      <point x="6157.0" y="2653.0" />
-      <point x="3457.0" y="2653.0" />
-      <point x="0.0" y="130.0" />
+      <point x="0.0" y="14.5" />
+      <point x="0.0" y="-14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.AccountCommandBase" target="io.github.alexiscomete.lapinousecond.view.discord.commands.Command" relationship="GENERALIZATION">
-      <point x="0.0" y="-30.0" />
-      <point x="7697.0" y="4613.0" />
-      <point x="7437.0" y="4613.0" />
-      <point x="0.0" y="73.5" />
+      <point x="12.0" y="14.5" />
+      <point x="12.0" y="-14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.ConfigCommand.ModalModif" target="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.ConfigCommand" relationship="INNER_CLASS">
-      <point x="59.33333333333303" y="-61.0" />
-      <point x="5716.333333333333" y="5213.0" />
-      <point x="6477.0" y="5213.0" />
-      <point x="6477.0" y="5013.0" />
-      <point x="5877.0" y="5013.0" />
-      <point x="0.0" y="89.0" />
+      <point x="0.0" y="-14.5" />
+      <point x="0.0" y="14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.useful.transactions.Auction" target="io.github.alexiscomete.lapinousecond.useful.transactions.Transaction" relationship="REALIZATION">
-      <point x="-40.0" y="-101.5" />
-      <point x="3077.0" y="2953.0" />
-      <point x="3257.0" y="2953.0" />
-      <point x="0.0" y="72.0" />
+      <point x="0.0" y="-14.5" />
+      <point x="0.0" y="14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.MarketCommand.M1" target="io.github.alexiscomete.lapinousecond.view.contextmanager.ModalContextManager" relationship="GENERALIZATION">
-      <point x="59.33333333333326" y="-45.0" />
-      <point x="1036.3333333333333" y="5233.0" />
-      <point x="4577.0" y="5233.0" />
-      <point x="0.0" y="89.0" />
+      <point x="-0.0" y="14.5" />
+      <point x="1229.0" y="1011.3000000000001" />
+      <point x="-98.0" y="-8.699999999999932" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.MarketCommand.M2" target="io.github.alexiscomete.lapinousecond.view.contextmanager.ModalContextManager" relationship="GENERALIZATION">
-      <point x="59.33333333333326" y="-45.0" />
-      <point x="1556.3333333333333" y="5233.0" />
-      <point x="4577.0" y="5233.0" />
-      <point x="0.0" y="89.0" />
+      <point x="-35.5" y="4.833333333333485" />
+      <point x="98.0" y="4.833333333333485" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.InvCommandTop" target="io.github.alexiscomete.lapinousecond.view.discord.commands.SubCommand" relationship="GENERALIZATION">
-      <point x="-60.0" y="-75.0" />
-      <point x="397.0" y="4793.0" />
-      <point x="-43.0" y="4793.0" />
-      <point x="0.0" y="74.5" />
+      <point x="81.0" y="0.0" />
+      <point x="2444.0" y="360.0" />
+      <point x="-5.0" y="-14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.worlds.Place" target="io.github.alexiscomete.lapinousecond.useful.managesave.CacheGetSet" relationship="GENERALIZATION">
-      <point x="-68.66666666666697" y="-245.0" />
-      <point x="7068.333333333333" y="2653.0" />
-      <point x="3457.0" y="2653.0" />
-      <point x="0.0" y="130.0" />
-    </edge>
-    <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.MapCommand.M5" target="io.github.alexiscomete.lapinousecond.view.contextmanager.ModalContextManager" relationship="GENERALIZATION">
-      <point x="-60.0" y="-45.0" />
-      <point x="5077.0" y="5233.0" />
-      <point x="4577.0" y="5233.0" />
-      <point x="0.0" y="89.0" />
+      <point x="0.0" y="-14.5" />
+      <point x="0.0" y="14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.ShopListCommand" target="io.github.alexiscomete.lapinousecond.view.discord.commands.SubCommand" relationship="GENERALIZATION">
-      <point x="-65.25" y="-74.0" />
-      <point x="2071.75" y="4793.0" />
-      <point x="-43.0" y="4793.0" />
-      <point x="0.0" y="74.5" />
+      <point x="-0.0" y="14.5" />
+      <point x="2649.0" y="635.1666666666667" />
+      <point x="71.0" y="-4.8333333333332575" />
+    </edge>
+    <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.MapCommand.M5" target="io.github.alexiscomete.lapinousecond.view.contextmanager.ModalContextManager" relationship="GENERALIZATION">
+      <point x="0.0" y="-14.5" />
+      <point x="0.0" y="14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.WorkCommandResources" target="io.github.alexiscomete.lapinousecond.view.discord.commands.ExecutableWithArguments" relationship="REALIZATION">
-      <point x="67.0" y="-75.0" />
-      <point x="1364.0" y="4593.0" />
-      <point x="3597.0" y="4593.0" />
-      <point x="0.0" y="87.5" />
+      <point x="0.0" y="-14.5" />
+      <point x="-131.0" y="140.0" />
+      <point x="-107.5" y="0.0" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.MapCommand" target="io.github.alexiscomete.lapinousecond.view.discord.commands.ExecutableWithArguments" relationship="REALIZATION">
-      <point x="-60.0" y="-74.0" />
-      <point x="5177.0" y="4593.0" />
-      <point x="3597.0" y="4593.0" />
-      <point x="0.0" y="87.5" />
+      <point x="62.0" y="-14.5" />
+      <point x="1171.0" y="605.0" />
+      <point x="139.0" y="605.0" />
+      <point x="10.0" y="14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.worlds.buildings.interactions.Bibliotheque" target="io.github.alexiscomete.lapinousecond.worlds.buildings.BuildingInteraction" relationship="GENERALIZATION">
-      <point x="0.0" y="-133.0" />
-      <point x="7277.0" y="3573.0" />
-      <point x="6477.0" y="3573.0" />
-      <point x="0.0" y="45.0" />
-    </edge>
-    <edge source="io.github.alexiscomete.lapinousecond.entity.OwnerInfinity" target="io.github.alexiscomete.lapinousecond.entity.Owner" relationship="REALIZATION">
-      <point x="0.0" y="-171.0" />
-      <point x="8057.0" y="2633.0" />
-      <point x="7197.0" y="2633.0" />
-      <point x="0.0" y="156.5" />
+      <point x="-20.5" y="-14.5" />
+      <point x="0.0" y="14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.worlds.PlaceZones" target="io.github.alexiscomete.lapinousecond.worlds.Place" relationship="GENERALIZATION">
-      <point x="0.0" y="-133.0" />
-      <point x="7837.0" y="3393.0" />
-      <point x="7205.666666666667" y="3393.0" />
-      <point x="68.66666666666697" y="245.0" />
+      <point x="0.0" y="-14.5" />
+      <point x="0.0" y="14.5" />
+    </edge>
+    <edge source="io.github.alexiscomete.lapinousecond.entity.OwnerInfinity" target="io.github.alexiscomete.lapinousecond.entity.Owner" relationship="REALIZATION">
+      <point x="-67.5" y="0.0" />
+      <point x="46.0" y="0.0" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.worlds.buildings.BuildingInteraction" target="io.github.alexiscomete.lapinousecond.worlds.buildings.BuildMethods" relationship="REALIZATION">
-      <point x="0.0" y="-45.0" />
-      <point x="6477.0" y="2573.0" />
-      <point x="6277.0" y="2573.0" />
-      <point x="0.0" y="115.0" />
-    </edge>
-    <edge source="io.github.alexiscomete.lapinousecond.useful.transactions.Offer" target="io.github.alexiscomete.lapinousecond.useful.managesave.CacheGetSet" relationship="GENERALIZATION">
-      <point x="40.0" y="-87.5" />
-      <point x="3517.0" y="2653.0" />
-      <point x="3457.0" y="2653.0" />
-      <point x="-0.0" y="130.0" />
+      <point x="-56.5" y="-14.5" />
+      <point x="0.0" y="14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.useful.transactions.Research" target="io.github.alexiscomete.lapinousecond.useful.transactions.Transaction" relationship="REALIZATION">
-      <point x="-40.0" y="-87.5" />
-      <point x="0.0" y="72.0" />
+      <point x="-53.0" y="0.0" />
+      <point x="61.5" y="0.0" />
+    </edge>
+    <edge source="io.github.alexiscomete.lapinousecond.useful.transactions.Offer" target="io.github.alexiscomete.lapinousecond.useful.managesave.CacheGetSet" relationship="GENERALIZATION">
+      <point x="41.5" y="0.0" />
+      <point x="1959.0" y="1120.0" />
+      <point x="-10.0" y="-14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.InvCommandItems" target="io.github.alexiscomete.lapinousecond.view.discord.commands.SubCommand" relationship="GENERALIZATION">
-      <point x="-60.0" y="-75.0" />
-      <point x="1517.0" y="4793.0" />
-      <point x="-43.0" y="4793.0" />
-      <point x="0.0" y="74.5" />
+      <point x="86.0" y="0.0" />
+      <point x="2424.0" y="440.0" />
+      <point x="-25.0" y="-14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.MarketCommand" target="io.github.alexiscomete.lapinousecond.view.discord.commands.ExecutableWithArguments" relationship="REALIZATION">
-      <point x="-80.0" y="-88.0" />
-      <point x="4057.0" y="4593.0" />
-      <point x="3597.0" y="4593.0" />
-      <point x="0.0" y="87.5" />
+      <point x="-81.0" y="-0.5000640000000658" />
+      <point x="40.0" y="799.4999359999999" />
+      <point x="-89.0" y="14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.ShopInfoCommand" target="io.github.alexiscomete.lapinousecond.view.discord.commands.SubCommand" relationship="GENERALIZATION">
-      <point x="-60.0" y="-74.0" />
-      <point x="1797.0" y="4793.0" />
-      <point x="-43.0" y="4793.0" />
-      <point x="0.0" y="74.5" />
-    </edge>
-    <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.ShopInfoCommand" target="io.github.alexiscomete.lapinousecond.view.discord.commands.ExecutableWithArguments" relationship="REALIZATION">
-      <point x="67.0" y="-74.0" />
-      <point x="1924.0" y="4593.0" />
-      <point x="3597.0" y="4593.0" />
-      <point x="0.0" y="87.5" />
+      <point x="88.5" y="0.0" />
+      <point x="2404.0" y="520.0" />
+      <point x="-45.0" y="-14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.ConfigCommand" target="io.github.alexiscomete.lapinousecond.view.discord.commands.ExecutableWithArguments" relationship="REALIZATION">
-      <point x="-100.0" y="-89.0" />
-      <point x="5777.0" y="4593.0" />
-      <point x="3597.0" y="4593.0" />
-      <point x="0.0" y="87.5" />
+      <point x="63.0" y="-14.5" />
+      <point x="1152.0" y="615.0" />
+      <point x="129.0" y="615.0" />
+      <point x="-0.0" y="14.5" />
+    </edge>
+    <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.ShopInfoCommand" target="io.github.alexiscomete.lapinousecond.view.discord.commands.ExecutableWithArguments" relationship="REALIZATION">
+      <point x="-0.0" y="-14.5" />
+      <point x="369.0" y="151.86363636363632" />
+      <point x="107.5" y="11.863636363636317" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.MapCommand.M4" target="io.github.alexiscomete.lapinousecond.view.contextmanager.ModalContextManager" relationship="GENERALIZATION">
-      <point x="-60.0" y="-45.0" />
-      <point x="4817.0" y="5233.0" />
-      <point x="4577.0" y="5233.0" />
-      <point x="0.0" y="89.0" />
+      <point x="35.5" y="0.0" />
+      <point x="1447.75" y="1400.0" />
+      <point x="-21.25" y="14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.WorkCommandBase" target="io.github.alexiscomete.lapinousecond.view.discord.commands.Command" relationship="GENERALIZATION">
-      <point x="0.0" y="-30.0" />
-      <point x="7277.0" y="4613.0" />
-      <point x="7437.0" y="4613.0" />
-      <point x="0.0" y="73.5" />
-    </edge>
-    <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.MapCommand.M1" target="io.github.alexiscomete.lapinousecond.view.contextmanager.ModalContextManager" relationship="GENERALIZATION">
-      <point x="-60.0" y="-45.0" />
-      <point x="4557.0" y="5233.0" />
-      <point x="4577.0" y="5233.0" />
-      <point x="0.0" y="89.0" />
+      <point x="0.0" y="-14.5" />
+      <point x="0.0" y="14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.worlds.buildings.interactions.Bar" target="io.github.alexiscomete.lapinousecond.worlds.buildings.BuildingInteraction" relationship="GENERALIZATION">
-      <point x="0.0" y="-133.0" />
-      <point x="5817.0" y="3573.0" />
-      <point x="6477.0" y="3573.0" />
-      <point x="0.0" y="45.0" />
+      <point x="0.0" y="-14.5" />
+      <point x="436.0" y="1605.5" />
+      <point x="369.0" y="1605.5" />
+      <point x="-76.5" y="14.5" />
+    </edge>
+    <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.MapCommand.M1" target="io.github.alexiscomete.lapinousecond.view.contextmanager.ModalContextManager" relationship="GENERALIZATION">
+      <point x="35.5" y="0.0" />
+      <point x="1427.75" y="1260.0" />
+      <point x="-41.25" y="14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.MapCommand.M2" target="io.github.alexiscomete.lapinousecond.view.contextmanager.ModalContextManager" relationship="GENERALIZATION">
-      <point x="-60.0" y="-45.0" />
-      <point x="4297.0" y="5233.0" />
-      <point x="4577.0" y="5233.0" />
-      <point x="0.0" y="89.0" />
+      <point x="35.5" y="0.0" />
+      <point x="1437.75" y="1340.0" />
+      <point x="-31.25" y="14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.worlds.buildings.autorisations.TypeAutorisation" target="io.github.alexiscomete.lapinousecond.worlds.buildings.autorisations.BuildingAutorisation" relationship="REALIZATION">
-      <point x="-0.0" y="-46.5" />
-      <point x="2397.0" y="3633.0" />
-      <point x="2617.0" y="3633.0" />
-      <point x="2617.0" y="3273.0" />
-      <point x="3677.0" y="3273.0" />
-      <point x="-0.0" y="30.0" />
-    </edge>
-    <edge source="io.github.alexiscomete.lapinousecond.view.ui.SimpleInteractionUICustomUI" target="io.github.alexiscomete.lapinousecond.view.ui.InteractionUICustomUI" relationship="REALIZATION">
-      <point x="0.0" y="-214.0" />
-      <point x="0.0" y="44.0" />
+      <point x="0.0" y="-14.5" />
+      <point x="756.0" y="812.5" />
+      <point x="474.0" y="812.5" />
+      <point x="25.0" y="14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.AccountCommandStart" target="io.github.alexiscomete.lapinousecond.view.discord.commands.SubCommand" relationship="GENERALIZATION">
-      <point x="-60.0" y="-75.0" />
-      <point x="677.0" y="4793.0" />
-      <point x="-43.0" y="4793.0" />
-      <point x="0.0" y="74.5" />
-    </edge>
-    <edge source="io.github.alexiscomete.lapinousecond.ItemsEnum.Companion" target="io.github.alexiscomete.lapinousecond.ItemsEnum" relationship="INNER_CLASS">
-      <point x="0.0" y="-30.0" />
-      <point x="357.0" y="3953.0" />
-      <point x="577.0" y="3953.0" />
-      <point x="0.0" y="91.0" />
+      <point x="99.5" y="0.0" />
+      <point x="2474.0" y="240.0" />
+      <point x="25.0" y="-14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.worlds.buildings.interactions.Armurerie" target="io.github.alexiscomete.lapinousecond.worlds.buildings.BuildingInteraction" relationship="GENERALIZATION">
-      <point x="0.0" y="-133.0" />
-      <point x="5217.0" y="3573.0" />
-      <point x="6477.0" y="3573.0" />
-      <point x="0.0" y="45.0" />
-    </edge>
-    <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.InteractCommandBase.M1" target="io.github.alexiscomete.lapinousecond.view.contextmanager.ModalContextManager" relationship="GENERALIZATION">
-      <point x="-60.0" y="-75.0" />
-      <point x="6197.0" y="5233.0" />
-      <point x="4577.0" y="5233.0" />
-      <point x="0.0" y="89.0" />
+      <point x="-51.0" y="-14.5" />
+      <point x="541.5" y="1407.5" />
+      <point x="465.5" y="1407.5" />
+      <point x="20.0" y="14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.ConfigCommand.M1" target="io.github.alexiscomete.lapinousecond.view.contextmanager.ModalContextManager" relationship="GENERALIZATION">
-      <point x="-80.0" y="-45.5" />
-      <point x="5877.0" y="5233.0" />
-      <point x="4577.0" y="5233.0" />
-      <point x="0.0" y="89.0" />
+      <point x="35.5" y="-2.8999999999999773" />
+      <point x="-98.0" y="-2.8999999999999773" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.ConfigCommand.M2" target="io.github.alexiscomete.lapinousecond.view.contextmanager.ModalContextManager" relationship="GENERALIZATION">
-      <point x="-60.0" y="-45.5" />
-      <point x="5337.0" y="5233.0" />
-      <point x="4577.0" y="5233.0" />
-      <point x="0.0" y="89.0" />
+      <point x="-0.0" y="-14.5" />
+      <point x="1249.0" y="1022.9" />
+      <point x="-98.0" y="2.8999999999999773" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.ConfigCommand.M3" target="io.github.alexiscomete.lapinousecond.view.contextmanager.ModalContextManager" relationship="GENERALIZATION">
-      <point x="-94.66666666666697" y="-45.5" />
-      <point x="6502.333333333333" y="5233.0" />
-      <point x="4577.0" y="5233.0" />
-      <point x="0.0" y="89.0" />
+      <point x="-0.0" y="-14.5" />
+      <point x="1309.0" y="1028.6999999999998" />
+      <point x="-98.0" y="8.699999999999818" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.worlds.Zone.Companion" target="io.github.alexiscomete.lapinousecond.worlds.Zone" relationship="INNER_CLASS">
-      <point x="0.0" y="-30.0" />
-      <point x="257.0" y="3573.0" />
-      <point x="-143.0" y="3573.0" />
-      <point x="0.0" y="161.0" />
-    </edge>
-    <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.InvCommandTop" target="io.github.alexiscomete.lapinousecond.view.discord.commands.ExecutableWithArguments" relationship="REALIZATION">
-      <point x="67.0" y="-75.0" />
-      <point x="524.0" y="4593.0" />
-      <point x="3597.0" y="4593.0" />
-      <point x="0.0" y="87.5" />
+      <point x="18.5" y="14.5" />
+      <point x="0.0" y="-14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.worlds.Place.Companion" target="io.github.alexiscomete.lapinousecond.worlds.Place" relationship="INNER_CLASS">
-      <point x="0.0" y="-44.0" />
-      <point x="7577.0" y="3553.0" />
-      <point x="7077.0" y="3553.0" />
-      <point x="-60.0" y="245.0" />
+      <point x="-62.5" y="4.833333333333485" />
+      <point x="41.0" y="4.833333333333485" />
+    </edge>
+    <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.InvCommandTop" target="io.github.alexiscomete.lapinousecond.view.discord.commands.ExecutableWithArguments" relationship="REALIZATION">
+      <point x="-0.0" y="-14.5" />
+      <point x="1329.0" y="141.3181818181818" />
+      <point x="107.5" y="1.318181818181813" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.AccountCommandPerms" target="io.github.alexiscomete.lapinousecond.view.discord.commands.ExecutableWithArguments" relationship="REALIZATION">
-      <point x="67.0" y="-75.0" />
-      <point x="244.0" y="4593.0" />
-      <point x="3597.0" y="4593.0" />
-      <point x="0.0" y="87.5" />
+      <point x="-0.0" y="-14.5" />
+      <point x="609.0" y="149.2272727272727" />
+      <point x="107.5" y="9.227272727272691" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.worlds.buildings.autorisations.ChoicePlaceAutorisation" target="io.github.alexiscomete.lapinousecond.worlds.buildings.autorisations.AutList" relationship="GENERALIZATION">
-      <point x="0.0" y="-30.0" />
-      <point x="1557.0" y="3953.0" />
-      <point x="1877.0" y="3953.0" />
-      <point x="0.0" y="63.0" />
-    </edge>
-    <edge source="io.github.alexiscomete.lapinousecond.view.ui.longuis.TestingUI" target="io.github.alexiscomete.lapinousecond.view.ui.LongCustomUI" relationship="REALIZATION">
-      <point x="0.0" y="-298.0" />
-      <point x="397.0" y="1413.0" />
-      <point x="877.0" y="1413.0" />
-      <point x="0.0" y="199.0" />
-    </edge>
-    <edge source="io.github.alexiscomete.lapinousecond.worlds.WorldImage" target="io.github.alexiscomete.lapinousecond.worlds.WorldManager" relationship="REALIZATION">
-      <point x="0.0" y="-144.5" />
-      <point x="2157.0" y="2853.0" />
-      <point x="1277.0" y="2853.0" />
-      <point x="0.0" y="128.0" />
+      <point x="0.0" y="-14.5" />
+      <point x="540.5" y="1003.5" />
+      <point x="437.5" y="1003.5" />
+      <point x="-9.0" y="14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.worlds.map.Node" target="io.github.alexiscomete.lapinousecond.worlds.map.PixelManager" relationship="GENERALIZATION">
-      <point x="-0.0" y="-91.0" />
-      <point x="3197.0" y="3473.0" />
-      <point x="4377.0" y="3473.0" />
-      <point x="-0.0" y="133.0" />
+      <point x="0.0" y="14.5" />
+      <point x="-64.0" y="-14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.MarketCommand.Wait23" target="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.MarketCommand" relationship="INNER_CLASS">
-      <point x="0.0" y="-130.0" />
-      <point x="337.0" y="5253.0" />
-      <point x="1437.0" y="5253.0" />
-      <point x="1437.0" y="5013.0" />
-      <point x="4137.0" y="5013.0" />
-      <point x="0.0" y="88.0" />
+      <point x="-1.25" y="-14.5" />
+      <point x="-1.25" y="14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.view.ui.author.AuthorFiction" target="io.github.alexiscomete.lapinousecond.view.ui.author.Author" relationship="REALIZATION">
-      <point x="0.0" y="-175.0" />
-      <point x="0.0" y="116.5" />
+      <point x="-46.5" y="-14.5" />
+      <point x="15.0" y="14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.WorkCommandRoles" target="io.github.alexiscomete.lapinousecond.view.discord.commands.ExecutableWithArguments" relationship="REALIZATION">
-      <point x="60.0" y="-75.0" />
-      <point x="2757.0" y="4593.0" />
-      <point x="3597.0" y="4593.0" />
-      <point x="0.0" y="87.5" />
+      <point x="-93.0" y="0.0" />
+      <point x="134.25" y="40.0" />
+      <point x="5.25" y="-14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.entity.Player" target="io.github.alexiscomete.lapinousecond.entity.Owner" relationship="REALIZATION">
-      <point x="100.0" y="-409.0" />
-      <point x="6897.0" y="2633.0" />
-      <point x="7197.0" y="2633.0" />
-      <point x="0.0" y="156.5" />
+      <point x="44.0" y="0.0" />
+      <point x="-46.0" y="0.0" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.InvCommandResources" target="io.github.alexiscomete.lapinousecond.view.discord.commands.SubCommand" relationship="GENERALIZATION">
-      <point x="-67.0" y="-75.0" />
-      <point x="3750.0" y="4793.0" />
-      <point x="-43.0" y="4793.0" />
-      <point x="0.0" y="74.5" />
+      <point x="100.5" y="0.0" />
+      <point x="2434.0" y="400.0" />
+      <point x="-15.0" y="-14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.ShopSellCommand" target="io.github.alexiscomete.lapinousecond.view.discord.commands.SubCommand" relationship="GENERALIZATION">
-      <point x="-60.0" y="-74.0" />
-      <point x="957.0" y="4793.0" />
-      <point x="-43.0" y="4793.0" />
-      <point x="0.0" y="74.5" />
+      <point x="86.5" y="0.0" />
+      <point x="2464.0" y="280.0" />
+      <point x="15.0" y="-14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.useful.transactions.Research" target="io.github.alexiscomete.lapinousecond.useful.managesave.CacheGetSet" relationship="GENERALIZATION">
-      <point x="36.0" y="-87.5" />
-      <point x="3333.0" y="2653.0" />
-      <point x="3457.0" y="2653.0" />
-      <point x="0.0" y="130.0" />
+      <point x="-0.0" y="14.5" />
+      <point x="1809.0" y="1275.1666666666665" />
+      <point x="-65.0" y="-4.833333333333485" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.view.contextmanager.MessagesContextManager" target="io.github.alexiscomete.lapinousecond.view.contextmanager.ContextManager" relationship="REALIZATION">
-      <point x="0.0" y="-73.5" />
-      <point x="5517.0" y="4633.0" />
-      <point x="5857.0" y="4633.0" />
-      <point x="0.0" y="30.0" />
-    </edge>
-    <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.InteractCommandBase.M1" target="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.InteractCommandBase" relationship="INNER_CLASS">
-      <point x="59.33333333333303" y="-75.0" />
-      <point x="6316.333333333333" y="5193.0" />
-      <point x="7037.0" y="5193.0" />
-      <point x="0.0" y="75.0" />
+      <point x="0.0" y="-14.5" />
+      <point x="1700.5" y="1536.5" />
+      <point x="1576.5" y="1536.5" />
+      <point x="-52.5" y="14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.worlds.buildings.interactions.Boutique" target="io.github.alexiscomete.lapinousecond.worlds.buildings.BuildingInteraction" relationship="GENERALIZATION">
-      <point x="0.0" y="-133.0" />
-      <point x="3937.0" y="3573.0" />
-      <point x="6477.0" y="3573.0" />
-      <point x="0.0" y="45.0" />
-    </edge>
-    <edge source="io.github.alexiscomete.lapinousecond.resources.ResourceManager.Companion" target="io.github.alexiscomete.lapinousecond.resources.ResourceManager" relationship="INNER_CLASS">
-      <point x="0.0" y="-44.0" />
-      <point x="0.0" y="74.0" />
+      <point x="-0.0" y="-14.5" />
+      <point x="722.5" y="1391.5" />
+      <point x="485.5" y="1391.5" />
+      <point x="40.0" y="14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.ShopBuyCommand" target="io.github.alexiscomete.lapinousecond.view.discord.commands.ExecutableWithArguments" relationship="REALIZATION">
-      <point x="60.0" y="-74.0" />
-      <point x="2477.0" y="4593.0" />
-      <point x="3597.0" y="4593.0" />
-      <point x="0.0" y="87.5" />
-    </edge>
-    <edge source="io.github.alexiscomete.lapinousecond.view.ui.EmbedPagesWithInteractions" target="io.github.alexiscomete.lapinousecond.view.ui.EmbedPages" relationship="GENERALIZATION">
-      <point x="0.0" y="-119.0" />
-      <point x="1217.0" y="3353.0" />
-      <point x="1819.5" y="3353.0" />
-      <point x="102.5" y="217.0" />
-    </edge>
-    <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.WorkCommandResources" target="io.github.alexiscomete.lapinousecond.view.discord.commands.SubCommand" relationship="GENERALIZATION">
-      <point x="-60.0" y="-75.0" />
-      <point x="1237.0" y="4793.0" />
-      <point x="-43.0" y="4793.0" />
-      <point x="0.0" y="74.5" />
+      <point x="-10.0" y="-14.5" />
+      <point x="-10.0" y="14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.worlds.buildings.Building" target="io.github.alexiscomete.lapinousecond.useful.managesave.CacheGetSet" relationship="GENERALIZATION">
-      <point x="-100.0" y="-326.0" />
-      <point x="5337.0" y="2653.0" />
-      <point x="3457.0" y="2653.0" />
-      <point x="0.0" y="130.0" />
+      <point x="-51.0" y="0.0" />
+      <point x="65.0" y="0.0" />
+    </edge>
+    <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.WorkCommandResources" target="io.github.alexiscomete.lapinousecond.view.discord.commands.SubCommand" relationship="GENERALIZATION">
+      <point x="108.0" y="0.0" />
+      <point x="2427.0" y="700.0" />
+      <point x="-22.0" y="14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.ConfigCommand" target="io.github.alexiscomete.lapinousecond.view.discord.commands.Command" relationship="GENERALIZATION">
-      <point x="100.0" y="-89.0" />
-      <point x="5977.0" y="4613.0" />
-      <point x="7437.0" y="4613.0" />
-      <point x="0.0" y="73.5" />
+      <point x="-80.0" y="0.0" />
+      <point x="921.0" y="1100.0" />
+      <point x="32.0" y="-14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.InteractCommandBase" target="io.github.alexiscomete.lapinousecond.view.discord.commands.ExecutableWithArguments" relationship="REALIZATION">
-      <point x="-67.0" y="-75.0" />
-      <point x="6970.0" y="4593.0" />
-      <point x="3597.0" y="4593.0" />
-      <point x="0.0" y="87.5" />
+      <point x="-4.75" y="14.5" />
+      <point x="-4.75" y="-14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.MarketCommand.M4" target="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.MarketCommand" relationship="INNER_CLASS">
-      <point x="-59.33333333333326" y="-45.0" />
-      <point x="1697.6666666666667" y="5253.0" />
-      <point x="1437.0" y="5253.0" />
-      <point x="1437.0" y="5013.0" />
-      <point x="4137.0" y="5013.0" />
-      <point x="0.0" y="88.0" />
+      <point x="35.5" y="0.0" />
+      <point x="1856.0" y="860.0" />
+      <point x="-33.0" y="14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.AccountCommandVerify" target="io.github.alexiscomete.lapinousecond.view.discord.commands.SubCommand" relationship="GENERALIZATION">
-      <point x="-67.0" y="-75.0" />
-      <point x="3190.0" y="4793.0" />
-      <point x="-43.0" y="4793.0" />
-      <point x="0.0" y="74.5" />
-    </edge>
-    <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.MarketCommand.M6" target="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.MarketCommand" relationship="INNER_CLASS">
-      <point x="-59.333333333333485" y="-45.0" />
-      <point x="2597.6666666666665" y="5253.0" />
-      <point x="1437.0" y="5253.0" />
-      <point x="1437.0" y="5013.0" />
-      <point x="4137.0" y="5013.0" />
-      <point x="0.0" y="88.0" />
+      <point x="103.0" y="0.0" />
+      <point x="2484.0" y="200.0" />
+      <point x="35.0" y="-14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.ShopSellCommand" target="io.github.alexiscomete.lapinousecond.view.discord.commands.ExecutableWithArguments" relationship="REALIZATION">
-      <point x="67.0" y="-74.0" />
-      <point x="1084.0" y="4593.0" />
-      <point x="3597.0" y="4593.0" />
-      <point x="0.0" y="87.5" />
+      <point x="-0.0" y="-14.5" />
+      <point x="1769.0" y="136.04545454545456" />
+      <point x="107.5" y="-3.954545454545439" />
     </edge>
-    <edge source="io.github.alexiscomete.lapinousecond.view.ui.longuis.PixelByPixelUI" target="io.github.alexiscomete.lapinousecond.view.ui.LongCustomUI" relationship="REALIZATION">
-      <point x="0.0" y="-382.0" />
-      <point x="0.0" y="199.0" />
+    <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.MarketCommand.M6" target="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.MarketCommand" relationship="INNER_CLASS">
+      <point x="35.5" y="0.0" />
+      <point x="1876.0" y="940.0" />
+      <point x="-13.0" y="14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.MarketCommand.M7" target="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.MarketCommand" relationship="INNER_CLASS">
-      <point x="-60.0" y="-45.0" />
-      <point x="1177.0" y="5253.0" />
-      <point x="1437.0" y="5253.0" />
-      <point x="1437.0" y="5013.0" />
-      <point x="4137.0" y="5013.0" />
-      <point x="0.0" y="88.0" />
+      <point x="35.5" y="0.0" />
+      <point x="1866.0" y="900.0" />
+      <point x="-23.0" y="14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.MarketCommand.M1" target="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.MarketCommand" relationship="INNER_CLASS">
-      <point x="-60.0" y="-45.0" />
-      <point x="917.0" y="5253.0" />
-      <point x="1437.0" y="5253.0" />
-      <point x="1437.0" y="5013.0" />
-      <point x="4137.0" y="5013.0" />
-      <point x="0.0" y="88.0" />
+      <point x="-0.0" y="-14.5" />
+      <point x="1229.0" y="809.5000640000001" />
+      <point x="-81.0" y="9.500064000000066" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.worlds.buildings.interactions.Pharmacie" target="io.github.alexiscomete.lapinousecond.worlds.buildings.BuildingInteraction" relationship="GENERALIZATION">
-      <point x="0.0" y="-133.0" />
-      <point x="5517.0" y="3573.0" />
-      <point x="6477.0" y="3573.0" />
-      <point x="0.0" y="45.0" />
-    </edge>
-    <edge source="io.github.alexiscomete.lapinousecond.entity.Player" target="io.github.alexiscomete.lapinousecond.useful.managesave.CacheGetSet" relationship="GENERALIZATION">
-      <point x="-89.66666666666697" y="-409.0" />
-      <point x="6707.333333333333" y="2653.0" />
-      <point x="3457.0" y="2653.0" />
-      <point x="0.0" y="130.0" />
-    </edge>
-    <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.MarketCommand.M2" target="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.MarketCommand" relationship="INNER_CLASS">
-      <point x="-60.0" y="-45.0" />
-      <point x="1437.0" y="5013.0" />
-      <point x="4137.0" y="5013.0" />
-      <point x="0.0" y="88.0" />
+      <point x="0.0" y="-14.5" />
+      <point x="458.5" y="1456.5" />
+      <point x="393.0" y="1456.5" />
+      <point x="-52.5" y="14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.worlds.buildings.Buildings.Companion" target="io.github.alexiscomete.lapinousecond.worlds.buildings.Buildings" relationship="INNER_CLASS">
-      <point x="0.0" y="-44.0" />
-      <point x="1557.0" y="3573.0" />
-      <point x="2857.0" y="3573.0" />
-      <point x="0.0" y="158.0" />
+      <point x="31.5" y="14.5" />
+      <point x="0.0" y="-14.5" />
+    </edge>
+    <edge source="io.github.alexiscomete.lapinousecond.entity.Player" target="io.github.alexiscomete.lapinousecond.useful.managesave.CacheGetSet" relationship="GENERALIZATION">
+      <point x="-44.0" y="1.5" />
+      <point x="1979.0" y="1141.5" />
+      <point x="10.0" y="-14.5" />
+    </edge>
+    <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.MarketCommand.M2" target="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.MarketCommand" relationship="INNER_CLASS">
+      <point x="0.0" y="-14.5" />
+      <point x="2129.0" y="712.5" />
+      <point x="1889.0" y="712.5" />
+      <point x="0.0" y="-14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.MarketCommand.M3" target="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.MarketCommand" relationship="INNER_CLASS">
-      <point x="-59.333333333333485" y="-45.0" />
-      <point x="2337.6666666666665" y="5253.0" />
-      <point x="1437.0" y="5253.0" />
-      <point x="1437.0" y="5013.0" />
-      <point x="4137.0" y="5013.0" />
-      <point x="0.0" y="88.0" />
+      <point x="-35.5" y="0.0" />
+      <point x="81.0" y="0.0" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.ConfigCommand.ModalModif" target="io.github.alexiscomete.lapinousecond.view.contextmanager.ModalContextManager" relationship="GENERALIZATION">
-      <point x="-60.0" y="-61.0" />
-      <point x="5597.0" y="5233.0" />
-      <point x="4577.0" y="5233.0" />
-      <point x="0.0" y="89.0" />
-    </edge>
-    <edge source="io.github.alexiscomete.lapinousecond.view.ui.DisabledUI" target="io.github.alexiscomete.lapinousecond.view.ui.InteractionUICustomUI" relationship="REALIZATION">
-      <point x="0.0" y="-214.0" />
-      <point x="637.0" y="433.0" />
-      <point x="257.0" y="433.0" />
-      <point x="0.0" y="44.0" />
+      <point x="65.0" y="0.0" />
+      <point x="1417.75" y="1200.0" />
+      <point x="-51.25" y="14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.WorkCommandRoles" target="io.github.alexiscomete.lapinousecond.view.discord.commands.SubCommand" relationship="GENERALIZATION">
-      <point x="-67.0" y="-75.0" />
-      <point x="2630.0" y="4793.0" />
-      <point x="-43.0" y="4793.0" />
-      <point x="0.0" y="74.5" />
+      <point x="-0.0" y="14.5" />
+      <point x="2869.0" y="644.8333333333333" />
+      <point x="71.0" y="4.8333333333332575" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.worlds.buildings.interactions.ArretBus" target="io.github.alexiscomete.lapinousecond.worlds.buildings.BuildingInteraction" relationship="GENERALIZATION">
-      <point x="0.0" y="-133.0" />
-      <point x="4537.0" y="3573.0" />
-      <point x="6477.0" y="3573.0" />
-      <point x="0.0" y="45.0" />
+      <point x="-44.0" y="-14.5" />
+      <point x="534.0" y="1415.5" />
+      <point x="455.5" y="1415.5" />
+      <point x="10.0" y="14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.ShopListCommand" target="io.github.alexiscomete.lapinousecond.view.discord.commands.ExecutableWithArguments" relationship="REALIZATION">
-      <point x="65.25" y="-74.0" />
-      <point x="2202.25" y="4593.0" />
-      <point x="3597.0" y="4593.0" />
-      <point x="0.0" y="87.5" />
+      <point x="-86.0" y="0.0" />
+      <point x="144.25" y="80.0" />
+      <point x="15.25" y="-14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.AccountCommandVerify" target="io.github.alexiscomete.lapinousecond.view.discord.commands.ExecutableWithArguments" relationship="REALIZATION">
-      <point x="60.0" y="-75.0" />
-      <point x="3317.0" y="4593.0" />
-      <point x="3597.0" y="4593.0" />
-      <point x="0.0" y="87.5" />
-    </edge>
-    <edge source="io.github.alexiscomete.lapinousecond.view.ui.EmbedPages.AddContent" target="io.github.alexiscomete.lapinousecond.view.ui.EmbedPages" relationship="INNER_CLASS">
-      <point x="0.0" y="-30.0" />
-      <point x="857.0" y="3333.0" />
-      <point x="1614.5" y="3333.0" />
-      <point x="-102.5" y="217.0" />
+      <point x="-0.0" y="-14.5" />
+      <point x="2229.0" y="130.7727272727273" />
+      <point x="107.5" y="-9.227272727272691" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.MapCommand" target="io.github.alexiscomete.lapinousecond.view.discord.commands.Command" relationship="GENERALIZATION">
-      <point x="67.0" y="-74.0" />
-      <point x="5304.0" y="4613.0" />
-      <point x="7437.0" y="4613.0" />
-      <point x="0.0" y="73.5" />
+      <point x="-73.0" y="0.0" />
+      <point x="59.0" y="0.0" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.worlds.buildings.autorisations.BuildingAutorisations" target="io.github.alexiscomete.lapinousecond.worlds.buildings.autorisations.AutList" relationship="GENERALIZATION">
-      <point x="0.0" y="-44.0" />
-      <point x="0.0" y="63.0" />
+      <point x="-86.0" y="-14.5" />
+      <point x="0.0" y="14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.HelpCommandBase" target="io.github.alexiscomete.lapinousecond.view.discord.commands.Command" relationship="GENERALIZATION">
-      <point x="0.0" y="-30.0" />
-      <point x="7477.0" y="4613.0" />
-      <point x="7437.0" y="4613.0" />
-      <point x="0.0" y="73.5" />
+      <point x="88.0" y="0.0" />
+      <point x="874.0" y="1220.0" />
+      <point x="-15.0" y="-14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.worlds.buildings.autorisations.AllAutorisation" target="io.github.alexiscomete.lapinousecond.worlds.buildings.autorisations.BuildingAutorisation" relationship="REALIZATION">
-      <point x="-0.0" y="-46.5" />
-      <point x="2617.0" y="3273.0" />
-      <point x="3677.0" y="3273.0" />
-      <point x="-0.0" y="30.0" />
+      <point x="-0.0" y="-14.5" />
+      <point x="471.5" y="1095.5" />
+      <point x="374.5" y="1095.5" />
+      <point x="-74.5" y="14.5" />
+    </edge>
+    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.interactions.InteractionSprite" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.Sprite" relationship="INTERFACE_GENERALIZATION">
+      <point x="-77.0" y="-7.0" />
+      <point x="43.0" y="0.0" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.useful.transactions.Auction" target="io.github.alexiscomete.lapinousecond.useful.managesave.CacheGetSet" relationship="GENERALIZATION">
-      <point x="36.0" y="-101.5" />
-      <point x="3153.0" y="2653.0" />
-      <point x="3457.0" y="2653.0" />
-      <point x="0.0" y="130.0" />
-    </edge>
-    <edge source="io.github.alexiscomete.lapinousecond.useful.managesave.SaveManager.Companion" target="io.github.alexiscomete.lapinousecond.useful.managesave.SaveManager" relationship="INNER_CLASS">
-      <point x="-0.0" y="-44.0" />
-      <point x="3477.0" y="3493.0" />
-      <point x="4997.0" y="3493.0" />
-      <point x="-0.0" y="213.0" />
+      <point x="49.5" y="4.833333333333485" />
+      <point x="-65.0" y="4.833333333333485" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.worlds.buildings.Building" target="io.github.alexiscomete.lapinousecond.worlds.buildings.BuildMethods" relationship="REALIZATION">
-      <point x="89.66666666666697" y="-326.0" />
-      <point x="5526.666666666667" y="2733.0" />
-      <point x="6317.0" y="2733.0" />
-      <point x="6317.0" y="2613.0" />
-      <point x="6277.0" y="2613.0" />
-      <point x="0.0" y="115.0" />
+      <point x="0.0" y="14.5" />
+      <point x="2149.0" y="1300.0" />
+      <point x="68.0" y="0.0" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.view.ui.dialogue.PartOfDialogue" target="io.github.alexiscomete.lapinousecond.view.ui.dialogue.DialoguePart" relationship="REALIZATION">
-      <point x="0.0" y="-189.0" />
-      <point x="0.0" y="144.5" />
+      <point x="33.0" y="14.5" />
+      <point x="0.0" y="-14.5" />
     </edge>
-    <edge source="io.github.alexiscomete.lapinousecond.view.ui.InteractionManager" target="io.github.alexiscomete.lapinousecond.view.ui.InteractionUI" relationship="REALIZATION">
-      <point x="0.0" y="-203.0" />
-      <point x="-80.0" y="115.0" />
+    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.MapTile" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.Tile" relationship="REALIZATION">
+      <point x="0.0" y="-14.5" />
+      <point x="1464.5" y="1536.5" />
+      <point x="1229.0" y="1536.5" />
+      <point x="0.0" y="14.5" />
+    </edge>
+    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.TreeTrunk" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.BaseTileGroup" relationship="GENERALIZATION">
+      <point x="0.0" y="-14.5" />
+      <point x="1328.5" y="1676.5" />
+      <point x="1270.5" y="1676.5" />
+      <point x="-32.0" y="14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.InteractCommandBase" target="io.github.alexiscomete.lapinousecond.view.discord.commands.Command" relationship="GENERALIZATION">
-      <point x="60.0" y="-75.0" />
-      <point x="7097.0" y="4613.0" />
-      <point x="7437.0" y="4613.0" />
-      <point x="0.0" y="73.5" />
+      <point x="97.0" y="0.0" />
+      <point x="278.5" y="0.0" />
+      <point x="278.5" y="817.000032" />
+      <point x="891.0" y="817.000032" />
+      <point x="2.0" y="-14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.ShopCommandBase" target="io.github.alexiscomete.lapinousecond.view.discord.commands.Command" relationship="GENERALIZATION">
-      <point x="0.0" y="-30.0" />
-      <point x="8097.0" y="4613.0" />
-      <point x="7437.0" y="4613.0" />
-      <point x="0.0" y="73.5" />
-    </edge>
-    <edge source="io.github.alexiscomete.lapinousecond.ItemsEnum.GetItem" target="io.github.alexiscomete.lapinousecond.ItemsEnum" relationship="INNER_CLASS">
-      <point x="0.0" y="-30.0" />
-      <point x="0.0" y="91.0" />
+      <point x="90.0" y="0.0" />
+      <point x="864.0" y="1280.0" />
+      <point x="-25.0" y="-14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.WorkCommandAll" target="io.github.alexiscomete.lapinousecond.view.discord.commands.SubCommand" relationship="GENERALIZATION">
-      <point x="-67.0" y="-75.0" />
-      <point x="2910.0" y="4793.0" />
-      <point x="-43.0" y="4793.0" />
-      <point x="0.0" y="74.5" />
+      <point x="-0.0" y="14.5" />
+      <point x="389.0" y="635.1666666666667" />
+      <point x="-71.0" y="-4.8333333333332575" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.HelpCommandMain" target="io.github.alexiscomete.lapinousecond.view.discord.commands.ExecutableWithArguments" relationship="REALIZATION">
-      <point x="60.0" y="-75.0" />
-      <point x="-43.0" y="4593.0" />
-      <point x="3597.0" y="4593.0" />
-      <point x="0.0" y="87.5" />
+      <point x="-0.0" y="-14.5" />
+      <point x="1549.0" y="138.6818181818182" />
+      <point x="107.5" y="-1.318181818181813" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.AccountCommandPerms" target="io.github.alexiscomete.lapinousecond.view.discord.commands.SubCommand" relationship="GENERALIZATION">
-      <point x="-60.0" y="-75.0" />
-      <point x="117.0" y="4793.0" />
-      <point x="-43.0" y="4793.0" />
-      <point x="0.0" y="74.5" />
+      <point x="104.5" y="0.0" />
+      <point x="2414.0" y="480.0" />
+      <point x="-35.0" y="-14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.InvCommandItems" target="io.github.alexiscomete.lapinousecond.view.discord.commands.ExecutableWithArguments" relationship="REALIZATION">
-      <point x="67.0" y="-75.0" />
-      <point x="1644.0" y="4593.0" />
-      <point x="3597.0" y="4593.0" />
-      <point x="0.0" y="87.5" />
+      <point x="-0.0" y="-14.5" />
+      <point x="849.0" y="146.59090909090907" />
+      <point x="107.5" y="6.590909090909065" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.view.contextmanager.SelectMenuContextManager" target="io.github.alexiscomete.lapinousecond.view.contextmanager.ContextManager" relationship="REALIZATION">
-      <point x="0.0" y="-89.0" />
-      <point x="6757.0" y="4633.0" />
-      <point x="5857.0" y="4633.0" />
-      <point x="0.0" y="30.0" />
+      <point x="-61.5" y="-14.5" />
+      <point x="15.0" y="14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.worlds.buildings.autorisations.BuildingAutorisations.Companion" target="io.github.alexiscomete.lapinousecond.worlds.buildings.autorisations.BuildingAutorisations" relationship="INNER_CLASS">
-      <point x="0.0" y="-44.0" />
-      <point x="0.0" y="44.0" />
+      <point x="-9.5" y="-14.5" />
+      <point x="0.0" y="14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.roles.RolesEnum.Companion" target="io.github.alexiscomete.lapinousecond.roles.RolesEnum" relationship="INNER_CLASS">
-      <point x="0.0" y="-44.0" />
-      <point x="0.0" y="130.0" />
+      <point x="38.0" y="14.5" />
+      <point x="0.0" y="-14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.useful.transactions.Offer" target="io.github.alexiscomete.lapinousecond.useful.transactions.Transaction" relationship="REALIZATION">
-      <point x="-36.0" y="-87.5" />
-      <point x="3441.0" y="2953.0" />
-      <point x="3257.0" y="2953.0" />
-      <point x="0.0" y="72.0" />
+      <point x="0.0" y="14.5" />
+      <point x="0.0" y="-14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.ShopBuyCommand" target="io.github.alexiscomete.lapinousecond.view.discord.commands.SubCommand" relationship="GENERALIZATION">
-      <point x="-67.0" y="-74.0" />
-      <point x="2350.0" y="4793.0" />
-      <point x="-43.0" y="4793.0" />
-      <point x="0.0" y="74.5" />
+      <point x="87.0" y="4.8333333333332575" />
+      <point x="-71.0" y="4.8333333333332575" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.worlds.buildings.Building" target="io.github.alexiscomete.lapinousecond.entity.Owner" relationship="REALIZATION">
-      <point x="89.66666666666697" y="-326.0" />
-      <point x="5526.666666666667" y="2733.0" />
-      <point x="6317.0" y="2733.0" />
-      <point x="6317.0" y="2593.0" />
-      <point x="7197.0" y="2593.0" />
-      <point x="0.0" y="156.5" />
+      <point x="51.0" y="0.0" />
+      <point x="2299.75" y="1280.0" />
+      <point x="-9.25" y="14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.view.Context" target="io.github.alexiscomete.lapinousecond.view.contextmanager.ContextManager" relationship="REALIZATION">
-      <point x="0.0" y="-231.0" />
-      <point x="4897.0" y="4633.0" />
-      <point x="5857.0" y="4633.0" />
-      <point x="0.0" y="30.0" />
+      <point x="0.0" y="-14.5" />
+      <point x="1865.0" y="1472.5" />
+      <point x="1654.0" y="1472.5" />
+      <point x="25.0" y="14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.worlds.buildings.interactions.Banque" target="io.github.alexiscomete.lapinousecond.worlds.buildings.BuildingInteraction" relationship="GENERALIZATION">
-      <point x="0.0" y="-133.0" />
-      <point x="6117.0" y="3573.0" />
-      <point x="6477.0" y="3573.0" />
-      <point x="0.0" y="45.0" />
-    </edge>
-    <edge source="io.github.alexiscomete.lapinousecond.view.contextmanager.ModalContextManager" target="io.github.alexiscomete.lapinousecond.view.contextmanager.ContextManager" relationship="REALIZATION">
-      <point x="0.0" y="-89.0" />
-      <point x="4577.0" y="4633.0" />
-      <point x="5857.0" y="4633.0" />
-      <point x="0.0" y="30.0" />
+      <point x="-0.0" y="-14.5" />
+      <point x="699.0" y="1536.5" />
+      <point x="385.0" y="1536.5" />
+      <point x="-60.5" y="14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.AccountCommandStart" target="io.github.alexiscomete.lapinousecond.view.discord.commands.ExecutableWithArguments" relationship="REALIZATION">
-      <point x="67.0" y="-75.0" />
-      <point x="804.0" y="4593.0" />
-      <point x="3597.0" y="4593.0" />
-      <point x="0.0" y="87.5" />
+      <point x="-0.0" y="-14.5" />
+      <point x="1989.0" y="133.40909090909093" />
+      <point x="107.5" y="-6.590909090909065" />
+    </edge>
+    <edge source="io.github.alexiscomete.lapinousecond.view.contextmanager.ModalContextManager" target="io.github.alexiscomete.lapinousecond.view.contextmanager.ContextManager" relationship="REALIZATION">
+      <point x="98.0" y="9.666666666666742" />
+      <point x="1695.5" y="1029.6666666666667" />
+      <point x="66.5" y="-14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.view.contextmanager.ButtonsContextManager" target="io.github.alexiscomete.lapinousecond.view.contextmanager.ContextManager" relationship="REALIZATION">
-      <point x="0.0" y="-75.0" />
-      <point x="6357.0" y="4633.0" />
-      <point x="5857.0" y="4633.0" />
-      <point x="0.0" y="30.0" />
+      <point x="0.0" y="-14.5" />
+      <point x="1693.5" y="1605.5" />
+      <point x="1566.5" y="1605.5" />
+      <point x="-62.5" y="14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.ConfigCommand.M2" target="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.ConfigCommand" relationship="INNER_CLASS">
-      <point x="59.33333333333303" y="-45.5" />
-      <point x="5456.333333333333" y="5213.0" />
-      <point x="6477.0" y="5213.0" />
-      <point x="6477.0" y="5013.0" />
-      <point x="5877.0" y="5013.0" />
-      <point x="0.0" y="89.0" />
+      <point x="-35.5" y="0.0" />
+      <point x="80.0" y="0.0" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.worlds.buildings.Building.Companion" target="io.github.alexiscomete.lapinousecond.worlds.buildings.Building" relationship="INNER_CLASS">
-      <point x="-0.0" y="-30.0" />
-      <point x="3697.0" y="3553.0" />
-      <point x="5437.0" y="3553.0" />
-      <point x="-0.0" y="326.0" />
+      <point x="0.0" y="14.5" />
+      <point x="0.0" y="-14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.ConfigCommand.M3" target="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.ConfigCommand" relationship="INNER_CLASS">
-      <point x="100.0" y="-45.5" />
-      <point x="6697.0" y="5213.0" />
-      <point x="6477.0" y="5213.0" />
-      <point x="6477.0" y="5013.0" />
-      <point x="5877.0" y="5013.0" />
-      <point x="0.0" y="89.0" />
+      <point x="-35.5" y="0.0" />
+      <point x="1101.5" y="1160.0" />
+      <point x="12.5" y="14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.SubCommandGroup" target="io.github.alexiscomete.lapinousecond.view.discord.commands.Sub" relationship="REALIZATION">
-      <point x="0.0" y="-74.5" />
-      <point x="7817.0" y="4353.0" />
-      <point x="-43.0" y="4353.0" />
-      <point x="0.0" y="58.0" />
-    </edge>
-    <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.ConfigCommand.M1" target="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.ConfigCommand" relationship="INNER_CLASS">
-      <point x="81.33333333333303" y="-45.5" />
-      <point x="6038.333333333333" y="5213.0" />
-      <point x="6477.0" y="5213.0" />
-      <point x="6477.0" y="5013.0" />
-      <point x="5877.0" y="5013.0" />
-      <point x="0.0" y="89.0" />
+      <point x="0.0" y="-14.5" />
+      <point x="0.0" y="14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.HelpCommandMain" target="io.github.alexiscomete.lapinousecond.view.discord.commands.SubCommand" relationship="GENERALIZATION">
-      <point x="20.0" y="-75.0" />
-      <point x="-83.0" y="4793.0" />
-      <point x="-43.0" y="4793.0" />
-      <point x="0.0" y="74.5" />
+      <point x="89.0" y="0.0" />
+      <point x="2454.0" y="320.0" />
+      <point x="5.0" y="-14.5" />
+    </edge>
+    <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.ConfigCommand.M1" target="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.ConfigCommand" relationship="INNER_CLASS">
+      <point x="0.0" y="14.5" />
+      <point x="0.0" y="-14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.InvCommandBase" target="io.github.alexiscomete.lapinousecond.view.discord.commands.Command" relationship="GENERALIZATION">
-      <point x="0.0" y="-30.0" />
-      <point x="7897.0" y="4613.0" />
-      <point x="7437.0" y="4613.0" />
-      <point x="0.0" y="73.5" />
+      <point x="83.0" y="0.0" />
+      <point x="-59.0" y="0.0" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.view.ui.author.AuthorDiscord" target="io.github.alexiscomete.lapinousecond.view.ui.author.Author" relationship="REALIZATION">
-      <point x="0.0" y="-147.0" />
-      <point x="857.0" y="2893.0" />
-      <point x="517.0" y="2893.0" />
-      <point x="0.0" y="116.5" />
+      <point x="0.0" y="-14.5" />
+      <point x="2217.0" y="1552.5" />
+      <point x="2014.0" y="1552.5" />
+      <point x="25.0" y="14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.worlds.buildings.autorisations.Inhabitants" target="io.github.alexiscomete.lapinousecond.worlds.buildings.autorisations.BuildingAutorisation" relationship="REALIZATION">
-      <point x="98.5" y="-0.0" />
-      <point x="3785.5" y="4013.0" />
-      <point x="3785.5" y="3093.0" />
-      <point x="98.5" y="-0.0" />
+      <point x="-0.0" y="-14.5" />
+      <point x="624.0" y="1085.5" />
+      <point x="384.5" y="1085.5" />
+      <point x="-64.5" y="14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.WorkCommandAll" target="io.github.alexiscomete.lapinousecond.view.discord.commands.ExecutableWithArguments" relationship="REALIZATION">
-      <point x="60.0" y="-75.0" />
-      <point x="3037.0" y="4593.0" />
-      <point x="3597.0" y="4593.0" />
-      <point x="0.0" y="87.5" />
-    </edge>
-    <edge source="io.github.alexiscomete.lapinousecond.view.ui.DiscordPlayerUI" target="io.github.alexiscomete.lapinousecond.view.ui.PlayerUI" relationship="REALIZATION">
-      <point x="0.0" y="-340.0" />
-      <point x="0.0" y="199.0" />
+      <point x="-84.0" y="0.0" />
+      <point x="154.25" y="580.0" />
+      <point x="25.25" y="14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.InvCommandInfos" target="io.github.alexiscomete.lapinousecond.view.discord.commands.ExecutableWithArguments" relationship="REALIZATION">
-      <point x="60.0" y="-76.0" />
-      <point x="0.0" y="87.5" />
+      <point x="-84.5" y="-11.863636363636317" />
+      <point x="107.5" y="-11.863636363636317" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.MarketCommand" target="io.github.alexiscomete.lapinousecond.view.discord.commands.Command" relationship="GENERALIZATION">
-      <point x="89.0" y="-88.0" />
-      <point x="4226.0" y="4613.0" />
-      <point x="7437.0" y="4613.0" />
-      <point x="0.0" y="73.5" />
+      <point x="-81.0" y="4.5" />
+      <point x="911.0" y="804.5" />
+      <point x="22.0" y="-14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.worlds.buildings.interactions.Boulangerie" target="io.github.alexiscomete.lapinousecond.worlds.buildings.BuildingInteraction" relationship="GENERALIZATION">
-      <point x="0.0" y="-133.0" />
-      <point x="6977.0" y="3573.0" />
-      <point x="6477.0" y="3573.0" />
-      <point x="0.0" y="45.0" />
+      <point x="-0.0" y="-14.5" />
+      <point x="613.5" y="1399.5" />
+      <point x="475.5" y="1399.5" />
+      <point x="30.0" y="14.5" />
+    </edge>
+    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.DrawSprite" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.Sprite" relationship="INTERFACE_GENERALIZATION">
+      <point x="0.0" y="-14.5" />
+      <point x="1127.0" y="1552.5" />
+      <point x="954.0" y="1552.5" />
+      <point x="25.0" y="14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.worlds.buildings.autorisations.AutList" target="io.github.alexiscomete.lapinousecond.worlds.buildings.autorisations.BuildingAutorisation" relationship="REALIZATION">
-      <point x="-0.0" y="-63.0" />
-      <point x="1877.0" y="3633.0" />
-      <point x="2617.0" y="3633.0" />
-      <point x="2617.0" y="3273.0" />
-      <point x="3677.0" y="3273.0" />
-      <point x="-0.0" y="30.0" />
+      <point x="0.0" y="-14.5" />
+      <point x="-2.5" y="14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.worlds.Place" target="io.github.alexiscomete.lapinousecond.entity.Owner" relationship="REALIZATION">
-      <point x="60.0" y="-245.0" />
-      <point x="0.0" y="156.5" />
-    </edge>
-    <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.InvCommandInfos" target="io.github.alexiscomete.lapinousecond.view.discord.commands.SubCommand" relationship="GENERALIZATION">
-      <point x="-67.0" y="-76.0" />
-      <point x="3470.0" y="4793.0" />
-      <point x="-43.0" y="4793.0" />
-      <point x="0.0" y="74.5" />
+      <point x="41.0" y="-4.833333333333485" />
+      <point x="2309.75" y="1355.1666666666665" />
+      <point x="0.75" y="14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.worlds.PlaceForTest" target="io.github.alexiscomete.lapinousecond.worlds.Place" relationship="GENERALIZATION">
-      <point x="0.0" y="-133.0" />
-      <point x="8077.0" y="3573.0" />
-      <point x="7837.0" y="3573.0" />
-      <point x="7837.0" y="3393.0" />
-      <point x="7205.666666666667" y="3393.0" />
-      <point x="68.66666666666697" y="245.0" />
+      <point x="64.5" y="0.0" />
+      <point x="-41.0" y="0.0" />
+    </edge>
+    <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.InvCommandInfos" target="io.github.alexiscomete.lapinousecond.view.discord.commands.SubCommand" relationship="GENERALIZATION">
+      <point x="45.0" y="14.5" />
+      <point x="45.0" y="-14.5" />
+    </edge>
+    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.MoveSprite" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.Sprite" relationship="INTERFACE_GENERALIZATION">
+      <point x="0.0" y="-14.5" />
+      <point x="986.5" y="1605.5" />
+      <point x="924.0" y="1605.5" />
+      <point x="-5.0" y="14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.SubCommand" target="io.github.alexiscomete.lapinousecond.view.discord.commands.Sub" relationship="REALIZATION">
-      <point x="0.0" y="-74.5" />
-      <point x="0.0" y="58.0" />
+      <point x="0.0" y="14.5" />
+      <point x="0.0" y="-14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.MapCommand.M2" target="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.MapCommand" relationship="INNER_CLASS">
-      <point x="59.33333333333303" y="-45.0" />
-      <point x="4416.333333333333" y="5153.0" />
-      <point x="6317.0" y="5153.0" />
-      <point x="6317.0" y="4993.0" />
-      <point x="5237.0" y="4993.0" />
-      <point x="0.0" y="74.0" />
+      <point x="-35.5" y="0.0" />
+      <point x="73.0" y="0.0" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.MapCommand.M1" target="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.MapCommand" relationship="INNER_CLASS">
-      <point x="59.33333333333303" y="-45.0" />
-      <point x="4676.333333333333" y="5153.0" />
-      <point x="6317.0" y="5153.0" />
-      <point x="6317.0" y="4993.0" />
-      <point x="5237.0" y="4993.0" />
-      <point x="0.0" y="74.0" />
+      <point x="0.0" y="14.5" />
+      <point x="0.0" y="-14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.view.ui.dialogue.DialogueBase" target="io.github.alexiscomete.lapinousecond.view.ui.dialogue.Dialogue" relationship="REALIZATION">
-      <point x="0.0" y="-217.0" />
-      <point x="0.0" y="186.5" />
+      <point x="26.0" y="14.5" />
+      <point x="0.0" y="-14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.entity.Company" target="io.github.alexiscomete.lapinousecond.entity.Owner" relationship="REALIZATION">
-      <point x="68.66666666666697" y="-171.0" />
-      <point x="6285.666666666667" y="2633.0" />
-      <point x="7197.0" y="2633.0" />
-      <point x="0.0" y="156.5" />
+      <point x="56.0" y="0.0" />
+      <point x="2309.0" y="1080.0" />
+      <point x="0.0" y="-14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.MapCommand.M5" target="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.MapCommand" relationship="INNER_CLASS">
-      <point x="59.33333333333303" y="-45.0" />
-      <point x="5196.333333333333" y="5153.0" />
-      <point x="6317.0" y="5153.0" />
-      <point x="6317.0" y="4993.0" />
-      <point x="5237.0" y="4993.0" />
-      <point x="0.0" y="74.0" />
+      <point x="-35.5" y="0.0" />
+      <point x="1104.0" y="1440.0" />
+      <point x="-5.0" y="14.5" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.worlds.PlaceForTest.Companion" target="io.github.alexiscomete.lapinousecond.worlds.PlaceForTest" relationship="INNER_CLASS">
-      <point x="0.0" y="-44.0" />
-      <point x="-60.0" y="133.0" />
-    </edge>
-    <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.MapCommand.M4" target="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.MapCommand" relationship="INNER_CLASS">
-      <point x="59.33333333333303" y="-45.0" />
-      <point x="4936.333333333333" y="5153.0" />
-      <point x="6317.0" y="5153.0" />
-      <point x="6317.0" y="4993.0" />
-      <point x="5237.0" y="4993.0" />
-      <point x="0.0" y="74.0" />
+      <point x="62.5" y="0.0" />
+      <point x="-64.5" y="0.0" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.worlds.WorldProcedural" target="io.github.alexiscomete.lapinousecond.worlds.WorldManager" relationship="REALIZATION">
-      <point x="0.0" y="-144.5" />
-      <point x="0.0" y="128.0" />
+      <point x="34.0" y="14.5" />
+      <point x="0.0" y="-14.5" />
+    </edge>
+    <edge source="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.MapCommand.M4" target="io.github.alexiscomete.lapinousecond.view.discord.commands.classes.MapCommand" relationship="INNER_CLASS">
+      <point x="-35.5" y="0.0" />
+      <point x="1114.0" y="1400.0" />
+      <point x="5.0" y="14.5" />
     </edge>
   </edges>
-  <settings layout="Hierarchic Compact" zoom="0.1" showDependencies="false" x="3993.5" y="2590.5" />
+  <settings layout="Compact" zoom="0.22570630239056194" showDependencies="false" x="1371.5" y="880.0" />
   <SelectedNodes>
-    <node>io.github.alexiscomete.lapinousecond.Item</node>
-    <node>io.github.alexiscomete.lapinousecond.worlds.buildings.autorisations.Inhabitants</node>
+    <node>io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.interactions.ProceduralInteractionElementsManager</node>
+    <node>io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.interactions.InteractionSprite</node>
   </SelectedNodes>
   <Categories>
-    <Category>Constructors</Category>
     <Category>Inner Classes</Category>
-    <Category>Methods</Category>
-    <Category>Properties</Category>
   </Categories>
   <SCOPE>All</SCOPE>
   <VISIBILITY>private</VISIBILITY>
