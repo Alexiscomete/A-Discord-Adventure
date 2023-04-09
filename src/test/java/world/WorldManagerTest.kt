@@ -20,7 +20,7 @@ class WorldManagerTest : WorldManager {
         return BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB)
     }
 
-    override fun zoomWithDecorElements(zoneToAdapt: ZoneToAdapt, progName: String, player: Player?): BufferedImage {
+    override fun zoomWithDecorElements(zoneToAdapt: ZoneToAdapt, progName: String, image: BufferedImage?, player: Player?): BufferedImage {
         return BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB)
     }
 

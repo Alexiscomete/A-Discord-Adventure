@@ -409,6 +409,24 @@ enum class WorldEnum(
         )
     }
 
+    /**
+     * It takes in a bunch of parameters, and returns a BufferedImage
+     *
+     * @param x The x coordinate of the center of the map
+     * @param y The y coordinate of the center of the map
+     * @param zoom The zoom level of the map.
+     * @param player The player that is viewing the map.
+     * @return A BufferedImage
+     */
+    fun zoomWithDecorElementsSquare(x: Int, y: Int, zoom: Int, zooms: Zooms, image: BufferedImage? = null, player: Player? = null): BufferedImage {
+        return worldManager.zoomWithDecorElements(
+            ZoneToAdapt(x - zoom, y - zoom, zoom * 2 + 1, zoom * 2 + 1, mapWidth, mapHeight, zooms),
+            progName,
+            image,
+            player
+        )
+    }
+
     // --------------------
     // PATH FINDING with A*
     // --------------------
