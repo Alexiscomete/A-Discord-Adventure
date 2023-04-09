@@ -13,10 +13,10 @@ import io.github.alexiscomete.lapinousecond.view.contextmanager.SelectMenuContex
 import io.github.alexiscomete.lapinousecond.view.discord.commands.Command
 import io.github.alexiscomete.lapinousecond.view.discord.commands.ExecutableWithArguments
 import io.github.alexiscomete.lapinousecond.view.discord.commands.getAccount
-import io.github.alexiscomete.lapinousecond.view.ui.playerui.DiscordPlayerUI
 import io.github.alexiscomete.lapinousecond.view.ui.longuis.EmbedPages
-import io.github.alexiscomete.lapinousecond.view.ui.old.MenuBuilder
 import io.github.alexiscomete.lapinousecond.view.ui.longuis.PixelByPixelUI
+import io.github.alexiscomete.lapinousecond.view.ui.old.MenuBuilder
+import io.github.alexiscomete.lapinousecond.view.ui.playerui.DiscordPlayerUI
 import io.github.alexiscomete.lapinousecond.worlds.WorldEnum
 import io.github.alexiscomete.lapinousecond.worlds.Zooms
 import io.github.alexiscomete.lapinousecond.worlds.bigger
@@ -670,7 +670,7 @@ class MapCommand : Command(
                         val biome = if (world.isDirt(xInt, yInt)) "la terre" else "l'eau"
 
                         val later = buttonClickEvent.buttonInteraction.respondLater()
-                        val image = world.zoomWithDecorElements(xInt, yInt, 30, zooms, player)
+                        val image = world.zoomWithDecorElements(xInt, yInt, 30, zooms, player = player)
 
                         later.thenAccept {
                             if (player["tuto"] == "6") {

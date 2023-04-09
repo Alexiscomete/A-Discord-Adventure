@@ -99,7 +99,7 @@ class PixelByPixelUI(
 
     override fun getBufferedImage(): BufferedImage {
         worldRenderScene.renderAll()
-        return world.zoomWithDecorElements(x, y, 30, zooms, player)
+        return world.zoomWithDecorElements(x, y, 30, zooms, canvas.bufferedImage, player)
     }
 
     override fun setBufferedImage(bufferedImage: BufferedImage?): LongCustomUI {

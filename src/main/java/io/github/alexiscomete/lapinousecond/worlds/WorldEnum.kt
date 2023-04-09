@@ -400,10 +400,11 @@ enum class WorldEnum(
      * @param player The player that is viewing the map.
      * @return A BufferedImage
      */
-    fun zoomWithDecorElements(x: Int, y: Int, zoom: Int, zooms: Zooms, player: Player? = null): BufferedImage {
+    fun zoomWithDecorElements(x: Int, y: Int, zoom: Int, zooms: Zooms, image: BufferedImage? = null, player: Player? = null): BufferedImage {
         return worldManager.zoomWithDecorElements(
             ZoneToAdapt(x - zoom * 2, y - zoom, zoom * 4, zoom * 2, mapWidth, mapHeight, zooms),
             progName,
+            image,
             player
         )
     }

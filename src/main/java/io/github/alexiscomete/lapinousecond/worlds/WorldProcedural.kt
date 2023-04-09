@@ -34,9 +34,14 @@ class WorldProcedural(
         return image
     }
 
-    override fun zoomWithDecorElements(zoneToAdapt: ZoneToAdapt, progName: String, player: Player?): BufferedImage {
+    override fun zoomWithDecorElements(
+        zoneToAdapt: ZoneToAdapt,
+        progName: String,
+        image: BufferedImage?,
+        player: Player?
+    ): BufferedImage {
         // generate the image
-        var image = zoom(zoneToAdapt)
+        var image0 = image ?: zoom(zoneToAdapt)
         // add the player
         if (player != null) {
             if (player["place_${progName}_zoom"] == "") {
@@ -56,9 +61,9 @@ class WorldProcedural(
                         player["place_${progName}_y"].toInt()
                     )
                 }
-                image.setRGB(x - zoneToAdapt.x, y - zoneToAdapt.y, Color.RED.rgb)
+                image0.setRGB(x - zoneToAdapt.x, y - zoneToAdapt.y, Color.RED.rgb)
             } else {
-                image.setRGB(
+                image0.setRGB(
                     player["place_${progName}_x"].toInt() - zoneToAdapt.x,
                     player["place_${progName}_y"].toInt() - zoneToAdapt.y,
                     Color.RED.rgb
@@ -66,7 +71,7 @@ class WorldProcedural(
             }
         }
 
-        image = bigger(image, 10)
+        image0 = bigger(image0, 10)
 
         val places = Place.getPlacesWithWorld(progName)
 
@@ -81,10 +86,10 @@ class WorldProcedural(
         getMapWithNames(
             places,
             zoneToAdapt,
-            image
+            image0
         )
 
-        return image
+        return image0
     }
 
     override fun uniqueTotalImage(): BufferedImage {
