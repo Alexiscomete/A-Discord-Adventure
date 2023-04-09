@@ -4,11 +4,9 @@ import io.github.alexiscomete.lapinousecond.worlds.WorldManager
 import io.github.alexiscomete.lapinousecond.worlds.Zooms
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.MultiTilesManager
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.WorldCanvas
-import io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.InteractionSpriteManager
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.BaseTileGroup
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.MapTile
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.TreeTrunk
-import kotlin.concurrent.thread
 
 class WorldRenderScene(
     val canvas: WorldCanvas,
@@ -18,7 +16,7 @@ class WorldRenderScene(
     val world: WorldManager
 ) {
 
-    private val spritesManagers = mutableListOf<InteractionSpriteManager>()
+    //private val spritesManagers = mutableListOf<InteractionSpriteManager>()
     private val multiTilesManagers = mutableListOf<MultiTilesManager>()
 
     var dicoTiles = mutableMapOf<Pair<Int, Int>, Tile>()
@@ -26,8 +24,8 @@ class WorldRenderScene(
     private var currentTile = getOrGenerateTileAt(x, y)
 
     fun renderAll() {
-        canvas.resetCanvas(Pair(31, 31))
-        currentTile.render(this, 15, 15)
+        canvas.resetCanvas(Pair(51, 51))
+        currentTile.render(this, 25, 25)
         val toDelete = mutableListOf<Tile>()
         for (tile in dicoTiles.values) {
             if (tile is BaseTileGroup) {
@@ -46,9 +44,9 @@ class WorldRenderScene(
         }
         toDelete.forEach { it.delete(this) }
         //spritesManagers.forEach { it.getAllElements().forEach { sprite -> sprite.drawOn(image) } }
-        thread {
-            spritesManagers.forEach { it.updateAfter() }
-        }
+        //thread {
+        //    spritesManagers.forEach { it.updateAfter() }
+        //}
     }
 
     fun moveUp() {

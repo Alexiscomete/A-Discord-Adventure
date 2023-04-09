@@ -25,7 +25,7 @@ abstract class BaseTileGroup(
         private set
 
     override fun renderRecursive(remainingSteps: Int, worldRenderScene: WorldRenderScene, xToUse: Int, yToUse: Int) {
-        if (remainingSteps < currentState) return
+        if (remainingSteps <= currentState) return
         currentState = remainingSteps
         up?.renderRecursive(
             remainingSteps - 1,

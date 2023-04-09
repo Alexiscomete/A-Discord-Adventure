@@ -30,50 +30,50 @@ class MapTile(
         private set
 
     override fun renderRecursive(remainingSteps: Int, worldRenderScene: WorldRenderScene, xToUse: Int, yToUse: Int) {
-        if (remainingSteps < currentState) return
+        if (remainingSteps <= currentState) return
         currentState = remainingSteps
-        worldRenderScene.canvas.drawTile(this, xToUse, yToUse)
-        (up ?: run {
-            val tile = worldRenderScene.getOrGenerateTileAt(x, y - 1)
-            up = tile
-            tile
-        }).renderRecursive(
-            remainingSteps - 1,
-            worldRenderScene,
-            xToUse,
-            yToUse - 1
-        )
-        (down ?: run {
-            worldRenderScene.getOrGenerateTileAt(x, y + 1).also {
-                down = it
-            }
-        }).renderRecursive(
-            remainingSteps - 1,
-            worldRenderScene,
-            xToUse,
-            yToUse + 1
-        )
-        (left ?: run {
-            worldRenderScene.getOrGenerateTileAt(x - 1, y).also {
-                left = it
-            }
-        }).renderRecursive(
-            remainingSteps - 1,
-            worldRenderScene,
-            xToUse - 1,
-            yToUse
-        )
-        (right ?: run {
-            worldRenderScene.getOrGenerateTileAt(x + 1, y).also {
-                right = it
-            }
-        }).renderRecursive(
-            remainingSteps - 1,
-            worldRenderScene,
-            xToUse + 1,
-            yToUse
-        )
-
+        if (worldRenderScene.canvas.drawTile(this, xToUse, yToUse)) {
+            (up ?: run {
+                val tile = worldRenderScene.getOrGenerateTileAt(x, y - 1)
+                up = tile
+                tile
+            }).renderRecursive(
+                remainingSteps - 1,
+                worldRenderScene,
+                xToUse,
+                yToUse - 1
+            )
+            (down ?: run {
+                worldRenderScene.getOrGenerateTileAt(x, y + 1).also {
+                    down = it
+                }
+            }).renderRecursive(
+                remainingSteps - 1,
+                worldRenderScene,
+                xToUse,
+                yToUse + 1
+            )
+            (left ?: run {
+                worldRenderScene.getOrGenerateTileAt(x - 1, y).also {
+                    left = it
+                }
+            }).renderRecursive(
+                remainingSteps - 1,
+                worldRenderScene,
+                xToUse - 1,
+                yToUse
+            )
+            (right ?: run {
+                worldRenderScene.getOrGenerateTileAt(x + 1, y).also {
+                    right = it
+                }
+            }).renderRecursive(
+                remainingSteps - 1,
+                worldRenderScene,
+                xToUse + 1,
+                yToUse
+            )
+        }
     }
 
     fun resetRender() {
@@ -81,7 +81,7 @@ class MapTile(
     }
 
     override fun render(worldRenderScene: WorldRenderScene, x: Int, y: Int) {
-        renderRecursive(17, worldRenderScene, x, y)
+        renderRecursive(50, worldRenderScene, x, y)
     }
 
     override fun letter(): Char {

@@ -11,11 +11,17 @@ class CacheTest {
     @Test
     fun testCacheMove() {
         val canvas = TerminalWorldCanvas()
+        var time = System.currentTimeMillis()
         val view = WorldRenderScene(canvas, 10, 10, Zooms.ZOOM_IN, WorldManagerTest())
+        println("Time to create: ${System.currentTimeMillis() - time}")
+        time = System.currentTimeMillis()
         view.renderAll()
+        println("Time to render: ${System.currentTimeMillis() - time}")
         canvas.printlnCanvas()
         view.moveUp()
+        time = System.currentTimeMillis()
         view.renderAll()
+        println("Time to render: ${System.currentTimeMillis() - time}")
         canvas.printlnCanvas()
         view.moveUp()
         view.renderAll()

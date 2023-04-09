@@ -13,12 +13,10 @@ class ImageWorldCanvas : WorldCanvas {
     var bufferedImage: BufferedImage = BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB)
         private set
 
-    override fun drawTile(tile: Tile, x: Int, y: Int, priority: Int) {
-        if (bufferedImage.width == 1) return
-        if (bufferedImage.height == 1) return
-        if (y < 0 || y >= bufferedImage.height) return
-        if (x < 0 || x >= bufferedImage.width) return
+    override fun drawTile(tile: Tile, x: Int, y: Int, priority: Int): Boolean {
+        if (y < 0 || y >= bufferedImage.height || x < 0 || x >= bufferedImage.width) return false
         bufferedImage.setRGB(x, y, tile.color().rgb)
+        return true
     }
 
     override fun drawSprite(sprite: Sprite, x: Int, y: Int) {
