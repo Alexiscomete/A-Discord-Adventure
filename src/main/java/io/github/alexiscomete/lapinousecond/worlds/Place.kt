@@ -3,10 +3,10 @@ package io.github.alexiscomete.lapinousecond.worlds
 import io.github.alexiscomete.lapinousecond.useful.managesave.CacheCustom
 import io.github.alexiscomete.lapinousecond.useful.managesave.Table
 import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
-import io.github.alexiscomete.lapinousecond.entity.Owner
+import io.github.alexiscomete.lapinousecond.entity.entities.Owner
 import io.github.alexiscomete.lapinousecond.useful.managesave.CacheGetSet
 import io.github.alexiscomete.lapinousecond.useful.managesave.saveManager
-import io.github.alexiscomete.lapinousecond.entity.resources.Resource
+import io.github.alexiscomete.lapinousecond.entity.concrete.resources.Resource
 import org.javacord.api.entity.message.embed.EmbedBuilder
 import java.awt.Color
 import java.sql.SQLException

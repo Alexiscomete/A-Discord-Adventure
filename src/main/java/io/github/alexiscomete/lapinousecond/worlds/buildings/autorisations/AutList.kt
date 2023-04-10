@@ -1,6 +1,6 @@
 package io.github.alexiscomete.lapinousecond.worlds.buildings.autorisations
 
-import io.github.alexiscomete.lapinousecond.entity.Owner
+import io.github.alexiscomete.lapinousecond.entity.entities.Owner
 
 open class AutList : BuildingAutorisation {
     protected var buildingAutorisations = ArrayList<BuildingAutorisation>()

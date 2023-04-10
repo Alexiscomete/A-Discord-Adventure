@@ -1,6 +1,6 @@
 package io.github.alexiscomete.lapinousecond.view.ui.longuis.inv
 
-import io.github.alexiscomete.lapinousecond.entity.resources.Resource
+import io.github.alexiscomete.lapinousecond.entity.concrete.resources.Resource
 import io.github.alexiscomete.lapinousecond.view.ui.interactionui.InteractionStyle
 import io.github.alexiscomete.lapinousecond.view.ui.interactionui.SimpleInteractionUICustomUI
 import io.github.alexiscomete.lapinousecond.view.ui.longuis.StaticUI

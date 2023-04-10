@@ -1,6 +1,6 @@
 package io.github.alexiscomete.lapinousecond.view.manager
 
-import io.github.alexiscomete.lapinousecond.entity.players
+import io.github.alexiscomete.lapinousecond.entity.entities.players
 import org.javacord.api.entity.channel.TextChannel
 import org.javacord.api.event.message.MessageCreateEvent
 import org.javacord.api.listener.message.MessageCreateListener

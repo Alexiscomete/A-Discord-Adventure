@@ -1,10 +1,10 @@
 package io.github.alexiscomete.lapinousecond.view.discord.commands.classes
 
-import io.github.alexiscomete.lapinousecond.entity.Player
-import io.github.alexiscomete.lapinousecond.entity.PlayerWithAccount
+import io.github.alexiscomete.lapinousecond.entity.entities.Player
+import io.github.alexiscomete.lapinousecond.entity.entities.PlayerWithAccount
 import io.github.alexiscomete.lapinousecond.entity.effects.priceToTravelWithEffect
 import io.github.alexiscomete.lapinousecond.entity.effects.timeMillisForOnePixel
-import io.github.alexiscomete.lapinousecond.entity.resources.Resource
+import io.github.alexiscomete.lapinousecond.entity.concrete.resources.Resource
 import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
 import io.github.alexiscomete.lapinousecond.view.Context
 import io.github.alexiscomete.lapinousecond.view.contextFor

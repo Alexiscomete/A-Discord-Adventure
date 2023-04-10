@@ -1,6 +1,6 @@
 package io.github.alexiscomete.lapinousecond.view
 
-import io.github.alexiscomete.lapinousecond.entity.PlayerWithAccount
+import io.github.alexiscomete.lapinousecond.entity.entities.PlayerWithAccount
 import io.github.alexiscomete.lapinousecond.view.contextmanager.ButtonsContextManager
 import io.github.alexiscomete.lapinousecond.view.contextmanager.ContextManager
 import io.github.alexiscomete.lapinousecond.view.contextmanager.ModalContextManager

@@ -4,8 +4,8 @@ import io.github.alexiscomete.lapinousecond.view.discord.commands.Command
 import io.github.alexiscomete.lapinousecond.view.discord.commands.ExecutableWithArguments
 import io.github.alexiscomete.lapinousecond.view.discord.commands.SubCommand
 import io.github.alexiscomete.lapinousecond.view.discord.commands.getAccount
-import io.github.alexiscomete.lapinousecond.entity.resources.Resource
-import io.github.alexiscomete.lapinousecond.entity.resources.ResourceManager
+import io.github.alexiscomete.lapinousecond.entity.concrete.resources.Resource
+import io.github.alexiscomete.lapinousecond.entity.concrete.resources.ResourceManager
 import org.javacord.api.entity.message.embed.EmbedBuilder
 import org.javacord.api.interaction.*
 import java.awt.Color

@@ -1,6 +1,6 @@
 package io.github.alexiscomete.lapinousecond.worlds
 
-import io.github.alexiscomete.lapinousecond.entity.Player
+import io.github.alexiscomete.lapinousecond.entity.entities.Player
 import procedural_generation.noise.ComplexNoise
 import java.awt.Color
 import java.awt.image.BufferedImage

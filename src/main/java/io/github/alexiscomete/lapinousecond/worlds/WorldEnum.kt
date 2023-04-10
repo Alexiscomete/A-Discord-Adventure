@@ -1,6 +1,6 @@
 package io.github.alexiscomete.lapinousecond.worlds
 
-import io.github.alexiscomete.lapinousecond.entity.Player
+import io.github.alexiscomete.lapinousecond.entity.entities.Player
 import io.github.alexiscomete.lapinousecond.worlds.map.Node
 import io.github.alexiscomete.lapinousecond.worlds.map.PixelManager
 import procedural_generation.noise.ComplexNoiseBuilder

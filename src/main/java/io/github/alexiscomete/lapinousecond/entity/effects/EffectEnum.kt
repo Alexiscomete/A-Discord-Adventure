@@ -1,6 +1,6 @@
 package io.github.alexiscomete.lapinousecond.entity.effects
 
-import io.github.alexiscomete.lapinousecond.entity.Player
+import io.github.alexiscomete.lapinousecond.entity.entities.Player
 
 fun timeMillisForOnePixel(player: Player): Long {
     return 10000L / (player.getEffectLevel(EffectEnum.SPEED_TRAVELING) + 1)

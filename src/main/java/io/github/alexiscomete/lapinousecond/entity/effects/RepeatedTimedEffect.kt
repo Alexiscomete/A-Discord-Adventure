@@ -1,6 +1,6 @@
 package io.github.alexiscomete.lapinousecond.entity.effects
 
-class RepeatedTimedEffect(type: EffectEnum, level: Int, duration: Long, private val timeBetween: Long,  private var numberOfRepeats: Int) : TimedEffect(type, level, duration) {
+class RepeatedTimedEffect(type: EffectEnum, level: Int, duration: Long, private val timeBetween: Long, private var numberOfRepeats: Int) : TimedEffect(type, level, duration) {
     private var remainingTimeBetween = timeBetween
 
     override fun tick() {

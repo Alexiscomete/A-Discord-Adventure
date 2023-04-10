@@ -1,6 +1,6 @@
 package world
 
-import io.github.alexiscomete.lapinousecond.entity.Player
+import io.github.alexiscomete.lapinousecond.entity.entities.Player
 import io.github.alexiscomete.lapinousecond.worlds.WorldManager
 import io.github.alexiscomete.lapinousecond.worlds.ZoneToAdapt
 import io.github.alexiscomete.lapinousecond.worlds.Zooms

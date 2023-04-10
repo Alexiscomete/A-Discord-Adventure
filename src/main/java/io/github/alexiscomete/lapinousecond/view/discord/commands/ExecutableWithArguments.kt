@@ -1,8 +1,8 @@
 package io.github.alexiscomete.lapinousecond.view.discord.commands
 
-import io.github.alexiscomete.lapinousecond.entity.Player
-import io.github.alexiscomete.lapinousecond.entity.PlayerWithAccount
-import io.github.alexiscomete.lapinousecond.entity.players
+import io.github.alexiscomete.lapinousecond.entity.entities.Player
+import io.github.alexiscomete.lapinousecond.entity.entities.PlayerWithAccount
+import io.github.alexiscomete.lapinousecond.entity.entities.players
 import io.github.alexiscomete.lapinousecond.worlds.ServerBot
 import io.github.alexiscomete.lapinousecond.worlds.servers
 import org.javacord.api.entity.user.User
