@@ -73,7 +73,7 @@ class WorldProcedural(
 
         image0 = bigger(image0, 10)
 
-        val places = Place.getPlacesWithWorld(progName)
+        val places = getPlacesWithWorld(progName)
 
         places.removeIf { place: Place ->
             if (!place.getX().isPresent || !place.getY().isPresent) {

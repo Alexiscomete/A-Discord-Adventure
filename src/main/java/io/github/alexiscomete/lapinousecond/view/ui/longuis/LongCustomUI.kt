@@ -1,7 +1,7 @@
 package io.github.alexiscomete.lapinousecond.view.ui.longuis
 
-import io.github.alexiscomete.lapinousecond.view.ui.playerui.PlayerUI
 import io.github.alexiscomete.lapinousecond.view.ui.interactionui.InteractionUICustomUI
+import io.github.alexiscomete.lapinousecond.view.ui.playerui.PlayerUI
 import io.github.alexiscomete.lapinousecond.view.ui.playerui.Question
 import java.awt.image.BufferedImage
 
@@ -19,7 +19,6 @@ interface LongCustomUI {
     fun getFields(): List<Pair<String, String>>?
 
     // image
-    // TODO : change to pixels to be more flexible ?
     fun getLinkedImage(): String?
     fun setLinkedImage(linkedImage: String?): LongCustomUI
     fun getBufferedImage(): BufferedImage?

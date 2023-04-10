@@ -1,31 +1,23 @@
 package io.github.alexiscomete.lapinousecond.worlds
 
-import io.github.alexiscomete.lapinousecond.useful.managesave.CacheCustom
-import io.github.alexiscomete.lapinousecond.useful.managesave.Table
-import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
-import io.github.alexiscomete.lapinousecond.entity.entities.Owner
-import io.github.alexiscomete.lapinousecond.useful.managesave.CacheGetSet
-import io.github.alexiscomete.lapinousecond.useful.managesave.saveManager
 import io.github.alexiscomete.lapinousecond.entity.concrete.resources.Resource
-import org.javacord.api.entity.message.embed.EmbedBuilder
-import java.awt.Color
+import io.github.alexiscomete.lapinousecond.entity.entities.Owner
+import io.github.alexiscomete.lapinousecond.useful.managesave.*
 import java.sql.SQLException
-import java.util.Optional
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
+import java.util.*
 
 val PLACES = Table("places")
 val places = CacheCustom(PLACES) { id: Long -> Place(id) }
 
-open class Place : CacheGetSet, Owner {
-
-    constructor() : super(generateUniqueID(), PLACES) {
+open class Place(
+    id: Long = run {
+        val tempID = generateUniqueID()
         val h = HashMap<String, String>()
-        h["id"] = id.toString()
+        h["id"] = tempID.toString()
         saveManager.insert("places", h)
+        tempID
     }
-
-    constructor(id: Long) : super(id, PLACES)
+) : CacheGetSet(id, PLACES), Owner {
 
     open fun getX(): Optional<Int> {
         return Optional.ofNullable(this["x"].toInt())
@@ -35,19 +27,6 @@ open class Place : CacheGetSet, Owner {
         return Optional.ofNullable(this["y"].toInt())
     }
 
-    fun setAndGet(row: String?, value: String?): Place {
-        super.set(row!!, value!!)
-        return this
-    }
-
-    val placeEmbed: EmbedBuilder
-        get() = EmbedBuilder()
-            .setAuthor(id.toString())
-            .setTitle(getString("name"))
-            .setColor(Color.green)
-            .setDescription(getString("descr"))
-            .addField("World", getString("world"), true)
-            .addField("Type", getString("type"), true)
     override val ownerType: String = ""
     override val ownerString: String = ""
     override fun addMoney(amount: Double) {
@@ -82,32 +61,31 @@ open class Place : CacheGetSet, Owner {
         TODO("Not yet implemented")
     }
 
-    companion object {
-        fun toPlaces(places: String): ArrayList<Place> {
-            val str = places.split(";".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-            val places1 = ArrayList<Place>()
-            for (s in str) {
-                try {
-                    places1.add(Place(s.toLong()))
-                } catch (ignore: NumberFormatException) {
-                }
-            }
-            return places1
-        }
+}
 
-        fun getPlacesWithWorld(world: String): ArrayList<Place> {
-            val resultSet = saveManager.executeQuery("SELECT * FROM places WHERE world = '$world'", true)
-            val places = ArrayList<Place>()
-            try {
-
-                //long id = resultSet.getLong("id"); places.add(new Place(id));
-                while (resultSet!!.next()) {
-                    places.add(Place(resultSet.getLong("id")))
-                }
-            } catch (e: SQLException) {
-                e.printStackTrace()
-            }
-            return places
+fun toPlaces(places: String): ArrayList<Place> {
+    val str = places.split(";".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+    val places1 = ArrayList<Place>()
+    for (s in str) {
+        try {
+            places1.add(Place(s.toLong()))
+        } catch (ignore: NumberFormatException) {
         }
     }
+    return places1
+}
+
+fun getPlacesWithWorld(world: String): ArrayList<Place> {
+    val resultSet = saveManager.executeQuery("SELECT * FROM places WHERE world = '$world'", true)
+    val places = ArrayList<Place>()
+    try {
+
+        //long id = resultSet.getLong("id"); places.add(new Place(id));
+        while (resultSet!!.next()) {
+            places.add(Place(resultSet.getLong("id")))
+        }
+    } catch (e: SQLException) {
+        e.printStackTrace()
+    }
+    return places
 }

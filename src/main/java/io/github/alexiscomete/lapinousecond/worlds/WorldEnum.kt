@@ -125,20 +125,6 @@ fun getMapWithNames(
     g.dispose()
 }
 
-/**
- * Clone a buffered image
- * Source : https://stackoverflow.com/questions/3514158/how-do-you-clone-a-bufferedimage
- *
- * @param bi The buffered image to clone
- * @return The cloned buffered image
- */
-fun cloneBufferedImage(bi: BufferedImage): BufferedImage {
-    val cm = bi.colorModel
-    val isAlphaPremultiplied = cm.isAlphaPremultiplied
-    val raster = bi.copyData(bi.raster.createCompatibleWritableRaster())
-    return BufferedImage(cm, raster, isAlphaPremultiplied, null)
-}
-
 data class ZoneToAdapt(
     var x: Int,
     var y: Int,
@@ -355,9 +341,6 @@ enum class WorldEnum(
         )
     );
 
-    val START_X = 1
-    val START_Y = 1
-
     /**
      * It takes two integers, x and y, and returns a Pixel object
      *
@@ -378,17 +361,6 @@ enum class WorldEnum(
      */
     fun isDirt(x: Int, y: Int): Boolean {
         return getPixel(x, y).isLanded
-    }
-
-    /**
-     * It takes a zone and a buffered image, and returns a buffered image that is a zoomed in version of the original
-     * buffered image, with the zoomed in area being the zone
-     *
-     * @param zone ZoneToAdapt
-     * @return A BufferedImage
-     */
-    private fun zoom(zone: ZoneToAdapt): BufferedImage {
-        return worldManager.zoom(zone)
     }
 
     /**
@@ -495,7 +467,7 @@ enum class WorldEnum(
         if (isInMap(pixel.x - 1, pixel.y + 1)) nodes2.add(getNode(pixel.x - 1, pixel.y + 1, nodes))
         if (isInMap(pixel.x, pixel.y + 1)) nodes2.add(getNode(pixel.x, pixel.y + 1, nodes))
         if (isInMap(pixel.x + 1, pixel.y + 1)) nodes2.add(getNode(pixel.x + 1, pixel.y + 1, nodes))
-        // pour chaque pixel on l'enlève si ce n'est pas du même type que le pixel courant
+        // pour chaque pixel, on l'enlève si ce n'est pas du même type que le pixel courant
         nodes2.removeIf { n: Node? -> n!!.isLanded != pixel.isLanded }
         return nodes2
     }

@@ -11,12 +11,6 @@ class ProgressionBar(
 
     val bar: String
         get() {
-            //if (value < 0) {
-            //    value = 0.0
-            //}
-            //if (maxValue < 0) {
-            //    maxValue = 1.0
-            //}
             val min = partMin
             return "`${before(min)}$indicator${after(numberChars - min)}`"
         }

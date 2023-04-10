@@ -1,11 +1,8 @@
 package io.github.alexiscomete.lapinousecond.worlds
 
-import io.github.alexiscomete.lapinousecond.worlds.Zone.Companion.fromString
-
 class PlaceZones : Place {
     var zones = ArrayList<Zone>()
 
-    constructor() : super()
     constructor(id: Long) : super(id) {
         val zonesBDD = getString("zones")
         if (zonesBDD != "") {

@@ -42,17 +42,14 @@ class Zone(var x1: Int, var y1: Int, var x2: Int, var y2: Int) {
     override fun toString(): String {
         return "[$x1:$y1] -> [$x2:$y2]"
     }
+}
 
-    companion object {
-        /**
-         * Permet de transformer un string en zone (pour la lecture de la base de données).
-         * @param s string à transformer au format "{x1,y1,x2,y2}"
-         * @return la zone correspondant au string
-         */
-        @JvmStatic
-        fun fromString(s: String): Zone {
-            val tab = s.substring(1, s.length - 1).split(",".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-            return Zone(tab[0].toInt(), tab[1].toInt(), tab[2].toInt(), tab[3].toInt())
-        }
-    }
+/**
+ * Permet de transformer un string en zone (pour la lecture de la base de données).
+ * @param s string à transformer au format "{x1,y1,x2,y2}"
+ * @return la zone correspondant au string
+ */
+fun fromString(s: String): Zone {
+    val tab = s.substring(1, s.length - 1).split(",".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+    return Zone(tab[0].toInt(), tab[1].toInt(), tab[2].toInt(), tab[3].toInt())
 }
