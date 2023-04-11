@@ -1,11 +1,11 @@
 package io.github.alexiscomete.lapinousecond.view.discord.commands.classes
 
+import io.github.alexiscomete.lapinousecond.entity.concrete.resources.Resource
+import io.github.alexiscomete.lapinousecond.entity.concrete.resources.ResourceManager
 import io.github.alexiscomete.lapinousecond.view.discord.commands.Command
 import io.github.alexiscomete.lapinousecond.view.discord.commands.ExecutableWithArguments
 import io.github.alexiscomete.lapinousecond.view.discord.commands.SubCommand
 import io.github.alexiscomete.lapinousecond.view.discord.commands.getAccount
-import io.github.alexiscomete.lapinousecond.entity.concrete.resources.Resource
-import io.github.alexiscomete.lapinousecond.entity.concrete.resources.ResourceManager
 import org.javacord.api.entity.message.embed.EmbedBuilder
 import org.javacord.api.interaction.*
 import java.awt.Color
@@ -32,7 +32,6 @@ private fun resource(arguments: MutableList<SlashCommandInteractionOption>): Res
 class ShopCommandBase : Command(
     "shop",
     "Acheter / vendre items et resources pour des mauvais prix",
-    "shop [[buy/sell] [name] <quantity>/list/info [name]]",
     inDms = false,
     subCommands = listOf(
         ShopBuyCommand(),
@@ -66,7 +65,7 @@ class ShopBuyCommand :
     ExecutableWithArguments {
     override val fullName: String
         get() = "shop buy"
-    override val botPerms: Array<String>?
+    override val botPerms: Array<String>
         get() = arrayOf("PLAY")
 
     override fun execute(slashCommand: SlashCommandInteraction) {
@@ -131,7 +130,7 @@ class ShopSellCommand :
     ExecutableWithArguments {
     override val fullName: String
         get() = "shop sell"
-    override val botPerms: Array<String>?
+    override val botPerms: Array<String>
         get() = arrayOf("PLAY")
 
     override fun execute(slashCommand: SlashCommandInteraction) {

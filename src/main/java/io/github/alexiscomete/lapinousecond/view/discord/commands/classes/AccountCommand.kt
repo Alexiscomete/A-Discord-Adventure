@@ -36,7 +36,6 @@ fun toSpawn(p: Player) {
 class AccountCommandBase : Command(
     "account",
     "Toutes les commandes liées à votre compte",
-    "/account [verify/start/perms]",
     subCommands = listOf(
         AccountCommandVerify(),
         AccountCommandStart(),

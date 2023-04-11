@@ -1,9 +1,9 @@
 package io.github.alexiscomete.lapinousecond.worlds
 
-class PlaceZones : Place {
+class PlaceZones(id: Long) : Place(id) {
     var zones = ArrayList<Zone>()
 
-    constructor(id: Long) : super(id) {
+    init {
         val zonesBDD = getString("zones")
         if (zonesBDD != "") {
             val zonesTab = zonesBDD.split(";".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()

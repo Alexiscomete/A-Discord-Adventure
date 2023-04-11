@@ -4,13 +4,12 @@ import io.github.alexiscomete.lapinousecond.api
 import org.javacord.api.entity.permission.PermissionType
 import org.javacord.api.interaction.SlashCommand
 import org.javacord.api.interaction.SlashCommandOption
-import java.util.EnumSet
+import java.util.*
 
 open class Command(
     val name: String,
     val description: String,
-    val usage: String,
-    discordPerms: EnumSet<PermissionType>? = null, // les permissions de discord sont automatiques, differentes de celles du bot
+    discordPerms: EnumSet<PermissionType>? = null, // les permissions de discord sont automatiques, différentes de celles du bot
     inDms: Boolean = true, // discord permet d´interdire les dm
     subCommands: List<Sub>? = null,
     arguments: ArrayList<SlashCommandOption> = arrayListOf()

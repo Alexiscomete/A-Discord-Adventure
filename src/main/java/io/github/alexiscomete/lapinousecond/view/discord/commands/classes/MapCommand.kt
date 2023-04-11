@@ -1,10 +1,10 @@
 package io.github.alexiscomete.lapinousecond.view.discord.commands.classes
 
-import io.github.alexiscomete.lapinousecond.entity.entities.Player
-import io.github.alexiscomete.lapinousecond.entity.entities.PlayerWithAccount
+import io.github.alexiscomete.lapinousecond.entity.concrete.resources.Resource
 import io.github.alexiscomete.lapinousecond.entity.effects.priceToTravelWithEffect
 import io.github.alexiscomete.lapinousecond.entity.effects.timeMillisForOnePixel
-import io.github.alexiscomete.lapinousecond.entity.concrete.resources.Resource
+import io.github.alexiscomete.lapinousecond.entity.entities.Player
+import io.github.alexiscomete.lapinousecond.entity.entities.PlayerWithAccount
 import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
 import io.github.alexiscomete.lapinousecond.view.Context
 import io.github.alexiscomete.lapinousecond.view.contextFor
@@ -90,7 +90,6 @@ class Select(name: String, val worlds: List<WorldEnum>) : SelectMenuContextManag
 class MapCommand : Command(
     "map",
     "Permet de faire toutes les actions à propos des déplacements sur la carte",
-    "map"
 ), ExecutableWithArguments {
     override val fullName: String
         get() = "map"

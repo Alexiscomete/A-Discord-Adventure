@@ -1,10 +1,10 @@
 package io.github.alexiscomete.lapinousecond.view.discord.commands.classes
 
 import io.github.alexiscomete.lapinousecond.api
+import io.github.alexiscomete.lapinousecond.entity.concrete.resources.Resource
 import io.github.alexiscomete.lapinousecond.entity.entities.Player
 import io.github.alexiscomete.lapinousecond.entity.entities.PlayerWithAccount
 import io.github.alexiscomete.lapinousecond.entity.entities.players
-import io.github.alexiscomete.lapinousecond.entity.concrete.resources.Resource
 import io.github.alexiscomete.lapinousecond.useful.managesave.saveManager
 import io.github.alexiscomete.lapinousecond.view.contextFor
 import io.github.alexiscomete.lapinousecond.view.discord.commands.Command
@@ -49,7 +49,6 @@ fun who(slashCommand: SlashCommandInteraction): Player {
 class InvCommandBase : Command(
     "inv",
     "Permet de voir l'inventaire du joueur de diverses manières",
-    "inv [infos/items/resources/top]",
     subCommands = listOf(
         InvCommandInfos(),
         InvCommandItems(),

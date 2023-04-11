@@ -10,7 +10,6 @@ import java.awt.Color
 class HelpCommandBase : Command(
     "help",
     "Aide interactive pour le bot, pas seulement les commandes",
-    "help [main]",
     subCommands = listOf(
         HelpCommandMain()
     )

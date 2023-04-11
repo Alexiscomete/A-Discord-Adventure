@@ -121,7 +121,6 @@ private fun setRoles(
 class WorkCommandBase : Command(
     "work",
     "Récupérer des resources et des rabbit coins",
-    "work [roles/all/resources]",
     inDms = false,
     subCommands = listOf(WorkCommandRoles(), WorkCommandAll(), WorkCommandResources())
 )

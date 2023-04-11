@@ -41,7 +41,6 @@ fun giveFromTo(from: Owner, to: Owner, amount: Double, resource: Resource): Bool
 class MarketCommand : Command(
     "market",
     "Permet de faire des transactions entre les joueurs",
-    "market",
     inDms = false
 ), ExecutableWithArguments {
 

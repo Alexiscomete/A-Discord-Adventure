@@ -27,7 +27,6 @@ import java.awt.Color
 class InteractCommandBase : Command(
     "interact",
     "Interact with your environment",
-    "interact"
 ), ExecutableWithArguments {
 
     override val fullName: String

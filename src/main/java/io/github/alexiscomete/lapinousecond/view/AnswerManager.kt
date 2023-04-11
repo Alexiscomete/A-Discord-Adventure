@@ -2,7 +2,6 @@ package io.github.alexiscomete.lapinousecond.view
 
 import org.json.JSONObject
 import java.io.InputStream
-import java.nio.charset.StandardCharsets
 import java.util.*
 
 class AnswerManager(input: InputStream?) {
@@ -23,7 +22,7 @@ class AnswerManager(input: InputStream?) {
 
     fun getAnswer(langageEnum: LangageEnum, answerEnum: AnswerEnum): String {
         val `object` = jsonObject!!.getJSONObject(answerEnum.value) ?: return langageEnum.invalidAnswer
-        val answer = `object`.getString(langageEnum.name_)
+        val answer = `object`.getString(langageEnum.displayName)
         if (answer == null || answer == "") {
             return langageEnum.invalidAnswer
         }

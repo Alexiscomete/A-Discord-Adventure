@@ -1,7 +1,6 @@
 package io.github.alexiscomete.lapinousecond.worlds.map
 
 import io.github.alexiscomete.lapinousecond.worlds.WorldManager
-import java.awt.image.BufferedImage
 
 class Node(x: Int, y: Int, worldManager: WorldManager, var cost: Double, var heuristic: Double) :
     PixelManager(x, y, worldManager) {

@@ -53,6 +53,6 @@ class PartOfDialogue(
     }
 
     override fun weight(): Int {
-        return content.length + author.getName().length
+        return content.length + author.name.length
     }
 }

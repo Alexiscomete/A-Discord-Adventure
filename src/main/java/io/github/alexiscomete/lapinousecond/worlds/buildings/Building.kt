@@ -1,7 +1,7 @@
 package io.github.alexiscomete.lapinousecond.worlds.buildings
 
-import io.github.alexiscomete.lapinousecond.entity.entities.Owner
 import io.github.alexiscomete.lapinousecond.entity.concrete.resources.Resource
+import io.github.alexiscomete.lapinousecond.entity.entities.Owner
 import io.github.alexiscomete.lapinousecond.useful.ProgressionBar
 import io.github.alexiscomete.lapinousecond.useful.managesave.CacheCustom
 import io.github.alexiscomete.lapinousecond.useful.managesave.CacheGetSet
@@ -11,7 +11,6 @@ import io.github.alexiscomete.lapinousecond.view.Context
 import io.github.alexiscomete.lapinousecond.view.ui.old.MenuBuilder
 import io.github.alexiscomete.lapinousecond.worlds.Place
 import org.json.JSONObject
-import java.awt.Color
 import java.util.*
 
 val BUILDINGS = (Table("buildings"))
@@ -73,21 +72,6 @@ class Building : CacheGetSet, BuildMethods, Owner {
                 "description"
             )
         }"
-    }
-
-    fun completeInfos(p: Context): MenuBuilder {
-        return if (getString("build_status") == "building") {
-            inBuildCompleteInfos(p)
-        } else {
-            getCompleteInfos(p)
-        }
-    }
-
-    private fun inBuildCompleteInfos(player: Context): MenuBuilder {
-        return MenuBuilder(title(), descriptionShort(), Color.DARK_GRAY, player)
-            .addButton("Donner de l'argent", "Permet de donner de l'argent à ce bâtiment") { _, _, _ ->
-                TODO("todo")
-            }
     }
 
     fun evolute(buildingInteraction: BuildingInteraction?) {

@@ -48,7 +48,6 @@ fun getUniquePlace(server: ServerBot): Place {
 class ConfigCommand : Command(
     "config",
     "Permet de configurer le serveur discord et les lieux associés à celui-ci",
-    "config",
     inDms = false,
     discordPerms = EnumSet.of(PermissionType.MANAGE_CHANNELS)
 ), ExecutableWithArguments {

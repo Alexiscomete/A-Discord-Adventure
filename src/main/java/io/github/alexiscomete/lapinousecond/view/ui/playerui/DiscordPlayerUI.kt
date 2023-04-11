@@ -180,11 +180,11 @@ class DiscordPlayerUI(private val context: Context, var interaction: Interaction
             .setAuthor(if (dialogueTitle != null) dialogueTitle else "Dialogue")
             .setDescription(dialoguePart!!.getContent())
         val author = dialoguePart!!.getAuthor()
-        messageEmbedBuilder.setTitle(author.getName())
+        messageEmbedBuilder.setTitle(author.name)
         if (author.hasImageAvatar()) {
-            messageEmbedBuilder.setThumbnail(author.getImageAvatar())
+            messageEmbedBuilder.setThumbnail(author.imageAvatar)
         } else if (author.hasLinkAvatar()) {
-            messageEmbedBuilder.setThumbnail(author.getLinkAvatar())
+            messageEmbedBuilder.setThumbnail(author.linkAvatar)
         }
         messageEmbedBuilder.setTimestampToNow()
         val lowLevelComponents = mutableListOf<Button>()

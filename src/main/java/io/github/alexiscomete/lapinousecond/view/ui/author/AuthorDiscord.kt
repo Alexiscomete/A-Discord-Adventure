@@ -3,56 +3,26 @@ package io.github.alexiscomete.lapinousecond.view.ui.author
 import org.javacord.api.entity.user.User
 import java.awt.image.BufferedImage
 
-class AuthorDiscord(user: User, name: String? = null, avatar: String? = null, image: BufferedImage? = null) : Author {
-
-    private var playerName: String
-    private var playerAvatar: String? = null
-    private var playerImage: BufferedImage? = null
+class AuthorDiscord(
+    user: User,
+    override var linkAvatar: String? = null,
+    override var imageAvatar: BufferedImage? = null,
+    override var name: String = run { user.name }
+) : Author {
 
     init {
-        playerName = name ?: user.name
-        if (image != null) {
-            playerImage = image
-        } else if (avatar != null) {
-            playerAvatar = avatar
-        } else if (user.avatar != null) {
-            playerAvatar = user.avatar.url.toString()
+        if (imageAvatar != null) {
+            linkAvatar = null
+        } else if (linkAvatar == null && user.avatar != null) {
+            linkAvatar = user.avatar.url.toString()
         }
     }
 
-    override fun getName(): String {
-        return playerName
-    }
-
-    override fun getLinkAvatar(): String {
-        return playerAvatar ?: throw IllegalStateException("No avatar link")
-    }
-
     override fun hasLinkAvatar(): Boolean {
-        return playerAvatar != null
-    }
-
-    override fun setName(name: String): Author {
-        playerName = name
-        return this
-    }
-
-    override fun setAvatar(avatar: String): Author {
-        playerAvatar = avatar
-        return this
-    }
-
-    override fun setAvatar(avatar: BufferedImage): Author {
-        playerImage = avatar
-        return this
-    }
-
-    override fun getImageAvatar(): BufferedImage {
-        return playerImage ?: throw IllegalStateException("No avatar image")
+        return linkAvatar != null
     }
 
     override fun hasImageAvatar(): Boolean {
-        return playerImage != null
+        return imageAvatar != null
     }
-
 }
