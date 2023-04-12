@@ -74,7 +74,7 @@ class WorldRenderScene(
         multiTilesManagers.forEach { if (it.hasTileAt(x, y)) tile = it.baseTileAt(x, y) }
         if (tile != null) return tile!!
         return dicoTiles.getOrPut(Pair(x, y)) {
-            if ((0..20).random() == 0 && world.getHeight(
+            if ((0..30).random() == 0 && world.getHeight(
                     x,
                     y,
                     zoomLevel

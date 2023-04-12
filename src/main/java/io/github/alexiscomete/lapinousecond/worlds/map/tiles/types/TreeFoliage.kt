@@ -7,7 +7,7 @@ class TreeFoliage(
     override val x: Int,
     override val y: Int,
     steps: Int,
-) : BaseTileGroup(priority = 2) {
+) : BaseTileGroup(priority = 2, stepsDecreasing = false) {
     override var up: Tile? = run {
         // get a random number : 0, 1, 2
         if (steps == 0) {

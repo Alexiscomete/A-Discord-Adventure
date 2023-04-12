@@ -11,16 +11,8 @@
             "id": "28088d378accb822",
             "type": "leaf",
             "state": {
-              "type": "canvas",
-              "state": {
-                "file": "src/main/java/io/github/alexiscomete/lapinousecond/entity/items/itemstree.canvas",
-                "viewState": {
-                  "x": 312.0625937226516,
-                  "y": 154.7563438585906,
-                  "zoom": -0.8333333333333335,
-                  "snapToGrid": false
-                }
-              }
+              "type": "empty",
+              "state": {}
             }
           }
         ]
@@ -89,7 +81,6 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "src/main/java/io/github/alexiscomete/lapinousecond/entity/items/itemstree.canvas",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -106,7 +97,6 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "src/main/java/io/github/alexiscomete/lapinousecond/entity/items/itemstree.canvas",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -128,9 +118,7 @@
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {
-                "file": "src/main/java/io/github/alexiscomete/lapinousecond/entity/items/itemstree.canvas"
-              }
+              "state": {}
             }
           }
         ]

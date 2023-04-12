@@ -6,9 +6,11 @@ import java.awt.Color
 class TreeTrunk(
     override val x: Int,
     override val y: Int,
-    steps: Int,
+    steps: Int = 2,
+    maxSteps: Int = steps,
 ) : BaseTileGroup(
-    priority = 1
+    priority = 1,
+    stepsDecreasing = false
 ) {
 
     override var up: Tile? = run {
@@ -18,7 +20,7 @@ class TreeTrunk(
         if (random == 0) {
             TreeFoliage(x, y - 1, 2)
         } else {
-            TreeTrunk(x, y - 1, steps - 1)
+            TreeTrunk(x, y - 1, steps - 1, maxSteps)
         }
     }
     override var down: Tile? = null
@@ -27,7 +29,7 @@ class TreeTrunk(
         if (steps <= 0) return@run TreeFoliage(x - 1, y, 0)
         when ((0..3).random()) {
             0 -> TreeFoliage(x - 1, y, 1)
-            1 -> TreeTrunk(x - 1, y, steps - 1)
+            1 -> if (steps == maxSteps) null else TreeTrunk(x - 1, y, steps - 1, maxSteps)
             else -> null
         }
     }
@@ -36,7 +38,7 @@ class TreeTrunk(
         if (steps <= 0) return@run TreeFoliage(x + 1, y, 0)
         when ((0..3).random()) {
             0 -> TreeFoliage(x + 1, y, 1)
-            1 -> TreeTrunk(x + 1, y, steps - 1)
+            1 -> if (steps == maxSteps) null else TreeTrunk(x - 1, y, steps - 1, maxSteps)
             else -> null
         }
     }

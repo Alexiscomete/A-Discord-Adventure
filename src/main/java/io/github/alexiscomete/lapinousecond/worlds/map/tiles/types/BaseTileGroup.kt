@@ -5,6 +5,7 @@ import io.github.alexiscomete.lapinousecond.worlds.map.tiles.WorldRenderScene
 
 abstract class BaseTileGroup(
     val priority: Int = 0,
+    private val stepsDecreasing: Boolean = true
 ) : Tile {
     override fun delete(worldRenderScene: WorldRenderScene) {
         val value = worldRenderScene.dicoTiles[Pair(x, y)]
@@ -27,26 +28,27 @@ abstract class BaseTileGroup(
     override fun renderRecursive(remainingSteps: Int, worldRenderScene: WorldRenderScene, xToUse: Int, yToUse: Int) {
         if (remainingSteps <= currentState) return
         currentState = remainingSteps
+        val nextSteps = if (stepsDecreasing) remainingSteps - 1 else remainingSteps
         up?.renderRecursive(
-            remainingSteps - 1,
+            nextSteps,
             worldRenderScene,
             xToUse,
             yToUse - 1
         )
         down?.renderRecursive(
-            remainingSteps - 1,
+            nextSteps,
             worldRenderScene,
             xToUse,
             yToUse + 1
         )
         left?.renderRecursive(
-            remainingSteps - 1,
+            nextSteps,
             worldRenderScene,
             xToUse - 1,
             yToUse
         )
         right?.renderRecursive(
-            remainingSteps - 1,
+            nextSteps,
             worldRenderScene,
             xToUse + 1,
             yToUse
