@@ -9,11 +9,7 @@ import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.MapTile
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.TreeTrunk
 
 class WorldRenderScene(
-    val canvas: WorldCanvas,
-    x: Int,
-    y: Int,
-    private val zoomLevel: Zooms,
-    val world: WorldManager
+    val canvas: WorldCanvas, x: Int, y: Int, private val zoomLevel: Zooms, val world: WorldManager
 ) {
 
     //private val spritesManagers = mutableListOf<InteractionSpriteManager>()
@@ -74,16 +70,23 @@ class WorldRenderScene(
         multiTilesManagers.forEach { if (it.hasTileAt(x, y)) tile = it.baseTileAt(x, y) }
         if (tile != null) return tile!!
         return dicoTiles.getOrPut(Pair(x, y)) {
-            if ((0..30).random() == 0 && world.getHeight(
-                    x,
-                    y,
-                    zoomLevel
-                ) > 0.5 && zoomLevel == Zooms.ZOOM_IN && world.pathLevel(x.toDouble(), y.toDouble()) > 0.8
+            if (
+                (0..30).random() == 0
+                && world.getHeight(x, y, zoomLevel) > 0.5
+                && zoomLevel == Zooms.ZOOM_IN
+                && world.pathLevel(x.toDouble(), y.toDouble()) > 0.8
+                && world.riverLevel(x.toDouble(), y.toDouble()) > 0.8
             ) {
                 TreeTrunk(x, y, 2)
             } else {
                 if (zoomLevel == Zooms.ZOOM_IN) {
-                    MapTile(x, y, world.getHeight(x, y, zoomLevel), world.isPath(x.toDouble(), y.toDouble()))
+                    MapTile(
+                        x,
+                        y,
+                        world.getHeight(x, y, zoomLevel),
+                        world.isPath(x.toDouble(), y.toDouble()),
+                        world.isRiver(x.toDouble(), y.toDouble())
+                    )
                 } else {
                     MapTile(x, y, world.getHeight(x, y, zoomLevel))
                 }

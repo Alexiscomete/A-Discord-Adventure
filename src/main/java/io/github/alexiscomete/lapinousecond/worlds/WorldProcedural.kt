@@ -12,6 +12,7 @@ class WorldProcedural(
 ) : WorldManager {
 
     private val path: ComplexNoise = complexNoiseBuilderForCaves.build(80)
+    private val river: ComplexNoise = complexNoiseBuilderForRivers.build(81)
 
     override fun isLand(x: Double, y: Double): Boolean {
         return complexNoise.getValue(x, y) > 0.5
@@ -129,6 +130,15 @@ class WorldProcedural(
         return path.getValue(x, y)
     }
 
+    override fun isRiver(x: Double, y: Double): Boolean {
+        return river.getValue(x, y) < 0.56
+    }
+
+    override fun riverLevel(x: Double, y: Double): Double {
+        return river.getValue(x, y)
+    }
+
+    @Deprecated("Use WorldRenderScene instead")
     private fun findColor(x: Int, y: Int, zooms: Zooms): Int {
         val color: Int = (getHeight(x, y, zooms) * 255).toInt()
         var blue = 0

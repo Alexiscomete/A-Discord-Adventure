@@ -51,4 +51,12 @@ class WorldManagerTest : WorldManager {
     override fun pathLevel(x: Double, y: Double): Double {
         return 0.0
     }
+
+    override fun isRiver(x: Double, y: Double): Boolean {
+        return false
+    }
+
+    override fun riverLevel(x: Double, y: Double): Double {
+        return 0.0
+    }
 }

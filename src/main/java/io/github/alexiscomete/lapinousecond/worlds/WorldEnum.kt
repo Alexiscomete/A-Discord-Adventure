@@ -56,6 +56,36 @@ var complexNoiseBuilderForCaves = ComplexNoiseBuilder(
     )
 )
 
+var complexNoiseBuilderForRivers = ComplexNoiseBuilder(
+    ValueOperationNodeBuilder(
+        ValueOperationNodeBuilder(
+            AddNodeBuilder(
+                NoiseMapBuilder(2.0),
+                ChangeSeedNodeBuilder(
+                    Operation.ADD,
+                    1,
+                    NoiseMapBuilder(2.0)
+                ),
+                ChangeLocationNodeBuilder(
+                    ChangeSeedNodeBuilder(
+                        Operation.ADD,
+                        5,
+                        NoiseMapBuilder(1.0)
+                    ),
+                    Operation.MULTIPLY,
+                    Operation.MULTIPLY,
+                    5.0,
+                    5.0
+                )
+            ),
+            ValueOperation.ABS,
+            0.5
+        ),
+        ValueOperation.REMOVE_POURCENT,
+        0.4
+    )
+)
+
 /**
  * Converts a given Image into a BufferedImage
  * thanks to [https://stackoverflow.com/questions/13605248/java-converting-image-to-bufferedimage](https://stackoverflow.com/questions/13605248/java-converting-image-to-bufferedimage)

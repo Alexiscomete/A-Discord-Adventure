@@ -15,4 +15,6 @@ interface WorldManager {
     fun getHeight(x: Int, y: Int, zoom: Zooms): Double
     fun isPath(x: Double, y: Double): Boolean
     fun pathLevel(x: Double, y: Double): Double
+    fun isRiver(x: Double, y: Double): Boolean
+    fun riverLevel(x: Double, y: Double): Double
 }

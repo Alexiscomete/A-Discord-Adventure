@@ -9,6 +9,7 @@ class MapTile(
     override val y: Int,
     private val height: Double,
     private val isPath: Boolean = false,
+    private val isRiver: Boolean = false,
     override var up: Tile? = null,
     override var down: Tile? = null,
     override var left: Tile? = null,
@@ -103,6 +104,9 @@ class MapTile(
             if (color > 128) {
                 if (isPath) {
                     return Color(255, 178, 79)
+                }
+                if (isRiver) {
+                    return Color(0, 111, 255)
                 }
                 green = 255 - color
                 if (color > 191) {
