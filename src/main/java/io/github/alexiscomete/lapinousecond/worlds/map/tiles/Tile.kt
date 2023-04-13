@@ -1,5 +1,6 @@
 package io.github.alexiscomete.lapinousecond.worlds.map.tiles
 
+import io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.Sprite
 import java.awt.Color
 
 interface Tile {
@@ -25,4 +26,5 @@ interface Tile {
     fun color(): Color
 
     fun isWalkable(): Boolean
+    fun removeSprite(sprite: Sprite)
 }
