@@ -2,6 +2,7 @@ package io.github.alexiscomete.lapinousecond.worlds.map.tiles.types
 
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.Tile
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.WorldRenderScene
+import io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.Sprite
 import java.awt.Color
 
 class MapTile(
@@ -10,6 +11,7 @@ class MapTile(
     private val height: Double,
     private val isPath: Boolean = false,
     private val isRiver: Boolean = false,
+    private val sprites: List<Sprite> = emptyList(),
     override var up: Tile? = null,
     override var down: Tile? = null,
     override var left: Tile? = null,
@@ -74,6 +76,9 @@ class MapTile(
                 xToUse + 1,
                 yToUse
             )
+            sprites.forEach {
+                it.render(worldRenderScene, xToUse, yToUse)
+            }
         }
     }
 

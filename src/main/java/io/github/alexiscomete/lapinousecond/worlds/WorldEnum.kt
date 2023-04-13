@@ -74,8 +74,8 @@ var complexNoiseBuilderForRivers = ComplexNoiseBuilder(
                     ),
                     Operation.MULTIPLY,
                     Operation.MULTIPLY,
-                    5.0,
-                    5.0
+                    4.0,
+                    4.0
                 )
             ),
             ValueOperation.ABS,
