@@ -3,7 +3,11 @@ package io.github.alexiscomete.lapinousecond.worlds.map.tiles.types
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.Tile
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.WorldRenderScene
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.Sprite
+import io.github.alexiscomete.lapinousecond.worlds.map.tiles.textures.Textures
+import io.github.alexiscomete.lapinousecond.worlds.map.tiles.textures.TexturesInCode
 import java.awt.Color
+import kotlin.math.abs
+import kotlin.math.min
 
 class MapTile(
     override val x: Int,
@@ -102,7 +106,7 @@ class MapTile(
 
     private var tileColor: Color? = null
 
-    private fun currentColorCalc() : Color {
+    private fun currentColorCalc(): Color {
         val color: Int = (height * 255).toInt()
         var blue = 0
         var green = 0
@@ -141,7 +145,74 @@ class MapTile(
 
     private var tileTexture: Array<Array<Color>>? = null
 
-    private fun currentTextureCalc() : Array<Array<Color>> {
+
+    private fun distanceWithPath(subX: Int, subY: Int): Int {
+        // max is 16
+        val distanceUp = up?.let {
+            if (it is MapTile && it.isPath) {
+                abs(subX - 8) + subY
+            } else {
+                16
+            }
+        } ?: 16
+        val distanceDown = down?.let {
+            if (it is MapTile && it.isPath) {
+                abs(subX - 8) + 16 - subY
+            } else {
+                16
+            }
+        } ?: 16
+        val distanceLeft = left?.let {
+            if (it is MapTile && it.isPath) {
+                abs(subY - 8) + subX
+            } else {
+                16
+            }
+        } ?: 16
+        val distanceRight = right?.let {
+            if (it is MapTile && it.isPath) {
+                abs(subY - 8) + 16 - subX
+            } else {
+                16
+            }
+        } ?: 16
+        return min(min(distanceUp, distanceDown), min(distanceLeft, distanceRight))
+    }
+
+    private fun distanceWithRiver(subX: Int, subY: Int): Int {
+        // max is 16
+        val distanceUp = up?.let {
+            if (it is MapTile && it.isRiver) {
+                abs(subX - 8) + subY
+            } else {
+                16
+            }
+        } ?: 16
+        val distanceDown = down?.let {
+            if (it is MapTile && it.isRiver) {
+                abs(subX - 8) + 16 - subY
+            } else {
+                16
+            }
+        } ?: 16
+        val distanceLeft = left?.let {
+            if (it is MapTile && it.isRiver) {
+                abs(subY - 8) + subX
+            } else {
+                16
+            }
+        } ?: 16
+        val distanceRight = right?.let {
+            if (it is MapTile && it.isRiver) {
+                abs(subY - 8) + 16 - subX
+            } else {
+                16
+            }
+        } ?: 16
+        return min(min(distanceUp, distanceDown), min(distanceLeft, distanceRight))
+    }
+
+    private fun currentTextureCalc(): Array<Array<Color>> {
         val color: Int = (height * 255).toInt()
         var blue = 0
         var green = 0
@@ -149,10 +220,18 @@ class MapTile(
         if (color > 127) {
             if (color > 128) {
                 if (isPath) {
-                    return Array(16) { Array(16) { Color(255, 178, 79) } }
+                    return TexturesInCode.PATH.texture
                 }
                 if (isRiver) {
-                    return Array(16) { Array(16) { Color(0, 111, 255) } }
+                    return Array(16) { y ->
+                        Array(16) { x ->
+                            if (distanceWithPath(x, y) < 9) {
+                                Color(255, 178, 79)
+                            } else {
+                                Color(0, 111, 255)
+                            }
+                        }
+                    }
                 }
                 green = 255 - color
                 if (color > 191) {
@@ -175,7 +254,7 @@ class MapTile(
         if (tileTexture == null) {
             tileTexture = currentTextureCalc()
         }
-        return tileTexture ?: Array(16) { Array(16) { Color(0, 0, 0) } }
+        return tileTexture ?: Textures.NULL.pixels
     }
 
     override fun isWalkable(): Boolean {
