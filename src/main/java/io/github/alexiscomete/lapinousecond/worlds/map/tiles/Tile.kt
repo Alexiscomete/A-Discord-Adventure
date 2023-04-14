@@ -24,6 +24,7 @@ interface Tile {
     fun letter(): Char
 
     fun color(): Color
+    fun texture(): Array<Array<Color>>
 
     fun isWalkable(): Boolean
     fun removeSprite(sprite: Sprite)

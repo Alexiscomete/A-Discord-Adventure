@@ -11,7 +11,7 @@ class MapTile(
     private val height: Double,
     private val isPath: Boolean = false,
     private val isRiver: Boolean = false,
-    private val sprites: List<Sprite> = emptyList(),
+    private val sprites: MutableList<Sprite> = mutableListOf(),
     override var up: Tile? = null,
     override var down: Tile? = null,
     override var left: Tile? = null,
@@ -100,7 +100,9 @@ class MapTile(
         }
     }
 
-    override fun color(): Color {
+    private var tileColor: Color? = null
+
+    private fun currentColorCalc() : Color {
         val color: Int = (height * 255).toInt()
         var blue = 0
         var green = 0
@@ -130,7 +132,57 @@ class MapTile(
         return Color(red, green, blue)
     }
 
+    override fun color(): Color {
+        if (tileColor == null) {
+            tileColor = currentColorCalc()
+        }
+        return tileColor ?: Color(0, 0, 0)
+    }
+
+    private var tileTexture: Array<Array<Color>>? = null
+
+    private fun currentTextureCalc() : Array<Array<Color>> {
+        val color: Int = (height * 255).toInt()
+        var blue = 0
+        var green = 0
+        var red = 0
+        if (color > 127) {
+            if (color > 128) {
+                if (isPath) {
+                    return Array(16) { Array(16) { Color(255, 178, 79) } }
+                }
+                if (isRiver) {
+                    return Array(16) { Array(16) { Color(0, 111, 255) } }
+                }
+                green = 255 - color
+                if (color > 191) {
+                    red = 255 - color
+                    if (color > 224) {
+                        blue = color
+                        green = color
+                    }
+                }
+            } else {
+                return Array(16) { Array(16) { Color(245, 245, 66) } }
+            }
+        } else {
+            blue = color
+        }
+        return Array(16) { Array(16) { Color(red, green, blue) } }
+    }
+
+    override fun texture(): Array<Array<Color>> {
+        if (tileTexture == null) {
+            tileTexture = currentTextureCalc()
+        }
+        return tileTexture ?: Array(16) { Array(16) { Color(0, 0, 0) } }
+    }
+
     override fun isWalkable(): Boolean {
         return true
+    }
+
+    override fun removeSprite(sprite: Sprite) {
+        sprites.remove(sprite)
     }
 }

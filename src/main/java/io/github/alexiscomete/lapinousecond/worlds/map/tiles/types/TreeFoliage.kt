@@ -1,6 +1,7 @@
 package io.github.alexiscomete.lapinousecond.worlds.map.tiles.types
 
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.Tile
+import io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.Sprite
 import java.awt.Color
 
 class TreeFoliage(
@@ -59,5 +60,9 @@ class TreeFoliage(
 
     override fun isWalkable(): Boolean {
         return false
+    }
+
+    override fun removeSprite(sprite: Sprite) {
+        TODO("Not yet implemented")
     }
 }
