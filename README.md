@@ -8,7 +8,7 @@ sur mon serveur discord.
 
 Rejoindre le serveur discord pour suivre l'avancement : [Le serveur discord](https://discord.gg/gq3WuZ2uSR)
 
-Toute aide sur ce github est la bienvenue. Merci à WolfoMir pour l'hébergement du du projet qui tourne actuellement.
+Toute aide sur ce github est la bienvenue. Merci à WolfoMir pour l'hébergement du projet qui tourne actuellement.
 
 ## Le bot
 
@@ -19,7 +19,9 @@ L'intérêt d'utiliser un bot discord est le concept central du jeu : le voyage 
 serveurs discord sont représentés par une ville dans le jeu. Une difficulté sera donc de pouvoir faire une histoire
 évolutive.
 
-Exemple de map à l'heure actuelle : ![Exemple de map](map_exemple1.png)
+Exemple de map à l'heure actuelle :
+
+![Exemple de map](map_exemple1.png)
 
 Tout est généré de manière procédurale afin de pouvoir utiliser une grande carte. Actuellement les arbres sont générés
 aléatoirement, mais une génération procédurale est prévue. Les chemins sont procéduraux à 100%. Ainsi, chaque joueur a
