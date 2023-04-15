@@ -20,7 +20,7 @@ class WorldRenderScene(
     private var currentTile = getOrGenerateTileAt(x, y)
 
     fun renderAll() {
-        canvas.resetCanvas(Pair(51, 51))
+        canvas.resetCanvas(51, 51)
         currentTile.render(this, 25, 25)
         val toDelete = mutableListOf<Tile>()
         for (tile in dicoTiles.values) {

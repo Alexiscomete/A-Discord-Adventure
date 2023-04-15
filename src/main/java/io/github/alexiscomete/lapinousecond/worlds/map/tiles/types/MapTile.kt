@@ -242,12 +242,32 @@ class MapTile(
                     }
                 }
             } else {
-                return Array(16) { Array(16) { Color(245, 245, 66) } }
+                return Array(16) { y ->
+                    Array(16) { x ->
+                        if (distanceWithPath(x, y) < 9) {
+                            Color(255, 178, 79)
+                        } else if (distanceWithRiver(x, y) < 9) {
+                            Color(0, 111, 255)
+                        } else {
+                            Color(245, 245, 66)
+                        }
+                    }
+                }
             }
         } else {
             blue = color
         }
-        return Array(16) { Array(16) { Color(red, green, blue) } }
+        return Array(16) { x ->
+            Array(16) { y ->
+                if (distanceWithPath(x, y) < 9) {
+                    Color(255, 178, 79)
+                } else if (distanceWithRiver(x, y) < 9) {
+                    Color(0, 111, 255)
+                } else {
+                    Color(red, green, blue)
+                }
+            }
+        }
     }
 
     override fun texture(): Array<Array<Color>> {

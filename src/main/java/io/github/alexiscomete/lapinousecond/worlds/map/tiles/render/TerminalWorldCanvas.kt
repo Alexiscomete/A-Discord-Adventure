@@ -15,13 +15,15 @@ class TerminalWorldCanvas : WorldCanvas {
         return true
     }
 
-    override fun drawSprite(sprite: Sprite, x: Int, y: Int) {
-        // TODO ... no sprite for now
+    override fun drawSprite(sprite: Sprite, x: Int, y: Int, priority: Int) {
+        if (y < 0 || y >= canvas.size || x < 0 || x >= sizeArray) return
+        if (priority < canvas[y][x].second) return
+        canvas[y][x] = Pair(sprite.letter(), priority)
     }
 
-    override fun resetCanvas(newSize: Pair<Int, Int>) {
-        canvas = Array(newSize.second) { Array(newSize.first) { Pair(' ', 0) } }
-        sizeArray = newSize.first
+    override fun resetCanvas(newW: Int, newH: Int) {
+        canvas = Array(newH) { Array(newW) { Pair(' ', 0) } }
+        sizeArray = newW
     }
 
     fun printlnCanvas() {

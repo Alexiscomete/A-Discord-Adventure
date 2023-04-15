@@ -14,4 +14,5 @@ interface Sprite {
     fun color(): Color
     fun letter(): Char
     fun texture(): Array<Array<Color>>
+    fun transparentMap(): Array<Array<Boolean>>
 }

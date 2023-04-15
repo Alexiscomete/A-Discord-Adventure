@@ -23,13 +23,16 @@ class ImageWorldCanvas : WorldCanvas {
         return true
     }
 
-    override fun drawSprite(sprite: Sprite, x: Int, y: Int) {
-        // TODO ... no sprite for now
+    override fun drawSprite(sprite: Sprite, x: Int, y: Int, priority: Int) {
+        if (y < 0 || y >= bufferedImage.height || x < 0 || x >= bufferedImage.width) return
+        if (priority < priorityMap[y][x]) return
+        bufferedImage.setRGB(x, y, sprite.color().rgb)
+        priorityMap[y][x] = priority
     }
 
-    override fun resetCanvas(newSize: Pair<Int, Int>) {
-        bufferedImage = BufferedImage(newSize.first, newSize.second, BufferedImage.TYPE_INT_RGB)
-        priorityMap = Array(newSize.second) { Array(newSize.first) { 0 } }
+    override fun resetCanvas(newW: Int, newH: Int) {
+        bufferedImage = BufferedImage(newW, newH, BufferedImage.TYPE_INT_RGB)
+        priorityMap = Array(newH) { Array(newW) { 0 } }
     }
 
 }
