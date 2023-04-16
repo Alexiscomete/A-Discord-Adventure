@@ -3,7 +3,6 @@ package io.github.alexiscomete.lapinousecond.worlds.map.tiles.types
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.Tile
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.WorldRenderScene
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.Sprite
-import io.github.alexiscomete.lapinousecond.worlds.map.tiles.textures.Textures
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.textures.TexturesInCode
 import java.awt.Color
 import kotlin.math.abs
@@ -271,10 +270,7 @@ class MapTile(
     }
 
     override fun texture(): Array<Array<Color>> {
-        if (tileTexture == null) {
-            tileTexture = currentTextureCalc()
-        }
-        return tileTexture ?: Textures.NULL.pixels
+        return currentTextureCalc()
     }
 
     override fun isWalkable(): Boolean {

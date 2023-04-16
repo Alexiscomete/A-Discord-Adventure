@@ -9,7 +9,7 @@ import io.github.alexiscomete.lapinousecond.view.ui.playerui.Question
 import io.github.alexiscomete.lapinousecond.worlds.WorldEnum
 import io.github.alexiscomete.lapinousecond.worlds.Zooms
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.WorldRenderScene
-import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.ImageWorldCanvas
+import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.TextureWorldCanvas
 import java.awt.image.BufferedImage
 
 class PixelByPixelUI(
@@ -57,7 +57,7 @@ class PixelByPixelUI(
             player["place_${worldStr}_zoom"] = value.name
         }
 
-    private val canvas = ImageWorldCanvas()
+    private val canvas = TextureWorldCanvas()
     private var worldRenderScene: WorldRenderScene = WorldRenderScene(
         canvas,
         x,

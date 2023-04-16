@@ -315,7 +315,8 @@ enum class WorldEnum(
                 builder
             ).build(60),
             300,
-            300
+            300,
+            "NORMAL"
         )
     ),
     DIBIMAP(
@@ -341,7 +342,8 @@ enum class WorldEnum(
                 )
             ).build(80),
             528,
-            272
+            272,
+            "DIBIMAP"
         )
     ),
     TUTO(
@@ -367,7 +369,8 @@ enum class WorldEnum(
                 )
             ).build(50),
             100,
-            50
+            50,
+            "TUTO"
         )
     );
 
@@ -402,12 +405,19 @@ enum class WorldEnum(
      * @param player The player that is viewing the map.
      * @return A BufferedImage
      */
-    fun zoomWithDecorElements(x: Int, y: Int, zoom: Int, zooms: Zooms, image: BufferedImage? = null, player: Player? = null): BufferedImage {
+    fun zoomWithDecorElements(
+        x: Int,
+        y: Int,
+        zoom: Int,
+        zooms: Zooms,
+        image: BufferedImage? = null,
+        player: Player? = null
+    ): BufferedImage {
         return worldManager.zoomWithDecorElements(
             ZoneToAdapt(x - zoom * 2, y - zoom, zoom * 4, zoom * 2, mapWidth, mapHeight, zooms),
-            progName,
             image,
-            player
+            player,
+            true
         )
     }
 
@@ -416,16 +426,23 @@ enum class WorldEnum(
      *
      * @param x The x coordinate of the center of the map
      * @param y The y coordinate of the center of the map
-     * @param zoom The zoom level of the map.
+     * @param size The zoom level of the map.
      * @param player The player that is viewing the map.
      * @return A BufferedImage
      */
-    fun zoomWithDecorElementsSquare(x: Int, y: Int, zoom: Int, zooms: Zooms, image: BufferedImage? = null, player: Player? = null): BufferedImage {
+    fun zoomWithDecorElementsSquare(
+        x: Int,
+        y: Int,
+        size: Int,
+        zooms: Zooms,
+        image: BufferedImage? = null,
+        player: Player? = null
+    ): BufferedImage {
         return worldManager.zoomWithDecorElements(
-            ZoneToAdapt(x - zoom, y - zoom, zoom * 2 + 1, zoom * 2 + 1, mapWidth, mapHeight, zooms),
-            progName,
+            ZoneToAdapt(x - size, y - size, size * 2 + 1, size * 2 + 1, mapWidth, mapHeight, zooms),
             image,
-            player
+            player,
+            false
         )
     }
 

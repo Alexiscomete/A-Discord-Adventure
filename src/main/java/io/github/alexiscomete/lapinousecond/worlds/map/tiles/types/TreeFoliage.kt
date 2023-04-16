@@ -59,7 +59,7 @@ class TreeFoliage(
     }
 
     override fun texture(): Array<Array<Color>> {
-        TODO("Not yet implemented")
+        return Array(16) { Array(16) { color() } }
     }
 
     override fun isWalkable(): Boolean {

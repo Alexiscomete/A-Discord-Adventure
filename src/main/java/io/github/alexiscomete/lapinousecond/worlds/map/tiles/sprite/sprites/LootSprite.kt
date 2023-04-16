@@ -29,4 +29,8 @@ class LootSprite(override var tile: Tile) : Sprite {
     override fun texture(): Array<Array<Color>> {
         TODO("Not yet implemented")
     }
+
+    override fun transparentMap(): Array<Array<Boolean>> {
+        TODO("Not yet implemented")
+    }
 }

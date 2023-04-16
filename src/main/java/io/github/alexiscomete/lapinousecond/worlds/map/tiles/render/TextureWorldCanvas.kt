@@ -18,7 +18,7 @@ class TextureWorldCanvas : WorldCanvas {
         for (i in 0..15) {
             for (j in 0..15) {
                 if (priority < priorityMap[y * 16 + j][x * 16 + i]) continue
-                bufferedImage.setRGB(x * 16 + i, y * 16 + j, colors[j * 16 + i][x * 16 + i].rgb)
+                bufferedImage.setRGB(x * 16 + i, y * 16 + j, colors[j][i].rgb)
                 priorityMap[y * 16 + j][x * 16 + i] = priority
             }
         }

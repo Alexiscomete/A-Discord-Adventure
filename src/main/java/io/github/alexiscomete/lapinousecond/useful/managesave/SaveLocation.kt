@@ -40,7 +40,7 @@ class SaveLocation<E>(private val sep: String, path: String, a: (String) -> E) {
 
     init {
         this.path = pathStatic + path
-        print("Searching file ${this.path}... ")
+        println("Searching file ${this.path}... ")
         file = File(pathStatic + path)
         this.a = a
         if (path.endsWith("/")) {

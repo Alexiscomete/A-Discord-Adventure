@@ -8,7 +8,8 @@ import java.awt.image.BufferedImage
 class WorldProcedural(
     private val complexNoise: ComplexNoise,
     private val maxX: Int,
-    private val maxY: Int
+    private val maxY: Int,
+    private val worldNameInDatabase: String
 ) : WorldManager {
 
     private val path: ComplexNoise = complexNoiseBuilderForCaves.build(80)
@@ -37,44 +38,31 @@ class WorldProcedural(
 
     override fun zoomWithDecorElements(
         zoneToAdapt: ZoneToAdapt,
-        progName: String,
         image: BufferedImage?,
-        player: Player?
+        player: Player?,
+        big: Boolean
     ): BufferedImage {
         // generate the image
         var image0 = image ?: zoom(zoneToAdapt)
         // add the player
         if (player != null) {
-            if (player["place_${progName}_zoom"] == "") {
-                player["place_${progName}_zoom"] = Zooms.ZOOM_OUT.name
-            }
-            if (player["place_${progName}_zoom"] != zoneToAdapt.zoom.name) {
-                val (x, y) = try {
-                    zoneToAdapt.zoom.zoomInTo(
-                        Zooms.valueOf(player["place_${progName}_zoom"]),
-                        player["place_${progName}_x"].toInt(),
-                        player["place_${progName}_y"].toInt()
-                    )
-                } catch (e: Exception) {
-                    zoneToAdapt.zoom.zoomOutTo(
-                        Zooms.valueOf(player["place_${progName}_zoom"]),
-                        player["place_${progName}_x"].toInt(),
-                        player["place_${progName}_y"].toInt()
-                    )
-                }
-                image0.setRGB(x - zoneToAdapt.x, y - zoneToAdapt.y, Color.RED.rgb)
-            } else {
-                image0.setRGB(
-                    player["place_${progName}_x"].toInt() - zoneToAdapt.x,
-                    player["place_${progName}_y"].toInt() - zoneToAdapt.y,
-                    Color.RED.rgb
-                )
-            }
+            addPlayerInImage(player, zoneToAdapt, image0)
         }
 
-        image0 = bigger(image0, 10)
+        if (big) {
+            image0 = bigger(image0, 10)
+        }
 
-        val places = getPlacesWithWorld(progName)
+        addCitiesNamesInImage(zoneToAdapt, image0)
+
+        return image0
+    }
+
+    private fun addCitiesNamesInImage(
+        zoneToAdapt: ZoneToAdapt,
+        image: BufferedImage
+    ) {
+        val places = getPlacesWithWorld(worldNameInDatabase)
 
         places.removeIf { place: Place ->
             if (!place.getX().isPresent || !place.getY().isPresent) {
@@ -87,10 +75,40 @@ class WorldProcedural(
         getMapWithNames(
             places,
             zoneToAdapt,
-            image0
+            image
         )
+    }
 
-        return image0
+    private fun addPlayerInImage(
+        player: Player,
+        zoneToAdapt: ZoneToAdapt,
+        image0: BufferedImage
+    ) {
+        if (player["place_${worldNameInDatabase}_zoom"] == "") {
+            player["place_${worldNameInDatabase}_zoom"] = Zooms.ZOOM_OUT.name
+        }
+        if (player["place_${worldNameInDatabase}_zoom"] != zoneToAdapt.zoom.name) {
+            val (x, y) = try {
+                zoneToAdapt.zoom.zoomInTo(
+                    Zooms.valueOf(player["place_${worldNameInDatabase}_zoom"]),
+                    player["place_${worldNameInDatabase}_x"].toInt(),
+                    player["place_${worldNameInDatabase}_y"].toInt()
+                )
+            } catch (e: Exception) {
+                zoneToAdapt.zoom.zoomOutTo(
+                    Zooms.valueOf(player["place_${worldNameInDatabase}_zoom"]),
+                    player["place_${worldNameInDatabase}_x"].toInt(),
+                    player["place_${worldNameInDatabase}_y"].toInt()
+                )
+            }
+            image0.setRGB(x - zoneToAdapt.x, y - zoneToAdapt.y, Color.RED.rgb)
+        } else {
+            image0.setRGB(
+                player["place_${worldNameInDatabase}_x"].toInt() - zoneToAdapt.x,
+                player["place_${worldNameInDatabase}_y"].toInt() - zoneToAdapt.y,
+                Color.RED.rgb
+            )
+        }
     }
 
     override fun uniqueTotalImage(): BufferedImage {
