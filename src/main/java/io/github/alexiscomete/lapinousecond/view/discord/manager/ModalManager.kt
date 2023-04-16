@@ -1,4 +1,4 @@
-package io.github.alexiscomete.lapinousecond.view.manager
+package io.github.alexiscomete.lapinousecond.view.discord.manager
 
 import io.github.alexiscomete.lapinousecond.view.discord.commands.getAccount
 import io.github.alexiscomete.lapinousecond.view.contextFor

@@ -142,7 +142,6 @@ class AccountCommandStart : SubCommand(
                 content += "Vous devrez rejoindre le serveur discord principal à un moment ou à un autre pour le tuto.\n"
             }
             val user = slashCommand.user
-            val what = HashMap<String, String>()
             val userData = getUserData(slashCommand.user.id)
             content += if (userData.hasAccount()) {
                 if (userData.isVerify) {
@@ -153,13 +152,11 @@ class AccountCommandStart : SubCommand(
             } else {
                 "Aucun compte de pixel trouvé sur le bot de Sylicium\n"
             }
-            what["id"] = user.id.toString()
-            saveManager.insert("players", what)
+            players.add(user.id)
             p = players[user.id]
             if (p == null) {
                 throw IllegalStateException("Erreur lors de la création du joueur. Réessayez ...")
             }
-            players.hashMap[user.id] = p
             p["x"] = userData.x.toString()
             p["y"] = userData.y.toString()
             p["has_account"] = fromBooleanToString(userData.hasAccount())

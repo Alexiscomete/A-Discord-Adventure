@@ -3,7 +3,7 @@ package io.github.alexiscomete.lapinousecond.useful.managesave
 import java.sql.SQLException
 
 open class CacheCustom<U>(private val table: Table, protected val function: (Long) -> U) {
-    val hashMap = HashMap<Long, U>()
+    private val hashMap = HashMap<Long, U>()
     operator fun get(l: Long): U? {
         var u = hashMap[l]
         if (u == null) {

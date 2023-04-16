@@ -5,10 +5,10 @@ import io.github.alexiscomete.lapinousecond.useful.managesave.SaveManager
 import io.github.alexiscomete.lapinousecond.useful.managesave.saveManager
 import io.github.alexiscomete.lapinousecond.view.discord.commands.ListenerSlashCommands
 import io.github.alexiscomete.lapinousecond.view.discord.commands.loadAllS
-import io.github.alexiscomete.lapinousecond.view.manager.ButtonsManager
-import io.github.alexiscomete.lapinousecond.view.manager.MessagesManager
-import io.github.alexiscomete.lapinousecond.view.manager.ModalManager
-import io.github.alexiscomete.lapinousecond.view.manager.SelectMenuManager
+import io.github.alexiscomete.lapinousecond.view.discord.manager.ButtonsManager
+import io.github.alexiscomete.lapinousecond.view.discord.manager.MessagesManager
+import io.github.alexiscomete.lapinousecond.view.discord.manager.ModalManager
+import io.github.alexiscomete.lapinousecond.view.discord.manager.SelectMenuManager
 import org.javacord.api.DiscordApi
 import org.javacord.api.DiscordApiBuilder
 import org.javacord.api.entity.intent.Intent

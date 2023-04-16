@@ -1,4 +1,4 @@
-package io.github.alexiscomete.lapinousecond.view.manager
+package io.github.alexiscomete.lapinousecond.view.discord.manager
 
 import io.github.alexiscomete.lapinousecond.entity.entities.players
 import org.javacord.api.entity.channel.TextChannel
