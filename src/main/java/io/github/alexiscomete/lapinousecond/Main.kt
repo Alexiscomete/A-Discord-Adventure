@@ -1,16 +1,17 @@
 package io.github.alexiscomete.lapinousecond
 
+import io.github.alexiscomete.lapinousecond.useful.managesave.SaveLocation
+import io.github.alexiscomete.lapinousecond.useful.managesave.SaveManager
+import io.github.alexiscomete.lapinousecond.useful.managesave.saveManager
 import io.github.alexiscomete.lapinousecond.view.discord.commands.ListenerSlashCommands
 import io.github.alexiscomete.lapinousecond.view.discord.commands.loadAllS
 import io.github.alexiscomete.lapinousecond.view.manager.ButtonsManager
 import io.github.alexiscomete.lapinousecond.view.manager.MessagesManager
 import io.github.alexiscomete.lapinousecond.view.manager.ModalManager
 import io.github.alexiscomete.lapinousecond.view.manager.SelectMenuManager
-import io.github.alexiscomete.lapinousecond.useful.managesave.SaveLocation
-import io.github.alexiscomete.lapinousecond.useful.managesave.SaveManager
-import io.github.alexiscomete.lapinousecond.useful.managesave.saveManager
 import org.javacord.api.DiscordApi
 import org.javacord.api.DiscordApiBuilder
+import org.javacord.api.entity.intent.Intent
 import java.io.IOException
 
 /**
@@ -20,10 +21,13 @@ val config: SaveLocation<String> = SaveLocation(";", "/config.txt") { a: String 
 
 val messagesManager: MessagesManager = MessagesManager()
 
-val api: DiscordApi = DiscordApiBuilder().setToken(run {
-    config.loadAll()
-    config.content[0]
-}).login().join()
+val api: DiscordApi = DiscordApiBuilder()
+    .addIntents(Intent.MESSAGE_CONTENT)
+    .setToken(run {
+        config.loadAll()
+        config.content[0]
+    })
+    .login().join()
 
 // démarrage du bot
 fun main() {
