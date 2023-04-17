@@ -2,7 +2,7 @@ name: depend
 on:
   push:
     branches:
-      - main
+      - depend
 
 jobs:
   build:
