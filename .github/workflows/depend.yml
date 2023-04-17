@@ -16,3 +16,5 @@ jobs:
 
       - name: Run snapshot action
         uses: mikepenz/gradle-dependency-submission@v0.8.6
+        with:
+          use-gradlew: false
