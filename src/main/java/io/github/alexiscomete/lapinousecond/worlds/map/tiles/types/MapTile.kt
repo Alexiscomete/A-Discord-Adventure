@@ -5,7 +5,6 @@ import io.github.alexiscomete.lapinousecond.worlds.map.tiles.WorldRenderScene
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.Sprite
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.textures.TexturesInCode
 import java.awt.Color
-import kotlin.math.abs
 import kotlin.math.min
 
 class MapTile(
@@ -149,30 +148,90 @@ class MapTile(
         // max is 16
         val distanceUp = up?.let {
             if (it is MapTile && it.isPath) {
-                abs(subX - 8) + subY
+                subY
             } else {
-                16
+                min(
+                    it.left?.let { upLeft ->
+                        if (upLeft is MapTile && upLeft.isPath) {
+                            subY + subX
+                        } else {
+                            16
+                        }
+                    } ?: 16,
+                    it.right?.let { upRight ->
+                        if (upRight is MapTile && upRight.isPath) {
+                            subY + 16 - subX
+                        } else {
+                            16
+                        }
+                    } ?: 16
+                )
             }
         } ?: 16
         val distanceDown = down?.let {
             if (it is MapTile && it.isPath) {
-                abs(subX - 8) + 16 - subY
+                16 - subY
             } else {
-                16
+                min(
+                    it.left?.let { downLeft ->
+                        if (downLeft is MapTile && downLeft.isPath) {
+                            16 - subY + subX
+                        } else {
+                            16
+                        }
+                    } ?: 16,
+                    it.right?.let { downRight ->
+                        if (downRight is MapTile && downRight.isPath) {
+                            32 - subY - subX
+                        } else {
+                            16
+                        }
+                    } ?: 16
+                )
             }
         } ?: 16
         val distanceLeft = left?.let {
             if (it is MapTile && it.isPath) {
-                abs(subY - 8) + subX
+                subX
             } else {
-                16
+                min(
+                    it.up?.let { leftUp ->
+                        if (leftUp is MapTile && leftUp.isPath) {
+                            subX + subY
+                        } else {
+                            16
+                        }
+                    } ?: 16,
+                    it.down?.let { leftDown ->
+                        if (leftDown is MapTile && leftDown.isPath) {
+                            subX + 16 - subY
+                        } else {
+                            16
+                        }
+                    } ?: 16
+                )
             }
         } ?: 16
         val distanceRight = right?.let {
             if (it is MapTile && it.isPath) {
-                abs(subY - 8) + 16 - subX
+                16 - subX
             } else {
-                16
+                min(
+                    it.up?.let { rightUp ->
+                        if (rightUp is MapTile && rightUp.isPath) {
+                            16 - subX + subY
+                        } else {
+                            16
+                        }
+                    } ?: 16,
+                    it.down?.let { rightDown ->
+                        if (rightDown is MapTile && rightDown.isPath) {
+                            32 - subX - subY
+                        } else {
+                            16
+                        }
+                    } ?: 16
+                )
             }
         } ?: 16
         return min(min(distanceUp, distanceDown), min(distanceLeft, distanceRight))
@@ -182,30 +241,90 @@ class MapTile(
         // max is 16
         val distanceUp = up?.let {
             if (it is MapTile && it.isRiver) {
-                abs(subX - 8) + subY
+                subY
             } else {
-                16
+                min(
+                    it.left?.let { upLeft ->
+                        if (upLeft is MapTile && upLeft.isRiver) {
+                            subY + subX
+                        } else {
+                            16
+                        }
+                    } ?: 16,
+                    it.right?.let { upRight ->
+                        if (upRight is MapTile && upRight.isRiver) {
+                            subY + 16 - subX
+                        } else {
+                            16
+                        }
+                    } ?: 16
+                )
             }
         } ?: 16
         val distanceDown = down?.let {
             if (it is MapTile && it.isRiver) {
-                abs(subX - 8) + 16 - subY
+                16 - subY
             } else {
-                16
+                min(
+                    it.left?.let { downLeft ->
+                        if (downLeft is MapTile && downLeft.isRiver) {
+                            16 - subY + subX
+                        } else {
+                            16
+                        }
+                    } ?: 16,
+                    it.right?.let { downRight ->
+                        if (downRight is MapTile && downRight.isRiver) {
+                            32 - subY - subX
+                        } else {
+                            16
+                        }
+                    } ?: 16
+                )
             }
         } ?: 16
         val distanceLeft = left?.let {
             if (it is MapTile && it.isRiver) {
-                abs(subY - 8) + subX
+                subX
             } else {
-                16
+                min(
+                    it.up?.let { leftUp ->
+                        if (leftUp is MapTile && leftUp.isRiver) {
+                            subX + subY
+                        } else {
+                            16
+                        }
+                    } ?: 16,
+                    it.down?.let { leftDown ->
+                        if (leftDown is MapTile && leftDown.isRiver) {
+                            subX + 16 - subY
+                        } else {
+                            16
+                        }
+                    } ?: 16
+                )
             }
         } ?: 16
         val distanceRight = right?.let {
             if (it is MapTile && it.isRiver) {
-                abs(subY - 8) + 16 - subX
+                16 - subX
             } else {
-                16
+                min(
+                    it.up?.let { rightUp ->
+                        if (rightUp is MapTile && rightUp.isRiver) {
+                            16 - subX + subY
+                        } else {
+                            16
+                        }
+                    } ?: 16,
+                    it.down?.let { rightDown ->
+                        if (rightDown is MapTile && rightDown.isRiver) {
+                            32 - subX - subY
+                        } else {
+                            16
+                        }
+                    } ?: 16
+                )
             }
         } ?: 16
         return min(min(distanceUp, distanceDown), min(distanceLeft, distanceRight))
@@ -224,7 +343,7 @@ class MapTile(
                 if (isRiver) {
                     return Array(16) { y ->
                         Array(16) { x ->
-                            if (distanceWithPath(x, y) < 9) {
+                            if (distanceWithPath(x, y) < 4) {
                                 Color(255, 178, 79)
                             } else {
                                 Color(0, 111, 255)
@@ -243,9 +362,9 @@ class MapTile(
             } else {
                 return Array(16) { y ->
                     Array(16) { x ->
-                        if (distanceWithPath(x, y) < 9) {
+                        if (distanceWithPath(x, y) < 4) {
                             Color(255, 178, 79)
-                        } else if (distanceWithRiver(x, y) < 9) {
+                        } else if (distanceWithRiver(x, y) < 4) {
                             Color(0, 111, 255)
                         } else {
                             Color(245, 245, 66)
@@ -256,11 +375,11 @@ class MapTile(
         } else {
             blue = color
         }
-        return Array(16) { x ->
-            Array(16) { y ->
-                if (distanceWithPath(x, y) < 9) {
+        return Array(16) { y ->
+            Array(16) { x ->
+                if (distanceWithPath(x, y) < 4) {
                     Color(255, 178, 79)
-                } else if (distanceWithRiver(x, y) < 9) {
+                } else if (distanceWithRiver(x, y) < 4) {
                     Color(0, 111, 255)
                 } else {
                     Color(red, green, blue)
