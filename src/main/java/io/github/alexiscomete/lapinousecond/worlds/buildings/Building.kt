@@ -11,6 +11,7 @@ import io.github.alexiscomete.lapinousecond.view.Context
 import io.github.alexiscomete.lapinousecond.view.ui.old.MenuBuilder
 import io.github.alexiscomete.lapinousecond.worlds.Place
 import org.json.JSONObject
+import java.io.InputStream
 import java.util.*
 
 val BUILDINGS = (Table("buildings"))
@@ -98,29 +99,6 @@ class Building : CacheGetSet, BuildMethods, Owner {
         return buildingInteraction!!.getCompleteInfos(p)
     }
 
-    companion object {
-        // the json file who contains buildings type information
-        var jsonObject: JSONObject? = null
-
-        // load the json file
-        init {
-            val inputStream = Building::class.java.classLoader.getResourceAsStream("config_buildings.json")
-            println(inputStream)
-            jsonObject = if (inputStream == null) {
-                JSONObject("{}")
-            } else {
-                val sc = Scanner(inputStream)
-                val stringBuilder = StringBuilder()
-                sc.forEachRemaining { str: String? ->
-                    stringBuilder.append(
-                        str
-                    )
-                }
-                JSONObject(stringBuilder.toString())
-            }
-        }
-    }
-
     override val ownerType: String
         get() = "building"
     override val ownerString: String
@@ -163,4 +141,21 @@ class Building : CacheGetSet, BuildMethods, Owner {
         return getString("collect_value").toDouble() >= amount
     }
 
+}
+
+val inputStream: InputStream? = Building::class.java.classLoader.getResourceAsStream("config_buildings.json")
+    .also { println(it) }
+
+// the json file who contains buildings type information
+var jsonObject: JSONObject = if (inputStream == null) {
+    JSONObject("{}")
+} else {
+    val sc = Scanner(inputStream)
+    val stringBuilder = StringBuilder()
+    sc.forEachRemaining { str: String? ->
+        stringBuilder.append(
+            str
+        )
+    }
+    JSONObject(stringBuilder.toString())
 }

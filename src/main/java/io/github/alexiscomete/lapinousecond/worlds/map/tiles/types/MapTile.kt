@@ -13,12 +13,17 @@ class MapTile(
     private val height: Double,
     private val isPath: Boolean = false,
     private val isRiver: Boolean = false,
-    private val sprites: MutableList<Sprite> = mutableListOf(),
-    override var up: Tile? = null,
-    override var down: Tile? = null,
-    override var left: Tile? = null,
-    override var right: Tile? = null,
+    private val sprites: MutableList<Sprite> = mutableListOf()
 ) : Tile {
+    var isInitUp = false
+    var isInitDown = false
+    var isInitLeft = false
+    var isInitRight = false
+    override var up: Tile? = null
+    override var down: Tile? = null
+    override var left: Tile? = null
+    override var right: Tile? = null
+
     override fun delete(worldRenderScene: WorldRenderScene) {
         worldRenderScene.dicoTiles.remove(Pair(x, y))
         up?.down = null
@@ -34,10 +39,15 @@ class MapTile(
     var currentState: Int = 0
         private set
 
+    private var onCanvas = false
+
     override fun renderRecursive(remainingSteps: Int, worldRenderScene: WorldRenderScene, xToUse: Int, yToUse: Int) {
         if (remainingSteps <= currentState) return
+        if (currentState == 0) {
+            onCanvas = worldRenderScene.canvas.drawTile(this, xToUse, yToUse)
+        }
         currentState = remainingSteps
-        if (worldRenderScene.canvas.drawTile(this, xToUse, yToUse)) {
+        if (onCanvas) {
             (up ?: run {
                 val tile = worldRenderScene.getOrGenerateTileAt(x, y - 1)
                 up = tile
@@ -86,6 +96,7 @@ class MapTile(
 
     fun resetRender() {
         currentState = 0
+        onCanvas = false
     }
 
     override fun render(worldRenderScene: WorldRenderScene, x: Int, y: Int) {
@@ -142,7 +153,6 @@ class MapTile(
     }
 
     private var tileTexture: Array<Array<Color>>? = null
-
 
     private fun distanceWithPath(subX: Int, subY: Int): Int {
         // max is 16

@@ -54,7 +54,7 @@ enum class Buildings(private val getBuildingM: (Building) -> BuildingInteraction
     var buildingAutorisations: BuildingAutorisations? = null
 
     init {
-        Building.jsonObject?.let { setModelWithJson(it.getJSONObject(name.lowercase())) }
+        jsonObject?.let { setModelWithJson(it.getJSONObject(name.lowercase())) }
     }
 
     private fun setModelWithJson(jsonObject: JSONObject) {
