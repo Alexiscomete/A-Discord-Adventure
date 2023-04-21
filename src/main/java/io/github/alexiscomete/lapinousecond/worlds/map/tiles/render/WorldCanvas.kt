@@ -7,4 +7,5 @@ interface WorldCanvas {
     fun drawTile(tile: Tile, x: Int, y: Int, priority: Int = 0): Boolean
     fun drawSprite(sprite: Sprite, x: Int, y: Int, priority: Int)
     fun resetCanvas(newW: Int, newH: Int)
+    fun onCanvas(x: Int, y: Int): Boolean
 }

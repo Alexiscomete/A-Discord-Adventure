@@ -15,10 +15,6 @@ class MapTile(
     private val isRiver: Boolean = false,
     private val sprites: MutableList<Sprite> = mutableListOf()
 ) : Tile {
-    var isInitUp = false
-    var isInitDown = false
-    var isInitLeft = false
-    var isInitRight = false
     override var up: Tile? = null
     override var down: Tile? = null
     override var left: Tile? = null
@@ -36,24 +32,21 @@ class MapTile(
         right = null
     }
 
-    var currentState: Int = 0
+    private var onCanvas = false
+    var rendered = false
         private set
 
-    private var onCanvas = false
-
-    override fun renderRecursive(remainingSteps: Int, worldRenderScene: WorldRenderScene, xToUse: Int, yToUse: Int) {
-        if (remainingSteps <= currentState) return
-        if (currentState == 0) {
-            onCanvas = worldRenderScene.canvas.drawTile(this, xToUse, yToUse)
-        }
-        currentState = remainingSteps
+    override fun renderRecursive(worldRenderScene: WorldRenderScene, xToUse: Int, yToUse: Int) {
+        if (rendered) return
+        rendered = true
+        if (worldRenderScene.distance(xToUse, yToUse) > 50) return
+        onCanvas = worldRenderScene.canvas.onCanvas(xToUse, yToUse)
         if (onCanvas) {
             (up ?: run {
-                val tile = worldRenderScene.getOrGenerateTileAt(x, y - 1)
-                up = tile
-                tile
+                worldRenderScene.getOrGenerateTileAt(x, y - 1).also {
+                    up = it
+                }
             }).renderRecursive(
-                remainingSteps - 1,
                 worldRenderScene,
                 xToUse,
                 yToUse - 1
@@ -63,7 +56,6 @@ class MapTile(
                     down = it
                 }
             }).renderRecursive(
-                remainingSteps - 1,
                 worldRenderScene,
                 xToUse,
                 yToUse + 1
@@ -73,7 +65,6 @@ class MapTile(
                     left = it
                 }
             }).renderRecursive(
-                remainingSteps - 1,
                 worldRenderScene,
                 xToUse - 1,
                 yToUse
@@ -83,7 +74,6 @@ class MapTile(
                     right = it
                 }
             }).renderRecursive(
-                remainingSteps - 1,
                 worldRenderScene,
                 xToUse + 1,
                 yToUse
@@ -91,16 +81,17 @@ class MapTile(
             sprites.forEach {
                 it.render(worldRenderScene, xToUse, yToUse)
             }
+            worldRenderScene.canvas.drawTile(this, xToUse, yToUse)
         }
     }
 
     fun resetRender() {
-        currentState = 0
         onCanvas = false
+        rendered = false
     }
 
     override fun render(worldRenderScene: WorldRenderScene, x: Int, y: Int) {
-        renderRecursive(50, worldRenderScene, x, y)
+        renderRecursive(worldRenderScene, x, y)
     }
 
     override fun letter(): Char {
@@ -152,7 +143,9 @@ class MapTile(
         return tileColor ?: Color(0, 0, 0)
     }
 
-    private var tileTexture: Array<Array<Color>>? = null
+    private val tileTexture: Array<Array<Color>> by lazy {
+        currentTextureCalc()
+    }
 
     private fun distanceWithPath(subX: Int, subY: Int): Int {
         // max is 16
@@ -399,7 +392,7 @@ class MapTile(
     }
 
     override fun texture(): Array<Array<Color>> {
-        return currentTextureCalc()
+        return tileTexture
     }
 
     override fun isWalkable(): Boolean {

@@ -11,8 +11,7 @@ class TreeTrunk(
     steps: Int = 2,
     maxSteps: Int = steps,
 ) : BaseTileGroup(
-    priority = 1,
-    stepsDecreasing = false
+    priority = 1
 ) {
 
     override var up: Tile? = run {

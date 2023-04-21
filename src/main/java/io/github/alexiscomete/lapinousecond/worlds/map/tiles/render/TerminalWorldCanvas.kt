@@ -26,6 +26,10 @@ class TerminalWorldCanvas : WorldCanvas {
         sizeArray = newW
     }
 
+    override fun onCanvas(x: Int, y: Int): Boolean {
+        return y >= 0 && y < canvas.size && x >= 0 && x < sizeArray
+    }
+
     fun printlnCanvas() {
         canvas.forEach { line ->
             line.forEach { char ->

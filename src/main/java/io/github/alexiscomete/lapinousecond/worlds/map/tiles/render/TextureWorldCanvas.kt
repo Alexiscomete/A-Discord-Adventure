@@ -44,4 +44,8 @@ class TextureWorldCanvas : WorldCanvas {
         bufferedImage = BufferedImage(currentWidth * 16, currentHeight * 16, BufferedImage.TYPE_INT_RGB)
         priorityMap = Array(currentHeight * 16) { Array(currentWidth * 16) { 0 } }
     }
+
+    override fun onCanvas(x: Int, y: Int): Boolean {
+        return y >= 0 && y < currentHeight && x >= 0 && x < currentWidth
+    }
 }

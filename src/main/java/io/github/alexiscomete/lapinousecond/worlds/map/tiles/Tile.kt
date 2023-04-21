@@ -14,7 +14,7 @@ interface Tile {
 
     fun delete(worldRenderScene: WorldRenderScene)
 
-    fun renderRecursive(remainingSteps: Int, worldRenderScene: WorldRenderScene, xToUse: Int, yToUse: Int)
+    fun renderRecursive(worldRenderScene: WorldRenderScene, xToUse: Int, yToUse: Int)
 
     /**
      * Aucun argument requis. Permet de réinitialiser les états de chaque tuile.

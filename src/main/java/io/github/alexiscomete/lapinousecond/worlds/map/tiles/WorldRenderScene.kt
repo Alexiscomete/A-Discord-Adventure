@@ -7,10 +7,22 @@ import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.WorldCanvas
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.BaseTileGroup
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.MapTile
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.TreeTrunk
+import kotlin.math.sqrt
 
 class WorldRenderScene(
     val canvas: WorldCanvas, x: Int, y: Int, private val zoomLevel: Zooms, val world: WorldManager
 ) {
+    val xReset = 21
+    val yReset = 21
+
+    // distances
+    val dicoDistances = mutableMapOf<Pair<Int, Int>, Int>()
+
+    fun distance(x: Int, y: Int): Int {
+        return dicoDistances.getOrPut(Pair(x, y)) {
+            sqrt((x * x + y * y).toDouble()).toInt()
+        }
+    }
 
     //private val spritesManagers = mutableListOf<InteractionSpriteManager>()
     private val multiTilesManagers = mutableListOf<MultiTilesManager>()
@@ -21,20 +33,20 @@ class WorldRenderScene(
 
     fun renderAll() {
         canvas.resetCanvas(41, 41)
-        currentTile.render(this, 21, 21)
+        currentTile.render(this, xReset, yReset)
         val toDelete = mutableListOf<Tile>()
         for (tile in dicoTiles.values) {
             if (tile is BaseTileGroup) {
-                if (tile.currentState == 0) {
-                    toDelete.add(tile)
-                } else {
+                if (tile.rendered) {
                     tile.resetRecursive()
+                } else {
+                    toDelete.add(tile)
                 }
             } else if (tile is MapTile) {
-                if (tile.currentState == 0) {
-                    toDelete.add(tile)
-                } else {
+                if (tile.rendered) {
                     tile.resetRender()
+                } else {
+                    toDelete.add(tile)
                 }
             }
         }

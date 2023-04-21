@@ -4,8 +4,7 @@ import io.github.alexiscomete.lapinousecond.worlds.map.tiles.Tile
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.WorldRenderScene
 
 abstract class BaseTileGroup(
-    val priority: Int = 0,
-    private val stepsDecreasing: Boolean = true
+    val priority: Int = 0
 ) : Tile {
     override fun delete(worldRenderScene: WorldRenderScene) {
         val value = worldRenderScene.dicoTiles[Pair(x, y)]
@@ -22,33 +21,29 @@ abstract class BaseTileGroup(
         right = null
     }
 
-    var currentState: Int = 0
+    var rendered: Boolean = false
         private set
 
-    override fun renderRecursive(remainingSteps: Int, worldRenderScene: WorldRenderScene, xToUse: Int, yToUse: Int) {
-        if (remainingSteps <= currentState) return
-        currentState = remainingSteps
-        val nextSteps = if (stepsDecreasing) remainingSteps - 1 else remainingSteps
+    override fun renderRecursive(worldRenderScene: WorldRenderScene, xToUse: Int, yToUse: Int) {
+        if (rendered) return
+        rendered = true
+        if (worldRenderScene.distance(xToUse, yToUse) > 50) return
         up?.renderRecursive(
-            nextSteps,
             worldRenderScene,
             xToUse,
             yToUse - 1
         )
         down?.renderRecursive(
-            nextSteps,
             worldRenderScene,
             xToUse,
             yToUse + 1
         )
         left?.renderRecursive(
-            nextSteps,
             worldRenderScene,
             xToUse - 1,
             yToUse
         )
         right?.renderRecursive(
-            nextSteps,
             worldRenderScene,
             xToUse + 1,
             yToUse
@@ -57,8 +52,8 @@ abstract class BaseTileGroup(
     }
 
     fun resetRecursive() {
-        if (currentState == 0) return
-        currentState = 0
+        if (!rendered) return
+        rendered = false
         up?.also {
             if (it is BaseTileGroup) {
                 it.resetRecursive()
@@ -82,6 +77,6 @@ abstract class BaseTileGroup(
     }
 
     override fun render(worldRenderScene: WorldRenderScene, x: Int, y: Int) {
-        renderRecursive(15, worldRenderScene, x, y)
+        renderRecursive(worldRenderScene, x, y)
     }
 }
