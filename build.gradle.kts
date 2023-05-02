@@ -20,7 +20,7 @@ repositories {
 }
 
 dependencies {
-    implementation("org.javacord:javacord:3.7.0")
+    implementation("org.javacord:javacord:3.8.0")
     implementation("org.xerial:sqlite-jdbc:3.40.0.0")
     implementation("org.json:json:20230227")
     implementation("org.jetbrains.kotlin:kotlin-stdlib:1.8.21")
