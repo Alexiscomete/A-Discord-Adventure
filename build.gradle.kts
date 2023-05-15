@@ -26,7 +26,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib:1.8.21")
     implementation("com.github.Alexiscomete:procedural_generation:1-ALPHA.2")
     testImplementation("org.junit.jupiter:junit-jupiter:5.9.3")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.0-RC")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1")
 }
 
 application {
