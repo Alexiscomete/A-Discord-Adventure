@@ -7,6 +7,8 @@ import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.WorldCanvas
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.BaseTileGroup
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.MapTile
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.TreeTrunk
+import java.util.LinkedList
+import java.util.Queue
 import kotlin.math.sqrt
 
 class WorldRenderScene(
@@ -14,6 +16,10 @@ class WorldRenderScene(
 ) {
     val xReset = 21
     val yReset = 21
+
+    // permet de d'aller de plus en plus loin
+    var renderQueue: Queue<Tile> = LinkedList()
+        private set
 
     // distances
     val dicoDistances = mutableMapOf<Pair<Int, Int>, Int>()
@@ -33,7 +39,11 @@ class WorldRenderScene(
 
     fun renderAll() {
         canvas.resetCanvas(41, 41)
-        currentTile.render(this, xReset, yReset)
+        currentTile.render(this, xReset, yReset, 0)
+        while (!renderQueue.isEmpty()) {
+            val tile = renderQueue.poll()
+            tile.render(this)
+        }
         val toDelete = mutableListOf<Tile>()
         for (tile in dicoTiles.values) {
             if (tile is BaseTileGroup) {

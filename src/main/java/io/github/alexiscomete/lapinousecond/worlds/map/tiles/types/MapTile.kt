@@ -19,6 +19,15 @@ class MapTile(
     override var down: Tile? = null
     override var left: Tile? = null
     override var right: Tile? = null
+    override var xToUse: Int
+        get() = TODO("Not yet implemented")
+        set(value) {}
+    override var yToUse: Int
+        get() = TODO("Not yet implemented")
+        set(value) {}
+    override var distanceRoot: Int
+        get() = TODO("Not yet implemented")
+        set(value) {}
 
     override fun delete(worldRenderScene: WorldRenderScene) {
         worldRenderScene.dicoTiles.remove(Pair(x, y))
@@ -36,7 +45,12 @@ class MapTile(
     var rendered = false
         private set
 
-    override fun renderRecursive(worldRenderScene: WorldRenderScene, xToUse: Int, yToUse: Int) {
+    fun resetRender() {
+        onCanvas = false
+        rendered = false
+    }
+
+    override fun render(worldRenderScene: WorldRenderScene, x: Int, y: Int, distance: Int) {
         if (rendered) return
         rendered = true
         if (worldRenderScene.distance(xToUse, yToUse) > 50) return
@@ -46,37 +60,41 @@ class MapTile(
                 worldRenderScene.getOrGenerateTileAt(x, y - 1).also {
                     up = it
                 }
-            }).renderRecursive(
+            }).addToRenderQueue(
                 worldRenderScene,
                 xToUse,
-                yToUse - 1
+                yToUse - 1,
+                distance + 1
             )
             (down ?: run {
                 worldRenderScene.getOrGenerateTileAt(x, y + 1).also {
                     down = it
                 }
-            }).renderRecursive(
+            }).addToRenderQueue(
                 worldRenderScene,
                 xToUse,
-                yToUse + 1
+                yToUse + 1,
+                distance + 1
             )
             (left ?: run {
                 worldRenderScene.getOrGenerateTileAt(x - 1, y).also {
                     left = it
                 }
-            }).renderRecursive(
+            }).addToRenderQueue(
                 worldRenderScene,
                 xToUse - 1,
-                yToUse
+                yToUse,
+                distance + 1
             )
             (right ?: run {
                 worldRenderScene.getOrGenerateTileAt(x + 1, y).also {
                     right = it
                 }
-            }).renderRecursive(
+            }).addToRenderQueue(
                 worldRenderScene,
                 xToUse + 1,
-                yToUse
+                yToUse,
+                distance + 1
             )
             sprites.forEach {
                 it.render(worldRenderScene, xToUse, yToUse)
@@ -85,13 +103,8 @@ class MapTile(
         }
     }
 
-    fun resetRender() {
-        onCanvas = false
-        rendered = false
-    }
-
-    override fun render(worldRenderScene: WorldRenderScene, x: Int, y: Int) {
-        renderRecursive(worldRenderScene, x, y)
+    override fun addToRenderQueue(worldRenderScene: WorldRenderScene, x: Int, y: Int, distance: Int) {
+        TODO("Not yet implemented")
     }
 
     override fun letter(): Char {

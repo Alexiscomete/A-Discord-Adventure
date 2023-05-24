@@ -11,15 +11,18 @@ interface Tile {
     var down: Tile?
     var left: Tile?
     var right: Tile?
+    var xToUse: Int
+    var yToUse: Int
+    var distanceRoot: Int
 
     fun delete(worldRenderScene: WorldRenderScene)
-
-    fun renderRecursive(worldRenderScene: WorldRenderScene, xToUse: Int, yToUse: Int)
 
     /**
      * Aucun argument requis. Permet de réinitialiser les états de chaque tuile.
      */
-    fun render(worldRenderScene: WorldRenderScene, x: Int, y: Int)
+    fun render(worldRenderScene: WorldRenderScene, x: Int = xToUse, y: Int = yToUse, distance: Int = distanceRoot)
+
+    fun addToRenderQueue(worldRenderScene: WorldRenderScene, x: Int, y: Int, distance: Int)
 
     fun letter(): Char
 

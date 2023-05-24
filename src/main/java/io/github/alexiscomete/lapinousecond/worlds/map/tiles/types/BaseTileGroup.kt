@@ -23,33 +23,9 @@ abstract class BaseTileGroup(
 
     var rendered: Boolean = false
         private set
+    var inQueue: Boolean = false
+        private set
 
-    override fun renderRecursive(worldRenderScene: WorldRenderScene, xToUse: Int, yToUse: Int) {
-        if (rendered) return
-        rendered = true
-        if (worldRenderScene.distance(xToUse, yToUse) > 50) return
-        up?.renderRecursive(
-            worldRenderScene,
-            xToUse,
-            yToUse - 1
-        )
-        down?.renderRecursive(
-            worldRenderScene,
-            xToUse,
-            yToUse + 1
-        )
-        left?.renderRecursive(
-            worldRenderScene,
-            xToUse - 1,
-            yToUse
-        )
-        right?.renderRecursive(
-            worldRenderScene,
-            xToUse + 1,
-            yToUse
-        )
-        worldRenderScene.canvas.drawTile(this, xToUse, yToUse, priority)
-    }
 
     fun resetRecursive() {
         if (!rendered) return
@@ -76,7 +52,22 @@ abstract class BaseTileGroup(
         }
     }
 
-    override fun render(worldRenderScene: WorldRenderScene, x: Int, y: Int) {
-        renderRecursive(worldRenderScene, x, y)
+    override fun render(worldRenderScene: WorldRenderScene, x: Int, y: Int, distance: Int) {
+        if (rendered) return
+        rendered = true
+        if (worldRenderScene.distance(xToUse, yToUse) > 50) return
+        up?.addToRenderQueue(worldRenderScene, xToUse, yToUse - 1, distance + 1)
+        down?.addToRenderQueue(worldRenderScene, xToUse, yToUse + 1, distance + 1)
+        left?.addToRenderQueue(
+            worldRenderScene, xToUse - 1, yToUse, distance + 1
+        )
+        right?.addToRenderQueue(
+            worldRenderScene, xToUse + 1, yToUse, distance + 1
+        )
+        worldRenderScene.canvas.drawTile(this, xToUse, yToUse, priority)
+    }
+
+    override fun addToRenderQueue(worldRenderScene: WorldRenderScene, x: Int, y: Int, distance: Int) {
+        TODO("Not yet implemented")
     }
 }
