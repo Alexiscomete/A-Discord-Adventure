@@ -1,5 +1,6 @@
 package io.github.alexiscomete.lapinousecond.worlds.map.tiles.types
 
+import io.github.alexiscomete.lapinousecond.worlds.map.tiles.RenderInfos
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.Tile
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.WorldRenderScene
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.Sprite
@@ -19,15 +20,6 @@ class MapTile(
     override var down: Tile? = null
     override var left: Tile? = null
     override var right: Tile? = null
-    override var xToUse: Int
-        get() = TODO("Not yet implemented")
-        set(value) {}
-    override var yToUse: Int
-        get() = TODO("Not yet implemented")
-        set(value) {}
-    override var distanceRoot: Int
-        get() = TODO("Not yet implemented")
-        set(value) {}
 
     override fun delete(worldRenderScene: WorldRenderScene) {
         worldRenderScene.dicoTiles.remove(Pair(x, y))
@@ -44,20 +36,22 @@ class MapTile(
     private var onCanvas = false
     var rendered = false
         private set
+    private var inQueue: Boolean = false
 
     fun resetRender() {
         onCanvas = false
         rendered = false
+        inQueue = false
     }
 
-    override fun render(worldRenderScene: WorldRenderScene, x: Int, y: Int, distance: Int) {
+    override fun render(worldRenderScene: WorldRenderScene, xToUse: Int, yToUse: Int, distance: Int) {
         if (rendered) return
         rendered = true
-        if (worldRenderScene.distance(xToUse, yToUse) > 50) return
+        if (distance > 50) return
         onCanvas = worldRenderScene.canvas.onCanvas(xToUse, yToUse)
         if (onCanvas) {
             (up ?: run {
-                worldRenderScene.getOrGenerateTileAt(x, y - 1).also {
+                worldRenderScene.getOrGenerateTileAt(xToUse, yToUse - 1).also {
                     up = it
                 }
             }).addToRenderQueue(
@@ -67,7 +61,7 @@ class MapTile(
                 distance + 1
             )
             (down ?: run {
-                worldRenderScene.getOrGenerateTileAt(x, y + 1).also {
+                worldRenderScene.getOrGenerateTileAt(xToUse, yToUse + 1).also {
                     down = it
                 }
             }).addToRenderQueue(
@@ -77,7 +71,7 @@ class MapTile(
                 distance + 1
             )
             (left ?: run {
-                worldRenderScene.getOrGenerateTileAt(x - 1, y).also {
+                worldRenderScene.getOrGenerateTileAt(xToUse - 1, yToUse).also {
                     left = it
                 }
             }).addToRenderQueue(
@@ -87,7 +81,7 @@ class MapTile(
                 distance + 1
             )
             (right ?: run {
-                worldRenderScene.getOrGenerateTileAt(x + 1, y).also {
+                worldRenderScene.getOrGenerateTileAt(xToUse + 1, yToUse).also {
                     right = it
                 }
             }).addToRenderQueue(
@@ -104,7 +98,8 @@ class MapTile(
     }
 
     override fun addToRenderQueue(worldRenderScene: WorldRenderScene, x: Int, y: Int, distance: Int) {
-        TODO("Not yet implemented")
+        if (inQueue) return
+        worldRenderScene.renderQueue.add(RenderInfos(this, x, y, distance))
     }
 
     override fun letter(): Char {
