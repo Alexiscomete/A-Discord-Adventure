@@ -2,7 +2,6 @@ package io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.templat
 
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.MultiTilesManager
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.templating.contexts.TemplateWorld
-import io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.templating.tiles.TemplatedTile
 
 interface Template {
 
