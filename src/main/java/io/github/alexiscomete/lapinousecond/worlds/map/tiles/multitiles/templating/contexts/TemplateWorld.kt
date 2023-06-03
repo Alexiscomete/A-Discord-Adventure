@@ -1,12 +1,15 @@
 package io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.templating.contexts
 
+import io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.templating.templates.NullWall
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.templating.templates.TemplatePart
+import io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.templating.templates.WhiteWall
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.templating.tiles.TemplatedTile
 
 enum class TemplateWorld(
     private val templatePart: TemplatePart
 ) {
-    ;
+    NULL_WARNING(NullWall()),
+    WHITE(WhiteWall());
 
     fun getTile() : TemplatedTile {
         return templatePart.getTile(0, 0)

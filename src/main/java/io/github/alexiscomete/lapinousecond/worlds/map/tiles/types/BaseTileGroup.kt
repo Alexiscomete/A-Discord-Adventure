@@ -26,6 +26,9 @@ abstract class BaseTileGroup(
         private set
     private var inQueue: Boolean = false
 
+    override fun isRendered(): Boolean {
+        return rendered
+    }
 
     fun resetRecursive() {
         if (!rendered) return

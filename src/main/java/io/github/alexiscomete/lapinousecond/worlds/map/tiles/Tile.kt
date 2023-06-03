@@ -30,4 +30,6 @@ interface Tile {
     fun removeSprite(sprite: Sprite)
 
     fun resetRender()
+
+    fun isRendered() : Boolean
 }

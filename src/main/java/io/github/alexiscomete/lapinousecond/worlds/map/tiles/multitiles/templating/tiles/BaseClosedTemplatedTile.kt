@@ -25,9 +25,12 @@ abstract class BaseClosedTemplatedTile(
         right = null
     }
 
-    var rendered: Boolean = false
-        private set
+    private var rendered: Boolean = false
     private var inQueue: Boolean = false
+
+    override fun isRendered(): Boolean {
+        return rendered
+    }
 
     override fun render(worldRenderScene: WorldRenderScene, xToUse: Int, yToUse: Int, distance: Int) {
         if (rendered) return

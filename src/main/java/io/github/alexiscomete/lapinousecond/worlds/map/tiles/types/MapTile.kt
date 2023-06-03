@@ -44,6 +44,10 @@ class MapTile(
         inQueue = false
     }
 
+    override fun isRendered(): Boolean {
+        return rendered
+    }
+
     override fun render(worldRenderScene: WorldRenderScene, xToUse: Int, yToUse: Int, distance: Int) {
         if (rendered) return
         rendered = true

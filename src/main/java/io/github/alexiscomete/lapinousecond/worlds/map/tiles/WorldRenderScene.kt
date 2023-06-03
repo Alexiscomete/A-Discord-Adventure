@@ -4,7 +4,6 @@ import io.github.alexiscomete.lapinousecond.worlds.WorldManager
 import io.github.alexiscomete.lapinousecond.worlds.Zooms
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.MultiTilesManager
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.WorldCanvas
-import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.BaseTileGroup
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.MapTile
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.TreeTrunk
 import java.util.*
@@ -34,18 +33,10 @@ class WorldRenderScene(
         }
         val toDelete = mutableListOf<Tile>()
         for (tile in dicoTiles.values) {
-            if (tile is BaseTileGroup) {
-                if (tile.rendered) {
-                    tile.resetRecursive()
-                } else {
-                    toDelete.add(tile)
-                }
-            } else if (tile is MapTile) {
-                if (tile.rendered) {
-                    tile.resetRender()
-                } else {
-                    toDelete.add(tile)
-                }
+            if (tile.isRendered()) {
+                tile.resetRender()
+            } else {
+                toDelete.add(tile)
             }
         }
         toDelete.forEach { it.delete(this) }
