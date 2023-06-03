@@ -38,7 +38,7 @@ class MapTile(
         private set
     private var inQueue: Boolean = false
 
-    fun resetRender() {
+    override fun resetRender() {
         onCanvas = false
         rendered = false
         inQueue = false

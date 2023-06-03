@@ -28,4 +28,6 @@ interface Tile {
 
     fun isWalkable(): Boolean
     fun removeSprite(sprite: Sprite)
+
+    fun resetRender()
 }

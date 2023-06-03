@@ -53,6 +53,10 @@ abstract class BaseTileGroup(
         }
     }
 
+    override fun resetRender() {
+        resetRecursive()
+    }
+
     override fun render(worldRenderScene: WorldRenderScene, xToUse: Int, yToUse: Int, distance: Int) {
         if (rendered) return
         rendered = true
