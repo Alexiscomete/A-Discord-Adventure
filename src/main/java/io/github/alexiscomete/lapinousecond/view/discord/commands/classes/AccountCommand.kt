@@ -184,7 +184,10 @@ class AccountCommandStart : SubCommand(
                 "Signalement",
                 "Les serveurs sont uniquement sur le thème du **Dibistan**. Si vous voyez malgré tout un abus signalez le sur le **serveur principal du bot**."
             )
-            .addField("Commençons le tuto", "> (???) : Bonjour ! Je suis **Aurimezi**, je suis ton nouveau inventaire. Ce n'est pas tout les jours qu'on achète un inventaire. Voyons voir ce qu'on a là ...\n\nUtilisez `/inv resource`")
+            .addField(
+                "Commençons le tuto",
+                "> (???) : Bonjour ! Je suis **Aurimezi**, je suis ton nouveau inventaire. Ce n'est pas tout les jours qu'on achète un inventaire. Voyons voir ce qu'on a là ...\n\nUtilisez `/inv resource`"
+            )
         if (content == "") {
             slashCommand.createImmediateResponder()
                 .addEmbed(embed)
