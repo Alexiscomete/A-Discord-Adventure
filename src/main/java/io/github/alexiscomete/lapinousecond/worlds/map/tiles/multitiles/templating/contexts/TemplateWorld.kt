@@ -5,6 +5,9 @@ import io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.templati
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.templating.templates.WhiteWall
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.templating.tiles.TemplatedTile
 
+/**
+ * Permet de remplir le vide des templates à l'aide d'un patterne
+ */
 enum class TemplateWorld(
     private val templatePart: TemplatePart
 ) {

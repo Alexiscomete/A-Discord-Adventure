@@ -45,18 +45,18 @@ class AccountCommandBase : Command(
 
 fun getUser(id: Long): String? {
     try {
-        val connection =
-            URL("https://dirtybiology.captaincommand.repl.co/api/?authorization=${config.content[2]}&request=getInfosByDiscordId&datas=%7B%22discordId%22:%22$id%22%7D").openConnection() as HttpURLConnection
-        connection.connectTimeout = 5000
-        connection.readTimeout = 5000
-        connection.requestMethod = "GET"
-        var response = ""
-        val scanner = Scanner(connection.inputStream)
-        if (scanner.hasNextLine()) {
-            response += scanner.nextLine()
-        }
-        scanner.close()
-        return response
+        // val connection =
+        //     URL("https://dirtybiology.captaincommand.repl.co/api/?authorization=${config.content[2]}&request=getInfosByDiscordId&datas=%7B%22discordId%22:%22$id%22%7D").openConnection() as HttpURLConnection
+        // connection.connectTimeout = 5000
+        // connection.readTimeout = 5000
+        // connection.requestMethod = "GET"
+        // var response = ""
+        // val scanner = Scanner(connection.inputStream)
+        // if (scanner.hasNextLine()) {
+        //     response += scanner.nextLine()
+        // }
+        // scanner.close()
+        // return response
     } catch (e: IOException) {
         e.printStackTrace()
     }
