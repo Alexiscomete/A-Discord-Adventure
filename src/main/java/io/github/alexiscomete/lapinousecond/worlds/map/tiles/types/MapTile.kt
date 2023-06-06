@@ -50,7 +50,7 @@ class MapTile(
     override fun render(worldRenderScene: WorldRenderScene, xToUse: Int, yToUse: Int, distance: Int) {
         if (rendered) return
         rendered = true
-        if (distance > 25) return
+        if (distance > 50) return
         onCanvas = worldRenderScene.canvas.onCanvas(xToUse, yToUse)
         if (onCanvas) {
             (up ?: run {
@@ -101,7 +101,7 @@ class MapTile(
     }
 
     override fun addToRenderQueue(worldRenderScene: WorldRenderScene, x: Int, y: Int, distance: Int) {
-        if (inQueue || distance > 25) return
+        if (inQueue || distance > 50) return
         worldRenderScene.renderQueue.add(RenderInfos(this, x, y, distance))
         inQueue = true
     }
