@@ -34,8 +34,7 @@ class MapTile(
     }
 
     private var onCanvas = false
-    var rendered = false
-        private set
+    private var rendered = false
     private var inQueue: Boolean = false
 
     override fun resetRender() {
@@ -51,11 +50,11 @@ class MapTile(
     override fun render(worldRenderScene: WorldRenderScene, xToUse: Int, yToUse: Int, distance: Int) {
         if (rendered) return
         rendered = true
-        if (distance > 50) return
+        if (distance > 25) return
         onCanvas = worldRenderScene.canvas.onCanvas(xToUse, yToUse)
         if (onCanvas) {
             (up ?: run {
-                worldRenderScene.getOrGenerateTileAt(xToUse, yToUse - 1).also {
+                worldRenderScene.getOrGenerateTileAt(x, y - 1).also {
                     up = it
                 }
             }).addToRenderQueue(
@@ -65,7 +64,7 @@ class MapTile(
                 distance + 1
             )
             (down ?: run {
-                worldRenderScene.getOrGenerateTileAt(xToUse, yToUse + 1).also {
+                worldRenderScene.getOrGenerateTileAt(x, y + 1).also {
                     down = it
                 }
             }).addToRenderQueue(
@@ -75,7 +74,7 @@ class MapTile(
                 distance + 1
             )
             (left ?: run {
-                worldRenderScene.getOrGenerateTileAt(xToUse - 1, yToUse).also {
+                worldRenderScene.getOrGenerateTileAt(x - 1, y).also {
                     left = it
                 }
             }).addToRenderQueue(
@@ -85,7 +84,7 @@ class MapTile(
                 distance + 1
             )
             (right ?: run {
-                worldRenderScene.getOrGenerateTileAt(xToUse + 1, yToUse).also {
+                worldRenderScene.getOrGenerateTileAt(x + 1, y).also {
                     right = it
                 }
             }).addToRenderQueue(
@@ -102,8 +101,9 @@ class MapTile(
     }
 
     override fun addToRenderQueue(worldRenderScene: WorldRenderScene, x: Int, y: Int, distance: Int) {
-        if (inQueue) return
+        if (inQueue || distance > 25) return
         worldRenderScene.renderQueue.add(RenderInfos(this, x, y, distance))
+        inQueue = true
     }
 
     override fun letter(): Char {
