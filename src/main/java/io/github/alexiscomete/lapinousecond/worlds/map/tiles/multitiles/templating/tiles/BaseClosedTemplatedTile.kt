@@ -40,8 +40,9 @@ abstract class BaseClosedTemplatedTile(
     }
 
     override fun addToRenderQueue(worldRenderScene: WorldRenderScene, x: Int, y: Int, distance: Int) {
-        if (inQueue) return
+        if (inQueue || distance > 50) return
         worldRenderScene.renderQueue.add(RenderInfos(this, x, y, distance))
+        inQueue = true
     }
 
     override fun isWalkable(): Boolean {
