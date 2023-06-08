@@ -3,9 +3,9 @@ package io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.templat
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.RenderInfos
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.Tile
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.WorldRenderScene
-import io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.Sprite
+import io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.ComplexTile
 
-abstract class BaseClosedTemplatedTile(
+abstract class BaseOpenedTemplatedTile(
     override val x: Int,
     override val y: Int
 ) : TemplatedTile {
@@ -14,15 +14,8 @@ abstract class BaseClosedTemplatedTile(
     override var left: Tile? = null
     override var right: Tile? = null
 
-    override fun delete(worldRenderScene: WorldRenderScene) {
-        up?.down = null
-        down?.up = null
-        left?.right = null
-        right?.left = null
-        up = null
-        down = null
-        left = null
-        right = null
+    override fun isWalkable(): Boolean {
+        return true
     }
 
     private var rendered: Boolean = false
@@ -36,13 +29,20 @@ abstract class BaseClosedTemplatedTile(
         if (rendered) return
         rendered = true
         if (distance > 50) return
-        worldRenderScene.canvas.drawTile(this, xToUse, yToUse, 5)
+        up?.addToRenderQueue(worldRenderScene, xToUse, yToUse - 1, distance + 1)
+        down?.addToRenderQueue(worldRenderScene, xToUse, yToUse + 1, distance + 1)
+        left?.addToRenderQueue(
+            worldRenderScene, xToUse - 1, yToUse, distance + 1
+        )
+        right?.addToRenderQueue(
+            worldRenderScene, xToUse + 1, yToUse, distance + 1
+        )
+        worldRenderScene.canvas.drawTile(this, xToUse, yToUse, 0)
     }
 
     override fun addToRenderQueue(worldRenderScene: WorldRenderScene, x: Int, y: Int, distance: Int) {
-        if (inQueue || distance > 50) return
+        if (inQueue) return
         worldRenderScene.renderQueue.add(RenderInfos(this, x, y, distance))
-        inQueue = true
     }
 
     override fun resetRender() {
@@ -50,12 +50,14 @@ abstract class BaseClosedTemplatedTile(
         inQueue = false
     }
 
-    override fun isWalkable(): Boolean {
-        return false
-    }
-
-    override fun removeSprite(sprite: Sprite) {
-        // no sprite
-        return
+    override fun delete(worldRenderScene: WorldRenderScene) {
+        up?.down = null
+        down?.up = null
+        left?.right = null
+        right?.left = null
+        up = null
+        down = null
+        left = null
+        right = null
     }
 }

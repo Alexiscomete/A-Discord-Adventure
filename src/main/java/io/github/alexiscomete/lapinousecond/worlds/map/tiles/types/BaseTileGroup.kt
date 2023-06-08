@@ -22,8 +22,7 @@ abstract class BaseTileGroup(
         right = null
     }
 
-    var rendered: Boolean = false
-        private set
+    private var rendered: Boolean = false
     private var inQueue: Boolean = false
 
     override fun isRendered(): Boolean {

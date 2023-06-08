@@ -29,4 +29,8 @@ interface MultiTilesManager {
      * @see canBeRemoved
      */
     fun iAmLoaded()
+
+    fun delete()
+
+    fun unload()
 }
