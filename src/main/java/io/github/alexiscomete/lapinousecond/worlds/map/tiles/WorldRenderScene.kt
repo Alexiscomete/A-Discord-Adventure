@@ -4,27 +4,20 @@ import io.github.alexiscomete.lapinousecond.worlds.WorldManager
 import io.github.alexiscomete.lapinousecond.worlds.Zooms
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.MultiTilesManager
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.WorldCanvas
-import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.BaseTileGroup
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.MapTile
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.TreeTrunk
-import kotlin.math.sqrt
+import java.util.*
 
 class WorldRenderScene(
     val canvas: WorldCanvas, x: Int, y: Int, private val zoomLevel: Zooms, val world: WorldManager
 ) {
-    val xReset = 21
-    val yReset = 21
+    private val xReset = 21
+    private val yReset = 21
 
-    // distances
-    val dicoDistances = mutableMapOf<Pair<Int, Int>, Int>()
+    // permet de d'aller de plus en plus loin
+    var renderQueue: Queue<RenderInfos> = LinkedList()
+        private set
 
-    fun distance(x: Int, y: Int): Int {
-        return dicoDistances.getOrPut(Pair(x, y)) {
-            sqrt((x * x + y * y).toDouble()).toInt()
-        }
-    }
-
-    //private val spritesManagers = mutableListOf<InteractionSpriteManager>()
     private val multiTilesManagers = mutableListOf<MultiTilesManager>()
 
     var dicoTiles = mutableMapOf<Pair<Int, Int>, Tile>()
@@ -33,28 +26,20 @@ class WorldRenderScene(
 
     fun renderAll() {
         canvas.resetCanvas(41, 41)
-        currentTile.render(this, xReset, yReset)
+        currentTile.render(this, xReset, yReset, 0)
+        while (!renderQueue.isEmpty()) {
+            val tile = renderQueue.poll()
+            tile.render(this)
+        }
         val toDelete = mutableListOf<Tile>()
         for (tile in dicoTiles.values) {
-            if (tile is BaseTileGroup) {
-                if (tile.rendered) {
-                    tile.resetRecursive()
-                } else {
-                    toDelete.add(tile)
-                }
-            } else if (tile is MapTile) {
-                if (tile.rendered) {
-                    tile.resetRender()
-                } else {
-                    toDelete.add(tile)
-                }
+            if (tile.isRendered()) {
+                tile.resetRender()
+            } else {
+                toDelete.add(tile)
             }
         }
         toDelete.forEach { it.delete(this) }
-        //spritesManagers.forEach { it.getAllElements().forEach { sprite -> sprite.drawOn(image) } }
-        //thread {
-        //    spritesManagers.forEach { it.updateAfter() }
-        //}
     }
 
     fun moveUp() {

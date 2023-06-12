@@ -15,7 +15,10 @@ import org.javacord.api.entity.intent.Intent
 import java.io.IOException
 
 /**
- * Configuration du bot
+ * Configuration du bot. Separated by ";"
+ * 0. discord TOKEN
+ * 1. BDD
+ * 2. Dibistan bot API token
  */
 val config: SaveLocation<String> = SaveLocation(";", "/config.txt") { a: String -> a }
 

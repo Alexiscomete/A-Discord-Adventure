@@ -1,5 +1,6 @@
 package io.github.alexiscomete.lapinousecond.worlds.map.tiles.types
 
+import io.github.alexiscomete.lapinousecond.worlds.map.tiles.RenderInfos
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.Tile
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.WorldRenderScene
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.Sprite
@@ -33,50 +34,64 @@ class MapTile(
     }
 
     private var onCanvas = false
-    var rendered = false
-        private set
+    private var rendered = false
+    private var inQueue: Boolean = false
 
-    override fun renderRecursive(worldRenderScene: WorldRenderScene, xToUse: Int, yToUse: Int) {
+    override fun resetRender() {
+        onCanvas = false
+        rendered = false
+        inQueue = false
+    }
+
+    override fun isRendered(): Boolean {
+        return rendered
+    }
+
+    override fun render(worldRenderScene: WorldRenderScene, xToUse: Int, yToUse: Int, distance: Int) {
         if (rendered) return
         rendered = true
-        if (worldRenderScene.distance(xToUse, yToUse) > 50) return
+        if (distance > 50) return
         onCanvas = worldRenderScene.canvas.onCanvas(xToUse, yToUse)
         if (onCanvas) {
             (up ?: run {
                 worldRenderScene.getOrGenerateTileAt(x, y - 1).also {
                     up = it
                 }
-            }).renderRecursive(
+            }).addToRenderQueue(
                 worldRenderScene,
                 xToUse,
-                yToUse - 1
+                yToUse - 1,
+                distance + 1
             )
             (down ?: run {
                 worldRenderScene.getOrGenerateTileAt(x, y + 1).also {
                     down = it
                 }
-            }).renderRecursive(
+            }).addToRenderQueue(
                 worldRenderScene,
                 xToUse,
-                yToUse + 1
+                yToUse + 1,
+                distance + 1
             )
             (left ?: run {
                 worldRenderScene.getOrGenerateTileAt(x - 1, y).also {
                     left = it
                 }
-            }).renderRecursive(
+            }).addToRenderQueue(
                 worldRenderScene,
                 xToUse - 1,
-                yToUse
+                yToUse,
+                distance + 1
             )
             (right ?: run {
                 worldRenderScene.getOrGenerateTileAt(x + 1, y).also {
                     right = it
                 }
-            }).renderRecursive(
+            }).addToRenderQueue(
                 worldRenderScene,
                 xToUse + 1,
-                yToUse
+                yToUse,
+                distance + 1
             )
             sprites.forEach {
                 it.render(worldRenderScene, xToUse, yToUse)
@@ -85,13 +100,10 @@ class MapTile(
         }
     }
 
-    fun resetRender() {
-        onCanvas = false
-        rendered = false
-    }
-
-    override fun render(worldRenderScene: WorldRenderScene, x: Int, y: Int) {
-        renderRecursive(worldRenderScene, x, y)
+    override fun addToRenderQueue(worldRenderScene: WorldRenderScene, x: Int, y: Int, distance: Int) {
+        if (inQueue || distance > 50) return
+        worldRenderScene.renderQueue.add(RenderInfos(this, x, y, distance))
+        inQueue = true
     }
 
     override fun letter(): Char {

@@ -3,7 +3,7 @@
  */
 
 plugins {
-    id("org.jetbrains.kotlin.jvm") version "1.7.0"
+    id("org.jetbrains.kotlin.jvm") version "1.8.22"
     application
     `maven-publish`
 }
@@ -20,13 +20,13 @@ repositories {
 }
 
 dependencies {
-    implementation("org.javacord:javacord:3.7.0")
-    implementation("org.xerial:sqlite-jdbc:3.40.0.0")
-    implementation("org.json:json:20220924")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.7.0")
+    implementation("org.javacord:javacord:3.8.0")
+    implementation("org.xerial:sqlite-jdbc:3.42.0.0")
+    implementation("org.json:json:20230227")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.8.22")
     implementation("com.github.Alexiscomete:procedural_generation:1-ALPHA.2")
-    testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.0-Beta")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.9.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1")
 }
 
 application {

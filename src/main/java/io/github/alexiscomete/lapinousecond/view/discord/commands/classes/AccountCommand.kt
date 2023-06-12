@@ -45,18 +45,18 @@ class AccountCommandBase : Command(
 
 fun getUser(id: Long): String? {
     try {
-        val connection =
-            URL("https://dirtybiology.captaincommand.repl.co/api/?authorization=${config.content[2]}&request=getInfosByDiscordId&datas=%7B%22discordId%22:%22$id%22%7D").openConnection() as HttpURLConnection
-        connection.connectTimeout = 5000
-        connection.readTimeout = 5000
-        connection.requestMethod = "GET"
-        var response = ""
-        val scanner = Scanner(connection.inputStream)
-        if (scanner.hasNextLine()) {
-            response += scanner.nextLine()
-        }
-        scanner.close()
-        return response
+        // val connection =
+        //     URL("https://dirtybiology.captaincommand.repl.co/api/?authorization=${config.content[2]}&request=getInfosByDiscordId&datas=%7B%22discordId%22:%22$id%22%7D").openConnection() as HttpURLConnection
+        // connection.connectTimeout = 5000
+        // connection.readTimeout = 5000
+        // connection.requestMethod = "GET"
+        // var response = ""
+        // val scanner = Scanner(connection.inputStream)
+        // if (scanner.hasNextLine()) {
+        //     response += scanner.nextLine()
+        // }
+        // scanner.close()
+        // return response
     } catch (e: IOException) {
         e.printStackTrace()
     }
@@ -184,7 +184,10 @@ class AccountCommandStart : SubCommand(
                 "Signalement",
                 "Les serveurs sont uniquement sur le thème du **Dibistan**. Si vous voyez malgré tout un abus signalez le sur le **serveur principal du bot**."
             )
-            .addField("Commençons le tuto", "> (???) : Bonjour ! Je suis **Aurimezi**, je suis ton nouveau inventaire. Ce n'est pas tout les jours qu'on achète un inventaire. Voyons voir ce qu'on a là ...\n\nUtilisez `/inv resource`")
+            .addField(
+                "Commençons le tuto",
+                "> (???) : Bonjour ! Je suis **Aurimezi**, je suis ton nouveau inventaire. Ce n'est pas tout les jours qu'on achète un inventaire. Voyons voir ce qu'on a là ...\n\nUtilisez `/inv resource`"
+            )
         if (content == "") {
             slashCommand.createImmediateResponder()
                 .addEmbed(embed)
