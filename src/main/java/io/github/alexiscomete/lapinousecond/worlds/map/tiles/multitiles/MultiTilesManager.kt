@@ -1,5 +1,7 @@
 package io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles
 
+import io.github.alexiscomete.lapinousecond.worlds.map.tiles.WorldRenderScene
+
 /**
  * Permet de gérer les groupes de tiles qui forment une structure. Par exemple, cela peut être un pont, un portail de téléportation, une maison, etc.
  */
@@ -21,7 +23,7 @@ interface MultiTilesManager {
     /**
      * Permet de supprimer toutes les tiles de l'objet complex.
      */
-    fun removeAllTiles()
+    fun removeAllTiles(worldRenderScene: WorldRenderScene)
 
     /**
      * Permet à une tile de dire à l'objet complex "Salut ! Merci de ne pas me supprimer !", ainsi l'objet complex ne sera pas supprimé après un appel à canBeRemoved().
@@ -30,7 +32,8 @@ interface MultiTilesManager {
      */
     fun iAmLoaded()
 
-    fun delete()
+    fun delete(worldRenderScene: WorldRenderScene)
 
-    fun unload()
+    fun unload(worldRenderScene: WorldRenderScene)
+    fun resetIAmLoaded()
 }

@@ -1,81 +1,114 @@
 package io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.templating.managers
 
+import io.github.alexiscomete.lapinousecond.worlds.map.tiles.WorldRenderScene
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.ComplexTile
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.MultiTilesManager
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.templating.contexts.TemplateWorld
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.templating.tiles.WhiteFloorOpenedTTile
 
 class EmptyRoom(
-    val size: Int,
-    val templateWorld: TemplateWorld,
+    private val size: Int,
+    private val templateWorld: TemplateWorld,
     val x: Int,
     val y: Int
 ) : MultiTilesManager {
-    private val dicoTilesExt = mutableMapOf<Pair<Int, Int>, ComplexTile>()
     private val dicoTilesInt = mutableMapOf<Pair<Int, Int>, ComplexTile>()
-    val door = WhiteFloorOpenedTTile(x, y)
+    private val door = WhiteFloorOpenedTTile(x, y)
+    private var isLoaded = false
 
     override fun load() {
+        dicoTilesInt[Pair(x, y)] = door
         // STEP 1 - load all
-        for (i in 1 until size + 1) {
+        for (i in -size/2 until size/2 + 1) {
             for (j in 1 until size + 1) {
-                val tile = WhiteFloorOpenedTTile(x + i, y + j)
-                dicoTilesExt[Pair(i, j)] = tile
+                val x = x + i
+                val y = y + j
+                val tile = WhiteFloorOpenedTTile(x, y)
+                dicoTilesInt[Pair(i, j)] = tile
+                /* CONCEPT
+                 WWWW
+                WXXXX
+                WXXX
+                WXX
+                WX
+                 */
+                val tileUp = dicoTilesInt[Pair(x, y - 1)] ?: templateWorld.getTile().also {
+                    dicoTilesInt[Pair(x, y - 1)] = it
+                }
+                tile.up = tileUp
+                tileUp.down = tile
+                val tileLeft = dicoTilesInt[Pair(x - 1, y)] ?: templateWorld.getTile().also {
+                    dicoTilesInt[Pair(x - 1, y)] = it
+                }
+                tile.left = tileLeft
+                tileLeft.right = tile
+                // ---
+                if (j == size) {
+                    val tileDown = dicoTilesInt[Pair(x, y + 1)] ?: templateWorld.getTile().also {
+                        dicoTilesInt[Pair(x, y + 1)] = it
+                    }
+                    tile.down = tileDown
+                    tileDown.up = tile
+                }
+                if (i == -size/2) {
+                    val tileRight = dicoTilesInt[Pair(x + 1, y)] ?: templateWorld.getTile().also {
+                        dicoTilesInt[Pair(x + 1, y)] = it
+                    }
+                    tile.right = tileRight
+                    tileRight.left = tile
+                }
             }
         }
-        // STEP 2 - load connections between tiles
-        for (tile in dicoTilesExt.values) {
-            val x = tile.x
-            val y = tile.y
-            val tileUp = dicoTilesExt[Pair(x, y - 1)] ?: WhiteWallOpenedTTile(x, y - 1).also {
-                dicoTilesExt[Pair(x, y - 1)] = it
-            }
-            tile.up = tileUp
-            tileUp.down = tile
-            val tileDown = dicoTilesExt[Pair(x, y + 1)] ?: WhiteWallOpenedTTile(x, y + 1).also {
-                dicoTilesExt[Pair(x, y + 1)] = it
-            }
-            tile.down = tileDown
-            tileDown.up = tile
-            val tileLeft = dicoTilesExt[Pair(x - 1, y)] ?: WhiteWallOpenedTTile(x - 1, y).also {
-                dicoTilesExt[Pair(x - 1, y)] = it
-            }
-            tile.left = tileLeft
-            tileLeft.right = tile
-            val tileRight = dicoTilesExt[Pair(x + 1, y)] ?: WhiteWallOpenedTTile(x + 1, y).also {
-                dicoTilesExt[Pair(x + 1, y)] = it
-            }
-            tile.right = tileRight
-            tileRight.left = tile
-        }
-        // TODO - optimiser en ne faisant pas les 4 directions
     }
 
     override fun baseTileAt(x: Int, y: Int): ComplexTile {
-        return dicoTilesExt[Pair(x, y)] ?: (throw IllegalArgumentException("Not in the room"))
+        return if (x == this.x && y == this.y) {
+            door
+        } else {
+            throw Exception("No EXT tile at $x, $y")
+        }
     }
 
     override fun hasTileAt(x: Int, y: Int): Boolean {
-        return dicoTilesExt.containsKey(Pair(x, y))
+        return x == this.x && y == this.y
     }
 
     override fun canBeRemoved(): Boolean {
-        TODO("Not yet implemented")
+        return !isLoaded
     }
 
-    override fun removeAllTiles() {
-        TODO("Not yet implemented")
+    override fun removeAllTiles(worldRenderScene: WorldRenderScene) {
+        dicoTilesInt.forEach { (_, tile) ->
+            tile.delete(worldRenderScene)
+        }
+        dicoTilesInt.clear()
     }
 
     override fun iAmLoaded() {
-        TODO("Not yet implemented")
+        isLoaded = true
     }
 
-    override fun delete() {
-        TODO("Not yet implemented")
+    override fun resetIAmLoaded() {
+        isLoaded = false
     }
 
-    override fun unload() {
-        TODO("Not yet implemented")
+    override fun delete(worldRenderScene: WorldRenderScene) {
+        removeAllTiles(worldRenderScene)
+    }
+
+    override fun unload(worldRenderScene: WorldRenderScene) {
+        val up = door.up
+        val down = door.down
+        val left = door.left
+        val right = door.right
+        dicoTilesInt.forEach { (_, tile) ->
+            tile.delete(worldRenderScene)
+        }
+        dicoTilesInt.clear()
+        dicoTilesInt[Pair(x, y)] = door
+        door.up = up
+        door.down = down
+        door.left = left
+        door.right = right
     }
 }
