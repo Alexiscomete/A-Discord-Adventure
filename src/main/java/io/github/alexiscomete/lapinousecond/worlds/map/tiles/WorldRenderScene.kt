@@ -3,6 +3,8 @@ package io.github.alexiscomete.lapinousecond.worlds.map.tiles
 import io.github.alexiscomete.lapinousecond.worlds.WorldManager
 import io.github.alexiscomete.lapinousecond.worlds.Zooms
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.MultiTilesManager
+import io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.templating.contexts.TemplateWorld
+import io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.templating.managers.EmptyRoom
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.WorldCanvas
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.MapTile
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.TreeTrunk
@@ -40,6 +42,15 @@ class WorldRenderScene(
             }
         }
         toDelete.forEach { it.delete(this) }
+        val toDelete2 = mutableListOf<MultiTilesManager>()
+        multiTilesManagers.forEach {
+            if (it.canBeRemoved()) {
+                it.delete(this)
+                toDelete2.add(it)
+            }
+            it.resetIAmLoaded()
+        }
+        toDelete2.forEach { multiTilesManagers.remove(it) }
     }
 
     fun moveUp() {
@@ -67,26 +78,32 @@ class WorldRenderScene(
         multiTilesManagers.forEach { if (it.hasTileAt(x, y)) tile = it.baseTileAt(x, y) }
         if (tile != null) return tile!!
         return dicoTiles.getOrPut(Pair(x, y)) {
-            if (
-                (0..30).random() == 0
-                && world.getHeight(x, y, zoomLevel) > 0.5
-                && zoomLevel == Zooms.ZOOM_IN
-                && world.pathLevel(x.toDouble(), y.toDouble()) > 0.8
-                && world.riverLevel(x.toDouble(), y.toDouble()) > 0.8
-            ) {
-                TreeTrunk(x, y, 2)
-            } else {
-                if (zoomLevel == Zooms.ZOOM_IN) {
-                    MapTile(
-                        x,
-                        y,
-                        world.getHeight(x, y, zoomLevel),
-                        world.isPath(x.toDouble(), y.toDouble()),
-                        world.isRiver(x.toDouble(), y.toDouble())
-                    )
-                } else {
-                    MapTile(x, y, world.getHeight(x, y, zoomLevel))
+            if (zoomLevel == Zooms.ZOOM_IN) {
+                when ((0..30).random()) {
+                    0 -> {
+                        if (
+                            world.getHeight(x, y, zoomLevel) > 0.5
+                            && world.pathLevel(x.toDouble(), y.toDouble()) > 0.8
+                            && world.riverLevel(x.toDouble(), y.toDouble()) > 0.8
+                        ) {
+                            return TreeTrunk(x, y, 2)
+                        }
+                    }
+                    1 -> {
+                        val manager = EmptyRoom(6, TemplateWorld.WHITE, x, y)
+                        multiTilesManagers.add(manager)
+                        return manager.baseTileAt(x, y)
+                    }
                 }
+                MapTile(
+                    x,
+                    y,
+                    world.getHeight(x, y, zoomLevel),
+                    world.isPath(x.toDouble(), y.toDouble()),
+                    world.isRiver(x.toDouble(), y.toDouble())
+                )
+            } else {
+                MapTile(x, y, world.getHeight(x, y, zoomLevel))
             }
         }
     }

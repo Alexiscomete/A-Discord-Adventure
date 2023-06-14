@@ -1,9 +1,12 @@
 package io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.templating.tiles
 
+import io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.MultiTilesManager
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.textures.Textures
 import java.awt.Color
 
-class NullClosedTTile(x: Int, y: Int) : BaseClosedTemplatedTile(x, y) {
+class NullClosedTTile(x: Int, y: Int, multiTilesManager: MultiTilesManager) : BaseClosedTemplatedTile(x, y,
+    multiTilesManager
+) {
     override fun letter(): Char {
         return 'N'
     }

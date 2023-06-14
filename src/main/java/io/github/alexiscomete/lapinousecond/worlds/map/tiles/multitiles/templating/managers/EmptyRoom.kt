@@ -13,7 +13,7 @@ class EmptyRoom(
     val y: Int
 ) : MultiTilesManager {
     private val dicoTilesInt = mutableMapOf<Pair<Int, Int>, ComplexTile>()
-    private val door = WhiteFloorOpenedTTile(x, y)
+    private val door = WhiteFloorOpenedTTile(x, y, this)
     private var isLoaded = false
 
     override fun load() {
@@ -23,7 +23,7 @@ class EmptyRoom(
             for (j in 1 until size + 1) {
                 val x = x + i
                 val y = y + j
-                val tile = WhiteFloorOpenedTTile(x, y)
+                val tile = WhiteFloorOpenedTTile(x, y, this)
                 dicoTilesInt[Pair(i, j)] = tile
                 /* CONCEPT
                  WWWW
@@ -32,26 +32,26 @@ class EmptyRoom(
                 WXX
                 WX
                  */
-                val tileUp = dicoTilesInt[Pair(x, y - 1)] ?: templateWorld.getTile().also {
+                val tileUp = dicoTilesInt[Pair(x, y - 1)] ?: templateWorld.getTile(this).also {
                     dicoTilesInt[Pair(x, y - 1)] = it
                 }
                 tile.up = tileUp
                 tileUp.down = tile
-                val tileLeft = dicoTilesInt[Pair(x - 1, y)] ?: templateWorld.getTile().also {
+                val tileLeft = dicoTilesInt[Pair(x - 1, y)] ?: templateWorld.getTile(this).also {
                     dicoTilesInt[Pair(x - 1, y)] = it
                 }
                 tile.left = tileLeft
                 tileLeft.right = tile
                 // ---
                 if (j == size) {
-                    val tileDown = dicoTilesInt[Pair(x, y + 1)] ?: templateWorld.getTile().also {
+                    val tileDown = dicoTilesInt[Pair(x, y + 1)] ?: templateWorld.getTile(this).also {
                         dicoTilesInt[Pair(x, y + 1)] = it
                     }
                     tile.down = tileDown
                     tileDown.up = tile
                 }
                 if (i == -size/2) {
-                    val tileRight = dicoTilesInt[Pair(x + 1, y)] ?: templateWorld.getTile().also {
+                    val tileRight = dicoTilesInt[Pair(x + 1, y)] ?: templateWorld.getTile(this).also {
                         dicoTilesInt[Pair(x + 1, y)] = it
                     }
                     tile.right = tileRight

@@ -4,10 +4,12 @@ import io.github.alexiscomete.lapinousecond.worlds.map.tiles.RenderInfos
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.Tile
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.WorldRenderScene
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.ComplexTile
+import io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.MultiTilesManager
 
 abstract class BaseOpenedTemplatedTile(
     override val x: Int,
-    override val y: Int
+    override val y: Int,
+    private val multiTilesManager: MultiTilesManager
 ) : TemplatedTile {
     override var up: Tile? = null
     override var down: Tile? = null
@@ -28,6 +30,7 @@ abstract class BaseOpenedTemplatedTile(
     override fun render(worldRenderScene: WorldRenderScene, xToUse: Int, yToUse: Int, distance: Int) {
         if (rendered) return
         rendered = true
+        multiTilesManager.iAmLoaded()
         if (distance > 50) return
         up?.addToRenderQueue(worldRenderScene, xToUse, yToUse - 1, distance + 1)
         down?.addToRenderQueue(worldRenderScene, xToUse, yToUse + 1, distance + 1)
