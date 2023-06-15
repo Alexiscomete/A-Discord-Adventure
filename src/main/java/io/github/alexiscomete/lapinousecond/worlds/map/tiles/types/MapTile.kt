@@ -112,7 +112,10 @@ class MapTile(
             in 0.3..0.5 -> '~'
             in 0.5..0.7 -> if (isPath) '#' else ','
             in 0.7..1.0 -> if (isPath) '#' else '^'
-            else -> ' '
+            else -> {
+                println("Error: height $height is not in range [0.0, 1.0]")
+                ' '
+            }
         }
     }
 

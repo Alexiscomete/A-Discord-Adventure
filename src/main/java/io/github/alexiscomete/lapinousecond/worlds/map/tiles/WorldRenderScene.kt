@@ -13,8 +13,9 @@ import java.util.*
 class WorldRenderScene(
     val canvas: WorldCanvas, x: Int, y: Int, private val zoomLevel: Zooms, val world: WorldManager
 ) {
-    private val xReset = 21
-    private val yReset = 21
+    private val size = 21
+    private val xReset = (size / 2 + 1)
+    private val yReset = (size / 2 + 1)
 
     // permet de d'aller de plus en plus loin
     var renderQueue: Queue<RenderInfos> = LinkedList()
@@ -27,7 +28,7 @@ class WorldRenderScene(
     private var currentTile = getOrGenerateTileAt(x, y)
 
     fun renderAll() {
-        canvas.resetCanvas(41, 41)
+        canvas.resetCanvas(size, size)
         currentTile.render(this, xReset, yReset, 0)
         while (!renderQueue.isEmpty()) {
             val tile = renderQueue.poll()
