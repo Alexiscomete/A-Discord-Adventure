@@ -90,6 +90,7 @@ class WorldRenderScene(
                             return TreeTrunk(x, y, 2)
                         }
                     }
+
                     1 -> {
                         val manager = EmptyRoom(6, TemplateWorld.WHITE, x, y)
                         multiTilesManagers.add(manager)

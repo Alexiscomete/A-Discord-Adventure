@@ -19,7 +19,7 @@ class EmptyRoom(
     override fun load() {
         dicoTilesInt[Pair(x, y)] = door
         // STEP 1 - load all
-        for (i in -size/2 until size/2 + 1) {
+        for (i in -size / 2 until size / 2 + 1) {
             for (j in 1 until size + 1) {
                 val x = x + i
                 val y = y + j
@@ -50,7 +50,7 @@ class EmptyRoom(
                     tile.down = tileDown
                     tileDown.up = tile
                 }
-                if (i == -size/2) {
+                if (i == -size / 2) {
                     val tileRight = dicoTilesInt[Pair(x + 1, y)] ?: templateWorld.getTile(this).also {
                         dicoTilesInt[Pair(x + 1, y)] = it
                     }
@@ -86,14 +86,20 @@ class EmptyRoom(
 
     override fun iAmLoaded() {
         isLoaded = true
+        println("iAmLoaded")
     }
 
     override fun resetIAmLoaded() {
+        println("resetIAmLoaded")
         isLoaded = false
+        dicoTilesInt.forEach { (_, u) ->
+            u.resetRender()
+        }
     }
 
     override fun delete(worldRenderScene: WorldRenderScene) {
         removeAllTiles(worldRenderScene)
+        println("deleted")
     }
 
     override fun unload(worldRenderScene: WorldRenderScene) {
