@@ -24,7 +24,7 @@ class EmptyRoom(
                 val x = x + i
                 val y = y + j
                 val tile = WhiteFloorOpenedTTile(x, y, this)
-                dicoTilesInt[Pair(i, j)] = tile
+                dicoTilesInt[Pair(x, y)] = tile
                 /* CONCEPT
                  WWWW
                 WXXXX
