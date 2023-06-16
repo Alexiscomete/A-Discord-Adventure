@@ -94,6 +94,7 @@ class WorldRenderScene(
                     1 -> {
                         val manager = EmptyRoom(6, TemplateWorld.WHITE, x, y)
                         multiTilesManagers.add(manager)
+                        manager.load()
                         return manager.baseTileAt(x, y)
                     }
                 }
