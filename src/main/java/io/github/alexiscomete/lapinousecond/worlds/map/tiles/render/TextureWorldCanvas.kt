@@ -38,6 +38,17 @@ class TextureWorldCanvas : WorldCanvas {
         }
     }
 
+    override fun justDrawThisOver(justDrawIt: JustDrawIt, x: Int, y: Int) {
+        if (y < 0 || y >= currentHeight || x < 0 || x >= currentWidth) return
+        val colors = justDrawIt.texture
+        for (i in 0..15) {
+            for (j in 0..15) {
+                bufferedImage.setRGB(x * 16 + i, y * 16 + j, colors[j][i].rgb)
+                priorityMap[y * 16 + j][x * 16 + i] = 0
+            }
+        }
+    }
+
     override fun resetCanvas(newW: Int, newH: Int) {
         currentHeight = newH
         currentWidth = newH
@@ -46,6 +57,6 @@ class TextureWorldCanvas : WorldCanvas {
     }
 
     override fun onCanvas(x: Int, y: Int): Boolean {
-        return y >= 0 && y < currentHeight && x >= 0 && x < currentWidth
+        return y in 0 until currentHeight && x in 0 until currentWidth
     }
 }

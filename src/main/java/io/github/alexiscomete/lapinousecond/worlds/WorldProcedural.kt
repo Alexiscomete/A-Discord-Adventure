@@ -87,7 +87,13 @@ class WorldProcedural(
         if (player["place_${worldNameInDatabase}_zoom"] == "") {
             player["place_${worldNameInDatabase}_zoom"] = Zooms.ZOOM_OUT.name
         }
-        if (player["place_${worldNameInDatabase}_zoom"] != zoneToAdapt.zoom.name) {
+        if (player["place_${worldNameInDatabase}_zoom"] == zoneToAdapt.zoom.name) {
+            image0.setRGB(
+                player["place_${worldNameInDatabase}_x"].toInt() - zoneToAdapt.x,
+                player["place_${worldNameInDatabase}_y"].toInt() - zoneToAdapt.y,
+                Color.RED.rgb
+            )
+        } else {
             val (x, y) = try {
                 zoneToAdapt.zoom.zoomInTo(
                     Zooms.valueOf(player["place_${worldNameInDatabase}_zoom"]),
@@ -102,12 +108,6 @@ class WorldProcedural(
                 )
             }
             image0.setRGB(x - zoneToAdapt.x, y - zoneToAdapt.y, Color.RED.rgb)
-        } else {
-            image0.setRGB(
-                player["place_${worldNameInDatabase}_x"].toInt() - zoneToAdapt.x,
-                player["place_${worldNameInDatabase}_y"].toInt() - zoneToAdapt.y,
-                Color.RED.rgb
-            )
         }
     }
 

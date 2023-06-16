@@ -21,6 +21,11 @@ class TerminalWorldCanvas : WorldCanvas {
         canvas[y][x] = Pair(sprite.letter(), priority)
     }
 
+    override fun justDrawThisOver(justDrawIt: JustDrawIt, x: Int, y: Int) {
+        if (y < 0 || y >= canvas.size || x < 0 || x >= sizeArray) return
+        canvas[y][x] = Pair(justDrawIt.letter, 0)
+    }
+
     override fun resetCanvas(newW: Int, newH: Int) {
         canvas = Array(newH) { Array(newW) { Pair(' ', 0) } }
         sizeArray = newW

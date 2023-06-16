@@ -9,16 +9,19 @@ import io.github.alexiscomete.lapinousecond.view.ui.playerui.Question
 import io.github.alexiscomete.lapinousecond.worlds.WorldEnum
 import io.github.alexiscomete.lapinousecond.worlds.Zooms
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.WorldRenderScene
+import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.JustDrawIt
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.TextureWorldCanvas
+import java.awt.Color
 import java.awt.image.BufferedImage
 
 class PixelByPixelUI(
-    private var playerUI: PlayerUI,
-    private var linkedImage: String?
+    private var playerUI: PlayerUI, private var linkedImage: String?
 ) : LongCustomUI {
 
     private var title: String = "Pixel by pixel"
     private var description = "Move with buttons"
+    private val justDrawPlayer =
+        JustDrawIt(letter = 'P', color = Color.RED, texture = Array(16) { Array(16) { Color.RED } })
 
     private val player
         get() = playerUI.getPlayer()
@@ -59,11 +62,7 @@ class PixelByPixelUI(
 
     private val canvas = TextureWorldCanvas()
     private var worldRenderScene: WorldRenderScene = WorldRenderScene(
-        canvas,
-        x,
-        y,
-        zooms,
-        world.worldManager
+        canvas, x, y, zooms, world.worldManager
     )
 
     override fun getTitle(): String {
@@ -99,7 +98,10 @@ class PixelByPixelUI(
 
     override fun getBufferedImage(): BufferedImage {
         worldRenderScene.renderAll()
-        return world.zoomWithDecorElementsSquare(x, y, 25, zooms, canvas.bufferedImage, player)
+        canvas.justDrawThisOver(
+            justDrawPlayer, worldRenderScene.size / 2, worldRenderScene.size / 2
+        )
+        return world.zoomWithDecorElementsSquare(x, y, worldRenderScene.size / 2, zooms, canvas.bufferedImage, player)
     }
 
     override fun setBufferedImage(bufferedImage: BufferedImage?): LongCustomUI {
@@ -116,26 +118,16 @@ class PixelByPixelUI(
 
     private var interactionUICustomUILists: List<List<InteractionUICustomUI>> = listOf(
         listOf(
-            SimpleInteractionUICustomUI(
-                "zoom_in",
-                "🔍",
-                "Zoom in",
-                InteractionStyle.SECONDARY,
-                {
-                    zooms = zooms.next ?: run {
-                        playerUI.addMessage(Message("Le monde microscopique n'est pas encore implémenté", "Problème"))
-                        zooms
-                    }
-                    worldRenderScene = WorldRenderScene(
-                        canvas,
-                        x,
-                        y,
-                        zooms,
-                        world.worldManager
-                    )
-                    return@SimpleInteractionUICustomUI null
+            SimpleInteractionUICustomUI("zoom_in", "🔍", "Zoom in", InteractionStyle.SECONDARY, {
+                zooms = zooms.next ?: run {
+                    playerUI.addMessage(Message("Le monde microscopique n'est pas encore implémenté", "Problème"))
+                    zooms
                 }
-            ),
+                worldRenderScene = WorldRenderScene(
+                    canvas, x, y, zooms, world.worldManager
+                )
+                return@SimpleInteractionUICustomUI null
+            }),
             SimpleInteractionUICustomUI(
                 "up",
                 "⬆",
@@ -147,26 +139,16 @@ class PixelByPixelUI(
                     return@SimpleInteractionUICustomUI null
                 },
             ),
-            SimpleInteractionUICustomUI(
-                "zoom_out",
-                "🚁",
-                "Zoom out",
-                InteractionStyle.SECONDARY,
-                {
-                    zooms = zooms.before ?: run {
-                        playerUI.addMessage(Message("Le monde des géants n'est pas encore implémenté", "Problème"))
-                        zooms
-                    }
-                    worldRenderScene = WorldRenderScene(
-                        canvas,
-                        x,
-                        y,
-                        zooms,
-                        world.worldManager
-                    )
-                    return@SimpleInteractionUICustomUI null
+            SimpleInteractionUICustomUI("zoom_out", "🚁", "Zoom out", InteractionStyle.SECONDARY, {
+                zooms = zooms.before ?: run {
+                    playerUI.addMessage(Message("Le monde des géants n'est pas encore implémenté", "Problème"))
+                    zooms
                 }
-            ),
+                worldRenderScene = WorldRenderScene(
+                    canvas, x, y, zooms, world.worldManager
+                )
+                return@SimpleInteractionUICustomUI null
+            }),
         ),
         listOf(
             SimpleInteractionUICustomUI(
@@ -179,8 +161,7 @@ class PixelByPixelUI(
                     worldRenderScene.moveLeft()
                     return@SimpleInteractionUICustomUI null
                 },
-            ),
-            SimpleInteractionUICustomUI(
+            ), SimpleInteractionUICustomUI(
                 "down",
                 "⬇",
                 "Move down",
@@ -190,8 +171,7 @@ class PixelByPixelUI(
                     worldRenderScene.moveDown()
                     return@SimpleInteractionUICustomUI null
                 },
-            ),
-            SimpleInteractionUICustomUI(
+            ), SimpleInteractionUICustomUI(
                 "right",
                 "➡",
                 "Move right",

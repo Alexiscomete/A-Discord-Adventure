@@ -13,7 +13,7 @@ import java.util.*
 class WorldRenderScene(
     val canvas: WorldCanvas, x: Int, y: Int, private val zoomLevel: Zooms, val world: WorldManager
 ) {
-    private val size = 21
+    val size = 21
     private val xReset = (size / 2 + 1)
     private val yReset = (size / 2 + 1)
 

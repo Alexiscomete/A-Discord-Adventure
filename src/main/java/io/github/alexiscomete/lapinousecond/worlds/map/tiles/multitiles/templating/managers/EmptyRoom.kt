@@ -86,11 +86,9 @@ class EmptyRoom(
 
     override fun iAmLoaded() {
         isLoaded = true
-        println("iAmLoaded")
     }
 
     override fun resetIAmLoaded() {
-        println("resetIAmLoaded")
         isLoaded = false
         dicoTilesInt.forEach { (_, u) ->
             u.resetRender()
@@ -99,7 +97,6 @@ class EmptyRoom(
 
     override fun delete(worldRenderScene: WorldRenderScene) {
         removeAllTiles(worldRenderScene)
-        println("deleted")
     }
 
     override fun unload(worldRenderScene: WorldRenderScene) {
