@@ -13,7 +13,7 @@ class EmptyRoom(
     val y: Int
 ) : MultiTilesManager {
     private val dicoTilesInt = mutableMapOf<Pair<Int, Int>, ComplexTile>()
-    private val door = WhiteFloorOpenedTTile(x, y, this)
+    private val door = WhiteFloorOpenedTTile(x, y, this, 1)
     private var isLoaded = false
 
     override fun load() {

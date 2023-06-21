@@ -9,7 +9,8 @@ import io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.MultiTil
 abstract class BaseOpenedTemplatedTile(
     override val x: Int,
     override val y: Int,
-    private val multiTilesManager: MultiTilesManager
+    private val multiTilesManager: MultiTilesManager,
+    private val threshold: Int
 ) : TemplatedTile {
     override var up: Tile? = null
     override var down: Tile? = null
@@ -31,15 +32,16 @@ abstract class BaseOpenedTemplatedTile(
         if (rendered) return
         rendered = true
         multiTilesManager.iAmLoaded()
-        if (distance > 50) return
-        up?.addToRenderQueue(worldRenderScene, xToUse, yToUse - 1, distance + 1)
-        down?.addToRenderQueue(worldRenderScene, xToUse, yToUse + 1, distance + 1)
-        left?.addToRenderQueue(
-            worldRenderScene, xToUse - 1, yToUse, distance + 1
-        )
-        right?.addToRenderQueue(
-            worldRenderScene, xToUse + 1, yToUse, distance + 1
-        )
+        if (distance <= threshold) {
+            up?.addToRenderQueue(worldRenderScene, xToUse, yToUse - 1, distance + 1)
+            down?.addToRenderQueue(worldRenderScene, xToUse, yToUse + 1, distance + 1)
+            left?.addToRenderQueue(
+                worldRenderScene, xToUse - 1, yToUse, distance + 1
+            )
+            right?.addToRenderQueue(
+                worldRenderScene, xToUse + 1, yToUse, distance + 1
+            )
+        }
         worldRenderScene.canvas.drawTile(this, xToUse, yToUse, 0)
     }
 
