@@ -14,8 +14,8 @@ class WorldRenderScene(
     val canvas: WorldCanvas, x: Int, y: Int, private val zoomLevel: Zooms, val world: WorldManager
 ) {
     val size = 21
-    private val xReset = (size / 2 + 1)
-    private val yReset = (size / 2 + 1)
+    val xReset = (size / 2 + 1)
+    val yReset = (size / 2 + 1)
 
     // permet de d'aller de plus en plus loin
     var renderQueue: Queue<RenderInfos> = LinkedList()
@@ -54,6 +54,8 @@ class WorldRenderScene(
         toDelete2.forEach { multiTilesManagers.remove(it) }
     }
 
+    // ATTENTION : les cases vides d'une pièce nous sortent des pièces
+
     fun moveUp() {
         val next = currentTile.up ?: getOrGenerateTileAt(currentTile.x, currentTile.y - 1)
         if (next.isWalkable()) currentTile = next
@@ -74,6 +76,8 @@ class WorldRenderScene(
         if (next.isWalkable()) currentTile = next
     }
 
+    var isShowed: Boolean = false
+
     fun getOrGenerateTileAt(x: Int, y: Int): Tile {
         var tile: Tile? = null
         multiTilesManagers.forEach { if (it.hasTileAt(x, y)) tile = it.baseTileAt(x, y) }
@@ -92,10 +96,13 @@ class WorldRenderScene(
                     }
 
                     1 -> {
-                        val manager = EmptyRoom(6, TemplateWorld.WHITE, x, y)
-                        multiTilesManagers.add(manager)
-                        manager.load()
-                        return manager.baseTileAt(x, y)
+                        if (!isShowed) {
+                            val manager = EmptyRoom(6, TemplateWorld.WHITE, x, y)
+                            multiTilesManagers.add(manager)
+                            manager.load()
+                            isShowed = true
+                            return manager.baseTileAt(x, y)
+                        }
                     }
                 }
                 MapTile(

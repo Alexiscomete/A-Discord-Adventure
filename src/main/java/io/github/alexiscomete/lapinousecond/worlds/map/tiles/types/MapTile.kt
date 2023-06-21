@@ -23,10 +23,18 @@ class MapTile(
 
     override fun delete(worldRenderScene: WorldRenderScene) {
         worldRenderScene.dicoTiles.remove(Pair(x, y))
-        up?.down = null
-        down?.up = null
-        left?.right = null
-        right?.left = null
+        up?.also {
+            if (this == it.down) it.down = null
+        }
+        down?.also {
+            if (this == it.up) it.up = null
+        }
+        left?.also {
+            if (this == it.right) it.right = null
+        }
+        right?.also {
+            if (this == it.left) it.left = null
+        }
         up = null
         down = null
         left = null

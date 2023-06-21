@@ -3,8 +3,10 @@ package world
 import io.github.alexiscomete.lapinousecond.worlds.WorldEnum
 import io.github.alexiscomete.lapinousecond.worlds.Zooms
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.WorldRenderScene
+import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.JustDrawIt
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.TerminalWorldCanvas
 import org.junit.jupiter.api.Test
+import java.awt.Color
 
 class CacheTest {
 
@@ -50,6 +52,11 @@ fun main() {
     var input = ""
     while (input != "quit") {
         view.renderAll()
+        canvas.justDrawThisOver(
+            JustDrawIt('X', Color(255, 0, 0), arrayOf(arrayOf(Color(255, 0, 0)))),
+            view.xReset,
+            view.yReset
+        )
         canvas.printlnCanvas()
         input = readlnOrNull() ?: ""
         when (input) {
