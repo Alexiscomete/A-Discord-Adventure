@@ -50,7 +50,7 @@ class EmptyRoom(
                     tile.down = tileDown
                     tileDown.up = tile
                 }
-                if (i == -size / 2) {
+                if (i == size / 2) {
                     val tileRight = dicoTilesInt[Pair(x + 1, y)] ?: templateWorld.getTile(this).also {
                         dicoTilesInt[Pair(x + 1, y)] = it
                     }
