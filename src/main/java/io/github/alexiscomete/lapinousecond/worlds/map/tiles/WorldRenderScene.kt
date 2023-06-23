@@ -76,7 +76,7 @@ class WorldRenderScene(
         if (next.isWalkable()) currentTile = next
     }
 
-    var isShowed: Boolean = false
+    private var isShowed: Boolean = false
 
     fun getOrGenerateTileAt(x: Int, y: Int): Tile {
         var tile: Tile? = null
@@ -91,7 +91,7 @@ class WorldRenderScene(
                             && world.pathLevel(x.toDouble(), y.toDouble()) > 0.8
                             && world.riverLevel(x.toDouble(), y.toDouble()) > 0.8
                         ) {
-                            return TreeTrunk(x, y, 2)
+                            return@getOrPut TreeTrunk(x, y, 2)
                         }
                     }
 
@@ -101,7 +101,7 @@ class WorldRenderScene(
                             multiTilesManagers.add(manager)
                             manager.load()
                             isShowed = true
-                            return manager.baseTileAt(x, y)
+                            return@getOrPut manager.baseTileAt(x, y)
                         }
                     }
                 }
@@ -117,4 +117,7 @@ class WorldRenderScene(
             }
         }
     }
+
+    fun getX(): Int = currentTile.x
+    fun getY(): Int = currentTile.y
 }

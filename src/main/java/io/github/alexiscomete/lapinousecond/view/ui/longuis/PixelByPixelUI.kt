@@ -99,7 +99,7 @@ class PixelByPixelUI(
     override fun getBufferedImage(): BufferedImage {
         worldRenderScene.renderAll()
         canvas.justDrawThisOver(
-            justDrawPlayer, worldRenderScene.size / 2, worldRenderScene.size / 2
+            justDrawPlayer, worldRenderScene.xReset, worldRenderScene.yReset
         )
         return world.zoomWithDecorElementsSquare(x, y, worldRenderScene.size / 2, zooms, canvas.bufferedImage, player)
     }
@@ -134,8 +134,8 @@ class PixelByPixelUI(
                 "Move up",
                 InteractionStyle.NORMAL,
                 {
-                    y--
                     worldRenderScene.moveUp()
+                    y = worldRenderScene.getY()
                     return@SimpleInteractionUICustomUI null
                 },
             ),
@@ -157,8 +157,8 @@ class PixelByPixelUI(
                 "Move left",
                 InteractionStyle.NORMAL,
                 {
-                    x--
                     worldRenderScene.moveLeft()
+                    x = worldRenderScene.getX()
                     return@SimpleInteractionUICustomUI null
                 },
             ), SimpleInteractionUICustomUI(
@@ -167,8 +167,8 @@ class PixelByPixelUI(
                 "Move down",
                 InteractionStyle.NORMAL,
                 {
-                    y++
                     worldRenderScene.moveDown()
+                    y = worldRenderScene.getY()
                     return@SimpleInteractionUICustomUI null
                 },
             ), SimpleInteractionUICustomUI(
@@ -177,8 +177,8 @@ class PixelByPixelUI(
                 "Move right",
                 InteractionStyle.NORMAL,
                 {
-                    x++
                     worldRenderScene.moveRight()
+                    x = worldRenderScene.getX()
                     return@SimpleInteractionUICustomUI null
                 },
             )

@@ -42,7 +42,7 @@ abstract class BaseOpenedTemplatedTile(
                 worldRenderScene, xToUse + 1, yToUse, distance + 1
             )
         }
-        worldRenderScene.canvas.drawTile(this, xToUse, yToUse, 0)
+        worldRenderScene.canvas.drawTile(this, xToUse, yToUse, 2)
     }
 
     override fun addToRenderQueue(worldRenderScene: WorldRenderScene, x: Int, y: Int, distance: Int) {
