@@ -7,6 +7,7 @@ import io.github.alexiscomete.lapinousecond.worlds.Zooms
 import java.awt.image.BufferedImage
 import java.util.*
 
+@Deprecated("This class is only used for testing purpose")
 class WorldManagerTest : WorldManager {
     override fun isLand(x: Double, y: Double): Boolean {
         return getHeight(x, y) > 0.5

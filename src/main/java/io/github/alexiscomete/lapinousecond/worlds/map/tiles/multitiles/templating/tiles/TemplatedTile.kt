@@ -2,5 +2,4 @@ package io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.templat
 
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.ComplexTile
 
-interface TemplatedTile : ComplexTile {
-}
+interface TemplatedTile : ComplexTile

@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test
 
 class FirstTest {
 
+    @Deprecated("This test is deprecated.", ReplaceWith("println(\"Hello, world!\")"))
     @Test
     fun test() {
         println("Hello, world!")

@@ -14,8 +14,8 @@ class WorldRenderScene(
     val canvas: WorldCanvas, x: Int, y: Int, private val zoomLevel: Zooms, val world: WorldManager
 ) {
     val size = 21
-    val xReset = (size / 2 + 1)
-    val yReset = (size / 2 + 1)
+    val xReset = (size / 2)
+    val yReset = (size / 2)
 
     // permet de d'aller de plus en plus loin
     var renderQueue: Queue<RenderInfos> = LinkedList()
@@ -76,16 +76,14 @@ class WorldRenderScene(
         if (next.isWalkable()) currentTile = next
     }
 
-    private var isShowed: Boolean = false
-
     fun getOrGenerateTileAt(x: Int, y: Int): Tile {
         var tile: Tile? = null
         multiTilesManagers.forEach { if (it.hasTileAt(x, y)) tile = it.baseTileAt(x, y) }
         if (tile != null) return tile!!
         return dicoTiles.getOrPut(Pair(x, y)) {
             if (zoomLevel == Zooms.ZOOM_IN) {
-                when ((0..30).random()) {
-                    0 -> {
+                when ((0..120).random()) {
+                    in 0..4 -> {
                         if (
                             world.getHeight(x, y, zoomLevel) > 0.5
                             && world.pathLevel(x.toDouble(), y.toDouble()) > 0.8
@@ -95,12 +93,15 @@ class WorldRenderScene(
                         }
                     }
 
-                    1 -> {
-                        if (!isShowed) {
+                    10 -> {
+                        if (
+                            world.getHeight(x, y, zoomLevel) > 0.5
+                            && world.pathLevel(x.toDouble(), y.toDouble()) in 0.65..0.85
+                            && world.riverLevel(x.toDouble(), y.toDouble()) > 0.65
+                        ) {
                             val manager = EmptyRoom(6, TemplateWorld.WHITE, x, y)
                             multiTilesManagers.add(manager)
                             manager.load()
-                            isShowed = true
                             return@getOrPut manager.baseTileAt(x, y)
                         }
                     }
