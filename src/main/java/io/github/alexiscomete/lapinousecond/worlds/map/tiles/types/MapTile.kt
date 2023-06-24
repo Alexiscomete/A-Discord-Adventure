@@ -371,6 +371,8 @@ class MapTile(
                         Array(16) { x ->
                             if (distanceWithPath(x, y) < 4) {
                                 Color(255, 178, 79)
+                            } else if (distanceWithRiver(x, y) < 16) {
+                                Color(0, 90, 255)
                             } else {
                                 Color(0, 111, 255)
                             }
@@ -403,10 +405,13 @@ class MapTile(
         }
         return Array(16) { y ->
             Array(16) { x ->
+                val distanceR = distanceWithRiver(x, y)
                 if (distanceWithPath(x, y) < 4) {
                     Color(255, 178, 79)
-                } else if (distanceWithRiver(x, y) < 4) {
+                } else if (distanceR < 4) {
                     Color(0, 111, 255)
+                } else if (distanceR < 6) {
+                    Color(91, 32, 0).mix(Color(red, green, blue))
                 } else {
                     Color(red, green, blue)
                 }
@@ -425,4 +430,12 @@ class MapTile(
     override fun removeSprite(sprite: Sprite) {
         sprites.remove(sprite)
     }
+}
+
+fun Color.mix(color: Color): Color {
+    return Color(
+        (this.red + color.red) / 2,
+        (this.green + color.green) / 2,
+        (this.blue + color.blue) / 2
+    )
 }
