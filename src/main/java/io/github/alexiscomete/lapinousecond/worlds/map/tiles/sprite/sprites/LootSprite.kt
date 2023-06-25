@@ -10,20 +10,45 @@ class LootSprite(override var tile: Tile) : Sprite {
         return
     }
 
-    override fun render(worldRenderScene: WorldRenderScene, x: Int, y: Int) {
-        TODO("Not yet implemented")
+    override fun delete(tile: Tile, worldRenderScene: WorldRenderScene) {
+        return
     }
 
-    override fun delete(tile: Tile) {
-        TODO("Not yet implemented")
+    private var opened = false
+
+    override fun render(worldRenderScene: WorldRenderScene, xToUse: Int, yToUse: Int, distance: Int) {
+        if (!opened && distance <= 1) {
+            opened = true
+        }
+        worldRenderScene.canvas.drawSprite(this, xToUse, yToUse, 5)
+    }
+
+    override fun resetRender() {
+        return
+    }
+
+    override fun isRendered(): Boolean {
+        return tile.isRendered()
+    }
+
+    override fun addToRenderQueue(worldRenderScene: WorldRenderScene, x: Int, y: Int, distance: Int) {
+        return
     }
 
     override fun color(): Color {
-        TODO("Not yet implemented")
+        return if (opened) {
+            Color(0, 0, 0)
+        }  else {
+            Color(255, 255, 255)
+        }
     }
 
     override fun letter(): Char {
-        TODO("Not yet implemented")
+        return if (opened) {
+            'O'
+        } else {
+            'C'
+        }
     }
 
     override fun texture(): Array<Array<Color>> {

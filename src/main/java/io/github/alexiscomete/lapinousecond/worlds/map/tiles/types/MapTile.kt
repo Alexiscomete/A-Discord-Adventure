@@ -163,7 +163,7 @@ class MapTile(
         if (tileColor == null) {
             tileColor = currentColorCalc()
         }
-        return tileColor ?: Color(0, 0, 0)
+        return tileColor ?: Color(0, 0, 0).also { println("Error: tileColor is null") }
     }
 
     private val tileTexture: Array<Array<Color>> by lazy {
@@ -371,7 +371,7 @@ class MapTile(
                         Array(16) { x ->
                             if (distanceWithPath(x, y) < 4) {
                                 Color(255, 178, 79)
-                            } else if (distanceWithRiver(x, y) < 16) {
+                            } else if (distanceWithRiver(x, y) < 10) {
                                 Color(0, 90, 255)
                             } else {
                                 Color(0, 111, 255)

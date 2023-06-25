@@ -14,22 +14,22 @@ interface Tile {
 
     fun delete(worldRenderScene: WorldRenderScene)
 
-    /**
-     * Aucun argument requis. Permet de réinitialiser les états de chaque tuile.
-     */
     fun render(worldRenderScene: WorldRenderScene, xToUse: Int, yToUse: Int, distance: Int)
 
     fun addToRenderQueue(worldRenderScene: WorldRenderScene, x: Int, y: Int, distance: Int)
-
-    fun letter(): Char
-
-    fun color(): Color
-    fun texture(): Array<Array<Color>>
 
     fun isWalkable(): Boolean
     fun removeSprite(sprite: Sprite)
 
     fun resetRender()
 
-    fun isRendered() : Boolean
+    fun isRendered(): Boolean
+
+    // RENDERING - CANVAS
+
+    fun letter(): Char
+
+    fun color(): Color
+
+    fun texture(): Array<Array<Color>>
 }
