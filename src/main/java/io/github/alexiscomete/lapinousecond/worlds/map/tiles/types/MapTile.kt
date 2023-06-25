@@ -102,7 +102,7 @@ class MapTile(
                 distance + 1
             )
             sprites.forEach {
-                it.render(worldRenderScene, xToUse, yToUse)
+                it.render(worldRenderScene, xToUse, yToUse, distance)
             }
             worldRenderScene.canvas.drawTile(this, xToUse, yToUse)
         }
