@@ -10,9 +10,7 @@ open class PixelManager(val x: Int, val y: Int, protected val worldManager: Worl
 
         if (x != other.x) return false
         if (y != other.y) return false
-        if (worldManager != other.worldManager) return false
-
-        return true
+        return worldManager == other.worldManager
     }
 
     override fun hashCode(): Int {

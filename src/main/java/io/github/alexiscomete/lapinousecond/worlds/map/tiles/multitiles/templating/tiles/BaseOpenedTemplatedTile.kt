@@ -3,7 +3,6 @@ package io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.templat
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.RenderInfos
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.Tile
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.WorldRenderScene
-import io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.ComplexTile
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.MultiTilesManager
 
 abstract class BaseOpenedTemplatedTile(

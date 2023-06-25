@@ -23,6 +23,6 @@ class WhiteFloorOpenedTTile(x: Int, y: Int, multiTilesManager: MultiTilesManager
     }
 
     override fun removeSprite(sprite: Sprite) {
-        return // TODO
+        return // TODO : Implement
     }
 }

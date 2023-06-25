@@ -1,11 +1,9 @@
 package io.github.alexiscomete.lapinousecond.view.ui.interactionui
 
-import io.github.alexiscomete.lapinousecond.view.ui.longuis.LongCustomUI
 import io.github.alexiscomete.lapinousecond.view.ui.playerui.PlayerUI
 import io.github.alexiscomete.lapinousecond.view.ui.playerui.Question
 
 class DisabledInteractionUI(
-    private var customUI: LongCustomUI,
     private val customInteractionStyle: InteractionStyle,
     private var id: String,
     private var title: String,

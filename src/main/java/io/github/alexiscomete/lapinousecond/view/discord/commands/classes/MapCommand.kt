@@ -355,7 +355,7 @@ class MapCommand : Command(
                 throw IllegalArgumentException("Le y de la case n'est pas dans la carte")
             }
 
-            // check if zoom is < 60 and > 0
+            // check if zoomInt is < 60 and > 0
             if (zoomInt < 1 || zoomInt > 60) {
                 throw IllegalArgumentException("Le zoom doit être compris entre 1 et 60 (et rester dans la carte !)")
             }

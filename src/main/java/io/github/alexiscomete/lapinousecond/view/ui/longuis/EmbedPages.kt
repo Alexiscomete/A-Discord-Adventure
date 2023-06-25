@@ -107,7 +107,6 @@ open class EmbedPages<U>(
 
                 listOf(
                     DisabledInteractionUI(
-                        this,
                         InteractionStyle.NORMAL_DISABLED,
                         "0",
                         "Aucune autre page"

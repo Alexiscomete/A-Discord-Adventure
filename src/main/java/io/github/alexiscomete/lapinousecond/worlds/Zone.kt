@@ -8,7 +8,7 @@ package io.github.alexiscomete.lapinousecond.worlds
  * @param x2 x droite (max)
  * @param y2 y bas (max)
  */
-class Zone(var x1: Int, var y1: Int, var x2: Int, var y2: Int) {
+class Zone(private var x1: Int, private var y1: Int, private var x2: Int, private var y2: Int) {
 
     /**
      * Retourne si un pixel est dans la zone.
@@ -21,23 +21,6 @@ class Zone(var x1: Int, var y1: Int, var x2: Int, var y2: Int) {
         return x in x1..x2 && y in y1..y2
     }
 
-    /**
-     * Retourne la largeur de la zone.
-     *
-     * @return la largeur de la zone
-     */
-    val width: Int
-        get() = x2 - x1
-
-    /**
-     * Retourne la hauteur de la zone.
-     *
-     * @return la hauteur de la zone
-     */
-    val height: Int
-        get() = y2 - y1
-
-    // setters
     // permet de récupérer la zone en string
     override fun toString(): String {
         return "[$x1:$y1] -> [$x2:$y2]"

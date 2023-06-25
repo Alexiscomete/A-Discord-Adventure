@@ -1,6 +1,5 @@
 package io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.templating.contexts
 
-import io.github.alexiscomete.lapinousecond.worlds.map.tiles.WorldRenderScene
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.MultiTilesManager
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.templating.templates.NullWall
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.templating.templates.TemplatePart

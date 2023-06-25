@@ -40,11 +40,6 @@ class MenuBuilder(name: String, description: String, color: Color, val context: 
         return this
     }
 
-    fun addEphemeral(): MenuBuilder {
-        ephemeral = true
-        return this
-    }
-
     fun setImage(image: BufferedImage): MenuBuilder {
         embedBuilder.setImage(image)
         return this

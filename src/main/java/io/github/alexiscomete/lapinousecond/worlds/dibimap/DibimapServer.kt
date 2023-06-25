@@ -56,6 +56,6 @@ enum class DibimapServer(val serverId: Long = 0, val zones: List<Zone> = listOf(
     }
 
     override fun toString(): String {
-        return "zones " + zones.joinToString { it.toString() + ", " } + " sur le serveur $displayName"
+        return "zones " + zones.joinToString { "$it, " } + " sur le serveur $displayName"
     }
 }

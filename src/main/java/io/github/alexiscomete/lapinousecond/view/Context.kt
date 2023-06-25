@@ -78,7 +78,7 @@ class Context(val players: Players, canParallel: Boolean = false) : ContextManag
         return this
     }
 
-    fun multiContext(multiContext: Context, canParallel: Boolean = false): Context {
+    private fun multiContext(multiContext: Context, canParallel: Boolean = false): Context {
         if (!canParallel) {
             clear()
         }
@@ -123,10 +123,7 @@ class Context(val players: Players, canParallel: Boolean = false) : ContextManag
         if (modal != null && modal!!.canApply(string)) {
             return true
         }
-        if (ui != null && ui!!.canExecute(string)) {
-            return true
-        }
-        return false
+        return ui != null && ui!!.canExecute(string)
     }
 
     fun apply(string: String, event: ButtonClickEvent) {

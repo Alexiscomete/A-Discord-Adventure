@@ -2,7 +2,6 @@ package io.github.alexiscomete.lapinousecond.view.discord.commands.classes
 
 import io.github.alexiscomete.lapinousecond.PERMS
 import io.github.alexiscomete.lapinousecond.UserPerms
-import io.github.alexiscomete.lapinousecond.config
 import io.github.alexiscomete.lapinousecond.entity.entities.Player
 import io.github.alexiscomete.lapinousecond.entity.entities.players
 import io.github.alexiscomete.lapinousecond.useful.managesave.fromBooleanToString
@@ -17,12 +16,7 @@ import org.javacord.api.interaction.SlashCommandInteraction
 import org.javacord.api.interaction.SlashCommandOption
 import org.javacord.api.interaction.SlashCommandOptionChoice
 import org.javacord.api.interaction.SlashCommandOptionType
-import org.json.JSONObject
 import java.awt.Color
-import java.io.IOException
-import java.net.HttpURLConnection
-import java.net.URL
-import java.util.*
 
 fun toSpawn(p: Player) {
     p["serv"] = "854288660147994634"
@@ -43,43 +37,7 @@ class AccountCommandBase : Command(
     )
 )
 
-fun getUser(id: Long): String? {
-    try {
-        // val connection =
-        //     URL("https://dirtybiology.captaincommand.repl.co/api/?authorization=${config.content[2]}&request=getInfosByDiscordId&datas=%7B%22discordId%22:%22$id%22%7D").openConnection() as HttpURLConnection
-        // connection.connectTimeout = 5000
-        // connection.readTimeout = 5000
-        // connection.requestMethod = "GET"
-        // var response = ""
-        // val scanner = Scanner(connection.inputStream)
-        // if (scanner.hasNextLine()) {
-        //     response += scanner.nextLine()
-        // }
-        // scanner.close()
-        // return response
-    } catch (e: IOException) {
-        e.printStackTrace()
-    }
-    return null
-}
-
-fun getUserData(id: Long): UserData {
-    val userData = getUser(id)
-    if (userData != null) {
-        val jsonObject = JSONObject(userData)
-        val back = jsonObject.getJSONObject("back")
-        if (!back.isEmpty) {
-            val member = back.getJSONObject("member")
-            val verified = member.getBoolean("verified")
-            return if (verified) {
-                val jsonArray = member.getJSONArray("coordinatesVerified")
-                UserData(jsonArray.getInt(0), jsonArray.getInt(1), isVerify = true, true)
-            } else {
-                val jsonArray = member.getJSONArray("coordinatesUnverified")
-                UserData(jsonArray.getInt(0), jsonArray.getInt(1), isVerify = false, true)
-            }
-        }
-    }
+fun getUserData(): UserData {
     return UserData(-1, -1, isVerify = false, false)
 }
 
@@ -101,7 +59,7 @@ class AccountCommandVerify : SubCommand(
 
     override fun execute(slashCommand: SlashCommandInteraction) {
         val player = getAccount(slashCommand)
-        val userData = getUserData(slashCommand.user.id)
+        val userData = getUserData()
         if (userData.hasAccount()) {
             player["x"] = userData.x.toString()
             player["x"] = userData.y.toString()
@@ -142,7 +100,7 @@ class AccountCommandStart : SubCommand(
                 content += "Vous devrez rejoindre le serveur discord principal à un moment ou à un autre pour le tuto.\n"
             }
             val user = slashCommand.user
-            val userData = getUserData(slashCommand.user.id)
+            val userData = getUserData()
             content += if (userData.hasAccount()) {
                 if (userData.isVerify) {
                     "Votre compte va être associé à votre pixel. Vous avez la vérification\n"
