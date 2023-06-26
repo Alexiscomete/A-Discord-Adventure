@@ -9,10 +9,9 @@ import io.github.alexiscomete.lapinousecond.view.discord.commands.Command
 import io.github.alexiscomete.lapinousecond.view.discord.commands.ExecutableWithArguments
 import io.github.alexiscomete.lapinousecond.view.discord.commands.getAccount
 import io.github.alexiscomete.lapinousecond.view.ui.longuis.EmbedPagesWithInteractions
+import io.github.alexiscomete.lapinousecond.view.ui.longuis.MenuBuilderUI
 import io.github.alexiscomete.lapinousecond.view.ui.old.MenuBuilder
-import io.github.alexiscomete.lapinousecond.view.ui.playerui.DiscordPlayerUI
-import io.github.alexiscomete.lapinousecond.view.ui.playerui.Message
-import io.github.alexiscomete.lapinousecond.view.ui.playerui.PlayerUI
+import io.github.alexiscomete.lapinousecond.view.ui.playerui.*
 import io.github.alexiscomete.lapinousecond.worlds.*
 import io.github.alexiscomete.lapinousecond.worlds.dibimap.checkById
 import io.github.alexiscomete.lapinousecond.worlds.dibimap.getValueById
@@ -23,6 +22,7 @@ import org.javacord.api.entity.message.component.TextInputStyle
 import org.javacord.api.entity.permission.PermissionType
 import org.javacord.api.entity.server.Server
 import org.javacord.api.event.interaction.ModalSubmitEvent
+import org.javacord.api.interaction.Interaction
 import org.javacord.api.interaction.SlashCommandInteraction
 import java.awt.Color
 import java.util.*
@@ -56,6 +56,7 @@ class ConfigCommand : Command(
     override val botPerms: Array<String>
         get() = arrayOf("CREATE_SERVER")
 
+    @Deprecated("Spécial menubuilder")
     class M1(
         name: String,
         private val idNameRP: String,
@@ -106,6 +107,7 @@ class ConfigCommand : Command(
         }
     }
 
+    @Deprecated("Spécial menubuilder")
     class M2(name: String, private val serverId: Long) : ModalContextManager(name) {
         override fun ex(smce: ModalSubmitEvent, c: Context) {
 
@@ -157,6 +159,7 @@ class ConfigCommand : Command(
         }
     }
 
+    @Deprecated("Spécial menubuilder")
     class M3(
         name: String,
         private val opNameRP: Optional<String>,
@@ -247,123 +250,108 @@ class ConfigCommand : Command(
         val serverId = slashCommand.server.get().id
         val server = servers[serverId]
         val context = contextFor(getAccount(slashCommand.user))
+        val serverD = slashCommand.server.get()
+        val channel = slashCommand.channel.get()
+        val ui = DiscordPlayerUI(context, slashCommand as Interaction)
 
         if (server == null) {
             val world =
                 if (serverId == 854288660147994634) WorldEnum.TUTO else if (isDibimap(serverId)) WorldEnum.DIBIMAP else WorldEnum.NORMAL
-            MenuBuilder(
-                "Votre première configuration",
-                "Votre serveur discord a été automatiquement assigné au ${world.nameRP}. Explications :\nLe Dibistan a un drapeau qui est aussi son territoire principal. Si votre serveur discord est un État ou une région qui a un territoire en forme de polygone sur le drapeau, alors son monde est le ${WorldEnum.DIBIMAP.nameRP} sinon c'est le monde ${WorldEnum.NORMAL.nameRP}. Les mécaniques sont différentes dans les 2 mondes. **Le monde détecté est-il correct ?**",
-                Color.BLUE,
-                context
-            )
-                .addButton(
-                    "Oui",
-                    "Le monde est correcte et je continue la configuration. **Irréversible**"
-                ) { yes, c1, _ ->
+            ui.setLongCustomUI(
+                MenuBuilderUI(
+                    "Votre première configuration",
+                    "Votre serveur discord a été automatiquement assigné au ${world.nameRP}. Explications :\nLe Dibistan a un drapeau qui est aussi son territoire principal. Si votre serveur discord est un État ou une région qui a un territoire en forme de polygone sur le drapeau, alors son monde est le ${WorldEnum.DIBIMAP.nameRP} sinon c'est le monde ${WorldEnum.NORMAL.nameRP}. Les mécaniques sont différentes dans les 2 mondes. **Le monde détecté est-il correct ?**",
+                    ui
+                )
+                    .addButton(
+                        "Oui",
+                        "Le monde est correcte et je continue la configuration. **Irréversible**"
+                    ) { playerUI ->
 
-                    when (world) {
-                        WorldEnum.NORMAL -> {
-                            val id = generateUniqueID()
-                            val idNameRP = generateUniqueID()
-                            val idDescription = generateUniqueID()
-                            val idWelcome = generateUniqueID()
+                        when (world) {
+                            WorldEnum.NORMAL -> {
+                                val id = generateUniqueID()
+                                val idNameRP = generateUniqueID()
+                                val idDescription = generateUniqueID()
+                                val idWelcome = generateUniqueID()
 
-                            yes.buttonInteraction.respondWithModal(
-                                id.toString(),
-                                "Configuration de la ville du serveur",
-                                ActionRow.of(
-                                    TextInput.create(
-                                        TextInputStyle.SHORT,
-                                        idNameRP.toString(),
+                                return@addButton Question(
+                                    "Configuration de la ville du serveur",
+                                    QuestionField(
                                         "Nom de la ville",
-                                        true
-                                    )
-                                ),
-                                ActionRow.of(
-                                    TextInput.create(
-                                        TextInputStyle.PARAGRAPH,
-                                        idDescription.toString(),
+                                        shortAnswer = true,
+                                        required = true
+                                    ),
+                                    QuestionField(
                                         "Description de la ville",
-                                        true
-                                    )
-                                ),
-                                ActionRow.of(
-                                    TextInput.create(
-                                        TextInputStyle.PARAGRAPH,
-                                        idWelcome.toString(),
+                                        shortAnswer = false,
+                                        required = true
+                                    ),
+                                    QuestionField(
                                         "Message de bienvenue",
-                                        true
+                                        shortAnswer = false,
+                                        required = true
                                     )
-                                )
-                            )
+                                ) {
+                                    M1(
+                                        id.toString(),
+                                        idNameRP.toString(),
+                                        idDescription.toString(),
+                                        idWelcome.toString(),
+                                        world,
+                                        serverId
+                                    )
+                                    null
+                                }
+                            }
 
-                            c1.modal(
-                                M1(
-                                    id.toString(),
-                                    idNameRP.toString(),
-                                    idDescription.toString(),
-                                    idWelcome.toString(),
-                                    world,
-                                    serverId
-                                )
-                            )
+                            WorldEnum.DIBIMAP -> {
+
+                                servers.add(serverId)
+                                val serverC = servers[serverId]
+                                    ?: throw IllegalArgumentException("Un problème de source inconnue est survenue. La création du serveur a échoué.")
+                                serverC["world"] = world.progName
+                                serverC["name"] = serverD.name
+
+                                val serverForZones = getValueById(serverId)
+
+                                playerUI.addMessage(Message("Le serveur a été configuré avec succès ! Vous devez faire à nouveau la commande pour ajouter des villes. Les $serverForZones ont été ajoutées automatiquement."))
+                            }
+
+                            WorldEnum.TUTO -> {
+                                val id = generateUniqueID()
+                                places.add(id)
+                                val place = places[id]
+                                    ?: throw IllegalArgumentException("Un problème de source inconnue est survenue. La création du serveur a échoué.")
+                                place["nameRP"] = "Saint-Lapin-sur-bot" // à Demander
+                                place["description"] = "Ville accueillante du tutoriel" // à Demander
+                                place["welcome"] =
+                                    "Ne restez pas trop longtemps ici et profitez de l'aventure" // à Demander
+                                place["x"] = 45.toString() // automatique normalement : aléatoire
+                                place["y"] = 20.toString() // automatique normalement : aléatoire
+                                place["type"] = "city" // automatique normalement
+                                place["world"] = world.progName // automatique normalement
+                                place["server"] = serverId.toString() // automatique normalement
+
+                                configNormalServer(world, serverD, id)
+
+                                playerUI.addMessage(Message("Le serveur a été configuré avec succès !"))
+                            }
                         }
-
-                        WorldEnum.DIBIMAP -> {
-
-                            servers.add(serverId)
-                            val serverC = servers[serverId]
-                                ?: throw IllegalArgumentException("Un problème de source inconnue est survenue. La création du serveur a échoué.")
-                            serverC["world"] = world.progName
-                            serverC["name"] = slashCommand.server.get().name
-
-                            val serverForZones = getValueById(serverId)
-
-                            yes.buttonInteraction.createImmediateResponder()
-                                .setContent("Le serveur a été configuré avec succès ! Vous devez faire à nouveau la commande pour ajouter des villes. Les $serverForZones ont été ajoutées automatiquement.")
-                                .respond()
-                        }
-
-                        WorldEnum.TUTO -> {
-                            val id = generateUniqueID()
-                            places.add(id)
-                            val place = places[id]
-                                ?: throw IllegalArgumentException("Un problème de source inconnue est survenue. La création du serveur a échoué.")
-                            place["nameRP"] = "Saint-Lapin-sur-bot" // à Demander
-                            place["description"] = "Ville accueillante du tutoriel" // à Demander
-                            place["welcome"] =
-                                "Ne restez pas trop longtemps ici et profitez de l'aventure" // à Demander
-                            place["x"] = 45.toString() // automatique normalement : aléatoire
-                            place["y"] = 20.toString() // automatique normalement : aléatoire
-                            place["type"] = "city" // automatique normalement
-                            place["world"] = world.progName // automatique normalement
-                            place["server"] = serverId.toString() // automatique normalement
-
-                            configNormalServer(world, slashCommand.server.get(), id)
-
-                            yes.buttonInteraction.createImmediateResponder()
-                                .setContent("Le serveur a été configuré avec succès !")
-                                .respond()
-                        }
+                        null
                     }
-
-                }
-                .addButton(
-                    "Non",
-                    "Le monde est incorrecte ou je veux changer quelque chose. **Réversible**"
-                ) { it, _, _ ->
-                    it.buttonInteraction.createOriginalMessageUpdater()
-                        .setContent("Contactez un administrateur pour changer le monde si c'est le problème")
-                        .removeAllEmbeds()
-                        .removeAllComponents()
-                        .update()
-                }
-                .responder(slashCommand)
+                    .addButton(
+                        "Non",
+                        "Le monde est incorrecte ou je veux changer quelque chose. **Réversible**"
+                    ) { playerUI ->
+                        playerUI.addMessage(Message("Contactez un administrateur pour changer le monde si c'est le problème"))
+                        null
+                    }
+            )
         } else {
             when (WorldEnum.valueOf(server["world"])) {
                 WorldEnum.NORMAL -> {
-                    modifServer(server, context, slashCommand.server.get(), slashCommand)
+                    modifServer(server, context, serverD, slashCommand)
                 }
 
                 WorldEnum.DIBIMAP -> {
@@ -389,7 +377,7 @@ class ConfigCommand : Command(
                             "Mise à jour du nom",
                             "Le nom du serveur discord est stocké dans la base de données. Mais si vous changer le nom du serveur discord le bot ne met pas à jour automatiquement de son côté."
                         ) { name, _, _ ->
-                            val serverDiscord = slashCommand.server.get()
+                            val serverDiscord = serverD
                             server["name"] = serverDiscord.name
                             name.buttonInteraction.createImmediateResponder()
                                 .setContent("Le nom du serveur a été mis à jour avec succès !")
@@ -592,7 +580,7 @@ class ConfigCommand : Command(
                                                 )
                                             }
                                             .messageBuilder()
-                                        menu.send(slashCommand.channel.get())
+                                        menu.send(channel)
                                         return@EmbedPagesWithInteractions null
                                     },
                                     null,
@@ -610,10 +598,12 @@ class ConfigCommand : Command(
                 }
 
                 WorldEnum.TUTO -> {
-                    modifServer(server, context, slashCommand.server.get(), slashCommand)
+                    modifServer(server, context, serverD, slashCommand)
                 }
             }
         }
+        ui.updateOrSend()
+        context.ui(ui)
     }
 
     private fun modifServer(
