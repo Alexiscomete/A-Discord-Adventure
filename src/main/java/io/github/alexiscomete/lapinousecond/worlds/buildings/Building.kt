@@ -2,11 +2,11 @@ package io.github.alexiscomete.lapinousecond.worlds.buildings
 
 import io.github.alexiscomete.lapinousecond.entity.concrete.resources.Resource
 import io.github.alexiscomete.lapinousecond.entity.entities.Owner
-import io.github.alexiscomete.lapinousecond.useful.ProgressionBar
-import io.github.alexiscomete.lapinousecond.useful.managesave.CacheCustom
-import io.github.alexiscomete.lapinousecond.useful.managesave.CacheGetSet
-import io.github.alexiscomete.lapinousecond.useful.managesave.Table
-import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
+import io.github.alexiscomete.lapinousecond.data.dataclass.ProgressionBar
+import io.github.alexiscomete.lapinousecond.data.managesave.CacheCustom
+import io.github.alexiscomete.lapinousecond.data.managesave.CacheGetSet
+import io.github.alexiscomete.lapinousecond.data.managesave.Table
+import io.github.alexiscomete.lapinousecond.data.managesave.generateUniqueID
 import io.github.alexiscomete.lapinousecond.view.Context
 import io.github.alexiscomete.lapinousecond.view.ui.old.MenuBuilder
 import io.github.alexiscomete.lapinousecond.worlds.Place

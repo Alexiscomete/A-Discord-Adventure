@@ -1,7 +1,7 @@
 package io.github.alexiscomete.lapinousecond.entity.xp
 
-import io.github.alexiscomete.lapinousecond.useful.ProgressionBar
-import io.github.alexiscomete.lapinousecond.useful.managesave.CacheGetSet
+import io.github.alexiscomete.lapinousecond.data.dataclass.ProgressionBar
+import io.github.alexiscomete.lapinousecond.data.managesave.CacheGetSet
 import kotlin.math.roundToInt
 
 class Level(

@@ -5,9 +5,9 @@ import io.github.alexiscomete.lapinousecond.entity.entities.Player
 import io.github.alexiscomete.lapinousecond.entity.entities.players
 import io.github.alexiscomete.lapinousecond.entity.concrete.resources.Resource
 import io.github.alexiscomete.lapinousecond.messagesManager
-import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
-import io.github.alexiscomete.lapinousecond.useful.managesave.saveManager
-import io.github.alexiscomete.lapinousecond.useful.transactions.*
+import io.github.alexiscomete.lapinousecond.data.managesave.generateUniqueID
+import io.github.alexiscomete.lapinousecond.data.managesave.saveManager
+import io.github.alexiscomete.lapinousecond.data.transactions.*
 import io.github.alexiscomete.lapinousecond.view.Context
 import io.github.alexiscomete.lapinousecond.view.contextFor
 import io.github.alexiscomete.lapinousecond.view.contextmanager.ButtonsContextManager

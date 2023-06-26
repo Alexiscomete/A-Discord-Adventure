@@ -1,10 +1,10 @@
 package io.github.alexiscomete.lapinousecond.view.discord.commands
 
-import io.github.alexiscomete.lapinousecond.UserPerms
 import io.github.alexiscomete.lapinousecond.view.discord.commands.classes.*
 import org.javacord.api.entity.message.MessageFlag
 import org.javacord.api.event.interaction.SlashCommandCreateEvent
 import org.javacord.api.listener.interaction.SlashCommandCreateListener
+import io.github.alexiscomete.lapinousecond.data.check
 
 val commands = LinkedHashMap<String, ExecutableWithArguments>()
 
@@ -36,11 +36,9 @@ class ListenerSlashCommands : SlashCommandCreateListener {
                     }
                     val name = sC.asServerTextChannel().get().name
                     // je pense que limiter les salons est important, venture permet d'inclure adventure et aventure
-                    if (!(name.contains("bot")
-                                || name.contains("command")
-                                || name.contains("spam")
-                                || name.contains("🤖")
-                                || name.contains("venture"))
+                    if (!(name.contains("bot") || name.contains("command") || name.contains("spam") || name.contains("🤖") || name.contains(
+                            "venture"
+                        ))
                     ) {
                         throw IllegalStateException("Le nom du salon doit contenir 'bot', 'command', 'spam', '🤖' ou 'venture' pour être autorisé à utiliser une commande")
                     }
@@ -60,13 +58,13 @@ class ListenerSlashCommands : SlashCommandCreateListener {
                     }
                 }
             }
-            val executableWithArguments = commands[commandName]
-                ?: throw IllegalStateException("Commande inconnue \"${commandName}\"")
+            val executableWithArguments =
+                commands[commandName] ?: throw IllegalStateException("Commande inconnue \"${commandName}\"")
             if (executableWithArguments.botPerms == null) {
                 executableWithArguments.execute(slashCommand)
             } else if (executableWithArguments.botPerms!!.isEmpty()) {
                 executableWithArguments.execute(slashCommand)
-            } else if (UserPerms.check(slashCommand.user.id, executableWithArguments.botPerms!!)) {
+            } else if (check(slashCommand.user.id, executableWithArguments.botPerms!!)) {
                 executableWithArguments.execute(slashCommand)
             } else {
                 throw IllegalStateException("Vous n'avez pas les permissions pour utiliser cette commande")

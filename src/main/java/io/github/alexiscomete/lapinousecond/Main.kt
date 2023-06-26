@@ -1,8 +1,8 @@
 package io.github.alexiscomete.lapinousecond
 
-import io.github.alexiscomete.lapinousecond.useful.managesave.SaveLocation
-import io.github.alexiscomete.lapinousecond.useful.managesave.SaveManager
-import io.github.alexiscomete.lapinousecond.useful.managesave.saveManager
+import io.github.alexiscomete.lapinousecond.data.managesave.SaveLocation
+import io.github.alexiscomete.lapinousecond.data.managesave.SaveManager
+import io.github.alexiscomete.lapinousecond.data.managesave.saveManager
 import io.github.alexiscomete.lapinousecond.view.discord.commands.ListenerSlashCommands
 import io.github.alexiscomete.lapinousecond.view.discord.commands.loadAllS
 import io.github.alexiscomete.lapinousecond.view.discord.manager.ButtonsManager

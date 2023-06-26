@@ -2,10 +2,10 @@ package io.github.alexiscomete.lapinousecond.entity.concrete.items
 
 import io.github.alexiscomete.lapinousecond.entity.concrete.items.items.StrasbourgSausage
 import io.github.alexiscomete.lapinousecond.entity.entities.players
-import io.github.alexiscomete.lapinousecond.useful.managesave.CacheCustom
-import io.github.alexiscomete.lapinousecond.useful.managesave.CacheGetSet
-import io.github.alexiscomete.lapinousecond.useful.managesave.Table
-import io.github.alexiscomete.lapinousecond.useful.managesave.save
+import io.github.alexiscomete.lapinousecond.data.managesave.CacheCustom
+import io.github.alexiscomete.lapinousecond.data.managesave.CacheGetSet
+import io.github.alexiscomete.lapinousecond.data.managesave.Table
+import io.github.alexiscomete.lapinousecond.data.managesave.save
 
 val ITEMS = Table("items")
 val itemsCacheCustom = CacheCustom(ITEMS) { id: Long ->

@@ -1,6 +1,6 @@
 package io.github.alexiscomete.lapinousecond.view.ui.old
 
-import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
+import io.github.alexiscomete.lapinousecond.data.managesave.generateUniqueID
 import io.github.alexiscomete.lapinousecond.view.Context
 import io.github.alexiscomete.lapinousecond.view.contextmanager.ButtonsContextManager
 import org.javacord.api.entity.message.MessageBuilder

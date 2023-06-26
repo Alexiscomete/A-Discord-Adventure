@@ -5,7 +5,7 @@ import io.github.alexiscomete.lapinousecond.entity.effects.priceToTravelWithEffe
 import io.github.alexiscomete.lapinousecond.entity.effects.timeMillisForOnePixel
 import io.github.alexiscomete.lapinousecond.entity.entities.Player
 import io.github.alexiscomete.lapinousecond.entity.entities.PlayerWithAccount
-import io.github.alexiscomete.lapinousecond.useful.managesave.generateUniqueID
+import io.github.alexiscomete.lapinousecond.data.managesave.generateUniqueID
 import io.github.alexiscomete.lapinousecond.view.Context
 import io.github.alexiscomete.lapinousecond.view.contextFor
 import io.github.alexiscomete.lapinousecond.view.contextmanager.ModalContextManager
