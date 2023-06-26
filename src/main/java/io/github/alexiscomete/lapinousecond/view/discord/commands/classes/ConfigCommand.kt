@@ -41,8 +41,7 @@ fun getUniquePlace(server: ServerBot): Place {
     if (placesL.size != 1) {
         throw IllegalArgumentException("Le serveur n'a pas un lieu unique. Contactez un administrateur.")
     }
-    return places[placesL[0]]
-        ?: throw IllegalArgumentException("Le lieu n'existe pas. Contactez un administrateur.")
+    return places[placesL[0]] ?: throw IllegalArgumentException("Le lieu n'existe pas. Contactez un administrateur.")
 }
 
 class ConfigCommand : Command(
@@ -56,55 +55,40 @@ class ConfigCommand : Command(
     override val botPerms: Array<String>
         get() = arrayOf("CREATE_SERVER")
 
-    @Deprecated("Spécial menubuilder")
-    class M1(
-        name: String,
-        private val idNameRP: String,
-        private val idDescription: String,
-        private val idWelcome: String,
-        private val world: WorldEnum,
-        private val serverId: Long
-    ) : ModalContextManager(name) {
-        override fun ex(smce: ModalSubmitEvent, c: Context) {
-            val opNameRp = smce.modalInteraction.getTextInputValueByCustomId(idNameRP)
-            val opDescription =
-                smce.modalInteraction.getTextInputValueByCustomId(idDescription)
-            val opWelcome = smce.modalInteraction.getTextInputValueByCustomId(idWelcome)
+    private fun createPlace(
+        question: Question, world: WorldEnum, serverId: Long, playerUI: PlayerUI, server: Server
+    ) {
+        val placeId = generateUniqueID()
+        places.add(placeId)
+        val place = places[placeId]
+            ?: throw IllegalArgumentException("Un problème de source inconnue est survenue. La création du serveur a échoué.")
 
-            if (!opNameRp.isPresent || !opDescription.isPresent || !opWelcome.isPresent) {
-                throw IllegalArgumentException("Un des champs n'a pas été rempli")
-            }
+        place["nameRP"] = question.field0.answer
+        place["description"] = question.field1!!.answer
+        place["welcome"] = question.field2!!.answer
 
-            val placeId = generateUniqueID()
-            places.add(placeId)
-            val place = places[placeId]
-                ?: throw IllegalArgumentException("Un problème de source inconnue est survenue. La création du serveur a échoué.")
+        // génération aléatoire des coordonnées du lieu entre 1 et le maximum du lieu
+        var x: Int
+        var y: Int
+        do {
+            x = (1..world.mapWidth).random()
+            y = (1..world.mapHeight).random()
+        } while (world.isDirt(x, y))
 
-            place["nameRP"] = opNameRp.get()
-            place["description"] = opDescription.get()
-            place["welcome"] = opWelcome.get()
+        place["x"] = x.toString()
+        place["y"] = y.toString()
 
-            // génération aléatoire des coordonnées du lieu entre 1 et le maximum du lieu
-            var x: Int
-            var y: Int
-            do {
-                x = (1..world.mapWidth).random()
-                y = (1..world.mapHeight).random()
-            } while (world.isDirt(x, y))
+        place["type"] = "city" // automatique normalement
+        place["world"] = world.progName // automatique normalement
+        place["server"] = serverId.toString() // automatique normalement
 
-            place["x"] = x.toString()
-            place["y"] = y.toString()
+        configNormalServer(world, server, placeId)
 
-            place["type"] = "city" // automatique normalement
-            place["world"] = world.progName // automatique normalement
-            place["server"] = serverId.toString() // automatique normalement
-
-            configNormalServer(world, smce.modalInteraction.server.get(), placeId)
-
-            smce.modalInteraction.createImmediateResponder()
-                .setContent("Le serveur a été configuré avec succès ! Les coordonnées sont [${x}:${y}]")
-                .respond()
-        }
+        playerUI.addMessage(
+            Message(
+                "Le serveur a été configuré avec succès ! Les coordonnées sont [${x}:${y}]"
+            )
+        )
     }
 
     @Deprecated("Spécial menubuilder")
@@ -113,49 +97,31 @@ class ConfigCommand : Command(
 
             // création d'un bouton pour continuer
             MenuBuilder(
-                "Discord n'autorise pas l'enchainement des entrées de texte",
-                "Donc cliquez sur ce",
-                Color.GREEN,
-                c
-            )
-                .addButton(
-                    "Bouton",
-                    "pour continuer"
-                ) { button, c2, _ ->
-                    // partie 2 du modal avec x et y, j'utilise à nouveau idNameRP (pour x); idDescription (pour y)
-                    val id2 = generateUniqueID()
+                "Discord n'autorise pas l'enchainement des entrées de texte", "Donc cliquez sur ce", Color.GREEN, c
+            ).addButton(
+                "Bouton", "pour continuer"
+            ) { button, c2, _ ->
+                // partie 2 du modal avec x et y, j'utilise à nouveau idNameRP (pour x); idDescription (pour y)
+                val id2 = generateUniqueID()
 
-                    button.buttonInteraction.respondWithModal(
-                        id2.toString(),
-                        "Ajout d'une ville (2/2)",
-                        ActionRow.of(
-                            TextInput.create(
-                                TextInputStyle.SHORT,
-                                "cxid",
-                                "Coordonnée X",
-                                true
-                            )
-                        ),
-                        ActionRow.of(
-                            TextInput.create(
-                                TextInputStyle.SHORT,
-                                "cyid",
-                                "Coordonnée Y",
-                                true
-                            )
+                button.buttonInteraction.respondWithModal(
+                    id2.toString(), "Ajout d'une ville (2/2)", ActionRow.of(
+                        TextInput.create(
+                            TextInputStyle.SHORT, "cxid", "Coordonnée X", true
+                        )
+                    ), ActionRow.of(
+                        TextInput.create(
+                            TextInputStyle.SHORT, "cyid", "Coordonnée Y", true
                         )
                     )
+                )
 
-                    val opNameRP =
-                        smce.modalInteraction.getTextInputValueByCustomId("cnameid")
-                    val opDescription =
-                        smce.modalInteraction.getTextInputValueByCustomId("cdescid")
-                    val opWelcome =
-                        smce.modalInteraction.getTextInputValueByCustomId("cwelcomeid")
+                val opNameRP = smce.modalInteraction.getTextInputValueByCustomId("cnameid")
+                val opDescription = smce.modalInteraction.getTextInputValueByCustomId("cdescid")
+                val opWelcome = smce.modalInteraction.getTextInputValueByCustomId("cwelcomeid")
 
-                    c2.modal(M3(id2.toString(), opNameRP, opDescription, opWelcome, serverId))
-                }
-                .responder(smce.modalInteraction)
+                c2.modal(M3(id2.toString(), opNameRP, opDescription, opWelcome, serverId))
+            }.responder(smce.modalInteraction)
         }
     }
 
@@ -169,10 +135,8 @@ class ConfigCommand : Command(
     ) : ModalContextManager(name) {
         override fun ex(smce: ModalSubmitEvent, c: Context) {
             // récupération de tous les éléments : description, nameRP, welcome, x, y
-            val opX =
-                smce.modalInteraction.getTextInputValueByCustomId("cxid")
-            val opY =
-                smce.modalInteraction.getTextInputValueByCustomId("cyid")
+            val opX = smce.modalInteraction.getTextInputValueByCustomId("cxid")
+            val opY = smce.modalInteraction.getTextInputValueByCustomId("cyid")
 
             // s'il manque un élément, on annule
             if (!opNameRP.isPresent || !opDescription.isPresent || !opWelcome.isPresent || !opX.isPresent || !opY.isPresent) {
@@ -221,9 +185,7 @@ class ConfigCommand : Command(
             servers[serverId]!!.addPlace(id)
 
             // on envoie un message de succès
-            smce.modalInteraction.createImmediateResponder()
-                .setContent("La ville a été créée avec succès !")
-                .respond()
+            smce.modalInteraction.createImmediateResponder().setContent("La ville a été créée avec succès !").respond()
         }
     }
 
@@ -237,9 +199,7 @@ class ConfigCommand : Command(
 
             place[col] = op.get()
 
-            smce.modalInteraction.createImmediateResponder()
-                .setContent("Modifié avec succès !")
-                .respond()
+            smce.modalInteraction.createImmediateResponder().setContent("Modifié avec succès !").respond()
         }
     }
 
@@ -257,97 +217,72 @@ class ConfigCommand : Command(
         if (server == null) {
             val world =
                 if (serverId == 854288660147994634) WorldEnum.TUTO else if (isDibimap(serverId)) WorldEnum.DIBIMAP else WorldEnum.NORMAL
-            ui.setLongCustomUI(
-                MenuBuilderUI(
-                    "Votre première configuration",
-                    "Votre serveur discord a été automatiquement assigné au ${world.nameRP}. Explications :\nLe Dibistan a un drapeau qui est aussi son territoire principal. Si votre serveur discord est un État ou une région qui a un territoire en forme de polygone sur le drapeau, alors son monde est le ${WorldEnum.DIBIMAP.nameRP} sinon c'est le monde ${WorldEnum.NORMAL.nameRP}. Les mécaniques sont différentes dans les 2 mondes. **Le monde détecté est-il correct ?**",
-                    ui
-                )
-                    .addButton(
-                        "Oui",
-                        "Le monde est correcte et je continue la configuration. **Irréversible**"
-                    ) { playerUI ->
+            ui.setLongCustomUI(MenuBuilderUI(
+                "Votre première configuration",
+                "Votre serveur discord a été automatiquement assigné au ${world.nameRP}. Explications :\nLe Dibistan a un drapeau qui est aussi son territoire principal. Si votre serveur discord est un État ou une région qui a un territoire en forme de polygone sur le drapeau, alors son monde est le ${WorldEnum.DIBIMAP.nameRP} sinon c'est le monde ${WorldEnum.NORMAL.nameRP}. Les mécaniques sont différentes dans les 2 mondes. **Le monde détecté est-il correct ?**",
+                ui
+            ).addButton(
+                "Oui", "Le monde est correcte et je continue la configuration. **Irréversible**"
+            ) { playerUI ->
 
-                        when (world) {
-                            WorldEnum.NORMAL -> {
-                                val id = generateUniqueID()
-                                val idNameRP = generateUniqueID()
-                                val idDescription = generateUniqueID()
-                                val idWelcome = generateUniqueID()
-
-                                return@addButton Question(
-                                    "Configuration de la ville du serveur",
-                                    QuestionField(
-                                        "Nom de la ville",
-                                        shortAnswer = true,
-                                        required = true
-                                    ),
-                                    QuestionField(
-                                        "Description de la ville",
-                                        shortAnswer = false,
-                                        required = true
-                                    ),
-                                    QuestionField(
-                                        "Message de bienvenue",
-                                        shortAnswer = false,
-                                        required = true
-                                    )
-                                ) {
-                                    M1(
-                                        id.toString(),
-                                        idNameRP.toString(),
-                                        idDescription.toString(),
-                                        idWelcome.toString(),
-                                        world,
-                                        serverId
-                                    )
-                                    null
-                                }
-                            }
-
-                            WorldEnum.DIBIMAP -> {
-
-                                servers.add(serverId)
-                                val serverC = servers[serverId]
-                                    ?: throw IllegalArgumentException("Un problème de source inconnue est survenue. La création du serveur a échoué.")
-                                serverC["world"] = world.progName
-                                serverC["name"] = serverD.name
-
-                                val serverForZones = getValueById(serverId)
-
-                                playerUI.addMessage(Message("Le serveur a été configuré avec succès ! Vous devez faire à nouveau la commande pour ajouter des villes. Les $serverForZones ont été ajoutées automatiquement."))
-                            }
-
-                            WorldEnum.TUTO -> {
-                                val id = generateUniqueID()
-                                places.add(id)
-                                val place = places[id]
-                                    ?: throw IllegalArgumentException("Un problème de source inconnue est survenue. La création du serveur a échoué.")
-                                place["nameRP"] = "Saint-Lapin-sur-bot" // à Demander
-                                place["description"] = "Ville accueillante du tutoriel" // à Demander
-                                place["welcome"] =
-                                    "Ne restez pas trop longtemps ici et profitez de l'aventure" // à Demander
-                                place["x"] = 45.toString() // automatique normalement : aléatoire
-                                place["y"] = 20.toString() // automatique normalement : aléatoire
-                                place["type"] = "city" // automatique normalement
-                                place["world"] = world.progName // automatique normalement
-                                place["server"] = serverId.toString() // automatique normalement
-
-                                configNormalServer(world, serverD, id)
-
-                                playerUI.addMessage(Message("Le serveur a été configuré avec succès !"))
-                            }
+                when (world) {
+                    WorldEnum.NORMAL -> {
+                        return@addButton Question(
+                            "Configuration de la ville du serveur", QuestionField(
+                                "Nom de la ville", shortAnswer = true, required = true
+                            ), QuestionField(
+                                "Description de la ville", shortAnswer = false, required = true
+                            ), QuestionField(
+                                "Message de bienvenue", shortAnswer = false, required = true
+                            )
+                        ) {
+                            createPlace(
+                                it, world, serverId, playerUI, serverD
+                            )
+                            null
                         }
-                        null
                     }
-                    .addButton(
-                        "Non",
-                        "Le monde est incorrecte ou je veux changer quelque chose. **Réversible**"
-                    ) { playerUI ->
-                        playerUI.addMessage(Message("Contactez un administrateur pour changer le monde si c'est le problème"))
-                        null
+
+                    WorldEnum.DIBIMAP -> {
+
+                        servers.add(serverId)
+                        val serverC = servers[serverId]
+                            ?: throw IllegalArgumentException("Un problème de source inconnue est survenue. La création du serveur a échoué.")
+                        serverC["world"] = world.progName
+                        serverC["name"] = serverD.name
+
+                        val serverForZones = getValueById(serverId)
+
+                        playerUI.addMessage(Message("Le serveur a été configuré avec succès ! Vous devez faire à nouveau la commande pour ajouter des villes. Les $serverForZones ont été ajoutées automatiquement."))
                     }
-            )
+
+                    WorldEnum.TUTO -> {
+                        val id = generateUniqueID()
+                        places.add(id)
+                        val place = places[id]
+                            ?: throw IllegalArgumentException("Un problème de source inconnue est survenue. La création du serveur a échoué.")
+                        place["nameRP"] = "Saint-Lapin-sur-bot" // à Demander
+                        place["description"] = "Ville accueillante du tutoriel" // à Demander
+                        place["welcome"] =
+                            "Ne restez pas trop longtemps ici et profitez de l'aventure" // à Demander
+                        place["x"] = 45.toString() // automatique normalement : aléatoire
+                        place["y"] = 20.toString() // automatique normalement : aléatoire
+                        place["type"] = "city" // automatique normalement
+                        place["world"] = world.progName // automatique normalement
+                        place["server"] = serverId.toString() // automatique normalement
+
+                        configNormalServer(world, serverD, id)
+
+                        playerUI.addMessage(Message("Le serveur a été configuré avec succès !"))
+                    }
+                }
+                null
+            }.addButton(
+                "Non", "Le monde est incorrecte ou je veux changer quelque chose. **Réversible**"
+            ) { playerUI ->
+                playerUI.addMessage(Message("Contactez un administrateur pour changer le monde si c'est le problème"))
+                null
+            })
         } else {
             when (WorldEnum.valueOf(server["world"])) {
                 WorldEnum.NORMAL -> {
@@ -361,72 +296,43 @@ class ConfigCommand : Command(
                         return (start until start + num).map { i ->
                             val place = placesArray[i]
                             Pair(
-                                place["nameRP"],
-                                "Coordonnées : ${place["x"]}, ${place["y"]}"
+                                place["nameRP"], "Coordonnées : ${place["x"]}, ${place["y"]}"
                             )
                         }
                     }
 
-                    MenuBuilder(
-                        "Configuration du serveur",
-                        "Configurer votre serveur discord d'entité territorial",
-                        Color.BLUE,
-                        context
-                    )
-                        .addButton(
+                    ui.setLongCustomUI(
+                        MenuBuilderUI(
+                            "Configuration du serveur", "Configurer votre serveur discord d'entité territorial", ui
+                        ).addButton(
                             "Mise à jour du nom",
                             "Le nom du serveur discord est stocké dans la base de données. Mais si vous changer le nom du serveur discord le bot ne met pas à jour automatiquement de son côté."
-                        ) { name, _, _ ->
-                            val serverDiscord = serverD
-                            server["name"] = serverDiscord.name
-                            name.buttonInteraction.createImmediateResponder()
-                                .setContent("Le nom du serveur a été mis à jour avec succès !")
-                                .respond()
-                        }
-                        .addButton("Ajouter une ville", "Permet d'ajouter une ville sur la carte") { addCity, c1, _ ->
+                        ) { playerUI ->
+                            server["name"] = serverD.name
+                            playerUI.addMessage(Message("Le nom du serveur a été mis à jour avec succès !"))
+                            null
+                        }.addButton("Ajouter une ville", "Permet d'ajouter une ville sur la carte") { playerUI ->
                             // j'ai besoin d'un nom, d'une description, d'un message de bienvenue, et de x et y. Les modals sont limités à 4 champs donc je vais faire 2 modals
                             val id = generateUniqueID()
 
-                            addCity.buttonInteraction.respondWithModal(
-                                id.toString(),
-                                "Ajout d'une ville (1/2)",
-                                ActionRow.of(
-                                    TextInput.create(
-                                        TextInputStyle.SHORT,
-                                        "cnameid",
-                                        "Nom RP de la ville",
-                                        true
-                                    )
-                                ),
-                                ActionRow.of(
-                                    TextInput.create(
-                                        TextInputStyle.PARAGRAPH,
-                                        "cdescid",
-                                        "Description de la ville",
-                                        true
-                                    )
-                                ),
-                                ActionRow.of(
-                                    TextInput.create(
-                                        TextInputStyle.PARAGRAPH,
-                                        "cwelcomeid",
-                                        "Message de bienvenue",
-                                        true
-                                    )
+                            return@addButton Question(
+                                "Ajout d'une ville (1/2)", QuestionField(
+                                    "Nom RP de la ville", shortAnswer = true, required = true
+                                ), QuestionField(
+                                    "Description de la ville", shortAnswer = false, required = true
+                                ), QuestionField(
+                                    "Message de bienvenue", shortAnswer = false, required = true
                                 )
-                            )
-
-                            c1.modal(
+                            ) {
                                 M2(
-                                    id.toString(),
-                                    serverId
+                                    id.toString(), serverId
                                 )
-                            )
-                        }
-                        .addButton(
+                                null
+                            }
+                        }.addButton(
                             "Supprimer une ville",
                             "Permet de supprimer une ville sur la carte si elle n'est pas utilisée pour le lore"
-                        ) { remove, c1, _ ->
+                        ) {
                             /**
                              * Etapes :
                              * 1. Récupérer la liste des villes
@@ -442,12 +348,9 @@ class ConfigCommand : Command(
                             val placesPlace = arrayListOf(*placesLong.map { places[it]!! }.toTypedArray())
 
                             // 2. Afficher la liste des villes au joueur dans un embed avec interactions
-                            val ui = DiscordPlayerUI(context, remove.interaction)
                             ui.setLongCustomUI(
                                 EmbedPagesWithInteractions(
-                                    placesPlace,
-                                    ::fillEmbed,
-                                    { place: Place, playerUI: PlayerUI ->
+                                    placesPlace, ::fillEmbed, { place: Place, playerUI: PlayerUI ->
                                         // 3. Récupérer la ville sélectionnée
                                         // 4. Supprimer la ville
                                         server.removePlace(place.id)
@@ -456,18 +359,11 @@ class ConfigCommand : Command(
                                         // 5. Envoyer un message de succès
                                         playerUI.addMessage(Message("La ville a été supprimée avec succès !"))
                                         return@EmbedPagesWithInteractions null
-                                    },
-                                    null,
-                                    null,
-                                    "Liste des villes",
-                                    "Sélectionnez une ville à supprimer",
-                                    ui
+                                    }, null, null, "Liste des villes", "Sélectionnez une ville à supprimer", ui
                                 )
                             )
-                            ui.updateOrSend()
-                            c1.ui(ui)
-                        }
-                        .addButton("Modifier une ville", "Permet de modifier une ville sur la carte") { city, c1, _ ->
+                            null
+                        }.addButton("Modifier une ville", "Permet de modifier une ville sur la carte") { playerUI ->
                             /**
                              * Etapes :
                              * 1. Récupérer la liste des villes
@@ -483,12 +379,9 @@ class ConfigCommand : Command(
                             val placesPlace = arrayListOf(*placesLong.map { places[it]!! }.toTypedArray())
 
                             // 2. Afficher la liste des villes au joueur dans un embed avec interactions
-                            val ui = DiscordPlayerUI(context, city.interaction)
                             ui.setLongCustomUI(
                                 EmbedPagesWithInteractions(
-                                    placesPlace,
-                                    ::fillEmbed,
-                                    { place: Place, _: PlayerUI ->
+                                    placesPlace, ::fillEmbed, { place: Place, _: PlayerUI ->
                                         // 3. Récupérer la ville sélectionnée
                                         // 4. Afficher les options de modification
 
@@ -497,104 +390,87 @@ class ConfigCommand : Command(
                                             "Sélectionner ce qu'il faut modifier :",
                                             Color.YELLOW,
                                             c1
-                                        )
-                                            .addButton(
-                                                "Modifier le nom RP du lieu",
-                                                "Modifiable à tout moment, le nom de votre ville est personnalisable."
-                                            ) { name, c3, _ ->
-                                                val id = generateUniqueID()
+                                        ).addButton(
+                                            "Modifier le nom RP du lieu",
+                                            "Modifiable à tout moment, le nom de votre ville est personnalisable."
+                                        ) { name, c3, _ ->
+                                            val id = generateUniqueID()
 
-                                                c3.modal(
-                                                    ModalModif(
-                                                        id.toString(),
-                                                        place,
-                                                        "nameRP"
+                                            c3.modal(
+                                                ModalModif(
+                                                    id.toString(), place, "nameRP"
+                                                )
+                                            )
+
+                                            name.buttonInteraction.respondWithModal(
+                                                id.toString(),
+                                                "Mise à jour du nom RP de la ville",
+                                                ActionRow.of(
+                                                    TextInput.create(
+                                                        TextInputStyle.SHORT,
+                                                        "cnameRPid",
+                                                        "Nom de la ville",
+                                                        true
                                                     )
                                                 )
+                                            )
+                                        }.addButton(
+                                            "Modifier la description du lieu",
+                                            "Modifiable à tout moment, la description de votre ville est la deuxième chose que voix une personne quand il regarde le lieu."
+                                        ) { description, c3, _ ->
+                                            val id = generateUniqueID()
 
-                                                name.buttonInteraction.respondWithModal(
-                                                    id.toString(),
-                                                    "Mise à jour du nom RP de la ville",
-                                                    ActionRow.of(
-                                                        TextInput.create(
-                                                            TextInputStyle.SHORT,
-                                                            "cnameRPid",
-                                                            "Nom de la ville",
-                                                            true
-                                                        )
+                                            c3.modal(
+                                                ModalModif(
+                                                    id.toString(), place, "description"
+                                                )
+                                            )
+
+                                            description.buttonInteraction.respondWithModal(
+                                                id.toString(),
+                                                "Mise à jour de la description de la ville",
+                                                ActionRow.of(
+                                                    TextInput.create(
+                                                        TextInputStyle.PARAGRAPH,
+                                                        "cdescriptionid",
+                                                        "Description de la ville",
+                                                        true
                                                     )
                                                 )
-                                            }
-                                            .addButton(
-                                                "Modifier la description du lieu",
-                                                "Modifiable à tout moment, la description de votre ville est la deuxième chose que voix une personne quand il regarde le lieu."
-                                            ) { description, c3, _ ->
-                                                val id = generateUniqueID()
+                                            )
+                                        }.addButton(
+                                            "Modifier le message de bienvenue",
+                                            "Modifiable à tout moment, le message de bienvenue est nécessaire pour mettre l'ambiance : ville magique ? Tech ? Abandonné ? Repaire de Pirates ?"
+                                        ) { welcome, c3, _ ->
+                                            val id = generateUniqueID()
 
-                                                c3.modal(
-                                                    ModalModif(
-                                                        id.toString(),
-                                                        place,
-                                                        "description"
+                                            c3.modal(
+                                                ModalModif(
+                                                    id.toString(), place, "welcome"
+                                                )
+                                            )
+
+                                            welcome.buttonInteraction.respondWithModal(
+                                                id.toString(),
+                                                "Mise à jour du message de bienvenue",
+                                                ActionRow.of(
+                                                    TextInput.create(
+                                                        TextInputStyle.PARAGRAPH,
+                                                        "cwelcomeid",
+                                                        "Message de bienvenue",
+                                                        true
                                                     )
                                                 )
-
-                                                description.buttonInteraction.respondWithModal(
-                                                    id.toString(),
-                                                    "Mise à jour de la description de la ville",
-                                                    ActionRow.of(
-                                                        TextInput.create(
-                                                            TextInputStyle.PARAGRAPH,
-                                                            "cdescriptionid",
-                                                            "Description de la ville",
-                                                            true
-                                                        )
-                                                    )
-                                                )
-                                            }
-                                            .addButton(
-                                                "Modifier le message de bienvenue",
-                                                "Modifiable à tout moment, le message de bienvenue est nécessaire pour mettre l'ambiance : ville magique ? Tech ? Abandonné ? Repaire de Pirates ?"
-                                            ) { welcome, c3, _ ->
-                                                val id = generateUniqueID()
-
-                                                c3.modal(
-                                                    ModalModif(
-                                                        id.toString(),
-                                                        place,
-                                                        "welcome"
-                                                    )
-                                                )
-
-                                                welcome.buttonInteraction.respondWithModal(
-                                                    id.toString(),
-                                                    "Mise à jour du message de bienvenue",
-                                                    ActionRow.of(
-                                                        TextInput.create(
-                                                            TextInputStyle.PARAGRAPH,
-                                                            "cwelcomeid",
-                                                            "Message de bienvenue",
-                                                            true
-                                                        )
-                                                    )
-                                                )
-                                            }
-                                            .messageBuilder()
+                                            )
+                                        }.messageBuilder()
                                         menu.send(channel)
                                         return@EmbedPagesWithInteractions null
-                                    },
-                                    null,
-                                    null,
-                                    "Liste des villes",
-                                    "Sélectionnez une ville à modifier",
-                                    ui
+                                    }, null, null, "Liste des villes", "Sélectionnez une ville à modifier", ui
                                 )
                             )
-                            ui.updateOrSend()
-                            c1.ui(ui)
+                            null
                         }
-                        .responder(slashCommand)
-
+                    )
                 }
 
                 WorldEnum.TUTO -> {
@@ -607,102 +483,74 @@ class ConfigCommand : Command(
     }
 
     private fun modifServer(
-        server: ServerBot,
-        context: Context,
-        serverDiscord: Server,
-        slashCommand: SlashCommandInteraction
+        server: ServerBot, context: Context, serverDiscord: Server, slashCommand: SlashCommandInteraction
     ) {
         MenuBuilder(
             "Modification du serveur dans un monde à lieu unique",
             "Vous pouvez modifier la configuration du serveur discord de façon simple dans un monde à serveur unique. Sélectionner ce qu'il faut modifier :",
             Color.YELLOW,
             context
-        )
-            .addButton(
-                "Mise à jour du nom du serveur",
-                "Le nom du serveur discord est stocké dans la base de données. Mais si vous changer le nom du serveur discord le bot ne met pas à jour automatiquement de son côté."
-            ) { name, _, _ ->
-                server["name"] = serverDiscord.name
-                name.buttonInteraction.createImmediateResponder()
-                    .setContent("Le nom du serveur a été mis à jour avec succès !")
-                    .respond()
-            }
-            .addButton(
-                "Modifier le nom RP du lieu",
-                "Modifiable à tout moment, le nom de votre ville est personnalisable."
-            ) { name, c1, _ ->
-                val id = generateUniqueID()
+        ).addButton(
+            "Mise à jour du nom du serveur",
+            "Le nom du serveur discord est stocké dans la base de données. Mais si vous changer le nom du serveur discord le bot ne met pas à jour automatiquement de son côté."
+        ) { name, _, _ ->
+            server["name"] = serverDiscord.name
+            name.buttonInteraction.createImmediateResponder()
+                .setContent("Le nom du serveur a été mis à jour avec succès !").respond()
+        }.addButton(
+            "Modifier le nom RP du lieu", "Modifiable à tout moment, le nom de votre ville est personnalisable."
+        ) { name, c1, _ ->
+            val id = generateUniqueID()
 
-                c1.modal(
-                    ModalModif(
-                        id.toString(),
-                        getUniquePlace(server),
-                        "nameRP"
+            c1.modal(
+                ModalModif(
+                    id.toString(), getUniquePlace(server), "nameRP"
+                )
+            )
+
+            name.buttonInteraction.respondWithModal(
+                id.toString(), "Mise à jour du nom RP de la ville", ActionRow.of(
+                    TextInput.create(TextInputStyle.SHORT, "cnameRPid", "Nom de la ville", true)
+                )
+            )
+        }.addButton(
+            "Modifier la description du lieu",
+            "Modifiable à tout moment, la description de votre ville est la deuxième chose que voix une personne quand il regarde le lieu."
+        ) { description, c1, _ ->
+            val id = generateUniqueID()
+
+            c1.modal(
+                ModalModif(
+                    id.toString(), getUniquePlace(server), "description"
+                )
+            )
+
+            description.buttonInteraction.respondWithModal(
+                id.toString(), "Mise à jour de la description de la ville", ActionRow.of(
+                    TextInput.create(
+                        TextInputStyle.PARAGRAPH, "cdescriptionid", "Description de la ville", true
                     )
                 )
+            )
+        }.addButton(
+            "Modifier le message de bienvenue",
+            "Modifiable à tout moment, le message de bienvenue est nécessaire pour mettre l'ambiance : ville magique ? Tech ? Abandonné ? Repaire de Pirates ?"
+        ) { welcome, c1, _ ->
+            val id = generateUniqueID()
 
-                name.buttonInteraction.respondWithModal(
-                    id.toString(),
-                    "Mise à jour du nom RP de la ville",
-                    ActionRow.of(
-                        TextInput.create(TextInputStyle.SHORT, "cnameRPid", "Nom de la ville", true)
+            c1.modal(
+                ModalModif(
+                    id.toString(), getUniquePlace(server), "welcome"
+                )
+            )
+
+            welcome.buttonInteraction.respondWithModal(
+                id.toString(), "Mise à jour du message de bienvenue", ActionRow.of(
+                    TextInput.create(
+                        TextInputStyle.PARAGRAPH, "cwelcomeid", "Message de bienvenue", true
                     )
                 )
-            }
-            .addButton(
-                "Modifier la description du lieu",
-                "Modifiable à tout moment, la description de votre ville est la deuxième chose que voix une personne quand il regarde le lieu."
-            ) { description, c1, _ ->
-                val id = generateUniqueID()
-
-                c1.modal(
-                    ModalModif(
-                        id.toString(),
-                        getUniquePlace(server),
-                        "description"
-                    )
-                )
-
-                description.buttonInteraction.respondWithModal(
-                    id.toString(),
-                    "Mise à jour de la description de la ville",
-                    ActionRow.of(
-                        TextInput.create(
-                            TextInputStyle.PARAGRAPH,
-                            "cdescriptionid",
-                            "Description de la ville",
-                            true
-                        )
-                    )
-                )
-            }
-            .addButton(
-                "Modifier le message de bienvenue",
-                "Modifiable à tout moment, le message de bienvenue est nécessaire pour mettre l'ambiance : ville magique ? Tech ? Abandonné ? Repaire de Pirates ?"
-            ) { welcome, c1, _ ->
-                val id = generateUniqueID()
-
-                c1.modal(
-                    ModalModif(
-                        id.toString(),
-                        getUniquePlace(server),
-                        "welcome"
-                    )
-                )
-
-                welcome.buttonInteraction.respondWithModal(
-                    id.toString(),
-                    "Mise à jour du message de bienvenue",
-                    ActionRow.of(
-                        TextInput.create(
-                            TextInputStyle.PARAGRAPH,
-                            "cwelcomeid",
-                            "Message de bienvenue",
-                            true
-                        )
-                    )
-                )
-            }
-            .responder(slashCommand)
+            )
+        }.responder(slashCommand)
     }
 }
