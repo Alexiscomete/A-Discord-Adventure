@@ -189,18 +189,18 @@ class ConfigCommand : Command(
         }
     }
 
+    @Deprecated("Spécial menubuilder", ReplaceWith("fieldModificationAnswer"))
     class ModalModif(name: String, val place: Place, private val col: String) : ModalContextManager(name) {
         override fun ex(smce: ModalSubmitEvent, c: Context) {
-            val op = smce.modalInteraction.getTextInputValueByCustomId("c${col}id")
 
-            if (!op.isPresent) {
-                throw IllegalArgumentException("Le champ n'a pas été rempli")
-            }
-
-            place[col] = op.get()
-
-            smce.modalInteraction.createImmediateResponder().setContent("Modifié avec succès !").respond()
         }
+    }
+
+    private fun fieldModificationAnswer(
+        question: Question, place: Place, col: String, playerUI: PlayerUI
+    ) {
+        place[col] = question.field0.answer
+        playerUI.addMessage(Message("Modifié avec succès !"))
     }
 
     override fun execute(slashCommand: SlashCommandInteraction) {
@@ -263,8 +263,7 @@ class ConfigCommand : Command(
                             ?: throw IllegalArgumentException("Un problème de source inconnue est survenue. La création du serveur a échoué.")
                         place["nameRP"] = "Saint-Lapin-sur-bot" // à Demander
                         place["description"] = "Ville accueillante du tutoriel" // à Demander
-                        place["welcome"] =
-                            "Ne restez pas trop longtemps ici et profitez de l'aventure" // à Demander
+                        place["welcome"] = "Ne restez pas trop longtemps ici et profitez de l'aventure" // à Demander
                         place["x"] = 45.toString() // automatique normalement : aléatoire
                         place["y"] = 20.toString() // automatique normalement : aléatoire
                         place["type"] = "city" // automatique normalement
@@ -286,7 +285,7 @@ class ConfigCommand : Command(
         } else {
             when (WorldEnum.valueOf(server["world"])) {
                 WorldEnum.NORMAL -> {
-                    modifServer(server, context, serverD, slashCommand)
+                    modifServer(server, serverD, ui)
                 }
 
                 WorldEnum.DIBIMAP -> {
@@ -385,96 +384,65 @@ class ConfigCommand : Command(
                                         // 3. Récupérer la ville sélectionnée
                                         // 4. Afficher les options de modification
 
-                                        val menu = MenuBuilder(
-                                            "Modification de la ville ${place["nameRP"]}",
-                                            "Sélectionner ce qu'il faut modifier :",
-                                            Color.YELLOW,
-                                            c1
-                                        ).addButton(
-                                            "Modifier le nom RP du lieu",
-                                            "Modifiable à tout moment, le nom de votre ville est personnalisable."
-                                        ) { name, c3, _ ->
-                                            val id = generateUniqueID()
-
-                                            c3.modal(
-                                                ModalModif(
-                                                    id.toString(), place, "nameRP"
-                                                )
-                                            )
-
-                                            name.buttonInteraction.respondWithModal(
-                                                id.toString(),
-                                                "Mise à jour du nom RP de la ville",
-                                                ActionRow.of(
-                                                    TextInput.create(
-                                                        TextInputStyle.SHORT,
-                                                        "cnameRPid",
-                                                        "Nom de la ville",
-                                                        true
+                                        playerUI.setLongCustomUI(
+                                            MenuBuilderUI(
+                                                "Modification de la ville ${place["nameRP"]}",
+                                                "Sélectionnez ce qu'il faut modifier :",
+                                                ui
+                                            ).addButton(
+                                                "Modifier le nom RP du lieu",
+                                                "Modifiable à tout moment, le nom de votre ville est personnalisable."
+                                            ) { _ ->
+                                                Question(
+                                                    "Mise à jour du nom RP de la ville", QuestionField(
+                                                        "Nom RP de la ville", shortAnswer = true, required = true
                                                     )
-                                                )
-                                            )
-                                        }.addButton(
-                                            "Modifier la description du lieu",
-                                            "Modifiable à tout moment, la description de votre ville est la deuxième chose que voix une personne quand il regarde le lieu."
-                                        ) { description, c3, _ ->
-                                            val id = generateUniqueID()
-
-                                            c3.modal(
-                                                ModalModif(
-                                                    id.toString(), place, "description"
-                                                )
-                                            )
-
-                                            description.buttonInteraction.respondWithModal(
-                                                id.toString(),
-                                                "Mise à jour de la description de la ville",
-                                                ActionRow.of(
-                                                    TextInput.create(
-                                                        TextInputStyle.PARAGRAPH,
-                                                        "cdescriptionid",
-                                                        "Description de la ville",
-                                                        true
+                                                ) {
+                                                    fieldModificationAnswer(
+                                                        it, place, "nameRP", ui
                                                     )
-                                                )
-                                            )
-                                        }.addButton(
-                                            "Modifier le message de bienvenue",
-                                            "Modifiable à tout moment, le message de bienvenue est nécessaire pour mettre l'ambiance : ville magique ? Tech ? Abandonné ? Repaire de Pirates ?"
-                                        ) { welcome, c3, _ ->
-                                            val id = generateUniqueID()
-
-                                            c3.modal(
-                                                ModalModif(
-                                                    id.toString(), place, "welcome"
-                                                )
-                                            )
-
-                                            welcome.buttonInteraction.respondWithModal(
-                                                id.toString(),
-                                                "Mise à jour du message de bienvenue",
-                                                ActionRow.of(
-                                                    TextInput.create(
-                                                        TextInputStyle.PARAGRAPH,
-                                                        "cwelcomeid",
-                                                        "Message de bienvenue",
-                                                        true
+                                                    null
+                                                }
+                                            }.addButton(
+                                                "Modifier la description du lieu",
+                                                "Modifiable à tout moment, la description de votre ville est la deuxième chose que voix une personne quand il regarde le lieu."
+                                            ) { _ ->
+                                                Question(
+                                                    "Mise à jour de la description de la ville", QuestionField(
+                                                        "Description de la ville", shortAnswer = false, required = true
                                                     )
-                                                )
-                                            )
-                                        }.messageBuilder()
-                                        menu.send(channel)
-                                        return@EmbedPagesWithInteractions null
+                                                ) {
+                                                    fieldModificationAnswer(
+                                                        it, place, "description", ui
+                                                    )
+                                                    null
+                                                }
+                                            }.addButton(
+                                                "Modifier le message de bienvenue",
+                                                "Modifiable à tout moment, le message de bienvenue est nécessaire pour mettre l'ambiance : ville magique ? Tech ? Abandonné ? Repaire de Pirates ?"
+                                            ) { _ ->
+                                                Question(
+                                                    "Mise à jour du message de bienvenue", QuestionField(
+                                                        "Message de bienvenue", shortAnswer = false, required = true
+                                                    )
+                                                ) {
+                                                    fieldModificationAnswer(
+                                                        it, place, "welcome", ui
+                                                    )
+                                                    null
+                                                }
+                                            }
+                                        )
+                                        null
                                     }, null, null, "Liste des villes", "Sélectionnez une ville à modifier", ui
                                 )
                             )
                             null
-                        }
-                    )
+                        })
                 }
 
                 WorldEnum.TUTO -> {
-                    modifServer(server, context, serverD, slashCommand)
+                    modifServer(server, serverD, ui)
                 }
             }
         }
@@ -483,74 +451,62 @@ class ConfigCommand : Command(
     }
 
     private fun modifServer(
-        server: ServerBot, context: Context, serverDiscord: Server, slashCommand: SlashCommandInteraction
+        server: ServerBot, serverDiscord: Server, ui: PlayerUI
     ) {
-        MenuBuilder(
-            "Modification du serveur dans un monde à lieu unique",
-            "Vous pouvez modifier la configuration du serveur discord de façon simple dans un monde à serveur unique. Sélectionner ce qu'il faut modifier :",
-            Color.YELLOW,
-            context
-        ).addButton(
-            "Mise à jour du nom du serveur",
-            "Le nom du serveur discord est stocké dans la base de données. Mais si vous changer le nom du serveur discord le bot ne met pas à jour automatiquement de son côté."
-        ) { name, _, _ ->
-            server["name"] = serverDiscord.name
-            name.buttonInteraction.createImmediateResponder()
-                .setContent("Le nom du serveur a été mis à jour avec succès !").respond()
-        }.addButton(
-            "Modifier le nom RP du lieu", "Modifiable à tout moment, le nom de votre ville est personnalisable."
-        ) { name, c1, _ ->
-            val id = generateUniqueID()
-
-            c1.modal(
-                ModalModif(
-                    id.toString(), getUniquePlace(server), "nameRP"
-                )
-            )
-
-            name.buttonInteraction.respondWithModal(
-                id.toString(), "Mise à jour du nom RP de la ville", ActionRow.of(
-                    TextInput.create(TextInputStyle.SHORT, "cnameRPid", "Nom de la ville", true)
-                )
-            )
-        }.addButton(
-            "Modifier la description du lieu",
-            "Modifiable à tout moment, la description de votre ville est la deuxième chose que voix une personne quand il regarde le lieu."
-        ) { description, c1, _ ->
-            val id = generateUniqueID()
-
-            c1.modal(
-                ModalModif(
-                    id.toString(), getUniquePlace(server), "description"
-                )
-            )
-
-            description.buttonInteraction.respondWithModal(
-                id.toString(), "Mise à jour de la description de la ville", ActionRow.of(
-                    TextInput.create(
-                        TextInputStyle.PARAGRAPH, "cdescriptionid", "Description de la ville", true
+        ui.setLongCustomUI(
+            MenuBuilderUI(
+                "Modification du serveur dans un monde à lieu unique",
+                "Vous pouvez modifier la configuration du serveur discord de façon simple dans un monde à serveur unique. Sélectionner ce qu'il faut modifier :",
+                ui
+            ).addButton(
+                "Mise à jour du nom du serveur",
+                "Le nom du serveur discord est stocké dans la base de données. Mais si vous changer le nom du serveur discord le bot ne met pas à jour automatiquement de son côté."
+            ) { pui ->
+                server["name"] = serverDiscord.name
+                pui.addMessage(Message("Le nom du serveur a été mis à jour avec succès !"))
+                null
+            }.addButton(
+                "Modifier le nom RP du lieu", "Modifiable à tout moment, le nom de votre ville est personnalisable."
+            ) {
+                Question(
+                    "Mise à jour du nom RP de la ville", QuestionField(
+                        "Nom RP de la ville", shortAnswer = true, required = true
                     )
-                )
-            )
-        }.addButton(
-            "Modifier le message de bienvenue",
-            "Modifiable à tout moment, le message de bienvenue est nécessaire pour mettre l'ambiance : ville magique ? Tech ? Abandonné ? Repaire de Pirates ?"
-        ) { welcome, c1, _ ->
-            val id = generateUniqueID()
-
-            c1.modal(
-                ModalModif(
-                    id.toString(), getUniquePlace(server), "welcome"
-                )
-            )
-
-            welcome.buttonInteraction.respondWithModal(
-                id.toString(), "Mise à jour du message de bienvenue", ActionRow.of(
-                    TextInput.create(
-                        TextInputStyle.PARAGRAPH, "cwelcomeid", "Message de bienvenue", true
+                ) {
+                    fieldModificationAnswer(
+                        it, getUniquePlace(server), "nameRP", ui
                     )
-                )
-            )
-        }.responder(slashCommand)
+                    null
+                }
+            }.addButton(
+                "Modifier la description du lieu",
+                "Modifiable à tout moment, la description de votre ville est la deuxième chose que voix une personne quand il regarde le lieu."
+            ) {
+                Question(
+                    "Mise à jour de la description de la ville", QuestionField(
+                        "Description de la ville", shortAnswer = false, required = true
+                    )
+                ) {
+                    fieldModificationAnswer(
+                        it, getUniquePlace(server), "description", ui
+                    )
+                    null
+                }
+            }.addButton(
+                "Modifier le message de bienvenue",
+                "Modifiable à tout moment, le message de bienvenue est nécessaire pour mettre l'ambiance : ville magique ? Tech ? Abandonné ? Repaire de Pirates ?"
+            ) {
+                Question(
+                    "Mise à jour du message de bienvenue", QuestionField(
+                        "Message de bienvenue", shortAnswer = false, required = true
+                    )
+                ) {
+                    fieldModificationAnswer(
+                        it, getUniquePlace(server), "welcome", ui
+                    )
+                    null
+                }
+            }
+        )
     }
 }
