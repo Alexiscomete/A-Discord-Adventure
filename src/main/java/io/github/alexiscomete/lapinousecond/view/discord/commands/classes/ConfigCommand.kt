@@ -2,29 +2,21 @@ package io.github.alexiscomete.lapinousecond.view.discord.commands.classes
 
 import io.github.alexiscomete.lapinousecond.data.managesave.generateUniqueID
 import io.github.alexiscomete.lapinousecond.data.managesave.saveManager
-import io.github.alexiscomete.lapinousecond.view.Context
 import io.github.alexiscomete.lapinousecond.view.contextFor
-import io.github.alexiscomete.lapinousecond.view.contextmanager.ModalContextManager
 import io.github.alexiscomete.lapinousecond.view.discord.commands.Command
 import io.github.alexiscomete.lapinousecond.view.discord.commands.ExecutableWithArguments
 import io.github.alexiscomete.lapinousecond.view.discord.commands.getAccount
 import io.github.alexiscomete.lapinousecond.view.ui.longuis.EmbedPagesWithInteractions
 import io.github.alexiscomete.lapinousecond.view.ui.longuis.MenuBuilderUI
-import io.github.alexiscomete.lapinousecond.view.ui.old.MenuBuilder
 import io.github.alexiscomete.lapinousecond.view.ui.playerui.*
 import io.github.alexiscomete.lapinousecond.worlds.*
 import io.github.alexiscomete.lapinousecond.worlds.dibimap.checkById
 import io.github.alexiscomete.lapinousecond.worlds.dibimap.getValueById
 import io.github.alexiscomete.lapinousecond.worlds.dibimap.isDibimap
-import org.javacord.api.entity.message.component.ActionRow
-import org.javacord.api.entity.message.component.TextInput
-import org.javacord.api.entity.message.component.TextInputStyle
 import org.javacord.api.entity.permission.PermissionType
 import org.javacord.api.entity.server.Server
-import org.javacord.api.event.interaction.ModalSubmitEvent
 import org.javacord.api.interaction.Interaction
 import org.javacord.api.interaction.SlashCommandInteraction
-import java.awt.Color
 import java.util.*
 
 fun configNormalServer(world: WorldEnum, server: Server, placeId: Long) {
@@ -91,109 +83,86 @@ class ConfigCommand : Command(
         )
     }
 
-    @Deprecated("Spécial menubuilder")
-    class M2(name: String, private val serverId: Long) : ModalContextManager(name) {
-        override fun ex(smce: ModalSubmitEvent, c: Context) {
+    private fun addPlace1(serverId: Long, pui: PlayerUI, question: Question) {
 
-            // création d'un bouton pour continuer
-            MenuBuilder(
-                "Discord n'autorise pas l'enchainement des entrées de texte", "Donc cliquez sur ce", Color.GREEN, c
+        // création d'un bouton pour continuer
+        pui.setLongCustomUI(
+            MenuBuilderUI(
+                "Discord n'autorise pas l'enchainement des entrées de texte", "Donc cliquez sur ce", pui
             ).addButton(
                 "Bouton", "pour continuer"
-            ) { button, c2, _ ->
+            ) {
                 // partie 2 du modal avec x et y, j'utilise à nouveau idNameRP (pour x); idDescription (pour y)
-                val id2 = generateUniqueID()
-
-                button.buttonInteraction.respondWithModal(
-                    id2.toString(), "Ajout d'une ville (2/2)", ActionRow.of(
-                        TextInput.create(
-                            TextInputStyle.SHORT, "cxid", "Coordonnée X", true
-                        )
-                    ), ActionRow.of(
-                        TextInput.create(
-                            TextInputStyle.SHORT, "cyid", "Coordonnée Y", true
-                        )
+                Question(
+                    "Ajout d'une ville (2/2)",
+                    QuestionField(
+                        "Coordonnée X",
+                        shortAnswer = true,
+                        required = true
+                    ),
+                    QuestionField(
+                        "Coordonnée Y",
+                        shortAnswer = true,
+                        required = true
                     )
-                )
-
-                val opNameRP = smce.modalInteraction.getTextInputValueByCustomId("cnameid")
-                val opDescription = smce.modalInteraction.getTextInputValueByCustomId("cdescid")
-                val opWelcome = smce.modalInteraction.getTextInputValueByCustomId("cwelcomeid")
-
-                c2.modal(M3(id2.toString(), opNameRP, opDescription, opWelcome, serverId))
-            }.responder(smce.modalInteraction)
-        }
+                ) {
+                    addPlace2(serverId, pui, question, it)
+                    null
+                }
+            }
+        )
     }
 
-    @Deprecated("Spécial menubuilder")
-    class M3(
-        name: String,
-        private val opNameRP: Optional<String>,
-        private val opDescription: Optional<String>,
-        private val opWelcome: Optional<String>,
-        private val serverId: Long
-    ) : ModalContextManager(name) {
-        override fun ex(smce: ModalSubmitEvent, c: Context) {
-            // récupération de tous les éléments : description, nameRP, welcome, x, y
-            val opX = smce.modalInteraction.getTextInputValueByCustomId("cxid")
-            val opY = smce.modalInteraction.getTextInputValueByCustomId("cyid")
+    private fun addPlace2(serverId: Long, pui: PlayerUI, question0: Question, question1: Question) {
+        // récupération de tous les éléments : description, nameRP, welcome, x, y
+        val opX = question1.field0.answer
+        val opY = question1.field1!!.answer
 
-            // s'il manque un élément, on annule
-            if (!opNameRP.isPresent || !opDescription.isPresent || !opWelcome.isPresent || !opX.isPresent || !opY.isPresent) {
-                throw IllegalArgumentException("Vous avez oublié un élément !")
-            }
+        // on récupère les éléments
+        val nameRP = question0.field0.answer
+        val description = question0.field1!!.answer
+        val welcome = question0.field2!!.answer
 
-            // on récupère les éléments
-            val nameRP = opNameRP.get()
-            val description = opDescription.get()
-            val welcome = opWelcome.get()
-            val x = opX.get()
-            val y = opY.get()
-
-            // on vérifie que les coordonnées sont bien des nombres
-            try {
-                x.toInt()
-                y.toInt()
-            } catch (e: NumberFormatException) {
-                throw IllegalArgumentException("Les coordonnées doivent être des nombres !")
-            }
-
-            if (!getValueById(serverId).isInZones(x.toInt(), y.toInt())) {
-                throw IllegalArgumentException("Les coordonnées ne sont pas dans les zones autorisées pour votre entité !")
-            }
-
-            // TODO : vérifier l'existence de la ville dans les villes du lore officiel
-
-            if (saveManager.hasResult("SELECT * FROM places WHERE nameRP = '$nameRP' OR x = '$x' AND y = '$y'")) {
-                throw IllegalArgumentException("Une ville existe déjà à ces coordonnées ou avec ce nom !")
-            }
-
-            val id = generateUniqueID()
-            // création de la ville, on réutilise encore id
-            places.add(id)
-            val place = places[id]
-                ?: throw IllegalArgumentException("Un problème de source inconnue est survenue. La création de la ville a échoué.")
-            place["nameRP"] = nameRP
-            place["description"] = description
-            place["welcome"] = welcome
-            place["x"] = x
-            place["y"] = y
-            place["server"] = serverId.toString()
-            place["type"] = "city"
-            place["world"] = WorldEnum.DIBIMAP.progName
-
-            servers[serverId]!!.addPlace(id)
-
-            // on envoie un message de succès
-            smce.modalInteraction.createImmediateResponder().setContent("La ville a été créée avec succès !").respond()
+        // on vérifie que les coordonnées sont bien des nombres
+        try {
+            opX.toInt()
+            opY.toInt()
+        } catch (e: NumberFormatException) {
+            throw IllegalArgumentException("Les coordonnées doivent être des nombres !")
         }
-    }
 
-    @Deprecated("Spécial menubuilder", ReplaceWith("fieldModificationAnswer"))
-    class ModalModif(name: String, val place: Place, private val col: String) : ModalContextManager(name) {
-        override fun ex(smce: ModalSubmitEvent, c: Context) {
-
+        if (!getValueById(serverId).isInZones(opX.toInt(), opY.toInt())) {
+            throw IllegalArgumentException("Les coordonnées ne sont pas dans les zones autorisées pour votre entité !")
         }
+
+        // TODO : vérifier l'existence de la ville dans les villes du lore officiel
+
+        if (saveManager.hasResult("SELECT * FROM places WHERE nameRP = '$nameRP' OR x = '$opX' AND y = '$opY'")) {
+            throw IllegalArgumentException("Une ville existe déjà à ces coordonnées ou avec ce nom !")
+        }
+
+        val id = generateUniqueID()
+        // création de la ville, on réutilise encore id
+        places.add(id)
+        val place = places[id]
+            ?: throw IllegalArgumentException("Un problème de source inconnue est survenue. La création de la ville a échoué.")
+        place["nameRP"] = nameRP
+        place["description"] = description
+        place["welcome"] = welcome
+        place["x"] = opX
+        place["y"] = opY
+        place["server"] = serverId.toString()
+        place["type"] = "city"
+        place["world"] = WorldEnum.DIBIMAP.progName
+
+        servers[serverId]!!.addPlace(id)
+
+        // on envoie un message de succès
+        pui.addMessage(
+            Message(
+                "La ville a été créée avec succès !"
+            )
+        )
     }
 
     private fun fieldModificationAnswer(
@@ -211,7 +180,6 @@ class ConfigCommand : Command(
         val server = servers[serverId]
         val context = contextFor(getAccount(slashCommand.user))
         val serverD = slashCommand.server.get()
-        val channel = slashCommand.channel.get()
         val ui = DiscordPlayerUI(context, slashCommand as Interaction)
 
         if (server == null) {
@@ -312,9 +280,8 @@ class ConfigCommand : Command(
                             null
                         }.addButton("Ajouter une ville", "Permet d'ajouter une ville sur la carte") { playerUI ->
                             // j'ai besoin d'un nom, d'une description, d'un message de bienvenue, et de x et y. Les modals sont limités à 4 champs donc je vais faire 2 modals
-                            val id = generateUniqueID()
 
-                            return@addButton Question(
+                            Question(
                                 "Ajout d'une ville (1/2)", QuestionField(
                                     "Nom RP de la ville", shortAnswer = true, required = true
                                 ), QuestionField(
@@ -323,9 +290,7 @@ class ConfigCommand : Command(
                                     "Message de bienvenue", shortAnswer = false, required = true
                                 )
                             ) {
-                                M2(
-                                    id.toString(), serverId
-                                )
+                                addPlace1(serverId, playerUI, it)
                                 null
                             }
                         }.addButton(
