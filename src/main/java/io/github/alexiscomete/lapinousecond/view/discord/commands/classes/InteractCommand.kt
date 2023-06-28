@@ -1,8 +1,8 @@
 package io.github.alexiscomete.lapinousecond.view.discord.commands.classes
 
 import io.github.alexiscomete.lapinousecond.api
-import io.github.alexiscomete.lapinousecond.entity.concrete.resources.Resource
 import io.github.alexiscomete.lapinousecond.data.managesave.saveManager
+import io.github.alexiscomete.lapinousecond.entity.concrete.resources.Resource
 import io.github.alexiscomete.lapinousecond.view.Context
 import io.github.alexiscomete.lapinousecond.view.contextFor
 import io.github.alexiscomete.lapinousecond.view.discord.commands.Command
@@ -10,7 +10,6 @@ import io.github.alexiscomete.lapinousecond.view.discord.commands.ExecutableWith
 import io.github.alexiscomete.lapinousecond.view.discord.commands.getAccount
 import io.github.alexiscomete.lapinousecond.view.ui.longuis.EmbedPagesWithInteractions
 import io.github.alexiscomete.lapinousecond.view.ui.longuis.MenuBuilderUI
-import io.github.alexiscomete.lapinousecond.view.ui.old.MenuBuilder
 import io.github.alexiscomete.lapinousecond.view.ui.playerui.*
 import io.github.alexiscomete.lapinousecond.worlds.WorldEnum
 import io.github.alexiscomete.lapinousecond.worlds.buildings.Building
@@ -39,6 +38,8 @@ class InteractCommandBase : Command(
         val player = getAccount(slashCommand)
         val world = WorldEnum.valueOf(player["world"])
         val context = contextFor(getAccount(slashCommand.user))
+        val ui = DiscordPlayerUI(context, slashCommand as Interaction)
+
         when (player["place_${world.progName}_type"]) {
             "coos" -> {
                 // on regarde s'il existe une ville à l'endroit où le joueur est
@@ -52,16 +53,15 @@ class InteractCommandBase : Command(
                 if (resultSet.next()) {
                     val place = places[resultSet.getString("id").toLong()]
                         ?: throw IllegalArgumentException("Place not found")
-                    MenuBuilder(
+                    ui.setLongCustomUI(MenuBuilderUI(
                         "Interactions sur la case $x $y du monde ${world.nameRP}",
                         "Liste de toutes vos possibilités dans la version actuelle du bot. Les sorts ne sont pas compris.",
-                        Color.BLUE,
-                        context
+                        ui
                     )
                         .addButton(
                             "Entrer dans la ville",
                             "La ville ${place["nameRP"]} est ici ! Vous pouvez y entrer en cliquant sur ce bouton. Description : ${place["description"]}"
-                        ) { it, _, _ ->
+                        ) { playerUI ->
                             fun errorWithSuccess() {
                                 it.buttonInteraction.createImmediateResponder()
                                     .setContent("Vous êtes maintenant dans la ville ${place["nameRP"]} ! Invitation impossible, le serveur n'est pas accessible.")
@@ -75,13 +75,13 @@ class InteractCommandBase : Command(
                             val op = api.getServerById(serverId)
                             if (!op.isPresent) {
                                 errorWithSuccess()
-                                return@addButton
+                                return@addButton null
                             }
                             val server = op.get()
                             val firstChannel = server.textChannels.firstOrNull()
                             if (firstChannel == null) {
                                 errorWithSuccess()
-                                return@addButton
+                                return@addButton null
                             }
                             val invite: Invite = InviteBuilder(firstChannel)
                                 .setMaxUses(42)
@@ -95,8 +95,8 @@ class InteractCommandBase : Command(
                                 .respond()
 
                             player["serv"] = serverId
-                        }
-                        .responder(slashCommand)
+                            null
+                        })
                 } else {
                     slashCommand.createImmediateResponder()
                         .setContent("Il n'y a rien ici. De nouvelles interactions arriveront à l'avenir, pour le moment allez vers une ville")
@@ -108,16 +108,15 @@ class InteractCommandBase : Command(
             "building" -> {
                 val building = load(player["place_${world.progName}_id"])
                     ?: throw IllegalArgumentException("Building not found")
-                MenuBuilder(
+                ui.setLongCustomUI(MenuBuilderUI(
                     "Interactions sur le bâtiment ${building["nameRP"]} du monde ${world.nameRP}",
                     "Liste de toutes vos possibilités dans la version actuelle du bot.",
-                    Color.BLUE,
-                    context
+                    ui
                 )
                     .addButton(
                         "Sortir du bâtiment",
                         "Vous sortez du bâtiment ${building["nameRP"]} et retournez dans la ville."
-                    ) { it, _, _ ->
+                    ) { playerUI ->
                         player["place_${world.progName}_type"] = "city"
                         it.buttonInteraction.createImmediateResponder()
                             .setContent("Vous êtes maintenant dans la ville ${building["nameRP"]} !")
@@ -127,13 +126,12 @@ class InteractCommandBase : Command(
                     .addButton(
                         "Informations",
                         "Vous regardez les informations du bâtiment ${building["nameRP"]}."
-                    ) { it, _, _ ->
+                    ) { playerUI ->
                         it.buttonInteraction.createImmediateResponder()
                             .setContent("${building.title()}\n${building.descriptionShort()}")
                             .setFlags(MessageFlag.EPHEMERAL)
                             .respond()
-                    }
-                    .responder(slashCommand)
+                    })
             }
 
             "city" -> {
@@ -232,16 +230,15 @@ class InteractCommandBase : Command(
                     context.ui(ui)
                 }
 
-                MenuBuilder(
+                MenuBuilderUI(
                     "Interactions dans la ville ${place["nameRP"]}",
                     "Liste de toutes vos possibilités dans la version actuelle du bot.",
-                    Color.BLUE,
-                    context
+                    ui
                 )
                     .addButton(
                         "Quitter la ville",
                         "Vous quittez la ville ${place["nameRP"]} et retournez dans la nature"
-                    ) { it, _, _ ->
+                    ) { playerUI ->
                         player["place_${world.progName}_type"] = "coos"
                         player["place_${world.progName}_id"] = "0"
                         it.buttonInteraction.createImmediateResponder()
@@ -252,7 +249,7 @@ class InteractCommandBase : Command(
                     .addButton(
                         "Informations sur la ville",
                         "Vous pouvez voir les informations sur la ville ${place["nameRP"]} en cliquant sur ce bouton"
-                    ) { it, _, _ ->
+                    ) { playerUI ->
                         it.buttonInteraction.createImmediateResponder()
                             .setContent("La ville ${place["nameRP"]} est une ville aux coordonnées ${place["x"]} ${place["y"]} du monde ${world.nameRP}. Description : ${place["description"]}")
                             .setFlags(MessageFlag.EPHEMERAL)
@@ -261,148 +258,147 @@ class InteractCommandBase : Command(
                     .addButton(
                         "Interactions avec les bâtiments",
                         "Vous pouvez entrer dans un bâtiment, en financer un, ou simplement voir les vôtres."
-                    ) { bat, c1, _ ->
-                        MenuBuilder(
-                            "Bâtiments",
-                            "Interactions avec les bâtiments",
-                            Color.BLUE,
-                            c1
-                        )
-                            .addButton(
-                                "Voir les bâtiments",
-                                "Vous pouvez voir les bâtiments de la ville ${place["nameRP"]} en cliquant sur ce bouton et interagir avec eux"
-                            ) { it, _, _ ->
-                                val buildings = Buildings.loadBuildings(place["buildings"])
-                                sendBuildingsInEmbed(
-                                    "Bâtiments de la ville ${place["nameRP"]}",
-                                    "Liste de tous les bâtiments de la ville ${place["nameRP"]}.",
-                                    buildings,
-                                    c1,
-                                    it.interaction
-                                )
-                            }
-                            .addButton(
-                                "Vos bâtiments",
-                                "Vous pouvez voir vos bâtiments en cliquant sur ce bouton et interagir avec eux"
-                            ) { yours, c2, _ ->
-                                val buildings = Buildings.loadBuildings(place["buildings"])
-                                // remove if not with this owner
-                                buildings.removeIf { building -> building["owner"] != player.id.toString() }
-                                val ui = DiscordPlayerUI(context, yours.interaction)
-                                ui.setLongCustomUI(
-                                    EmbedPagesWithInteractions(
+                    ) { playerUI ->
+                        playerUI.setLongCustomUI(
+                            MenuBuilderUI(
+                                "Bâtiments",
+                                "Interactions avec les bâtiments",
+                                playerUI
+                            )
+                                .addButton(
+                                    "Voir les bâtiments",
+                                    "Vous pouvez voir les bâtiments de la ville ${place["nameRP"]} en cliquant sur ce bouton et interagir avec eux"
+                                ) { playerUI ->
+                                    val buildings = Buildings.loadBuildings(place["buildings"])
+                                    sendBuildingsInEmbed(
+                                        "Bâtiments de la ville ${place["nameRP"]}",
+                                        "Liste de tous les bâtiments de la ville ${place["nameRP"]}.",
                                         buildings,
-                                        { start: Int, max: Int, buildingsL: ArrayList<Building> ->
-                                            return@EmbedPagesWithInteractions (start until max).map { i ->
-                                                val building = buildingsL[i]
-                                                Pair(building.title(), building.descriptionShort())
-                                            }
-                                        },
-                                        { building: Building, playerUI: PlayerUI ->
-                                            if (building["build_status"] == "building") {
-                                                // annuler ou aider le bâtiment
-                                                playerUI.setLongCustomUI(
-                                                    MenuBuilderUI(
-                                                        "Bâtiment ${building["nameRP"]}",
-                                                        "Que voulez-vous faire avec le bâtiment ${building["nameRP"]} ?",
-                                                        playerUI
-                                                    )
-                                                        .addButton(
-                                                            "Annuler le bâtiment",
-                                                            "Vous annulez le bâtiment ${building["nameRP"]}"
-                                                        ) { playerUI1: PlayerUI ->
-                                                            // on le retire de la bdd
-                                                            saveManager.execute(
-                                                                "DELETE FROM buildings WHERE id = ${building.id}",
-                                                                true
-                                                            )
-                                                            playerUI1.addMessage(Message("Vous avez annulé le bâtiment !"))
-                                                            return@addButton null
-                                                        }
-                                                        .addButton(
-                                                            "Aider le bâtiment",
-                                                            "Vous aidez le bâtiment ${building["nameRP"]}"
-                                                        ) { playerUI1: PlayerUI ->
-                                                            helpBuilding(building, playerUI1)
-                                                        }
-                                                )
-                                            } else {
-                                                enterInBuilding(building, playerUI)
-                                            }
-                                            return@EmbedPagesWithInteractions null
-                                        },
-                                        null,
-                                        null,
-                                        "Vos bâtiments de la ville ${place["nameRP"]}",
-                                        "Liste de tous vos bâtiments de la ville ${place["nameRP"]}.",
-                                        ui
+                                        c1,
+                                        it.interaction
                                     )
-                                )
-                                ui.updateOrSend()
-                                c2.ui(ui)
-                            }
-                            .addButton(
-                                "Bâtiments en construction",
-                                "Vous pouvez voir les bâtiments en construction dans la ville en cliquant sur ce bouton et interagir avec eux"
-                            ) { it, eyufg, _ ->
-                                val buildings = Buildings.loadBuildings(place["buildings"])
-                                // remove if not in construction
-                                buildings.removeIf { building -> building["build_status"] != "building" }
-                                sendBuildingsInEmbed(
-                                    "Bâtiments en construction de la ville ${place["nameRP"]}",
-                                    "Liste de tous les bâtiments en construction de la ville ${place["nameRP"]}.",
-                                    buildings,
-                                    eyufg,
-                                    it.interaction
-                                )
-                            }
-                            .addButton(
-                                "Construire un bâtiment",
-                                "Vous pouvez construire un bâtiment dans la ville ${place["nameRP"]} en cliquant sur ce bouton"
-                            ) { again, c2, _ ->
-                                val buildsTypes = arrayListOf(*Buildings.values())
-                                val ui = DiscordPlayerUI(context, again.interaction)
-                                ui.setLongCustomUI(
-                                    EmbedPagesWithInteractions(
-                                        buildsTypes,
-                                        { start: Int, max: Int, buildsTypesL: ArrayList<Buildings> ->
-                                            return@EmbedPagesWithInteractions (start until max).map { i ->
-                                                val buildType = buildsTypesL[i]
-                                                Pair(
-                                                    buildType.name.lowercase(),
-                                                    buildType.basePrice.toString() + " " + Resource.RABBIT_COIN.show + " (Peut être construit : " + buildType.isBuild + ")"
-                                                )
-                                            }
-                                        },
-                                        { buildType: Buildings, playerUI: PlayerUI ->
-                                            if (buildType.isBuild && buildType.buildingAutorisations?.isAutorise(player) == true) {
-                                                val place1 = player.place
-                                                    ?: throw IllegalArgumentException("Le joueur n'est pas dans une ville")
-                                                val building2 = Building(buildType, player, place1)
-                                                playerUI.addMessage(
-                                                    Message(
-                                                        building2.title(),
-                                                        building2.descriptionShort()
+                                    null
+                                }
+                                .addButton(
+                                    "Vos bâtiments",
+                                    "Vous pouvez voir vos bâtiments en cliquant sur ce bouton et interagir avec eux"
+                                ) { ui ->
+                                    val buildings = Buildings.loadBuildings(place["buildings"])
+                                    // remove if not with this owner
+                                    buildings.removeIf { building -> building["owner"] != player.id.toString() }
+                                    ui.setLongCustomUI(
+                                        EmbedPagesWithInteractions(
+                                            buildings,
+                                            { start: Int, max: Int, buildingsL: ArrayList<Building> ->
+                                                return@EmbedPagesWithInteractions (start until max).map { i ->
+                                                    val building = buildingsL[i]
+                                                    Pair(building.title(), building.descriptionShort())
+                                                }
+                                            },
+                                            { building: Building, playerUI: PlayerUI ->
+                                                if (building["build_status"] == "building") {
+                                                    // annuler ou aider le bâtiment
+                                                    playerUI.setLongCustomUI(
+                                                        MenuBuilderUI(
+                                                            "Bâtiment ${building["nameRP"]}",
+                                                            "Que voulez-vous faire avec le bâtiment ${building["nameRP"]} ?",
+                                                            playerUI
+                                                        )
+                                                            .addButton(
+                                                                "Annuler le bâtiment",
+                                                                "Vous annulez le bâtiment ${building["nameRP"]}"
+                                                            ) { playerUI1: PlayerUI ->
+                                                                // on le retire de la bdd
+                                                                saveManager.execute(
+                                                                    "DELETE FROM buildings WHERE id = ${building.id}",
+                                                                    true
+                                                                )
+                                                                playerUI1.addMessage(Message("Vous avez annulé le bâtiment !"))
+                                                                null
+                                                            }
+                                                            .addButton(
+                                                                "Aider le bâtiment",
+                                                                "Vous aidez le bâtiment ${building["nameRP"]}"
+                                                            ) { playerUI1: PlayerUI ->
+                                                                helpBuilding(building, playerUI1)
+                                                            }
                                                     )
-                                                )
-                                                return@EmbedPagesWithInteractions null
-                                            } else {
-                                                throw IllegalArgumentException("Vous ne pouvez pas construire ce bâtiment")
-                                            }
-                                        },
-                                        null,
-                                        null,
-                                        "Bâtiments disponibles",
-                                        "Liste de tous les bâtiments disponibles.",
-                                        ui
+                                                } else {
+                                                    enterInBuilding(building, playerUI)
+                                                }
+                                                null
+                                            },
+                                            null,
+                                            null,
+                                            "Vos bâtiments de la ville ${place["nameRP"]}",
+                                            "Liste de tous vos bâtiments de la ville ${place["nameRP"]}.",
+                                            ui
+                                        )
                                     )
-                                )
-                                ui.updateOrSend()
-                                c2.ui(ui)
-                            }
-                            .modif(bat)
+                                    null
+                                }
+                                .addButton(
+                                    "Bâtiments en construction",
+                                    "Vous pouvez voir les bâtiments en construction dans la ville en cliquant sur ce bouton et interagir avec eux"
+                                ) { playerUI ->
+                                    val buildings = Buildings.loadBuildings(place["buildings"])
+                                    // remove if not in construction
+                                    buildings.removeIf { building -> building["build_status"] != "building" }
+                                    sendBuildingsInEmbed(
+                                        "Bâtiments en construction de la ville ${place["nameRP"]}",
+                                        "Liste de tous les bâtiments en construction de la ville ${place["nameRP"]}.",
+                                        buildings,
+                                        eyufg,
+                                        it.interaction
+                                    )
+                                }
+                                .addButton(
+                                    "Construire un bâtiment",
+                                    "Vous pouvez construire un bâtiment dans la ville ${place["nameRP"]} en cliquant sur ce bouton"
+                                ) { ui ->
+                                    val buildsTypes = arrayListOf(*Buildings.values())
+                                    ui.setLongCustomUI(
+                                        EmbedPagesWithInteractions(
+                                            buildsTypes,
+                                            { start: Int, max: Int, buildsTypesL: ArrayList<Buildings> ->
+                                                return@EmbedPagesWithInteractions (start until max).map { i ->
+                                                    val buildType = buildsTypesL[i]
+                                                    Pair(
+                                                        buildType.name.lowercase(),
+                                                        buildType.basePrice.toString() + " " + Resource.RABBIT_COIN.show + " (Peut être construit : " + buildType.isBuild + ")"
+                                                    )
+                                                }
+                                            },
+                                            { buildType: Buildings, playerUI: PlayerUI ->
+                                                if (buildType.isBuild && buildType.buildingAutorisations?.isAutorise(
+                                                        player
+                                                    ) == true
+                                                ) {
+                                                    val place1 = player.place
+                                                        ?: throw IllegalArgumentException("Le joueur n'est pas dans une ville")
+                                                    val building2 = Building(buildType, player, place1)
+                                                    playerUI.addMessage(
+                                                        Message(
+                                                            building2.title(),
+                                                            building2.descriptionShort()
+                                                        )
+                                                    )
+                                                    return@EmbedPagesWithInteractions null
+                                                } else {
+                                                    throw IllegalArgumentException("Vous ne pouvez pas construire ce bâtiment")
+                                                }
+                                            },
+                                            null,
+                                            null,
+                                            "Bâtiments disponibles",
+                                            "Liste de tous les bâtiments disponibles.",
+                                            ui
+                                        )
+                                    )
+                                    null
+                                })
+                        null
                     }
-                    .responder(slashCommand)
             }
 
             else -> {
@@ -412,6 +408,9 @@ class InteractCommandBase : Command(
                     .respond()
             }
         }
+
+        ui.updateOrSend()
+        context.ui(ui)
     }
 
 }
