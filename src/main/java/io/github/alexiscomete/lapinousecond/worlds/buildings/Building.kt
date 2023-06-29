@@ -7,8 +7,8 @@ import io.github.alexiscomete.lapinousecond.data.managesave.CacheCustom
 import io.github.alexiscomete.lapinousecond.data.managesave.CacheGetSet
 import io.github.alexiscomete.lapinousecond.data.managesave.Table
 import io.github.alexiscomete.lapinousecond.data.managesave.generateUniqueID
-import io.github.alexiscomete.lapinousecond.view.Context
-import io.github.alexiscomete.lapinousecond.view.ui.old.MenuBuilder
+import io.github.alexiscomete.lapinousecond.view.ui.longuis.LongCustomUI
+import io.github.alexiscomete.lapinousecond.view.ui.playerui.PlayerUI
 import io.github.alexiscomete.lapinousecond.worlds.Place
 import org.json.JSONObject
 import java.io.InputStream
@@ -95,8 +95,8 @@ class Building : CacheGetSet, BuildMethods, Owner {
     override val usage: String?
         get() = buildingInteraction!!.usage
 
-    override fun getCompleteInfos(p: Context): MenuBuilder {
-        return buildingInteraction!!.getCompleteInfos(p)
+    override fun getCompleteInfos(ui: PlayerUI): LongCustomUI {
+        return buildingInteraction!!.getCompleteInfos(ui)
     }
 
     override val ownerType: String

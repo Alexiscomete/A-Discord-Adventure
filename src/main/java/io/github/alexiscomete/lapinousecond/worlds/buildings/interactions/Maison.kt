@@ -1,10 +1,10 @@
 package io.github.alexiscomete.lapinousecond.worlds.buildings.interactions
 
-import io.github.alexiscomete.lapinousecond.view.Context
-import io.github.alexiscomete.lapinousecond.view.ui.old.MenuBuilder
+import io.github.alexiscomete.lapinousecond.view.ui.longuis.LongCustomUI
+import io.github.alexiscomete.lapinousecond.view.ui.longuis.MenuBuilderUI
+import io.github.alexiscomete.lapinousecond.view.ui.playerui.PlayerUI
 import io.github.alexiscomete.lapinousecond.worlds.buildings.Building
 import io.github.alexiscomete.lapinousecond.worlds.buildings.BuildingInteraction
-import java.awt.Color
 
 class Maison(building: Building?) : BuildingInteraction(building!!) {
     override fun interpret(args: Array<String>) {}
@@ -21,12 +21,11 @@ class Maison(building: Building?) : BuildingInteraction(building!!) {
         return "Maison"
     }
 
-    override fun getCompleteInfos(p: Context): MenuBuilder {
-        return MenuBuilder(
+    override fun getCompleteInfos(ui: PlayerUI): LongCustomUI {
+        return MenuBuilderUI(
             "Maison",
             "Bienvenue dans votre maison",
-            Color.DARK_GRAY,
-            p
+            ui
         )
     }
 

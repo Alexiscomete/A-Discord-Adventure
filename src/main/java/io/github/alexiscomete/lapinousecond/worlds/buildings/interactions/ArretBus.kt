@@ -1,10 +1,10 @@
 package io.github.alexiscomete.lapinousecond.worlds.buildings.interactions
 
-import io.github.alexiscomete.lapinousecond.view.Context
-import io.github.alexiscomete.lapinousecond.view.ui.old.MenuBuilder
+import io.github.alexiscomete.lapinousecond.view.ui.longuis.LongCustomUI
+import io.github.alexiscomete.lapinousecond.view.ui.longuis.MenuBuilderUI
+import io.github.alexiscomete.lapinousecond.view.ui.playerui.PlayerUI
 import io.github.alexiscomete.lapinousecond.worlds.buildings.Building
 import io.github.alexiscomete.lapinousecond.worlds.buildings.BuildingInteraction
-import java.awt.Color
 
 class ArretBus(building: Building?) : BuildingInteraction(building!!) {
     override fun interpret(args: Array<String>) {}
@@ -13,12 +13,11 @@ class ArretBus(building: Building?) : BuildingInteraction(building!!) {
     override val usage: String?
         get() = null
 
-    override fun getCompleteInfos(p: Context): MenuBuilder {
-        return MenuBuilder(
+    override fun getCompleteInfos(ui: PlayerUI): LongCustomUI {
+        return MenuBuilderUI(
             "Arrêt de bus",
             "Cet arrêt de bus est vide, il n'y a personne pour l'instant.",
-            Color(0, 0, 0),
-            p
+            ui
         )
     }
 
