@@ -45,48 +45,6 @@ private fun verifyBal(player: Player) {
     }
 }
 
-class Select(name: String, val worlds: List<WorldEnum>) : SelectMenuContextManager(name) {
-    override fun ex(smce: SelectMenuChooseEvent, c: Context) {
-        val selectMenuInteraction = smce.selectMenuInteraction
-        val index = selectMenuInteraction.chosenOptions[0].label.toInt()
-        val world = worlds[index]
-        val player = c.players.player.player
-        // get the player's bal
-        verifyBal(player)
-        val ui = DiscordPlayerUI(c, smce.interaction)
-
-        ui.setLongCustomUI(
-            MenuBuilderUI(
-                "Confirmer",
-                "Confirmez-vous le voyage vers ce monde pour 100 ${Resource.RABBIT_COIN.show} ?",
-                ui
-            )
-                .addButton("Oui", "Oui je veux changer de monde") { _ ->
-                    // get the player's bal
-                    verifyBal(player)
-
-                    player.removeMoney(100.0)
-
-                    player["world"] = world.progName
-                    if (player["place_${world.progName}_x"] == "") {
-                        player["place_${world}_type"] = "coos"
-                        player["place_${world.progName}_x"] = world.defaultX.toString()
-                        player["place_${world.progName}_y"] = world.defaultY.toString()
-                    }
-                    ui.addMessage(
-                        Message("Vous êtes maintenant dans le monde ${world.progName}")
-                    )
-                    null
-                }
-                .addButton("Non", "Non je ne veux pas changer de monde") { _ ->
-                    ui.addMessage(
-                        Message("Vous avez annulé le voyage")
-                    )
-                    null
-                })
-    }
-}
-
 class MapCommand : Command(
     "map",
     "Permet de faire toutes les actions à propos des déplacements sur la carte",
@@ -95,345 +53,6 @@ class MapCommand : Command(
         get() = "map"
     override val botPerms: Array<String>
         get() = arrayOf("PLAY")
-
-    @Deprecated("Use the new one")
-    class M1 {
-        fun ex(smce: ModalSubmitEvent, c: Context, question: Question) {
-            val opX = question.field0.answer
-            val opY = question.field1!!.answer
-
-            // optional to string
-
-            // str to int
-            val x = try {
-                opX.toInt()
-            } catch (e: Exception) {
-                throw IllegalArgumentException("x is not an int")
-            }
-            val y = try {
-                opY.toInt()
-            } catch (e: Exception) {
-                throw IllegalArgumentException("y is not an int")
-            }
-
-            val player = c.players.player.player
-            val world = try {
-                WorldEnum.valueOf(player["world"])
-            } catch (e: Exception) {
-                throw IllegalArgumentException("world is not a valid world")
-            }
-            val currentX = try {
-                player["place_${world.progName}_x"].toInt()
-            } catch (e: Exception) {
-                throw IllegalArgumentException("current x is not an int")
-            }
-            val currentY = try {
-                player["place_${world.progName}_y"].toInt()
-            } catch (e: Exception) {
-                throw IllegalArgumentException("current y is not an int")
-            }
-
-            if (x < 0 || x > world.mapWidth || y < 0 || y > world.mapHeight) {
-                throw IllegalArgumentException("La coordonnée x ou la coordonnée y est en dehors du monde ... attention au vide ! (Le monde a une taille de ${world.mapWidth}x${world.mapHeight})")
-            }
-
-            // Etape : calcul du trajet et affichage du prix en temps ou en argent
-            val nodePlayer = world.getNode(currentX, currentY, ArrayList())
-            val nodeDest = world.getNode(x, y, ArrayList())
-            //long !!
-            smce.modalInteraction.createImmediateResponder()
-                .setContent("Patientez un instant... calcul du trajet")
-            val path = world.findPath(nodePlayer, nodeDest)
-            val image = bigger(world.drawPath(path), 3)
-
-            val timeMillisOnePixel = timeMillisForOnePixel(player)
-            val timeMillisToTravel = timeMillisOnePixel * path.size
-            val priceToTravel = priceToTravelWithEffect(player, path.size)
-
-            MenuBuilderUI(
-                "Comment voyager ?",
-                "Il existe 2 moyens de voyager de façon simple",
-                Color.RED,
-                c
-            )
-                .setImage(image)
-                .addButton(
-                    "Temps",
-                    "Vous allez prendre $timeMillisToTravel ms pour aller jusqu'à ce pixel. Attention : les effets peuvent ne pas fonctionner si ils ne sont pas actifs à l'arrivée."
-                ) { _ ->
-                    MenuBuilderUI(
-                        "Confirmer",
-                        "Confirmer le voyage ?",
-                        Color.orange,
-                        c3
-                    )
-                        .addButton("Oui", "Oui je veux aller jusqu'à ce pixel") { _ ->
-                            player.setPath(path, "default_time", timeMillisOnePixel)
-                            it.buttonInteraction.createOriginalMessageUpdater()
-                                .removeAllComponents()
-                                .removeAllEmbeds()
-                                .setContent("Vous êtes maintenant sur le trajet vers le pixel ($x, $y)")
-                                .update()
-                        }
-                        .addButton("Non", "Non je ne veux pas aller jusqu'à ce pixel") { _ ->
-                            it.buttonInteraction.createOriginalMessageUpdater()
-                                .removeAllComponents()
-                                .removeAllEmbeds()
-                                .setContent("Vous avez annulé le voyage")
-                                .update()
-                        }
-                    null
-                }
-                .addButton(
-                    "Argent",
-                    "Vous allez dépenser $priceToTravel ${Resource.RABBIT_COIN.show} pour aller jusqu'à ce pixel. Les effets sont pris en compte."
-                ) { _ ->
-                    MenuBuilderUI(
-                        "Confirmer",
-                        "Confirmer le voyage ?",
-                        Color.orange,
-                        c3
-                    )
-                        .addButton("Oui", "Oui je veux aller jusqu'à ce pixel") { _ ->
-                            // get the player's money
-                            val money = player.getMoney()
-                            if (money < priceToTravel) {
-                                it.buttonInteraction.createOriginalMessageUpdater()
-                                    .removeAllComponents()
-                                    .removeAllEmbeds()
-                                    .setContent("Vous n'avez pas assez d'argent pour aller jusqu'à ce pixel")
-                                    .update()
-                            } else {
-                                player.removeMoney(priceToTravel)
-                                player["place_${world.progName}_x"] = x.toString()
-                                player["place_${world.progName}_y"] = y.toString()
-                                it.buttonInteraction.createOriginalMessageUpdater()
-                                    .removeAllComponents()
-                                    .removeAllEmbeds()
-                                    .setContent("Vous êtes maintenant sur le pixel ($x, $y)")
-                                    .update()
-                            }
-                        }
-                        .addButton("Non", "Non je ne veux pas aller jusqu'à ce pixel") { _ ->
-                            it.buttonInteraction.createOriginalMessageUpdater()
-                                .removeAllComponents()
-                                .removeAllEmbeds()
-                                .setContent("Vous avez annulé le voyage")
-                                .update()
-                        }
-                    null
-                }
-        }
-
-    }
-
-    @Deprecated("Use")
-    class M2 {
-        fun ex(c: Context, question: Question) {
-
-            // get optionals text inputs from modal interaction
-            val opX1 = question.field0.answer
-            val opY1 = question.field1!!.answer
-            val opX2 = question.field2!!.answer
-            val opY2 = question.field3!!.answer
-
-            // check if the strings are numbers
-            val x1Int = try {
-                opX1.toInt()
-            } catch (e: NumberFormatException) {
-                throw IllegalArgumentException("Le x du point de départ n'est pas un nombre")
-            }
-            val y1Int = try {
-                opY1.toInt()
-            } catch (e: NumberFormatException) {
-                throw IllegalArgumentException("Le y du point de départ n'est pas un nombre")
-            }
-            val x2Int = try {
-                opX2.toInt()
-            } catch (e: NumberFormatException) {
-                throw IllegalArgumentException("Le x du point d'arrivée n'est pas un nombre")
-            }
-            val y2Int = try {
-                opY2.toInt()
-            } catch (e: NumberFormatException) {
-                throw IllegalArgumentException("Le y du point d'arrivée n'est pas un nombre")
-            }
-
-            val player = c.players.player.player
-            val world = player.world
-
-            // check if the arguments are in the right range
-            if (x1Int < 0 || x1Int > world.mapWidth) {
-                throw IllegalArgumentException("The first argument must be between 0 and " + world.mapWidth)
-            }
-            if (y1Int < 0 || y1Int > world.mapHeight) {
-                throw IllegalArgumentException("The second argument must be between 0 and " + world.mapHeight)
-            }
-            if (x2Int < 0 || x2Int > world.mapWidth) {
-                throw IllegalArgumentException("The third argument must be between 0 and " + world.mapWidth)
-            }
-            if (y2Int < 0 || y2Int > world.mapHeight) {
-                throw IllegalArgumentException("The fourth argument must be between 0 and " + world.mapHeight)
-            }
-
-            // send a later responder
-            modalInteraction.createImmediateResponder()
-                .setContent("📍 Calcul en cours ...")
-                .respond()
-
-            // send the path
-            val path = world.findPath(
-                world.getNode(
-                    x1Int, y1Int, ArrayList()
-                ),
-                world.getNode(
-                    x2Int, y2Int, ArrayList()
-                )
-            )
-
-            MessageBuilder()
-                .addAttachment(world.drawPath(path), "path.png")
-                .setContent("📍 Chemin trouvé : " + path.size + " étapes")
-                .send(modalInteraction.channel.get())
-        }
-    }
-
-    @Deprecated("Use")
-    class M4 {
-        fun ex(smce: ModalSubmitEvent, c: Context) {
-            val modalInteraction = smce.modalInteraction
-            val opX = modalInteraction.getTextInputValueByCustomId("cxid")
-            val opY = modalInteraction.getTextInputValueByCustomId("cyid")
-            val opZoom = modalInteraction.getTextInputValueByCustomId("czoomid")
-
-            // transform optionals to strings
-            val x = opX.orElse("n")
-            val y = opY.orElse("n")
-            val zoomStr = opZoom.orElse("n")
-
-            // check if the arguments are numbers
-            val xInt = try {
-                x.toInt()
-            } catch (e: NumberFormatException) {
-                throw IllegalArgumentException("Le x de la case n'est pas un nombre")
-            }
-            val yInt = try {
-                y.toInt()
-            } catch (e: NumberFormatException) {
-                throw IllegalArgumentException("Le y de la case n'est pas un nombre")
-            }
-            var zoomInt = try {
-                zoomStr.toInt()
-            } catch (e: NumberFormatException) {
-                throw IllegalArgumentException("Le zoom n'est pas un nombre")
-            }
-
-            val player = c.players.player.player
-            val world = player.world
-
-            // check if the arguments are in the right range
-            if (xInt < 0 || xInt > world.mapWidth) {
-                throw IllegalArgumentException("Le x de la case n'est pas dans la carte")
-            }
-            if (yInt < 0 || yInt > world.mapHeight) {
-                throw IllegalArgumentException("Le y de la case n'est pas dans la carte")
-            }
-
-            // check if zoomInt is < 60 and > 0
-            if (zoomInt < 1 || zoomInt > 60) {
-                throw IllegalArgumentException("Le zoom doit être compris entre 1 et 60 (et rester dans la carte !)")
-            }
-
-            var zooms = Zooms.ZOOM_OUT
-            if (zoomInt < 9) {
-                when (zoomInt) {
-                    2 -> {
-                        zooms = Zooms.ZOOM_ZONES_DETAILS
-                        zoomInt = 60
-                    }
-
-                    1 -> {
-                        zooms = Zooms.ZOOM_IN
-                        zoomInt = 60
-                    }
-
-                    else -> {
-                        zooms = Zooms.ZOOM_ZONES
-                        zoomInt *= 7
-                    }
-                }
-            }
-
-            val (xInt2, yInt2) = Zooms.ZOOM_OUT.zoomInTo(zooms, xInt, yInt)
-
-            // send the zoom on the map
-            val later = modalInteraction.respondLater()
-
-            val image = world.zoomWithDecorElements(xInt2, yInt2, zoomInt, zooms)
-
-            later.thenAccept {
-                it.addEmbed(
-                    EmbedBuilder()
-                        .setTitle("Zoom sur la carte")
-                        .setImage(image)
-                )
-                    .update()
-            }
-        }
-    }
-
-    @Deprecated("Use other")
-    class M5 {
-        fun ex(smce: ModalSubmitEvent, c: Context) {
-            val opInt = smce.interaction.asModalInteraction()
-            if (!opInt.isPresent) {
-                throw IllegalStateException("Interaction is not a modal interaction")
-            }
-
-            // get optionals text inputs from modal interaction
-            val modalInteraction = opInt.get()
-            val opX = modalInteraction.getTextInputValueByCustomId("cxid")
-            val opY = modalInteraction.getTextInputValueByCustomId("cyid")
-
-            // transform optionals to strings
-            val x = try {
-                opX.orElse("n").toInt()
-            } catch (e: NumberFormatException) {
-                throw IllegalArgumentException("Le x de la case n'est pas un nombre")
-            }
-            val y = try {
-                opY.orElse("n").toInt()
-            } catch (e: NumberFormatException) {
-                throw IllegalArgumentException("Le y de la case n'est pas un nombre")
-            }
-
-            val player = c.players.player.player
-            val world = player.world
-
-            if (x < 0 || x > world.mapWidth) {
-                throw IllegalArgumentException("Le x de la case n'est pas dans la carte")
-            }
-            if (y < 0 || y > world.mapHeight) {
-                throw IllegalArgumentException("Le y de la case n'est pas dans la carte")
-            }
-
-            val biome = if (world.isDirt(x, y)) {
-                "la terre"
-            } else {
-                "l'eau"
-            }
-
-            modalInteraction.createImmediateResponder()
-                .addEmbed(
-                    EmbedBuilder()
-                        .setTitle("Type de case de [$x:$y]")
-                        .setDescription("🌱 La case est de $biome")
-                        .setColor(Color.BLUE)
-                )
-                .respond()
-        }
-
-    }
 
     override fun execute(slashCommand: SlashCommandInteraction) {
         val context = contextFor(PlayerWithAccount(slashCommand.user))
@@ -465,42 +84,63 @@ class MapCommand : Command(
                                 val worlds = worldEnums.map { it }
                                 val player = getAccount(slashCommand)
 
-                                // create the embed builder
-                                val eb = EmbedBuilder()
-                                    .setTitle("Mondes")
-                                    .setDescription("Choisissez un monde. Votre monde : ${player["world"]}")
-                                    .setColor(Color.PINK)
+                                val builder = MenuBuilderUI(
+                                    "Mondes",
+                                    "Choisissez un monde. Votre monde : ${player["world"]}",
+                                    ui
+                                )
 
                                 // for each world, add a field
-                                for ((i, world) in worlds.withIndex()) {
-                                    eb.addField(
-                                        "(${i}) ${world.nameRP}",
-                                        "**Nom officiel :** ${world.progName}\n**Type de serveur :** ${world.typeOfServer}\n${world.desc}",
-                                        true
-                                    )
+                                for (world in worlds) {
+                                    builder.addButton(
+                                        world.nameRP,
+                                        "**Nom officiel :** ${world.progName}\n**Type de serveur :** ${world.typeOfServer}\n${world.desc}"
+                                    ) {
+
+                                        // get the player's bal
+                                        verifyBal(player)
+
+                                        ui.setLongCustomUI(
+                                            MenuBuilderUI(
+                                                "Confirmer",
+                                                "Confirmez-vous le voyage vers ce monde pour 100 ${Resource.RABBIT_COIN.show} ?",
+                                                ui
+                                            )
+                                                .addButton("Oui", "Oui je veux changer de monde") { _ ->
+                                                    // get the player's bal
+                                                    verifyBal(player)
+
+                                                    player.removeMoney(100.0)
+
+                                                    player["world"] = world.progName
+                                                    if (player["place_${world.progName}_x"] == "") {
+                                                        player["place_${world}_type"] = "coos"
+                                                        player["place_${world.progName}_x"] = world.defaultX.toString()
+                                                        player["place_${world.progName}_y"] = world.defaultY.toString()
+                                                    }
+                                                    ui.addMessage(
+                                                        Message("Vous êtes maintenant dans le monde ${world.progName}")
+                                                    )
+                                                    null
+                                                }
+                                                .addButton("Non", "Non je ne veux pas changer de monde") { _ ->
+                                                    ui.addMessage(
+                                                        Message("Vous avez annulé le voyage")
+                                                    )
+                                                    null
+                                                })
+                                        null
+                                    }
                                 }
 
-                                // create the list of selections
-                                val options = ArrayList<SelectMenuOption>()
-                                for ((i, zoneDel) in worlds.withIndex()) {
-                                    options.add(SelectMenuOption.create(i.toString(), zoneDel.toString()))
-                                }
-                                val id = generateUniqueID()
-                                val actionRow =
-                                    ActionRow.of(SelectMenu.createStringMenu(id.toString(), "Monde où aller", options))
+                                ui.setLongCustomUI(builder)
 
-                                context.selectMenu(Select(id.toString(), worlds))
-
-                                mcce.buttonInteraction.createImmediateResponder()
-                                    .addEmbed(eb)
-                                    .addComponents(actionRow)
-                                    .respond()
+                                null
                             }
                             .addButton(
                                 "Aller à",
                                 "Mode de déplacement le plus simple. Permet de se déplacer sur le pixel de son choix"
                             ) { _ ->
-                                val id = generateUniqueID().toString()
 
                                 val player = ui.getPlayer()
                                 val world = player["world"]
@@ -533,7 +173,130 @@ class MapCommand : Command(
                                         required = true
                                     )
                                 ) {
-                                    M1()
+                                    val opX = it.field0.answer
+                                    val opY = it.field1!!.answer
+
+                                    // str to int
+                                    val x = try {
+                                        opX.toInt()
+                                    } catch (e: Exception) {
+                                        throw IllegalArgumentException("x is not an int")
+                                    }
+                                    val y = try {
+                                        opY.toInt()
+                                    } catch (e: Exception) {
+                                        throw IllegalArgumentException("y is not an int")
+                                    }
+
+                                    val player = ui.getPlayer()
+                                    val world = try {
+                                        WorldEnum.valueOf(player["world"])
+                                    } catch (e: Exception) {
+                                        throw IllegalArgumentException("world is not a valid world")
+                                    }
+                                    val currentX = try {
+                                        player["place_${world.progName}_x"].toInt()
+                                    } catch (e: Exception) {
+                                        throw IllegalArgumentException("current x is not an int")
+                                    }
+                                    val currentY = try {
+                                        player["place_${world.progName}_y"].toInt()
+                                    } catch (e: Exception) {
+                                        throw IllegalArgumentException("current y is not an int")
+                                    }
+
+                                    if (x < 0 || x > world.mapWidth || y < 0 || y > world.mapHeight) {
+                                        throw IllegalArgumentException("La coordonnée x ou la coordonnée y est en dehors du monde ... attention au vide ! (Le monde a une taille de ${world.mapWidth}x${world.mapHeight})")
+                                    }
+
+                                    // Etape : calcul du trajet et affichage du prix en temps ou en argent
+                                    val nodePlayer = world.getNode(currentX, currentY, ArrayList())
+                                    val nodeDest = world.getNode(x, y, ArrayList())
+                                    //long !!
+                                    smce.modalInteraction.createImmediateResponder()
+                                        .setContent("Patientez un instant... calcul du trajet")
+
+
+                                    val path = world.findPath(nodePlayer, nodeDest)
+                                    val image = bigger(world.drawPath(path), 3)
+
+                                    val timeMillisOnePixel = timeMillisForOnePixel(player)
+                                    val timeMillisToTravel = timeMillisOnePixel * path.size
+                                    val priceToTravel = priceToTravelWithEffect(player, path.size)
+
+                                    MenuBuilderUI(
+                                        "Comment voyager ?",
+                                        "Il existe 2 moyens de voyager de façon simple",
+                                        Color.RED,
+                                        c
+                                    )
+                                        .setImage(image)
+                                        .addButton(
+                                            "Temps",
+                                            "Vous allez prendre $timeMillisToTravel ms pour aller jusqu'à ce pixel. Attention : les effets peuvent ne pas fonctionner si ils ne sont pas actifs à l'arrivée."
+                                        ) { _ ->
+                                            MenuBuilderUI(
+                                                "Confirmer",
+                                                "Confirmer le voyage ?",
+                                                Color.orange,
+                                                c3
+                                            )
+                                                .addButton("Oui", "Oui je veux aller jusqu'à ce pixel") { _ ->
+                                                    player.setPath(path, "default_time", timeMillisOnePixel)
+                                                    it.buttonInteraction.createOriginalMessageUpdater()
+                                                        .removeAllComponents()
+                                                        .removeAllEmbeds()
+                                                        .setContent("Vous êtes maintenant sur le trajet vers le pixel ($x, $y)")
+                                                        .update()
+                                                }
+                                                .addButton("Non", "Non je ne veux pas aller jusqu'à ce pixel") { _ ->
+                                                    it.buttonInteraction.createOriginalMessageUpdater()
+                                                        .removeAllComponents()
+                                                        .removeAllEmbeds()
+                                                        .setContent("Vous avez annulé le voyage")
+                                                        .update()
+                                                }
+                                            null
+                                        }
+                                        .addButton(
+                                            "Argent",
+                                            "Vous allez dépenser $priceToTravel ${Resource.RABBIT_COIN.show} pour aller jusqu'à ce pixel. Les effets sont pris en compte."
+                                        ) { _ ->
+                                            MenuBuilderUI(
+                                                "Confirmer",
+                                                "Confirmer le voyage ?",
+                                                Color.orange,
+                                                c3
+                                            )
+                                                .addButton("Oui", "Oui je veux aller jusqu'à ce pixel") { _ ->
+                                                    // get the player's money
+                                                    val money = player.getMoney()
+                                                    if (money < priceToTravel) {
+                                                        it.buttonInteraction.createOriginalMessageUpdater()
+                                                            .removeAllComponents()
+                                                            .removeAllEmbeds()
+                                                            .setContent("Vous n'avez pas assez d'argent pour aller jusqu'à ce pixel")
+                                                            .update()
+                                                    } else {
+                                                        player.removeMoney(priceToTravel)
+                                                        player["place_${world.progName}_x"] = x.toString()
+                                                        player["place_${world.progName}_y"] = y.toString()
+                                                        it.buttonInteraction.createOriginalMessageUpdater()
+                                                            .removeAllComponents()
+                                                            .removeAllEmbeds()
+                                                            .setContent("Vous êtes maintenant sur le pixel ($x, $y)")
+                                                            .update()
+                                                    }
+                                                }
+                                                .addButton("Non", "Non je ne veux pas aller jusqu'à ce pixel") { _ ->
+                                                    it.buttonInteraction.createOriginalMessageUpdater()
+                                                        .removeAllComponents()
+                                                        .removeAllEmbeds()
+                                                        .setContent("Vous avez annulé le voyage")
+                                                        .update()
+                                                }
+                                            null
+                                        }
                                     null
                                 }
                             }
@@ -684,7 +447,6 @@ class MapCommand : Command(
                                 "Trouver un chemin",
                                 "Un lieu ou des coordonnées ? Trouvez le chemin le plus court"
                             ) { _ ->
-                                val id = generateUniqueID().toString()
 
                                 Question(
                                     "Trouver un chemin",
@@ -709,7 +471,70 @@ class MapCommand : Command(
                                         required = true
                                     )
                                 ) {
-                                    M2()
+                                    // get optionals text inputs from modal interaction
+                                    val opX1 = it.field0.answer
+                                    val opY1 = it.field1!!.answer
+                                    val opX2 = it.field2!!.answer
+                                    val opY2 = it.field3!!.answer
+
+                                    // check if the strings are numbers
+                                    val x1Int = try {
+                                        opX1.toInt()
+                                    } catch (e: NumberFormatException) {
+                                        throw IllegalArgumentException("Le x du point de départ n'est pas un nombre")
+                                    }
+                                    val y1Int = try {
+                                        opY1.toInt()
+                                    } catch (e: NumberFormatException) {
+                                        throw IllegalArgumentException("Le y du point de départ n'est pas un nombre")
+                                    }
+                                    val x2Int = try {
+                                        opX2.toInt()
+                                    } catch (e: NumberFormatException) {
+                                        throw IllegalArgumentException("Le x du point d'arrivée n'est pas un nombre")
+                                    }
+                                    val y2Int = try {
+                                        opY2.toInt()
+                                    } catch (e: NumberFormatException) {
+                                        throw IllegalArgumentException("Le y du point d'arrivée n'est pas un nombre")
+                                    }
+
+                                    val player = c.players.player.player
+                                    val world = player.world
+
+                                    // check if the arguments are in the right range
+                                    if (x1Int < 0 || x1Int > world.mapWidth) {
+                                        throw IllegalArgumentException("The first argument must be between 0 and " + world.mapWidth)
+                                    }
+                                    if (y1Int < 0 || y1Int > world.mapHeight) {
+                                        throw IllegalArgumentException("The second argument must be between 0 and " + world.mapHeight)
+                                    }
+                                    if (x2Int < 0 || x2Int > world.mapWidth) {
+                                        throw IllegalArgumentException("The third argument must be between 0 and " + world.mapWidth)
+                                    }
+                                    if (y2Int < 0 || y2Int > world.mapHeight) {
+                                        throw IllegalArgumentException("The fourth argument must be between 0 and " + world.mapHeight)
+                                    }
+
+                                    // send a later responder
+                                    modalInteraction.createImmediateResponder()
+                                        .setContent("📍 Calcul en cours ...")
+                                        .respond()
+
+                                    // send the path
+                                    val path = world.findPath(
+                                        world.getNode(
+                                            x1Int, y1Int, ArrayList()
+                                        ),
+                                        world.getNode(
+                                            x2Int, y2Int, ArrayList()
+                                        )
+                                    )
+
+                                    MessageBuilder()
+                                        .addAttachment(world.drawPath(path), "path.png")
+                                        .setContent("📍 Chemin trouvé : " + path.size + " étapes")
+                                        .send(modalInteraction.channel.get())
                                     null
                                 }
                             }
@@ -717,7 +542,6 @@ class MapCommand : Command(
                                 "Zoomer",
                                 "Zoomer sur une carte"
                             ) { _ ->
-                                val id = generateUniqueID().toString()
                                 Question(
                                     "Informations pour zoomer sur la carte",
                                     QuestionField(
@@ -736,7 +560,80 @@ class MapCommand : Command(
                                         required = true
                                     )
                                 ) {
-                                    M4()
+
+                                    // transform optionals to strings
+                                    val x = it.field0.answer
+                                    val y = it.field1!!.answer
+                                    val zoomStr = it.field2!!.answer
+
+                                    // check if the arguments are numbers
+                                    val xInt = try {
+                                        x.toInt()
+                                    } catch (e: NumberFormatException) {
+                                        throw IllegalArgumentException("Le x de la case n'est pas un nombre")
+                                    }
+                                    val yInt = try {
+                                        y.toInt()
+                                    } catch (e: NumberFormatException) {
+                                        throw IllegalArgumentException("Le y de la case n'est pas un nombre")
+                                    }
+                                    var zoomInt = try {
+                                        zoomStr.toInt()
+                                    } catch (e: NumberFormatException) {
+                                        throw IllegalArgumentException("Le zoom n'est pas un nombre")
+                                    }
+
+                                    val player = c.players.player.player
+                                    val world = player.world
+
+                                    // check if the arguments are in the right range
+                                    if (xInt < 0 || xInt > world.mapWidth) {
+                                        throw IllegalArgumentException("Le x de la case n'est pas dans la carte")
+                                    }
+                                    if (yInt < 0 || yInt > world.mapHeight) {
+                                        throw IllegalArgumentException("Le y de la case n'est pas dans la carte")
+                                    }
+
+                                    // check if zoomInt is < 60 and > 0
+                                    if (zoomInt < 1 || zoomInt > 60) {
+                                        throw IllegalArgumentException("Le zoom doit être compris entre 1 et 60 (et rester dans la carte !)")
+                                    }
+
+                                    var zooms = Zooms.ZOOM_OUT
+                                    if (zoomInt < 9) {
+                                        when (zoomInt) {
+                                            2 -> {
+                                                zooms = Zooms.ZOOM_ZONES_DETAILS
+                                                zoomInt = 60
+                                            }
+
+                                            1 -> {
+                                                zooms = Zooms.ZOOM_IN
+                                                zoomInt = 60
+                                            }
+
+                                            else -> {
+                                                zooms = Zooms.ZOOM_ZONES
+                                                zoomInt *= 7
+                                            }
+                                        }
+                                    }
+
+                                    val (xInt2, yInt2) = Zooms.ZOOM_OUT.zoomInTo(zooms, xInt, yInt)
+
+                                    // send the zoom on the map
+                                    val later = modalInteraction.respondLater()
+
+                                    val image = world.zoomWithDecorElements(xInt2, yInt2, zoomInt, zooms)
+
+                                    later.thenAccept {
+                                        it.addEmbed(
+                                            EmbedBuilder()
+                                                .setTitle("Zoom sur la carte")
+                                                .setImage(image)
+                                        )
+                                            .update()
+                                    }
                                     null
                                 }
                             }
@@ -744,8 +641,6 @@ class MapCommand : Command(
                                 "Type de case",
                                 "Le biome d'une case et les informations"
                             ) { _ ->
-                                val id = generateUniqueID().toString()
-
                                 Question(
                                     "Type de case",
                                     QuestionField(
@@ -759,7 +654,41 @@ class MapCommand : Command(
                                         required = true
                                     )
                                 ) {
-                                    M5()
+
+                                    // transform optionals to strings
+                                    val x = try {
+                                        it.field0.answer.toInt()
+                                    } catch (e: NumberFormatException) {
+                                        throw IllegalArgumentException("Le x de la case n'est pas un nombre")
+                                    }
+                                    val y = try {
+                                        it.field1!!.answer.toInt()
+                                    } catch (e: NumberFormatException) {
+                                        throw IllegalArgumentException("Le y de la case n'est pas un nombre")
+                                    }
+
+                                    val player = ui.getPlayer()
+                                    val world = player.world
+
+                                    if (x < 0 || x > world.mapWidth) {
+                                        throw IllegalArgumentException("Le x de la case n'est pas dans la carte")
+                                    }
+                                    if (y < 0 || y > world.mapHeight) {
+                                        throw IllegalArgumentException("Le y de la case n'est pas dans la carte")
+                                    }
+
+                                    val biome = if (world.isDirt(x, y)) {
+                                        "la terre"
+                                    } else {
+                                        "l'eau"
+                                    }
+
+                                    ui.addMessage(
+                                        Message(
+                                            "🌱 La case est de $biome",
+                                            "Type de case de [$x:$y]"
+                                        )
+                                    )
                                     null
                                 }
                             })
