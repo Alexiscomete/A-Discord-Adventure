@@ -8,15 +8,17 @@ import io.github.alexiscomete.lapinousecond.entity.entities.PlayerWithAccount
 import io.github.alexiscomete.lapinousecond.data.managesave.generateUniqueID
 import io.github.alexiscomete.lapinousecond.view.Context
 import io.github.alexiscomete.lapinousecond.view.contextFor
-import io.github.alexiscomete.lapinousecond.view.contextmanager.ModalContextManager
 import io.github.alexiscomete.lapinousecond.view.contextmanager.SelectMenuContextManager
 import io.github.alexiscomete.lapinousecond.view.discord.commands.Command
 import io.github.alexiscomete.lapinousecond.view.discord.commands.ExecutableWithArguments
 import io.github.alexiscomete.lapinousecond.view.discord.commands.getAccount
 import io.github.alexiscomete.lapinousecond.view.ui.longuis.EmbedPages
+import io.github.alexiscomete.lapinousecond.view.ui.longuis.MenuBuilderUI
 import io.github.alexiscomete.lapinousecond.view.ui.longuis.PixelByPixelUI
-import io.github.alexiscomete.lapinousecond.view.ui.old.MenuBuilder
 import io.github.alexiscomete.lapinousecond.view.ui.playerui.DiscordPlayerUI
+import io.github.alexiscomete.lapinousecond.view.ui.playerui.Message
+import io.github.alexiscomete.lapinousecond.view.ui.playerui.Question
+import io.github.alexiscomete.lapinousecond.view.ui.playerui.QuestionField
 import io.github.alexiscomete.lapinousecond.worlds.WorldEnum
 import io.github.alexiscomete.lapinousecond.worlds.Zooms
 import io.github.alexiscomete.lapinousecond.worlds.bigger
@@ -24,9 +26,9 @@ import io.github.alexiscomete.lapinousecond.worlds.map.FilesMapEnum
 import org.javacord.api.entity.message.MessageBuilder
 import org.javacord.api.entity.message.component.*
 import org.javacord.api.entity.message.embed.EmbedBuilder
-import org.javacord.api.event.interaction.ButtonClickEvent
 import org.javacord.api.event.interaction.ModalSubmitEvent
 import org.javacord.api.event.interaction.SelectMenuChooseEvent
+import org.javacord.api.interaction.Interaction
 import org.javacord.api.interaction.SlashCommandInteraction
 import java.awt.Color
 
@@ -51,39 +53,37 @@ class Select(name: String, val worlds: List<WorldEnum>) : SelectMenuContextManag
         val player = c.players.player.player
         // get the player's bal
         verifyBal(player)
+        val ui = DiscordPlayerUI(c, smce.interaction)
 
-        MenuBuilder(
-            "Confirmer",
-            "Confirmez-vous le voyage vers ce monde pour 100 ${Resource.RABBIT_COIN.show} ?",
-            Color.orange,
-            c
-        )
-            .addButton("Oui", "Oui je veux changer de monde") { it, _, _ ->
-                // get the player's bal
-                verifyBal(player)
+        ui.setLongCustomUI(
+            MenuBuilderUI(
+                "Confirmer",
+                "Confirmez-vous le voyage vers ce monde pour 100 ${Resource.RABBIT_COIN.show} ?",
+                ui
+            )
+                .addButton("Oui", "Oui je veux changer de monde") { _ ->
+                    // get the player's bal
+                    verifyBal(player)
 
-                player.removeMoney(100.0)
+                    player.removeMoney(100.0)
 
-                player["world"] = world.progName
-                if (player["place_${world.progName}_x"] == "") {
-                    player["place_${world}_type"] = "coos"
-                    player["place_${world.progName}_x"] = world.defaultX.toString()
-                    player["place_${world.progName}_y"] = world.defaultY.toString()
+                    player["world"] = world.progName
+                    if (player["place_${world.progName}_x"] == "") {
+                        player["place_${world}_type"] = "coos"
+                        player["place_${world.progName}_x"] = world.defaultX.toString()
+                        player["place_${world.progName}_y"] = world.defaultY.toString()
+                    }
+                    ui.addMessage(
+                        Message("Vous êtes maintenant dans le monde ${world.progName}")
+                    )
+                    null
                 }
-                it.buttonInteraction.createOriginalMessageUpdater()
-                    .removeAllComponents()
-                    .removeAllEmbeds()
-                    .setContent("Vous êtes maintenant dans le monde ${world.progName}")
-                    .update()
-            }
-            .addButton("Non", "Non je ne veux pas changer de monde") { it, _, _ ->
-                it.buttonInteraction.createOriginalMessageUpdater()
-                    .removeAllComponents()
-                    .removeAllEmbeds()
-                    .setContent("Vous avez annulé le voyage")
-                    .update()
-            }
-            .modif(smce)
+                .addButton("Non", "Non je ne veux pas changer de monde") { _ ->
+                    ui.addMessage(
+                        Message("Vous avez annulé le voyage")
+                    )
+                    null
+                })
     }
 }
 
@@ -96,32 +96,22 @@ class MapCommand : Command(
     override val botPerms: Array<String>
         get() = arrayOf("PLAY")
 
-    class M1(name: String) : ModalContextManager(name) {
-        override fun ex(smce: ModalSubmitEvent, c: Context) {
-            val modalInteraction = smce.modalInteraction
-            val opX = modalInteraction.getTextInputValueByCustomId("cxid")
-            val opY = modalInteraction.getTextInputValueByCustomId("cyid")
+    @Deprecated("Use the new one")
+    class M1 {
+        fun ex(smce: ModalSubmitEvent, c: Context, question: Question) {
+            val opX = question.field0.answer
+            val opY = question.field1!!.answer
 
             // optional to string
-            val xStr = if (opX.isPresent) {
-                opX.get()
-            } else {
-                throw IllegalArgumentException("x is not present")
-            }
-            val yStr = if (opY.isPresent) {
-                opY.get()
-            } else {
-                throw IllegalArgumentException("y is not present")
-            }
 
             // str to int
             val x = try {
-                xStr.toInt()
+                opX.toInt()
             } catch (e: Exception) {
                 throw IllegalArgumentException("x is not an int")
             }
             val y = try {
-                yStr.toInt()
+                opY.toInt()
             } catch (e: Exception) {
                 throw IllegalArgumentException("y is not an int")
             }
@@ -160,7 +150,7 @@ class MapCommand : Command(
             val timeMillisToTravel = timeMillisOnePixel * path.size
             val priceToTravel = priceToTravelWithEffect(player, path.size)
 
-            MenuBuilder(
+            MenuBuilderUI(
                 "Comment voyager ?",
                 "Il existe 2 moyens de voyager de façon simple",
                 Color.RED,
@@ -170,14 +160,14 @@ class MapCommand : Command(
                 .addButton(
                     "Temps",
                     "Vous allez prendre $timeMillisToTravel ms pour aller jusqu'à ce pixel. Attention : les effets peuvent ne pas fonctionner si ils ne sont pas actifs à l'arrivée."
-                ) { timeB, c3, _ ->
-                    MenuBuilder(
+                ) { _ ->
+                    MenuBuilderUI(
                         "Confirmer",
                         "Confirmer le voyage ?",
                         Color.orange,
                         c3
                     )
-                        .addButton("Oui", "Oui je veux aller jusqu'à ce pixel") { it, _, _ ->
+                        .addButton("Oui", "Oui je veux aller jusqu'à ce pixel") { _ ->
                             player.setPath(path, "default_time", timeMillisOnePixel)
                             it.buttonInteraction.createOriginalMessageUpdater()
                                 .removeAllComponents()
@@ -185,26 +175,26 @@ class MapCommand : Command(
                                 .setContent("Vous êtes maintenant sur le trajet vers le pixel ($x, $y)")
                                 .update()
                         }
-                        .addButton("Non", "Non je ne veux pas aller jusqu'à ce pixel") { it, _, _ ->
+                        .addButton("Non", "Non je ne veux pas aller jusqu'à ce pixel") { _ ->
                             it.buttonInteraction.createOriginalMessageUpdater()
                                 .removeAllComponents()
                                 .removeAllEmbeds()
                                 .setContent("Vous avez annulé le voyage")
                                 .update()
                         }
-                        .modif(timeB)
+                    null
                 }
                 .addButton(
                     "Argent",
                     "Vous allez dépenser $priceToTravel ${Resource.RABBIT_COIN.show} pour aller jusqu'à ce pixel. Les effets sont pris en compte."
-                ) { moneyB, c3, _ ->
-                    MenuBuilder(
+                ) { _ ->
+                    MenuBuilderUI(
                         "Confirmer",
                         "Confirmer le voyage ?",
                         Color.orange,
                         c3
                     )
-                        .addButton("Oui", "Oui je veux aller jusqu'à ce pixel") { it, _, _ ->
+                        .addButton("Oui", "Oui je veux aller jusqu'à ce pixel") { _ ->
                             // get the player's money
                             val money = player.getMoney()
                             if (money < priceToTravel) {
@@ -224,54 +214,47 @@ class MapCommand : Command(
                                     .update()
                             }
                         }
-                        .addButton("Non", "Non je ne veux pas aller jusqu'à ce pixel") { it, _, _ ->
+                        .addButton("Non", "Non je ne veux pas aller jusqu'à ce pixel") { _ ->
                             it.buttonInteraction.createOriginalMessageUpdater()
                                 .removeAllComponents()
                                 .removeAllEmbeds()
                                 .setContent("Vous avez annulé le voyage")
                                 .update()
                         }
-                        .modif(moneyB)
+                    null
                 }
-                .responder(smce.modalInteraction)
         }
 
     }
 
-    class M2(name: String) : ModalContextManager(name) {
-        override fun ex(smce: ModalSubmitEvent, c: Context) {
+    @Deprecated("Use")
+    class M2 {
+        fun ex(c: Context, question: Question) {
 
             // get optionals text inputs from modal interaction
-            val modalInteraction = smce.modalInteraction
-            val opX1 = modalInteraction.getTextInputValueByCustomId("cx1id")
-            val opY1 = modalInteraction.getTextInputValueByCustomId("cy1id")
-            val opX2 = modalInteraction.getTextInputValueByCustomId("cx2id")
-            val opY2 = modalInteraction.getTextInputValueByCustomId("cy2id")
-
-            // transform optionals to strings
-            val x1 = opX1.orElse("n")
-            val y1 = opY1.orElse("n")
-            val x2 = opX2.orElse("n")
-            val y2 = opY2.orElse("n")
+            val opX1 = question.field0.answer
+            val opY1 = question.field1!!.answer
+            val opX2 = question.field2!!.answer
+            val opY2 = question.field3!!.answer
 
             // check if the strings are numbers
             val x1Int = try {
-                x1.toInt()
+                opX1.toInt()
             } catch (e: NumberFormatException) {
                 throw IllegalArgumentException("Le x du point de départ n'est pas un nombre")
             }
             val y1Int = try {
-                y1.toInt()
+                opY1.toInt()
             } catch (e: NumberFormatException) {
                 throw IllegalArgumentException("Le y du point de départ n'est pas un nombre")
             }
             val x2Int = try {
-                x2.toInt()
+                opX2.toInt()
             } catch (e: NumberFormatException) {
                 throw IllegalArgumentException("Le x du point d'arrivée n'est pas un nombre")
             }
             val y2Int = try {
-                y2.toInt()
+                opY2.toInt()
             } catch (e: NumberFormatException) {
                 throw IllegalArgumentException("Le y du point d'arrivée n'est pas un nombre")
             }
@@ -315,8 +298,9 @@ class MapCommand : Command(
         }
     }
 
-    class M4(name: String) : ModalContextManager(name) {
-        override fun ex(smce: ModalSubmitEvent, c: Context) {
+    @Deprecated("Use")
+    class M4 {
+        fun ex(smce: ModalSubmitEvent, c: Context) {
             val modalInteraction = smce.modalInteraction
             val opX = modalInteraction.getTextInputValueByCustomId("cxid")
             val opY = modalInteraction.getTextInputValueByCustomId("cyid")
@@ -398,8 +382,9 @@ class MapCommand : Command(
         }
     }
 
-    class M5(name: String) : ModalContextManager(name) {
-        override fun ex(smce: ModalSubmitEvent, c: Context) {
+    @Deprecated("Use other")
+    class M5 {
+        fun ex(smce: ModalSubmitEvent, c: Context) {
             val opInt = smce.interaction.asModalInteraction()
             if (!opInt.isPresent) {
                 throw IllegalStateException("Interaction is not a modal interaction")
@@ -452,372 +437,335 @@ class MapCommand : Command(
 
     override fun execute(slashCommand: SlashCommandInteraction) {
         val context = contextFor(PlayerWithAccount(slashCommand.user))
-        MenuBuilder(
-            "Carte 🗺",
-            "Se déplacer est important dans le jeu ! Visitez le monde et regardez autour de vous",
-            Color.PINK,
-            context
-        )
-            .addButton(
-                "Voyager",
-                "Permet de se déplacer de plusieurs façons sur la carte"
-            ) { messageComponentCreateEvent: ButtonClickEvent, c1, _ ->
-                MenuBuilder(
+        val ui = DiscordPlayerUI(context, slashCommand as Interaction)
+        ui.setLongCustomUI(
+            MenuBuilderUI(
+                "Carte 🗺",
+                "Se déplacer est important dans le jeu ! Visitez le monde et regardez autour de vous",
+                ui
+            )
+                .addButton(
                     "Voyager",
-                    "Voyager est important dans ce jeu",
-                    Color.PINK,
-                    c1
-                )
-                    .addButton(
-                        "Mondes",
-                        "Permet de changer de monde"
-                    ) { mcce: ButtonClickEvent, _, _ ->
-                        // Etape 1 : afficher la liste des mondes
-
-                        // get all worlds
-                        val worldEnums = WorldEnum.values()
-                        val worlds = worldEnums.map { it }
-                        val player = getAccount(slashCommand)
-
-                        // create the embed builder
-                        val eb = EmbedBuilder()
-                            .setTitle("Mondes")
-                            .setDescription("Choisissez un monde. Votre monde : ${player["world"]}")
-                            .setColor(Color.PINK)
-
-                        // for each world, add a field
-                        for ((i, world) in worlds.withIndex()) {
-                            eb.addField(
-                                "(${i}) ${world.nameRP}",
-                                "**Nom officiel :** ${world.progName}\n**Type de serveur :** ${world.typeOfServer}\n${world.desc}",
-                                true
-                            )
-                        }
-
-                        // create the list of selections
-                        val options = ArrayList<SelectMenuOption>()
-                        for ((i, zoneDel) in worlds.withIndex()) {
-                            options.add(SelectMenuOption.create(i.toString(), zoneDel.toString()))
-                        }
-                        val id = generateUniqueID()
-                        val actionRow =
-                            ActionRow.of(SelectMenu.createStringMenu(id.toString(), "Monde où aller", options))
-
-                        context.selectMenu(Select(id.toString(), worlds))
-
-                        mcce.buttonInteraction.createImmediateResponder()
-                            .addEmbed(eb)
-                            .addComponents(actionRow)
-                            .respond()
-                    }
-                    .addButton(
-                        "Aller à",
-                        "Mode de déplacement le plus simple. Permet de se déplacer sur le pixel de son choix"
-                    ) { buttonClickEvent: ButtonClickEvent, c2, _ ->
-                        val id = generateUniqueID().toString()
-
-                        val player = c2.players.player.player
-                        val world = player["world"]
-                        val type = player["place_${world}_type"]
-                        if (type == "") {
-                            player["place_${world}_type"] = "coos"
-                        } else if (type != "coos") {
-                            throw IllegalArgumentException("Vous n'êtes pas sur des coordonnées")
-                        }
-                        val zooms = try {
-                            Zooms.valueOf(player["place_${world}_zoom"])
-                        } catch (e: IllegalArgumentException) {
-                            player["place_${world}_zoom"] = "ZOOM_OUT"
-                            Zooms.ZOOM_OUT
-                        }
-                        if (zooms != Zooms.ZOOM_OUT) {
-                            throw IllegalArgumentException("Vous n'êtes pas sur le zoom de base, vous ne pouvez pas utiliser cette commande actuellement. Utilisez le déplacement pixel par pixel pour dézoomer")
-                        }
-
-                        buttonClickEvent.buttonInteraction.respondWithModal(
-                            id, "Sur quel pixel se rendre ?",
-                            ActionRow.of(
-                                TextInput.create(TextInputStyle.SHORT, "cxid", "Le x du pixel")
-                            ),
-                            ActionRow.of(
-                                TextInput.create(TextInputStyle.SHORT, "cyid", "Le y du pixel")
-                            )
+                    "Permet de se déplacer de plusieurs façons sur la carte"
+                ) { _ ->
+                    ui.setLongCustomUI(
+                        MenuBuilderUI(
+                            "Voyager",
+                            "Voyager est important dans ce jeu",
+                            ui
                         )
+                            .addButton(
+                                "Mondes",
+                                "Permet de changer de monde"
+                            ) { _ ->
+                                // Etape 1 : afficher la liste des mondes
 
-                        c2.modal(
-                            M1(
-                                id
-                            )
-                        )
-                    }
-                    .addButton(
-                        "Pixel par pixel",
-                        "Mode de déplacement maîtrisable."
-                    ) { buttonClickEvent: ButtonClickEvent, contextUI, _ ->
+                                // get all worlds
+                                val worldEnums = WorldEnum.values()
+                                val worlds = worldEnums.map { it }
+                                val player = getAccount(slashCommand)
 
-                        val player = contextUI.players.player.player
-                        val world = player["world"]
-                        val type = player["place_${world}_type"]
+                                // create the embed builder
+                                val eb = EmbedBuilder()
+                                    .setTitle("Mondes")
+                                    .setDescription("Choisissez un monde. Votre monde : ${player["world"]}")
+                                    .setColor(Color.PINK)
 
-                        if (type == "") {
-                            player["place_${world}_type"] = "coos"
-                        } else if (type != "coos") {
-                            throw IllegalArgumentException("Non disponible pour le moment dans les villes et autres lieux sans coordonnées")
-                        }
-
-                        val ui = DiscordPlayerUI(contextUI, buttonClickEvent.interaction)
-                        ui.setLongCustomUI(
-                            PixelByPixelUI(
-                                ui,
-                                null
-                            )
-                        )
-                        ui.updateOrSend()
-                        contextUI.ui(ui)
-                    }
-                    .modif(messageComponentCreateEvent)
-            }
-            .addButton(
-                "Retourner au hub",
-                "Une urgence ? Bloqué dans un lieu inexistant ? Retournez au hub gratuitement !"
-            ) { messageComponentCreateEvent: ButtonClickEvent, c1, _ ->
-                val p = getAccount(slashCommand)
-                MenuBuilder(
-                    "Confirmation requise",
-                    "Voulez-vous vraiment retourner au hub ?",
-                    Color.PINK,
-                    c1
-                )
-                    .addButton("Oui", "Retourner au hub") { buttonClickEvent: ButtonClickEvent, _, _ ->
-                        buttonClickEvent.buttonInteraction.createOriginalMessageUpdater()
-                            .setContent("✔ Flavinou vient de vous téléporter au hub <https://discord.gg/q4hVQ6gwyx>")
-                            .update()
-                        toSpawn(p)
-                    }
-                    .addButton("Non", "Annuler") { buttonClickEvent: ButtonClickEvent, _, _ ->
-                        buttonClickEvent.buttonInteraction.createOriginalMessageUpdater()
-                            .setContent("Annulé").update()
-                    }
-                    .modif(messageComponentCreateEvent)
-            }
-            .addButton(
-                "Cartes",
-                "Les cartes sont disponibles ici ! De nombreuses actions complémentaires sont proposées"
-            ) { messageComponentCreateEvent: ButtonClickEvent, c1, _ ->
-                MenuBuilder(
-                    "Cartes 🌌",
-                    "Les cartes ... tellement de cartes !",
-                    Color.PINK,
-                    c1
-                )
-                    .addButton(
-                        "Liste des cartes",
-                        "Toutes les cartes permanentes du jeu ... remerciez Darki"
-                    ) { buttonClickEvent: ButtonClickEvent, context: Context, _ ->
-                        val maps = arrayListOf(*FilesMapEnum.values())
-                        val ui = DiscordPlayerUI(context, buttonClickEvent.interaction)
-                        ui.setLongCustomUI(
-                            EmbedPages(
-                                null,
-                                null,
-                                "Liste des cartes",
-                                "Toutes les cartes permanentes du jeu ... remerciez Darki",
-                                null,
-                                maps,
-                                { i: Int, i1: Int, filesMapEnums: ArrayList<FilesMapEnum> ->
-                                    val pairs = ArrayList<Pair<String, String>>()
-                                    for (j in i until i + i1) {
-                                        val map = filesMapEnums[j]
-                                        pairs.add(
-                                            Pair(
-                                                map.name,
-                                                map.description + "\n" + map.urlOfMap + "\n de : " + map.author
-                                            )
-                                        )
-                                    }
-                                    if (pairs.size == 0) {
-                                        return@EmbedPages listOf(Pair("Aucune carte", "Aucune carte"))
-                                    }
-                                    return@EmbedPages pairs
-                                },
-                                ui
-                            )
-                        )
-                        ui.updateOrSend()
-                        context.ui(ui)
-                    }
-                    .addButton(
-                        "Ma position",
-                        "Toutes les informations sur votre position"
-                    ) { buttonClickEvent: ButtonClickEvent, _, _ ->
-
-                        val player = getAccount(slashCommand)
-                        val worldStr = player["world"]
-                        val world = WorldEnum.valueOf(worldStr)
-                        val position = player.positionToString()
-
-                        val x = player["place_${worldStr}_x"]
-                        val y = player["place_${worldStr}_y"]
-                        val zoom = player["place_${worldStr}_zoom"]
-                        val zooms = try {
-                            Zooms.valueOf(zoom)
-                        } catch (e: Exception) {
-                            Zooms.ZOOM_OUT
-                        }
-                        val xInt = x.toInt()
-                        val yInt = y.toInt()
-                        val biome = if (world.isDirt(xInt, yInt)) "la terre" else "l'eau"
-
-                        val later = buttonClickEvent.buttonInteraction.respondLater()
-                        val image = world.zoomWithDecorElements(xInt, yInt, 30, zooms, player = player)
-
-                        later.thenAccept {
-                            if (player["tuto"] == "6") {
-                                it
-                                    .addEmbed(
-                                        EmbedBuilder()
-                                            .setTitle("Vous êtes dans $biome")
-                                            .setImage(image)
-                                            .setDescription(position)
-                                            .setColor(Color.PINK)
+                                // for each world, add a field
+                                for ((i, world) in worlds.withIndex()) {
+                                    eb.addField(
+                                        "(${i}) ${world.nameRP}",
+                                        "**Nom officiel :** ${world.progName}\n**Type de serveur :** ${world.typeOfServer}\n${world.desc}",
+                                        true
                                     )
-                                    .setContent("> (Aurimezi) : Drôle de position ... allons voir la ville la plus proche ! Fait `/map` puis `voyager` et enfin `Aller à`. Je doit malheureusement te laisser, je dois aller voir un de tes futurs équipements pour un recrutement. Bonne chance !")
-                                    .update()
-                            } else {
-                                it
-                                    .addEmbed(
-                                        EmbedBuilder()
-                                            .setTitle("Vous êtes dans $biome")
-                                            .setImage(image)
-                                            .setDescription(position)
-                                            .setColor(Color.PINK)
-                                    )
-                                    .update()
+                                }
+
+                                // create the list of selections
+                                val options = ArrayList<SelectMenuOption>()
+                                for ((i, zoneDel) in worlds.withIndex()) {
+                                    options.add(SelectMenuOption.create(i.toString(), zoneDel.toString()))
+                                }
+                                val id = generateUniqueID()
+                                val actionRow =
+                                    ActionRow.of(SelectMenu.createStringMenu(id.toString(), "Monde où aller", options))
+
+                                context.selectMenu(Select(id.toString(), worlds))
+
+                                mcce.buttonInteraction.createImmediateResponder()
+                                    .addEmbed(eb)
+                                    .addComponents(actionRow)
+                                    .respond()
                             }
+                            .addButton(
+                                "Aller à",
+                                "Mode de déplacement le plus simple. Permet de se déplacer sur le pixel de son choix"
+                            ) { _ ->
+                                val id = generateUniqueID().toString()
+
+                                val player = ui.getPlayer()
+                                val world = player["world"]
+                                val type = player["place_${world}_type"]
+                                if (type == "") {
+                                    player["place_${world}_type"] = "coos"
+                                } else if (type != "coos") {
+                                    throw IllegalArgumentException("Vous n'êtes pas sur des coordonnées")
+                                }
+                                val zooms = try {
+                                    Zooms.valueOf(player["place_${world}_zoom"])
+                                } catch (e: IllegalArgumentException) {
+                                    player["place_${world}_zoom"] = "ZOOM_OUT"
+                                    Zooms.ZOOM_OUT
+                                }
+                                if (zooms != Zooms.ZOOM_OUT) {
+                                    throw IllegalArgumentException("Vous n'êtes pas sur le zoom de base, vous ne pouvez pas utiliser cette commande actuellement. Utilisez le déplacement pixel par pixel pour dézoomer")
+                                }
+
+                                Question(
+                                    "Sur quel pixel se rendre ?",
+                                    QuestionField(
+                                        "Le x du pixel",
+                                        shortAnswer = true,
+                                        required = true
+                                    ),
+                                    QuestionField(
+                                        "Le y du pixel",
+                                        shortAnswer = true,
+                                        required = true
+                                    )
+                                ) {
+                                    M1()
+                                    null
+                                }
+                            }
+                            .addButton(
+                                "Pixel par pixel",
+                                "Mode de déplacement maîtrisable."
+                            ) { _ ->
+
+                                val player = ui.getPlayer()
+                                val world = player["world"]
+                                val type = player["place_${world}_type"]
+
+                                if (type == "") {
+                                    player["place_${world}_type"] = "coos"
+                                } else if (type != "coos") {
+                                    throw IllegalArgumentException("Non disponible pour le moment dans les villes et autres lieux sans coordonnées")
+                                }
+
+                                ui.setLongCustomUI(
+                                    PixelByPixelUI(
+                                        ui,
+                                        null
+                                    )
+                                )
+                                null
+                            }
+                    )
+                    null
+                }
+                .addButton(
+                    "Retourner au hub",
+                    "Une urgence ? Bloqué dans un lieu inexistant ? Retournez au hub gratuitement !"
+                ) { _ ->
+                    val p = getAccount(slashCommand)
+                    ui.setLongCustomUI(MenuBuilderUI(
+                        "Confirmation requise",
+                        "Voulez-vous vraiment retourner au hub ?",
+                        ui
+                    )
+                        .addButton("Oui", "Retourner au hub") { _ ->
+                            ui.addMessage(Message("✔ Flavinou vient de vous téléporter au hub <https://discord.gg/q4hVQ6gwyx>"))
+                            toSpawn(p)
+                            null
                         }
+                        .addButton("Non", "Annuler") { _ ->
+                            ui.addMessage(Message("Annulé"))
+                            null
+                        }
+                    )
+                    null
+                }
+                .addButton(
+                    "Cartes",
+                    "Les cartes sont disponibles ici ! De nombreuses actions complémentaires sont proposées"
+                ) { _ ->
+                    ui.setLongCustomUI(
+                        MenuBuilderUI(
+                            "Cartes 🌌",
+                            "Les cartes ... tellement de cartes !",
+                            ui
+                        )
+                            .addButton(
+                                "Liste des cartes",
+                                "Toutes les cartes permanentes du jeu ... remerciez Darki"
+                            ) { _ ->
+                                val maps = arrayListOf(*FilesMapEnum.values())
+                                ui.setLongCustomUI(
+                                    EmbedPages(
+                                        null,
+                                        null,
+                                        "Liste des cartes",
+                                        "Toutes les cartes permanentes du jeu ... remerciez Darki",
+                                        null,
+                                        maps,
+                                        { i: Int, i1: Int, filesMapEnums: ArrayList<FilesMapEnum> ->
+                                            val pairs = ArrayList<Pair<String, String>>()
+                                            for (j in i until i + i1) {
+                                                val map = filesMapEnums[j]
+                                                pairs.add(
+                                                    Pair(
+                                                        map.name,
+                                                        map.description + "\n" + map.urlOfMap + "\n de : " + map.author
+                                                    )
+                                                )
+                                            }
+                                            if (pairs.size == 0) {
+                                                return@EmbedPages listOf(Pair("Aucune carte", "Aucune carte"))
+                                            }
+                                            return@EmbedPages pairs
+                                        },
+                                        ui
+                                    )
+                                )
+                                null
+                            }
+                            .addButton(
+                                "Ma position",
+                                "Toutes les informations sur votre position"
+                            ) { _ ->
 
-                    }
-                    .addButton(
-                        "Trouver un chemin",
-                        "Un lieu ou des coordonnées ? Trouvez le chemin le plus court"
-                    ) { mcce: ButtonClickEvent, c2, _ ->
-                        val id = generateUniqueID().toString()
-                        mcce.buttonInteraction
-                            .respondWithModal(
-                                id, "Trouver un chemin",
-                                ActionRow.of(
-                                    TextInput.create(
-                                        TextInputStyle.SHORT,
-                                        "cx1id",
+                                val player = getAccount(slashCommand)
+                                val worldStr = player["world"]
+                                val world = WorldEnum.valueOf(worldStr)
+                                val position = player.positionToString()
+
+                                val x = player["place_${worldStr}_x"]
+                                val y = player["place_${worldStr}_y"]
+                                val zoom = player["place_${worldStr}_zoom"]
+                                val zooms = try {
+                                    Zooms.valueOf(zoom)
+                                } catch (e: Exception) {
+                                    Zooms.ZOOM_OUT
+                                }
+                                val xInt = x.toInt()
+                                val yInt = y.toInt()
+                                val biome = if (world.isDirt(xInt, yInt)) "la terre" else "l'eau"
+
+                                val later = buttonClickEvent.buttonInteraction.respondLater()
+                                val image = world.zoomWithDecorElements(xInt, yInt, 30, zooms, player = player)
+
+                                later.thenAccept {
+                                    if (player["tuto"] == "6") {
+                                        it
+                                            .addEmbed(
+                                                EmbedBuilder()
+                                                    .setTitle("Vous êtes dans $biome")
+                                                    .setImage(image)
+                                                    .setDescription(position)
+                                                    .setColor(Color.PINK)
+                                            )
+                                            .setContent("> (Aurimezi) : Drôle de position ... allons voir la ville la plus proche ! Fait `/map` puis `voyager` et enfin `Aller à`. Je doit malheureusement te laisser, je dois aller voir un de tes futurs équipements pour un recrutement. Bonne chance !")
+                                            .update()
+                                    } else {
+                                        it
+                                            .addEmbed(
+                                                EmbedBuilder()
+                                                    .setTitle("Vous êtes dans $biome")
+                                                    .setImage(image)
+                                                    .setDescription(position)
+                                                    .setColor(Color.PINK)
+                                            )
+                                            .update()
+                                    }
+                                }
+
+                            }
+                            .addButton(
+                                "Trouver un chemin",
+                                "Un lieu ou des coordonnées ? Trouvez le chemin le plus court"
+                            ) { _ ->
+                                val id = generateUniqueID().toString()
+
+                                Question(
+                                    "Trouver un chemin",
+                                    QuestionField(
                                         "Le x du point de départ",
-                                        true
-                                    )
-                                ),
-                                ActionRow.of(
-                                    TextInput.create(
-                                        TextInputStyle.SHORT,
-                                        "cy1id",
+                                        shortAnswer = true,
+                                        required = true
+                                    ),
+                                    QuestionField(
                                         "Le y du point de départ",
-                                        true
-                                    )
-                                ),
-                                ActionRow.of(
-                                    TextInput.create(
-                                        TextInputStyle.SHORT,
-                                        "cx2id",
+                                        shortAnswer = true,
+                                        required = true
+                                    ),
+                                    QuestionField(
                                         "Le x du point d'arrivée",
-                                        true
-                                    )
-                                ),
-                                ActionRow.of(
-                                    TextInput.create(
-                                        TextInputStyle.SHORT,
-                                        "cy2id",
+                                        shortAnswer = true,
+                                        required = true
+                                    ),
+                                    QuestionField(
                                         "Le y du point d'arrivée",
-                                        true
+                                        shortAnswer = true,
+                                        required = true
                                     )
-                                )
-                            )
-
-                        c2.modal(
-                            M2(id)
-                        )
-                    }
-                    .addButton(
-                        "Zoomer",
-                        "Zoomer sur une carte"
-                    ) { zoom: ButtonClickEvent, c2, _ ->
-                        val id = generateUniqueID().toString()
-
-                        zoom.buttonInteraction
-                            .respondWithModal(
-                                id,
-                                "Informations pour zoomer sur la carte",
-                                ActionRow.of(
-                                    TextInput.create(
-                                        TextInputStyle.SHORT,
-                                        "cxid",
+                                ) {
+                                    M2()
+                                    null
+                                }
+                            }
+                            .addButton(
+                                "Zoomer",
+                                "Zoomer sur une carte"
+                            ) { _ ->
+                                val id = generateUniqueID().toString()
+                                Question(
+                                    "Informations pour zoomer sur la carte",
+                                    QuestionField(
                                         "Le x de la case",
-                                        true
-                                    )
-                                ),
-                                ActionRow.of(
-                                    TextInput.create(
-                                        TextInputStyle.SHORT,
-                                        "cyid",
+                                        shortAnswer = true,
+                                        required = true
+                                    ),
+                                    QuestionField(
                                         "Le y de la case",
-                                        true
-                                    )
-                                ),
-                                ActionRow.of(
-                                    TextInput.create(
-                                        TextInputStyle.SHORT,
-                                        "czoomid",
+                                        shortAnswer = true,
+                                        required = true
+                                    ),
+                                    QuestionField(
                                         "Zoom (1-60) = hauteur/2",
-                                        true
+                                        shortAnswer = true,
+                                        required = true
                                     )
-                                )
-                            )
+                                ) {
+                                    M4()
+                                    null
+                                }
+                            }
+                            .addButton(
+                                "Type de case",
+                                "Le biome d'une case et les informations"
+                            ) { _ ->
+                                val id = generateUniqueID().toString()
 
-                        c2.modal(
-                            M4(id)
-                        )
-                    }
-                    .addButton(
-                        "Type de case",
-                        "Le biome d'une case et les informations"
-                    ) { mcce: ButtonClickEvent, c2, _ ->
-                        val id = generateUniqueID().toString()
-                        val idX = generateUniqueID()
-                        val idY = generateUniqueID()
-                        mcce.buttonInteraction
-                            .respondWithModal(
-                                id, "Type de case",
-                                ActionRow.of(
-                                    TextInput.create(
-                                        TextInputStyle.SHORT,
-                                        idX.toString(),
+                                Question(
+                                    "Type de case",
+                                    QuestionField(
                                         "Le x de la case",
-                                        true
-                                    )
-                                ),
-                                ActionRow.of(
-                                    TextInput.create(
-                                        TextInputStyle.SHORT,
-                                        idY.toString(),
+                                        shortAnswer = true,
+                                        required = true
+                                    ),
+                                    QuestionField(
                                         "Le y de la case",
-                                        true
+                                        shortAnswer = true,
+                                        required = true
                                     )
-                                )
-                            )
-
-                        c2.modal(
-                            M5(id)
-                        )
-                    }
-                    .modif(messageComponentCreateEvent)
-            }
-            .responder(slashCommand)
-
+                                ) {
+                                    M5()
+                                    null
+                                }
+                            })
+                    null
+                })
+        ui.updateOrSend()
+        context.ui(ui)
     }
 }
