@@ -1,30 +1,29 @@
 package io.github.alexiscomete.lapinousecond.view.discord.commands.classes
 
-import io.github.alexiscomete.lapinousecond.entity.entities.Owner
-import io.github.alexiscomete.lapinousecond.entity.entities.Player
-import io.github.alexiscomete.lapinousecond.entity.entities.players
-import io.github.alexiscomete.lapinousecond.entity.concrete.resources.Resource
-import io.github.alexiscomete.lapinousecond.messagesManager
 import io.github.alexiscomete.lapinousecond.data.managesave.generateUniqueID
 import io.github.alexiscomete.lapinousecond.data.managesave.saveManager
 import io.github.alexiscomete.lapinousecond.data.transactions.*
+import io.github.alexiscomete.lapinousecond.entity.concrete.resources.Resource
+import io.github.alexiscomete.lapinousecond.entity.entities.Owner
+import io.github.alexiscomete.lapinousecond.entity.entities.Player
+import io.github.alexiscomete.lapinousecond.entity.entities.players
+import io.github.alexiscomete.lapinousecond.messagesManager
 import io.github.alexiscomete.lapinousecond.view.Context
 import io.github.alexiscomete.lapinousecond.view.contextFor
-import io.github.alexiscomete.lapinousecond.view.contextmanager.ButtonsContextManager
 import io.github.alexiscomete.lapinousecond.view.contextmanager.ModalContextManager
 import io.github.alexiscomete.lapinousecond.view.discord.commands.Command
 import io.github.alexiscomete.lapinousecond.view.discord.commands.ExecutableWithArguments
 import io.github.alexiscomete.lapinousecond.view.discord.commands.getAccount
 import io.github.alexiscomete.lapinousecond.view.ui.longuis.EmbedPagesWithInteractions
+import io.github.alexiscomete.lapinousecond.view.ui.longuis.MenuBuilderUI
 import io.github.alexiscomete.lapinousecond.view.ui.old.MenuBuilder
-import io.github.alexiscomete.lapinousecond.view.ui.playerui.DiscordPlayerUI
-import io.github.alexiscomete.lapinousecond.view.ui.playerui.Message
-import io.github.alexiscomete.lapinousecond.view.ui.playerui.PlayerUI
+import io.github.alexiscomete.lapinousecond.view.ui.playerui.*
 import org.javacord.api.entity.message.component.ActionRow
 import org.javacord.api.entity.message.component.TextInput
 import org.javacord.api.entity.message.component.TextInputStyle
 import org.javacord.api.event.interaction.ButtonClickEvent
 import org.javacord.api.event.interaction.ModalSubmitEvent
+import org.javacord.api.interaction.Interaction
 import org.javacord.api.interaction.SlashCommandInteraction
 import java.awt.Color
 
@@ -49,6 +48,7 @@ class MarketCommand : Command(
     override val botPerms: Array<String>
         get() = arrayOf("PLAY")
 
+    @Deprecated("Use the new version")
     class M1(name: String) : ModalContextManager(name) {
         override fun ex(smce: ModalSubmitEvent, c: Context) {
 
@@ -120,68 +120,60 @@ class MarketCommand : Command(
         var quantity: Double? = null
 
         fun sendMenu(
-            modalSubmitEvent: ModalSubmitEvent,
             resource: Resource,
             quantity: Double,
             r2: Resource,
             quantity2: Double,
             p1: Player,
             p2: Player,
-            c3: Context
+            pui: PlayerUI
         ) {
             // accept, cancel are used to count the number of users who select each button
-            MenuBuilder(
-                "Suite de l'échange",
-                "La personne avec qui vous échangez a proposé $quantity ${resource.show}",
-                Color.YELLOW,
-                c3
-            )
-                .addButton(
-                    "Accepter",
-                    "Vous acceptez l'échange."
-                ) { it, _, _ ->
-                    if (accept) {
-                        it.buttonInteraction.createOriginalMessageUpdater()
-                            .removeAllComponents()
-                            .removeAllEmbeds()
-                            .setContent("Echange accepté. Transaction en cours...")
-                            .update()
-                        if (!p1.hasResource(resource, quantity) || !p2.hasResource(r2, quantity2)) {
-                            throw IllegalArgumentException("Une des personnes n'a pas assez de ressources")
+            pui.setLongCustomUI(
+                MenuBuilderUI(
+                    "Suite de l'échange",
+                    "La personne avec qui vous échangez a proposé $quantity ${resource.show}",
+                    pui
+                )
+                    .addButton(
+                        "Accepter",
+                        "Vous acceptez l'échange."
+                    ) { _ ->
+                        if (accept) {
+                            pui.addMessage(
+                                Message(
+                                    "Echange accepté. Transaction en cours..."
+                                )
+                            )
+                            if (!p1.hasResource(resource, quantity) || !p2.hasResource(r2, quantity2)) {
+                                throw IllegalArgumentException("Une des personnes n'a pas assez de ressources")
+                            }
+                            p1.removeResource(resource, quantity)
+                            p2.removeResource(r2, quantity2)
+                            p1.addResource(r2, quantity2)
+                            p2.addResource(resource, quantity)
+
+                            pui.addMessage(Message("Transaction effectuée"))
+                        } else if (cancel) {
+                            pui.addMessage(Message("L'échange est annulé"))
+                        } else {
+                            accept = true
+                            pui.addMessage(
+                                Message(
+                                    "Vous avez accepté l'échange. Merci de patienter."
+                                )
+                            )
                         }
-                        p1.removeResource(resource, quantity)
-                        p2.removeResource(r2, quantity2)
-                        p1.addResource(r2, quantity2)
-                        p2.addResource(resource, quantity)
-                        it.buttonInteraction.createOriginalMessageUpdater()
-                            .removeAllComponents()
-                            .removeAllEmbeds()
-                            .setContent("Transaction effectuée")
-                            .update()
-                    } else if (cancel) {
-                        it.buttonInteraction.createOriginalMessageUpdater()
-                            .removeAllComponents()
-                            .removeAllEmbeds()
-                            .setContent("L'échange est annulé")
-                            .update()
-                    } else {
-                        accept = true
-                        it.buttonInteraction.createOriginalMessageUpdater()
-                            .removeAllComponents()
-                            .removeAllEmbeds()
-                            .setContent("Vous avez accepté l'échange. Merci de patienter.")
-                            .update()
+                        null
                     }
-                }
-                .addButton("Annuler", "Vous refusez l'échange") { it, _, _ ->
-                    it.buttonInteraction.createOriginalMessageUpdater()
-                        .removeAllComponents()
-                        .removeAllEmbeds()
-                        .setContent("L'échange est annulé")
-                        .update()
-                    cancel = true
-                }
-                .responder(modalSubmitEvent.modalInteraction)
+                    .addButton("Annuler", "Vous refusez l'échange") { _ ->
+                        pui.addMessage(
+                            Message("L'échange est annulé")
+                        )
+                        cancel = true
+                        null
+                    }
+            )
         }
 
         /**
@@ -235,8 +227,8 @@ class MarketCommand : Command(
             if (wait.end2) {
                 val p1 = players[smce.modalInteraction.user.id]!!
                 val p2 = players[wait.wait!!.modalInteraction.user.id]!!
-                wait.sendMenu(smce, wait.resource!!, wait.quantity!!, resource1, quantityDouble, p2, p1, c)
-                wait.sendMenu(wait.wait!!, resource1, quantityDouble, wait.resource!!, wait.quantity!!, p1, p2, otherC)
+                wait.sendMenu(wait.resource!!, wait.quantity!!, resource1, quantityDouble, p2, p1, c)
+                wait.sendMenu(resource1, quantityDouble, wait.resource!!, wait.quantity!!, p1, p2, otherC)
             } else {
                 wait.pleaseWait(smce, resource1, quantityDouble)
             }
@@ -273,8 +265,8 @@ class MarketCommand : Command(
             if (wait.end1) {
                 val p1 = players[smce.modalInteraction.user.id]!!
                 val p2 = players[wait.wait!!.modalInteraction.user.id]!!
-                wait.sendMenu(smce, wait.resource!!, wait.quantity!!, resource1, quantityDouble, p2, p1, c)
-                wait.sendMenu(wait.wait!!, resource1, quantityDouble, wait.resource!!, wait.quantity!!, p1, p2, otherC)
+                wait.sendMenu(wait.resource!!, wait.quantity!!, resource1, quantityDouble, p2, p1, c)
+                wait.sendMenu(resource1, quantityDouble, wait.resource!!, wait.quantity!!, p1, p2, otherC)
             } else {
                 wait.pleaseWait(smce, resource1, quantityDouble)
             }
@@ -456,6 +448,7 @@ class MarketCommand : Command(
 
         val player = getAccount(slashCommand)
         val context = contextFor(getAccount(slashCommand.user))
+
         if (player.level.level < 2) {
             slashCommand.createImmediateResponder()
                 .setContent("Vous devez être niveau 2 pour accéder au marché. Utilisez la commande `/shop` pour monter commercer et la commande `/work` pour gagner de l'xp.")
@@ -463,144 +456,58 @@ class MarketCommand : Command(
             return
         }
 
-        MenuBuilder(
+        val ui = DiscordPlayerUI(context, slashCommand as Interaction)
+
+        MenuBuilderUI(
             "Le marché",
             "Ici est le lieu d'échanges entre les joueurs ! Avancez sur vos quêtes en trouvant ici des objets introuvables, gagnez de l'argent en vendant des objets ou des ressources .... bref c'est le lieu des joueurs",
-            Color.YELLOW,
-            context
+            ui
         )
             .addButton(
                 "Donner",
                 "Donner un objet ou des ressources à un autre joueur"
-            ) { messageComponentCreateEvent: ButtonClickEvent, c1, _ ->
+            ) { _ ->
                 val id = generateUniqueID()
 
-                messageComponentCreateEvent.buttonInteraction.respondWithModal(
-                    id.toString(),
+                Question(
                     "Répondez aux questions pour donner",
-                    ActionRow.of(
-                        TextInput.create(
-                            TextInputStyle.SHORT,
-                            "cresourceid",
-                            "Quelle ressource / objet voulez-vous donner ?",
-                            true
-                        )
+                    QuestionField(
+                        "Quelle ressource / objet voulez-vous donner ?",
+                        shortAnswer = true,
+                        required = true
                     ),
-                    ActionRow.of(
-                        TextInput.create(
-                            TextInputStyle.SHORT,
-                            "cquantityid",
-                            "Combien voulez-vous donner ?",
-                            true
-                        )
+                    QuestionField(
+                        "Combien voulez-vous donner ?",
+                        shortAnswer = true,
+                        required = true
                     )
-                )
-
-                c1.modal(M1(id.toString()))
+                ) {
+                    M1(id.toString())
+                    null
+                }
             }
             .addButton(
                 "Echanger",
                 "Echanger un objet ou des ressources avec un autre joueur de façon sécurisée"
-            ) { messageComponentCreateEvent: ButtonClickEvent, c1, _ ->
-                getAccount(slashCommand)
-                messagesManager.addListener(
-                    slashCommand.channel.get(),
-                    slashCommand.user.id
-                ) { message ->
-                    val owner = message.messageContent
-                    // l'owner est au format <@id>, je vais donc extraire l'id
-                    val ownerId = owner.substring(2, owner.length - 1)
-                    players[ownerId.toLong()] ?: throw IllegalArgumentException("Le joueur n'existe pas")
-                    MenuBuilder(
-                        "Demande d'échange",
-                        "<@${slashCommand.user.id}> vous a proposé un échange. **Négociez avant avec lui**",
-                        Color.YELLOW,
-                        contextFor(getAccount(message.message.mentionedUsers[0]))
-                    )
-                        .addButton(
-                            "Accepter",
-                            "Vous acceptez de négociez avec lui"
-                        ) { buttonClickEvent: ButtonClickEvent, c3, _ ->
-                            val id1 = generateUniqueID()
-                            val id2 = generateUniqueID()
+            ) { _ ->
 
-                            buttonClickEvent.buttonInteraction.respondWithModal(
-                                id1.toString(), "Répondez aux question pour commencer l'échange",
-                                ActionRow.of(
-                                    TextInput.create(
-                                        TextInputStyle.SHORT,
-                                        "cresource1id",
-                                        "Quelle ressource / objet voulez-vous échanger ?",
-                                        true
-                                    )
-                                ),
-                                ActionRow.of(
-                                    TextInput.create(
-                                        TextInputStyle.SHORT,
-                                        "cquantity1id",
-                                        "Combien voulez-vous échanger ?",
-                                        true
-                                    )
-                                )
-                            )
-                            messageComponentCreateEvent.buttonInteraction.respondWithModal(
-                                id2.toString(), "Que donner ?",
-                                ActionRow.of(
-                                    TextInput.create(
-                                        TextInputStyle.SHORT,
-                                        "cresource2id",
-                                        "Ressource / objet à échanger",
-                                        true
-                                    )
-                                ),
-                                ActionRow.of(
-                                    TextInput.create(
-                                        TextInputStyle.SHORT,
-                                        "cquantity2id",
-                                        "Combien voulez-vous échanger ?",
-                                        true
-                                    )
-                                )
-                            )
+                // TODO - refonte de l'interface et du système d'échange
 
-                            val wait = Wait23()
-
-                            c1.modal(M2(id1.toString(), wait, c3))
-                            c3.modal(M3(id2.toString(), wait, c1))
-                        }
-                        .addButton(
-                            "Refuser",
-                            "Vous refusez de négocier avec lui"
-                        ) { messageComponentCreateEvent: ButtonClickEvent, _, _ ->
-                            messageComponentCreateEvent.buttonInteraction
-                                .createOriginalMessageUpdater()
-                                .removeAllEmbeds()
-                                .removeAllComponents()
-                                .setContent("<@$ownerId> a refusé votre échange")
-                                .update()
-                        }
-                        .messageBuilder()
-                        .setContent("<@$ownerId>")
-                        .send(slashCommand.channel.get())
-                }
-
-                messageComponentCreateEvent.buttonInteraction.createOriginalMessageUpdater()
-                    .removeAllEmbeds()
-                    .removeAllComponents()
-                    .setContent("Vous demandez un échange. Mentionnez le joueur avec qui vous souhaitez négocier puis restez dans le salon pour recevoir le modal")
-                    .update()
+                ui.addMessage(
+                    Message("Le système d'échange est pour le moment en refonte totale. Désolé.")
+                )
+                null
             }
             .addButton(
                 "Offres",
                 "Les vendeurs proposent un prix"
-            ) { messageComponentCreateEvent: ButtonClickEvent, c1, _ ->
+            ) { _ ->
                 askWhat(
                     "offre",
-                    messageComponentCreateEvent,
-                    c1,
-                    { it, c2, _ ->
+                    ui,
+                    { _ ->
                         val result = saveManager.executeQuery(
-                            "SELECT id FROM offers WHERE who = ${messageComponentCreateEvent.buttonInteraction.user.id}",
+                            "SELECT id FROM offers WHERE who = ${ui.getPlayer().id}",
                             true
                         ) ?: throw IllegalArgumentException("No offers")
                         val offers = arrayListOf<Offer>()
@@ -608,7 +515,6 @@ class MarketCommand : Command(
                             offers.add(Offer(result.getLong("id")))
                         }
                         result.close()
-                        val ui = DiscordPlayerUI(context, it.interaction)
                         ui.setLongCustomUI(
                             EmbedPagesWithInteractions(
                                 offers,
@@ -651,9 +557,7 @@ class MarketCommand : Command(
                                 ui
                             )
                         )
-                        ui.updateOrSend()
-                        context.ui(ui)
-                    }, { it, c2, _ ->
+                    }, { _ ->
                         val result =
                             saveManager.executeQuery("SELECT id FROM offers", true) ?: throw IllegalStateException(
                                 "No offers"
@@ -663,7 +567,6 @@ class MarketCommand : Command(
                             offers.add(Offer(result.getLong("id")))
                         }
                         result.close()
-                        val ui = DiscordPlayerUI(context, it.interaction)
                         ui.setLongCustomUI(
                             EmbedPagesWithInteractions(
                                 offers,
@@ -710,57 +613,45 @@ class MarketCommand : Command(
                                 ui
                             )
                         )
-                        ui.updateOrSend()
-                        context.ui(ui)
-                    }) { event, c2, _ ->
+                    }) { _ ->
                     val id = generateUniqueID().toString()
 
-                    event.buttonInteraction.respondWithModal(
-                        id, "Création d'une offre",
-                        ActionRow.of(
-                            TextInput.create(
-                                TextInputStyle.SHORT,
-                                "citemid",
-                                "Quelle ressource / objet voulez-vous vendre ?",
-                                true
-                            )
+                    Question(
+                        "Création d'une offre",
+                        QuestionField(
+                            "Quelle ressource / objet voulez-vous vendre ?",
+                            shortAnswer = true,
+                            required = true
                         ),
-                        ActionRow.of(
-                            TextInput.create(
-                                TextInputStyle.SHORT,
-                                "cquantityid",
-                                "Combien voulez-vous en vendre ?",
-                                true
-                            )
+                        QuestionField(
+                            "Combien voulez-vous en vendre ?",
+                            shortAnswer = true,
+                            required = true
                         ),
-                        ActionRow.of(
-                            TextInput.create(
-                                TextInputStyle.SHORT,
-                                "ccostid",
-                                "Combien voulez-vous de RB en échange ?",
-                                true
-                            )
+                        QuestionField(
+                            "Combien voulez-vous de RB en échange ?",
+                            shortAnswer = true,
+                            required = true
                         )
-                    )
-
-                    c2.modal(
+                    ) {
                         M4(
                             id,
                         )
-                    )
+                        null
+                    }
                 }
+                null
             }
             .addButton(
                 "Recherches",
                 "Les acheteurs recherchent un objet pour un certain prix"
-            ) { messageComponentCreateEvent: ButtonClickEvent, c1, _ ->
+            ) { _ ->
                 askWhat(
                     "recherche",
-                    messageComponentCreateEvent,
-                    c1,
-                    { it, _, _ ->
+                    ui,
+                    { pui ->
                         val result = saveManager.executeQuery(
-                            "SELECT id FROM researches WHERE who = ${messageComponentCreateEvent.buttonInteraction.user.id}",
+                            "SELECT id FROM researches WHERE who = ${pui.getPlayer().id}",
                             true
                         ) ?: throw IllegalArgumentException("No researches")
                         val researches = arrayListOf<Research>()
@@ -768,8 +659,7 @@ class MarketCommand : Command(
                             researches.add(Research(result.getLong("id")))
                         }
                         result.close()
-                        val ui = DiscordPlayerUI(context, it.interaction)
-                        ui.setLongCustomUI(
+                        pui.setLongCustomUI(
                             EmbedPagesWithInteractions(
                                 researches,
                                 { start: Int, num: Int, researchArrayList: ArrayList<Research> ->
@@ -814,9 +704,7 @@ class MarketCommand : Command(
                                 ui
                             )
                         )
-                        ui.updateOrSend()
-                        context.ui(ui)
-                    }, { it, _, _ ->
+                    }, { _ ->
                         val result =
                             saveManager.executeQuery("SELECT id FROM researches", true) ?: throw IllegalStateException(
                                 "No researches found"
@@ -826,7 +714,6 @@ class MarketCommand : Command(
                             researches.add(Research(result.getLong("id")))
                         }
                         result.close()
-                        val ui = DiscordPlayerUI(context, it.interaction)
                         ui.setLongCustomUI(
                             EmbedPagesWithInteractions(
                                 researches,
@@ -876,53 +763,40 @@ class MarketCommand : Command(
                                 ui
                             )
                         )
-                        ui.updateOrSend()
-                        context.ui(ui)
-                    }) { event, c2, _ ->
+                    }) { _ ->
                     val id = generateUniqueID().toString()
 
-                    event.buttonInteraction.respondWithModal(
-                        id, "Création d'une recherche",
-                        ActionRow.of(
-                            TextInput.create(
-                                TextInputStyle.SHORT,
-                                "citemid",
-                                "Quelle ressource / objet cherchez vous ?",
-                                true
-                            )
+                    Question(
+                        "Création d'une recherche",
+                        QuestionField(
+                            "Quelle ressource / objet cherchez vous ?",
+                            shortAnswer = true,
+                            required = true
                         ),
-                        ActionRow.of(
-                            TextInput.create(
-                                TextInputStyle.SHORT,
-                                "cquantityid",
-                                "Combien en cherchez vous ?",
-                                true
-                            )
+                        QuestionField(
+                            "Combien en cherchez vous ?",
+                            shortAnswer = true,
+                            required = true
                         ),
-                        ActionRow.of(
-                            TextInput.create(
-                                TextInputStyle.SHORT,
-                                "ccostid",
-                                "Combien voulez-vous donner de RB en échange ?",
-                                true
-                            )
+                        QuestionField(
+                            "Combien voulez-vous donner de RB en échange ?",
+                            shortAnswer = true,
+                            required = true
                         )
-                    )
-
-                    c2.modal(
-                        M6(
-                            id
-                        )
-                    )
+                    ) {
+                        M6(id)
+                        null
+                    }
                 }
+                null
             }
             .addButton(
                 "Enchères",
                 "Ici trouvez les objets les plus rares et chers"
-            ) { messageComponentCreateEvent: ButtonClickEvent, c1, _ ->
-                askWhat("enchère", messageComponentCreateEvent, c1, { it, _, _ ->
+            ) { _ ->
+                askWhat("enchère", ui, { _ ->
                     val result = saveManager.executeQuery(
-                        "SELECT id FROM auctions WHERE who = ${messageComponentCreateEvent.buttonInteraction.user.id}",
+                        "SELECT id FROM auctions WHERE who = ${ui.getPlayer().id}",
                         true
                     ) ?: throw IllegalArgumentException("No auctions")
                     val auctions = arrayListOf<Auction>()
@@ -930,7 +804,6 @@ class MarketCommand : Command(
                         auctions.add(Auction(result.getLong("id")))
                     }
                     result.close()
-                    val ui = DiscordPlayerUI(context, it.interaction)
                     ui.setLongCustomUI(
                         EmbedPagesWithInteractions(
                             auctions,
@@ -980,7 +853,7 @@ class MarketCommand : Command(
                     )
                     ui.updateOrSend()
                     context.ui(ui)
-                }, { it, _, _ ->
+                }, { _ ->
                     val result =
                         saveManager.executeQuery("SELECT id FROM auctions", true) ?: throw IllegalStateException(
                             "No auctions found"
@@ -990,7 +863,6 @@ class MarketCommand : Command(
                         auctions.add(Auction(result.getLong("id")))
                     }
                     result.close()
-                    val ui = DiscordPlayerUI(context, it.interaction)
                     ui.setLongCustomUI(
                         EmbedPagesWithInteractions(
                             auctions,
@@ -1036,75 +908,66 @@ class MarketCommand : Command(
                             ui
                         )
                     )
-                    ui.updateOrSend()
-                    context.ui(ui)
-                }) { event, c2, _ ->
+                }) { _ ->
                     val id = generateUniqueID().toString()
 
-                    event.buttonInteraction.respondWithModal(
-                        id, "Création d'une enchère",
-                        ActionRow.of(
-                            TextInput.create(
-                                TextInputStyle.SHORT,
-                                "citemid",
-                                "Ressource / objet à mettre aux enchères",
-                                true
-                            )
+                    Question(
+                        "Création d'une enchère",
+                        QuestionField(
+                            "Ressource / objet à mettre aux enchères",
+                            shortAnswer = true,
+                            required = true
                         ),
-                        ActionRow.of(
-                            TextInput.create(
-                                TextInputStyle.SHORT,
-                                "cquantityid",
-                                "Combien voulez-vous en mettre ?",
-                                true
-                            )
+                        QuestionField(
+                            "Combien voulez-vous en mettre ?",
+                            shortAnswer = true,
+                            required = true
                         ),
-                        ActionRow.of(
-                            TextInput.create(
-                                TextInputStyle.SHORT,
-                                "ccostid",
-                                "Prix de base de l'enchère",
-                                true
-                            )
+                        QuestionField(
+                            "Prix de base de l'enchère",
+                            shortAnswer = true,
+                            required = true
                         )
-                    )
-
-                    c2.modal(
+                    ) {
                         M7(id)
-                    )
+                        null
+                    }
                 }
+                null
             }
-            .responder(slashCommand)
 
     }
 
     private fun askWhat(
         name: String,
-        buttonClickEvent: ButtonClickEvent,
-        context: Context,
-        my: (ButtonClickEvent, Context, ButtonsContextManager) -> Unit,
-        everything: (ButtonClickEvent, Context, ButtonsContextManager) -> Unit,
-        create: (ButtonClickEvent, Context, ButtonsContextManager) -> Unit
+        playerUI: PlayerUI,
+        my: (PlayerUI) -> Unit,
+        everything: (PlayerUI) -> Unit,
+        create: (PlayerUI) -> Unit
     ) {
-        MenuBuilder("Que faire ?", "Il existe 3 possibilités pour les ${name}s", Color.YELLOW, context)
-            .addButton(
-                "Mes ${name}s",
-                "Voir vos ${name}s, si elles existent. Dans le cas des offres et recherches, vous pouvez les supprimer. Dans le cas des enchères, vous pouvez finir une enchère.",
-            ) { messageComponentCreateEvent: ButtonClickEvent, c1, b1 ->
-                my(messageComponentCreateEvent, c1, b1)
-            }
-            .addButton(
-                "Toutes les ${name}s",
-                "Voir toutes les ${name}s. Vous pouvez interagir avec celles-ci ici (répondre à une enchère, acheter une offre, etc.)",
-            ) { messageComponentCreateEvent: ButtonClickEvent, c1, b1 ->
-                everything(messageComponentCreateEvent, c1, b1)
-            }
-            .addButton(
-                "Créer une $name",
-                "Créer une $name avec le menu interactif"
-            ) { messageComponentCreateEvent: ButtonClickEvent, c1, b1 ->
-                create(messageComponentCreateEvent, c1, b1)
-            }
-            .modif(buttonClickEvent)
+        playerUI.setLongCustomUI(
+            MenuBuilderUI("Que faire ?", "Il existe 3 possibilités pour les ${name}s", playerUI)
+                .addButton(
+                    "Mes ${name}s",
+                    "Voir vos ${name}s, si elles existent. Dans le cas des offres et recherches, vous pouvez les supprimer. Dans le cas des enchères, vous pouvez finir une enchère.",
+                ) { _ ->
+                    my(playerUI)
+                    null
+                }
+                .addButton(
+                    "Toutes les ${name}s",
+                    "Voir toutes les ${name}s. Vous pouvez interagir avec celles-ci ici (répondre à une enchère, acheter une offre, etc.)",
+                ) { _ ->
+                    everything(playerUI)
+                    null
+                }
+                .addButton(
+                    "Créer une $name",
+                    "Créer une $name avec le menu interactif"
+                ) { _ ->
+                    create(playerUI)
+                    null
+                }
+        )
     }
 }
