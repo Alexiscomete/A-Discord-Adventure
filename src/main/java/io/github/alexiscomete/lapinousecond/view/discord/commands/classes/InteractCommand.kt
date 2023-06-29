@@ -3,7 +3,6 @@ package io.github.alexiscomete.lapinousecond.view.discord.commands.classes
 import io.github.alexiscomete.lapinousecond.api
 import io.github.alexiscomete.lapinousecond.data.managesave.saveManager
 import io.github.alexiscomete.lapinousecond.entity.concrete.resources.Resource
-import io.github.alexiscomete.lapinousecond.view.Context
 import io.github.alexiscomete.lapinousecond.view.contextFor
 import io.github.alexiscomete.lapinousecond.view.discord.commands.Command
 import io.github.alexiscomete.lapinousecond.view.discord.commands.ExecutableWithArguments
@@ -21,7 +20,6 @@ import org.javacord.api.entity.server.invite.Invite
 import org.javacord.api.entity.server.invite.InviteBuilder
 import org.javacord.api.interaction.Interaction
 import org.javacord.api.interaction.SlashCommandInteraction
-import java.awt.Color
 
 class InteractCommandBase : Command(
     "interact",
@@ -63,10 +61,9 @@ class InteractCommandBase : Command(
                             "La ville ${place["nameRP"]} est ici ! Vous pouvez y entrer en cliquant sur ce bouton. Description : ${place["description"]}"
                         ) { playerUI ->
                             fun errorWithSuccess() {
-                                it.buttonInteraction.createImmediateResponder()
-                                    .setContent("Vous êtes maintenant dans la ville ${place["nameRP"]} ! Invitation impossible, le serveur n'est pas accessible.")
-                                    .setFlags(MessageFlag.EPHEMERAL)
-                                    .respond()
+                                playerUI.addMessage(
+                                    Message("Vous êtes maintenant dans la ville ${place["nameRP"]} ! Invitation impossible, le serveur n'est pas accessible.")
+                                )
                             }
 
                             player["place_${world.progName}_type"] = "city"
@@ -89,10 +86,9 @@ class InteractCommandBase : Command(
                                 .create()
                                 .join()
 
-                            it.buttonInteraction.createImmediateResponder()
-                                .setContent("Vous êtes maintenant dans la ville ${place["nameRP"]} ! Voici l'invitation pour rejoindre le serveur : ${invite.url}")
-                                .setFlags(MessageFlag.EPHEMERAL)
-                                .respond()
+                            playerUI.addMessage(
+                                Message("Vous êtes maintenant dans la ville ${place["nameRP"]} ! Voici l'invitation pour rejoindre le serveur : ${invite.url}")
+                            )
 
                             player["serv"] = serverId
                             null
@@ -118,19 +114,19 @@ class InteractCommandBase : Command(
                         "Vous sortez du bâtiment ${building["nameRP"]} et retournez dans la ville."
                     ) { playerUI ->
                         player["place_${world.progName}_type"] = "city"
-                        it.buttonInteraction.createImmediateResponder()
-                            .setContent("Vous êtes maintenant dans la ville ${building["nameRP"]} !")
-                            .setFlags(MessageFlag.EPHEMERAL)
-                            .respond()
+                        playerUI.addMessage(
+                            Message("Vous êtes maintenant dans la ville ${building["nameRP"]} !")
+                        )
+                        null
                     }
                     .addButton(
                         "Informations",
                         "Vous regardez les informations du bâtiment ${building["nameRP"]}."
                     ) { playerUI ->
-                        it.buttonInteraction.createImmediateResponder()
-                            .setContent("${building.title()}\n${building.descriptionShort()}")
-                            .setFlags(MessageFlag.EPHEMERAL)
-                            .respond()
+                        playerUI.addMessage(
+                            Message("${building.title()}\n${building.descriptionShort()}")
+                        )
+                        null
                     })
             }
 
@@ -197,11 +193,8 @@ class InteractCommandBase : Command(
                 fun sendBuildingsInEmbed(
                     title: String,
                     description: String,
-                    buildings: ArrayList<Building>,
-                    context: Context,
-                    city: Interaction
+                    buildings: ArrayList<Building>
                 ) {
-                    val ui = DiscordPlayerUI(context, city)
                     ui.setLongCustomUI(
                         EmbedPagesWithInteractions(
                             buildings,
@@ -226,8 +219,6 @@ class InteractCommandBase : Command(
                             ui
                         )
                     )
-                    ui.updateOrSend()
-                    context.ui(ui)
                 }
 
                 MenuBuilderUI(
@@ -241,19 +232,17 @@ class InteractCommandBase : Command(
                     ) { playerUI ->
                         player["place_${world.progName}_type"] = "coos"
                         player["place_${world.progName}_id"] = "0"
-                        it.buttonInteraction.createImmediateResponder()
-                            .setContent("Vous êtes maintenant dans la nature !")
-                            .setFlags(MessageFlag.EPHEMERAL)
-                            .respond()
+                        playerUI.addMessage(Message("Vous êtes maintenant dans la nature !"))
+                        null
                     }
                     .addButton(
                         "Informations sur la ville",
                         "Vous pouvez voir les informations sur la ville ${place["nameRP"]} en cliquant sur ce bouton"
                     ) { playerUI ->
-                        it.buttonInteraction.createImmediateResponder()
-                            .setContent("La ville ${place["nameRP"]} est une ville aux coordonnées ${place["x"]} ${place["y"]} du monde ${world.nameRP}. Description : ${place["description"]}")
-                            .setFlags(MessageFlag.EPHEMERAL)
-                            .respond()
+                        playerUI.addMessage(
+                            Message("La ville ${place["nameRP"]} est une ville aux coordonnées ${place["x"]} ${place["y"]} du monde ${world.nameRP}. Description : ${place["description"]}")
+                        )
+                        null
                     }
                     .addButton(
                         "Interactions avec les bâtiments",
@@ -268,14 +257,12 @@ class InteractCommandBase : Command(
                                 .addButton(
                                     "Voir les bâtiments",
                                     "Vous pouvez voir les bâtiments de la ville ${place["nameRP"]} en cliquant sur ce bouton et interagir avec eux"
-                                ) { playerUI ->
+                                ) { _ ->
                                     val buildings = Buildings.loadBuildings(place["buildings"])
                                     sendBuildingsInEmbed(
                                         "Bâtiments de la ville ${place["nameRP"]}",
                                         "Liste de tous les bâtiments de la ville ${place["nameRP"]}.",
-                                        buildings,
-                                        c1,
-                                        it.interaction
+                                        buildings
                                     )
                                     null
                                 }
@@ -340,17 +327,16 @@ class InteractCommandBase : Command(
                                 .addButton(
                                     "Bâtiments en construction",
                                     "Vous pouvez voir les bâtiments en construction dans la ville en cliquant sur ce bouton et interagir avec eux"
-                                ) { playerUI ->
+                                ) { _ ->
                                     val buildings = Buildings.loadBuildings(place["buildings"])
                                     // remove if not in construction
                                     buildings.removeIf { building -> building["build_status"] != "building" }
                                     sendBuildingsInEmbed(
                                         "Bâtiments en construction de la ville ${place["nameRP"]}",
                                         "Liste de tous les bâtiments en construction de la ville ${place["nameRP"]}.",
-                                        buildings,
-                                        eyufg,
-                                        it.interaction
+                                        buildings
                                     )
+                                    null
                                 }
                                 .addButton(
                                     "Construire un bâtiment",
