@@ -4,38 +4,15 @@ import io.github.alexiscomete.lapinousecond.data.managesave.generateUniqueID
 import io.github.alexiscomete.lapinousecond.data.managesave.saveManager
 import io.github.alexiscomete.lapinousecond.data.transactions.*
 import io.github.alexiscomete.lapinousecond.entity.concrete.resources.Resource
-import io.github.alexiscomete.lapinousecond.entity.entities.Owner
-import io.github.alexiscomete.lapinousecond.entity.entities.Player
-import io.github.alexiscomete.lapinousecond.entity.entities.players
-import io.github.alexiscomete.lapinousecond.messagesManager
-import io.github.alexiscomete.lapinousecond.view.Context
 import io.github.alexiscomete.lapinousecond.view.contextFor
-import io.github.alexiscomete.lapinousecond.view.contextmanager.ModalContextManager
 import io.github.alexiscomete.lapinousecond.view.discord.commands.Command
 import io.github.alexiscomete.lapinousecond.view.discord.commands.ExecutableWithArguments
 import io.github.alexiscomete.lapinousecond.view.discord.commands.getAccount
 import io.github.alexiscomete.lapinousecond.view.ui.longuis.EmbedPagesWithInteractions
 import io.github.alexiscomete.lapinousecond.view.ui.longuis.MenuBuilderUI
-import io.github.alexiscomete.lapinousecond.view.ui.old.MenuBuilder
 import io.github.alexiscomete.lapinousecond.view.ui.playerui.*
-import org.javacord.api.entity.message.component.ActionRow
-import org.javacord.api.entity.message.component.TextInput
-import org.javacord.api.entity.message.component.TextInputStyle
-import org.javacord.api.event.interaction.ButtonClickEvent
-import org.javacord.api.event.interaction.ModalSubmitEvent
 import org.javacord.api.interaction.Interaction
 import org.javacord.api.interaction.SlashCommandInteraction
-import java.awt.Color
-
-fun giveFromTo(from: Owner, to: Owner, amount: Double, resource: Resource): Boolean {
-    return if (from.hasResource(resource, amount)) {
-        from.removeResource(resource, amount)
-        to.addResource(resource, amount)
-        true
-    } else {
-        false
-    }
-}
 
 class MarketCommand : Command(
     "market",
@@ -47,399 +24,6 @@ class MarketCommand : Command(
         get() = "market"
     override val botPerms: Array<String>
         get() = arrayOf("PLAY")
-
-    @Deprecated("Use the new version")
-    class M1(name: String) : ModalContextManager(name) {
-        override fun ex(smce: ModalSubmitEvent, c: Context) {
-
-            // get optionals text inputs from modal interaction
-            val modalInteraction = smce.modalInteraction
-            val opResource = modalInteraction.getTextInputValueByCustomId("cresourceid")
-            val opQuantity = modalInteraction.getTextInputValueByCustomId("cquantityid")
-
-            // check if all text inputs are present
-            if (!opResource.isPresent || !opQuantity.isPresent) {
-                throw IllegalArgumentException("Missing text inputs")
-            }
-
-            // get text inputs
-            val ressource = opResource.get()
-            val quantity = opQuantity.get()
-
-            // On vérifie que la ressource est bien une ressource valide
-            val resource = Resource.valueOf(ressource.uppercase())
-
-            // On vérifie que la quantité est bien un nombre
-            val quantityDouble = quantity.toDouble()
-
-            // On vérifie que la quantité est bien positive
-            if (quantityDouble <= 0) {
-                throw IllegalArgumentException("La quantité doit être positive")
-            }
-
-            modalInteraction.createImmediateResponder()
-                .setContent("Continuons. Mentionnez le nom du joueur à qui vous souhaitez donner")
-                .respond()
-
-            messagesManager.addListener(
-                smce.modalInteraction.channel.get(),
-                smce.modalInteraction.user.id
-            ) {
-                val owner = it.messageContent
-                // l'owner est au format <@id>, je vais donc extraire l'id
-                val ownerId = owner.substring(2, owner.length - 1)
-                val player =
-                    players[ownerId.toLong()] ?: throw IllegalArgumentException("Le joueur n'existe pas")
-
-                // on fait la transaction sécurisée avec GiveFromTo
-                if (!giveFromTo(
-                        c.players.player.player, player, quantityDouble,
-                        resource
-                    )
-                ) {
-                    throw IllegalArgumentException("Vous n'avez pas assez de ressources pour effectuer cette transaction")
-                } else {
-                    modalInteraction.createImmediateResponder()
-                        .setContent("Vous avez bien donné $quantity $resource à $owner")
-                        .respond()
-                }
-            }
-        }
-    }
-
-    class Wait23 {
-
-        private var accept = false
-        private var cancel = false
-
-        var end1 = false
-        var end2 = false
-
-        var wait: ModalSubmitEvent? = null
-        var resource: Resource? = null
-        var quantity: Double? = null
-
-        fun sendMenu(
-            resource: Resource,
-            quantity: Double,
-            r2: Resource,
-            quantity2: Double,
-            p1: Player,
-            p2: Player,
-            pui: PlayerUI
-        ) {
-            // accept, cancel are used to count the number of users who select each button
-            pui.setLongCustomUI(
-                MenuBuilderUI(
-                    "Suite de l'échange",
-                    "La personne avec qui vous échangez a proposé $quantity ${resource.show}",
-                    pui
-                )
-                    .addButton(
-                        "Accepter",
-                        "Vous acceptez l'échange."
-                    ) { _ ->
-                        if (accept) {
-                            pui.addMessage(
-                                Message(
-                                    "Echange accepté. Transaction en cours..."
-                                )
-                            )
-                            if (!p1.hasResource(resource, quantity) || !p2.hasResource(r2, quantity2)) {
-                                throw IllegalArgumentException("Une des personnes n'a pas assez de ressources")
-                            }
-                            p1.removeResource(resource, quantity)
-                            p2.removeResource(r2, quantity2)
-                            p1.addResource(r2, quantity2)
-                            p2.addResource(resource, quantity)
-
-                            pui.addMessage(Message("Transaction effectuée"))
-                        } else if (cancel) {
-                            pui.addMessage(Message("L'échange est annulé"))
-                        } else {
-                            accept = true
-                            pui.addMessage(
-                                Message(
-                                    "Vous avez accepté l'échange. Merci de patienter."
-                                )
-                            )
-                        }
-                        null
-                    }
-                    .addButton("Annuler", "Vous refusez l'échange") { _ ->
-                        pui.addMessage(
-                            Message("L'échange est annulé")
-                        )
-                        cancel = true
-                        null
-                    }
-            )
-        }
-
-        /**
-         * It takes a modalSubmitEvent, a resource and a quantity, and then sets the wait, resource and
-         * quantity variables to the values of the parameters. And say to the user to wait
-         *
-         * @param modalSubmitEvent The event that triggered the interaction.
-         * @param resourceWait The resource that the user is waiting for
-         * @param quantityWait The quantity of the resource you want to wait for.
-         */
-        fun pleaseWait(
-            modalSubmitEvent: ModalSubmitEvent,
-            resourceWait: Resource,
-            quantityWait: Double
-        ) {
-            wait = modalSubmitEvent
-            resource = resourceWait
-            quantity = quantityWait
-            modalSubmitEvent.interaction.createImmediateResponder()
-                .setContent("Merci de patienter")
-                .respond()
-        }
-    }
-
-    class M2(name: String, private val wait: Wait23, private val otherC: Context) : ModalContextManager(name) {
-        override fun ex(smce: ModalSubmitEvent, c: Context) {
-            val modalInteraction = smce.modalInteraction
-            val opResource = modalInteraction.getTextInputValueByCustomId("cresource1id")
-            val opQuantity = modalInteraction.getTextInputValueByCustomId("cquantity1id")
-
-            // check if all text inputs are present
-            if (!opResource.isPresent || !opQuantity.isPresent) {
-                throw IllegalArgumentException("Missing text inputs")
-            }
-
-            // get text inputs
-            val ressource = opResource.get()
-            val quantity1 = opQuantity.get()
-
-            // On vérifie que la ressource est bien une ressource valide
-            val resource1 = Resource.valueOf(ressource.uppercase())
-
-            // On vérifie que la quantité est bien un nombre
-            val quantityDouble = quantity1.toDouble()
-
-            // On vérifie que la quantité est bien positive
-            if (quantityDouble <= 0) {
-                throw IllegalArgumentException("La quantité doit être positive")
-            }
-
-            if (wait.end2) {
-                val p1 = players[smce.modalInteraction.user.id]!!
-                val p2 = players[wait.wait!!.modalInteraction.user.id]!!
-                wait.sendMenu(wait.resource!!, wait.quantity!!, resource1, quantityDouble, p2, p1, c)
-                wait.sendMenu(resource1, quantityDouble, wait.resource!!, wait.quantity!!, p1, p2, otherC)
-            } else {
-                wait.pleaseWait(smce, resource1, quantityDouble)
-            }
-            wait.end1 = true
-        }
-    }
-
-    class M3(name: String, private val wait: Wait23, private val otherC: Context) : ModalContextManager(name) {
-        override fun ex(smce: ModalSubmitEvent, c: Context) {
-            val modalInteraction = smce.modalInteraction
-            val opResource = modalInteraction.getTextInputValueByCustomId("cresource2id")
-            val opQuantity = modalInteraction.getTextInputValueByCustomId("cquantity2id")
-
-            // check if all text inputs are present
-            if (!opResource.isPresent || !opQuantity.isPresent) {
-                throw IllegalArgumentException("Missing text inputs")
-            }
-
-            // get text inputs
-            val ressource = opResource.get()
-            val quantity1 = opQuantity.get()
-
-            // On vérifie que la ressource est bien une ressource valide
-            val resource1 = Resource.valueOf(ressource.uppercase())
-
-            // On vérifie que la quantité est bien un nombre
-            val quantityDouble = quantity1.toDouble()
-
-            // On vérifie que la quantité est bien positive
-            if (quantityDouble <= 0) {
-                throw IllegalArgumentException("La quantité doit être positive")
-            }
-
-            if (wait.end1) {
-                val p1 = players[smce.modalInteraction.user.id]!!
-                val p2 = players[wait.wait!!.modalInteraction.user.id]!!
-                wait.sendMenu(wait.resource!!, wait.quantity!!, resource1, quantityDouble, p2, p1, c)
-                wait.sendMenu(resource1, quantityDouble, wait.resource!!, wait.quantity!!, p1, p2, otherC)
-            } else {
-                wait.pleaseWait(smce, resource1, quantityDouble)
-            }
-            wait.end2 = true
-        }
-    }
-
-    class M4(name: String) : ModalContextManager(name) {
-        override fun ex(smce: ModalSubmitEvent, c: Context) {
-            val modalInteraction = smce.modalInteraction
-            val opResource = modalInteraction.getTextInputValueByCustomId("citemid")
-            val opQuantity = modalInteraction.getTextInputValueByCustomId("cquantityid")
-            val opCost = modalInteraction.getTextInputValueByCustomId("ccostid")
-
-            // check if all text inputs are present
-            if (!opResource.isPresent || !opQuantity.isPresent || !opCost.isPresent) {
-                throw IllegalArgumentException("Missing text inputs")
-            }
-
-            // get text inputs
-            val ressource = opResource.get()
-            val quantity = opQuantity.get()
-            val cost = opCost.get()
-
-            // On vérifie que la ressource est bien une ressource valide
-            val resource = Resource.valueOf(ressource.uppercase())
-
-            // On vérifie que la quantité est bien un nombre
-            val quantityDouble = quantity.toDouble()
-
-            // On vérifie que la quantité est bien positive
-            if (quantityDouble <= 0) {
-                throw IllegalArgumentException("La quantité doit être positive")
-            }
-
-            // On vérifie que le prix est bien un nombre
-            val costDouble = cost.toDouble()
-
-            // On vérifie que le prix est bien positif
-            if (costDouble <= 0) {
-                throw IllegalArgumentException("Le prix doit être positif")
-            }
-
-            val p = c.players.player.player
-            if (!p.hasResource(resource, quantityDouble)) {
-                throw IllegalArgumentException("Vous n'avez pas assez de ${resource.name}")
-            }
-            p.removeResource(resource, quantityDouble)
-            val offerId = generateUniqueID()
-            offers.add(offerId)
-            val offer = Offer(offerId)
-            offer["who"] = p.id.toString()
-            offer["what"] = resource.name
-            offer["amount"] = quantityDouble.toString()
-            offer["amountRB"] = costDouble.toString()
-
-            smce.modalInteraction.createImmediateResponder()
-                .setContent("Votre offre a bien été enregistrée :  $costDouble ${Resource.RABBIT_COIN.show} -> $quantityDouble ${resource.name}")
-                .respond()
-        }
-    }
-
-    class M6(name: String) : ModalContextManager(name) {
-        override fun ex(smce: ModalSubmitEvent, c: Context) {
-            val modalInteraction = smce.modalInteraction
-            val opResource = modalInteraction.getTextInputValueByCustomId("citemid")
-            val opQuantity = modalInteraction.getTextInputValueByCustomId("cquantityid")
-            val opCost = modalInteraction.getTextInputValueByCustomId("ccostid")
-
-            // check if all text inputs are present
-            if (!opResource.isPresent || !opQuantity.isPresent || !opCost.isPresent) {
-                throw IllegalArgumentException("Missing text inputs")
-            }
-
-            // get text inputs
-            val ressource = opResource.get()
-            val quantity = opQuantity.get()
-            val cost = opCost.get()
-
-            // On vérifie que la ressource est bien une ressource valide
-            val resource = Resource.valueOf(ressource.uppercase())
-
-            // On vérifie que la quantité est bien un nombre
-            val quantityDouble = quantity.toDouble()
-
-            // On vérifie que la quantité est bien positive
-            if (quantityDouble <= 0) {
-                throw IllegalArgumentException("La quantité doit être positive")
-            }
-
-            // On vérifie que le prix est bien un nombre
-            val costDouble = cost.toDouble()
-
-            // On vérifie que le prix est bien positif
-            if (costDouble <= 0) {
-                throw IllegalArgumentException("Le prix doit être positif")
-            }
-
-            val p = c.players.player.player
-            if (!p.hasMoney(costDouble)) {
-                throw IllegalArgumentException("Vous n'avez pas assez de ${Resource.RABBIT_COIN.show}")
-            }
-            p.removeMoney(costDouble)
-            val researchId = generateUniqueID()
-            researches.add(researchId)
-            val research = Research(researchId)
-            research["who"] = p.id.toString()
-            research["what"] = resource.name
-            research["amount"] = quantityDouble.toString()
-            research["amountRB"] = costDouble.toString()
-
-            smce.modalInteraction.createImmediateResponder()
-                .setContent("Votre recherche a bien été enregistrée :  $quantityDouble ${resource.name} -> $costDouble ${Resource.RABBIT_COIN.show}")
-                .respond()
-        }
-    }
-
-    class M7(name: String) : ModalContextManager(name) {
-        override fun ex(smce: ModalSubmitEvent, c: Context) {
-            val modalInteraction = smce.modalInteraction
-            val opResource = modalInteraction.getTextInputValueByCustomId("citemid")
-            val opQuantity = modalInteraction.getTextInputValueByCustomId("cquantityid")
-            val opCost = modalInteraction.getTextInputValueByCustomId("ccostid")
-
-            // check if all text inputs are present
-            if (!opResource.isPresent || !opQuantity.isPresent || !opCost.isPresent) {
-                throw IllegalArgumentException("Missing text inputs")
-            }
-
-            // get text inputs
-            val ressource = opResource.get()
-            val quantity = opQuantity.get()
-            val cost = opCost.get()
-
-            // On vérifie que la ressource est bien une ressource valide
-            val resource = Resource.valueOf(ressource.uppercase())
-
-            // On vérifie que la quantité est bien un nombre
-            val quantityDouble = quantity.toDouble()
-
-            // On vérifie que la quantité est bien positive
-            if (quantityDouble <= 0) {
-                throw IllegalArgumentException("La quantité doit être positive")
-            }
-
-            // On vérifie que le prix est bien un nombre
-            val costDouble = cost.toDouble()
-
-            // On vérifie que le prix est bien positif
-            if (costDouble <= 0) {
-                throw IllegalArgumentException("Le prix de départ doit être positif")
-            }
-
-            val p = c.players.player.player
-            if (!p.hasResource(resource, quantityDouble)) {
-                throw IllegalArgumentException("Vous n'avez pas assez de ${resource.name}")
-            }
-            p.removeResource(resource, quantityDouble)
-            val auctionId = generateUniqueID()
-            auctions.add(auctionId)
-            val auction = Auction(auctionId)
-            auction["who"] = p.id.toString()
-            auction["what"] = resource.name
-            auction["amount"] = quantityDouble.toString()
-            auction["amountRB"] = costDouble.toString()
-            auction["whoMax"] = p.id.toString()
-
-            smce.modalInteraction.createImmediateResponder()
-                .setContent("Votre enchère a bien été enregistrée :  $costDouble ${Resource.RABBIT_COIN.show} -> $quantityDouble ${resource.name}")
-                .respond()
-        }
-
-    }
 
     override fun execute(slashCommand: SlashCommandInteraction) {
         AUCTIONS
@@ -467,8 +51,6 @@ class MarketCommand : Command(
                 "Donner",
                 "Donner un objet ou des ressources à un autre joueur"
             ) { _ ->
-                val id = generateUniqueID()
-
                 Question(
                     "Répondez aux questions pour donner",
                     QuestionField(
@@ -482,7 +64,29 @@ class MarketCommand : Command(
                         required = true
                     )
                 ) {
-                    M1(id.toString())
+                    // get optionals text inputs from modal interaction
+
+                    // get text inputs
+                    val ressource = it.field0.answer
+                    val quantity = it.field1!!.answer
+
+                    // On vérifie que la ressource est bien une ressource valide
+                    val resource = Resource.valueOf(ressource.uppercase())
+
+                    // On vérifie que la quantité est bien un nombre
+                    val quantityDouble = quantity.toDouble()
+
+                    // On vérifie que la quantité est bien positive
+                    if (quantityDouble <= 0) {
+                        throw IllegalArgumentException("La quantité doit être positive")
+                    }
+
+                    ui.addMessage(
+                        Message("RENFONTE EN COURS - ceci ne fonctionne pas encore. Utilisez des offres pour le moment")
+                    )
+
+                    // TODO - Faire un système de mention
+
                     null
                 }
             }
@@ -614,8 +218,6 @@ class MarketCommand : Command(
                             )
                         )
                     }) { _ ->
-                    val id = generateUniqueID().toString()
-
                     Question(
                         "Création d'une offre",
                         QuestionField(
@@ -634,9 +236,45 @@ class MarketCommand : Command(
                             required = true
                         )
                     ) {
-                        M4(
-                            id,
-                        )
+
+                        // get text inputs
+                        val ressource = it.field0.answer
+                        val quantity = it.field1!!.answer
+                        val cost = it.field2!!.answer
+
+                        // On vérifie que la ressource est bien une ressource valide
+                        val resource = Resource.valueOf(ressource.uppercase())
+
+                        // On vérifie que la quantité est bien un nombre
+                        val quantityDouble = quantity.toDouble()
+
+                        // On vérifie que la quantité est bien positive
+                        if (quantityDouble <= 0) {
+                            throw IllegalArgumentException("La quantité doit être positive")
+                        }
+
+                        // On vérifie que le prix est bien un nombre
+                        val costDouble = cost.toDouble()
+
+                        // On vérifie que le prix est bien positif
+                        if (costDouble <= 0) {
+                            throw IllegalArgumentException("Le prix doit être positif")
+                        }
+
+                        val p = ui.getPlayer()
+                        if (!p.hasResource(resource, quantityDouble)) {
+                            throw IllegalArgumentException("Vous n'avez pas assez de ${resource.name}")
+                        }
+                        p.removeResource(resource, quantityDouble)
+                        val offerId = generateUniqueID()
+                        offers.add(offerId)
+                        val offer = Offer(offerId)
+                        offer["who"] = p.id.toString()
+                        offer["what"] = resource.name
+                        offer["amount"] = quantityDouble.toString()
+                        offer["amountRB"] = costDouble.toString()
+
+                        ui.addMessage(Message("Votre offre a bien été enregistrée :  $costDouble ${Resource.RABBIT_COIN.show} -> $quantityDouble ${resource.name}"))
                         null
                     }
                 }
@@ -764,8 +402,6 @@ class MarketCommand : Command(
                             )
                         )
                     }) { _ ->
-                    val id = generateUniqueID().toString()
-
                     Question(
                         "Création d'une recherche",
                         QuestionField(
@@ -784,7 +420,49 @@ class MarketCommand : Command(
                             required = true
                         )
                     ) {
-                        M6(id)
+
+                        // get text inputs
+                        val ressource = it.field0.answer
+                        val quantity = it.field1!!.answer
+                        val cost = it.field2!!.answer
+
+                        // On vérifie que la ressource est bien une ressource valide
+                        val resource = Resource.valueOf(ressource.uppercase())
+
+                        // On vérifie que la quantité est bien un nombre
+                        val quantityDouble = quantity.toDouble()
+
+                        // On vérifie que la quantité est bien positive
+                        if (quantityDouble <= 0) {
+                            throw IllegalArgumentException("La quantité doit être positive")
+                        }
+
+                        // On vérifie que le prix est bien un nombre
+                        val costDouble = cost.toDouble()
+
+                        // On vérifie que le prix est bien positif
+                        if (costDouble <= 0) {
+                            throw IllegalArgumentException("Le prix doit être positif")
+                        }
+
+                        val p = ui.getPlayer()
+                        if (!p.hasMoney(costDouble)) {
+                            throw IllegalArgumentException("Vous n'avez pas assez de ${Resource.RABBIT_COIN.show}")
+                        }
+                        p.removeMoney(costDouble)
+                        val researchId = generateUniqueID()
+                        researches.add(researchId)
+                        val research = Research(researchId)
+                        research["who"] = p.id.toString()
+                        research["what"] = resource.name
+                        research["amount"] = quantityDouble.toString()
+                        research["amountRB"] = costDouble.toString()
+
+                        ui.addMessage(
+                            Message(
+                                "Votre recherche a bien été enregistrée :  $quantityDouble ${resource.name} -> $costDouble ${Resource.RABBIT_COIN.show}"
+                            )
+                        )
                         null
                     }
                 }
@@ -909,7 +587,6 @@ class MarketCommand : Command(
                         )
                     )
                 }) { _ ->
-                    val id = generateUniqueID().toString()
 
                     Question(
                         "Création d'une enchère",
@@ -929,7 +606,48 @@ class MarketCommand : Command(
                             required = true
                         )
                     ) {
-                        M7(id)
+
+                        // get text inputs
+                        val ressource = it.field0.answer
+                        val quantity = it.field1!!.answer
+                        val cost = it.field2!!.answer
+
+                        // On vérifie que la ressource est bien une ressource valide
+                        val resource = Resource.valueOf(ressource.uppercase())
+
+                        // On vérifie que la quantité est bien un nombre
+                        val quantityDouble = quantity.toDouble()
+
+                        // On vérifie que la quantité est bien positive
+                        if (quantityDouble <= 0) {
+                            throw IllegalArgumentException("La quantité doit être positive")
+                        }
+
+                        // On vérifie que le prix est bien un nombre
+                        val costDouble = cost.toDouble()
+
+                        // On vérifie que le prix est bien positif
+                        if (costDouble <= 0) {
+                            throw IllegalArgumentException("Le prix de départ doit être positif")
+                        }
+
+                        val p = ui.getPlayer()
+                        if (!p.hasResource(resource, quantityDouble)) {
+                            throw IllegalArgumentException("Vous n'avez pas assez de ${resource.name}")
+                        }
+                        p.removeResource(resource, quantityDouble)
+                        val auctionId = generateUniqueID()
+                        auctions.add(auctionId)
+                        val auction = Auction(auctionId)
+                        auction["who"] = p.id.toString()
+                        auction["what"] = resource.name
+                        auction["amount"] = quantityDouble.toString()
+                        auction["amountRB"] = costDouble.toString()
+                        auction["whoMax"] = p.id.toString()
+
+                        ui.addMessage(
+                            Message("Votre enchère a bien été enregistrée :  $costDouble ${Resource.RABBIT_COIN.show} -> $quantityDouble ${resource.name}")
+                        )
                         null
                     }
                 }

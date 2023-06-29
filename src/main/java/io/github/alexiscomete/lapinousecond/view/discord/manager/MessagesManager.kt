@@ -29,7 +29,7 @@ class MessagesManager : MessageCreateListener {
                             val pair = player.level.addXp(0.2)
                             player.lastLevelUpdate = System.currentTimeMillis()
                             if (pair != null) {
-                                messageCreateEvent.message.reply("Tu es passé du niveau " + pair.first + " au niveau " + pair.second + " ! *Pour désactiver ce message, interdisez au bot de parler dans ce salon*")
+                                messageCreateEvent.message.reply("Tu es passé.e du niveau " + pair.first + " au niveau " + pair.second + " ! *Pour désactiver ce message, interdisez au bot de parler dans ce salon*")
                             }
                         }
                     }
@@ -40,6 +40,7 @@ class MessagesManager : MessageCreateListener {
         }
     }
 
+    @Deprecated("Please use modals or buttons instead")
     fun addListener(textChannel: TextChannel, id: Long, messageCreateEventConsumer: Consumer<MessageCreateEvent>) {
         if (consumers.containsKey(textChannel)) {
             consumers[textChannel]!![id] = messageCreateEventConsumer
