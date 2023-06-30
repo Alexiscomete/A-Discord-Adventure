@@ -13,27 +13,15 @@ class ResultUI(
 ) : StaticUI(
     listOf(), playerUI,
 ) {
-    override fun getTitle(): String? {
-        return title
-    }
+    override fun getTitle() = title
 
-    override fun getDescription(): String? {
-        return description
-    }
+    override fun getDescription() = description
 
-    override fun getFields(): List<Pair<String, String>>? {
-        return null
-    }
+    override fun getFields() = null
 
-    override fun getLinkedImage(): String? {
-        return linkedImage
-    }
+    override fun getLinkedImage() = linkedImage
 
-    override fun getBufferedImage(): BufferedImage? {
-        return buffuredImage
-    }
+    override fun getBufferedImage() = buffuredImage
 
-    override fun getUnderString(): String? {
-        return underString
-    }
+    override fun getUnderString() = underString
 }

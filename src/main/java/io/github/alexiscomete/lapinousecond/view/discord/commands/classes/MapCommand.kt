@@ -9,21 +9,16 @@ import io.github.alexiscomete.lapinousecond.view.contextFor
 import io.github.alexiscomete.lapinousecond.view.discord.commands.Command
 import io.github.alexiscomete.lapinousecond.view.discord.commands.ExecutableWithArguments
 import io.github.alexiscomete.lapinousecond.view.discord.commands.getAccount
-import io.github.alexiscomete.lapinousecond.view.ui.longuis.EmbedPages
-import io.github.alexiscomete.lapinousecond.view.ui.longuis.MenuBuilderUI
-import io.github.alexiscomete.lapinousecond.view.ui.longuis.PixelByPixelUI
-import io.github.alexiscomete.lapinousecond.view.ui.longuis.WaitingManager
+import io.github.alexiscomete.lapinousecond.view.ui.longuis.*
 import io.github.alexiscomete.lapinousecond.view.ui.playerui.*
 import io.github.alexiscomete.lapinousecond.worlds.WorldEnum
 import io.github.alexiscomete.lapinousecond.worlds.Zooms
 import io.github.alexiscomete.lapinousecond.worlds.bigger
 import io.github.alexiscomete.lapinousecond.worlds.map.FilesMapEnum
-import org.javacord.api.entity.message.MessageBuilder
-import org.javacord.api.entity.message.component.*
-import org.javacord.api.entity.message.embed.EmbedBuilder
+import io.github.alexiscomete.lapinousecond.worlds.map.PixelManager
 import org.javacord.api.interaction.Interaction
 import org.javacord.api.interaction.SlashCommandInteraction
-import java.awt.Color
+import kotlin.math.absoluteValue
 import kotlin.math.pow
 
 const val SECOND_TO_MILLIS = 1000
@@ -215,113 +210,142 @@ class MapCommand : Command(
                                     ui.addMessage(Message("Patientez un instant... calcul du trajet"))
 
                                     class WaitingForPath(
-                                        val pathDistance: Int
+                                        pathDistance: Int,
                                     ) : WaitingManager {
                                         val endTime = System.currentTimeMillis() + pathDistance.toDouble().pow(
                                             ESTIMATED_ASTAR_TIME_EXPONENT
                                         ).toInt()
+
+                                        var path: ArrayList<PixelManager>? = null
+
+                                        fun findPath() = Thread {
+                                            path = worldEnum.findPath(nodePlayer, nodeDest)
+                                        }.start()
 
                                         override fun estimatedRemainingTimeSeconds(): Int {
                                             return (endTime - System.currentTimeMillis()).toInt() / SECOND_TO_MILLIS
                                         }
 
                                         override fun isFinished(): Boolean {
-                                            TODO("Not yet implemented")
+                                            return path != null
                                         }
 
                                         override fun executeAfter(playerUI: PlayerUI): Question? {
-                                            TODO("Not yet implemented")
-                                        }
 
+                                            if (path == null) {
+                                                throw IllegalStateException("Path is null")
+                                            }
+
+                                            val path = path!!
+
+                                            val image = bigger(worldEnum.drawPath(path), 3)
+
+                                            val timeMillisOnePixel = timeMillisForOnePixel(player)
+                                            val timeMillisToTravel = timeMillisOnePixel * path.size
+                                            val priceToTravel = priceToTravelWithEffect(player, path.size)
+
+                                            playerUI.setLongCustomUI(MenuBuilderUI(
+                                                "Comment voyager ?",
+                                                "Il existe 2 moyens de voyager de façon simple",
+                                                ui
+                                            )
+                                                .setImage(image)
+                                                .addButton(
+                                                    "Temps",
+                                                    "Vous allez prendre $timeMillisToTravel ms pour aller jusqu'à ce pixel. Attention : les effets peuvent ne pas fonctionner si ils ne sont pas actifs à l'arrivée."
+                                                ) { pui ->
+                                                    pui.setLongCustomUI(
+                                                        MenuBuilderUI(
+                                                            "Confirmer",
+                                                            "Confirmer le voyage ?",
+                                                            pui
+                                                        )
+                                                            .addButton(
+                                                                "Oui",
+                                                                "Oui je veux aller jusqu'à ce pixel"
+                                                            ) { _ ->
+                                                                player.setPath(
+                                                                    path,
+                                                                    "default_time",
+                                                                    timeMillisOnePixel
+                                                                )
+                                                                pui.addMessage(
+                                                                    Message("Vous êtes maintenant sur le trajet vers le pixel ($x, $y)")
+                                                                )
+                                                                null
+                                                            }
+                                                            .addButton(
+                                                                "Non",
+                                                                "Non je ne veux pas aller jusqu'à ce pixel"
+                                                            ) { _ ->
+                                                                pui.addMessage(
+                                                                    Message("Vous avez annulé le voyage")
+                                                                )
+                                                                null
+                                                            }
+                                                    )
+                                                    null
+                                                }
+                                                .addButton(
+                                                    "Argent",
+                                                    "Vous allez dépenser $priceToTravel ${Resource.RABBIT_COIN.show} pour aller jusqu'à ce pixel. Les effets sont pris en compte."
+                                                ) { pui ->
+                                                    pui.setLongCustomUI(
+                                                        MenuBuilderUI(
+                                                            "Confirmer",
+                                                            "Confirmer le voyage ?",
+                                                            pui
+                                                        )
+                                                            .addButton(
+                                                                "Oui",
+                                                                "Oui je veux aller jusqu'à ce pixel"
+                                                            ) { _ ->
+                                                                // get the player's money
+                                                                val money = player.getMoney()
+                                                                if (money < priceToTravel) {
+                                                                    pui.addMessage(
+                                                                        Message(
+                                                                            "Vous n'avez pas assez d'argent pour aller jusqu'à ce pixel"
+                                                                        )
+                                                                    )
+                                                                } else {
+                                                                    player.removeMoney(priceToTravel)
+                                                                    player["place_${worldEnum.progName}_x"] =
+                                                                        x.toString()
+                                                                    player["place_${worldEnum.progName}_y"] =
+                                                                        y.toString()
+                                                                    pui.addMessage(
+                                                                        Message("Vous êtes maintenant sur le pixel ($x, $y)")
+                                                                    )
+                                                                }
+                                                                null
+                                                            }
+                                                            .addButton(
+                                                                "Non",
+                                                                "Non je ne veux pas aller jusqu'à ce pixel"
+                                                            ) { _ ->
+                                                                pui.addMessage(
+                                                                    Message(
+                                                                        "Vous avez annulé le voyage"
+                                                                    )
+                                                                )
+                                                                null
+                                                            }
+                                                    )
+                                                    null
+                                                })
+                                            return null
+                                        }
                                     }
 
-
-                                    val path = worldEnum.findPath(nodePlayer, nodeDest)
-                                    val image = bigger(worldEnum.drawPath(path), 3)
-
-                                    val timeMillisOnePixel = timeMillisForOnePixel(player)
-                                    val timeMillisToTravel = timeMillisOnePixel * path.size
-                                    val priceToTravel = priceToTravelWithEffect(player, path.size)
-
-                                    MenuBuilderUI(
-                                        "Comment voyager ?",
-                                        "Il existe 2 moyens de voyager de façon simple",
-                                        Color.RED,
-                                        c
+                                    val waitingManager = WaitingForPath(
+                                        (nodePlayer.x - nodeDest.x).absoluteValue + (nodePlayer.y - nodeDest.y).absoluteValue
                                     )
-                                        .setImage(image)
-                                        .addButton(
-                                            "Temps",
-                                            "Vous allez prendre $timeMillisToTravel ms pour aller jusqu'à ce pixel. Attention : les effets peuvent ne pas fonctionner si ils ne sont pas actifs à l'arrivée."
-                                        ) { pui ->
-                                            pui.setLongCustomUI(
-                                                MenuBuilderUI(
-                                                    "Confirmer",
-                                                    "Confirmer le voyage ?",
-                                                    pui
-                                                )
-                                                    .addButton("Oui", "Oui je veux aller jusqu'à ce pixel") { _ ->
-                                                        player.setPath(path, "default_time", timeMillisOnePixel)
-                                                        pui.addMessage(
-                                                            Message("Vous êtes maintenant sur le trajet vers le pixel ($x, $y)")
-                                                        )
-                                                        null
-                                                    }
-                                                    .addButton(
-                                                        "Non",
-                                                        "Non je ne veux pas aller jusqu'à ce pixel"
-                                                    ) { _ ->
-                                                        pui.addMessage(
-                                                            Message("Vous avez annulé le voyage")
-                                                        )
-                                                        null
-                                                    }
-                                            )
-                                            null
-                                        }
-                                        .addButton(
-                                            "Argent",
-                                            "Vous allez dépenser $priceToTravel ${Resource.RABBIT_COIN.show} pour aller jusqu'à ce pixel. Les effets sont pris en compte."
-                                        ) { pui ->
-                                            pui.setLongCustomUI(
-                                                MenuBuilderUI(
-                                                    "Confirmer",
-                                                    "Confirmer le voyage ?",
-                                                    pui
-                                                )
-                                                    .addButton("Oui", "Oui je veux aller jusqu'à ce pixel") { _ ->
-                                                        // get the player's money
-                                                        val money = player.getMoney()
-                                                        if (money < priceToTravel) {
-                                                            pui.addMessage(
-                                                                Message(
-                                                                    "Vous n'avez pas assez d'argent pour aller jusqu'à ce pixel"
-                                                                )
-                                                            )
-                                                        } else {
-                                                            player.removeMoney(priceToTravel)
-                                                            player["place_${worldEnum.progName}_x"] = x.toString()
-                                                            player["place_${worldEnum.progName}_y"] = y.toString()
-                                                            pui.addMessage(
-                                                                Message("Vous êtes maintenant sur le pixel ($x, $y)")
-                                                            )
-                                                        }
-                                                        null
-                                                    }
-                                                    .addButton(
-                                                        "Non",
-                                                        "Non je ne veux pas aller jusqu'à ce pixel"
-                                                    ) { _ ->
-                                                        pui.addMessage(
-                                                            Message(
-                                                                "Vous avez annulé le voyage"
-                                                            )
-                                                        )
-                                                        null
-                                                    }
-                                            )
-                                            null
-                                        }
+
+                                    ui.setLongCustomUI(WaitingUI(ui, waitingManager))
+
+                                    waitingManager.findPath()
+
                                     null
                                 }
                             }
@@ -438,36 +462,24 @@ class MapCommand : Command(
                                 val xInt = x.toInt()
                                 val yInt = y.toInt()
                                 val biome = if (world.isDirt(xInt, yInt)) "la terre" else "l'eau"
-
-                                val later = buttonClickEvent.buttonInteraction.respondLater()
                                 val image = world.zoomWithDecorElements(xInt, yInt, 30, zooms, player = player)
 
-                                later.thenAccept {
-                                    if (player["tuto"] == "6") {
-                                        it
-                                            .addEmbed(
-                                                EmbedBuilder()
-                                                    .setTitle("Vous êtes dans $biome")
-                                                    .setImage(image)
-                                                    .setDescription(position)
-                                                    .setColor(Color.PINK)
-                                            )
-                                            .setContent("> (Aurimezi) : Drôle de position ... allons voir la ville la plus proche ! Fait `/map` puis `voyager` et enfin `Aller à`. Je doit malheureusement te laisser, je dois aller voir un de tes futurs équipements pour un recrutement. Bonne chance !")
-                                            .update()
-
-                                    } else {
-                                        it
-                                            .addEmbed(
-                                                EmbedBuilder()
-                                                    .setTitle("Vous êtes dans $biome")
-                                                    .setImage(image)
-                                                    .setDescription(position)
-                                                    .setColor(Color.PINK)
-                                            )
-                                            .update()
-                                    }
+                                val resultUI = if (player["tuto"] == "6") {
+                                    ResultUI(
+                                        ui,
+                                        "Vous êtes dans $biome",
+                                        "> (Aurimezi) : Drôle de position ... allons voir la ville la plus proche ! Fait `/map` puis `voyager` et enfin `Aller à`. Je doit malheureusement te laisser, je dois aller voir un de tes futurs équipements pour un recrutement. Bonne chance !",
+                                        null,
+                                        image,
+                                        position
+                                    )
+                                } else {
+                                    ResultUI(ui, "Vous êtes dans $biome", position, null, image, null)
                                 }
 
+                                ui.setLongCustomUI(resultUI)
+
+                                null
                             }
                             .addButton(
                                 "Trouver un chemin",
@@ -525,7 +537,7 @@ class MapCommand : Command(
                                         throw IllegalArgumentException("Le y du point d'arrivée n'est pas un nombre")
                                     }
 
-                                    val player = c.players.player.player
+                                    val player = ui.getPlayer()
                                     val world = player.world
 
                                     // check if the arguments are in the right range
@@ -542,25 +554,68 @@ class MapCommand : Command(
                                         throw IllegalArgumentException("The fourth argument must be between 0 and " + world.mapHeight)
                                     }
 
-                                    // send a later responder
-                                    modalInteraction.createImmediateResponder()
-                                        .setContent("📍 Calcul en cours ...")
-                                        .respond()
+                                    ui.addMessage(
+                                        Message("\uD83D\uDCCD Calcul en cours ...")
+                                    )
 
-                                    // send the path
-                                    val path = world.findPath(
-                                        world.getNode(
-                                            x1Int, y1Int, ArrayList()
-                                        ),
-                                        world.getNode(
-                                            x2Int, y2Int, ArrayList()
+                                    class WaitingForPath2(pathDistance: Int) : WaitingManager {
+                                        val endTime = System.currentTimeMillis() + pathDistance.toDouble().pow(
+                                            ESTIMATED_ASTAR_TIME_EXPONENT
+                                        ).toInt()
+                                        var path: ArrayList<PixelManager>? = null
+
+                                        fun execute() = Thread {
+                                            path = world.findPath(
+                                                world.getNode(
+                                                    x1Int, y1Int, ArrayList()
+                                                ),
+                                                world.getNode(
+                                                    x2Int, y2Int, ArrayList()
+                                                )
+                                            )
+                                        }.start()
+
+                                        override fun estimatedRemainingTimeSeconds(): Int {
+                                            return (endTime - System.currentTimeMillis()).toInt() / SECOND_TO_MILLIS
+                                        }
+
+                                        override fun isFinished(): Boolean {
+                                            return path != null
+                                        }
+
+                                        override fun executeAfter(playerUI: PlayerUI): Question? {
+                                            if (path == null) {
+                                                throw IllegalStateException("Path is null")
+                                            }
+                                            val path = path!!
+
+                                            ui.setLongCustomUI(
+                                                ResultUI(
+                                                    playerUI,
+                                                    "📍 Chemin trouvé : " + path.size + " étapes",
+                                                    null,
+                                                    null,
+                                                    world.drawPath(path),
+                                                    null
+                                                )
+                                            )
+                                            return null
+                                        }
+                                    }
+
+                                    val pathDistance = (x1Int - x2Int).absoluteValue + (y1Int - y2Int).absoluteValue
+
+                                    val waitingManager = WaitingForPath2(pathDistance)
+
+                                    ui.setLongCustomUI(
+                                        WaitingUI(
+                                            ui,
+                                            waitingManager
                                         )
                                     )
 
-                                    MessageBuilder()
-                                        .addAttachment(world.drawPath(path), "path.png")
-                                        .setContent("📍 Chemin trouvé : " + path.size + " étapes")
-                                        .send(modalInteraction.channel.get())
+                                    waitingManager.execute()
+
                                     null
                                 }
                             }
@@ -609,7 +664,7 @@ class MapCommand : Command(
                                         throw IllegalArgumentException("Le zoom n'est pas un nombre")
                                     }
 
-                                    val player = c.players.player.player
+                                    val player = ui.getPlayer()
                                     val world = player.world
 
                                     // check if the arguments are in the right range
@@ -648,18 +703,20 @@ class MapCommand : Command(
                                     val (xInt2, yInt2) = Zooms.ZOOM_OUT.zoomInTo(zooms, xInt, yInt)
 
                                     // send the zoom on the map
-                                    val later = modalInteraction.respondLater()
 
                                     val image = world.zoomWithDecorElements(xInt2, yInt2, zoomInt, zooms)
 
-                                    later.thenAccept {
-                                        it.addEmbed(
-                                            EmbedBuilder()
-                                                .setTitle("Zoom sur la carte")
-                                                .setImage(image)
+                                    ui.setLongCustomUI(
+                                        ResultUI(
+                                            ui,
+                                            "Zoom sur la carte",
+                                            null,
+                                            null,
+                                            image,
+                                            null
                                         )
-                                            .update()
-                                    }
+                                    )
+
                                     null
                                 }
                             }
