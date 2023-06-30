@@ -24,6 +24,10 @@ import org.javacord.api.entity.message.embed.EmbedBuilder
 import org.javacord.api.interaction.Interaction
 import org.javacord.api.interaction.SlashCommandInteraction
 import java.awt.Color
+import kotlin.math.pow
+
+const val SECOND_TO_MILLIS = 1000
+const val ESTIMATED_ASTAR_TIME_EXPONENT = 1.5
 
 private fun verifyBal(player: Player) {
     var bal = player["bal"]
@@ -210,11 +214,15 @@ class MapCommand : Command(
 
                                     ui.addMessage(Message("Patientez un instant... calcul du trajet"))
 
-                                    class WaitingForPath : WaitingManager {
-                                        val startTime = System.currentTimeMillis()
+                                    class WaitingForPath(
+                                        val pathDistance: Int
+                                    ) : WaitingManager {
+                                        val endTime = System.currentTimeMillis() + pathDistance.toDouble().pow(
+                                            ESTIMATED_ASTAR_TIME_EXPONENT
+                                        ).toInt()
 
                                         override fun estimatedRemainingTimeSeconds(): Int {
-                                            TODO("Not yet implemented")
+                                            return (endTime - System.currentTimeMillis()).toInt() / SECOND_TO_MILLIS
                                         }
 
                                         override fun isFinished(): Boolean {
@@ -248,26 +256,26 @@ class MapCommand : Command(
                                         ) { pui ->
                                             pui.setLongCustomUI(
                                                 MenuBuilderUI(
-                                                "Confirmer",
-                                                "Confirmer le voyage ?",
-                                                pui
-                                            )
-                                                .addButton("Oui", "Oui je veux aller jusqu'à ce pixel") { _ ->
-                                                    player.setPath(path, "default_time", timeMillisOnePixel)
-                                                    pui.addMessage(
-                                                        Message("Vous êtes maintenant sur le trajet vers le pixel ($x, $y)")
-                                                    )
-                                                    null
-                                                }
-                                                .addButton(
-                                                    "Non",
-                                                    "Non je ne veux pas aller jusqu'à ce pixel"
-                                                ) { _ ->
-                                                    pui.addMessage(
-                                                        Message("Vous avez annulé le voyage")
-                                                    )
-                                                    null
-                                                }
+                                                    "Confirmer",
+                                                    "Confirmer le voyage ?",
+                                                    pui
+                                                )
+                                                    .addButton("Oui", "Oui je veux aller jusqu'à ce pixel") { _ ->
+                                                        player.setPath(path, "default_time", timeMillisOnePixel)
+                                                        pui.addMessage(
+                                                            Message("Vous êtes maintenant sur le trajet vers le pixel ($x, $y)")
+                                                        )
+                                                        null
+                                                    }
+                                                    .addButton(
+                                                        "Non",
+                                                        "Non je ne veux pas aller jusqu'à ce pixel"
+                                                    ) { _ ->
+                                                        pui.addMessage(
+                                                            Message("Vous avez annulé le voyage")
+                                                        )
+                                                        null
+                                                    }
                                             )
                                             null
                                         }
