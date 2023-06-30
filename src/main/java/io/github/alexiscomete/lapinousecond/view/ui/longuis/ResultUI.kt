@@ -5,8 +5,8 @@ import java.awt.image.BufferedImage
 
 class ResultUI(
     playerUI: PlayerUI,
-    val title: String?,
-    val description: String?,
+    private val title: String?,
+    private val description: String?,
     private val linkedImage: String?,
     private val buffuredImage: BufferedImage?,
     private val underString: String?
