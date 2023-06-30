@@ -2,14 +2,13 @@ package io.github.alexiscomete.lapinousecond.view.discord.commands.classes
 
 import io.github.alexiscomete.lapinousecond.data.PERMS
 import io.github.alexiscomete.lapinousecond.data.UserPerms
-import io.github.alexiscomete.lapinousecond.entity.entities.Player
-import io.github.alexiscomete.lapinousecond.entity.entities.players
 import io.github.alexiscomete.lapinousecond.data.managesave.fromBooleanToString
 import io.github.alexiscomete.lapinousecond.data.managesave.saveManager
+import io.github.alexiscomete.lapinousecond.entity.entities.Player
+import io.github.alexiscomete.lapinousecond.entity.entities.players
 import io.github.alexiscomete.lapinousecond.view.discord.commands.Command
 import io.github.alexiscomete.lapinousecond.view.discord.commands.ExecutableWithArguments
 import io.github.alexiscomete.lapinousecond.view.discord.commands.SubCommand
-import io.github.alexiscomete.lapinousecond.view.discord.commands.getAccount
 import io.github.alexiscomete.lapinousecond.worlds.WorldEnum
 import org.javacord.api.entity.message.embed.EmbedBuilder
 import org.javacord.api.interaction.SlashCommandInteraction
@@ -37,16 +36,6 @@ class AccountCommandBase : Command(
     )
 )
 
-fun getUserData(): UserData {
-    return UserData(-1, -1, isVerify = false, false)
-}
-
-class UserData(val x: Int, val y: Int, val isVerify: Boolean, private val hasAccount: Boolean) {
-    fun hasAccount(): Boolean {
-        return hasAccount
-    }
-}
-
 class AccountCommandVerify : SubCommand(
     "verify",
     "Vérifier vos coordonnées (bot de Sylicium)"
@@ -58,27 +47,9 @@ class AccountCommandVerify : SubCommand(
         get() = null
 
     override fun execute(slashCommand: SlashCommandInteraction) {
-        val player = getAccount(slashCommand)
-        val userData = getUserData()
-        if (userData.hasAccount()) {
-            player["x"] = userData.x.toString()
-            player["x"] = userData.y.toString()
-            player["has_account"] = if (userData.hasAccount()) "1" else "0"
-            player["is_verify"] = if (userData.isVerify) "1" else "0"
-            if (userData.isVerify) {
-                slashCommand.createImmediateResponder()
-                    .setContent("Votre compte a été associé à votre pixel. Vous avez la vérification")
-                    .respond()
-            } else {
-                slashCommand.createImmediateResponder()
-                    .setContent("Votre compte a été associé à votre pixel. Vous n'avez malheureusement pas la vérification 😕")
-                    .respond()
-            }
-        } else {
-            slashCommand.createImmediateResponder()
-                .setContent("Vous n'avez pas encore de compte de pixel, utilisez le bot de Sylicium")
-                .respond()
-        }
+        slashCommand.createImmediateResponder()
+            .setContent("Le bot de Sylicium n'est plus disponible pour une durée indéterminée. ||(Peut-être pour toujours)||")
+            .respond()
     }
 }
 
@@ -100,25 +71,12 @@ class AccountCommandStart : SubCommand(
                 content += "Vous devrez rejoindre le serveur discord principal à un moment ou à un autre pour le tuto.\n"
             }
             val user = slashCommand.user
-            val userData = getUserData()
-            content += if (userData.hasAccount()) {
-                if (userData.isVerify) {
-                    "Votre compte va être associé à votre pixel. Vous avez la vérification\n"
-                } else {
-                    "Votre compte va être associé à votre pixel. Vous n'avez malheureusement pas la vérification 😕\n"
-                }
-            } else {
-                "Aucun compte de pixel trouvé sur le bot de Sylicium\n"
-            }
+            content += "Le bot pour vérifier votre pixel n'est plus disponible. Si vous souhaitez associez votre pixel, contacter le dev.\n"
             players.add(user.id)
             p = players[user.id]
             if (p == null) {
                 throw IllegalStateException("Erreur lors de la création du joueur. Réessayez ...")
             }
-            p["x"] = userData.x.toString()
-            p["y"] = userData.y.toString()
-            p["has_account"] = fromBooleanToString(userData.hasAccount())
-            p["is_verify"] = fromBooleanToString(userData.isVerify)
             p["bal"] = "0.0"
         }
         toSpawn(p)
