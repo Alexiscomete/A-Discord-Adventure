@@ -5,20 +5,15 @@ import io.github.alexiscomete.lapinousecond.entity.effects.priceToTravelWithEffe
 import io.github.alexiscomete.lapinousecond.entity.effects.timeMillisForOnePixel
 import io.github.alexiscomete.lapinousecond.entity.entities.Player
 import io.github.alexiscomete.lapinousecond.entity.entities.PlayerWithAccount
-import io.github.alexiscomete.lapinousecond.data.managesave.generateUniqueID
-import io.github.alexiscomete.lapinousecond.view.Context
 import io.github.alexiscomete.lapinousecond.view.contextFor
-import io.github.alexiscomete.lapinousecond.view.contextmanager.SelectMenuContextManager
 import io.github.alexiscomete.lapinousecond.view.discord.commands.Command
 import io.github.alexiscomete.lapinousecond.view.discord.commands.ExecutableWithArguments
 import io.github.alexiscomete.lapinousecond.view.discord.commands.getAccount
 import io.github.alexiscomete.lapinousecond.view.ui.longuis.EmbedPages
 import io.github.alexiscomete.lapinousecond.view.ui.longuis.MenuBuilderUI
 import io.github.alexiscomete.lapinousecond.view.ui.longuis.PixelByPixelUI
-import io.github.alexiscomete.lapinousecond.view.ui.playerui.DiscordPlayerUI
-import io.github.alexiscomete.lapinousecond.view.ui.playerui.Message
-import io.github.alexiscomete.lapinousecond.view.ui.playerui.Question
-import io.github.alexiscomete.lapinousecond.view.ui.playerui.QuestionField
+import io.github.alexiscomete.lapinousecond.view.ui.longuis.WaitingManager
+import io.github.alexiscomete.lapinousecond.view.ui.playerui.*
 import io.github.alexiscomete.lapinousecond.worlds.WorldEnum
 import io.github.alexiscomete.lapinousecond.worlds.Zooms
 import io.github.alexiscomete.lapinousecond.worlds.bigger
@@ -26,8 +21,6 @@ import io.github.alexiscomete.lapinousecond.worlds.map.FilesMapEnum
 import org.javacord.api.entity.message.MessageBuilder
 import org.javacord.api.entity.message.component.*
 import org.javacord.api.entity.message.embed.EmbedBuilder
-import org.javacord.api.event.interaction.ModalSubmitEvent
-import org.javacord.api.event.interaction.SelectMenuChooseEvent
 import org.javacord.api.interaction.Interaction
 import org.javacord.api.interaction.SlashCommandInteraction
 import java.awt.Color
@@ -188,37 +181,55 @@ class MapCommand : Command(
                                         throw IllegalArgumentException("y is not an int")
                                     }
 
-                                    val player = ui.getPlayer()
-                                    val world = try {
-                                        WorldEnum.valueOf(player["world"])
+                                    val worldEnum = try {
+                                        WorldEnum.valueOf(world)
                                     } catch (e: Exception) {
                                         throw IllegalArgumentException("world is not a valid world")
                                     }
                                     val currentX = try {
-                                        player["place_${world.progName}_x"].toInt()
+                                        player["place_${world}_x"].toInt()
                                     } catch (e: Exception) {
                                         throw IllegalArgumentException("current x is not an int")
                                     }
                                     val currentY = try {
-                                        player["place_${world.progName}_y"].toInt()
+                                        player["place_${world}_y"].toInt()
                                     } catch (e: Exception) {
                                         throw IllegalArgumentException("current y is not an int")
                                     }
 
-                                    if (x < 0 || x > world.mapWidth || y < 0 || y > world.mapHeight) {
-                                        throw IllegalArgumentException("La coordonnée x ou la coordonnée y est en dehors du monde ... attention au vide ! (Le monde a une taille de ${world.mapWidth}x${world.mapHeight})")
+                                    if (x < 0 || x > worldEnum.mapWidth || y < 0 || y > worldEnum.mapHeight) {
+                                        throw IllegalArgumentException("La coordonnée x ou la coordonnée y est en dehors du monde ... attention au vide ! (Le monde a une taille de ${worldEnum.mapWidth}x${worldEnum.mapHeight})")
                                     }
 
                                     // Etape : calcul du trajet et affichage du prix en temps ou en argent
-                                    val nodePlayer = world.getNode(currentX, currentY, ArrayList())
-                                    val nodeDest = world.getNode(x, y, ArrayList())
+
+                                    val nodePlayer = worldEnum.getNode(currentX, currentY, ArrayList())
+                                    val nodeDest = worldEnum.getNode(x, y, ArrayList())
+
                                     //long !!
-                                    smce.modalInteraction.createImmediateResponder()
-                                        .setContent("Patientez un instant... calcul du trajet")
+
+                                    ui.addMessage(Message("Patientez un instant... calcul du trajet"))
+
+                                    class WaitingForPath : WaitingManager {
+                                        val startTime = System.currentTimeMillis()
+
+                                        override fun estimatedRemainingTimeSeconds(): Int {
+                                            TODO("Not yet implemented")
+                                        }
+
+                                        override fun isFinished(): Boolean {
+                                            TODO("Not yet implemented")
+                                        }
+
+                                        override fun executeAfter(playerUI: PlayerUI): Question? {
+                                            TODO("Not yet implemented")
+                                        }
+
+                                    }
 
 
-                                    val path = world.findPath(nodePlayer, nodeDest)
-                                    val image = bigger(world.drawPath(path), 3)
+                                    val path = worldEnum.findPath(nodePlayer, nodeDest)
+                                    val image = bigger(worldEnum.drawPath(path), 3)
 
                                     val timeMillisOnePixel = timeMillisForOnePixel(player)
                                     val timeMillisToTravel = timeMillisOnePixel * path.size
@@ -234,67 +245,73 @@ class MapCommand : Command(
                                         .addButton(
                                             "Temps",
                                             "Vous allez prendre $timeMillisToTravel ms pour aller jusqu'à ce pixel. Attention : les effets peuvent ne pas fonctionner si ils ne sont pas actifs à l'arrivée."
-                                        ) { _ ->
-                                            MenuBuilderUI(
+                                        ) { pui ->
+                                            pui.setLongCustomUI(
+                                                MenuBuilderUI(
                                                 "Confirmer",
                                                 "Confirmer le voyage ?",
-                                                Color.orange,
-                                                c3
+                                                pui
                                             )
                                                 .addButton("Oui", "Oui je veux aller jusqu'à ce pixel") { _ ->
                                                     player.setPath(path, "default_time", timeMillisOnePixel)
-                                                    it.buttonInteraction.createOriginalMessageUpdater()
-                                                        .removeAllComponents()
-                                                        .removeAllEmbeds()
-                                                        .setContent("Vous êtes maintenant sur le trajet vers le pixel ($x, $y)")
-                                                        .update()
+                                                    pui.addMessage(
+                                                        Message("Vous êtes maintenant sur le trajet vers le pixel ($x, $y)")
+                                                    )
+                                                    null
                                                 }
-                                                .addButton("Non", "Non je ne veux pas aller jusqu'à ce pixel") { _ ->
-                                                    it.buttonInteraction.createOriginalMessageUpdater()
-                                                        .removeAllComponents()
-                                                        .removeAllEmbeds()
-                                                        .setContent("Vous avez annulé le voyage")
-                                                        .update()
+                                                .addButton(
+                                                    "Non",
+                                                    "Non je ne veux pas aller jusqu'à ce pixel"
+                                                ) { _ ->
+                                                    pui.addMessage(
+                                                        Message("Vous avez annulé le voyage")
+                                                    )
+                                                    null
                                                 }
+                                            )
                                             null
                                         }
                                         .addButton(
                                             "Argent",
                                             "Vous allez dépenser $priceToTravel ${Resource.RABBIT_COIN.show} pour aller jusqu'à ce pixel. Les effets sont pris en compte."
-                                        ) { _ ->
-                                            MenuBuilderUI(
-                                                "Confirmer",
-                                                "Confirmer le voyage ?",
-                                                Color.orange,
-                                                c3
-                                            )
-                                                .addButton("Oui", "Oui je veux aller jusqu'à ce pixel") { _ ->
-                                                    // get the player's money
-                                                    val money = player.getMoney()
-                                                    if (money < priceToTravel) {
-                                                        it.buttonInteraction.createOriginalMessageUpdater()
-                                                            .removeAllComponents()
-                                                            .removeAllEmbeds()
-                                                            .setContent("Vous n'avez pas assez d'argent pour aller jusqu'à ce pixel")
-                                                            .update()
-                                                    } else {
-                                                        player.removeMoney(priceToTravel)
-                                                        player["place_${world.progName}_x"] = x.toString()
-                                                        player["place_${world.progName}_y"] = y.toString()
-                                                        it.buttonInteraction.createOriginalMessageUpdater()
-                                                            .removeAllComponents()
-                                                            .removeAllEmbeds()
-                                                            .setContent("Vous êtes maintenant sur le pixel ($x, $y)")
-                                                            .update()
+                                        ) { pui ->
+                                            pui.setLongCustomUI(
+                                                MenuBuilderUI(
+                                                    "Confirmer",
+                                                    "Confirmer le voyage ?",
+                                                    pui
+                                                )
+                                                    .addButton("Oui", "Oui je veux aller jusqu'à ce pixel") { _ ->
+                                                        // get the player's money
+                                                        val money = player.getMoney()
+                                                        if (money < priceToTravel) {
+                                                            pui.addMessage(
+                                                                Message(
+                                                                    "Vous n'avez pas assez d'argent pour aller jusqu'à ce pixel"
+                                                                )
+                                                            )
+                                                        } else {
+                                                            player.removeMoney(priceToTravel)
+                                                            player["place_${worldEnum.progName}_x"] = x.toString()
+                                                            player["place_${worldEnum.progName}_y"] = y.toString()
+                                                            pui.addMessage(
+                                                                Message("Vous êtes maintenant sur le pixel ($x, $y)")
+                                                            )
+                                                        }
+                                                        null
                                                     }
-                                                }
-                                                .addButton("Non", "Non je ne veux pas aller jusqu'à ce pixel") { _ ->
-                                                    it.buttonInteraction.createOriginalMessageUpdater()
-                                                        .removeAllComponents()
-                                                        .removeAllEmbeds()
-                                                        .setContent("Vous avez annulé le voyage")
-                                                        .update()
-                                                }
+                                                    .addButton(
+                                                        "Non",
+                                                        "Non je ne veux pas aller jusqu'à ce pixel"
+                                                    ) { _ ->
+                                                        pui.addMessage(
+                                                            Message(
+                                                                "Vous avez annulé le voyage"
+                                                            )
+                                                        )
+                                                        null
+                                                    }
+                                            )
                                             null
                                         }
                                     null
@@ -429,6 +446,7 @@ class MapCommand : Command(
                                             )
                                             .setContent("> (Aurimezi) : Drôle de position ... allons voir la ville la plus proche ! Fait `/map` puis `voyager` et enfin `Aller à`. Je doit malheureusement te laisser, je dois aller voir un de tes futurs équipements pour un recrutement. Bonne chance !")
                                             .update()
+
                                     } else {
                                         it
                                             .addEmbed(

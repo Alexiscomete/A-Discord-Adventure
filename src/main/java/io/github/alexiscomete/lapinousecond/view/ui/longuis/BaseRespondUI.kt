@@ -18,7 +18,6 @@ abstract class BaseRespondUI(
 
     override fun respondToInteraction(id: String): Question? {
         return interactions.flatten().first { it.getId() == id }.execute(currentUI)
-
     }
 
     override fun respondToInteraction(id: String, argument: String): Question? {
