@@ -18,8 +18,10 @@ import org.javacord.api.interaction.SlashCommandOptionChoice
 import org.javacord.api.interaction.SlashCommandOptionType
 import java.awt.Color
 
+const val MAIN_SERVER_ID = 854288660147994634
+
 fun toSpawn(p: Player) {
-    p["serv"] = "854288660147994634"
+    p["serv"] = MAIN_SERVER_ID.toString()
     p["world"] = "TUTO"
     p["place_TUTO_x"] = WorldEnum.TUTO.defaultX.toString()
     p["place_TUTO_y"] = WorldEnum.TUTO.defaultY.toString()
@@ -68,7 +70,7 @@ class AccountCommandStart : SubCommand(
         var p = players[slashCommand.user.id]
         var content = ""
         if (p == null) {
-            if ((slashCommand.server.isPresent && slashCommand.server.get().id != 854288660147994634L) || !slashCommand.server.isPresent) {
+            if ((slashCommand.server.isPresent && slashCommand.server.get().id != MAIN_SERVER_ID) || !slashCommand.server.isPresent) {
                 content += "Vous devrez rejoindre le serveur discord principal à un moment ou à un autre pour le tuto.\n"
             }
             val user = slashCommand.user
