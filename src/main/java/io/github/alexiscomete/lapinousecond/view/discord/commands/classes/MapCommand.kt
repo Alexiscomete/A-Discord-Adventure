@@ -1,5 +1,6 @@
 package io.github.alexiscomete.lapinousecond.view.discord.commands.classes
 
+import io.github.alexiscomete.lapinousecond.data.TutoSteps
 import io.github.alexiscomete.lapinousecond.entity.concrete.resources.Resource
 import io.github.alexiscomete.lapinousecond.entity.effects.priceToTravelWithEffect
 import io.github.alexiscomete.lapinousecond.entity.effects.timeMillisForOnePixel
@@ -464,7 +465,8 @@ class MapCommand : Command(
                                 val biome = if (world.isDirt(xInt, yInt)) "la terre" else "l'eau"
                                 val image = world.zoomWithDecorElements(xInt, yInt, 30, zooms, player = player)
 
-                                val resultUI = if (player["tuto"] == "6") {
+                                val resultUI = if (player["tuto"] == TutoSteps.STEP_POSITION.number) {
+                                    player["tuto"] = TutoSteps.STEP_POSITION.nextStepNum
                                     ResultUI(
                                         ui,
                                         "Vous êtes dans $biome",

@@ -1,5 +1,6 @@
 package io.github.alexiscomete.lapinousecond.view.discord.commands.classes
 
+import io.github.alexiscomete.lapinousecond.data.TutoSteps
 import io.github.alexiscomete.lapinousecond.entity.concrete.resources.Resource
 import io.github.alexiscomete.lapinousecond.entity.concrete.resources.ResourceManager
 import io.github.alexiscomete.lapinousecond.view.discord.commands.Command
@@ -13,6 +14,10 @@ import kotlin.math.round
 
 private const val BUY_COEF = 1.1
 private const val SELL_COEF = 0.9
+const val MAX_SHOP_QUANTITY = Int.MAX_VALUE
+const val MIN_SHOP_QUANTITY = 1
+
+// TODO : round prices
 
 private fun resource(arguments: MutableList<SlashCommandInteractionOption>): Resource {
     val resourceArgument = arguments.first { it.name == "name" }
@@ -59,7 +64,13 @@ class ShopBuyCommand :
                     return@run arrayList
                 }
             ),
-            SlashCommandOption.createLongOption("quantity", "Quantité à acheter", false, 1, 8007199254740991)
+            SlashCommandOption.createLongOption(
+                "quantity",
+                "Quantité à acheter",
+                false,
+                MIN_SHOP_QUANTITY.toLong(),
+                MAX_SHOP_QUANTITY.toLong()
+            )
         )
     ),
     ExecutableWithArguments {
@@ -71,14 +82,14 @@ class ShopBuyCommand :
     override fun execute(slashCommand: SlashCommandInteraction) {
         val arguments = slashCommand.arguments
         val resource = resource(arguments)
-        var quantity = 1
+        var quantity = MIN_SHOP_QUANTITY
         val quantityArgument = arguments.first { it.name == "quantity" }
 
         val opQuantity = quantityArgument.longValue
         if (opQuantity.isPresent) {
             quantity = opQuantity.get().toInt()
-            if (quantity < 1) {
-                throw IllegalArgumentException("Quantity must be greater than 0")
+            if (quantity < MIN_SHOP_QUANTITY) {
+                throw IllegalArgumentException("Quantity must be greater than ${MIN_SHOP_QUANTITY - 1}")
             }
         }
 
@@ -124,7 +135,13 @@ class ShopSellCommand :
                     return@run arrayList
                 }
             ),
-            SlashCommandOption.createLongOption("quantity", "Quantité à vendre", false, 1, 8007199254740991)
+            SlashCommandOption.createLongOption(
+                "quantity",
+                "Quantité à vendre",
+                false,
+                MIN_SHOP_QUANTITY.toLong(),
+                MAX_SHOP_QUANTITY.toLong()
+            )
         )
     ),
     ExecutableWithArguments {
@@ -136,14 +153,14 @@ class ShopSellCommand :
     override fun execute(slashCommand: SlashCommandInteraction) {
         val arguments = slashCommand.arguments
         val resource = resource(arguments)
-        var quantity = 1
+        var quantity = MIN_SHOP_QUANTITY
         val quantityArgument = arguments.first { it.name == "quantity" }
 
         val opQuantity = quantityArgument.longValue
         if (opQuantity.isPresent) {
             quantity = opQuantity.get().toInt()
-            if (quantity < 1) {
-                throw IllegalArgumentException("Quantity must be greater than 0")
+            if (quantity < MIN_SHOP_QUANTITY) {
+                throw IllegalArgumentException("Quantity must be greater than ${MIN_SHOP_QUANTITY - 1}")
             }
         }
 
@@ -206,8 +223,8 @@ class ShopListCommand :
             .addField("Resources", stringBuilder.toString())
         val responder = slashCommand.createImmediateResponder()
             .addEmbed(embedBuilder)
-        if (player["tuto"].toInt() == 5) {
-            player["tuto"] = "6"
+        if (player["tuto"] == TutoSteps.STEP_SHOP.number) {
+            player["tuto"] = TutoSteps.STEP_SHOP.nextStepNum
             responder.setContent("> (Aurimezi) : Voici la liste des ressources disponibles dans le magasin ! Bon faut pas le dire mais ils prennent un pourcentage sur chaque vente donc il vaut mieux que tu passes par le marché ! Mais il faut vite avancer et une offre au marché peut rester plusieurs jours. Je te laisse faire tes achats avec `/shop sell` et `/shop buy`, moi je me prépare à partir à l'aventure ! Utilises `/map` quand tu est prêt. Sélectionnes `Cartes` puis `Ma position`.")
         }
         responder.respond()

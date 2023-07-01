@@ -1,5 +1,6 @@
 package io.github.alexiscomete.lapinousecond.view.discord.commands.classes
 
+import io.github.alexiscomete.lapinousecond.data.TutoSteps
 import io.github.alexiscomete.lapinousecond.entity.concrete.resources.Resource
 import io.github.alexiscomete.lapinousecond.entity.concrete.resources.ResourceManager
 import io.github.alexiscomete.lapinousecond.entity.concrete.resources.WorkEnum
@@ -14,12 +15,15 @@ import java.awt.Color
 import java.time.Instant
 import java.util.*
 
+const val WORK_COOLDOWN_MILLIS = 200_000
+const val WORK_COOLDOWN_SECONDS = WORK_COOLDOWN_MILLIS / 1000
+
 fun setWork(
     player: Player,
     embedBuilder: EmbedBuilder,
     response: InteractionImmediateResponseBuilder
 ) {
-    if (System.currentTimeMillis() - player.workTime > 200000) {
+    if (System.currentTimeMillis() - player.workTime > WORK_COOLDOWN_MILLIS) {
         val wo = WorkEnum.values()
         val random = Random()
         var total = 0
@@ -57,15 +61,15 @@ fun setWork(
         }
         player.updateWorkTime()
         player.level.addXp(0.5)
-        if (player["tuto"].toInt() == 3) {
+        if (player["tuto"] == TutoSteps.STEP_WORK.number) {
             response.setContent("> (Aurimezi) : Bon tu as déjà plus de trucs. Maintenant on va utiliser ma fonctionnalité de magasin pour échanger ce que tu as trouvé. Bon qu'est ce qu'on a ramassé ...\n\nUtilisez à nouveau la commande d'inventaire")
-            player["tuto"] = "4"
+            player["tuto"] = TutoSteps.STEP_WORK.nextStepNum
             player.level.addXp(1.0)
         }
     } else {
         embedBuilder.addField(
             "Work",
-            "Cooldown ! Temps entre 2 work : 200s, temps écoulé : " + (System.currentTimeMillis() - player.workTime) / 1000 + "s. Temps avant le prochain : <t:" + (Instant.now().epochSecond + 200 - (System.currentTimeMillis() - player.workTime) / 1000) + ":R>"
+            "Cooldown ! Temps entre 2 work : ${WORK_COOLDOWN_SECONDS}s, temps écoulé : " + (System.currentTimeMillis() - player.workTime) / 1000 + "s. Temps avant le prochain : <t:" + (Instant.now().epochSecond + WORK_COOLDOWN_SECONDS - (System.currentTimeMillis() - player.workTime) / 1000) + ":R>"
         )
     }
 }

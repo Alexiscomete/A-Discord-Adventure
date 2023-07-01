@@ -1,5 +1,6 @@
 package io.github.alexiscomete.lapinousecond.view.ui.longuis.inv
 
+import io.github.alexiscomete.lapinousecond.data.TutoSteps
 import io.github.alexiscomete.lapinousecond.entity.concrete.resources.Resource
 import io.github.alexiscomete.lapinousecond.view.ui.interactionui.InteractionStyle
 import io.github.alexiscomete.lapinousecond.view.ui.interactionui.SimpleInteractionUICustomUI
@@ -49,8 +50,8 @@ class InvResourcesUI(playerUI: PlayerUI) : StaticUI(
     playerUI
 ) {
     override fun getTitle(): String {
-        val tuto = currentUI.getPlayer()["tuto"].toInt()
-        if (tuto == 1) {
+        val tuto = currentUI.getPlayer()["tuto"]
+        if (tuto == TutoSteps.STEP_INVENTORY_EMPTY.number) {
             currentUI.addMessage(
                 Message(
                     "> (Aurimezi) : Vide ?! Comment tu as fait pour acheter un inventaire sans argent ?\n" +
@@ -62,8 +63,8 @@ class InvResourcesUI(playerUI: PlayerUI) : StaticUI(
                             "Utilisez `/work all`\n"
                 )
             )
-            currentUI.getPlayer()["tuto"] = "3"
-        } else if (tuto == 4) {
+            currentUI.getPlayer()["tuto"] = TutoSteps.STEP_INVENTORY_EMPTY.nextStepNum
+        } else if (tuto == TutoSteps.STEP_INVENTORY_FULL.number) {
             currentUI.addMessage(
                 Message(
                     "> (Aurimezi) : Ca fait du bien de ne pas se sentir vide ... maintenant achetons ou vendons des ressources. Regardons ce qu'on a au magasin\n" +
@@ -71,7 +72,7 @@ class InvResourcesUI(playerUI: PlayerUI) : StaticUI(
                             "Utilisez `/shop list`\n"
                 )
             )
-            currentUI.getPlayer()["tuto"] = "5"
+            currentUI.getPlayer()["tuto"] = TutoSteps.STEP_INVENTORY_FULL.nextStepNum
         }
         return "Inventaire : ressources et argent"
     }

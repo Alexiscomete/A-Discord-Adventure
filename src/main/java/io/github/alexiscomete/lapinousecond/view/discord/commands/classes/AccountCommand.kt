@@ -1,6 +1,7 @@
 package io.github.alexiscomete.lapinousecond.view.discord.commands.classes
 
 import io.github.alexiscomete.lapinousecond.data.PERMS
+import io.github.alexiscomete.lapinousecond.data.TutoSteps
 import io.github.alexiscomete.lapinousecond.data.UserPerms
 import io.github.alexiscomete.lapinousecond.data.managesave.fromBooleanToString
 import io.github.alexiscomete.lapinousecond.data.managesave.saveManager
@@ -83,7 +84,7 @@ class AccountCommandStart : SubCommand(
         if (slashCommand.server.isPresent) {
             p["serv"] = slashCommand.server.get().id.toString()
         }
-        p["tuto"] = "1"
+        p["tuto"] = TutoSteps.STEP_INVENTORY_EMPTY.number
         val embed = EmbedBuilder()
             .setColor(Color.CYAN)
             .setTitle("Une nouvelle aventure commence")
