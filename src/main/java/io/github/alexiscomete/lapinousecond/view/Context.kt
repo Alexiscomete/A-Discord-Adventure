@@ -3,7 +3,6 @@ package io.github.alexiscomete.lapinousecond.view
 import io.github.alexiscomete.lapinousecond.entity.entities.PlayerWithAccount
 import io.github.alexiscomete.lapinousecond.view.contextmanager.ButtonsContextManager
 import io.github.alexiscomete.lapinousecond.view.contextmanager.ContextManager
-import io.github.alexiscomete.lapinousecond.view.contextmanager.ModalContextManager
 import io.github.alexiscomete.lapinousecond.view.contextmanager.SelectMenuContextManager
 import io.github.alexiscomete.lapinousecond.view.ui.playerui.DiscordPlayerUI
 import io.github.alexiscomete.lapinousecond.view.ui.playerui.Message
@@ -57,40 +56,15 @@ class Context(val players: Players, canParallel: Boolean = false) : ContextManag
     private var buttons: ButtonsContextManager? = null
     private var selectMenu: SelectMenuContextManager? = null
     private var multiContext: Context? = null
-    private var modal: ModalContextManager? = null
     private var ui: DiscordPlayerUI? = null
 
     val messages = mutableListOf<Message>()
-
-    fun buttons(buttons: ButtonsContextManager, canParallel: Boolean = false): Context {
-        if (!canParallel) {
-            clear()
-        }
-        this.buttons = buttons
-        return this
-    }
-
-    fun selectMenu(selectMenu: SelectMenuContextManager, canParallel: Boolean = false): Context {
-        if (!canParallel) {
-            clear()
-        }
-        this.selectMenu = selectMenu
-        return this
-    }
 
     private fun multiContext(multiContext: Context, canParallel: Boolean = false): Context {
         if (!canParallel) {
             clear()
         }
         this.multiContext = multiContext
-        return this
-    }
-
-    fun modal(modal: ModalContextManager, canParallel: Boolean = false): Context {
-        if (!canParallel) {
-            clear()
-        }
-        this.modal = modal
         return this
     }
 
@@ -106,7 +80,6 @@ class Context(val players: Players, canParallel: Boolean = false) : ContextManag
         buttons = null
         selectMenu = null
         multiContext = null
-        modal = null
         ui = null
     }
 
@@ -118,9 +91,6 @@ class Context(val players: Players, canParallel: Boolean = false) : ContextManag
             return true
         }
         if (selectMenu != null && selectMenu!!.canApply(string)) {
-            return true
-        }
-        if (modal != null && modal!!.canApply(string)) {
             return true
         }
         return ui != null && ui!!.canExecute(string)
@@ -173,16 +143,15 @@ class Context(val players: Players, canParallel: Boolean = false) : ContextManag
                 return
             }
         }
-        if (modal != null) {
-            if (modal!!.canApply(customId)) {
-                modal!!.ex(p0, this)
-                return
-            }
+        if (ui != null && ui!!.canExecute(customId)) {
+            ui!!.interaction = p0.interaction
+            ui!!.respondToInteraction(customId)
+            return
         }
-        throw IllegalStateException("Cannot apply $customId. ${if (modal != null) modal.toString() else "No modal"}, ${if (multiContext != null) multiContext.toString() else "No multiContext"} => Cette interaction n'est plus valide, recommencez : le bot supprime les anciennes interactions de sa mémoire afin de ne pas se mélanger les pinceaux")
+        throw IllegalStateException("Cannot apply $customId. ${if (multiContext != null) multiContext.toString() else "No multiContext"} => Cette interaction n'est plus valide, recommencez : le bot supprime les anciennes interactions de sa mémoire afin de ne pas se mélanger les pinceaux")
     }
 
     override fun toString(): String {
-        return "Context(players=$players, buttons=$buttons, selectMenu=$selectMenu, multiContext=$multiContext, modal=$modal)"
+        return "Context(players=$players, buttons=$buttons, selectMenu=$selectMenu, multiContext=$multiContext, ui=$ui)"
     }
 }
