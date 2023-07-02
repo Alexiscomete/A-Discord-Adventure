@@ -4,6 +4,8 @@ import io.github.alexiscomete.lapinousecond.view.ui.playerui.PlayerUI
 import io.github.alexiscomete.lapinousecond.view.ui.playerui.Question
 import java.awt.image.BufferedImage
 
+// TODO - ajouter les langues (fr, en, dibi)
+
 class MenuBuilderFactoryUI(
     private val name: String,
     private val description: String
