@@ -44,6 +44,25 @@ fun askWhat(
     })
 }
 
+fun renderTransaction(
+    start: Int,
+    num: Int,
+    transactionsArrayList: ArrayList<out Transaction>,
+    name: String
+): ArrayList<Pair<String, String>> {
+    val pairs = arrayListOf<Pair<String, String>>()
+    for (i in start until start + num) {
+        val research = transactionsArrayList[i]
+        pairs.add(
+            Pair(
+                "$name ${i - start + 1}",
+                "${research.amountRB} -> ${research.amount} ${research.what.show}"
+            )
+        )
+    }
+    return pairs
+}
+
 val MAIN_MARKET_MENU = MenuBuilderFactoryUI(
     "Le marché",
     "Ici est le lieu d'échanges entre les joueurs ! Avancez sur vos quêtes en trouvant ici des objets introuvables, gagnez de l'argent en vendant des objets ou des ressources .... bref c'est le lieu des joueurs"
@@ -108,17 +127,7 @@ val MAIN_MARKET_MENU = MenuBuilderFactoryUI(
             EmbedPagesWithInteractions(
                 offers,
                 { start: Int, num: Int, offerArrayList: ArrayList<Offer> ->
-                    val pairs = arrayListOf<Pair<String, String>>()
-                    for (i in start until start + num) {
-                        val offer = offerArrayList[i]
-                        pairs.add(
-                            Pair(
-                                "Offre ${i - start + 1}",
-                                "${offer.amountRB} -> ${offer.amount} ${offer.what.show}"
-                            )
-                        )
-                    }
-                    return@EmbedPagesWithInteractions pairs
+                    renderTransaction(start, num, offerArrayList, "Offre")
                 },
                 { offer: Offer, playerUI: PlayerUI ->
                     val player2 = playerUI.getPlayer()
@@ -168,7 +177,7 @@ val MAIN_MARKET_MENU = MenuBuilderFactoryUI(
                             )
                         )
                     }
-                    return@EmbedPagesWithInteractions pairs
+                    pairs
                 },
                 { offer: Offer, playerUI: PlayerUI ->
                     val player2 = playerUI.getPlayer()
@@ -268,17 +277,7 @@ val MAIN_MARKET_MENU = MenuBuilderFactoryUI(
             EmbedPagesWithInteractions(
                 researches,
                 { start: Int, num: Int, researchArrayList: ArrayList<Research> ->
-                    val pairs = arrayListOf<Pair<String, String>>()
-                    for (i in start until start + num) {
-                        val research = researchArrayList[i]
-                        pairs.add(
-                            Pair(
-                                "Offre ${i - start + 1}",
-                                "${research.amountRB} -> ${research.amount} ${research.what.show}"
-                            )
-                        )
-                    }
-                    return@EmbedPagesWithInteractions pairs
+                    renderTransaction(start, num, researchArrayList, "Recherche")
                 },
                 { offer: Research, playerUI: PlayerUI ->
                     val player2 = playerUI.getPlayer()
@@ -330,7 +329,7 @@ val MAIN_MARKET_MENU = MenuBuilderFactoryUI(
                             )
                         )
                     }
-                    return@EmbedPagesWithInteractions pairs
+                    pairs
                 },
                 { research: Research, playerUI: PlayerUI ->
                     val player2 = playerUI.getPlayer()
@@ -436,17 +435,7 @@ val MAIN_MARKET_MENU = MenuBuilderFactoryUI(
             EmbedPagesWithInteractions(
                 auctions,
                 { start: Int, num: Int, auctionArrayList: ArrayList<Auction> ->
-                    val pairs = arrayListOf<Pair<String, String>>()
-                    for (i in start until start + num) {
-                        val auction = auctionArrayList[i]
-                        pairs.add(
-                            Pair(
-                                "Enchère ${i - start + 1}",
-                                "${auction.amountRB} -> ${auction.amount} ${auction.what.show}"
-                            )
-                        )
-                    }
-                    return@EmbedPagesWithInteractions pairs
+                    renderTransaction(start, num, auctionArrayList, "Enchère")
                 },
                 { auction: Auction, playerUI: PlayerUI ->
                     val player2 = playerUI.getPlayer()
@@ -502,7 +491,7 @@ val MAIN_MARKET_MENU = MenuBuilderFactoryUI(
                             )
                         )
                     }
-                    return@EmbedPagesWithInteractions pairs
+                    pairs
                 },
                 { auction: Auction, playerUI: PlayerUI ->
                     val player2 = playerUI.getPlayer()
@@ -610,16 +599,14 @@ class MarketCommand : Command(
 
         if (player.level.level < LEVEL_FOR_MARKET) {
             slashCommand.createImmediateResponder()
-                .setContent("Vous devez être niveau 2 pour accéder au marché. Utilisez la commande `/shop` pour monter commercer et la commande `/work` pour gagner de l'xp.")
+                .setContent("Vous devez être niveau $LEVEL_FOR_MARKET pour accéder au marché. Utilisez la commande `/shop` pour monter commercer et la commande `/work` pour gagner de l'xp.")
                 .respond()
             return
         }
 
         val ui = DiscordPlayerUI(context, slashCommand as Interaction)
 
-        ui.setLongCustomUI(
-            MAIN_MARKET_MENU.build(ui)
-        )
+        ui.setLongCustomUI(MAIN_MARKET_MENU.build(ui))
         ui.updateOrSend()
         context.ui(ui)
     }
