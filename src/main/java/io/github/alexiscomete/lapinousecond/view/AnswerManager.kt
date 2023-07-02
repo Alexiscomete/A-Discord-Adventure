@@ -21,7 +21,7 @@ class AnswerManager(input: InputStream?) {
     }
 
     fun getAnswer(langageEnum: LangageEnum, answerEnum: AnswerEnum): String {
-        val `object` = jsonObject!!.getJSONObject(answerEnum.value) ?: return langageEnum.invalidAnswer
+        val `object` = jsonObject!!.getJSONObject("answerEnum.value") ?: return langageEnum.invalidAnswer
         val answer = `object`.getString(langageEnum.displayName)
         if (answer == null || answer == "") {
             return langageEnum.invalidAnswer

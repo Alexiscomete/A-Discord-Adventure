@@ -9,10 +9,16 @@ import io.github.alexiscomete.lapinousecond.view.discord.commands.Command
 import io.github.alexiscomete.lapinousecond.view.discord.commands.ExecutableWithArguments
 import io.github.alexiscomete.lapinousecond.view.discord.commands.getAccount
 import io.github.alexiscomete.lapinousecond.view.ui.longuis.EmbedPagesWithInteractions
+import io.github.alexiscomete.lapinousecond.view.ui.longuis.MenuBuilderFactoryUI
 import io.github.alexiscomete.lapinousecond.view.ui.longuis.MenuBuilderUI
 import io.github.alexiscomete.lapinousecond.view.ui.playerui.*
 import org.javacord.api.interaction.Interaction
 import org.javacord.api.interaction.SlashCommandInteraction
+
+val MAIN_MARKET_MENU = MenuBuilderFactoryUI(
+    "Le marché",
+    "Ici est le lieu d'échanges entre les joueurs ! Avancez sur vos quêtes en trouvant ici des objets introuvables, gagnez de l'argent en vendant des objets ou des ressources .... bref c'est le lieu des joueurs"
+)
 
 class MarketCommand : Command(
     "market",
@@ -42,7 +48,7 @@ class MarketCommand : Command(
 
         val ui = DiscordPlayerUI(context, slashCommand as Interaction)
 
-        MenuBuilderUI(
+        ui.setLongCustomUI(MenuBuilderUI(
             "Le marché",
             "Ici est le lieu d'échanges entre les joueurs ! Avancez sur vos quêtes en trouvant ici des objets introuvables, gagnez de l'argent en vendant des objets ou des ressources .... bref c'est le lieu des joueurs",
             ui
@@ -653,7 +659,9 @@ class MarketCommand : Command(
                 }
                 null
             }
-
+        )
+        ui.updateOrSend()
+        context.ui(ui)
     }
 
     private fun askWhat(

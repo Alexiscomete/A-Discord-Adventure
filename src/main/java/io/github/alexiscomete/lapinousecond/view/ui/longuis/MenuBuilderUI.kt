@@ -7,7 +7,11 @@ import io.github.alexiscomete.lapinousecond.view.ui.interactionui.SimpleInteract
 import io.github.alexiscomete.lapinousecond.view.ui.playerui.Question
 import java.awt.image.BufferedImage
 
-class MenuBuilderUI(private val name: String, private val description: String, playerUI: PlayerUI) : StaticUI(listOf(), playerUI) {
+class MenuBuilderUI(
+    private val name: String,
+    private val description: String,
+    playerUI: PlayerUI
+) : StaticUI(listOf(), playerUI) {
 
     private var bufferedImage: BufferedImage? = null
 
