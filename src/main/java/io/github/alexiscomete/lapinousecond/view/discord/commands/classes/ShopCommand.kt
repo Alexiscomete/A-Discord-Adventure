@@ -16,6 +16,7 @@ private const val BUY_COEF = 1.1
 private const val SELL_COEF = 0.9
 const val MAX_SHOP_QUANTITY = Int.MAX_VALUE
 const val MIN_SHOP_QUANTITY = 1
+const val ROUND_PRECISION = 1000
 
 // TODO : round prices
 
@@ -208,9 +209,9 @@ class ShopListCommand :
                 .append("\n")
                 .append(r.show)
                 .append(" -> `")
-                .append(round(r.price * BUY_COEF * 1000) / 1000)
+                .append(round(r.price * BUY_COEF * ROUND_PRECISION) / ROUND_PRECISION)
                 .append("`; `")
-                .append(round(r.price * SELL_COEF * 1000) / 1000)
+                .append(round(r.price * SELL_COEF * ROUND_PRECISION) / ROUND_PRECISION)
                 .append("`; `")
                 .append(r.price)
                 .append("`; `")

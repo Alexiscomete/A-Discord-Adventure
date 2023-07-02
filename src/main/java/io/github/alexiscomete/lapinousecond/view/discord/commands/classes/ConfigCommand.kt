@@ -19,6 +19,9 @@ import org.javacord.api.interaction.Interaction
 import org.javacord.api.interaction.SlashCommandInteraction
 import java.util.*
 
+const val TUTO_CITY_X = "45"
+const val TUTO_CITY_Y = "20"
+
 fun configNormalServer(world: WorldEnum, server: Server, placeId: Long) {
     servers.add(server.id)
     val serverC = servers[server.id]
@@ -229,14 +232,14 @@ class ConfigCommand : Command(
                         places.add(id)
                         val place = places[id]
                             ?: throw IllegalArgumentException("Un problème de source inconnue est survenue. La création du serveur a échoué.")
-                        place["nameRP"] = "Saint-Lapin-sur-bot" // à Demander
-                        place["description"] = "Ville accueillante du tutoriel" // à Demander
-                        place["welcome"] = "Ne restez pas trop longtemps ici et profitez de l'aventure" // à Demander
-                        place["x"] = 45.toString() // automatique normalement : aléatoire
-                        place["y"] = 20.toString() // automatique normalement : aléatoire
-                        place["type"] = "city" // automatique normalement
-                        place["world"] = world.progName // automatique normalement
-                        place["server"] = serverId.toString() // automatique normalement
+                        place["nameRP"] = "Saint-Lapin-sur-bot"
+                        place["description"] = "Ville accueillante du tutoriel"
+                        place["welcome"] = "Ne restez pas trop longtemps ici et profitez de l'aventure"
+                        place["x"] = TUTO_CITY_X
+                        place["y"] = TUTO_CITY_Y
+                        place["type"] = "city"
+                        place["world"] = world.progName
+                        place["server"] = serverId.toString()
 
                         configNormalServer(world, serverD, id)
 

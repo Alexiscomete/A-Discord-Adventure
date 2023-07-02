@@ -7,7 +7,6 @@ import org.javacord.api.event.interaction.SelectMenuChooseEvent
 import org.javacord.api.listener.interaction.SelectMenuChooseListener
 
 class SelectMenuManager : SelectMenuChooseListener {
-
     override fun onSelectMenuChoose(p0: SelectMenuChooseEvent) {
         try {
             val player = getAccount(p0.selectMenuInteraction.user)

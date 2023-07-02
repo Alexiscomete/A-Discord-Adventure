@@ -16,6 +16,7 @@ import org.javacord.api.interaction.Interaction
 import org.javacord.api.interaction.SlashCommandInteraction
 
 const val LEVEL_FOR_MARKET = 2
+const val MIN_AUCTION_ADDING = 100.0
 
 fun askWhat(
     name: String, playerUI: PlayerUI, my: (PlayerUI) -> Unit, everything: (PlayerUI) -> Unit, create: (PlayerUI) -> Unit
@@ -220,15 +221,12 @@ val MAIN_MARKET_MENU = MenuBuilderFactoryUI(
         ) {
 
             // get text inputs
-            val ressource = it.field0.answer
-            val quantity = it.field1!!.answer
-            val cost = it.field2!!.answer
 
             // On vérifie que la ressource est bien une ressource valide
-            val resource = Resource.valueOf(ressource.uppercase())
+            val resource = Resource.valueOf(it.field0.answer.uppercase())
 
             // On vérifie que la quantité est bien un nombre
-            val quantityDouble = quantity.toDouble()
+            val quantityDouble = it.field1!!.answer.toDouble()
 
             // On vérifie que la quantité est bien positive
             if (quantityDouble <= 0) {
@@ -236,7 +234,7 @@ val MAIN_MARKET_MENU = MenuBuilderFactoryUI(
             }
 
             // On vérifie que le prix est bien un nombre
-            val costDouble = cost.toDouble()
+            val costDouble = it.field2!!.answer.toDouble()
 
             // On vérifie que le prix est bien positif
             if (costDouble <= 0) {
@@ -374,15 +372,12 @@ val MAIN_MARKET_MENU = MenuBuilderFactoryUI(
         ) {
 
             // get text inputs
-            val ressource = it.field0.answer
-            val quantity = it.field1!!.answer
-            val cost = it.field2!!.answer
 
             // On vérifie que la ressource est bien une ressource valide
-            val resource = Resource.valueOf(ressource.uppercase())
+            val resource = Resource.valueOf(it.field0.answer.uppercase())
 
             // On vérifie que la quantité est bien un nombre
-            val quantityDouble = quantity.toDouble()
+            val quantityDouble = it.field1!!.answer.toDouble()
 
             // On vérifie que la quantité est bien positive
             if (quantityDouble <= 0) {
@@ -390,7 +385,7 @@ val MAIN_MARKET_MENU = MenuBuilderFactoryUI(
             }
 
             // On vérifie que le prix est bien un nombre
-            val costDouble = cost.toDouble()
+            val costDouble = it.field2!!.answer.toDouble()
 
             // On vérifie que le prix est bien positif
             if (costDouble <= 0) {
@@ -503,13 +498,13 @@ val MAIN_MARKET_MENU = MenuBuilderFactoryUI(
                     if (auction.who.id == player2.id || auction.whoMax.id == player2.id) {
                         throw IllegalArgumentException("Vous ne pouvez pas répondre à votre propre enchère")
                     }
-                    if (!player2.hasMoney(auction.amountRB + 100.0)) {
+                    if (!player2.hasMoney(auction.amountRB + MIN_AUCTION_ADDING)) {
                         throw IllegalArgumentException("Vous n'avez pas assez d'argent pour répondre à cette enchère (il faut enchérir de 100 ${Resource.RABBIT_COIN.show})")
                     }
-                    player2.removeMoney(auction.amountRB + 100.0)
+                    player2.removeMoney(auction.amountRB + MIN_AUCTION_ADDING)
                     auction.whoMax.addMoney(auction.amountRB)
                     auction["whoMax"] = player2.id.toString()
-                    auction["amountRB"] = (auction.amountRB + 100.0).toString()
+                    auction["amountRB"] = (auction.amountRB + MIN_AUCTION_ADDING).toString()
                     // respond
                     playerUI.addMessage(Message("Vous avez répondu à l'enchère de ${auction.amountRB} ${Resource.RABBIT_COIN.show}"))
                     return@EmbedPagesWithInteractions null
@@ -522,7 +517,6 @@ val MAIN_MARKET_MENU = MenuBuilderFactoryUI(
             )
         )
     }) { _ ->
-
         Question(
             "Création d'une enchère", QuestionField(
                 "Ressource / objet à mettre aux enchères", shortAnswer = true, required = true

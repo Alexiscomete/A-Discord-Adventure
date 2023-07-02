@@ -16,7 +16,9 @@ import java.time.Instant
 import java.util.*
 
 const val WORK_COOLDOWN_MILLIS = 200_000
-const val WORK_COOLDOWN_SECONDS = WORK_COOLDOWN_MILLIS / 1000
+const val WORK_COOLDOWN_SECONDS = WORK_COOLDOWN_MILLIS / SECOND_TO_MILLIS
+const val XP_FOR_WORKING = 0.5
+const val XP_FOR_TUTO = 1.0
 
 fun setWork(
     player: Player,
@@ -60,16 +62,16 @@ fun setWork(
             player.updateResources()
         }
         player.updateWorkTime()
-        player.level.addXp(0.5)
+        player.level.addXp(XP_FOR_WORKING)
         if (player["tuto"] == TutoSteps.STEP_WORK.number) {
             response.setContent("> (Aurimezi) : Bon tu as déjà plus de trucs. Maintenant on va utiliser ma fonctionnalité de magasin pour échanger ce que tu as trouvé. Bon qu'est ce qu'on a ramassé ...\n\nUtilisez à nouveau la commande d'inventaire")
             player["tuto"] = TutoSteps.STEP_WORK.nextStepNum
-            player.level.addXp(1.0)
+            player.level.addXp(XP_FOR_TUTO)
         }
     } else {
         embedBuilder.addField(
             "Work",
-            "Cooldown ! Temps entre 2 work : ${WORK_COOLDOWN_SECONDS}s, temps écoulé : " + (System.currentTimeMillis() - player.workTime) / 1000 + "s. Temps avant le prochain : <t:" + (Instant.now().epochSecond + WORK_COOLDOWN_SECONDS - (System.currentTimeMillis() - player.workTime) / 1000) + ":R>"
+            "Cooldown ! Temps entre 2 work : ${WORK_COOLDOWN_SECONDS}s, temps écoulé : " + (System.currentTimeMillis() - player.workTime) / SECOND_TO_MILLIS + "s. Temps avant le prochain : <t:" + (Instant.now().epochSecond + WORK_COOLDOWN_SECONDS - (System.currentTimeMillis() - player.workTime) / SECOND_TO_MILLIS) + ":R>"
         )
     }
 }
@@ -98,7 +100,7 @@ private fun setRoles(
                 if (find.isReady) {
                     roles.append(role.displayName).append(" : ").append(role.salary)
                         .append(" ${Resource.RABBIT_COIN.show} \n")
-                    find.currentCooldown = (System.currentTimeMillis() / 1000)
+                    find.currentCooldown = (System.currentTimeMillis() / SECOND_TO_MILLIS)
                     totalRoles += role.salary.toDouble()
                 } else {
                     roles.append(role.displayName).append(" : ").append("Cooldown -> <t:")
@@ -109,12 +111,12 @@ private fun setRoles(
                     .append(" ${Resource.RABBIT_COIN.show} \n")
                 totalRoles += role.salary.toDouble()
                 val r = Role(role)
-                r.currentCooldown = (System.currentTimeMillis() / 1000)
+                r.currentCooldown = (System.currentTimeMillis() / SECOND_TO_MILLIS)
                 player.addRole(r)
             }
         }
         player["bal"] = (player["bal"].toDouble() + totalRoles).toString()
-        player.level.addXp(0.5)
+        player.level.addXp(XP_FOR_WORKING)
     } else {
         roles.append("Vous n'êtes pas sur un serveur")
     }

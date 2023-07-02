@@ -6,6 +6,9 @@ import org.javacord.api.event.interaction.SlashCommandCreateEvent
 import org.javacord.api.listener.interaction.SlashCommandCreateListener
 import io.github.alexiscomete.lapinousecond.data.check
 
+const val RPD_ID = 904736069080186981
+const val RPD_BOT_CHANNEL_ID = 914268153796771950
+
 val commands = LinkedHashMap<String, ExecutableWithArguments>()
 
 fun loadAllS() {
@@ -31,7 +34,7 @@ class ListenerSlashCommands : SlashCommandCreateListener {
                 val serverTextChannelOp = slashCommand.channel
                 if (serverTextChannelOp.isPresent) {
                     val sC = serverTextChannelOp.get()
-                    if (s.id == 904736069080186981L && sC.id != 914268153796771950L) {
+                    if (s.id == RPD_ID && sC.id != RPD_BOT_CHANNEL_ID) {
                         throw IllegalStateException("Dans ce serveur uniquement, il est interdit d'utiliser cette commande ici")
                     }
                     val name = sC.asServerTextChannel().get().name

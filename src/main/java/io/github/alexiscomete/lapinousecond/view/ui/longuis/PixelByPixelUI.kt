@@ -14,6 +14,9 @@ import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.TextureWorld
 import java.awt.Color
 import java.awt.image.BufferedImage
 
+const val PIXEL_HEIGHT = 16
+const val PIXEL_WIDTH = 16
+
 class PixelByPixelUI(
     private var playerUI: PlayerUI, private var linkedImage: String?
 ) : LongCustomUI {
@@ -21,7 +24,7 @@ class PixelByPixelUI(
     private var title: String = "Pixel by pixel"
     private var description = "Move with buttons"
     private val justDrawPlayer =
-        JustDrawIt(letter = 'P', color = Color.RED, texture = Array(16) { Array(16) { Color.RED } })
+        JustDrawIt(letter = 'P', color = Color.RED, texture = Array(PIXEL_HEIGHT) { Array(PIXEL_WIDTH) { Color.RED } })
 
     private val player
         get() = playerUI.getPlayer()

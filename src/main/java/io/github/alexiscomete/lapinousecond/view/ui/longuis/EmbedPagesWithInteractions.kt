@@ -26,7 +26,7 @@ open class EmbedPagesWithInteractions<U>(
     uContentOf,
     context
 ) {
-    override val number = 5
+    override val elementsPerPages = 5
 
     override fun addComponents() {
         setInteractionUICustomUIs(
@@ -40,7 +40,7 @@ open class EmbedPagesWithInteractions<U>(
     protected val buttons: List<InteractionUICustomUI>
         get() {
             val buttons = mutableListOf<InteractionUICustomUI>()
-            for (i in pageLevel until pageLevel + number.coerceAtMost(uArrayList.size - pageLevel)) {
+            for (i in pageLevel until pageLevel + elementsPerPages.coerceAtMost(uArrayList.size - pageLevel)) {
                 buttons.add(
                     SimpleInteractionUICustomUI(
                         (i - pageLevel + 1).toString(),

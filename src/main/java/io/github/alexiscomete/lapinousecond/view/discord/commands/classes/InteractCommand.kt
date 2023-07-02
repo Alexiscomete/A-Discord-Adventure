@@ -21,6 +21,8 @@ import org.javacord.api.entity.server.invite.InviteBuilder
 import org.javacord.api.interaction.Interaction
 import org.javacord.api.interaction.SlashCommandInteraction
 
+const val MAX_INVITATION_USAGES = 42
+
 class InteractCommandBase : Command(
     "interact",
     "Interact with your environment",
@@ -81,7 +83,7 @@ class InteractCommandBase : Command(
                                 return@addButton null
                             }
                             val invite: Invite = InviteBuilder(firstChannel)
-                                .setMaxUses(42)
+                                .setMaxUses(MAX_INVITATION_USAGES)
                                 .setNeverExpire()
                                 .create()
                                 .join()

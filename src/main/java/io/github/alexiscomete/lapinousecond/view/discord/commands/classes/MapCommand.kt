@@ -24,8 +24,11 @@ import kotlin.math.pow
 
 const val SECOND_TO_MILLIS = 1000
 const val ESTIMATED_ASTAR_TIME_EXPONENT = 1.5
+const val RABBIT_WORLD_PRICE = 100.0
+const val MAP_ZOOM_DEFAULT = 30
+const val MAP_ZOOM_MAX = 60
 
-private fun verifyBal(player: Player) {
+private fun verifyBalForWorld(player: Player) {
     var bal = player["bal"]
     if (bal == "") {
         player["bal"] = "0.0"
@@ -33,7 +36,7 @@ private fun verifyBal(player: Player) {
     }
 
     val balDouble = bal.toDouble()
-    if (balDouble < 100.0) {
+    if (balDouble < RABBIT_WORLD_PRICE) {
         throw IllegalStateException("La guilde des lapins de transports demande 100.0 ${Resource.RABBIT_COIN.show} pour voyager dans un autre monde")
     }
 }
@@ -91,7 +94,7 @@ class MapCommand : Command(
                                     ) {
 
                                         // get the player's bal
-                                        verifyBal(player)
+                                        verifyBalForWorld(player)
 
                                         ui.setLongCustomUI(
                                             MenuBuilderUI(
@@ -101,9 +104,9 @@ class MapCommand : Command(
                                             )
                                                 .addButton("Oui", "Oui je veux changer de monde") { _ ->
                                                     // get the player's bal
-                                                    verifyBal(player)
+                                                    verifyBalForWorld(player)
 
-                                                    player.removeMoney(100.0)
+                                                    player.removeMoney(RABBIT_WORLD_PRICE)
 
                                                     player["world"] = world.progName
                                                     if (player["place_${world.progName}_x"] == "") {
@@ -213,9 +216,8 @@ class MapCommand : Command(
                                     class WaitingForPath(
                                         pathDistance: Int,
                                     ) : WaitingManager {
-                                        val endTime = System.currentTimeMillis() + pathDistance.toDouble().pow(
-                                            ESTIMATED_ASTAR_TIME_EXPONENT
-                                        ).toInt()
+                                        val endTime = System.currentTimeMillis() + pathDistance.toDouble()
+                                            .pow(ESTIMATED_ASTAR_TIME_EXPONENT).toInt()
 
                                         var path: ArrayList<PixelManager>? = null
 
@@ -463,7 +465,7 @@ class MapCommand : Command(
                                 val xInt = x.toInt()
                                 val yInt = y.toInt()
                                 val biome = if (world.isDirt(xInt, yInt)) "la terre" else "l'eau"
-                                val image = world.zoomWithDecorElements(xInt, yInt, 30, zooms, player = player)
+                                val image = world.zoomWithDecorElements(xInt, yInt, MAP_ZOOM_DEFAULT, zooms, player = player)
 
                                 val resultUI = if (player["tuto"] == TutoSteps.STEP_POSITION.number) {
                                     player["tuto"] = TutoSteps.STEP_POSITION.nextStepNum
@@ -678,26 +680,27 @@ class MapCommand : Command(
                                     }
 
                                     // check if zoomInt is < 60 and > 0
-                                    if (zoomInt < 1 || zoomInt > 60) {
+                                    if (zoomInt < 1 || zoomInt > MAP_ZOOM_MAX) {
                                         throw IllegalArgumentException("Le zoom doit être compris entre 1 et 60 (et rester dans la carte !)")
                                     }
 
+                                    // if zoom is low, we can show more details
                                     var zooms = Zooms.ZOOM_OUT
-                                    if (zoomInt < 9) {
+                                    if (zoomInt < (MAP_ZOOM_MAX / Zooms.ZOOM_ZONES.zoom) + 1) { // just 9 actually
                                         when (zoomInt) {
                                             2 -> {
                                                 zooms = Zooms.ZOOM_ZONES_DETAILS
-                                                zoomInt = 60
+                                                zoomInt = MAP_ZOOM_MAX
                                             }
 
                                             1 -> {
                                                 zooms = Zooms.ZOOM_IN
-                                                zoomInt = 60
+                                                zoomInt = MAP_ZOOM_MAX
                                             }
 
                                             else -> {
                                                 zooms = Zooms.ZOOM_ZONES
-                                                zoomInt *= 7
+                                                zoomInt *= Zooms.ZOOM_ZONES.zoom
                                             }
                                         }
                                     }

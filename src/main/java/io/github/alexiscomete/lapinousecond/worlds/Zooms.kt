@@ -1,7 +1,7 @@
 package io.github.alexiscomete.lapinousecond.worlds
 
 enum class Zooms(
-    private val zoom: Int,
+    val zoom: Int,
     val before: Zooms?
 ) {
     ZOOM_OUT(1, null),

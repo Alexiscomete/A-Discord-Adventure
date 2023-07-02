@@ -29,7 +29,7 @@ open class EmbedPages<U>(
     protected var pageLevel = 0
     private val idLast = "last"
     private val idNext = "next"
-    open val number = 10
+    open val elementsPerPages = 10
 
     init {
         addComponents()
@@ -39,8 +39,8 @@ open class EmbedPages<U>(
         playerUI: PlayerUI
     ) : Question? {
         // check if the button is valid : it must have enough elements to go to the next page
-        if (pageLevel + number < uArrayList.size) {
-            pageLevel += number
+        if (pageLevel + elementsPerPages < uArrayList.size) {
+            pageLevel += elementsPerPages
             addComponents()
         }
         return null
@@ -49,8 +49,8 @@ open class EmbedPages<U>(
     protected open fun last(
         playerUI: PlayerUI
     ) : Question? {
-        if (pageLevel > number - 1) {
-            pageLevel -= number
+        if (pageLevel > elementsPerPages - 1) {
+            pageLevel -= elementsPerPages
             addComponents()
         }
         return null
@@ -62,7 +62,7 @@ open class EmbedPages<U>(
 
     open val components: List<InteractionUICustomUI>
         get() =
-            if (pageLevel > 0 && pageLevel + number < uArrayList.size) {
+            if (pageLevel > 0 && pageLevel + elementsPerPages < uArrayList.size) {
                 listOf(
                     SimpleInteractionUICustomUI(
                         idLast,
@@ -92,7 +92,7 @@ open class EmbedPages<U>(
                         null
                     )
                 )
-            } else if (pageLevel + number < uArrayList.size) {
+            } else if (pageLevel + elementsPerPages < uArrayList.size) {
                 listOf(
                     SimpleInteractionUICustomUI(
                         idNext,
@@ -116,6 +116,6 @@ open class EmbedPages<U>(
             }
 
     override fun getFields(): List<Pair<String, String>> {
-        return uContentOf(pageLevel, number.coerceAtMost(uArrayList.size - pageLevel), uArrayList)
+        return uContentOf(pageLevel, elementsPerPages.coerceAtMost(uArrayList.size - pageLevel), uArrayList)
     }
 }
