@@ -222,96 +222,92 @@ val TRAVEL_MENU = MenuBuilderFactoryUI(
                     val timeMillisToTravel = timeMillisOnePixel * path.size
                     val priceToTravel = priceToTravelWithEffect(player, path.size)
 
-                    playerUI.setLongCustomUI(MenuBuilderUI(
-                        "Comment voyager ?",
-                        "Il existe 2 moyens de voyager de façon simple",
-                        ui
+                    val builderTime = MenuBuilderFactoryUI(
+                        "Confirmer",
+                        "Confirmer le voyage ?"
                     )
-                        .setImage(image)
                         .addButton(
-                            "Temps",
-                            "Vous allez prendre $timeMillisToTravel ms pour aller jusqu'à ce pixel. Attention : les effets peuvent ne pas fonctionner si ils ne sont pas actifs à l'arrivée."
+                            "Oui",
+                            "Oui je veux aller jusqu'à ce pixel"
                         ) { pui ->
-                            pui.setLongCustomUI(
-                                MenuBuilderUI(
-                                    "Confirmer",
-                                    "Confirmer le voyage ?",
-                                    pui
-                                )
-                                    .addButton(
-                                        "Oui",
-                                        "Oui je veux aller jusqu'à ce pixel"
-                                    ) { _ ->
-                                        player.setPath(
-                                            path,
-                                            "default_time",
-                                            timeMillisOnePixel
-                                        )
-                                        pui.addMessage(
-                                            Message("Vous êtes maintenant sur le trajet vers le pixel ($x, $y)")
-                                        )
-                                        null
-                                    }
-                                    .addButton(
-                                        "Non",
-                                        "Non je ne veux pas aller jusqu'à ce pixel"
-                                    ) { _ ->
-                                        pui.addMessage(
-                                            Message("Vous avez annulé le voyage")
-                                        )
-                                        null
-                                    }
+                            player.setPath(
+                                path,
+                                "default_time",
+                                timeMillisOnePixel
+                            )
+                            pui.addMessage(
+                                Message("Vous êtes maintenant sur le trajet vers le pixel ($x, $y)")
                             )
                             null
                         }
                         .addButton(
-                            "Argent",
-                            "Vous allez dépenser $priceToTravel ${Resource.RABBIT_COIN.show} pour aller jusqu'à ce pixel. Les effets sont pris en compte."
+                            "Non",
+                            "Non je ne veux pas aller jusqu'à ce pixel"
                         ) { pui ->
-                            pui.setLongCustomUI(
-                                MenuBuilderUI(
-                                    "Confirmer",
-                                    "Confirmer le voyage ?",
-                                    pui
-                                )
-                                    .addButton(
-                                        "Oui",
-                                        "Oui je veux aller jusqu'à ce pixel"
-                                    ) { _ ->
-                                        // get the player's money
-                                        val money = player.getMoney()
-                                        if (money < priceToTravel) {
-                                            pui.addMessage(
-                                                Message(
-                                                    "Vous n'avez pas assez d'argent pour aller jusqu'à ce pixel"
-                                                )
-                                            )
-                                        } else {
-                                            player.removeMoney(priceToTravel)
-                                            player["place_${worldEnum.progName}_x"] =
-                                                x.toString()
-                                            player["place_${worldEnum.progName}_y"] =
-                                                y.toString()
-                                            pui.addMessage(
-                                                Message("Vous êtes maintenant sur le pixel ($x, $y)")
-                                            )
-                                        }
-                                        null
-                                    }
-                                    .addButton(
-                                        "Non",
-                                        "Non je ne veux pas aller jusqu'à ce pixel"
-                                    ) { _ ->
-                                        pui.addMessage(
-                                            Message(
-                                                "Vous avez annulé le voyage"
-                                            )
-                                        )
-                                        null
-                                    }
+                            pui.addMessage(
+                                Message("Vous avez annulé le voyage")
                             )
                             null
-                        })
+                        }
+
+                    val builderMoney = MenuBuilderFactoryUI(
+                        "Confirmer",
+                        "Confirmer le voyage ?"
+                    )
+                        .addButton(
+                            "Oui",
+                            "Oui je veux aller jusqu'à ce pixel"
+                        ) { pui ->
+                            // get the player's money
+                            val money = player.getMoney()
+                            if (money < priceToTravel) {
+                                pui.addMessage(
+                                    Message(
+                                        "Vous n'avez pas assez d'argent pour aller jusqu'à ce pixel"
+                                    )
+                                )
+                            } else {
+                                player.removeMoney(priceToTravel)
+                                player["place_${worldEnum.progName}_x"] =
+                                    x.toString()
+                                player["place_${worldEnum.progName}_y"] =
+                                    y.toString()
+                                pui.addMessage(
+                                    Message("Vous êtes maintenant sur le pixel ($x, $y)")
+                                )
+                            }
+                            null
+                        }
+                        .addButton(
+                            "Non",
+                            "Non je ne veux pas aller jusqu'à ce pixel"
+                        ) { pui ->
+                            pui.addMessage(
+                                Message(
+                                    "Vous avez annulé le voyage"
+                                )
+                            )
+                            null
+                        }
+
+                    val builder = MenuBuilderFactoryUI(
+                        "Comment voyager ?",
+                        "Il existe 2 moyens de voyager de façon simple"
+                    )
+                        .addMenu(
+                            "Temps",
+                            "Vous allez prendre $timeMillisToTravel ms pour aller jusqu'à ce pixel. Attention : les effets peuvent ne pas fonctionner si ils ne sont pas actifs à l'arrivée.",
+                            builderTime
+                        )
+                        .addMenu(
+                            "Argent",
+                            "Vous allez dépenser $priceToTravel ${Resource.RABBIT_COIN.show} pour aller jusqu'à ce pixel. Les effets sont pris en compte.",
+                            builderMoney
+                        )
+
+                    playerUI.setLongCustomUI(
+                        builder.build(playerUI, image)
+                    )
                     return null
                 }
             }
