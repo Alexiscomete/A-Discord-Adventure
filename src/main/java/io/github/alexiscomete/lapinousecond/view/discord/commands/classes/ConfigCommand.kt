@@ -193,7 +193,7 @@ class ConfigCommand : Command(
                 "Votre serveur discord a été automatiquement assigné au ${world.nameRP}. Explications :\nLe Dibistan a un drapeau qui est aussi son territoire principal. Si votre serveur discord est un État ou une région qui a un territoire en forme de polygone sur le drapeau, alors son monde est le ${WorldEnum.DIBIMAP.nameRP} sinon c'est le monde ${WorldEnum.NORMAL.nameRP}. Les mécaniques sont différentes dans les 2 mondes. **Le monde détecté est-il correct ?**",
                 ui
             ).addButton(
-                "Oui", "Le monde est correcte et je continue la configuration. **Irréversible**"
+                "Oui", "Le monde est correct et je continue la configuration. **Irréversible**"
             ) { playerUI ->
 
                 when (world) {
@@ -248,7 +248,7 @@ class ConfigCommand : Command(
                 }
                 null
             }.addButton(
-                "Non", "Le monde est incorrecte ou je veux changer quelque chose. **Réversible**"
+                "Non", "Le monde est incorrect ou je veux changer quelque chose. **Réversible**"
             ) { playerUI ->
                 playerUI.addMessage(Message("Contactez un administrateur pour changer le monde si c'est le problème"))
                 null

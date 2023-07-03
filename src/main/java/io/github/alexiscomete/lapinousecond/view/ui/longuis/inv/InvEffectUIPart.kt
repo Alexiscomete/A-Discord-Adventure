@@ -3,6 +3,7 @@ package io.github.alexiscomete.lapinousecond.view.ui.longuis.inv
 import io.github.alexiscomete.lapinousecond.entity.effects.Effect
 import io.github.alexiscomete.lapinousecond.entity.effects.EffectEnum
 import io.github.alexiscomete.lapinousecond.entity.effects.TimedEffect
+import io.github.alexiscomete.lapinousecond.view.discord.commands.classes.SECOND_TO_MILLIS
 
 class InvEffectUIPart(
     private val effectType: EffectEnum
@@ -13,7 +14,7 @@ class InvEffectUIPart(
     fun add(effect: Effect) {
         totalLevel += effect.level
         description += if (effect is TimedEffect) {
-            "; ${effect.level} (${effect.remainingDuration/1000}s)"
+            "; ${effect.level} (${effect.remainingDuration / SECOND_TO_MILLIS}s)"
         } else {
             "; ${effect.level}"
         }

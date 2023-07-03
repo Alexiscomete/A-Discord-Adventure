@@ -35,7 +35,7 @@ class InvEffectsUI(playerUI: PlayerUI) : EmbedPages<InvEffectUIPart>(
                 InteractionStyle.NORMAL,
                 {
                     currentUI.setLongCustomUI(InvResourcesUI(currentUI))
-                    return@SimpleInteractionUICustomUI null
+                    null
                 },
                 null
             ),
@@ -46,7 +46,7 @@ class InvEffectsUI(playerUI: PlayerUI) : EmbedPages<InvEffectUIPart>(
                 InteractionStyle.NORMAL,
                 {
                     currentUI.setLongCustomUI(InvInfosUI(currentUI))
-                    return@SimpleInteractionUICustomUI null
+                    null
                 },
                 null
             ),
@@ -57,7 +57,7 @@ class InvEffectsUI(playerUI: PlayerUI) : EmbedPages<InvEffectUIPart>(
                 InteractionStyle.NORMAL,
                 {
                     currentUI.setLongCustomUI(InvItemsUI(currentUI))
-                    return@SimpleInteractionUICustomUI null
+                    null
                 },
                 null
             )
