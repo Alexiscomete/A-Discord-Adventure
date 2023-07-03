@@ -10,10 +10,12 @@ import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.MapTile
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.TreeTrunk
 import java.util.*
 
+const val DEFAULT_SIZE_RENDER = 21
+const val TREES_DEFAULT_SIZE = 2
+
 class WorldRenderScene(
-    val canvas: WorldCanvas, x: Int, y: Int, private val zoomLevel: Zooms, val world: WorldManager
+    val canvas: WorldCanvas, x: Int, y: Int, private val zoomLevel: Zooms, val world: WorldManager, val size: Int = DEFAULT_SIZE_RENDER
 ) {
-    val size = 21
     val xReset = (size / 2)
     val yReset = (size / 2)
 
@@ -89,7 +91,7 @@ class WorldRenderScene(
                             && world.pathLevel(x.toDouble(), y.toDouble()) > 0.8
                             && world.riverLevel(x.toDouble(), y.toDouble()) > 0.8
                         ) {
-                            return@getOrPut TreeTrunk(x, y, 2)
+                            return@getOrPut TreeTrunk(x, y, TREES_DEFAULT_SIZE)
                         }
                     }
 

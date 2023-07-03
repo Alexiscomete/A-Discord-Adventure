@@ -2,6 +2,8 @@ package io.github.alexiscomete.lapinousecond.worlds.map.tiles.render
 
 import java.awt.Color
 
+const val HASH_CODE_MULTIPLIER = 31
+
 data class JustDrawIt(
     val letter: Char,
     val color: Color,
@@ -20,8 +22,8 @@ data class JustDrawIt(
 
     override fun hashCode(): Int {
         var result = letter.hashCode()
-        result = 31 * result + color.hashCode()
-        result = 31 * result + texture.contentDeepHashCode()
+        result = HASH_CODE_MULTIPLIER * result + color.hashCode()
+        result = HASH_CODE_MULTIPLIER * result + texture.contentDeepHashCode()
         return result
     }
 }

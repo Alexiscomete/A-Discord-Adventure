@@ -1,17 +1,20 @@
 package io.github.alexiscomete.lapinousecond.worlds.map.tiles.types
 
+import io.github.alexiscomete.lapinousecond.worlds.map.tiles.TREES_DEFAULT_SIZE
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.Tile
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.Sprite
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.textures.TexturesInCode
 import java.awt.Color
 
+const val TREE_TRUNK_PRIORITY = 1
+
 class TreeTrunk(
     override val x: Int,
     override val y: Int,
-    steps: Int = 2,
+    steps: Int = TREES_DEFAULT_SIZE,
     maxSteps: Int = steps,
 ) : BaseTileGroup(
-    priority = 1
+    priority = TREE_TRUNK_PRIORITY
 ) {
 
     override var up: Tile? = run {

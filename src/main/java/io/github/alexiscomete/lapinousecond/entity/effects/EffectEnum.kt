@@ -2,8 +2,10 @@ package io.github.alexiscomete.lapinousecond.entity.effects
 
 import io.github.alexiscomete.lapinousecond.entity.entities.Player
 
+const val DEFAULT_TIME_FOR_ONE_PIXEL = 10000L
+
 fun timeMillisForOnePixel(player: Player): Long {
-    return 10000L / (player.getEffectLevel(EffectEnum.SPEED_TRAVELING) + 1)
+    return DEFAULT_TIME_FOR_ONE_PIXEL / (player.getEffectLevel(EffectEnum.SPEED_TRAVELING) + 1)
 }
 
 fun priceToTravelWithEffect(player: Player, pathSize: Int): Double {

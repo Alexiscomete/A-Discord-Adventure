@@ -5,6 +5,8 @@ import io.github.alexiscomete.lapinousecond.worlds.map.tiles.Tile
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.WorldRenderScene
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.MultiTilesManager
 
+const val DEFAULT_TEMPLATE_PRIORITY = 2
+
 abstract class BaseOpenedTemplatedTile(
     override val x: Int,
     override val y: Int,
@@ -41,7 +43,7 @@ abstract class BaseOpenedTemplatedTile(
                 worldRenderScene, xToUse + 1, yToUse, distance + 1
             )
         }
-        worldRenderScene.canvas.drawTile(this, xToUse, yToUse, 2)
+        worldRenderScene.canvas.drawTile(this, xToUse, yToUse, DEFAULT_TEMPLATE_PRIORITY)
     }
 
     override fun addToRenderQueue(worldRenderScene: WorldRenderScene, x: Int, y: Int, distance: Int) {

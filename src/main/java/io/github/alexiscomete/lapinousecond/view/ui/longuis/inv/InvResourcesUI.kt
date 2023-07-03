@@ -19,7 +19,7 @@ class InvResourcesUI(playerUI: PlayerUI) : StaticUI(
                 InteractionStyle.NORMAL,
                 {
                     playerUI.setLongCustomUI(InvInfosUI(playerUI))
-                    return@SimpleInteractionUICustomUI null
+                    null
                 },
                 null
             ),
@@ -30,7 +30,7 @@ class InvResourcesUI(playerUI: PlayerUI) : StaticUI(
                 InteractionStyle.NORMAL,
                 {
                     playerUI.setLongCustomUI(InvItemsUI(playerUI))
-                    return@SimpleInteractionUICustomUI null
+                    null
                 },
                 null
             ),
@@ -41,7 +41,7 @@ class InvResourcesUI(playerUI: PlayerUI) : StaticUI(
                 InteractionStyle.NORMAL,
                 {
                     playerUI.setLongCustomUI(InvEffectsUI(playerUI))
-                    return@SimpleInteractionUICustomUI null
+                    null
                 },
                 null
             )
@@ -97,7 +97,7 @@ class InvResourcesUI(playerUI: PlayerUI) : StaticUI(
     }
 
     override fun getLinkedImage(): String {
-        return "https://cdn.discordapp.com/attachments/854322477152337920/924612939879702588/unknown.png"
+        return INV_IMAGE_URL
     }
 
     override fun getBufferedImage(): BufferedImage? {

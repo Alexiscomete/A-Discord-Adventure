@@ -5,6 +5,7 @@ import io.github.alexiscomete.lapinousecond.worlds.map.tiles.Tile
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.WorldRenderScene
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.MultiTilesManager
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.Sprite
+import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.RENDER_DISTANCE_DEFAULT
 
 abstract class BaseClosedTemplatedTile(
     override val x: Int,
@@ -38,12 +39,12 @@ abstract class BaseClosedTemplatedTile(
         if (rendered) return
         rendered = true
         multiTilesManager.iAmLoaded()
-        if (distance > 50) return
+        if (distance > RENDER_DISTANCE_DEFAULT) return
         worldRenderScene.canvas.drawTile(this, xToUse, yToUse, 5)
     }
 
     override fun addToRenderQueue(worldRenderScene: WorldRenderScene, x: Int, y: Int, distance: Int) {
-        if (inQueue || distance > 50) return
+        if (inQueue || distance > RENDER_DISTANCE_DEFAULT) return
         worldRenderScene.renderQueue.add(RenderInfos(this, x, y, distance))
         inQueue = true
     }

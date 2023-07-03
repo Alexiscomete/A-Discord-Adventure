@@ -8,16 +8,16 @@ import io.github.alexiscomete.lapinousecond.view.ui.playerui.PlayerUI
 
 class InvItemsUI(playerUI: PlayerUI) : EmbedPagesWithInteractions<Item>(
     run {
-        return@run playerUI.getPlayer().getAllItems()
+        playerUI.getPlayer().getAllItems()
     },
     { i: Int, i1: Int, items: ArrayList<Item> ->
-        val pairs = items.subList(i, i1).map { Pair(it.name + " (" + it.id.toString() + ")", it.description) }
+        val pairs = items.subList(i, i1).map { Pair("${it.name} (${it.id})", it.description) }
         pairs.ifEmpty { listOf(Pair("Aucun item", "Revenez plus tard")) }
     },
-    { u: Item, player: PlayerUI ->
+    { _: Item, _: PlayerUI ->
         null
     },
-    "https://cdn.discordapp.com/attachments/854322477152337920/924612939879702588/unknown.png",
+    INV_IMAGE_URL,
     null,
     "Inventaire de vos items",
     "Les items sont utilisables et ne fusionnent pas dans l'inventaire contrairement aux ressources.",
@@ -32,7 +32,7 @@ class InvItemsUI(playerUI: PlayerUI) : EmbedPagesWithInteractions<Item>(
                 InteractionStyle.NORMAL,
                 {
                     currentUI.setLongCustomUI(InvResourcesUI(currentUI))
-                    return@SimpleInteractionUICustomUI null
+                    null
                 },
                 null
             ),
@@ -43,7 +43,7 @@ class InvItemsUI(playerUI: PlayerUI) : EmbedPagesWithInteractions<Item>(
                 InteractionStyle.NORMAL,
                 {
                     currentUI.setLongCustomUI(InvInfosUI(currentUI))
-                    return@SimpleInteractionUICustomUI null
+                    null
                 },
                 null
             ),
@@ -54,7 +54,7 @@ class InvItemsUI(playerUI: PlayerUI) : EmbedPagesWithInteractions<Item>(
                 InteractionStyle.NORMAL,
                 {
                     currentUI.setLongCustomUI(InvEffectsUI(currentUI))
-                    return@SimpleInteractionUICustomUI null
+                    null
                 },
                 null
             )

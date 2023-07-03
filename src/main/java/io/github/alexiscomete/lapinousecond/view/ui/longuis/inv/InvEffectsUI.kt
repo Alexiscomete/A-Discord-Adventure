@@ -19,7 +19,7 @@ class InvEffectsUI(playerUI: PlayerUI) : EmbedPages<InvEffectUIPart>(
             val part = dico.getOrPut(effect.type) { InvEffectUIPart(effect.type) }
             part.add(effect)
         }
-        return@run arrayListOf(*dico.values.toTypedArray())
+        arrayListOf(*dico.values.toTypedArray())
     },
     { i: Int, i1: Int, invEffectUIParts: ArrayList<InvEffectUIPart> ->
         invEffectUIParts.subList(i, i1).map { it.getPair() }

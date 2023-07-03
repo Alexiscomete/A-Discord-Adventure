@@ -5,11 +5,13 @@ import io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.Sprite
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.textures.TexturesInCode
 import java.awt.Color
 
+const val TREE_FOLIAGE_PRIORITY = TREE_TRUNK_PRIORITY + 1
+
 class TreeFoliage(
     override val x: Int,
     override val y: Int,
     steps: Int,
-) : BaseTileGroup(priority = 2) {
+) : BaseTileGroup(priority = TREE_FOLIAGE_PRIORITY) {
     override var up: Tile? = run {
         // get a random number : 0, 1, 2
         if (steps == 0) {

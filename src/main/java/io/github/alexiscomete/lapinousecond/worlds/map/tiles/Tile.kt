@@ -3,6 +3,9 @@ package io.github.alexiscomete.lapinousecond.worlds.map.tiles
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.Sprite
 import java.awt.Color
 
+const val PIXEL_HEIGHT = 16
+const val PIXEL_WIDTH = 16
+
 interface Tile {
 
     val x: Int

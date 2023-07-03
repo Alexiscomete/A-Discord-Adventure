@@ -8,14 +8,13 @@ import io.github.alexiscomete.lapinousecond.view.ui.playerui.PlayerUI
 import io.github.alexiscomete.lapinousecond.view.ui.playerui.Question
 import io.github.alexiscomete.lapinousecond.worlds.WorldEnum
 import io.github.alexiscomete.lapinousecond.worlds.Zooms
+import io.github.alexiscomete.lapinousecond.worlds.map.tiles.PIXEL_HEIGHT
+import io.github.alexiscomete.lapinousecond.worlds.map.tiles.PIXEL_WIDTH
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.WorldRenderScene
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.JustDrawIt
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.TextureWorldCanvas
 import java.awt.Color
 import java.awt.image.BufferedImage
-
-const val PIXEL_HEIGHT = 16
-const val PIXEL_WIDTH = 16
 
 class PixelByPixelUI(
     private var playerUI: PlayerUI, private var linkedImage: String?
@@ -129,7 +128,7 @@ class PixelByPixelUI(
                 worldRenderScene = WorldRenderScene(
                     canvas, x, y, zooms, world.worldManager
                 )
-                return@SimpleInteractionUICustomUI null
+                null
             }),
             SimpleInteractionUICustomUI(
                 "up",
@@ -139,7 +138,7 @@ class PixelByPixelUI(
                 {
                     worldRenderScene.moveUp()
                     y = worldRenderScene.getY()
-                    return@SimpleInteractionUICustomUI null
+                    null
                 },
             ),
             SimpleInteractionUICustomUI("zoom_out", "🚁", "Zoom out", InteractionStyle.SECONDARY, {
@@ -150,7 +149,7 @@ class PixelByPixelUI(
                 worldRenderScene = WorldRenderScene(
                     canvas, x, y, zooms, world.worldManager
                 )
-                return@SimpleInteractionUICustomUI null
+                null
             }),
         ),
         listOf(
@@ -162,7 +161,7 @@ class PixelByPixelUI(
                 {
                     worldRenderScene.moveLeft()
                     x = worldRenderScene.getX()
-                    return@SimpleInteractionUICustomUI null
+                    null
                 },
             ), SimpleInteractionUICustomUI(
                 "down",
@@ -172,7 +171,7 @@ class PixelByPixelUI(
                 {
                     worldRenderScene.moveDown()
                     y = worldRenderScene.getY()
-                    return@SimpleInteractionUICustomUI null
+                    null
                 },
             ), SimpleInteractionUICustomUI(
                 "right",
@@ -182,7 +181,7 @@ class PixelByPixelUI(
                 {
                     worldRenderScene.moveRight()
                     x = worldRenderScene.getX()
-                    return@SimpleInteractionUICustomUI null
+                    null
                 },
             )
         ),

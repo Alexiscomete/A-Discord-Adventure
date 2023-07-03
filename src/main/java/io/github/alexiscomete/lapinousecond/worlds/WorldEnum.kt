@@ -15,6 +15,8 @@ import javax.imageio.ImageIO
 import kotlin.math.pow
 import kotlin.math.sqrt
 
+const val MAX_PATH_CACHE_SIZE = 4000
+
 var complexNoiseBuilderForCaves = ComplexNoiseBuilder(
     ValueOperationNodeBuilder(
         ValueOperationNodeBuilder(
@@ -491,7 +493,7 @@ enum class WorldEnum(
                 }
             }
             closedList.add(current)
-            require(openList.size <= 4000) { "Le chemin met trop de puissance à calculer, essayez en plusieurs fois" }
+            require(openList.size <= MAX_PATH_CACHE_SIZE) { "Le chemin met trop de puissance à calculer, essayez en plusieurs fois" }
         }
         throw IllegalArgumentException("Aucun chemin trouvé")
     }

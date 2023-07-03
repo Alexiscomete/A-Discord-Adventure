@@ -4,6 +4,9 @@ import io.github.alexiscomete.lapinousecond.data.dataclass.ProgressionBar
 import io.github.alexiscomete.lapinousecond.data.managesave.CacheGetSet
 import kotlin.math.roundToInt
 
+const val ROUND_PRECISION = 1000.0
+const val PROGRESSION_STRING_SIZE = 15
+
 class Level(
     val entity: CacheGetSet,
     private val field: String,
@@ -60,7 +63,7 @@ class Level(
     val xpInCurrentLevel
         get() = xpInCurrentLevel(if (entity[field] == "") 0.0 else entity[field].toDouble())
 
-    fun addXp(xp: Double) : Pair<Int, Int>? {
+    fun addXp(xp: Double): Pair<Int, Int>? {
         val currentLevel = level
         entity[field] = ((if (entity[field] == "") 0.0 else entity[field].toDouble()) + xp).toString()
         val newLevel = level
@@ -95,7 +98,7 @@ class Level(
             "⬜",
             totalXpForNextLevel,
             xpInCurrentLevel,
-            15
-        ).bar + " **$level** (${(xpInCurrentLevel * 10000.0).roundToInt() / 10000.0}/${(totalXpForNextLevel * 10000.0).roundToInt() / 10000.0})"
+            PROGRESSION_STRING_SIZE
+        ).bar + " **$level** (${(xpInCurrentLevel * ROUND_PRECISION).roundToInt() / ROUND_PRECISION}/${(totalXpForNextLevel * ROUND_PRECISION).roundToInt() / ROUND_PRECISION})"
     }
 }

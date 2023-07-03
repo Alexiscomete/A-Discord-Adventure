@@ -6,6 +6,8 @@ import io.github.alexiscomete.lapinousecond.view.ui.playerui.PlayerUI
 import io.github.alexiscomete.lapinousecond.view.ui.longuis.StaticUI
 import java.awt.image.BufferedImage
 
+const val INV_IMAGE_URL = "https://cdn.discordapp.com/attachments/854322477152337920/924612939879702588/unknown.png"
+
 class InvInfosUI(playerUI: PlayerUI) : StaticUI(
     interactionUICustomUILists = listOf(
         listOf(
@@ -16,7 +18,7 @@ class InvInfosUI(playerUI: PlayerUI) : StaticUI(
                 InteractionStyle.NORMAL,
                 {
                     playerUI.setLongCustomUI(InvResourcesUI(playerUI))
-                    return@SimpleInteractionUICustomUI null
+                    null
                 },
                 null
             ),
@@ -27,7 +29,7 @@ class InvInfosUI(playerUI: PlayerUI) : StaticUI(
                 InteractionStyle.NORMAL,
                 {
                     playerUI.setLongCustomUI(InvItemsUI(playerUI))
-                    return@SimpleInteractionUICustomUI null
+                    null
                 },
                 null
             ),
@@ -38,7 +40,7 @@ class InvInfosUI(playerUI: PlayerUI) : StaticUI(
                 InteractionStyle.NORMAL,
                 {
                     playerUI.setLongCustomUI(InvEffectsUI(playerUI))
-                    return@SimpleInteractionUICustomUI null
+                    null
                 },
                 null
             )
@@ -68,7 +70,7 @@ class InvInfosUI(playerUI: PlayerUI) : StaticUI(
     }
 
     override fun getLinkedImage(): String {
-        return "https://cdn.discordapp.com/attachments/854322477152337920/924612939879702588/unknown.png"
+        return INV_IMAGE_URL
     }
 
     override fun getBufferedImage(): BufferedImage? {

@@ -62,7 +62,7 @@ abstract class BaseTileGroup(
     override fun render(worldRenderScene: WorldRenderScene, xToUse: Int, yToUse: Int, distance: Int) {
         if (rendered) return
         rendered = true
-        if (distance > 50) return
+        if (distance > RENDER_DISTANCE_DEFAULT) return
         up?.addToRenderQueue(worldRenderScene, xToUse, yToUse - 1, distance + 1)
         down?.addToRenderQueue(worldRenderScene, xToUse, yToUse + 1, distance + 1)
         left?.addToRenderQueue(
