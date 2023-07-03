@@ -149,14 +149,14 @@ class InteractCommandBase : Command(
                     buttonClickEvent.addMessage(Message("Vous êtes maintenant dans le bâtiment ${building["nameRP"]} !"))
                 }
 
-                fun helpBuilding(building: Building, playerUI: PlayerUI): Question {
-                    // Etape 1 : demander au joueur le montant à entrer en montrant le montant nécessaire
-                    // Etape 2 : vérifier que le joueur a assez d'argent et que le montant ne dépasse pas le montant nécessaire
-                    // Etape 3 : retirer l'argent du joueur et ajouter l'argent au bâtiment
+                fun helpBuilding(building: Building, playerUI: PlayerUI): Question =
+                // Etape 1 : demander au joueur le montant à entrer en montrant le montant nécessaire
+                // Etape 2 : vérifier que le joueur a assez d'argent et que le montant ne dépasse pas le montant nécessaire
+                // Etape 3 : retirer l'argent du joueur et ajouter l'argent au bâtiment
 
                     // Etape 1
 
-                    return Question(
+                    Question(
                         "Actuellement ${building["collect_value"]} / ${building["collect_target"]} rb",
                         QuestionField(
                             "Montant à donner",
@@ -188,9 +188,9 @@ class InteractCommandBase : Command(
                                 "Vous avez donné $money ${Resource.RABBIT_COIN.show} au bâtiment ${building["nameRP"]} ! <@${building["owner"]}> peut vous remerciez !"
                             )
                         )
-                        return@Question null
+                        null
                     }
-                }
+
 
                 fun sendBuildingsInEmbed(
                     title: String,
@@ -201,7 +201,7 @@ class InteractCommandBase : Command(
                         EmbedPagesWithInteractions(
                             buildings,
                             { start: Int, max: Int, buildingsL: ArrayList<Building> ->
-                                return@EmbedPagesWithInteractions (start until max).map { i ->
+                                (start until max).map { i ->
                                     val building = buildingsL[i]
                                     Pair(building.title(), building.descriptionShort())
                                 }
@@ -279,7 +279,7 @@ class InteractCommandBase : Command(
                                         EmbedPagesWithInteractions(
                                             buildings,
                                             { start: Int, max: Int, buildingsL: ArrayList<Building> ->
-                                                return@EmbedPagesWithInteractions (start until max).map { i ->
+                                                (start until max).map { i ->
                                                     val building = buildingsL[i]
                                                     Pair(building.title(), building.descriptionShort())
                                                 }
@@ -349,7 +349,7 @@ class InteractCommandBase : Command(
                                         EmbedPagesWithInteractions(
                                             buildsTypes,
                                             { start: Int, max: Int, buildsTypesL: ArrayList<Buildings> ->
-                                                return@EmbedPagesWithInteractions (start until max).map { i ->
+                                                (start until max).map { i ->
                                                     val buildType = buildsTypesL[i]
                                                     Pair(
                                                         buildType.name.lowercase(),
@@ -371,7 +371,7 @@ class InteractCommandBase : Command(
                                                             building2.descriptionShort()
                                                         )
                                                     )
-                                                    return@EmbedPagesWithInteractions null
+                                                    null
                                                 } else {
                                                     throw IllegalArgumentException("Vous ne pouvez pas construire ce bâtiment")
                                                 }
