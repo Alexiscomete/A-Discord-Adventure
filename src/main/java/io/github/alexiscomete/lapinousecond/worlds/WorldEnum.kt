@@ -3,6 +3,8 @@ package io.github.alexiscomete.lapinousecond.worlds
 import io.github.alexiscomete.lapinousecond.entity.entities.Player
 import io.github.alexiscomete.lapinousecond.worlds.map.Node
 import io.github.alexiscomete.lapinousecond.worlds.map.PixelManager
+import io.github.alexiscomete.lapinousecond.worlds.map.tiles.WorldRenderScene
+import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.ImageWorldCanvas
 import procedural_generation.noise.ComplexNoiseBuilder
 import procedural_generation.noise.NoiseMapBuilder
 import procedural_generation.noise.nodes.*
@@ -12,6 +14,7 @@ import java.awt.Image
 import java.awt.image.BufferedImage
 import java.io.IOException
 import javax.imageio.ImageIO
+import kotlin.math.max
 import kotlin.math.pow
 import kotlin.math.sqrt
 
@@ -555,9 +558,24 @@ enum class WorldEnum(
     }
 
     fun drawPath(path: ArrayList<PixelManager>): BufferedImage {
-        val img = worldManager.uniqueTotalImage()
+        val maxX = path.maxOf { it.x }
+        val maxY = path.maxOf { it.y }
+        val minX = path.minOf { it.x }
+        val minY = path.minOf { it.y }
+        val maxSize = max(maxX - minX, maxY - minY) + 2
+        val canvas = ImageWorldCanvas()
+        val renderScene = WorldRenderScene(
+            canvas,
+            minX-1+(maxSize/2),
+            minY-1+(maxSize/2),
+            Zooms.ZOOM_OUT,
+            worldManager,
+            maxSize
+        )
+        renderScene.renderAll()
+        val img = canvas.bufferedImage
         for (p in path) {
-            img.setRGB(worldManager.xImage(p.x), worldManager.yImage(p.y), Color.RED.rgb)
+            img.setRGB(p.x - minX + 1, p.y - minY + 1, Color.RED.rgb)
         }
         return img
     }

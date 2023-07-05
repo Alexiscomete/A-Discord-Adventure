@@ -31,6 +31,7 @@ class WorldProcedural(
         return isLand(x1, y1)
     }
 
+    @Deprecated("Please use WorldRenderScene instead")
     override fun zoom(zoneToAdapt: ZoneToAdapt): BufferedImage {
         // generate the image
         val image = BufferedImage(zoneToAdapt.width, zoneToAdapt.height, BufferedImage.TYPE_INT_RGB)
@@ -43,6 +44,7 @@ class WorldProcedural(
         return image
     }
 
+    @Deprecated("Please use WorldRenderScene instead")
     override fun zoomWithDecorElements(
         zoneToAdapt: ZoneToAdapt,
         image: BufferedImage?,
@@ -118,6 +120,7 @@ class WorldProcedural(
         }
     }
 
+    @Deprecated("Please use WorldRenderScene instead")
     override fun uniqueTotalImage(): BufferedImage {
         // generate the image
         val image = BufferedImage(maxX, maxY, BufferedImage.TYPE_INT_RGB)
@@ -130,10 +133,12 @@ class WorldProcedural(
         return image
     }
 
+    @Deprecated("Always return x", ReplaceWith("x"))
     override fun xImage(x: Int): Int {
         return x
     }
 
+    @Deprecated("Always return y", ReplaceWith("y"))
     override fun yImage(y: Int): Int {
         return y
     }
