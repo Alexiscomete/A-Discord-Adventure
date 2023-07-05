@@ -101,7 +101,7 @@ class PixelByPixelUI(
     override fun getBufferedImage(): BufferedImage {
         worldRenderScene.renderAll()
         canvas.justDrawThisOver(
-            justDrawPlayer, worldRenderScene.xReset, worldRenderScene.yReset
+            justDrawPlayer, worldRenderScene.worldRenderer.xReset, worldRenderScene.worldRenderer.yReset
         )
         return world.zoomWithDecorElementsSquare(x, y, worldRenderScene.size / 2, zooms, canvas.bufferedImage, player)
     }

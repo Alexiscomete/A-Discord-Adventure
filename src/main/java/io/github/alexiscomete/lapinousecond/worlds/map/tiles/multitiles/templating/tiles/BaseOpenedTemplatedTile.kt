@@ -1,9 +1,9 @@
 package io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.templating.tiles
 
-import io.github.alexiscomete.lapinousecond.worlds.map.tiles.RenderInfos
+import io.github.alexiscomete.lapinousecond.worlds.map.tiles.RenderingType
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.Tile
-import io.github.alexiscomete.lapinousecond.worlds.map.tiles.WorldRenderScene
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.MultiTilesManager
+import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.WorldCanvas
 
 const val DEFAULT_TEMPLATE_PRIORITY = 2
 
@@ -29,26 +29,20 @@ abstract class BaseOpenedTemplatedTile(
         return rendered
     }
 
-    override fun render(worldRenderScene: WorldRenderScene, xToUse: Int, yToUse: Int, distance: Int) {
-        if (rendered) return
+    override fun render(
+        xToUse: Int,
+        yToUse: Int,
+        distance: Int,
+        canvas: WorldCanvas
+    ): RenderingType {
+        if (rendered) return RenderingType.NO_RENDER
         rendered = true
         multiTilesManager.iAmLoaded()
+        canvas.drawTile(this, xToUse, yToUse, DEFAULT_TEMPLATE_PRIORITY)
         if (distance <= threshold) {
-            up?.addToRenderQueue(worldRenderScene, xToUse, yToUse - 1, distance + 1)
-            down?.addToRenderQueue(worldRenderScene, xToUse, yToUse + 1, distance + 1)
-            left?.addToRenderQueue(
-                worldRenderScene, xToUse - 1, yToUse, distance + 1
-            )
-            right?.addToRenderQueue(
-                worldRenderScene, xToUse + 1, yToUse, distance + 1
-            )
+            return RenderingType.ONLY_IF_EXIST
         }
-        worldRenderScene.canvas.drawTile(this, xToUse, yToUse, DEFAULT_TEMPLATE_PRIORITY)
-    }
-
-    override fun addToRenderQueue(worldRenderScene: WorldRenderScene, x: Int, y: Int, distance: Int) {
-        if (inQueue) return
-        worldRenderScene.renderQueue.add(RenderInfos(this, x, y, distance))
+        return RenderingType.NO_RENDER
     }
 
     override fun resetRender() {
@@ -56,7 +50,7 @@ abstract class BaseOpenedTemplatedTile(
         inQueue = false
     }
 
-    override fun delete(worldRenderScene: WorldRenderScene) {
+    override fun delete() {
         up?.down = null
         down?.up = null
         left?.right = null

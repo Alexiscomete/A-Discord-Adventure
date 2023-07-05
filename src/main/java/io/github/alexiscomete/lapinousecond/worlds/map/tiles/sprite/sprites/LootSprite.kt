@@ -2,6 +2,7 @@ package io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.sprites
 
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.Tile
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.WorldRenderScene
+import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.WorldCanvas
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.Sprite
 import java.awt.Color
 
@@ -16,11 +17,11 @@ class LootSprite(override var tile: Tile) : Sprite {
 
     private var opened = false
 
-    override fun render(worldRenderScene: WorldRenderScene, xToUse: Int, yToUse: Int, distance: Int) {
+    override fun render(canvas: WorldCanvas, xToUse: Int, yToUse: Int, distance: Int) {
         if (!opened && distance <= 1) {
             opened = true
         }
-        worldRenderScene.canvas.drawSprite(this, xToUse, yToUse, 5)
+        canvas.drawSprite(this, xToUse, yToUse, 5)
     }
 
     override fun resetRender() {
@@ -29,10 +30,6 @@ class LootSprite(override var tile: Tile) : Sprite {
 
     override fun isRendered(): Boolean {
         return tile.isRendered()
-    }
-
-    override fun addToRenderQueue(worldRenderScene: WorldRenderScene, x: Int, y: Int, distance: Int) {
-        return
     }
 
     override fun color(): Color {

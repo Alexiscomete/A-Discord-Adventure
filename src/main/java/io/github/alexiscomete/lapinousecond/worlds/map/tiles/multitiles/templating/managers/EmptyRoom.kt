@@ -1,6 +1,5 @@
 package io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.templating.managers
 
-import io.github.alexiscomete.lapinousecond.worlds.map.tiles.WorldRenderScene
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.ComplexTile
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.MultiTilesManager
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.templating.contexts.TemplateWorld
@@ -77,9 +76,9 @@ class EmptyRoom(
         return !isLoaded
     }
 
-    override fun removeAllTiles(worldRenderScene: WorldRenderScene) {
+    override fun removeAllTiles() {
         dicoTilesInt.forEach { (_, tile) ->
-            tile.delete(worldRenderScene)
+            tile.delete()
         }
         dicoTilesInt.clear()
     }
@@ -95,17 +94,17 @@ class EmptyRoom(
         }
     }
 
-    override fun delete(worldRenderScene: WorldRenderScene) {
-        removeAllTiles(worldRenderScene)
+    override fun delete() {
+        removeAllTiles()
     }
 
-    override fun unload(worldRenderScene: WorldRenderScene) {
+    override fun unload() {
         val up = door.up
         val down = door.down
         val left = door.left
         val right = door.right
         dicoTilesInt.forEach { (_, tile) ->
-            tile.delete(worldRenderScene)
+            tile.delete()
         }
         dicoTilesInt.clear()
         dicoTilesInt[Pair(x, y)] = door

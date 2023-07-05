@@ -1,21 +1,17 @@
 package io.github.alexiscomete.lapinousecond.worlds.map.tiles.types
 
-import io.github.alexiscomete.lapinousecond.worlds.map.tiles.RenderInfos
+import io.github.alexiscomete.lapinousecond.worlds.map.tiles.RenderingType
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.Tile
-import io.github.alexiscomete.lapinousecond.worlds.map.tiles.WorldRenderScene
+import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.WorldCanvas
 
 abstract class BaseTileGroup(
     val priority: Int = 0
 ) : Tile {
-    override fun delete(worldRenderScene: WorldRenderScene) {
-        val value = worldRenderScene.dicoTiles[Pair(x, y)]
-        if (value == this) {
-            worldRenderScene.dicoTiles.remove(Pair(x, y))
-        }
-        up?.delete(worldRenderScene)
-        down?.delete(worldRenderScene)
-        left?.delete(worldRenderScene)
-        right?.delete(worldRenderScene)
+    override fun delete() {
+        up?.delete()
+        down?.delete()
+        left?.delete()
+        right?.delete()
         up = null
         down = null
         left = null
@@ -59,23 +55,17 @@ abstract class BaseTileGroup(
         resetRecursive()
     }
 
-    override fun render(worldRenderScene: WorldRenderScene, xToUse: Int, yToUse: Int, distance: Int) {
-        if (rendered) return
+    override fun render(
+        xToUse: Int,
+        yToUse: Int,
+        distance: Int,
+        canvas: WorldCanvas
+    ): RenderingType {
+        if (rendered) return RenderingType.NO_RENDER
         rendered = true
-        if (distance > RENDER_DISTANCE_DEFAULT) return
-        up?.addToRenderQueue(worldRenderScene, xToUse, yToUse - 1, distance + 1)
-        down?.addToRenderQueue(worldRenderScene, xToUse, yToUse + 1, distance + 1)
-        left?.addToRenderQueue(
-            worldRenderScene, xToUse - 1, yToUse, distance + 1
-        )
-        right?.addToRenderQueue(
-            worldRenderScene, xToUse + 1, yToUse, distance + 1
-        )
-        worldRenderScene.canvas.drawTile(this, xToUse, yToUse, priority)
+        if (distance > RENDER_DISTANCE_DEFAULT) return RenderingType.NO_RENDER
+        canvas.drawTile(this, xToUse, yToUse, priority)
+        return RenderingType.ONLY_IF_EXIST
     }
 
-    override fun addToRenderQueue(worldRenderScene: WorldRenderScene, x: Int, y: Int, distance: Int) {
-        if (inQueue) return
-        worldRenderScene.renderQueue.add(RenderInfos(this, x, y, distance))
-    }
 }

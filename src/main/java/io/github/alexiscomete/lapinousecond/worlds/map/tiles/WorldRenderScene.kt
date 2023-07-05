@@ -1,17 +1,9 @@
 package io.github.alexiscomete.lapinousecond.worlds.map.tiles
 
 import io.github.alexiscomete.lapinousecond.worlds.THRESHOLD_PATH
-import io.github.alexiscomete.lapinousecond.worlds.THRESHOLD_RIVER
 import io.github.alexiscomete.lapinousecond.worlds.WorldManager
 import io.github.alexiscomete.lapinousecond.worlds.Zooms
-import io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.MultiTilesManager
-import io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.templating.contexts.TemplateWorld
-import io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.templating.managers.EmptyRoom
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.WorldCanvas
-import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.MapTile
-import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.OCEAN_HEIGHT
-import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.TreeTrunk
-import java.util.*
 
 const val DEFAULT_SIZE_RENDER = 21
 const val TREES_DEFAULT_SIZE = 2
@@ -25,125 +17,48 @@ class WorldRenderScene(
     val canvas: WorldCanvas,
     x: Int,
     y: Int,
-    private val zoomLevel: Zooms,
+    zoomLevel: Zooms,
     val world: WorldManager,
     val size: Int = DEFAULT_SIZE_RENDER
 ) {
-    val xReset = (size / 2)
-    val yReset = (size / 2)
 
-    // permet de d'aller de plus en plus loin
-    var renderQueue: Queue<RenderInfos> = LinkedList()
-        private set
+    // NEW
 
-    private val multiTilesManagers = mutableListOf<MultiTilesManager>()
+    val tileGenerator = BaseTileGenerator(zoomLevel, world)
+    val worldRenderer = BaseWorldRenderer(size, canvas, tileGenerator)
 
-    var dicoTiles = mutableMapOf<Pair<Int, Int>, Tile>()
-        private set
-    private var currentTile = getOrGenerateTileAt(x, y)
+    private var currentTile = tileGenerator.getOrGenerateTileAt(x, y)
 
     fun renderAll() {
-        canvas.resetCanvas(size, size)
-        currentTile.render(this, xReset, yReset, 0)
-        while (!renderQueue.isEmpty()) {
-            val tile = renderQueue.poll()
-            tile.render(this)
-        }
-        val toDelete = mutableListOf<Tile>()
-        for (tile in dicoTiles.values) {
-            if (tile.isRendered()) {
-                tile.resetRender()
-            } else {
-                toDelete.add(tile)
-            }
-        }
-        toDelete.forEach { it.delete(this) }
-        val toDelete2 = mutableListOf<MultiTilesManager>()
-        multiTilesManagers.forEach {
-            if (it.canBeRemoved()) {
-                it.delete(this)
-                toDelete2.add(it)
-            }
-            it.resetIAmLoaded()
-        }
-        toDelete2.forEach { multiTilesManagers.remove(it) }
+        // RENDER
+
+        worldRenderer.renderAll(currentTile)
+
+        // UPDATE CACHE
+
+        tileGenerator.updateCache()
     }
 
     // ATTENTION : les cases vides d'une pièce nous sortent des pièces
 
     fun moveUp() {
-        val next = currentTile.up ?: getOrGenerateTileAt(currentTile.x, currentTile.y - 1)
+        val next = currentTile.up ?: tileGenerator.getOrGenerateTileAt(currentTile.x, currentTile.y - 1)
         if (next.isWalkable()) currentTile = next
     }
 
     fun moveDown() {
-        val next = currentTile.down ?: getOrGenerateTileAt(currentTile.x, currentTile.y + 1)
+        val next = currentTile.down ?: tileGenerator.getOrGenerateTileAt(currentTile.x, currentTile.y + 1)
         if (next.isWalkable()) currentTile = next
     }
 
     fun moveLeft() {
-        val next = currentTile.left ?: getOrGenerateTileAt(currentTile.x - 1, currentTile.y)
+        val next = currentTile.left ?: tileGenerator.getOrGenerateTileAt(currentTile.x - 1, currentTile.y)
         if (next.isWalkable()) currentTile = next
     }
 
     fun moveRight() {
-        val next = currentTile.right ?: getOrGenerateTileAt(currentTile.x + 1, currentTile.y)
+        val next = currentTile.right ?: tileGenerator.getOrGenerateTileAt(currentTile.x + 1, currentTile.y)
         if (next.isWalkable()) currentTile = next
-    }
-
-    fun getOrGenerateTileAt(x: Int, y: Int): Tile {
-        var tile: Tile? = null
-        multiTilesManagers.forEach { if (it.hasTileAt(x, y)) tile = it.baseTileAt(x, y) }
-        if (tile != null) return tile!!
-        return dicoTiles.getOrPut(Pair(x, y)) {
-            if (zoomLevel == Zooms.ZOOM_IN) {
-                when ((0..120).random()) {
-                    in 0..4 -> {
-                        if (
-                            world.getHeight(x, y, zoomLevel) > OCEAN_HEIGHT
-                            && world.pathLevel(
-                                x.toDouble(),
-                                y.toDouble()
-                            ) > THRESHOLD_PATH + TREE_DISTANCE_WITH_ELEMENTS
-                            && world.riverLevel(
-                                x.toDouble(),
-                                y.toDouble()
-                            ) > THRESHOLD_RIVER + TREE_DISTANCE_WITH_ELEMENTS
-                        ) {
-                            return@getOrPut TreeTrunk(x, y, TREES_DEFAULT_SIZE)
-                        }
-                    }
-
-                    10 -> {
-                        if (
-                            world.getHeight(x, y, zoomLevel) > OCEAN_HEIGHT
-                            && world.pathLevel(
-                                x.toDouble(),
-                                y.toDouble()
-                            ) in EMPTY_ROOM_PATH_LEVEL
-                            && world.riverLevel(
-                                x.toDouble(),
-                                y.toDouble()
-                            ) > THRESHOLD_RIVER + EMPTY_ROOM_DISTANCE_WITH_ELEMENTS
-                        ) {
-                            val manager = EmptyRoom(6, TemplateWorld.WHITE, x, y)
-                            multiTilesManagers.add(manager)
-                            manager.load()
-                            return@getOrPut manager.baseTileAt(x, y)
-                        }
-                    }
-                }
-                MapTile(
-                    x,
-                    y,
-                    world.getHeight(x, y, zoomLevel),
-                    world.isPath(x.toDouble(), y.toDouble()),
-                    world.isRiver(x.toDouble(), y.toDouble())
-                )
-            } else {
-                MapTile(x, y, world.getHeight(x, y, zoomLevel))
-            }
-        }
     }
 
     fun getX(): Int = currentTile.x

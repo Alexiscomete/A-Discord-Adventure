@@ -2,6 +2,7 @@ package io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite
 
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.Tile
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.WorldRenderScene
+import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.WorldCanvas
 import java.awt.Color
 
 interface Sprite {
@@ -15,10 +16,9 @@ interface Sprite {
 
     // RENDERING - WORLD
 
-    fun render(worldRenderScene: WorldRenderScene, xToUse: Int, yToUse: Int, distance: Int)
+    fun render(canvas: WorldCanvas, xToUse: Int, yToUse: Int, distance: Int)
     fun resetRender()
     fun isRendered(): Boolean
-    fun addToRenderQueue(worldRenderScene: WorldRenderScene, x: Int, y: Int, distance: Int)
 
     // RENDERING - CANVAS
 

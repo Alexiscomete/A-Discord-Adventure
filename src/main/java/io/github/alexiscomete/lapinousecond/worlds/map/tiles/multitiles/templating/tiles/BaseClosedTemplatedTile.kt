@@ -1,9 +1,9 @@
 package io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.templating.tiles
 
-import io.github.alexiscomete.lapinousecond.worlds.map.tiles.RenderInfos
+import io.github.alexiscomete.lapinousecond.worlds.map.tiles.RenderingType
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.Tile
-import io.github.alexiscomete.lapinousecond.worlds.map.tiles.WorldRenderScene
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.MultiTilesManager
+import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.WorldCanvas
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.Sprite
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.RENDER_DISTANCE_DEFAULT
 
@@ -17,7 +17,7 @@ abstract class BaseClosedTemplatedTile(
     override var left: Tile? = null
     override var right: Tile? = null
 
-    override fun delete(worldRenderScene: WorldRenderScene) {
+    override fun delete() {
         up?.down = null
         down?.up = null
         left?.right = null
@@ -35,18 +35,18 @@ abstract class BaseClosedTemplatedTile(
         return rendered
     }
 
-    override fun render(worldRenderScene: WorldRenderScene, xToUse: Int, yToUse: Int, distance: Int) {
-        if (rendered) return
+    override fun render(
+        xToUse: Int,
+        yToUse: Int,
+        distance: Int,
+        canvas: WorldCanvas
+    ): RenderingType {
+        if (rendered) return RenderingType.NO_RENDER
         rendered = true
         multiTilesManager.iAmLoaded()
-        if (distance > RENDER_DISTANCE_DEFAULT) return
-        worldRenderScene.canvas.drawTile(this, xToUse, yToUse, 5)
-    }
-
-    override fun addToRenderQueue(worldRenderScene: WorldRenderScene, x: Int, y: Int, distance: Int) {
-        if (inQueue || distance > RENDER_DISTANCE_DEFAULT) return
-        worldRenderScene.renderQueue.add(RenderInfos(this, x, y, distance))
-        inQueue = true
+        if (distance > RENDER_DISTANCE_DEFAULT) return RenderingType.NO_RENDER
+        canvas.drawTile(this, xToUse, yToUse, 5)
+        return RenderingType.NO_RENDER
     }
 
     override fun resetRender() {

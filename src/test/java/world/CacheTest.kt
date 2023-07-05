@@ -15,7 +15,7 @@ class CacheTest {
     fun testCacheMove() {
         val canvas = TerminalWorldCanvas()
         var time = System.currentTimeMillis()
-        val view = WorldRenderScene(canvas, 10, 10, Zooms.ZOOM_IN, WorldManagerTest())
+        val view = WorldRenderScene(canvas, 10, 10, Zooms.ZOOM_IN, WorldEnum.DIBIMAP.worldManager)
         println("Time to create: ${System.currentTimeMillis() - time}")
         time = System.currentTimeMillis()
         view.renderAll()
@@ -55,8 +55,8 @@ fun main() {
         view.renderAll()
         canvas.justDrawThisOver(
             JustDrawIt('X', Color(255, 0, 0), arrayOf(arrayOf(Color(255, 0, 0)))),
-            view.xReset,
-            view.yReset
+            view.worldRenderer.xReset,
+            view.worldRenderer.yReset
         )
         canvas.printlnCanvas()
         input = readlnOrNull() ?: ""

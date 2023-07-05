@@ -1,5 +1,6 @@
 package io.github.alexiscomete.lapinousecond.worlds.map.tiles
 
+import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.WorldCanvas
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.Sprite
 import java.awt.Color
 
@@ -15,11 +16,9 @@ interface Tile {
     var left: Tile?
     var right: Tile?
 
-    fun delete(worldRenderScene: WorldRenderScene)
+    fun delete()
 
-    fun render(worldRenderScene: WorldRenderScene, xToUse: Int, yToUse: Int, distance: Int)
-
-    fun addToRenderQueue(worldRenderScene: WorldRenderScene, x: Int, y: Int, distance: Int)
+    fun render(xToUse: Int, yToUse: Int, distance: Int, canvas: WorldCanvas) : RenderingType
 
     fun isWalkable(): Boolean
     fun removeSprite(sprite: Sprite)
