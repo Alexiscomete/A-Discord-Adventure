@@ -4,12 +4,20 @@ import io.github.alexiscomete.lapinousecond.worlds.THRESHOLD_PATH
 import io.github.alexiscomete.lapinousecond.worlds.THRESHOLD_RIVER
 import io.github.alexiscomete.lapinousecond.worlds.WorldManager
 import io.github.alexiscomete.lapinousecond.worlds.Zooms
-import io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.MultiTilesManager
-import io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.templating.contexts.TemplateWorld
-import io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.templating.managers.EmptyRoom
+import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.multitiles.MultiTilesManager
+import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.multitiles.templating.contexts.TemplateWorld
+import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.multitiles.templating.managers.EmptyRoom
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.MapTile
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.OCEAN_HEIGHT
+import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.Tile
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.TreeTrunk
+
+const val TREES_DEFAULT_SIZE = 2
+const val TREE_DISTANCE_WITH_ELEMENTS = 0.25
+const val EMPTY_ROOM_DISTANCE_WITH_ELEMENTS = 0.1
+const val EMPTY_ROOM_MAX_DISTANCE_WITH_PATH = 0.3
+val EMPTY_ROOM_PATH_LEVEL =
+    (THRESHOLD_PATH + EMPTY_ROOM_DISTANCE_WITH_ELEMENTS)..(THRESHOLD_PATH + EMPTY_ROOM_MAX_DISTANCE_WITH_PATH)
 
 class BaseTileGenerator(
     private val zoomLevel: Zooms,

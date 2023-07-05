@@ -1,7 +1,7 @@
 package io.github.alexiscomete.lapinousecond.worlds.map.tiles.types
 
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.*
-import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.WorldCanvas
+import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.canvas.WorldCanvas
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.Sprite
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.textures.TexturesInCode
 import java.awt.Color
@@ -53,11 +53,9 @@ class MapTile(
     }
 
     private var rendered = false
-    private var inQueue: Boolean = false
 
     override fun resetRender() {
         rendered = false
-        inQueue = false
     }
 
     override fun isRendered(): Boolean {
@@ -69,19 +67,21 @@ class MapTile(
         yToUse: Int,
         distance: Int,
         canvas: WorldCanvas
-    ): RenderingType {
-        if (rendered) return RenderingType.NO_RENDER
+    ) {
+        sprites.forEach { it.render(canvas, xToUse, yToUse, distance) }
+        canvas.drawTile(this, xToUse, yToUse)
+    }
+
+    override fun renderingType(xToUse: Int, yToUse: Int, distance: Int, canvas: WorldCanvas): RenderingType {
+        if (rendered) return RenderingType.NOTHING
         rendered = true
-        if (distance > RENDER_DISTANCE_DEFAULT) return RenderingType.NO_RENDER
+        if (distance > RENDER_DISTANCE_DEFAULT) return RenderingType.NOTHING
         val onCanvas = canvas.onCanvas(xToUse, yToUse)
         if (onCanvas) {
-            sprites.forEach {
-                it.render(canvas, xToUse, yToUse, distance)
-            }
-            canvas.drawTile(this, xToUse, yToUse)
             return RenderingType.ALWAYS_RENDER
         }
-        return RenderingType.NO_RENDER
+        return RenderingType.NOTHING
+
     }
 
     override fun letter(): Char {
@@ -151,41 +151,41 @@ class MapTile(
                         if (upLeft is MapTile && upLeft.isPath) {
                             subY + subX
                         } else {
-                            PIXEL_HEIGHT
+                            TILE_HEIGHT
                         }
-                    } ?: PIXEL_HEIGHT,
+                    } ?: TILE_HEIGHT,
                     it.right?.let { upRight ->
                         if (upRight is MapTile && upRight.isPath) {
-                            subY + PIXEL_HEIGHT - subX
+                            subY + TILE_HEIGHT - subX
                         } else {
-                            PIXEL_HEIGHT
+                            TILE_HEIGHT
                         }
-                    } ?: PIXEL_HEIGHT
+                    } ?: TILE_HEIGHT
                 )
             }
-        } ?: PIXEL_HEIGHT
+        } ?: TILE_HEIGHT
         val distanceDown = down?.let {
             if (it is MapTile && it.isPath) {
-                PIXEL_HEIGHT - subY
+                TILE_HEIGHT - subY
             } else {
                 min(
                     it.left?.let { downLeft ->
                         if (downLeft is MapTile && downLeft.isPath) {
-                            PIXEL_HEIGHT - subY + subX
+                            TILE_HEIGHT - subY + subX
                         } else {
-                            PIXEL_HEIGHT
+                            TILE_HEIGHT
                         }
-                    } ?: PIXEL_HEIGHT,
+                    } ?: TILE_HEIGHT,
                     it.right?.let { downRight ->
                         if (downRight is MapTile && downRight.isPath) {
-                            (PIXEL_HEIGHT * 2) - subY - subX
+                            (TILE_HEIGHT * 2) - subY - subX
                         } else {
-                            PIXEL_HEIGHT
+                            TILE_HEIGHT
                         }
-                    } ?: PIXEL_HEIGHT
+                    } ?: TILE_HEIGHT
                 )
             }
-        } ?: PIXEL_HEIGHT
+        } ?: TILE_HEIGHT
         val distanceLeft = left?.let {
             if (it is MapTile && it.isPath) {
                 subX
@@ -195,41 +195,41 @@ class MapTile(
                         if (leftUp is MapTile && leftUp.isPath) {
                             subX + subY
                         } else {
-                            PIXEL_WIDTH
+                            TILE_WIDTH
                         }
-                    } ?: PIXEL_WIDTH,
+                    } ?: TILE_WIDTH,
                     it.down?.let { leftDown ->
                         if (leftDown is MapTile && leftDown.isPath) {
-                            subX + PIXEL_WIDTH - subY
+                            subX + TILE_WIDTH - subY
                         } else {
-                            PIXEL_WIDTH
+                            TILE_WIDTH
                         }
-                    } ?: PIXEL_WIDTH
+                    } ?: TILE_WIDTH
                 )
             }
-        } ?: PIXEL_WIDTH
+        } ?: TILE_WIDTH
         val distanceRight = right?.let {
             if (it is MapTile && it.isPath) {
-                PIXEL_WIDTH - subX
+                TILE_WIDTH - subX
             } else {
                 min(
                     it.up?.let { rightUp ->
                         if (rightUp is MapTile && rightUp.isPath) {
-                            PIXEL_WIDTH - subX + subY
+                            TILE_WIDTH - subX + subY
                         } else {
-                            PIXEL_WIDTH
+                            TILE_WIDTH
                         }
-                    } ?: PIXEL_WIDTH,
+                    } ?: TILE_WIDTH,
                     it.down?.let { rightDown ->
                         if (rightDown is MapTile && rightDown.isPath) {
-                            (PIXEL_WIDTH * 2) - subX - subY
+                            (TILE_WIDTH * 2) - subX - subY
                         } else {
-                            PIXEL_WIDTH
+                            TILE_WIDTH
                         }
-                    } ?: PIXEL_WIDTH
+                    } ?: TILE_WIDTH
                 )
             }
-        } ?: PIXEL_WIDTH
+        } ?: TILE_WIDTH
         return min(min(distanceUp, distanceDown), min(distanceLeft, distanceRight))
     }
 
@@ -244,41 +244,41 @@ class MapTile(
                         if (upLeft is MapTile && upLeft.isRiver) {
                             subY + subX
                         } else {
-                            PIXEL_HEIGHT
+                            TILE_HEIGHT
                         }
-                    } ?: PIXEL_HEIGHT,
+                    } ?: TILE_HEIGHT,
                     it.right?.let { upRight ->
                         if (upRight is MapTile && upRight.isRiver) {
-                            subY + PIXEL_HEIGHT - subX
+                            subY + TILE_HEIGHT - subX
                         } else {
-                            PIXEL_HEIGHT
+                            TILE_HEIGHT
                         }
-                    } ?: PIXEL_HEIGHT
+                    } ?: TILE_HEIGHT
                 )
             }
-        } ?: PIXEL_HEIGHT
+        } ?: TILE_HEIGHT
         val distanceDown = down?.let {
             if (it is MapTile && it.isRiver) {
-                PIXEL_HEIGHT - subY
+                TILE_HEIGHT - subY
             } else {
                 min(
                     it.left?.let { downLeft ->
                         if (downLeft is MapTile && downLeft.isRiver) {
-                            PIXEL_HEIGHT - subY + subX
+                            TILE_HEIGHT - subY + subX
                         } else {
-                            PIXEL_HEIGHT
+                            TILE_HEIGHT
                         }
-                    } ?: PIXEL_HEIGHT,
+                    } ?: TILE_HEIGHT,
                     it.right?.let { downRight ->
                         if (downRight is MapTile && downRight.isRiver) {
-                            (PIXEL_HEIGHT * 2) - subY - subX
+                            (TILE_HEIGHT * 2) - subY - subX
                         } else {
-                            PIXEL_HEIGHT
+                            TILE_HEIGHT
                         }
-                    } ?: PIXEL_HEIGHT
+                    } ?: TILE_HEIGHT
                 )
             }
-        } ?: PIXEL_HEIGHT
+        } ?: TILE_HEIGHT
         val distanceLeft = left?.let {
             if (it is MapTile && it.isRiver) {
                 subX
@@ -288,41 +288,41 @@ class MapTile(
                         if (leftUp is MapTile && leftUp.isRiver) {
                             subX + subY
                         } else {
-                            PIXEL_WIDTH
+                            TILE_WIDTH
                         }
-                    } ?: PIXEL_WIDTH,
+                    } ?: TILE_WIDTH,
                     it.down?.let { leftDown ->
                         if (leftDown is MapTile && leftDown.isRiver) {
-                            subX + PIXEL_WIDTH - subY
+                            subX + TILE_WIDTH - subY
                         } else {
-                            PIXEL_WIDTH
+                            TILE_WIDTH
                         }
-                    } ?: PIXEL_WIDTH
+                    } ?: TILE_WIDTH
                 )
             }
-        } ?: PIXEL_WIDTH
+        } ?: TILE_WIDTH
         val distanceRight = right?.let {
             if (it is MapTile && it.isRiver) {
-                PIXEL_WIDTH - subX
+                TILE_WIDTH - subX
             } else {
                 min(
                     it.up?.let { rightUp ->
                         if (rightUp is MapTile && rightUp.isRiver) {
-                            PIXEL_WIDTH - subX + subY
+                            TILE_WIDTH - subX + subY
                         } else {
-                            PIXEL_WIDTH
+                            TILE_WIDTH
                         }
-                    } ?: PIXEL_WIDTH,
+                    } ?: TILE_WIDTH,
                     it.down?.let { rightDown ->
                         if (rightDown is MapTile && rightDown.isRiver) {
-                            (PIXEL_WIDTH * 2) - subX - subY
+                            (TILE_WIDTH * 2) - subX - subY
                         } else {
-                            PIXEL_WIDTH
+                            TILE_WIDTH
                         }
-                    } ?: PIXEL_WIDTH
+                    } ?: TILE_WIDTH
                 )
             }
-        } ?: PIXEL_WIDTH
+        } ?: TILE_WIDTH
         return min(min(distanceUp, distanceDown), min(distanceLeft, distanceRight))
     }
 
@@ -337,8 +337,8 @@ class MapTile(
                     return TexturesInCode.PATH.texture
                 }
                 if (isRiver) {
-                    return Array(PIXEL_HEIGHT) { y ->
-                        Array(PIXEL_WIDTH) { x ->
+                    return Array(TILE_HEIGHT) { y ->
+                        Array(TILE_WIDTH) { x ->
                             if (distanceWithPath(x, y) < 4) {
                                 Color(255, 178, 79)
                             } else if (distanceWithRiver(x, y) < 10) {
@@ -358,8 +358,8 @@ class MapTile(
                     }
                 }
             } else {
-                return Array(PIXEL_HEIGHT) { y ->
-                    Array(PIXEL_WIDTH) { x ->
+                return Array(TILE_HEIGHT) { y ->
+                    Array(TILE_WIDTH) { x ->
                         if (distanceWithPath(x, y) < 4) {
                             Color(255, 178, 79)
                         } else if (distanceWithRiver(x, y) < 4) {
@@ -373,8 +373,8 @@ class MapTile(
         } else {
             blue = color
         }
-        return Array(PIXEL_HEIGHT) { y ->
-            Array(PIXEL_WIDTH) { x ->
+        return Array(TILE_HEIGHT) { y ->
+            Array(TILE_WIDTH) { x ->
                 val distanceR = distanceWithRiver(x, y)
                 if (distanceWithPath(x, y) < 4) {
                     Color(255, 178, 79)

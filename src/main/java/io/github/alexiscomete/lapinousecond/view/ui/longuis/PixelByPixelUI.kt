@@ -8,11 +8,11 @@ import io.github.alexiscomete.lapinousecond.view.ui.playerui.PlayerUI
 import io.github.alexiscomete.lapinousecond.view.ui.playerui.Question
 import io.github.alexiscomete.lapinousecond.worlds.WorldEnum
 import io.github.alexiscomete.lapinousecond.worlds.Zooms
-import io.github.alexiscomete.lapinousecond.worlds.map.tiles.PIXEL_HEIGHT
-import io.github.alexiscomete.lapinousecond.worlds.map.tiles.PIXEL_WIDTH
+import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.TILE_HEIGHT
+import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.TILE_WIDTH
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.WorldRenderScene
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.JustDrawIt
-import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.TextureWorldCanvas
+import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.canvas.TextureWorldCanvas
 import java.awt.Color
 import java.awt.image.BufferedImage
 
@@ -23,7 +23,7 @@ class PixelByPixelUI(
     private var title: String = "Pixel by pixel"
     private var description = "Move with buttons"
     private val justDrawPlayer =
-        JustDrawIt(letter = 'P', color = Color.RED, texture = Array(PIXEL_HEIGHT) { Array(PIXEL_WIDTH) { Color.RED } })
+        JustDrawIt(letter = 'P', color = Color.RED, texture = Array(TILE_HEIGHT) { Array(TILE_WIDTH) { Color.RED } })
 
     private val player
         get() = playerUI.getPlayer()

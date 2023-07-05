@@ -1,8 +1,7 @@
 package io.github.alexiscomete.lapinousecond.worlds.map.tiles.types
 
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.RenderingType
-import io.github.alexiscomete.lapinousecond.worlds.map.tiles.Tile
-import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.WorldCanvas
+import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.canvas.WorldCanvas
 
 abstract class BaseTileGroup(
     val priority: Int = 0
@@ -60,11 +59,14 @@ abstract class BaseTileGroup(
         yToUse: Int,
         distance: Int,
         canvas: WorldCanvas
-    ): RenderingType {
-        if (rendered) return RenderingType.NO_RENDER
-        rendered = true
-        if (distance > RENDER_DISTANCE_DEFAULT) return RenderingType.NO_RENDER
+    ) {
         canvas.drawTile(this, xToUse, yToUse, priority)
+    }
+
+    override fun renderingType(xToUse: Int, yToUse: Int, distance: Int, canvas: WorldCanvas): RenderingType {
+        if (rendered) return RenderingType.NOTHING
+        rendered = true
+        if (distance > RENDER_DISTANCE_DEFAULT) return RenderingType.NOTHING
         return RenderingType.ONLY_IF_EXIST
     }
 

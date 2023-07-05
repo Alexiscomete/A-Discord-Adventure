@@ -1,7 +1,6 @@
 package io.github.alexiscomete.lapinousecond.worlds.map.tiles.types
 
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.TREES_DEFAULT_SIZE
-import io.github.alexiscomete.lapinousecond.worlds.map.tiles.Tile
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.Sprite
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.textures.TexturesInCode
 import java.awt.Color
