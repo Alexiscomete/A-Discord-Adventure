@@ -1,5 +1,7 @@
 package io.github.alexiscomete.lapinousecond.worlds.map.tiles
 
+import io.github.alexiscomete.lapinousecond.worlds.THRESHOLD_PATH
+import io.github.alexiscomete.lapinousecond.worlds.THRESHOLD_RIVER
 import io.github.alexiscomete.lapinousecond.worlds.WorldManager
 import io.github.alexiscomete.lapinousecond.worlds.Zooms
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.MultiTilesManager
@@ -7,14 +9,25 @@ import io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.templati
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.templating.managers.EmptyRoom
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.WorldCanvas
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.MapTile
+import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.OCEAN_HEIGHT
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.TreeTrunk
 import java.util.*
 
 const val DEFAULT_SIZE_RENDER = 21
 const val TREES_DEFAULT_SIZE = 2
+const val TREE_DISTANCE_WITH_ELEMENTS = 0.25
+const val EMPTY_ROOM_DISTANCE_WITH_ELEMENTS = 0.1
+const val EMPTY_ROOM_MAX_DISTANCE_WITH_PATH = 0.3
+val EMPTY_ROOM_PATH_LEVEL =
+    (THRESHOLD_PATH + EMPTY_ROOM_DISTANCE_WITH_ELEMENTS)..(THRESHOLD_PATH + EMPTY_ROOM_MAX_DISTANCE_WITH_PATH)
 
 class WorldRenderScene(
-    val canvas: WorldCanvas, x: Int, y: Int, private val zoomLevel: Zooms, val world: WorldManager, val size: Int = DEFAULT_SIZE_RENDER
+    val canvas: WorldCanvas,
+    x: Int,
+    y: Int,
+    private val zoomLevel: Zooms,
+    val world: WorldManager,
+    val size: Int = DEFAULT_SIZE_RENDER
 ) {
     val xReset = (size / 2)
     val yReset = (size / 2)
@@ -87,9 +100,15 @@ class WorldRenderScene(
                 when ((0..120).random()) {
                     in 0..4 -> {
                         if (
-                            world.getHeight(x, y, zoomLevel) > 0.5
-                            && world.pathLevel(x.toDouble(), y.toDouble()) > 0.8
-                            && world.riverLevel(x.toDouble(), y.toDouble()) > 0.8
+                            world.getHeight(x, y, zoomLevel) > OCEAN_HEIGHT
+                            && world.pathLevel(
+                                x.toDouble(),
+                                y.toDouble()
+                            ) > THRESHOLD_PATH + TREE_DISTANCE_WITH_ELEMENTS
+                            && world.riverLevel(
+                                x.toDouble(),
+                                y.toDouble()
+                            ) > THRESHOLD_RIVER + TREE_DISTANCE_WITH_ELEMENTS
                         ) {
                             return@getOrPut TreeTrunk(x, y, TREES_DEFAULT_SIZE)
                         }
@@ -97,9 +116,15 @@ class WorldRenderScene(
 
                     10 -> {
                         if (
-                            world.getHeight(x, y, zoomLevel) > 0.5
-                            && world.pathLevel(x.toDouble(), y.toDouble()) in 0.65..0.85
-                            && world.riverLevel(x.toDouble(), y.toDouble()) > 0.65
+                            world.getHeight(x, y, zoomLevel) > OCEAN_HEIGHT
+                            && world.pathLevel(
+                                x.toDouble(),
+                                y.toDouble()
+                            ) in EMPTY_ROOM_PATH_LEVEL
+                            && world.riverLevel(
+                                x.toDouble(),
+                                y.toDouble()
+                            ) > THRESHOLD_RIVER + EMPTY_ROOM_DISTANCE_WITH_ELEMENTS
                         ) {
                             val manager = EmptyRoom(6, TemplateWorld.WHITE, x, y)
                             multiTilesManagers.add(manager)

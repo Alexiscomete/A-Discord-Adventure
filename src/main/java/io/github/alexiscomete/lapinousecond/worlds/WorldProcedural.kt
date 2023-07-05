@@ -1,9 +1,16 @@
 package io.github.alexiscomete.lapinousecond.worlds
 
 import io.github.alexiscomete.lapinousecond.entity.entities.Player
+import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.OCEAN_HEIGHT
 import procedural_generation.noise.ComplexNoise
 import java.awt.Color
 import java.awt.image.BufferedImage
+
+const val PATH_SEED = 80L
+const val RIVER_SEED = PATH_SEED + 1L
+
+const val THRESHOLD_PATH = 0.55
+const val THRESHOLD_RIVER = 0.56
 
 class WorldProcedural(
     private val complexNoise: ComplexNoise,
@@ -12,11 +19,11 @@ class WorldProcedural(
     private val worldNameInDatabase: String
 ) : WorldManager {
 
-    private val path: ComplexNoise = complexNoiseBuilderForCaves.build(80)
-    private val river: ComplexNoise = complexNoiseBuilderForRivers.build(81)
+    private val path: ComplexNoise = complexNoiseBuilderForCaves.build(PATH_SEED)
+    private val river: ComplexNoise = complexNoiseBuilderForRivers.build(RIVER_SEED)
 
     override fun isLand(x: Double, y: Double): Boolean {
-        return complexNoise.getValue(x, y) > 0.5
+        return complexNoise.getValue(x, y) > OCEAN_HEIGHT
     }
 
     override fun isLand(x: Int, y: Int, zoom: Zooms): Boolean {
@@ -141,7 +148,7 @@ class WorldProcedural(
     }
 
     override fun isPath(x: Double, y: Double): Boolean {
-        return path.getValue(x, y) < 0.55
+        return path.getValue(x, y) < THRESHOLD_PATH
     }
 
     override fun pathLevel(x: Double, y: Double): Double {
@@ -149,7 +156,7 @@ class WorldProcedural(
     }
 
     override fun isRiver(x: Double, y: Double): Boolean {
-        return river.getValue(x, y) < 0.56
+        return river.getValue(x, y) < THRESHOLD_RIVER
     }
 
     override fun riverLevel(x: Double, y: Double): Double {

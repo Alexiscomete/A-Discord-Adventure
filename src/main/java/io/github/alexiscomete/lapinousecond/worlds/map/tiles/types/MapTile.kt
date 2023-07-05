@@ -7,6 +7,17 @@ import java.awt.Color
 import kotlin.math.min
 
 const val RENDER_DISTANCE_DEFAULT = 50
+const val HEIGHT_MULTIPLICATOR_TO_INT = 255
+
+const val MIN_HEIGHT = 0.0
+const val DEEP_OCEAN_HEIGHT = 0.3
+const val OCEAN_HEIGHT = 0.5
+const val INT_OCEAN_HEIGHT = (OCEAN_HEIGHT * HEIGHT_MULTIPLICATOR_TO_INT).toInt()
+const val INT_GRASS_HEIGHT = INT_OCEAN_HEIGHT + 1 // 128
+const val MONTAIN_HEIGHT = 0.75
+const val INT_MONTAIN_HEIGHT = (MONTAIN_HEIGHT * HEIGHT_MULTIPLICATOR_TO_INT).toInt() // 191
+const val INT_SNOW_HEIGHT = 224
+const val MAX_HEIGHT = 1.0
 
 class MapTile(
     override val x: Int,
@@ -116,12 +127,12 @@ class MapTile(
 
     override fun letter(): Char {
         return when (height) {
-            in 0.0..0.3 -> '@'
-            in 0.3..0.5 -> '~'
-            in 0.5..0.7 -> if (isPath) '#' else ','
-            in 0.7..1.0 -> if (isPath) '#' else '^'
+            in MIN_HEIGHT..DEEP_OCEAN_HEIGHT -> '@'
+            in DEEP_OCEAN_HEIGHT..OCEAN_HEIGHT -> '~'
+            in OCEAN_HEIGHT..MONTAIN_HEIGHT -> if (isPath) '#' else ','
+            in MONTAIN_HEIGHT..MAX_HEIGHT -> if (isPath) '#' else '^'
             else -> {
-                println("Error: height $height is not in range [0.0, 1.0]")
+                println("Error: height $height is not in range [${MIN_HEIGHT}, ${MAX_HEIGHT}]")
                 ' '
             }
         }
@@ -130,12 +141,12 @@ class MapTile(
     private var tileColor: Color? = null
 
     private fun currentColorCalc(): Color {
-        val color: Int = (height * 255).toInt()
+        val color: Int = (height * HEIGHT_MULTIPLICATOR_TO_INT).toInt()
         var blue = 0
         var green = 0
         var red = 0
-        if (color > 127) {
-            if (color > 128) {
+        if (color > INT_OCEAN_HEIGHT) {
+            if (color > INT_GRASS_HEIGHT) {
                 if (isPath) {
                     return Color(255, 178, 79)
                 }
@@ -143,9 +154,9 @@ class MapTile(
                     return Color(0, 111, 255)
                 }
                 green = 255 - color
-                if (color > 191) {
+                if (color > INT_MONTAIN_HEIGHT) {
                     red = 255 - color
-                    if (color > 224) {
+                    if (color > INT_SNOW_HEIGHT) {
                         blue = color
                         green = color
                     }
@@ -357,12 +368,12 @@ class MapTile(
     }
 
     private fun currentTextureCalc(): Array<Array<Color>> {
-        val color: Int = (height * 255).toInt()
+        val color: Int = (height * HEIGHT_MULTIPLICATOR_TO_INT).toInt()
         var blue = 0
         var green = 0
         var red = 0
-        if (color > 127) {
-            if (color > 128) {
+        if (color > INT_OCEAN_HEIGHT) {
+            if (color > INT_GRASS_HEIGHT) {
                 if (isPath) {
                     return TexturesInCode.PATH.texture
                 }
@@ -380,9 +391,9 @@ class MapTile(
                     }
                 }
                 green = 255 - color
-                if (color > 191) {
+                if (color > INT_MONTAIN_HEIGHT) {
                     red = 255 - color
-                    if (color > 224) {
+                    if (color > INT_SNOW_HEIGHT) {
                         blue = color
                         green = color
                     }

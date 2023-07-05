@@ -32,7 +32,6 @@ val api: DiscordApi = DiscordApiBuilder()
     })
     .login().join()
 
-// démarrage du bot
 fun main() {
 
     try {
