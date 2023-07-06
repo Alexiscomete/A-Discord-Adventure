@@ -1,17 +1,17 @@
 package io.github.alexiscomete.lapinousecond.worlds
 
+import io.github.alexiscomete.lapinousecond.Beurk
 import io.github.alexiscomete.lapinousecond.entity.entities.Player
 import java.awt.image.BufferedImage
 
 interface WorldManager {
     fun isLand(x: Double, y: Double): Boolean
     fun isLand(x: Int, y: Int, zoom: Zooms): Boolean
-    @Deprecated("Please use WorldRenderScene instead")
-    fun zoom(zoneToAdapt: ZoneToAdapt): BufferedImage
-    @Deprecated("Please use WorldRenderScene instead")
+
+    @Beurk
     fun zoomWithDecorElements(
         zoneToAdapt: ZoneToAdapt,
-        image: BufferedImage? = null,
+        image: BufferedImage,
         player: Player? = null,
         big: Boolean
     ): BufferedImage

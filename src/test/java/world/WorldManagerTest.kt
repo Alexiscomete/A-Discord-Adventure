@@ -17,11 +17,7 @@ class WorldManagerTest : WorldManager {
         return getHeight(x, y, zoom) > 0.5
     }
 
-    override fun zoom(zoneToAdapt: ZoneToAdapt): BufferedImage {
-        return BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB)
-    }
-
-    override fun zoomWithDecorElements(zoneToAdapt: ZoneToAdapt, image: BufferedImage?, player: Player?, big: Boolean): BufferedImage {
+    override fun zoomWithDecorElements(zoneToAdapt: ZoneToAdapt, image: BufferedImage, player: Player?, big: Boolean): BufferedImage {
         return BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB)
     }
 

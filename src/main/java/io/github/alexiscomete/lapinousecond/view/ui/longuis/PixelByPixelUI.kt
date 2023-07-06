@@ -9,6 +9,7 @@ import io.github.alexiscomete.lapinousecond.view.ui.playerui.Question
 import io.github.alexiscomete.lapinousecond.worlds.WorldEnum
 import io.github.alexiscomete.lapinousecond.worlds.Zooms
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.BaseTileGenerator
+import io.github.alexiscomete.lapinousecond.worlds.map.tiles.DEFAULT_SIZE_RENDER
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.TILE_HEIGHT
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.TILE_WIDTH
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.WorldRenderScene
@@ -104,7 +105,7 @@ class PixelByPixelUI(
         canvas.justDrawThisOver(
             justDrawPlayer, worldRenderScene.worldRenderer.xSource, worldRenderScene.worldRenderer.ySource
         )
-        return world.zoomWithDecorElementsSquare(x, y, TODO("TODO"), zooms, canvas.bufferedImage, player)
+        return world.zoomWithDecorElementsSquare(x, y, DEFAULT_SIZE_RENDER/2, zooms, canvas.bufferedImage)
     }
 
     override fun setBufferedImage(bufferedImage: BufferedImage?): LongCustomUI {

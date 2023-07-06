@@ -1,5 +1,6 @@
 package io.github.alexiscomete.lapinousecond.worlds
 
+import io.github.alexiscomete.lapinousecond.Beurk
 import io.github.alexiscomete.lapinousecond.entity.entities.Player
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.OCEAN_HEIGHT
 import procedural_generation.noise.ComplexNoise
@@ -14,8 +15,6 @@ const val THRESHOLD_RIVER = 0.56
 
 class WorldProcedural(
     private val complexNoise: ComplexNoise,
-    private val maxX: Int,
-    private val maxY: Int,
     private val worldNameInDatabase: String
 ) : WorldManager {
 
@@ -31,28 +30,15 @@ class WorldProcedural(
         return isLand(x1, y1)
     }
 
-    @Deprecated("Please use WorldRenderScene instead")
-    override fun zoom(zoneToAdapt: ZoneToAdapt): BufferedImage {
-        // generate the image
-        val image = BufferedImage(zoneToAdapt.width, zoneToAdapt.height, BufferedImage.TYPE_INT_RGB)
-        // fill the image
-        for (x in zoneToAdapt.x until zoneToAdapt.x + zoneToAdapt.width) {
-            for (y in zoneToAdapt.y until zoneToAdapt.y + zoneToAdapt.height) {
-                image.setRGB(x - zoneToAdapt.x, y - zoneToAdapt.y, findColor(x, y, zoneToAdapt.zoom))
-            }
-        }
-        return image
-    }
-
-    @Deprecated("Please use WorldRenderScene instead")
+    @Beurk
     override fun zoomWithDecorElements(
         zoneToAdapt: ZoneToAdapt,
-        image: BufferedImage?,
+        image: BufferedImage,
         player: Player?,
         big: Boolean
     ): BufferedImage {
         // generate the image
-        var image0 = image ?: zoom(zoneToAdapt)
+        var image0 = image
         // add the player
         if (player != null) {
             addPlayerInImage(player, zoneToAdapt, image0)

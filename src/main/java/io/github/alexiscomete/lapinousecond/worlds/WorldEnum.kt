@@ -1,5 +1,6 @@
 package io.github.alexiscomete.lapinousecond.worlds
 
+import io.github.alexiscomete.lapinousecond.Beurk
 import io.github.alexiscomete.lapinousecond.entity.entities.Player
 import io.github.alexiscomete.lapinousecond.worlds.map.Node
 import io.github.alexiscomete.lapinousecond.worlds.map.PixelManager
@@ -320,8 +321,6 @@ enum class WorldEnum(
             ComplexNoiseBuilder(
                 builder
             ).build(60),
-            300,
-            300,
             "NORMAL"
         )
     ),
@@ -347,8 +346,6 @@ enum class WorldEnum(
                     )
                 )
             ).build(80),
-            528,
-            272,
             "DIBIMAP"
         )
     ),
@@ -374,8 +371,6 @@ enum class WorldEnum(
                     )
                 )
             ).build(50),
-            100,
-            50,
             "TUTO"
         )
     );
@@ -411,17 +406,17 @@ enum class WorldEnum(
      * @param player The player that is viewing the map.
      * @return A BufferedImage
      */
+    @Beurk
     fun zoomWithDecorElements(
         x: Int,
         y: Int,
         zoom: Int,
         zooms: Zooms,
-        image: BufferedImage? = null,
         player: Player? = null
     ): BufferedImage {
         return worldManager.zoomWithDecorElements(
             ZoneToAdapt(x - zoom * 2, y - zoom, zoom * 4, zoom * 2, mapWidth, mapHeight, zooms),
-            image,
+            imageFrom(x - zoom * 2, y - zoom, zoom * 4, zoom * 2, zooms),
             player,
             true
         )
@@ -433,22 +428,20 @@ enum class WorldEnum(
      * @param x The x coordinate of the center of the map
      * @param y The y coordinate of the center of the map
      * @param size The zoom level of the map.
-     * @param player The player that is viewing the map.
      * @return A BufferedImage
      */
+    @Beurk
     fun zoomWithDecorElementsSquare(
         x: Int,
         y: Int,
         size: Int,
         zooms: Zooms,
-        image: BufferedImage? = null,
-        player: Player? = null
+        image: BufferedImage,
     ): BufferedImage {
         return worldManager.zoomWithDecorElements(
             ZoneToAdapt(x - size, y - size, size * 2 + 1, size * 2 + 1, mapWidth, mapHeight, zooms),
             image,
-            player,
-            false
+            big = false
         )
     }
 
@@ -563,20 +556,24 @@ enum class WorldEnum(
         val maxY = path.maxOf { it.y }
         val minX = path.minOf { it.x }
         val minY = path.minOf { it.y }
-        val canvas = ImageWorldCanvas()
-        val tileGenerator = BaseTileGenerator(Zooms.ZOOM_OUT, worldManager)
-        val renderScene = WorldRenderScene(
-            canvas,
-            minX - 1,
-            minY - 1,
-            tileGenerator = tileGenerator,
-            worldRenderer = SquareWorldRenderer(maxY - minY + 2, maxX - minX + 2, canvas, tileGenerator)
-        )
-        renderScene.renderAll()
-        val img = canvas.bufferedImage
+        val img = imageFrom(minX-1, minY-1, maxX+1, maxY+1)
         for (p in path) {
             img.setRGB(p.x - minX + 1, p.y - minY + 1, Color.RED.rgb)
         }
         return img
+    }
+
+    private fun imageFrom(minX: Int, minY: Int, maxX: Int, maxY: Int, zooms: Zooms = Zooms.ZOOM_OUT): BufferedImage {
+        val canvas = ImageWorldCanvas()
+        val tileGenerator = BaseTileGenerator(zooms, worldManager)
+        val renderScene = WorldRenderScene(
+            canvas,
+            minX,
+            minY,
+            tileGenerator = tileGenerator,
+            worldRenderer = SquareWorldRenderer(maxY - minY, maxX - minX, canvas, tileGenerator)
+        )
+        renderScene.renderAll()
+        return canvas.bufferedImage
     }
 }
