@@ -2,6 +2,7 @@ package world
 
 import io.github.alexiscomete.lapinousecond.worlds.WorldEnum
 import io.github.alexiscomete.lapinousecond.worlds.Zooms
+import io.github.alexiscomete.lapinousecond.worlds.map.tiles.BaseTileGenerator
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.WorldRenderScene
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.JustDrawIt
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.canvas.TerminalWorldCanvas
@@ -15,7 +16,12 @@ class CacheTest {
     fun testCacheMove() {
         val canvas = TerminalWorldCanvas()
         var time = System.currentTimeMillis()
-        val view = WorldRenderScene(canvas, 10, 10, Zooms.ZOOM_IN, WorldEnum.DIBIMAP.worldManager)
+        val view = WorldRenderScene(
+            canvas,
+            10,
+            10,
+            BaseTileGenerator(Zooms.ZOOM_IN, WorldEnum.DIBIMAP.worldManager)
+        )
         println("Time to create: ${System.currentTimeMillis() - time}")
         time = System.currentTimeMillis()
         view.renderAll()
@@ -49,7 +55,12 @@ class CacheTest {
 
 fun main() {
     val canvas = TerminalWorldCanvas()
-    val view = WorldRenderScene(canvas, 0, 600, Zooms.ZOOM_IN, WorldEnum.NORMAL.worldManager)
+    val view = WorldRenderScene(
+        canvas,
+        0,
+        600,
+        BaseTileGenerator(Zooms.ZOOM_IN, WorldEnum.NORMAL.worldManager)
+    )
     var input = ""
     while (input != "quit") {
         view.renderAll()

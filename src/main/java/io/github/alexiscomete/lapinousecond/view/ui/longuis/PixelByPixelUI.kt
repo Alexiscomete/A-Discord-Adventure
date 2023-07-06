@@ -8,6 +8,7 @@ import io.github.alexiscomete.lapinousecond.view.ui.playerui.PlayerUI
 import io.github.alexiscomete.lapinousecond.view.ui.playerui.Question
 import io.github.alexiscomete.lapinousecond.worlds.WorldEnum
 import io.github.alexiscomete.lapinousecond.worlds.Zooms
+import io.github.alexiscomete.lapinousecond.worlds.map.tiles.BaseTileGenerator
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.TILE_HEIGHT
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.TILE_WIDTH
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.WorldRenderScene
@@ -64,7 +65,7 @@ class PixelByPixelUI(
 
     private val canvas = TextureWorldCanvas()
     private var worldRenderScene: WorldRenderScene = WorldRenderScene(
-        canvas, x, y, zooms, world.worldManager
+        canvas, x, y, BaseTileGenerator(zooms, world.worldManager)
     )
 
     override fun getTitle(): String {
@@ -103,7 +104,7 @@ class PixelByPixelUI(
         canvas.justDrawThisOver(
             justDrawPlayer, worldRenderScene.worldRenderer.xSource, worldRenderScene.worldRenderer.ySource
         )
-        return world.zoomWithDecorElementsSquare(x, y, worldRenderScene.size / 2, zooms, canvas.bufferedImage, player)
+        return world.zoomWithDecorElementsSquare(x, y, TODO("TODO"), zooms, canvas.bufferedImage, player)
     }
 
     override fun setBufferedImage(bufferedImage: BufferedImage?): LongCustomUI {
@@ -126,7 +127,7 @@ class PixelByPixelUI(
                     zooms
                 }
                 worldRenderScene = WorldRenderScene(
-                    canvas, x, y, zooms, world.worldManager
+                    canvas, x, y, BaseTileGenerator(zooms, world.worldManager)
                 )
                 null
             }),
@@ -147,7 +148,7 @@ class PixelByPixelUI(
                     zooms
                 }
                 worldRenderScene = WorldRenderScene(
-                    canvas, x, y, zooms, world.worldManager
+                    canvas, x, y, BaseTileGenerator(zooms, world.worldManager)
                 )
                 null
             }),

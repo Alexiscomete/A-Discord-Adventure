@@ -3,7 +3,9 @@ package io.github.alexiscomete.lapinousecond.worlds
 import io.github.alexiscomete.lapinousecond.entity.entities.Player
 import io.github.alexiscomete.lapinousecond.worlds.map.Node
 import io.github.alexiscomete.lapinousecond.worlds.map.PixelManager
+import io.github.alexiscomete.lapinousecond.worlds.map.tiles.BaseTileGenerator
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.WorldRenderScene
+import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.SquareWorldRenderer
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.canvas.ImageWorldCanvas
 import procedural_generation.noise.ComplexNoiseBuilder
 import procedural_generation.noise.NoiseMapBuilder
@@ -14,7 +16,6 @@ import java.awt.Image
 import java.awt.image.BufferedImage
 import java.io.IOException
 import javax.imageio.ImageIO
-import kotlin.math.max
 import kotlin.math.pow
 import kotlin.math.sqrt
 
@@ -562,15 +563,14 @@ enum class WorldEnum(
         val maxY = path.maxOf { it.y }
         val minX = path.minOf { it.x }
         val minY = path.minOf { it.y }
-        val maxSize = max(maxX - minX, maxY - minY) + 2
         val canvas = ImageWorldCanvas()
+        val tileGenerator = BaseTileGenerator(Zooms.ZOOM_OUT, worldManager)
         val renderScene = WorldRenderScene(
             canvas,
-            minX-1+(maxSize/2),
-            minY-1+(maxSize/2),
-            Zooms.ZOOM_OUT,
-            worldManager,
-            maxSize
+            minX - 1,
+            minY - 1,
+            tileGenerator = tileGenerator,
+            worldRenderer = SquareWorldRenderer(maxY - minY + 2, maxX - minX + 2, canvas, tileGenerator)
         )
         renderScene.renderAll()
         val img = canvas.bufferedImage

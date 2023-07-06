@@ -120,29 +120,6 @@ class WorldProcedural(
         }
     }
 
-    @Deprecated("Please use WorldRenderScene instead")
-    override fun uniqueTotalImage(): BufferedImage {
-        // generate the image
-        val image = BufferedImage(maxX, maxY, BufferedImage.TYPE_INT_RGB)
-        // fill the image
-        for (x in 0 until maxX) {
-            for (y in 0 until maxY) {
-                image.setRGB(x, y, findColor(x, y, Zooms.ZOOM_OUT))
-            }
-        }
-        return image
-    }
-
-    @Deprecated("Always return x", ReplaceWith("x"))
-    override fun xImage(x: Int): Int {
-        return x
-    }
-
-    @Deprecated("Always return y", ReplaceWith("y"))
-    override fun yImage(y: Int): Int {
-        return y
-    }
-
     override fun getHeight(x: Double, y: Double): Double {
         return complexNoise.getValue(x, y)
     }

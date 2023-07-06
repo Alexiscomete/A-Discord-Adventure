@@ -1,7 +1,5 @@
 package io.github.alexiscomete.lapinousecond.worlds.map.tiles
 
-import io.github.alexiscomete.lapinousecond.worlds.WorldManager
-import io.github.alexiscomete.lapinousecond.worlds.Zooms
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.BaseWorldRenderer
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.WorldRenderer
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.canvas.WorldCanvas
@@ -12,11 +10,8 @@ class WorldRenderScene(
     val canvas: WorldCanvas,
     x: Int,
     y: Int,
-    zoomLevel: Zooms,
-    val world: WorldManager,
-    val size: Int = DEFAULT_SIZE_RENDER,
-    private val tileGenerator: TileGenerator = BaseTileGenerator(zoomLevel, world),
-    val worldRenderer: WorldRenderer = BaseWorldRenderer(size, canvas, tileGenerator)
+    private val tileGenerator: TileGenerator,
+    val worldRenderer: WorldRenderer = BaseWorldRenderer(DEFAULT_SIZE_RENDER, canvas, tileGenerator)
 ) {
     private var currentTile = tileGenerator.getOrGenerateTileAt(x, y)
 

@@ -25,18 +25,6 @@ class WorldManagerTest : WorldManager {
         return BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB)
     }
 
-    override fun uniqueTotalImage(): BufferedImage {
-        return BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB)
-    }
-
-    override fun xImage(x: Int): Int {
-        return 0
-    }
-
-    override fun yImage(y: Int): Int {
-        return 0
-    }
-
     override fun getHeight(x: Double, y: Double): Double {
         return Random().nextDouble()
     }
