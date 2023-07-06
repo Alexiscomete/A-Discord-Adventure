@@ -55,8 +55,8 @@ fun main() {
         view.renderAll()
         canvas.justDrawThisOver(
             JustDrawIt('X', Color(255, 0, 0), arrayOf(arrayOf(Color(255, 0, 0)))),
-            view.worldRenderer.xReset,
-            view.worldRenderer.yReset
+            view.worldRenderer.xSource,
+            view.worldRenderer.ySource
         )
         canvas.printlnCanvas()
         input = readlnOrNull() ?: ""
