@@ -3,324 +3,626 @@
   <ID>JAVA</ID>
   <OriginalElement />
   <nodes>
-    <node x="812.0" y="183.0">io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.templating.templates.WhiteWall</node>
-    <node x="898.0" y="703.0">io.github.alexiscomete.lapinousecond.worlds.map.tiles.BaseTileGenerator</node>
-    <node x="1162.0" y="543.0">io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.ComplexTile</node>
-    <node x="567.0" y="307.0">io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.DrawSprite</node>
-    <node x="268.0" y="483.0">io.github.alexiscomete.lapinousecond.worlds.map.tiles.textures.TexturesInCode</node>
-    <node x="208.5" y="243.0">io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.templating.tiles.BaseClosedTemplatedTile</node>
-    <node x="1139.0" y="703.0">io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.MultiTilesManager</node>
-    <node x="1071.0" y="23.0">io.github.alexiscomete.lapinousecond.worlds.map.tiles.RenderingType</node>
-    <node x="254.5" y="163.0">io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.templating.tiles.TemplatedTile</node>
-    <node x="1489.5" y="463.0">io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.TreeTrunk</node>
-    <node x="798.5" y="99.0">io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.TerminalWorldCanvas</node>
-    <node x="1355.0" y="803.0">io.github.alexiscomete.lapinousecond.worlds.map.tiles.WorldRenderScene</node>
-    <node x="814.0" y="543.0">io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.templating.templates.Template</node>
-    <node x="1018.0" y="263.0">io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.templating.templates.TemplatePart</node>
-    <node x="798.5" y="31.0">io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.TextureWorldCanvas</node>
-    <node x="381.5" y="703.0">io.github.alexiscomete.lapinousecond.worlds.map.tiles.RenderInfos</node>
-    <node x="144.0" y="869.0">io.github.alexiscomete.lapinousecond.worlds.map.tiles.SquareWorldRenderer</node>
-    <node x="-127.0" y="803.0">io.github.alexiscomete.lapinousecond.worlds.map.tiles.WorldRenderer</node>
-    <node x="913.5" y="343.0">io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.BaseTileGroup</node>
-    <node x="557.5" y="423.0">io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.interactions.ProceduralInteractionElementsManager</node>
-    <node x="724.0" y="307.0">io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.sprites.LootSprite</node>
-    <node x="1011.0" y="183.0">io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.templating.contexts.TemplateWorld</node>
-    <node x="527.0" y="103.0">io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.Sprite</node>
-    <node x="266.5" y="563.0">io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.JustDrawIt</node>
-    <node x="567.0" y="171.0">io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.interactions.InteractionSprite</node>
-    <node x="1164.0" y="623.0">io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.templating.managers.EmptyRoom</node>
-    <node x="248.5" y="323.0">io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.templating.tiles.NullClosedTTile</node>
-    <node x="956.0" y="463.0">io.github.alexiscomete.lapinousecond.worlds.map.tiles.Tile</node>
-    <node x="567.0" y="239.0">io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.MoveSprite</node>
-    <node x="1219.0" y="263.0">io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.templating.templates.NullWall</node>
-    <node x="1124.0" y="403.0">io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.TreeFoliage</node>
-    <node x="619.5" y="703.0">io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.MapTile</node>
-    <node x="452.5" y="23.0">io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.InteractionSpriteManager</node>
-    <node x="535.5" y="523.0">io.github.alexiscomete.lapinousecond.worlds.map.tiles.textures.Textures</node>
-    <node x="697.0" y="763.0">io.github.alexiscomete.lapinousecond.worlds.map.tiles.TileGenerator</node>
-    <node x="152.0" y="803.0">io.github.alexiscomete.lapinousecond.worlds.map.tiles.BaseWorldRenderer</node>
-    <node x="758.5" y="-37.0">io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.WorldCanvas</node>
+    <node x="2669.3913730803943" y="628.9609375">io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.RenderInfos</node>
+    <node x="1442.0" y="973.9609375">io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.JustDrawIt</node>
+    <node x="2593.0997064137273" y="820.9609375">io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.BaseWorldRenderer</node>
+    <node x="2041.3782746160791" y="820.9609375">io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.canvas.TerminalWorldCanvas</node>
+    <node x="1883.0" y="973.9609375">io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.RenderingType</node>
+    <node x="2352.628274616079" y="628.9609375">io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.WorldRenderer</node>
+    <node x="1998.6282746160791" y="1046.9609375">io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.canvas.ImageWorldCanvas</node>
+    <node x="83.0" y="1046.9609375">io.github.alexiscomete.lapinousecond.worlds.map.tiles.textures.Textures</node>
+    <node x="1080.1666666666665" y="628.9609375">io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.MapTile</node>
+    <node x="801.5833333333333" y="372.9609375">io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.multitiles.templating.tiles.WhiteFloorOpenedTTile</node>
+    <node x="195.58333333333326" y="372.9609375">io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.multitiles.templating.tiles.WhiteWallClosedTTile</node>
+    <node x="247.0" y="1046.9609375">io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.TileKt</node>
+    <node x="1187.0" y="973.9609375">io.github.alexiscomete.lapinousecond.worlds.map.tiles.BaseTileGeneratorKt</node>
+    <node x="273.4747064137275" y="280.9609375">io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.multitiles.templating.tiles.BaseClosedTemplatedTile</node>
+    <node x="2686.0" y="973.9609375">io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.MapTileKt</node>
+    <node x="316.0" y="973.9609375">io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.multitiles.templating.tiles.BaseOpenedTemplatedTileKt</node>
+    <node x="-62.939363143631226" y="454.9609375">io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.BaseTileGroup</node>
+    <node x="1140.8047651309817" y="820.9609375">io.github.alexiscomete.lapinousecond.worlds.map.tiles.BaseTileGenerator</node>
+    <node x="1861.0032746160791" y="628.9609375">io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.sprites.LootSprite</node>
+    <node x="636.0" y="973.9609375">io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.InteractionSpriteManager</node>
+    <node x="1212.1666666666665" y="628.9609375">io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.interactions.InteractionSprite</node>
+    <node x="567.919941282746" y="-13.0390625">io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.Tile</node>
+    <node x="-20.291666666666742" y="546.9609375">io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.TreeFoliage</node>
+    <node x="926.0" y="973.9609375">io.github.alexiscomete.lapinousecond.worlds.map.tiles.WorldRenderSceneKt</node>
+    <node x="2351.0997064137273" y="820.9609375">io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.SquareWorldRenderer</node>
+    <node x="598.8782746160792" y="454.9609375">io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.multitiles.templating.templates.NullWall</node>
+    <node x="2021.6282746160791" y="628.9609375">io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.canvas.WorldCanvas</node>
+    <node x="898.9583333333333" y="168.9609375">io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.multitiles.MultiTilesManager</node>
+    <node x="434.58333333333326" y="372.9609375">io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.multitiles.templating.tiles.NullClosedTTile</node>
+    <node x="2494.0" y="973.9609375">io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.TreeTrunkKt</node>
+    <node x="337.7247064137275" y="454.9609375">io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.multitiles.templating.templates.WhiteWall</node>
+    <node x="1548.5032746160791" y="546.9609375">io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.Sprite</node>
+    <node x="-84.0" y="973.9609375">io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.interactions.ProceduralInteractionElementsManager</node>
+    <node x="1807.3782746160791" y="820.9609375">io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.canvas.TextureWorldCanvas</node>
+    <node x="1685.0032746160791" y="628.9609375">io.github.alexiscomete.lapinousecond.worlds.map.tiles.TileGenerator</node>
+    <node x="2350.75" y="900.9609375">io.github.alexiscomete.lapinousecond.worlds.map.tiles.WorldRenderScene</node>
+    <node x="1664.0" y="973.9609375">io.github.alexiscomete.lapinousecond.worlds.map.tiles.textures.TexturesInCode</node>
+    <node x="627.5833333333333" y="372.9609375">io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.multitiles.templating.templates.TemplatePart</node>
+    <node x="2096.0" y="973.9609375">io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.TreeFoliageKt</node>
+    <node x="803.1797651309815" y="628.9609375">io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.multitiles.templating.managers.EmptyRoom</node>
+    <node x="273.9747064137275" y="168.9609375">io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.multitiles.templating.tiles.TemplatedTile</node>
+    <node x="-84.0" y="1046.9609375">io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.multitiles.templating.templates.Template</node>
+    <node x="448.4747064137275" y="546.9609375">io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.multitiles.templating.contexts.TemplateWorld</node>
+    <node x="1528.0032746160791" y="628.9609375">io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.DrawSprite</node>
+    <node x="2299.0" y="973.9609375">io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.JustDrawItKt</node>
+    <node x="788.5833333333333" y="280.9609375">io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.multitiles.templating.tiles.BaseOpenedTemplatedTile</node>
+    <node x="2194.628274616079" y="628.9609375">io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.MoveSprite</node>
+    <node x="235.97470641372752" y="86.9609375">io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.multitiles.ComplexTile</node>
+    <node x="-20.441960252939225" y="628.9609375">io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.TreeTrunk</node>
   </nodes>
   <notes />
   <edges>
-    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.BaseWorldRenderer" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.WorldCanvas" relationship="TO_ONE">
-      <point x="-48.5" y="-14.0" />
-      <point x="206.5" y="-23.0" />
-      <point x="-76.5" y="0.0" />
+    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.multitiles.templating.tiles.NullClosedTTile" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.multitiles.templating.tiles.BaseClosedTemplatedTile" relationship="GENERALIZATION">
+      <point x="43.25" y="-14.0" />
+      <point x="564.3333333333333" y="340.9609375" />
+      <point x="404.9747064137275" y="340.9609375" />
+      <point x="404.9747064137275" y="330.9609375" />
+      <point x="463.2247064137275" y="330.9609375" />
+      <point x="63.25" y="14.0" />
     </edge>
-    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.BaseTileGroup" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.Tile" relationship="REALIZATION">
-      <point x="5.0" y="14.0" />
-      <point x="5.0" y="-14.0" />
+    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.WorldRenderScene" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.canvas.WorldCanvas" relationship="TO_ONE">
+      <point x="-50.0" y="-14.0" />
+      <point x="2400.75" y="879.9609375" />
+      <point x="2014.7689701897016" y="879.9609375" />
+      <point x="2014.7689701897016" y="869.9609375" />
+      <point x="2336.9747064137273" y="869.9609375" />
+      <point x="2336.9747064137273" y="728.9609375" />
+      <point x="2375.9747064137273" y="728.9609375" />
+      <point x="2375.9747064137273" y="688.9609375" />
+      <point x="2136.378274616079" y="688.9609375" />
+      <point x="38.25" y="14.0" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.MapTile" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.Sprite" relationship="TO_MANY">
-      <point x="12.5" y="-14.0" />
-      <point x="687.5" y="465.0" />
-      <point x="537.0" y="465.0" />
-      <point x="-38.0" y="14.0" />
+      <point x="27.75" y="-14.0" />
+      <point x="1163.4166666666665" y="606.9609375" />
+      <point x="1137.4140695573587" y="606.9609375" />
+      <point x="1137.4140695573587" y="596.9609375" />
+      <point x="1564.5032746160791" y="596.9609375" />
+      <point x="-32.0" y="14.0" />
     </edge>
-    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.WorldRenderScene" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.BaseWorldRenderer" relationship="CREATE">
-      <point x="0.0" y="14.0" />
-      <point x="1455.0" y="833.0" />
-      <point x="255.0" y="833.0" />
-      <point x="0.0" y="14.0" />
+    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.multitiles.templating.managers.EmptyRoom" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.multitiles.MultiTilesManager" relationship="REALIZATION">
+      <point x="47.33333333333337" y="-14.0" />
+      <point x="921.5130984643149" y="606.9609375" />
+      <point x="1058.0833333333333" y="606.9609375" />
+      <point x="1058.0833333333333" y="258.9609375" />
+      <point x="1042.9583333333333" y="258.9609375" />
+      <point x="48.0" y="14.0" />
     </edge>
-    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.BaseWorldRenderer" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.RenderInfos" relationship="TO_MANY">
-      <point x="0.0" y="-14.0" />
-      <point x="255.0" y="717.0" />
-      <point x="-93.5" y="0.0" />
+    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.multitiles.templating.tiles.WhiteWallClosedTTile" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.multitiles.templating.tiles.BaseClosedTemplatedTile" relationship="GENERALIZATION">
+      <point x="54.75" y="-14.0" />
+      <point x="359.83333333333326" y="340.9609375" />
+      <point x="404.9747064137275" y="340.9609375" />
+      <point x="404.9747064137275" y="330.9609375" />
+      <point x="463.2247064137275" y="330.9609375" />
+      <point x="63.25" y="14.0" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.TreeFoliage" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.BaseTileGroup" relationship="GENERALIZATION">
-      <point x="-0.0" y="-14.0" />
-      <point x="1195.0" y="361.6666666666667" />
-      <point x="81.5" y="4.666666666666671" />
+      <point x="-47.33333333333334" y="-14.0" />
+      <point x="3.3749999999998863" y="524.9609375" />
+      <point x="-22.189363143631226" y="524.9609375" />
+      <point x="-40.75" y="14.0" />
     </edge>
-    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.templating.tiles.BaseClosedTemplatedTile" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.templating.tiles.TemplatedTile" relationship="REALIZATION">
+    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.multitiles.templating.tiles.BaseClosedTemplatedTile" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.multitiles.MultiTilesManager" relationship="TO_ONE">
+      <point x="63.25" y="-14.0" />
+      <point x="463.2247064137275" y="258.9609375" />
+      <point x="717.0833333333333" y="258.9609375" />
+      <point x="717.0833333333333" y="238.9609375" />
+      <point x="957.3333333333333" y="238.9609375" />
+      <point x="957.3333333333333" y="218.9609375" />
+      <point x="946.9583333333333" y="218.9609375" />
+      <point x="-48.0" y="14.0" />
+    </edge>
+    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.multitiles.templating.contexts.TemplateWorld" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.multitiles.templating.templates.WhiteWall" relationship="CREATE">
+      <point x="-42.0" y="-14.0" />
+      <point x="490.4747064137275" y="524.9609375" />
+      <point x="499.2247064137275" y="524.9609375" />
+      <point x="499.2247064137275" y="514.9609375" />
+      <point x="400.7247064137275" y="514.9609375" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.RenderInfos" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.Tile" relationship="TO_ONE">
       <point x="0.0" y="-14.0" />
-      <point x="0.0" y="14.0" />
+      <point x="2762.8913730803943" y="55.9609375" />
+      <point x="1042.0032746160794" y="55.9609375" />
+      <point x="1042.0032746160791" y="45.9609375" />
+      <point x="632.919941282746" y="45.9609375" />
+      <point x="26.0" y="14.0" />
     </edge>
-    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.MapTile" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.Tile" relationship="TO_ONE">
-      <point x="22.5" y="-14.0" />
-      <point x="697.5" y="480.6" />
-      <point x="-39.0" y="3.5999999999999943" />
+    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.SquareWorldRenderer" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.RenderInfos" relationship="TO_MANY">
+      <point x="-74.0" y="-14.0" />
+      <point x="2388.0997064137273" y="798.9609375" />
+      <point x="2365.9747064137273" y="798.9609375" />
+      <point x="2365.9747064137273" y="758.9609375" />
+      <point x="2656.7663730803943" y="758.9609375" />
+      <point x="2656.7663730803943" y="678.9609375" />
+      <point x="2716.1413730803943" y="678.9609375" />
+      <point x="-46.75" y="14.0" />
     </edge>
-    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.BaseWorldRenderer" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.WorldRenderer" relationship="REALIZATION">
-      <point x="-103.0" y="0.0" />
-      <point x="102.0" y="0.0" />
+    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.multitiles.templating.tiles.WhiteFloorOpenedTTile" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.multitiles.templating.tiles.BaseOpenedTemplatedTile" relationship="CREATE">
+      <point x="-58.25" y="-14.0" />
+      <point x="859.8333333333333" y="350.9609375" />
+      <point x="853.3333333333333" y="350.9609375" />
+      <point x="-64.75" y="14.0" />
     </edge>
-    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.BaseTileGenerator" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.Tile" relationship="TO_MANY">
+    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.multitiles.templating.tiles.BaseOpenedTemplatedTile" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.Tile" relationship="TO_ONE">
+      <point x="64.75" y="-14.0" />
+      <point x="982.8333333333333" y="258.9609375" />
+      <point x="920.7247064137275" y="258.9609375" />
+      <point x="920.7247064137275" y="228.9609375" />
+      <point x="888.4583333333333" y="228.9609375" />
+      <point x="888.4583333333333" y="55.9609375" />
+      <point x="1042.0032746160791" y="55.9609375" />
+      <point x="1042.0032746160791" y="45.9609375" />
+      <point x="632.919941282746" y="45.9609375" />
+      <point x="26.0" y="14.0" />
+    </edge>
+    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.BaseWorldRenderer" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.WorldRenderer" relationship="REALIZATION">
       <point x="0.0" y="-14.0" />
+      <point x="2696.0997064137273" y="788.9609375" />
+      <point x="2666.7663730803943" y="788.9609375" />
+      <point x="2666.7663730803943" y="688.9609375" />
+      <point x="2478.628274616079" y="688.9609375" />
+      <point x="42.0" y="14.0" />
+    </edge>
+    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.BaseTileGenerator" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.multitiles.templating.managers.EmptyRoom" relationship="CREATE">
+      <point x="-64.66666666666674" y="-14.0" />
+      <point x="1173.1380984643147" y="798.9609375" />
+      <point x="874.1797651309815" y="798.9609375" />
       <point x="0.0" y="14.0" />
     </edge>
-    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.BaseTileGenerator" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.templating.managers.EmptyRoom" relationship="CREATE">
-      <point x="29.0" y="-14.0" />
-      <point x="1024.0" y="637.0" />
-      <point x="-71.0" y="0.0" />
-    </edge>
-    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.TextureWorldCanvas" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.WorldCanvas" relationship="REALIZATION">
-      <point x="-70.0" y="-14.0" />
-      <point x="0.0" y="14.0" />
-    </edge>
-    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.templating.tiles.BaseClosedTemplatedTile" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.RenderInfos" relationship="CREATE">
-      <point x="124.5" y="14.0" />
-      <point x="-15.5" y="-14.0" />
-    </edge>
-    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.templating.managers.EmptyRoom" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.templating.contexts.TemplateWorld" relationship="TO_ONE">
-      <point x="71.0" y="-4.666666666666629" />
-      <point x="1351.0" y="632.3333333333334" />
-      <point x="1351.0" y="192.33333333333334" />
-      <point x="84.0" y="-4.666666666666657" />
-    </edge>
-    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.templating.tiles.NullClosedTTile" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.templating.tiles.BaseClosedTemplatedTile" relationship="CREATE">
-      <point x="0.0" y="-14.0" />
-      <point x="0.0" y="14.0" />
-    </edge>
-    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.templating.tiles.TemplatedTile" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.ComplexTile" relationship="INTERFACE_GENERALIZATION">
-      <point x="80.5" y="-8.0" />
-      <point x="1341.0" y="169.0" />
-      <point x="1341.0" y="557.0" />
-      <point x="73.0" y="0.0" />
-    </edge>
-    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.MapTile" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.Tile" relationship="REALIZATION">
-      <point x="55.5" y="-8.400000000000034" />
-      <point x="812.0" y="708.5999999999999" />
-      <point x="812.0" y="485.79999999999995" />
-      <point x="-39.0" y="8.799999999999983" />
+    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.BaseWorldRenderer" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.canvas.WorldCanvas" relationship="TO_ONE">
+      <point x="-68.66666666666674" y="-14.0" />
+      <point x="2627.433039747061" y="798.9609375" />
+      <point x="2568.4616079494126" y="798.9609375" />
+      <point x="2568.4616079494126" y="698.9609375" />
+      <point x="2375.9747064137273" y="698.9609375" />
+      <point x="2375.9747064137273" y="688.9609375" />
+      <point x="2136.378274616079" y="688.9609375" />
+      <point x="38.25" y="14.0" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.TreeTrunk" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.BaseTileGroup" relationship="GENERALIZATION">
-      <point x="-0.0" y="-14.0" />
-      <point x="1555.0" y="352.3333333333333" />
-      <point x="81.5" y="-4.666666666666671" />
+      <point x="-43.66666666666666" y="-14.0" />
+      <point x="1.3913730803941462" y="606.9609375" />
+      <point x="-30.791666666666742" y="606.9609375" />
+      <point x="-30.791666666666742" y="524.9609375" />
+      <point x="-22.189363143631226" y="524.9609375" />
+      <point x="-40.75" y="14.0" />
     </edge>
-    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.WorldRenderScene" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.BaseTileGenerator" relationship="TO_ONE">
-      <point x="-100.0" y="-6.0" />
-      <point x="995.0" y="811.0" />
-      <point x="-0.0" y="14.0" />
+    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.WorldRenderScene" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.WorldRenderer" relationship="TO_ONE">
+      <point x="-50.0" y="-14.0" />
+      <point x="2400.75" y="879.9609375" />
+      <point x="2014.7689701897016" y="879.9609375" />
+      <point x="2014.7689701897016" y="869.9609375" />
+      <point x="1577.8782746160791" y="869.9609375" />
+      <point x="1577.8782746160791" y="748.9609375" />
+      <point x="2394.628274616079" y="748.9609375" />
+      <point x="-42.0" y="14.0" />
     </edge>
-    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.WorldRenderScene" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.Tile" relationship="TO_MANY">
-      <point x="-32.75" y="-14.0" />
-      <point x="1422.25" y="479.8" />
-      <point x="39.0" y="2.8000000000000114" />
+    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.SquareWorldRenderer" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.TileGenerator" relationship="TO_ONE">
+      <point x="-74.0" y="-14.0" />
+      <point x="2388.0997064137273" y="798.9609375" />
+      <point x="2365.9747064137273" y="798.9609375" />
+      <point x="2365.9747064137273" y="718.9609375" />
+      <point x="2209.0997064137273" y="718.9609375" />
+      <point x="2209.0997064137273" y="698.9609375" />
+      <point x="1802.0032746160791" y="698.9609375" />
+      <point x="39.0" y="14.0" />
+    </edge>
+    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.BaseWorldRenderer" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.RenderInfos" relationship="CREATE">
+      <point x="68.66666666666674" y="-14.0" />
+      <point x="2764.7663730803943" y="778.9609375" />
+      <point x="2796.6439701897016" y="778.9609375" />
+      <point x="2796.6439701897016" y="768.9609375" />
+      <point x="2809.6413730803943" y="768.9609375" />
+      <point x="46.75" y="14.0" />
+    </edge>
+    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.multitiles.templating.contexts.TemplateWorld" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.multitiles.templating.templates.NullWall" relationship="CREATE">
+      <point x="-42.0" y="-14.0" />
+      <point x="490.4747064137275" y="524.9609375" />
+      <point x="499.2247064137275" y="524.9609375" />
+      <point x="499.2247064137275" y="514.9609375" />
+      <point x="654.8782746160792" y="514.9609375" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.SquareWorldRenderer" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.RenderInfos" relationship="CREATE">
+      <point x="74.0" y="-14.0" />
+      <point x="2536.0997064137273" y="778.9609375" />
+      <point x="2796.6439701897016" y="778.9609375" />
+      <point x="2796.6439701897016" y="768.9609375" />
+      <point x="2809.6413730803943" y="768.9609375" />
+      <point x="46.75" y="14.0" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.TreeTrunk" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.TreeFoliage" relationship="CREATE">
-      <point x="-10.0" y="-14.0" />
-      <point x="1545.0" y="417.0" />
-      <point x="71.0" y="0.0" />
+      <point x="0.0" y="-14.0" />
+      <point x="45.058039747060775" y="606.9609375" />
+      <point x="63.97470641372752" y="606.9609375" />
+      <point x="63.97470641372752" y="596.9609375" />
+      <point x="50.70833333333326" y="596.9609375" />
+      <point x="0.0" y="14.0" />
     </edge>
-    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.BaseWorldRenderer" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.TileGenerator" relationship="TO_ONE">
-      <point x="0.0" y="0.0" />
-      <point x="0.0" y="0.0" />
+    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.multitiles.templating.tiles.BaseOpenedTemplatedTile" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.multitiles.MultiTilesManager" relationship="TO_ONE">
+      <point x="64.75" y="-14.0" />
+      <point x="982.8333333333333" y="258.9609375" />
+      <point x="920.7247064137275" y="258.9609375" />
+      <point x="920.7247064137275" y="248.9609375" />
+      <point x="957.3333333333333" y="248.9609375" />
+      <point x="957.3333333333333" y="218.9609375" />
+      <point x="946.9583333333333" y="218.9609375" />
+      <point x="-48.0" y="14.0" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.TreeTrunk" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.BaseTileGroup" relationship="CREATE">
-      <point x="10.0" y="-14.0" />
-      <point x="1565.0" y="333.0" />
-      <point x="995.0" y="333.0" />
       <point x="0.0" y="-14.0" />
+      <point x="45.058039747060775" y="606.9609375" />
+      <point x="63.97470641372752" y="606.9609375" />
+      <point x="63.97470641372752" y="596.9609375" />
+      <point x="132.20833333333326" y="596.9609375" />
+      <point x="132.20833333333326" y="514.9609375" />
+      <point x="45.308039747060775" y="514.9609375" />
+      <point x="45.308039747060775" y="504.9609375" />
+      <point x="59.310636856368774" y="504.9609375" />
+      <point x="40.75" y="14.0" />
     </edge>
-    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.templating.managers.EmptyRoom" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.MultiTilesManager" relationship="REALIZATION">
-      <point x="5.0" y="14.0" />
-      <point x="5.0" y="-14.0" />
-    </edge>
-    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.BaseWorldRenderer" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.RenderInfos" relationship="CREATE">
-      <point x="0.0" y="0.0" />
-      <point x="0.0" y="0.0" />
-    </edge>
-    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.sprites.LootSprite" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.Tile" relationship="TO_ONE">
+    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.multitiles.templating.tiles.BaseOpenedTemplatedTile" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.multitiles.templating.tiles.TemplatedTile" relationship="REALIZATION">
+      <point x="-64.75" y="-14.0" />
+      <point x="853.3333333333333" y="248.9609375" />
+      <point x="354.4747064137275" y="248.9609375" />
       <point x="0.0" y="14.0" />
-      <point x="789.0" y="401.0" />
-      <point x="990.0" y="401.0" />
-      <point x="-5.0" y="-14.0" />
+    </edge>
+    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.multitiles.templating.tiles.NullClosedTTile" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.multitiles.templating.tiles.BaseClosedTemplatedTile" relationship="CREATE">
+      <point x="-43.25" y="-14.0" />
+      <point x="477.83333333333326" y="350.9609375" />
+      <point x="394.9747064137275" y="350.9609375" />
+      <point x="394.9747064137275" y="330.9609375" />
+      <point x="336.7247064137275" y="330.9609375" />
+      <point x="-63.25" y="14.0" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.BaseTileGenerator" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.TreeTrunk" relationship="CREATE">
-      <point x="39.0" y="-14.0" />
-      <point x="1034.0" y="682.0" />
-      <point x="1553.0" y="682.0" />
-      <point x="-2.0" y="14.0" />
+      <point x="-64.66666666666674" y="-14.0" />
+      <point x="1173.1380984643147" y="798.9609375" />
+      <point x="874.1797651309815" y="798.9609375" />
+      <point x="874.1797651309815" y="788.9609375" />
+      <point x="45.058039747060775" y="788.9609375" />
+      <point x="0.0" y="14.0" />
     </edge>
-    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.templating.managers.EmptyRoom" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.ComplexTile" relationship="TO_MANY">
+    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.canvas.ImageWorldCanvas" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.canvas.WorldCanvas" relationship="REALIZATION">
+      <point x="99.5" y="-0.0" />
+      <point x="2873.8913730803943" y="1060.9609375" />
+      <point x="2873.8913730803943" y="-30.5390625" />
+      <point x="2098.128274616079" y="-30.5390625" />
+      <point x="-0.0" y="-14.0" />
+    </edge>
+    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.multitiles.templating.tiles.WhiteFloorOpenedTTile" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.multitiles.templating.tiles.BaseOpenedTemplatedTile" relationship="GENERALIZATION">
+      <point x="58.25" y="-14.0" />
+      <point x="976.3333333333333" y="350.9609375" />
+      <point x="982.8333333333333" y="350.9609375" />
+      <point x="64.75" y="14.0" />
+    </edge>
+    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.multitiles.templating.tiles.BaseClosedTemplatedTile" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.multitiles.templating.tiles.TemplatedTile" relationship="REALIZATION">
+      <point x="-63.25" y="-14.0" />
+      <point x="336.7247064137275" y="248.9609375" />
+      <point x="354.4747064137275" y="248.9609375" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.multitiles.templating.templates.WhiteWall" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.multitiles.templating.templates.TemplatePart" relationship="REALIZATION">
+      <point x="31.5" y="-14.0" />
+      <point x="432.2247064137275" y="432.9609375" />
+      <point x="685.3333333333333" y="432.9609375" />
+      <point x="685.3333333333333" y="422.9609375" />
+      <point x="666.0833333333333" y="422.9609375" />
+      <point x="-38.5" y="14.0" />
+    </edge>
+    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.multitiles.templating.managers.EmptyRoom" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.multitiles.templating.contexts.TemplateWorld" relationship="TO_ONE">
+      <point x="-47.33333333333337" y="-14.0" />
+      <point x="826.8464317976482" y="606.9609375" />
+      <point x="490.42976513098154" y="606.9609375" />
+      <point x="490.42976513098154" y="596.9609375" />
+      <point x="532.4747064137275" y="596.9609375" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.SquareWorldRenderer" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.canvas.WorldCanvas" relationship="TO_ONE">
+      <point x="-74.0" y="-14.0" />
+      <point x="2388.0997064137273" y="798.9609375" />
+      <point x="2365.9747064137273" y="798.9609375" />
+      <point x="2365.9747064137273" y="738.9609375" />
+      <point x="2375.9747064137273" y="738.9609375" />
+      <point x="2375.9747064137273" y="688.9609375" />
+      <point x="2136.378274616079" y="688.9609375" />
+      <point x="38.25" y="14.0" />
+    </edge>
+    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.multitiles.templating.tiles.TemplatedTile" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.multitiles.ComplexTile" relationship="INTERFACE_GENERALIZATION">
       <point x="0.0" y="-14.0" />
-      <point x="0.0" y="14.0" />
+      <point x="354.4747064137275" y="141.9609375" />
+      <point x="345.4747064137275" y="141.9609375" />
+      <point x="36.5" y="14.0" />
     </edge>
-    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.RenderInfos" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.Tile" relationship="TO_ONE">
-      <point x="27.5" y="-14.0" />
-      <point x="502.5" y="475.4" />
-      <point x="-39.0" y="-1.5999999999999943" />
+    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.multitiles.templating.managers.EmptyRoom" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.multitiles.templating.tiles.WhiteFloorOpenedTTile" relationship="TO_ONE">
+      <point x="-47.33333333333337" y="-14.0" />
+      <point x="826.8464317976482" y="606.9609375" />
+      <point x="490.42976513098154" y="606.9609375" />
+      <point x="490.42976513098154" y="596.9609375" />
+      <point x="905.2247064137275" y="596.9609375" />
+      <point x="905.2247064137275" y="432.9609375" />
+      <point x="859.8333333333333" y="432.9609375" />
+      <point x="-58.25" y="14.0" />
     </edge>
-    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.templating.templates.WhiteWall" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.templating.templates.TemplatePart" relationship="REALIZATION">
-      <point x="0.0" y="14.0" />
-      <point x="875.0" y="277.0" />
-      <point x="-77.0" y="0.0" />
-    </edge>
-    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.templating.tiles.NullClosedTTile" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.templating.tiles.BaseClosedTemplatedTile" relationship="GENERALIZATION">
-      <point x="86.5" y="-6.000152415790275" />
-      <point x="463.5" y="330.9998475842097" />
-      <point x="463.5" y="257.0" />
-      <point x="126.5" y="0.0" />
-    </edge>
-    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.WorldRenderScene" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.BaseTileGenerator" relationship="CREATE">
-      <point x="-100.0" y="-2.0" />
-      <point x="896.0" y="815.0" />
-      <point x="896.0" y="725.4000000000001" />
-      <point x="-97.0" y="8.400000000000034" />
-    </edge>
-    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.templating.contexts.TemplateWorld" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.templating.templates.WhiteWall" relationship="CREATE">
-      <point x="-84.0" y="0.0" />
-      <point x="63.0" y="0.0" />
-    </edge>
-    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.templating.contexts.TemplateWorld" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.templating.templates.NullWall" relationship="CREATE">
-      <point x="84.0" y="4.666666666666657" />
-      <point x="1275.0" y="201.66666666666666" />
-      <point x="-0.0" y="-14.0" />
-    </edge>
-    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.TreeFoliage" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.Tile" relationship="TO_ONE">
-      <point x="-0.0" y="14.0" />
-      <point x="1195.0" y="468.6" />
-      <point x="39.0" y="-8.399999999999977" />
-    </edge>
-    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.ComplexTile" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.Tile" relationship="INTERFACE_GENERALIZATION">
-      <point x="-0.0" y="-14.0" />
-      <point x="1235.0" y="485.4" />
-      <point x="39.0" y="8.399999999999977" />
+    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.multitiles.templating.templates.NullWall" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.multitiles.templating.templates.TemplatePart" relationship="REALIZATION">
+      <point x="28.0" y="-14.0" />
+      <point x="682.8782746160792" y="432.9609375" />
+      <point x="685.3333333333333" y="432.9609375" />
+      <point x="685.3333333333333" y="422.9609375" />
+      <point x="666.0833333333333" y="422.9609375" />
+      <point x="-38.5" y="14.0" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.BaseTileGenerator" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.MapTile" relationship="CREATE">
-      <point x="-97.0" y="-2.8000000000000114" />
-      <point x="55.5" y="-2.8000000000000114" />
-    </edge>
-    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.WorldRenderScene" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.RenderInfos" relationship="TO_MANY">
-      <point x="-100.0" y="6.0" />
-      <point x="475.0" y="823.0" />
-      <point x="-0.0" y="14.0" />
-    </edge>
-    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.MapTile" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.RenderInfos" relationship="CREATE">
-      <point x="-55.5" y="0.0" />
-      <point x="93.5" y="0.0" />
+      <point x="-64.66666666666674" y="-14.0" />
+      <point x="1173.1380984643147" y="798.9609375" />
+      <point x="874.1797651309815" y="798.9609375" />
+      <point x="874.1797651309815" y="788.9609375" />
+      <point x="1135.6666666666665" y="788.9609375" />
+      <point x="0.0" y="14.0" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.BaseTileGenerator" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.TileGenerator" relationship="REALIZATION">
-      <point x="-97.0" y="2.8000000000000114" />
-      <point x="775.0" y="719.8" />
-      <point x="-0.0" y="-14.0" />
+      <point x="64.66666666666674" y="-14.0" />
+      <point x="1302.4714317976482" y="738.9609375" />
+      <point x="1724.0032746160791" y="738.9609375" />
+      <point x="-39.0" y="14.0" />
     </edge>
-    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.TreeTrunk" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.Tile" relationship="TO_ONE">
-      <point x="-65.5" y="-2.8000000000000114" />
-      <point x="39.0" y="-2.8000000000000114" />
+    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.MapTile" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.Tile" relationship="TO_ONE">
+      <point x="27.75" y="-14.0" />
+      <point x="1163.4166666666665" y="606.9609375" />
+      <point x="1137.4140695573587" y="606.9609375" />
+      <point x="1137.4140695573587" y="55.9609375" />
+      <point x="1042.0032746160791" y="55.9609375" />
+      <point x="1042.0032746160791" y="45.9609375" />
+      <point x="632.919941282746" y="45.9609375" />
+      <point x="26.0" y="14.0" />
+    </edge>
+    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.BaseTileGenerator" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.Tile" relationship="TO_MANY">
+      <point x="0.0" y="-14.0" />
+      <point x="1237.8047651309817" y="798.9609375" />
+      <point x="1279.8497064137275" y="798.9609375" />
+      <point x="1279.8497064137275" y="728.9609375" />
+      <point x="1400.6666666666665" y="728.9609375" />
+      <point x="1400.6666666666665" y="55.9609375" />
+      <point x="1042.0032746160791" y="55.9609375" />
+      <point x="1042.0032746160791" y="45.9609375" />
+      <point x="632.919941282746" y="45.9609375" />
+      <point x="26.0" y="14.0" />
+    </edge>
+    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.BaseTileGroup" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.Tile" relationship="REALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="18.56063685636866" y="65.9609375" />
+      <point x="547.3106368563687" y="65.9609375" />
+      <point x="547.3106368563687" y="35.9609375" />
+      <point x="606.919941282746" y="35.9609375" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.MapTile" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.Tile" relationship="REALIZATION">
+      <point x="-27.75" y="-14.0" />
+      <point x="1107.9166666666665" y="606.9609375" />
+      <point x="1126.4140695573587" y="606.9609375" />
+      <point x="1126.4140695573587" y="65.9609375" />
+      <point x="547.3106368563687" y="65.9609375" />
+      <point x="547.3106368563687" y="35.9609375" />
+      <point x="606.919941282746" y="35.9609375" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.SquareWorldRenderer" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.WorldRenderer" relationship="REALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="2462.0997064137273" y="788.9609375" />
+      <point x="2666.7663730803943" y="788.9609375" />
+      <point x="2666.7663730803943" y="688.9609375" />
+      <point x="2478.628274616079" y="688.9609375" />
+      <point x="42.0" y="14.0" />
+    </edge>
+    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.multitiles.templating.tiles.WhiteWallClosedTTile" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.multitiles.templating.tiles.BaseClosedTemplatedTile" relationship="CREATE">
+      <point x="-54.75" y="-14.0" />
+      <point x="250.33333333333326" y="350.9609375" />
+      <point x="394.9747064137275" y="350.9609375" />
+      <point x="394.9747064137275" y="330.9609375" />
+      <point x="336.7247064137275" y="330.9609375" />
+      <point x="-63.25" y="14.0" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.sprites.LootSprite" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.Sprite" relationship="REALIZATION">
+      <point x="-32.5" y="-14.0" />
+      <point x="1893.5032746160791" y="596.9609375" />
+      <point x="1628.5032746160791" y="596.9609375" />
+      <point x="32.0" y="14.0" />
+    </edge>
+    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.multitiles.templating.templates.NullWall" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.multitiles.templating.tiles.NullClosedTTile" relationship="CREATE">
+      <point x="-28.0" y="-14.0" />
+      <point x="626.8782746160792" y="422.9609375" />
+      <point x="521.0833333333333" y="422.9609375" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.BaseTileGenerator" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.multitiles.MultiTilesManager" relationship="TO_MANY">
       <point x="0.0" y="-14.0" />
-      <point x="789.0" y="161.0" />
-      <point x="600.0" y="161.0" />
-      <point x="25.0" y="14.0" />
+      <point x="1237.8047651309817" y="798.9609375" />
+      <point x="1279.8497064137275" y="798.9609375" />
+      <point x="1279.8497064137275" y="728.9609375" />
+      <point x="1201.6666666666665" y="728.9609375" />
+      <point x="1201.6666666666665" y="228.9609375" />
+      <point x="957.3333333333333" y="228.9609375" />
+      <point x="957.3333333333333" y="218.9609375" />
+      <point x="946.9583333333333" y="218.9609375" />
+      <point x="-48.0" y="14.0" />
     </edge>
-    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.templating.tiles.BaseClosedTemplatedTile" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.Tile" relationship="TO_ONE">
-      <point x="121.33333333333326" y="14.0" />
-      <point x="456.33333333333326" y="470.20000000000005" />
-      <point x="-39.0" y="-6.799999999999983" />
+    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.multitiles.templating.templates.WhiteWall" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.multitiles.templating.tiles.WhiteWallClosedTTile" relationship="CREATE">
+      <point x="-31.5" y="-14.0" />
+      <point x="369.2247064137275" y="432.9609375" />
+      <point x="305.08333333333326" y="432.9609375" />
+      <point x="0.0" y="14.0" />
     </edge>
-    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.templating.templates.NullWall" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.templating.tiles.NullClosedTTile" relationship="CREATE">
-      <point x="-0.0" y="14.0" />
-      <point x="1275.0" y="339.0" />
-      <point x="86.5" y="2.0" />
+    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.BaseWorldRenderer" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.TileGenerator" relationship="TO_ONE">
+      <point x="-68.66666666666674" y="-14.0" />
+      <point x="2627.433039747061" y="798.9609375" />
+      <point x="2568.4616079494126" y="798.9609375" />
+      <point x="2568.4616079494126" y="708.9609375" />
+      <point x="2209.0997064137273" y="708.9609375" />
+      <point x="2209.0997064137273" y="698.9609375" />
+      <point x="1802.0032746160791" y="698.9609375" />
+      <point x="39.0" y="14.0" />
     </edge>
-    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.WorldRenderScene" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.BaseWorldRenderer" relationship="TO_ONE">
-      <point x="-100.0" y="10.0" />
-      <point x="103.0" y="10.0" />
+    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.WorldRenderScene" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.TileGenerator" relationship="TO_ONE">
+      <point x="-50.0" y="-14.0" />
+      <point x="2400.75" y="879.9609375" />
+      <point x="2014.7689701897016" y="879.9609375" />
+      <point x="2014.7689701897016" y="869.9609375" />
+      <point x="2030.8782746160791" y="869.9609375" />
+      <point x="2030.8782746160791" y="738.9609375" />
+      <point x="2209.0997064137273" y="738.9609375" />
+      <point x="2209.0997064137273" y="698.9609375" />
+      <point x="1802.0032746160791" y="698.9609375" />
+      <point x="39.0" y="14.0" />
+    </edge>
+    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.WorldRenderScene" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.BaseWorldRenderer" relationship="CREATE">
+      <point x="50.0" y="-14.0" />
+      <point x="2500.75" y="879.9609375" />
+      <point x="2696.0997064137273" y="879.9609375" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.multitiles.templating.contexts.TemplateWorld" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.multitiles.templating.templates.TemplatePart" relationship="TO_ONE">
+      <point x="42.0" y="-14.0" />
+      <point x="574.4747064137275" y="524.9609375" />
+      <point x="751.8782746160792" y="524.9609375" />
+      <point x="751.8782746160792" y="432.9609375" />
+      <point x="743.0833333333333" y="432.9609375" />
+      <point x="38.5" y="14.0" />
+    </edge>
+    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.multitiles.templating.managers.EmptyRoom" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.multitiles.ComplexTile" relationship="TO_MANY">
+      <point x="-47.33333333333337" y="-14.0" />
+      <point x="826.8464317976482" y="606.9609375" />
+      <point x="490.42976513098154" y="606.9609375" />
+      <point x="490.42976513098154" y="596.9609375" />
+      <point x="172.20833333333326" y="596.9609375" />
+      <point x="172.20833333333326" y="141.9609375" />
+      <point x="272.4747064137275" y="141.9609375" />
+      <point x="-36.5" y="14.0" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.DrawSprite" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.Sprite" relationship="INTERFACE_GENERALIZATION">
       <point x="0.0" y="-14.0" />
-      <point x="635.5" y="273.0" />
-      <point x="547.0" y="273.0" />
-      <point x="-28.0" y="14.0" />
+      <point x="0.0" y="14.0" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.MoveSprite" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.Sprite" relationship="INTERFACE_GENERALIZATION">
       <point x="0.0" y="-14.0" />
-      <point x="636.0" y="213.0" />
-      <point x="557.0" y="213.0" />
-      <point x="-18.0" y="14.0" />
+      <point x="2263.628274616079" y="606.9609375" />
+      <point x="1596.5032746160791" y="606.9609375" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.TreeTrunk" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.Tile" relationship="TO_ONE">
+      <point x="43.66666666666666" y="-14.0" />
+      <point x="88.7247064137274" y="606.9609375" />
+      <point x="143.20833333333326" y="606.9609375" />
+      <point x="143.20833333333326" y="55.9609375" />
+      <point x="1042.0032746160791" y="55.9609375" />
+      <point x="1042.0032746160791" y="45.9609375" />
+      <point x="632.919941282746" y="45.9609375" />
+      <point x="26.0" y="14.0" />
+    </edge>
+    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.multitiles.templating.managers.EmptyRoom" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.multitiles.templating.tiles.WhiteFloorOpenedTTile" relationship="CREATE">
+      <point x="0.0" y="-14.0" />
+      <point x="874.1797651309815" y="606.9609375" />
+      <point x="916.2247064137275" y="606.9609375" />
+      <point x="916.2247064137275" y="432.9609375" />
+      <point x="976.3333333333333" y="432.9609375" />
+      <point x="58.25" y="14.0" />
+    </edge>
+    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.BaseWorldRenderer" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.RenderInfos" relationship="TO_MANY">
+      <point x="-68.66666666666674" y="-14.0" />
+      <point x="2627.433039747061" y="798.9609375" />
+      <point x="2568.4616079494126" y="798.9609375" />
+      <point x="2568.4616079494126" y="768.9609375" />
+      <point x="2656.7663730803943" y="768.9609375" />
+      <point x="2656.7663730803943" y="678.9609375" />
+      <point x="2716.1413730803943" y="678.9609375" />
+      <point x="-46.75" y="14.0" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.TreeFoliage" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.BaseTileGroup" relationship="CREATE">
-      <point x="-71.0" y="0.0" />
-      <point x="1026.25" y="417.0" />
-      <point x="31.25" y="14.0" />
-    </edge>
-    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.templating.contexts.TemplateWorld" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.templating.templates.TemplatePart" relationship="TO_ONE">
-      <point x="0.0" y="14.0" />
       <point x="0.0" y="-14.0" />
+      <point x="50.70833333333326" y="514.9609375" />
+      <point x="45.308039747060775" y="514.9609375" />
+      <point x="45.308039747060775" y="504.9609375" />
+      <point x="59.310636856368774" y="504.9609375" />
+      <point x="40.75" y="14.0" />
     </edge>
-    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.BaseTileGroup" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.RenderInfos" relationship="CREATE">
-      <point x="-81.5" y="0.0" />
-      <point x="492.5" y="357.0" />
-      <point x="17.5" y="-14.0" />
-    </edge>
-    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.WorldRenderScene" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.WorldCanvas" relationship="TO_ONE">
-      <point x="-22.75" y="-14.0" />
-      <point x="1432.25" y="-23.0" />
-      <point x="76.5" y="0.0" />
-    </edge>
-    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.BaseTileGenerator" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.MultiTilesManager" relationship="TO_MANY">
-      <point x="97.0" y="0.0" />
-      <point x="-96.0" y="0.0" />
-    </edge>
-    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.templating.tiles.BaseClosedTemplatedTile" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.MultiTilesManager" relationship="TO_ONE">
-      <point x="116.16666666666674" y="14.0" />
-      <point x="451.16666666666674" y="672.0" />
-      <point x="1230.0" y="672.0" />
-      <point x="-5.0" y="-14.0" />
-    </edge>
-    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.templating.templates.NullWall" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.multitiles.templating.templates.TemplatePart" relationship="REALIZATION">
-      <point x="-56.0" y="0.0" />
-      <point x="77.0" y="0.0" />
-    </edge>
-    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.TerminalWorldCanvas" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.WorldCanvas" relationship="REALIZATION">
+    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.canvas.TerminalWorldCanvas" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.canvas.WorldCanvas" relationship="REALIZATION">
       <point x="0.0" y="-14.0" />
-      <point x="908.5" y="61.0" />
-      <point x="796.5" y="61.0" />
-      <point x="-38.5" y="14.0" />
+      <point x="2151.378274616079" y="798.9609375" />
+      <point x="1943.6797651309817" y="798.9609375" />
+      <point x="1943.6797651309817" y="688.9609375" />
+      <point x="2059.878274616079" y="688.9609375" />
+      <point x="-38.25" y="14.0" />
+    </edge>
+    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.multitiles.ComplexTile" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.Tile" relationship="INTERFACE_GENERALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="308.9747064137275" y="45.9609375" />
+      <point x="580.919941282746" y="45.9609375" />
+      <point x="-26.0" y="14.0" />
+    </edge>
+    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.sprites.LootSprite" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.Tile" relationship="TO_ONE">
+      <point x="32.5" y="-14.0" />
+      <point x="1958.5032746160791" y="596.9609375" />
+      <point x="1931.2532746160791" y="596.9609375" />
+      <point x="1931.2532746160791" y="55.9609375" />
+      <point x="1042.0032746160791" y="55.9609375" />
+      <point x="1042.0032746160791" y="45.9609375" />
+      <point x="632.919941282746" y="45.9609375" />
+      <point x="26.0" y="14.0" />
+    </edge>
+    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.canvas.TextureWorldCanvas" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.canvas.WorldCanvas" relationship="REALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="1913.8782746160791" y="798.9609375" />
+      <point x="1943.6797651309817" y="798.9609375" />
+      <point x="1943.6797651309817" y="688.9609375" />
+      <point x="2059.878274616079" y="688.9609375" />
+      <point x="-38.25" y="14.0" />
+    </edge>
+    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.TreeFoliage" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.Tile" relationship="TO_ONE">
+      <point x="47.33333333333334" y="-14.0" />
+      <point x="98.04166666666663" y="524.9609375" />
+      <point x="110.56063685636866" y="524.9609375" />
+      <point x="110.56063685636866" y="55.9609375" />
+      <point x="1042.0032746160791" y="55.9609375" />
+      <point x="1042.0032746160791" y="45.9609375" />
+      <point x="632.919941282746" y="45.9609375" />
+      <point x="26.0" y="14.0" />
     </edge>
     <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.interactions.InteractionSprite" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.Sprite" relationship="INTERFACE_GENERALIZATION">
-      <point x="-66.0" y="-14.0" />
-      <point x="15.0" y="14.0" />
+      <point x="0.0" y="-14.0" />
+      <point x="1301.1666666666665" y="606.9609375" />
+      <point x="1596.5032746160791" y="606.9609375" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.WorldRenderScene" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.Tile" relationship="TO_ONE">
+      <point x="-50.0" y="-14.0" />
+      <point x="2400.75" y="879.9609375" />
+      <point x="2014.7689701897016" y="879.9609375" />
+      <point x="2014.7689701897016" y="869.9609375" />
+      <point x="-83.99999999999977" y="869.9609375" />
+      <point x="-84.0" y="55.9609375" />
+      <point x="1042.0032746160791" y="55.9609375" />
+      <point x="1042.0032746160791" y="45.9609375" />
+      <point x="632.919941282746" y="45.9609375" />
+      <point x="26.0" y="14.0" />
+    </edge>
+    <edge source="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.multitiles.templating.tiles.BaseClosedTemplatedTile" target="io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.Tile" relationship="TO_ONE">
+      <point x="63.25" y="-14.0" />
+      <point x="463.2247064137275" y="258.9609375" />
+      <point x="717.0833333333333" y="258.9609375" />
+      <point x="717.0833333333333" y="55.9609375" />
+      <point x="1042.0032746160791" y="55.9609375" />
+      <point x="1042.0032746160791" y="45.9609375" />
+      <point x="632.919941282746" y="45.9609375" />
+      <point x="26.0" y="14.0" />
     </edge>
   </edges>
-  <settings layout="Compact" zoom="0.32814282485875707" showDependencies="true" x="621.4171726242948" y="531.6561370548309" />
-  <SelectedNodes />
+  <settings layout="Hierarchic" zoom="0.4545761567038163" showDependencies="true" x="1396.5" y="540.5000000000001" />
+  <SelectedNodes>
+    <node>io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.canvas.ImageWorldCanvas</node>
+  </SelectedNodes>
   <Categories>
     <Category>Inner Classes</Category>
   </Categories>

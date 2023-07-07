@@ -4,7 +4,9 @@ import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.Tile
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.WorldRenderScene
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.canvas.WorldCanvas
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.Sprite
+import io.github.alexiscomete.lapinousecond.worlds.map.tiles.textures.TexturesForSprites
 import java.awt.Color
+import java.awt.image.BufferedImage
 
 class LootSprite(override var tile: Tile) : Sprite {
     override fun initialLoadOn(tile: Tile) {
@@ -48,11 +50,7 @@ class LootSprite(override var tile: Tile) : Sprite {
         }
     }
 
-    override fun texture(): Array<Array<Color>> {
-        TODO("Not yet implemented")
-    }
-
-    override fun transparentMap(): Array<Array<Boolean>> {
-        TODO("Not yet implemented")
+    override fun texture(): BufferedImage {
+        return TexturesForSprites.NULL.image
     }
 }

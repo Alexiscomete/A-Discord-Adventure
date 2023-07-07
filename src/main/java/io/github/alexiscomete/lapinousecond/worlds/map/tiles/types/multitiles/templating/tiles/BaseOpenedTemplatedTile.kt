@@ -1,6 +1,6 @@
 package io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.multitiles.templating.tiles
 
-import io.github.alexiscomete.lapinousecond.worlds.map.tiles.RenderingType
+import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.RenderingType
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.Tile
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.multitiles.MultiTilesManager
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.canvas.WorldCanvas

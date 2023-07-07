@@ -30,20 +30,10 @@ class TextureWorldCanvas : WorldCanvas {
     }
 
     override fun drawSprite(sprite: Sprite, x: Int, y: Int, priority: Int) {
-        if (y < 0 || y >= currentHeight || x < 0 || x >= currentWidth) return
-        val colors = sprite.texture()
-        val transparent = sprite.transparentMap()
-        for (i in 0 until TILE_WIDTH) {
-            for (j in 0 until TILE_HEIGHT) {
-                if (priority < priorityMap[y * TILE_HEIGHT + j][x * TILE_WIDTH + i] || transparent[y * TILE_HEIGHT + i][x * TILE_WIDTH + i]) continue
-                bufferedImage.setRGB(
-                    x * TILE_WIDTH + i,
-                    y * TILE_HEIGHT + j,
-                    colors[y * TILE_HEIGHT + i][x * TILE_WIDTH + i].rgb
-                )
-                priorityMap[y * TILE_HEIGHT + j][x * TILE_WIDTH + i] = priority
-            }
-        }
+        if (y < 0 || y > currentHeight - TILE_HEIGHT || x < 0 || x > currentWidth - TILE_WIDTH) return
+        val gr = bufferedImage.createGraphics()
+        gr.drawImage(sprite.texture(), x * TILE_WIDTH, y * TILE_HEIGHT, null)
+        gr.dispose()
     }
 
     override fun justDrawThisOver(justDrawIt: JustDrawIt, x: Int, y: Int) {
