@@ -2,7 +2,6 @@ package io.github.alexiscomete.lapinousecond.worlds.map.tiles.types
 
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.RenderingType
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.canvas.WorldCanvas
-import io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.Sprite
 import java.awt.Color
 
 const val TILE_HEIGHT = 16
@@ -23,7 +22,6 @@ interface Tile {
     fun renderingType(xToUse: Int, yToUse: Int, distance: Int, canvas: WorldCanvas): RenderingType
 
     fun isWalkable(): Boolean
-    fun removeSprite(sprite: Sprite)
 
     fun resetRender()
 

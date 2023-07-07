@@ -1,11 +1,10 @@
 package io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.multitiles.templating.tiles
 
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.RenderingType
+import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.canvas.WorldCanvas
+import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.RENDER_DISTANCE_DEFAULT
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.Tile
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.multitiles.MultiTilesManager
-import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.canvas.WorldCanvas
-import io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.Sprite
-import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.RENDER_DISTANCE_DEFAULT
 
 abstract class BaseClosedTemplatedTile(
     override val x: Int,
@@ -59,10 +58,5 @@ abstract class BaseClosedTemplatedTile(
 
     override fun isWalkable(): Boolean {
         return false
-    }
-
-    override fun removeSprite(sprite: Sprite) {
-        // no sprite
-        return
     }
 }

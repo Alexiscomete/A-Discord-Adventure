@@ -2,7 +2,6 @@ package io.github.alexiscomete.lapinousecond.worlds.map.tiles.types
 
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.RenderingType
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.canvas.WorldCanvas
-import io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.Sprite
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.textures.TexturesInCode
 import java.awt.Color
 import kotlin.math.min
@@ -25,8 +24,7 @@ class MapTile(
     override val y: Int,
     private val height: Double,
     private val isPath: Boolean = false,
-    private val isRiver: Boolean = false,
-    private val sprites: MutableList<Sprite> = mutableListOf()
+    private val isRiver: Boolean = false
 ) : Tile {
     override var up: Tile? = null
     override var down: Tile? = null
@@ -68,7 +66,6 @@ class MapTile(
         distance: Int,
         canvas: WorldCanvas
     ) {
-        sprites.forEach { it.render(canvas, xToUse, yToUse, distance) }
         canvas.drawTile(this, xToUse, yToUse)
     }
 
@@ -395,10 +392,6 @@ class MapTile(
 
     override fun isWalkable(): Boolean {
         return true
-    }
-
-    override fun removeSprite(sprite: Sprite) {
-        sprites.remove(sprite)
     }
 }
 
