@@ -9,7 +9,6 @@ import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.canvas.Termi
 import org.junit.jupiter.api.Test
 import java.awt.Color
 
-@Deprecated("This test is deprecated.")
 class CacheTest {
 
     @Test

@@ -130,32 +130,4 @@ class WorldProcedural(
     override fun riverLevel(x: Double, y: Double): Double {
         return river.getValue(x, y)
     }
-
-    @Deprecated("Use WorldRenderScene instead")
-    private fun findColor(x: Int, y: Int, zooms: Zooms): Int {
-        val color: Int = (getHeight(x, y, zooms) * 255).toInt()
-        var blue = 0
-        var green = 0
-        var red = 0
-        if (color > 127) {
-            if (color > 128) {
-                if (zooms == Zooms.ZOOM_IN && isPath(x.toDouble(), y.toDouble())) {
-                    return Color(255, 178, 79).rgb
-                }
-                green = 255 - color
-                if (color > 191) {
-                    red = 255 - color
-                    if (color > 224) {
-                        blue = color
-                        green = color
-                    }
-                }
-            } else {
-                return Color(245, 245, 66).rgb
-            }
-        } else {
-            blue = color
-        }
-        return Color(red, green, blue).rgb
-    }
 }
