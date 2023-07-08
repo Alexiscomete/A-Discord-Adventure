@@ -4,6 +4,7 @@ import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.BaseWorldRen
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.WorldRenderer
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.canvas.WorldCanvas
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.Sprite
+import io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.SpritesManager
 
 const val DEFAULT_SIZE_RENDER = 21
 
@@ -12,18 +13,12 @@ class WorldRenderScene(
     x: Int,
     y: Int,
     private val tileGenerator: TileGenerator,
-    val worldRenderer: WorldRenderer = BaseWorldRenderer(DEFAULT_SIZE_RENDER, canvas, tileGenerator)
+    val worldRenderer: WorldRenderer = BaseWorldRenderer(DEFAULT_SIZE_RENDER, canvas, tileGenerator, SpritesManager())
 ) {
     private var currentTile = tileGenerator.getOrGenerateTileAt(x, y)
-    private val sprites = mutableListOf<Sprite>()
 
     fun renderAll() {
         worldRenderer.renderAll(currentTile)
-        for (sprite in sprites) {
-            if (sprite.tile.isRendered()) {
-                sprite.render(canvas, 0, 0, 0)
-            }
-        }
         tileGenerator.updateCache()
     }
 

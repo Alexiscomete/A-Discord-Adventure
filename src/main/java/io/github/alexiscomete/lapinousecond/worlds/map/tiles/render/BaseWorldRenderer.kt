@@ -3,12 +3,14 @@ package io.github.alexiscomete.lapinousecond.worlds.map.tiles.render
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.Tile
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.TileGenerator
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.canvas.WorldCanvas
+import io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.SpritesManager
 import java.util.*
 
 class BaseWorldRenderer(
     val size: Int,
     val canvas: WorldCanvas,
-    private val tileGenerator: TileGenerator
+    private val tileGenerator: TileGenerator,
+    private val spritesManager: SpritesManager
 ) : WorldRenderer {
     private var renderQueue: Queue<RenderInfos> = LinkedList()
 
@@ -23,6 +25,9 @@ class BaseWorldRenderer(
             when (renderInfos.renderingType(canvas)) {
                 RenderingType.NO_RENDER_REC -> {
                     renderInfos.render(canvas)
+                    spritesManager.spritesOnTile(renderInfos.tile).forEach {
+                        it.render(canvas, renderInfos.xToUse, renderInfos.yToUse, renderInfos.distance)
+                    }
                 }
                 RenderingType.ONLY_IF_EXIST -> {
                     with(renderInfos) {
@@ -72,6 +77,9 @@ class BaseWorldRenderer(
                         }
                     }
                     renderInfos.render(canvas)
+                    spritesManager.spritesOnTile(renderInfos.tile).forEach {
+                        it.render(canvas, renderInfos.xToUse, renderInfos.yToUse, renderInfos.distance)
+                    }
                 }
                 RenderingType.ALWAYS_RENDER -> {
                     with(renderInfos) {
@@ -136,6 +144,9 @@ class BaseWorldRenderer(
                         )
                     }
                     renderInfos.render(canvas)
+                    spritesManager.spritesOnTile(renderInfos.tile).forEach {
+                        it.render(canvas, renderInfos.xToUse, renderInfos.yToUse, renderInfos.distance)
+                    }
                 }
 
                 RenderingType.NOTHING -> {}
