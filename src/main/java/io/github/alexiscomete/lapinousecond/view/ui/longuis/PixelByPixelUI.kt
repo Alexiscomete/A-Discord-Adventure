@@ -66,7 +66,7 @@ class PixelByPixelUI(
 
     private val canvas = TextureWorldCanvas()
     private var worldRenderScene: WorldRenderScene = WorldRenderScene(
-        canvas, x, y, BaseTileGenerator(zooms, world.worldManager)
+        canvas, x, y, BaseTileGenerator(zooms, world.worldManager,)
     )
 
     override fun getTitle(): String {
@@ -128,7 +128,7 @@ class PixelByPixelUI(
                     zooms
                 }
                 worldRenderScene = WorldRenderScene(
-                    canvas, x, y, BaseTileGenerator(zooms, world.worldManager)
+                    canvas, x, y, BaseTileGenerator(zooms, world.worldManager,)
                 )
                 null
             }),
@@ -149,7 +149,7 @@ class PixelByPixelUI(
                     zooms
                 }
                 worldRenderScene = WorldRenderScene(
-                    canvas, x, y, BaseTileGenerator(zooms, world.worldManager)
+                    canvas, x, y, BaseTileGenerator(zooms, world.worldManager,)
                 )
                 null
             }),

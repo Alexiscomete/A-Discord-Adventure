@@ -4,6 +4,8 @@ import io.github.alexiscomete.lapinousecond.worlds.THRESHOLD_PATH
 import io.github.alexiscomete.lapinousecond.worlds.THRESHOLD_RIVER
 import io.github.alexiscomete.lapinousecond.worlds.WorldManager
 import io.github.alexiscomete.lapinousecond.worlds.Zooms
+import io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.SpritesManager
+import io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.sprites.LootSprite
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.MapTile
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.OCEAN_HEIGHT
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.Tile
@@ -25,6 +27,8 @@ class BaseTileGenerator(
 ) : TileGenerator {
     private val multiTilesManagers = mutableListOf<MultiTilesManager>()
     private var dicoTiles = mutableMapOf<Pair<Int, Int>, Tile>()
+    override val spritesManager: SpritesManager = SpritesManager()
+
     override fun getOrGenerateTileAt(x: Int, y: Int): Tile {
         var tile: Tile? = null
         multiTilesManagers.forEach { if (it.hasTileAt(x, y)) tile = it.baseTileAt(x, y) }
@@ -73,7 +77,11 @@ class BaseTileGenerator(
                     world.getHeight(x, y, zoomLevel),
                     world.isPath(x.toDouble(), y.toDouble()),
                     world.isRiver(x.toDouble(), y.toDouble())
-                )
+                ).also {
+                    if ((0..100).random() == 5) {
+                        spritesManager.sprites.add(LootSprite(it))
+                    }
+                }
             } else {
                 MapTile(x, y, world.getHeight(x, y, zoomLevel))
             }
@@ -91,6 +99,7 @@ class BaseTileGenerator(
         }
         toDelete.forEach {
             it.value.delete()
+            spritesManager.spritesOnTile(it.value).forEach { s -> spritesManager.sprites.remove(s) }
             dicoTiles.remove(it.key)
         }
         val toDelete2 = mutableListOf<MultiTilesManager>()

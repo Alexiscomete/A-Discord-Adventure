@@ -565,7 +565,7 @@ enum class WorldEnum(
 
     private fun imageFrom(minX: Int, minY: Int, maxX: Int, maxY: Int, zooms: Zooms = Zooms.ZOOM_OUT): BufferedImage {
         val canvas = ImageWorldCanvas()
-        val tileGenerator = BaseTileGenerator(zooms, worldManager)
+        val tileGenerator = BaseTileGenerator(zooms, worldManager,)
         val renderScene = WorldRenderScene(
             canvas,
             minX,
