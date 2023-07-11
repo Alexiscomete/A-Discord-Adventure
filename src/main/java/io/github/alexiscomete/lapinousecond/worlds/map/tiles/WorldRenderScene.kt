@@ -11,7 +11,12 @@ class WorldRenderScene(
     x: Int,
     y: Int,
     private val tileGenerator: TileGenerator,
-    val worldRenderer: WorldRenderer = BaseWorldRenderer(DEFAULT_SIZE_RENDER, canvas, tileGenerator, tileGenerator.spritesManager)
+    val worldRenderer: WorldRenderer = BaseWorldRenderer(
+        DEFAULT_SIZE_RENDER,
+        canvas,
+        tileGenerator,
+        tileGenerator.spritesManager
+    )
 ) {
     private var currentTile = tileGenerator.getOrGenerateTileAt(x, y)
 
