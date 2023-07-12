@@ -51,6 +51,6 @@ class LootSprite(override var tile: Tile) : Sprite {
     }
 
     override fun texture(): BufferedImage {
-        return TexturesForSprites.NULL.image
+        return TexturesForSprites.CHEST.image
     }
 }
