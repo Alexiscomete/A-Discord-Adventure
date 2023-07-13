@@ -8,6 +8,8 @@ import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.Tile
 import java.awt.Color
 import java.awt.image.BufferedImage
 
+
+// TODO : relier aux mouvements
 class PlayerSprite(override var tile: Tile) : Sprite {
     override fun initialLoadOn(tile: Tile) {
         return
