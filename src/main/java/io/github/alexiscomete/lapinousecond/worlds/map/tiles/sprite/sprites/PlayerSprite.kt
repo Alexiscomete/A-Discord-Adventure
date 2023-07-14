@@ -33,7 +33,7 @@ class PlayerSprite(override var tile: Tile) : Sprite {
     }
 
     override fun isRendered(): Boolean {
-        return tile.isRendered()
+        return true
     }
 
     override fun color(): Color {
