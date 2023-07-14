@@ -19,12 +19,8 @@ class PlayerSprite(override var tile: Tile) : Sprite {
         return
     }
 
-    private var opened = false
-
     override fun render(canvas: WorldCanvas, xToUse: Int, yToUse: Int, distance: Int) {
-        if (!opened && distance <= 1) {
-            opened = true
-        }
+        println("PlayerSprite.render")
         canvas.drawSprite(this, xToUse, yToUse, 5)
     }
 

@@ -24,8 +24,6 @@ class PixelByPixelUI(
 
     private var title: String = "Pixel by pixel"
     private var description = "Move with buttons"
-    private val justDrawPlayer =
-        JustDrawIt(letter = 'P', color = Color.RED, texture = Array(TILE_HEIGHT) { Array(TILE_WIDTH) { Color.RED } })
 
     private val player
         get() = playerUI.getPlayer()
@@ -102,9 +100,6 @@ class PixelByPixelUI(
 
     override fun getBufferedImage(): BufferedImage {
         worldRenderScene.renderAll()
-        canvas.justDrawThisOver(
-            justDrawPlayer, worldRenderScene.worldRenderer.xSource, worldRenderScene.worldRenderer.ySource
-        )
         return world.zoomWithDecorElementsSquare(x, y, DEFAULT_SIZE_RENDER/2, zooms, canvas.bufferedImage)
     }
 

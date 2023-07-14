@@ -30,7 +30,9 @@ class TextureWorldCanvas : WorldCanvas {
     }
 
     override fun drawSprite(sprite: Sprite, x: Int, y: Int, priority: Int) {
-        if (y < 0 || y > currentHeight - TILE_HEIGHT || x < 0 || x > currentWidth - TILE_WIDTH) return
+        println("OK0")
+        if (y < 0 || y > currentHeight - TILE_HEIGHT + 1 || x < 0 || x > currentWidth - TILE_WIDTH + 1) return
+        println("OK1")
         val gr = bufferedImage.createGraphics()
         gr.drawImage(sprite.texture(), x * TILE_WIDTH, y * TILE_HEIGHT, null)
         gr.dispose()
