@@ -37,7 +37,7 @@ class LootSprite(override var tile: Tile) : Sprite {
     override fun color(): Color {
         return if (opened) {
             Color(0, 0, 0)
-        }  else {
+        } else {
             Color(255, 255, 255)
         }
     }
@@ -51,6 +51,10 @@ class LootSprite(override var tile: Tile) : Sprite {
     }
 
     override fun texture(): BufferedImage {
-        return TexturesForSprites.CHEST.image
+        return if (opened) {
+            TexturesForSprites.CHEST_OPEN.image
+        } else {
+            TexturesForSprites.CHEST.image
+        }
     }
 }

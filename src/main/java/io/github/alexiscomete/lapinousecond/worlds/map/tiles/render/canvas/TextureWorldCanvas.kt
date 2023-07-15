@@ -11,6 +11,7 @@ class TextureWorldCanvas : WorldCanvas {
 
     private var currentHeight = 1
     private var currentWidth = 1
+
     var bufferedImage: BufferedImage =
         BufferedImage(currentWidth * TILE_WIDTH, currentHeight * TILE_HEIGHT, BufferedImage.TYPE_INT_RGB)
         private set
@@ -30,9 +31,7 @@ class TextureWorldCanvas : WorldCanvas {
     }
 
     override fun drawSprite(sprite: Sprite, x: Int, y: Int, priority: Int) {
-        println("OK0")
-        if (y < 0 || y > currentHeight - TILE_HEIGHT + 1 || x < 0 || x > currentWidth - TILE_WIDTH + 1) return
-        println("OK1")
+        if (y < 0 || y > (currentHeight * TILE_HEIGHT) - TILE_HEIGHT + 1 || x < 0 || x > (currentWidth * TILE_WIDTH) - TILE_WIDTH + 1) return
         val gr = bufferedImage.createGraphics()
         gr.drawImage(sprite.texture(), x * TILE_WIDTH, y * TILE_HEIGHT, null)
         gr.dispose()
