@@ -14,6 +14,7 @@ import io.github.alexiscomete.lapinousecond.data.managesave.CacheCustom
 import io.github.alexiscomete.lapinousecond.data.managesave.CacheGetSet
 import io.github.alexiscomete.lapinousecond.data.managesave.Table
 import io.github.alexiscomete.lapinousecond.data.managesave.saveManager
+import io.github.alexiscomete.lapinousecond.entity.concrete.items.items.StrasbourgSausage
 import io.github.alexiscomete.lapinousecond.view.AnswerEnum
 import io.github.alexiscomete.lapinousecond.view.LangageEnum
 import io.github.alexiscomete.lapinousecond.view.answerManager
@@ -219,6 +220,10 @@ open class Player(id: Long) : CacheGetSet(id, PLAYERS), Owner, ContainsItems {
 
     override fun getAllItems(): ArrayList<Item> {
         // query of all items in the inventory of the player
+        StrasbourgSausage(0).also {
+            it["containsItemsType"]
+            it["containsItemsId"]
+        } // TODO : rendre ça propre
         val query = "SELECT * FROM items WHERE containsItemsType = 'player' AND containsItemsId = '${id}'"
         val preparedStatement = saveManager.preparedStatement(query)
         val result = saveManager.executeMultipleQueryKey(preparedStatement)

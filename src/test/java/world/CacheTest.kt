@@ -19,7 +19,7 @@ class CacheTest {
             canvas,
             10,
             10,
-            BaseTileGenerator(Zooms.ZOOM_IN, WorldEnum.DIBIMAP.worldManager)
+            BaseTileGenerator(Zooms.ZOOM_IN, WorldEnum.DIBIMAP.worldManager, null)
         )
         println("Time to create: ${System.currentTimeMillis() - time}")
         time = System.currentTimeMillis()
@@ -58,7 +58,7 @@ fun main() {
         canvas,
         0,
         600,
-        BaseTileGenerator(Zooms.ZOOM_IN, WorldEnum.NORMAL.worldManager)
+        BaseTileGenerator(Zooms.ZOOM_IN, WorldEnum.NORMAL.worldManager, null)
     )
     var input = ""
     while (input != "quit") {

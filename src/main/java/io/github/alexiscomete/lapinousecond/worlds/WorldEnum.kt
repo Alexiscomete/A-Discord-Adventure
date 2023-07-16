@@ -556,7 +556,7 @@ enum class WorldEnum(
         val maxY = path.maxOf { it.y }
         val minX = path.minOf { it.x }
         val minY = path.minOf { it.y }
-        val img = imageFrom(minX-1, minY-1, maxX+1, maxY+1)
+        val img = imageFrom(minX - 1, minY - 1, maxX + 1, maxY + 1)
         for (p in path) {
             img.setRGB(p.x - minX + 1, p.y - minY + 1, Color.RED.rgb)
         }
@@ -565,7 +565,7 @@ enum class WorldEnum(
 
     private fun imageFrom(minX: Int, minY: Int, maxX: Int, maxY: Int, zooms: Zooms = Zooms.ZOOM_OUT): BufferedImage {
         val canvas = ImageWorldCanvas()
-        val tileGenerator = BaseTileGenerator(zooms, worldManager,)
+        val tileGenerator = BaseTileGenerator(zooms, worldManager, null)
         val renderScene = WorldRenderScene(
             canvas,
             minX,

@@ -1,5 +1,9 @@
 package io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.sprites
 
+import io.github.alexiscomete.lapinousecond.data.managesave.generateUniqueID
+import io.github.alexiscomete.lapinousecond.entity.concrete.items.ITEMS
+import io.github.alexiscomete.lapinousecond.entity.concrete.items.items.StrasbourgSausage
+import io.github.alexiscomete.lapinousecond.entity.entities.Player
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.Tile
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.WorldRenderScene
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.canvas.WorldCanvas
@@ -8,7 +12,7 @@ import io.github.alexiscomete.lapinousecond.worlds.map.tiles.textures.TexturesFo
 import java.awt.Color
 import java.awt.image.BufferedImage
 
-class LootSprite(override var tile: Tile) : Sprite {
+class LootSprite(override var tile: Tile, val player: Player) : Sprite {
     override fun initialLoadOn(tile: Tile) {
         return
     }
@@ -20,8 +24,10 @@ class LootSprite(override var tile: Tile) : Sprite {
     private var opened = false
 
     override fun render(canvas: WorldCanvas, xToUse: Int, yToUse: Int, distance: Int) {
+        ITEMS
         if (!opened && distance <= 1) {
             opened = true
+            player.addItem(StrasbourgSausage(generateUniqueID()))
         }
         canvas.drawSprite(this, xToUse, yToUse, 5)
     }

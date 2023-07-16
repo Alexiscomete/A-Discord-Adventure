@@ -1,5 +1,6 @@
 package io.github.alexiscomete.lapinousecond.worlds.map.tiles
 
+import io.github.alexiscomete.lapinousecond.entity.entities.Player
 import io.github.alexiscomete.lapinousecond.worlds.THRESHOLD_PATH
 import io.github.alexiscomete.lapinousecond.worlds.THRESHOLD_RIVER
 import io.github.alexiscomete.lapinousecond.worlds.WorldManager
@@ -24,6 +25,7 @@ val EMPTY_ROOM_PATH_LEVEL =
 class BaseTileGenerator(
     private val zoomLevel: Zooms,
     val world: WorldManager,
+    val player: Player?
 ) : TileGenerator {
     private val multiTilesManagers = mutableListOf<MultiTilesManager>()
     private var dicoTiles = mutableMapOf<Pair<Int, Int>, Tile>()
@@ -78,8 +80,8 @@ class BaseTileGenerator(
                     world.isPath(x.toDouble(), y.toDouble()),
                     world.isRiver(x.toDouble(), y.toDouble())
                 ).also {
-                    if ((0..100).random() == 5) {
-                        spritesManager.sprites.add(LootSprite(it))
+                    if ((0..200).random() == 5 && player != null) {
+                        spritesManager.sprites.add(LootSprite(it, player))
                     }
                 }
             } else {
