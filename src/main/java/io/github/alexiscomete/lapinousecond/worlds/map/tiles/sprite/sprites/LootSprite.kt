@@ -3,6 +3,7 @@ package io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.sprites
 import io.github.alexiscomete.lapinousecond.data.managesave.generateUniqueID
 import io.github.alexiscomete.lapinousecond.entity.concrete.items.ITEMS
 import io.github.alexiscomete.lapinousecond.entity.concrete.items.items.StrasbourgSausage
+import io.github.alexiscomete.lapinousecond.entity.concrete.items.itemsCacheCustom
 import io.github.alexiscomete.lapinousecond.entity.entities.Player
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.Tile
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.WorldRenderScene
@@ -27,7 +28,11 @@ class LootSprite(override var tile: Tile, val player: Player) : Sprite {
         ITEMS
         if (!opened && distance <= 1) {
             opened = true
-            player.addItem(StrasbourgSausage(generateUniqueID()))
+            val id = generateUniqueID()
+            itemsCacheCustom.add(id)
+            val item = StrasbourgSausage(id)
+            item["type"] = "StrasbourgSausage"
+            player.addItem(item)
         }
         canvas.drawSprite(this, xToUse, yToUse, 5)
     }
