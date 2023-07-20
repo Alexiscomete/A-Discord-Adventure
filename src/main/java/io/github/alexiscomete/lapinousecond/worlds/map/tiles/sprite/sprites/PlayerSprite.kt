@@ -10,21 +10,10 @@ import java.awt.image.BufferedImage
 
 
 class PlayerSprite(override var tile: Tile) : Sprite {
-    override fun initialLoadOn(tile: Tile) {
-        return
-    }
-
-    override fun delete(tile: Tile, worldRenderScene: WorldRenderScene) {
-        return
-    }
 
     override fun render(canvas: WorldCanvas, xToUse: Int, yToUse: Int, distance: Int) {
         println("PlayerSprite.render")
         canvas.drawSprite(this, xToUse, yToUse, 5)
-    }
-
-    override fun resetRender() {
-        return
     }
 
     override fun isRendered(): Boolean {

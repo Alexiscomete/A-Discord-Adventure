@@ -14,18 +14,10 @@ import java.awt.Color
 import java.awt.image.BufferedImage
 
 class LootSprite(override var tile: Tile, val player: Player) : Sprite {
-    override fun initialLoadOn(tile: Tile) {
-        return
-    }
-
-    override fun delete(tile: Tile, worldRenderScene: WorldRenderScene) {
-        return
-    }
 
     private var opened = false
 
     override fun render(canvas: WorldCanvas, xToUse: Int, yToUse: Int, distance: Int) {
-        ITEMS
         if (!opened && distance <= 1) {
             opened = true
             val id = generateUniqueID()
@@ -35,10 +27,6 @@ class LootSprite(override var tile: Tile, val player: Player) : Sprite {
             player.addItem(item)
         }
         canvas.drawSprite(this, xToUse, yToUse, 5)
-    }
-
-    override fun resetRender() {
-        return
     }
 
     override fun isRendered(): Boolean {

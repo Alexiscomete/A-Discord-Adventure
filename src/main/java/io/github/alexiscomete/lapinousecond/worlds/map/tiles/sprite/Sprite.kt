@@ -10,15 +10,9 @@ interface Sprite {
 
     var tile: Tile
 
-    // MEMORY MANAGEMENT
-
-    fun initialLoadOn(tile: Tile)
-    fun delete(tile: Tile, worldRenderScene: WorldRenderScene)
-
     // RENDERING - WORLD
 
     fun render(canvas: WorldCanvas, xToUse: Int, yToUse: Int, distance: Int)
-    fun resetRender()
     fun isRendered(): Boolean
 
     // RENDERING - CANVAS
