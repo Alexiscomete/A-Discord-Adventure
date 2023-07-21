@@ -9,6 +9,7 @@ import io.github.alexiscomete.lapinousecond.worlds.map.tiles.WorldRenderScene
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.SquareWorldRenderer
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.canvas.ImageWorldCanvas
 import procedural_generation.noise.ComplexNoiseBuilder
+import procedural_generation.noise.NodeBuilder
 import procedural_generation.noise.NoiseMapBuilder
 import procedural_generation.noise.nodes.*
 import java.awt.Color
@@ -22,38 +23,45 @@ import kotlin.math.sqrt
 
 const val MAX_PATH_CACHE_SIZE = 4000
 
-var complexNoiseBuilderForCaves = ComplexNoiseBuilder(
+var seedCount = 0L
+
+fun generateBasicBuilder(weight: Double) : NodeBuilder {
+    seedCount++
+    return ChangeSeedNodeBuilder(
+        Operation.ADD,
+        seedCount,
+        NoiseMapBuilder(weight)
+    )
+}
+
+fun generateBasicBuilderBig(weight: Double, big: Double) : NodeBuilder {
+    return ChangeLocationNodeBuilder(
+        generateBasicBuilder(weight),
+        Operation.DIVIDE,
+        Operation.DIVIDE,
+        big,
+        big
+    )
+}
+
+fun generateBasicBuilderSmall(weight: Double, small: Double) : NodeBuilder {
+    return ChangeLocationNodeBuilder(
+        generateBasicBuilder(weight),
+        Operation.MULTIPLY,
+        Operation.MULTIPLY,
+        small,
+        small
+    )
+}
+
+val complexNoiseBuilderForCaves = ComplexNoiseBuilder(
     ValueOperationNodeBuilder(
         ValueOperationNodeBuilder(
             AddNodeBuilder(
                 NoiseMapBuilder(2.0),
-                ChangeSeedNodeBuilder(
-                    Operation.ADD,
-                    1,
-                    NoiseMapBuilder(2.0)
-                ),
-                ChangeLocationNodeBuilder(
-                    ChangeSeedNodeBuilder(
-                        Operation.ADD,
-                        5,
-                        NoiseMapBuilder(1.0)
-                    ),
-                    Operation.MULTIPLY,
-                    Operation.MULTIPLY,
-                    10.0,
-                    10.0
-                ),
-                ChangeLocationNodeBuilder(
-                    ChangeSeedNodeBuilder(
-                        Operation.ADD,
-                        6,
-                        NoiseMapBuilder(0.5)
-                    ),
-                    Operation.MULTIPLY,
-                    Operation.MULTIPLY,
-                    100.0,
-                    100.0
-                )
+                generateBasicBuilder(2.0),
+                generateBasicBuilderSmall(1.0, 10.0),
+                generateBasicBuilderSmall(0.5, 100.0)
             ),
             ValueOperation.ABS,
             0.5
@@ -68,22 +76,8 @@ var complexNoiseBuilderForRivers = ComplexNoiseBuilder(
         ValueOperationNodeBuilder(
             AddNodeBuilder(
                 NoiseMapBuilder(2.0),
-                ChangeSeedNodeBuilder(
-                    Operation.ADD,
-                    1,
-                    NoiseMapBuilder(2.0)
-                ),
-                ChangeLocationNodeBuilder(
-                    ChangeSeedNodeBuilder(
-                        Operation.ADD,
-                        5,
-                        NoiseMapBuilder(1.0)
-                    ),
-                    Operation.MULTIPLY,
-                    Operation.MULTIPLY,
-                    4.0,
-                    4.0
-                )
+                generateBasicBuilder(2.0),
+                generateBasicBuilderSmall(1.0, 4.0)
             ),
             ValueOperation.ABS,
             0.5
@@ -217,78 +211,14 @@ fun getImage(path: String): BufferedImage {
 val builder = ValueOperationNodeBuilder(
     ValueOperationNodeBuilder(
         AddNodeBuilder(
-            ChangeLocationNodeBuilder(
-                ChangeSeedNodeBuilder(
-                    Operation.ADD,
-                    4,
-                    NoiseMapBuilder(5.0)
-                ),
-                Operation.DIVIDE,
-                Operation.DIVIDE,
-                2.5,
-                2.5
-            ),
-            ChangeLocationNodeBuilder(
-                ChangeSeedNodeBuilder(
-                    Operation.ADD,
-                    3,
-                    NoiseMapBuilder(4.0)
-                ),
-                Operation.DIVIDE,
-                Operation.DIVIDE,
-                2.0,
-                2.0
-            ),
-            ChangeLocationNodeBuilder(
-                ChangeSeedNodeBuilder(
-                    Operation.ADD,
-                    2,
-                    NoiseMapBuilder(1.0)
-                ),
-                Operation.DIVIDE,
-                Operation.DIVIDE,
-                2.0,
-                2.0
-            ),
+            generateBasicBuilderBig(5.0, 2.5),
+            generateBasicBuilderBig(4.0, 2.0),
+            generateBasicBuilderBig(1.0, 2.0),
             NoiseMapBuilder(0.5),
-            ChangeSeedNodeBuilder(
-                Operation.ADD,
-                1,
-                NoiseMapBuilder(0.5)
-            ),
-            ChangeLocationNodeBuilder(
-                ChangeSeedNodeBuilder(
-                    Operation.ADD,
-                    5,
-                    NoiseMapBuilder(0.3)
-                ),
-                Operation.MULTIPLY,
-                Operation.MULTIPLY,
-                10.0,
-                10.0
-            ),
-            ChangeLocationNodeBuilder(
-                ChangeSeedNodeBuilder(
-                    Operation.ADD,
-                    6,
-                    NoiseMapBuilder(0.3)
-                ),
-                Operation.MULTIPLY,
-                Operation.MULTIPLY,
-                100.0,
-                100.0
-            ),
-            ChangeLocationNodeBuilder(
-                ChangeSeedNodeBuilder(
-                    Operation.ADD,
-                    7,
-                    NoiseMapBuilder(0.2)
-                ),
-                Operation.MULTIPLY,
-                Operation.MULTIPLY,
-                1000.0,
-                1000.0
-            )
+            generateBasicBuilder(0.5),
+            generateBasicBuilderSmall(0.3, 10.0),
+            generateBasicBuilderSmall(0.3, 100.0),
+            generateBasicBuilderSmall(0.2, 1000.0)
         ),
         ValueOperation.POWER_SYMMETRICAL,
         2.0
@@ -296,6 +226,16 @@ val builder = ValueOperationNodeBuilder(
     ValueOperation.REMOVE_POURCENT,
     0.4
 )
+
+fun generateMaskBuilder(name: String) : NodeBuilder {
+    return ImageMaskNodeBuilder(
+        getImage(name),
+        5.0,
+        Color(0x704A40),
+        Color(0x4D759D),
+        6
+    )
+}
 
 enum class WorldEnum(
     val typeOfServer: String,
@@ -337,13 +277,7 @@ enum class WorldEnum(
             ComplexNoiseBuilder(
                 AddNodeBuilder(
                     builder,
-                    ImageMaskNodeBuilder(
-                        getImage("DIBIMAP"),
-                        5.0,
-                        Color(0x704A40),
-                        Color(0x4D759D),
-                        6
-                    )
+                    generateMaskBuilder("DIBIMAP")
                 )
             ).build(80),
             "DIBIMAP"
@@ -362,13 +296,7 @@ enum class WorldEnum(
             ComplexNoiseBuilder(
                 AddNodeBuilder(
                     builder,
-                    ImageMaskNodeBuilder(
-                        getImage("TUTO"),
-                        5.0,
-                        Color(0x704A40),
-                        Color(0x4D759D),
-                        6
-                    )
+                    generateMaskBuilder("TUTO")
                 )
             ).build(50),
             "TUTO"
