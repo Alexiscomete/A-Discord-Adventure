@@ -1,15 +1,13 @@
 package io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.sprites
 
 import io.github.alexiscomete.lapinousecond.data.managesave.generateUniqueID
-import io.github.alexiscomete.lapinousecond.entity.concrete.items.ITEMS
 import io.github.alexiscomete.lapinousecond.entity.concrete.items.items.StrasbourgSausage
 import io.github.alexiscomete.lapinousecond.entity.concrete.items.itemsCacheCustom
 import io.github.alexiscomete.lapinousecond.entity.entities.Player
-import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.Tile
-import io.github.alexiscomete.lapinousecond.worlds.map.tiles.WorldRenderScene
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.canvas.WorldCanvas
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.Sprite
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.textures.TexturesForSprites
+import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.Tile
 import java.awt.Color
 import java.awt.image.BufferedImage
 
