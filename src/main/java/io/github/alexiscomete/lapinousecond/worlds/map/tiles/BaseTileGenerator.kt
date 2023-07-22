@@ -6,6 +6,7 @@ import io.github.alexiscomete.lapinousecond.worlds.THRESHOLD_RIVER
 import io.github.alexiscomete.lapinousecond.worlds.WorldManager
 import io.github.alexiscomete.lapinousecond.worlds.Zooms
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.SpritesManager
+import io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.sprites.DuckSprite
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.sprites.LootSprite
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.MapTile
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.OCEAN_HEIGHT
@@ -80,8 +81,14 @@ class BaseTileGenerator(
                     world.isPath(x.toDouble(), y.toDouble()),
                     world.isRiver(x.toDouble(), y.toDouble())
                 ).also {
-                    if ((0..200).random() == 5 && player != null) {
-                        spritesManager.sprites.add(LootSprite(it, player))
+                    if (world.isRiver(x.toDouble(), y.toDouble())) {
+                        if ((0..100).random() == 5) {
+                            spritesManager.sprites.add(DuckSprite(it))
+                        }
+                    } else {
+                        if ((0..200).random() == 5 && player != null) {
+                            spritesManager.sprites.add(LootSprite(it, player))
+                        }
                     }
                 }
             } else {

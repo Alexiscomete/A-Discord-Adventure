@@ -11,6 +11,7 @@ class DuckSprite(override var tile: Tile) : SpriteWithIA {
     override fun useIA() {
         TODO("Not yet implemented")
     }
+
     override fun render(canvas: WorldCanvas, xToUse: Int, yToUse: Int, distance: Int) {
         canvas.drawSprite(this, xToUse, yToUse, 5)
     }
