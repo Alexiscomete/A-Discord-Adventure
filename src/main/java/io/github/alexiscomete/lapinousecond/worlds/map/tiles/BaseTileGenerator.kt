@@ -81,7 +81,7 @@ class BaseTileGenerator(
                     world.isPath(x.toDouble(), y.toDouble()),
                     world.isRiver(x.toDouble(), y.toDouble())
                 ).also {
-                    if (world.isRiver(x.toDouble(), y.toDouble())) {
+                    if (it.isRiver) {
                         if ((0..100).random() == 5) {
                             spritesManager.sprites.add(DuckSprite(it))
                         }

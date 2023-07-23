@@ -23,8 +23,8 @@ class MapTile(
     override val x: Int,
     override val y: Int,
     private val height: Double,
-    private val isPath: Boolean = false,
-    private val isRiver: Boolean = false
+    val isPath: Boolean = false,
+    val isRiver: Boolean = false
 ) : Tile {
     override var up: Tile? = null
     override var down: Tile? = null
