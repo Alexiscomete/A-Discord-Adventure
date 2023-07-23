@@ -3,6 +3,7 @@ package io.github.alexiscomete.lapinousecond.worlds.map.tiles
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.BaseWorldRenderer
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.WorldRenderer
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.canvas.WorldCanvas
+import io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.SpriteWithIA
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.sprites.PlayerSprite
 
 const val DEFAULT_SIZE_RENDER = 21
@@ -25,6 +26,7 @@ class WorldRenderScene(
     }
 
     fun renderAll() {
+        tileGenerator.spritesManager.sprites.filterIsInstance<SpriteWithIA>().forEach { it.useIA() }
         worldRenderer.renderAll(currentTile)
         tileGenerator.updateCache()
     }
