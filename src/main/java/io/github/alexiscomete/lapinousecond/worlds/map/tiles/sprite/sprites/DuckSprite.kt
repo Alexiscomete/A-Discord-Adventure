@@ -3,6 +3,7 @@ package io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.sprites
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.canvas.WorldCanvas
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.SpriteWithIA
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.textures.TexturesForSprites
+import io.github.alexiscomete.lapinousecond.worlds.map.tiles.textures.mirrorImage
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.MapTile
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.Tile
 import java.awt.Color
@@ -10,7 +11,7 @@ import java.awt.image.BufferedImage
 
 class DuckSprite(override var tile: Tile) : SpriteWithIA {
     // false is left, true is right
-    private var direction = true
+    private var direction = false
     private var canUp = true
     private var canDown = true
 
@@ -85,6 +86,9 @@ class DuckSprite(override var tile: Tile) : SpriteWithIA {
     }
 
     override fun texture(): BufferedImage {
+        if (direction) {
+            return TexturesForSprites.DUCK.image.mirrorImage
+        }
         return TexturesForSprites.DUCK.image
     }
 
