@@ -9,7 +9,7 @@ import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.Tile
 import java.awt.Color
 import java.awt.image.BufferedImage
 
-class DuckSprite(override var tile: Tile) : SpriteWithIA {
+class DuckSprite(override var tile: Tile) : SpriteWithIA, BaseSprite() {
     // false is left, true is right
     private var direction = false
     private var canUp = true
@@ -67,14 +67,6 @@ class DuckSprite(override var tile: Tile) : SpriteWithIA {
                 canUp = true
             }
         }
-    }
-
-    override fun render(canvas: WorldCanvas, xToUse: Int, yToUse: Int, distance: Int) {
-        canvas.drawSprite(this, xToUse, yToUse, 5)
-    }
-
-    override fun isRendered(): Boolean {
-        return tile.isRendered()
     }
 
     override fun color(): Color {
