@@ -7,6 +7,7 @@ import io.github.alexiscomete.lapinousecond.worlds.WorldManager
 import io.github.alexiscomete.lapinousecond.worlds.Zooms
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.SpritesManager
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.sprites.DuckSprite
+import io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.sprites.DuckZombieSprite
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.sprites.LootSprite
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.sprites.SlimeSprite
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.MapTile
@@ -83,15 +84,20 @@ class BaseTileGenerator(
                     world.isRiver(x.toDouble(), y.toDouble())
                 ).also {
                     if (it.isRiver) {
-                        if ((0..100).random() == 5) {
-                            spritesManager.sprites.add(DuckSprite(it))
+                        when ((0..100).random()) {
+                            5 -> {
+                                spritesManager.sprites.add(DuckSprite(it))
+                            }
+                            in 6..7 -> {
+                                spritesManager.sprites.add(DuckZombieSprite(it))
+                            }
                         }
                     } else {
                         when ((0..200).random()) {
                             5 -> {
                                 if (player != null) spritesManager.sprites.add(LootSprite(it, player))
                             }
-                            in 6..10 -> {
+                            in 6..7 -> {
                                 spritesManager.sprites.add(SlimeSprite(it))
                             }
                         }
