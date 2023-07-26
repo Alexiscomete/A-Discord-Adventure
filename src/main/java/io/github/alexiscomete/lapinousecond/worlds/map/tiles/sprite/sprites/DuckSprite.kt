@@ -1,6 +1,5 @@
 package io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.sprites
 
-import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.canvas.WorldCanvas
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.SpriteWithIA
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.textures.TexturesForSprites
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.textures.mirrorImage
@@ -79,7 +78,7 @@ class DuckSprite(override var tile: Tile) : SpriteWithIA, BaseSprite() {
 
     override fun texture(): BufferedImage {
         if (direction) {
-            return TexturesForSprites.DUCK.image.mirrorImage
+            return TexturesForSprites.DUCK.image.mirrorImage()
         }
         return TexturesForSprites.DUCK.image
     }

@@ -25,7 +25,7 @@ class MapTile(
     private val height: Double,
     val isPath: Boolean = false,
     val isRiver: Boolean = false
-) : Tile {
+) : Tile, DistanceWithPlayer {
     override var up: Tile? = null
     override var down: Tile? = null
     override var left: Tile? = null
@@ -69,16 +69,19 @@ class MapTile(
         canvas.drawTile(this, xToUse, yToUse)
     }
 
+    override var currentDistance = 100
+        private set
+
     override fun renderingType(xToUse: Int, yToUse: Int, distance: Int, canvas: WorldCanvas): RenderingType {
         if (rendered) return RenderingType.NOTHING
         rendered = true
         if (distance > RENDER_DISTANCE_DEFAULT) return RenderingType.NOTHING
         val onCanvas = canvas.onCanvas(xToUse, yToUse)
         if (onCanvas) {
+            currentDistance = distance
             return RenderingType.ALWAYS_RENDER
         }
         return RenderingType.NOTHING
-
     }
 
     override fun letter(): Char {
