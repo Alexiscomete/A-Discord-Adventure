@@ -10,7 +10,8 @@ enum class TexturesForSprites(val path: String) {
     PLAYER_V1("textures/sprites/playerV1.png"),
     CHEST("textures/sprites/chest.png"),
     CHEST_OPEN("textures/sprites/chestopen.png"),
-    DUCK("textures/sprites/duck.png");
+    DUCK("textures/sprites/duck.png"),
+    SLIME("textures/sprites/slime.png"),;
 
     val image: BufferedImage = run {
         val stream = TexturesForSprites::class.java.classLoader.getResourceAsStream(path)
