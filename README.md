@@ -1,12 +1,10 @@
-# A-Discord-Adventure
+# ![Image du joueur](src/main/resources/textures/sprites/playerV1.png) A-Discord-Adventure
 
 ## Le projet
 
-"A Discord Adventure" est un jeu vidéo de type RPG multijoueur. Il n'a pour le moment pas beaucoup de fonctionnalités,
-car c'est long à développer. Actuellement, je travaille sur la version bêta, avec parfois l'aide d'une petite communauté
+"A Discord Adventure" est un jeu vidéo de type RPG multijoueur ![Image d'un slime](src/main/resources/textures/sprites/slime.png). Il n'a pour le moment pas beaucoup de fonctionnalités,
+car c'est long à développer (de 0). Actuellement, je travaille sur la version bêta, avec parfois l'aide d'une petite communauté
 sur mon serveur discord.
-
-![joueur](src/main/resources/textures/sprites/playerV1.png) ![joueur](src/main/resources/textures/sprites/duck.png) ![joueur](src/main/resources/textures/sprites/chest.png) ![joueur](src/main/resources/textures/sprites/slime.png)
 
 Rejoindre le serveur discord pour suivre l'avancement : [Le serveur discord](https://discord.gg/gq3WuZ2uSR)
 
@@ -49,7 +47,7 @@ Ceci était un des premiers rendus. Depuis, j'ai ajouté de nombreux éléments.
 
 Et bien sûr, je ne montre pas tout !!
 
-# Le jeu
+# ![Image d'un canard](src/main/resources/textures/sprites/duck.png) Le jeu
 
 **Je vous invite à TERMINER le tutoriel afin de comprendre le jeu et de lire les dialogues. La plupart des gens ne le
 font pas.**
@@ -58,7 +56,7 @@ L'histoire n'est pas encore complète, mais le but final du jeu sera de trouver 
 
 Récolter des ressources, vendre, trouver des items, se battre, ...
 
-# Le repo github
+# ![Image d'un coffre de loot](src/main/resources/textures/sprites/chest.png) Le repo github
 
 Comme vous pouvez le constater, le bot discord est open source sous license MIT. Vous pouvez donc librement le
 réutiliser et vous en inspirer. Malgré tout, si vous réutilisez le code du bot, citer le projet et le code d'origine est
