@@ -84,11 +84,11 @@ class BaseTileGenerator(
                     world.isRiver(x.toDouble(), y.toDouble())
                 ).also {
                     if (it.isRiver) {
-                        when ((0..100).random()) {
-                            5 -> {
+                        when ((0..200).random()) {
+                            in 6..8 -> {
                                 spritesManager.sprites.add(DuckSprite(it))
                             }
-                            in 6..7 -> {
+                            5 -> {
                                 spritesManager.sprites.add(DuckZombieSprite(it))
                             }
                         }
