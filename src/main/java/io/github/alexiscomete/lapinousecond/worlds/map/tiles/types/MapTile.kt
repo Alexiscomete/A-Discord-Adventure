@@ -2,6 +2,7 @@ package io.github.alexiscomete.lapinousecond.worlds.map.tiles.types
 
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.RenderingType
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.canvas.WorldCanvas
+import io.github.alexiscomete.lapinousecond.worlds.map.tiles.textures.Textures
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.textures.TexturesInCode
 import java.awt.Color
 import kotlin.math.min
@@ -373,6 +374,7 @@ class MapTile(
         } else {
             blue = color
         }
+        val textureTemp = Textures.BASE_GRASS.colorFilterFor(Color(red, green, blue), 1.5)
         return Array(TILE_HEIGHT) { y ->
             Array(TILE_WIDTH) { x ->
                 val distanceR = distanceWithRiver(x, y)
@@ -383,7 +385,7 @@ class MapTile(
                 } else if (distanceR < 6) {
                     Color(91, 32, 0).mix(Color(red, green, blue))
                 } else {
-                    Color(red, green, blue)
+                    textureTemp[x][y]
                 }
             }
         }
