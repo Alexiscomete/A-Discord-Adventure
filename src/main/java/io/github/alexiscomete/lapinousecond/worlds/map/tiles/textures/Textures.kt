@@ -29,7 +29,7 @@ enum class Textures(val path: String) {
             for (y in 0 until TILE_HEIGHT) {
                 // si on dépasse de l'image, prendre un pixel noir
                 try {
-                    pixels[y][x] = Color(bufferedImage.getRGB(x, y))
+                    pixels[x][y] = Color(bufferedImage.getRGB(x, y))
                 } catch (_: ArrayIndexOutOfBoundsException) {
                     println("WARNING again")
                 }
