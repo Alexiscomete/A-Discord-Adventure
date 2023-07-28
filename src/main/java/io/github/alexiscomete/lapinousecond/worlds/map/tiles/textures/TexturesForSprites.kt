@@ -9,9 +9,12 @@ enum class TexturesForSprites(val path: String) {
     NULL("textures/tiles/null.png"),
     PLAYER_V1("textures/sprites/playerV1.png"),
     CHEST("textures/sprites/chest.png"),
+    CHEST_CLOSED("textures/sprites/chest_closed.png"),
     CHEST_OPEN("textures/sprites/chestopen.png"),
+    CHEST_OPENED("textures/sprites/chest_opened.png"),
     DUCK("textures/sprites/duck.png"),
     SLIME("textures/sprites/slime.png"),
+    SLIME_V2("textures/sprites/slime_green.png"),
     DUCK_ZOMBIE("textures/sprites/duckZ.png"),;
 
     val image: BufferedImage = run {
@@ -21,7 +24,7 @@ enum class TexturesForSprites(val path: String) {
         val bufferedImage = ImageIO.read(stream)
 
         if (bufferedImage.width != TILE_WIDTH || bufferedImage.height != TILE_HEIGHT) {
-            throw IllegalArgumentException("Texture $path is not 16x16")
+            println("WARNING -- Texture $path is not ${TILE_WIDTH}x${TILE_HEIGHT} -- PLEASE FIX IT")
         }
 
         stream.close()

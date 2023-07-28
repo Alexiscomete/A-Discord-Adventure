@@ -18,10 +18,10 @@ class SlimeSprite(override var tile: Tile) : BaseMonsterSprite() {
 
     override fun texture(): BufferedImage {
         if ((1..2).random() == 1) {
-            if ((1..2).random() == 1) return TexturesForSprites.SLIME.image.mirrorImage().mirrorImageVertically()
-            return TexturesForSprites.SLIME.image.mirrorImage()
+            if ((1..2).random() == 1) return TexturesForSprites.SLIME_V2.image.mirrorImage().mirrorImageVertically()
+            return TexturesForSprites.SLIME_V2.image.mirrorImage()
         }
-        if ((1..2).random() == 1) return TexturesForSprites.SLIME.image.mirrorImageVertically()
-        return TexturesForSprites.SLIME.image
+        if ((1..2).random() == 1) return TexturesForSprites.SLIME_V2.image.mirrorImageVertically()
+        return TexturesForSprites.SLIME_V2.image
     }
 }

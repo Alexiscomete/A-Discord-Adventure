@@ -49,9 +49,9 @@ class LootSprite(override var tile: Tile, val player: Player) : Sprite {
 
     override fun texture(): BufferedImage {
         return if (opened) {
-            TexturesForSprites.CHEST_OPEN.image
+            TexturesForSprites.CHEST_OPENED.image
         } else {
-            TexturesForSprites.CHEST.image
+            TexturesForSprites.CHEST_CLOSED.image
         }
     }
 }

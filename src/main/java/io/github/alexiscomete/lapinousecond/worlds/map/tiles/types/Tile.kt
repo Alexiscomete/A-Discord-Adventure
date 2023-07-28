@@ -4,8 +4,8 @@ import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.RenderingTyp
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.canvas.WorldCanvas
 import java.awt.Color
 
-const val TILE_HEIGHT = 16
-const val TILE_WIDTH = 16
+const val TILE_HEIGHT = 17
+const val TILE_WIDTH = 17
 
 interface Tile {
 
