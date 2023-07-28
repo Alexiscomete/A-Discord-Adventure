@@ -20,6 +20,9 @@ const val INT_MONTAIN_HEIGHT = (MONTAIN_HEIGHT * HEIGHT_MULTIPLICATOR_TO_INT).to
 const val INT_SNOW_HEIGHT = 224
 const val MAX_HEIGHT = 1.0
 
+val textureTempLight = Textures.BASE_WATER.colorFilterFor(Color(0, 111, 255), 2.3)
+val textureTempDark = Textures.BASE_WATER.colorFilterFor(Color(0, 90, 255), 1.7)
+
 class MapTile(
     override val x: Int,
     override val y: Int,
@@ -343,9 +346,9 @@ class MapTile(
                             if (distanceWithPath(x, y) < 4) {
                                 Color(255, 178, 79)
                             } else if (distanceWithRiver(x, y) < 10) {
-                                Color(0, 90, 255)
+                                textureTempDark[x][y]
                             } else {
-                                Color(0, 111, 255)
+                                textureTempLight[x][y]
                             }
                         }
                     }
@@ -364,7 +367,7 @@ class MapTile(
                         if (distanceWithPath(x, y) < 4) {
                             Color(255, 178, 79)
                         } else if (distanceWithRiver(x, y) < 4) {
-                            Color(0, 111, 255)
+                            textureTempLight[x][y]
                         } else {
                             Color(245, 245, 66)
                         }
@@ -374,14 +377,18 @@ class MapTile(
         } else {
             blue = color
         }
-        val textureTemp = Textures.BASE_GRASS.colorFilterFor(Color(red, green, blue), 1.5)
+        val textureTemp = if (color > INT_OCEAN_HEIGHT) {
+            Textures.BASE_GRASS.colorFilterFor(Color(red, green, blue), 2.3)
+        } else {
+            Textures.BASE_WATER.colorFilterFor(Color(red, green, blue), 2.3)
+        }
         return Array(TILE_HEIGHT) { y ->
             Array(TILE_WIDTH) { x ->
                 val distanceR = distanceWithRiver(x, y)
                 if (distanceWithPath(x, y) < 4) {
                     Color(255, 178, 79)
                 } else if (distanceR < 4) {
-                    Color(0, 111, 255)
+                    textureTempLight[x][y]
                 } else if (distanceR < 6) {
                     Color(91, 32, 0).mix(Color(red, green, blue))
                 } else {

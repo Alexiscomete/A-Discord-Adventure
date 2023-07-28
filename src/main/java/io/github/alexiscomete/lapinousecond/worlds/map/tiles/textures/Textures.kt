@@ -7,7 +7,8 @@ import javax.imageio.ImageIO
 
 enum class Textures(val path: String) {
     NULL("textures/tiles/null.png"),
-    BASE_GRASS("textures/tiles/base_grass.png");
+    BASE_GRASS("textures/tiles/base_grass.png"),
+    BASE_WATER("textures/tiles/water.png");
 
     val pixels: Array<Array<Color>> = Array(TILE_HEIGHT) {
         Array(TILE_WIDTH) {
@@ -37,10 +38,10 @@ enum class Textures(val path: String) {
         }
     }
 
-    private val filters = HashMap<Pair<Color, Double>, Array<Array<Color>>>()
+    private val filters = HashMap<Triple<Color, Double, Double>, Array<Array<Color>>>()
 
-    fun colorFilterFor(color: Color, intensity: Double): Array<Array<Color>> {
-        val key = Pair(color, intensity)
+    fun colorFilterFor(color: Color, intensity: Double, opacity: Double = 0.5): Array<Array<Color>> {
+        val key = Triple(color, intensity, opacity)
         if (filters.containsKey(key)) {
             return filters[key]!!
         }
@@ -48,9 +49,9 @@ enum class Textures(val path: String) {
         val filteredPixels = Array(TILE_HEIGHT) { y ->
             Array(TILE_WIDTH) { x ->
                 val originalColor = pixels[y][x]
-                val red = (originalColor.red * color.red * intensity / 255).toInt().coerceIn(0, 255)
-                val green = (originalColor.green * color.green * intensity / 255).toInt().coerceIn(0, 255)
-                val blue = (originalColor.blue * color.blue * intensity / 255).toInt().coerceIn(0, 255)
+                val red = ((originalColor.red + color.red * intensity * opacity) / (1 + opacity)).toInt().coerceIn(0, 255)
+                val green = ((originalColor.green + color.green * intensity * opacity) / (1 + opacity)).toInt().coerceIn(0, 255)
+                val blue = ((originalColor.blue + color.blue * intensity * opacity) / (1 + opacity)).toInt().coerceIn(0, 255)
 
                 Color(red, green, blue)
             }
