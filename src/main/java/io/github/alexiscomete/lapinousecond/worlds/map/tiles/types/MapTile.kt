@@ -145,114 +145,28 @@ class MapTile(
     }
 
     private fun distanceWithPath(subX: Int, subY: Int): Int {
-        // max is 16
-        val distanceUp = up?.let {
-            if (it is MapTile && it.isPath) {
-                subY
-            } else {
-                min(
-                    it.left?.let { upLeft ->
-                        if (upLeft is MapTile && upLeft.isPath) {
-                            subY + subX
-                        } else {
-                            TILE_HEIGHT
-                        }
-                    } ?: TILE_HEIGHT,
-                    it.right?.let { upRight ->
-                        if (upRight is MapTile && upRight.isPath) {
-                            subY + TILE_HEIGHT - subX
-                        } else {
-                            TILE_HEIGHT
-                        }
-                    } ?: TILE_HEIGHT
-                )
-            }
-        } ?: TILE_HEIGHT
-        val distanceDown = down?.let {
-            if (it is MapTile && it.isPath) {
-                TILE_HEIGHT - subY
-            } else {
-                min(
-                    it.left?.let { downLeft ->
-                        if (downLeft is MapTile && downLeft.isPath) {
-                            TILE_HEIGHT - subY + subX
-                        } else {
-                            TILE_HEIGHT
-                        }
-                    } ?: TILE_HEIGHT,
-                    it.right?.let { downRight ->
-                        if (downRight is MapTile && downRight.isPath) {
-                            (TILE_HEIGHT * 2) - subY - subX
-                        } else {
-                            TILE_HEIGHT
-                        }
-                    } ?: TILE_HEIGHT
-                )
-            }
-        } ?: TILE_HEIGHT
-        val distanceLeft = left?.let {
-            if (it is MapTile && it.isPath) {
-                subX
-            } else {
-                min(
-                    it.up?.let { leftUp ->
-                        if (leftUp is MapTile && leftUp.isPath) {
-                            subX + subY
-                        } else {
-                            TILE_WIDTH
-                        }
-                    } ?: TILE_WIDTH,
-                    it.down?.let { leftDown ->
-                        if (leftDown is MapTile && leftDown.isPath) {
-                            subX + TILE_WIDTH - subY
-                        } else {
-                            TILE_WIDTH
-                        }
-                    } ?: TILE_WIDTH
-                )
-            }
-        } ?: TILE_WIDTH
-        val distanceRight = right?.let {
-            if (it is MapTile && it.isPath) {
-                TILE_WIDTH - subX
-            } else {
-                min(
-                    it.up?.let { rightUp ->
-                        if (rightUp is MapTile && rightUp.isPath) {
-                            TILE_WIDTH - subX + subY
-                        } else {
-                            TILE_WIDTH
-                        }
-                    } ?: TILE_WIDTH,
-                    it.down?.let { rightDown ->
-                        if (rightDown is MapTile && rightDown.isPath) {
-                            (TILE_WIDTH * 2) - subX - subY
-                        } else {
-                            TILE_WIDTH
-                        }
-                    } ?: TILE_WIDTH
-                )
-            }
-        } ?: TILE_WIDTH
-        return min(min(distanceUp, distanceDown), min(distanceLeft, distanceRight))
+        return distanceWith(subX, subY) { it.isPath }
     }
 
     private fun distanceWithRiver(subX: Int, subY: Int): Int {
-        // max is 16
+        return distanceWith(subX, subY) { it.isRiver }
+    }
+
+    private inline fun distanceWith(subX: Int, subY: Int, apply: (MapTile) -> Boolean): Int {
         val distanceUp = up?.let {
-            if (it is MapTile && it.isRiver) {
+            if (it is MapTile && apply(it)) {
                 subY
             } else {
                 min(
                     it.left?.let { upLeft ->
-                        if (upLeft is MapTile && upLeft.isRiver) {
+                        if (upLeft is MapTile && apply(upLeft)) {
                             subY + subX
                         } else {
                             TILE_HEIGHT
                         }
                     } ?: TILE_HEIGHT,
                     it.right?.let { upRight ->
-                        if (upRight is MapTile && upRight.isRiver) {
+                        if (upRight is MapTile && apply(upRight)) {
                             subY + TILE_HEIGHT - subX
                         } else {
                             TILE_HEIGHT
@@ -267,14 +181,14 @@ class MapTile(
             } else {
                 min(
                     it.left?.let { downLeft ->
-                        if (downLeft is MapTile && downLeft.isRiver) {
+                        if (downLeft is MapTile && apply(downLeft)) {
                             TILE_HEIGHT - subY + subX
                         } else {
                             TILE_HEIGHT
                         }
                     } ?: TILE_HEIGHT,
                     it.right?.let { downRight ->
-                        if (downRight is MapTile && downRight.isRiver) {
+                        if (downRight is MapTile && apply(downRight)) {
                             (TILE_HEIGHT * 2) - subY - subX
                         } else {
                             TILE_HEIGHT
@@ -284,19 +198,19 @@ class MapTile(
             }
         } ?: TILE_HEIGHT
         val distanceLeft = left?.let {
-            if (it is MapTile && it.isRiver) {
+            if (it is MapTile && apply(it)) {
                 subX
             } else {
                 min(
                     it.up?.let { leftUp ->
-                        if (leftUp is MapTile && leftUp.isRiver) {
+                        if (leftUp is MapTile && apply(leftUp)) {
                             subX + subY
                         } else {
                             TILE_WIDTH
                         }
                     } ?: TILE_WIDTH,
                     it.down?.let { leftDown ->
-                        if (leftDown is MapTile && leftDown.isRiver) {
+                        if (leftDown is MapTile && apply(leftDown)) {
                             subX + TILE_WIDTH - subY
                         } else {
                             TILE_WIDTH
@@ -306,19 +220,19 @@ class MapTile(
             }
         } ?: TILE_WIDTH
         val distanceRight = right?.let {
-            if (it is MapTile && it.isRiver) {
+            if (it is MapTile && apply(it)) {
                 TILE_WIDTH - subX
             } else {
                 min(
                     it.up?.let { rightUp ->
-                        if (rightUp is MapTile && rightUp.isRiver) {
+                        if (rightUp is MapTile && apply(rightUp)) {
                             TILE_WIDTH - subX + subY
                         } else {
                             TILE_WIDTH
                         }
                     } ?: TILE_WIDTH,
                     it.down?.let { rightDown ->
-                        if (rightDown is MapTile && rightDown.isRiver) {
+                        if (rightDown is MapTile && apply(rightDown)) {
                             (TILE_WIDTH * 2) - subX - subY
                         } else {
                             TILE_WIDTH
