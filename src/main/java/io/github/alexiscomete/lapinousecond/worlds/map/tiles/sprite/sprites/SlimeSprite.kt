@@ -6,8 +6,12 @@ import io.github.alexiscomete.lapinousecond.worlds.map.tiles.textures.mirrorImag
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.Tile
 import java.awt.Color
 import java.awt.image.BufferedImage
+import java.time.LocalDate
 
 class SlimeSprite(override var tile: Tile) : BaseMonsterSprite() {
+
+    private val day = LocalDate.now().dayOfMonth
+
     override fun color(): Color {
         return Color(0, 255, 0)
     }
@@ -17,7 +21,7 @@ class SlimeSprite(override var tile: Tile) : BaseMonsterSprite() {
     }
 
     override fun texture(): BufferedImage {
-        if ((1..2).random() == 1) {
+        if (day == 30 && (1..10).random() == 1) {
             if ((1..2).random() == 1) return TexturesForSprites.SLIME_V2.image.mirrorImage().mirrorImageVertically()
             return TexturesForSprites.SLIME_V2.image.mirrorImage()
         }
