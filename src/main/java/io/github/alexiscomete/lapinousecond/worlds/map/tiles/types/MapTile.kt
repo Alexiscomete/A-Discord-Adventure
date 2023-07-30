@@ -189,7 +189,7 @@ class MapTile(
             }
         } ?: TILE_HEIGHT
         val distanceDown = down?.let {
-            if (it is MapTile && it.isRiver) {
+            if (it is MapTile && apply(it)) {
                 TILE_HEIGHT - subY
             } else {
                 min(
