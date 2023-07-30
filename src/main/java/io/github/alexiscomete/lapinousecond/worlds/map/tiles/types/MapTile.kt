@@ -20,8 +20,21 @@ const val INT_MONTAIN_HEIGHT = (MONTAIN_HEIGHT * HEIGHT_MULTIPLICATOR_TO_INT).to
 const val INT_SNOW_HEIGHT = 224
 const val MAX_HEIGHT = 1.0
 
-val textureTempLight = Textures.BASE_WATER.colorFilterFor(Color(0, 111, 255), 2.3)
-val textureTempDark = Textures.BASE_WATER.colorFilterFor(Color(0, 90, 255), 1.7)
+val texturesLight = listOf(
+    Textures.BASE_WATER1.colorFilterFor(Color(0, 111, 255), 2.3),
+    Textures.BASE_WATER2.colorFilterFor(Color(0, 111, 255), 2.3),
+    Textures.BASE_WATER3.colorFilterFor(Color(0, 111, 255), 2.3),
+    Textures.BASE_WATER4.colorFilterFor(Color(0, 111, 255), 2.3),
+    Textures.BASE_WATER5.colorFilterFor(Color(0, 111, 255), 2.3),
+)
+
+val texturesDark = listOf(
+    Textures.BASE_WATER1.colorFilterFor(Color(0, 90, 255), 1.7),
+    Textures.BASE_WATER2.colorFilterFor(Color(0, 90, 255), 1.7),
+    Textures.BASE_WATER3.colorFilterFor(Color(0, 90, 255), 1.7),
+    Textures.BASE_WATER4.colorFilterFor(Color(0, 90, 255), 1.7),
+    Textures.BASE_WATER5.colorFilterFor(Color(0, 90, 255), 1.7),
+)
 
 class MapTile(
     override val x: Int,
@@ -245,6 +258,7 @@ class MapTile(
     }
 
     private fun currentTextureCalc(): Array<Array<Color>> {
+        val indexWater = texturesLight.indices.random()
         val color: Int = (height * HEIGHT_MULTIPLICATOR_TO_INT).toInt()
         var blue = 0
         var green = 0
@@ -260,9 +274,9 @@ class MapTile(
                             if (distanceWithPath(x, y) < 4) {
                                 Color(255, 178, 79)
                             } else if (distanceWithRiver(x, y) < 10) {
-                                textureTempDark[x][y]
+                                texturesDark[indexWater][x][y]
                             } else {
-                                textureTempLight[x][y]
+                                texturesLight[indexWater][x][y]
                             }
                         }
                     }
@@ -281,7 +295,7 @@ class MapTile(
                         if (distanceWithPath(x, y) < 4) {
                             Color(255, 178, 79)
                         } else if (distanceWithRiver(x, y) < 4) {
-                            textureTempLight[x][y]
+                            texturesLight[indexWater][x][y]
                         } else {
                             Color(245, 245, 66)
                         }
@@ -294,7 +308,7 @@ class MapTile(
         val textureTemp = if (color > INT_OCEAN_HEIGHT) {
             Textures.BASE_GRASS.colorFilterFor(Color(red, green, blue), 2.3)
         } else {
-            Textures.BASE_WATER.colorFilterFor(Color(red, green, blue), 2.3)
+            Textures.BASE_WATER1.colorFilterFor(Color(red, green, blue), 2.3)
         }
         return Array(TILE_HEIGHT) { y ->
             Array(TILE_WIDTH) { x ->
@@ -302,7 +316,7 @@ class MapTile(
                 if (distanceWithPath(x, y) < 4) {
                     Color(255, 178, 79)
                 } else if (distanceR < 4) {
-                    textureTempLight[x][y]
+                    texturesLight[indexWater][x][y]
                 } else if (distanceR < 6) {
                     Color(91, 32, 0).mix(Color(red, green, blue))
                 } else {

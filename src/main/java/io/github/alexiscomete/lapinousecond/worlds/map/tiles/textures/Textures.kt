@@ -8,7 +8,11 @@ import javax.imageio.ImageIO
 enum class Textures(val path: String) {
     NULL("textures/tiles/null.png"),
     BASE_GRASS("textures/tiles/base_grass.png"),
-    BASE_WATER("textures/tiles/water.png");
+    BASE_WATER1("textures/tiles/water.png"),
+    BASE_WATER2("textures/tiles/water2.png"),
+    BASE_WATER3("textures/tiles/water3.png"),
+    BASE_WATER4("textures/tiles/water4.png"),
+    BASE_WATER5("textures/tiles/water5.png"),;
 
     val pixels: Array<Array<Color>> = Array(TILE_HEIGHT) {
         Array(TILE_WIDTH) {
