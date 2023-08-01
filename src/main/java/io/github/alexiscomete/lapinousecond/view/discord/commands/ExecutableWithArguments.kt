@@ -1,6 +1,6 @@
 package io.github.alexiscomete.lapinousecond.view.discord.commands
 
-import io.github.alexiscomete.lapinousecond.entity.entities.Player
+import io.github.alexiscomete.lapinousecond.entity.entities.PlayerData
 import io.github.alexiscomete.lapinousecond.entity.entities.PlayerWithAccount
 import io.github.alexiscomete.lapinousecond.entity.entities.players
 import io.github.alexiscomete.lapinousecond.worlds.ServerBot
@@ -8,7 +8,7 @@ import io.github.alexiscomete.lapinousecond.worlds.servers
 import org.javacord.api.entity.user.User
 import org.javacord.api.interaction.SlashCommandInteraction
 
-fun getAccount(slashCommandInteraction: SlashCommandInteraction): Player {
+fun getAccount(slashCommandInteraction: SlashCommandInteraction): PlayerData {
     try {
         return players[slashCommandInteraction.user.id]
             ?: throw IllegalStateException("Vous devez avoir un compte pour utiliser cette commande. Utilisez /start")
@@ -17,7 +17,7 @@ fun getAccount(slashCommandInteraction: SlashCommandInteraction): Player {
     }
 }
 
-fun getAccount(id: Long): Player {
+fun getAccount(id: Long): PlayerData {
     try {
         return players[id]
             ?: throw IllegalStateException("Vous devez avoir un compte pour utiliser cette commande. Utilisez /start")
@@ -42,7 +42,7 @@ interface ExecutableWithArguments {
     fun execute(slashCommand: SlashCommandInteraction)
 
     fun getCurrentServerBot(slashCommand: SlashCommandInteraction): ServerBot {
-        val p: Player = getAccount(slashCommand)
+        val p: PlayerData = getAccount(slashCommand)
         if (p["serv"] == "") {
             throw IllegalStateException("Impossible de trouver votre serveur actuel : utilisez /hub")
         }

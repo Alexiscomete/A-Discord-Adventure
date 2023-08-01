@@ -13,7 +13,7 @@ class InvEffectsUI(playerUI: PlayerUI) : EmbedPages<InvEffectUIPart>(
     "Les effets peuvent exister en plusieurs exemplaires car les niveaux sont cumulables.",
     "Chaque catégorie correspond à un effet avec à chaque fois le niveau total et les différentes pairs de temps et de niveau.",
     run {
-        val effects = playerUI.getPlayer().getEffectsCopy()
+        val effects = playerUI.getPlayer().effectsManager.getEffectsCopy()
         val dico = HashMap<EffectEnum, InvEffectUIPart>()
         effects.forEach { effect ->
             val part = dico.getOrPut(effect.type) { InvEffectUIPart(effect.type) }

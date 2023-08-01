@@ -1,6 +1,6 @@
 package io.github.alexiscomete.lapinousecond.view.ui.playerui
 
-import io.github.alexiscomete.lapinousecond.entity.entities.Player
+import io.github.alexiscomete.lapinousecond.entity.entities.PlayerData
 import io.github.alexiscomete.lapinousecond.view.Context
 import io.github.alexiscomete.lapinousecond.view.contextFor
 import io.github.alexiscomete.lapinousecond.view.discord.commands.getAccount
@@ -556,7 +556,7 @@ class DiscordPlayerUI(private val context: Context, var interaction: Interaction
         return dialogues
     }
 
-    override fun getPlayer(): Player {
+    override fun getPlayer(): PlayerData {
         return context.players.player.player
     }
 

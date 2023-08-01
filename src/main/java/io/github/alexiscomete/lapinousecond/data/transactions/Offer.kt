@@ -1,6 +1,6 @@
 package io.github.alexiscomete.lapinousecond.data.transactions
 
-import io.github.alexiscomete.lapinousecond.entity.entities.Player
+import io.github.alexiscomete.lapinousecond.entity.entities.PlayerData
 import io.github.alexiscomete.lapinousecond.entity.entities.players
 import io.github.alexiscomete.lapinousecond.entity.concrete.resources.Resource
 import io.github.alexiscomete.lapinousecond.data.managesave.CacheCustom
@@ -11,7 +11,7 @@ val OFFERS = Table("offers")
 val offers = CacheCustom(OFFERS) { Offer(it) }
 
 class Offer(id: Long) : CacheGetSet(id, OFFERS), Transaction {
-    override val who: Player
+    override val who: PlayerData
         get() = players[this["who"].toLong()]!!
     override val amount: Double
         get() = this["amount"].toDouble()

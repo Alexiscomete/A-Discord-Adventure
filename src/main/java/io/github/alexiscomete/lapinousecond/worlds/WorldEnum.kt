@@ -1,7 +1,7 @@
 package io.github.alexiscomete.lapinousecond.worlds
 
 import io.github.alexiscomete.lapinousecond.Beurk
-import io.github.alexiscomete.lapinousecond.entity.entities.Player
+import io.github.alexiscomete.lapinousecond.entity.entities.PlayerData
 import io.github.alexiscomete.lapinousecond.worlds.map.Node
 import io.github.alexiscomete.lapinousecond.worlds.map.PixelManager
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.BaseTileGenerator
@@ -331,7 +331,7 @@ enum class WorldEnum(
      * @param x The x coordinate of the center of the map
      * @param y The y coordinate of the center of the map
      * @param zoom The zoom level of the map.
-     * @param player The player that is viewing the map.
+     * @param playerData The player that is viewing the map.
      * @return A BufferedImage
      */
     @Beurk
@@ -340,12 +340,12 @@ enum class WorldEnum(
         y: Int,
         zoom: Int,
         zooms: Zooms,
-        player: Player? = null
+        playerData: PlayerData? = null
     ): BufferedImage {
         return worldManager.zoomWithDecorElements(
             ZoneToAdapt(x - zoom * 2, y - zoom, zoom * 4, zoom * 2, mapWidth, mapHeight, zooms),
             imageFrom(x - zoom * 2, y - zoom, zoom * 4, zoom * 2, zooms),
-            player,
+            playerData,
             true
         )
     }

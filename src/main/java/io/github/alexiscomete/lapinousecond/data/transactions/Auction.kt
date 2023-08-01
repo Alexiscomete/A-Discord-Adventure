@@ -1,6 +1,6 @@
 package io.github.alexiscomete.lapinousecond.data.transactions
 
-import io.github.alexiscomete.lapinousecond.entity.entities.Player
+import io.github.alexiscomete.lapinousecond.entity.entities.PlayerData
 import io.github.alexiscomete.lapinousecond.entity.entities.players
 import io.github.alexiscomete.lapinousecond.entity.concrete.resources.Resource
 import io.github.alexiscomete.lapinousecond.data.managesave.CacheCustom
@@ -11,7 +11,7 @@ val AUCTIONS = Table("auctions")
 val auctions = CacheCustom(AUCTIONS) { Auction(it) }
 
 class Auction(id: Long) : CacheGetSet(id, AUCTIONS), Transaction {
-    override val who: Player
+    override val who: PlayerData
         get() = players[this["who"].toLong()]!!
     override val amount: Double
         get() = this["amount"].toDouble()
@@ -19,6 +19,6 @@ class Auction(id: Long) : CacheGetSet(id, AUCTIONS), Transaction {
         get() = Resource.valueOf(this["what"].uppercase())
     override val amountRB: Double
         get() = this["amountRB"].toDouble()
-    val whoMax: Player
+    val whoMax: PlayerData
         get() = players[this["whoMax"].toLong()]!!
 }

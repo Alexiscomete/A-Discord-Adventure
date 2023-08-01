@@ -1,7 +1,7 @@
 package io.github.alexiscomete.lapinousecond.worlds
 
 import io.github.alexiscomete.lapinousecond.Beurk
-import io.github.alexiscomete.lapinousecond.entity.entities.Player
+import io.github.alexiscomete.lapinousecond.entity.entities.PlayerData
 import java.awt.image.BufferedImage
 
 interface WorldManager {
@@ -12,7 +12,7 @@ interface WorldManager {
     fun zoomWithDecorElements(
         zoneToAdapt: ZoneToAdapt,
         image: BufferedImage,
-        player: Player? = null,
+        playerData: PlayerData? = null,
         big: Boolean
     ): BufferedImage
 

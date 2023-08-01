@@ -1,7 +1,7 @@
 package io.github.alexiscomete.lapinousecond.worlds
 
 import io.github.alexiscomete.lapinousecond.Beurk
-import io.github.alexiscomete.lapinousecond.entity.entities.Player
+import io.github.alexiscomete.lapinousecond.entity.entities.PlayerData
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.OCEAN_HEIGHT
 import procedural_generation.noise.ComplexNoise
 import java.awt.Color
@@ -34,14 +34,14 @@ class WorldProcedural(
     override fun zoomWithDecorElements(
         zoneToAdapt: ZoneToAdapt,
         image: BufferedImage,
-        player: Player?,
+        playerData: PlayerData?,
         big: Boolean
     ): BufferedImage {
         // generate the image
         var image0 = image
         // add the player
-        if (player != null) {
-            addPlayerInImage(player, zoneToAdapt, image0)
+        if (playerData != null) {
+            addPlayerInImage(playerData, zoneToAdapt, image0)
         }
 
         if (big) {
@@ -75,31 +75,31 @@ class WorldProcedural(
     }
 
     private fun addPlayerInImage(
-        player: Player,
+        playerData: PlayerData,
         zoneToAdapt: ZoneToAdapt,
         image0: BufferedImage
     ) {
-        if (player["place_${worldNameInDatabase}_zoom"] == "") {
-            player["place_${worldNameInDatabase}_zoom"] = Zooms.ZOOM_OUT.name
+        if (playerData["place_${worldNameInDatabase}_zoom"] == "") {
+            playerData["place_${worldNameInDatabase}_zoom"] = Zooms.ZOOM_OUT.name
         }
-        if (player["place_${worldNameInDatabase}_zoom"] == zoneToAdapt.zoom.name) {
+        if (playerData["place_${worldNameInDatabase}_zoom"] == zoneToAdapt.zoom.name) {
             image0.setRGB(
-                player["place_${worldNameInDatabase}_x"].toInt() - zoneToAdapt.x,
-                player["place_${worldNameInDatabase}_y"].toInt() - zoneToAdapt.y,
+                playerData["place_${worldNameInDatabase}_x"].toInt() - zoneToAdapt.x,
+                playerData["place_${worldNameInDatabase}_y"].toInt() - zoneToAdapt.y,
                 Color.RED.rgb
             )
         } else {
             val (x, y) = try {
                 zoneToAdapt.zoom.zoomInTo(
-                    Zooms.valueOf(player["place_${worldNameInDatabase}_zoom"]),
-                    player["place_${worldNameInDatabase}_x"].toInt(),
-                    player["place_${worldNameInDatabase}_y"].toInt()
+                    Zooms.valueOf(playerData["place_${worldNameInDatabase}_zoom"]),
+                    playerData["place_${worldNameInDatabase}_x"].toInt(),
+                    playerData["place_${worldNameInDatabase}_y"].toInt()
                 )
             } catch (e: Exception) {
                 zoneToAdapt.zoom.zoomOutTo(
-                    Zooms.valueOf(player["place_${worldNameInDatabase}_zoom"]),
-                    player["place_${worldNameInDatabase}_x"].toInt(),
-                    player["place_${worldNameInDatabase}_y"].toInt()
+                    Zooms.valueOf(playerData["place_${worldNameInDatabase}_zoom"]),
+                    playerData["place_${worldNameInDatabase}_x"].toInt(),
+                    playerData["place_${worldNameInDatabase}_y"].toInt()
                 )
             }
             image0.setRGB(x - zoneToAdapt.x, y - zoneToAdapt.y, Color.RED.rgb)

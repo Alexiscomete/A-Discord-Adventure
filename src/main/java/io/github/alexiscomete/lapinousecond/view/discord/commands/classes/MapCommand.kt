@@ -4,7 +4,7 @@ import io.github.alexiscomete.lapinousecond.data.TutoSteps
 import io.github.alexiscomete.lapinousecond.entity.concrete.resources.Resource
 import io.github.alexiscomete.lapinousecond.entity.effects.priceToTravelWithEffect
 import io.github.alexiscomete.lapinousecond.entity.effects.timeMillisForOnePixel
-import io.github.alexiscomete.lapinousecond.entity.entities.Player
+import io.github.alexiscomete.lapinousecond.entity.entities.PlayerData
 import io.github.alexiscomete.lapinousecond.entity.entities.PlayerWithAccount
 import io.github.alexiscomete.lapinousecond.view.contextFor
 import io.github.alexiscomete.lapinousecond.view.discord.commands.Command
@@ -27,10 +27,10 @@ const val RABBIT_WORLD_PRICE = 100.0
 const val MAP_ZOOM_DEFAULT = 30
 const val MAP_ZOOM_MAX = 60
 
-private fun verifyBalForWorld(player: Player) {
-    var bal = player["bal"]
+private fun verifyBalForWorld(playerData: PlayerData) {
+    var bal = playerData["bal"]
     if (bal == "") {
-        player["bal"] = "0.0"
+        playerData["bal"] = "0.0"
         bal = "0.0"
     }
 
@@ -421,7 +421,7 @@ val MAPS_MENU = MenuBuilderFactoryUI(
         val xInt = x.toInt()
         val yInt = y.toInt()
         val biome = if (world.isDirt(xInt, yInt)) "la terre" else "l'eau"
-        val image = world.zoomWithDecorElements(xInt, yInt, MAP_ZOOM_DEFAULT, zooms, player = player)
+        val image = world.zoomWithDecorElements(xInt, yInt, MAP_ZOOM_DEFAULT, zooms, playerData = player)
 
         val resultUI = if (player["tuto"] == TutoSteps.STEP_POSITION.number) {
             player["tuto"] = TutoSteps.STEP_POSITION.nextStepNum

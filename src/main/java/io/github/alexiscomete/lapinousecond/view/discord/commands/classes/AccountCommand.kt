@@ -5,7 +5,7 @@ import io.github.alexiscomete.lapinousecond.data.TutoSteps
 import io.github.alexiscomete.lapinousecond.data.UserPerms
 import io.github.alexiscomete.lapinousecond.data.managesave.fromBooleanToString
 import io.github.alexiscomete.lapinousecond.data.managesave.saveManager
-import io.github.alexiscomete.lapinousecond.entity.entities.Player
+import io.github.alexiscomete.lapinousecond.entity.entities.PlayerData
 import io.github.alexiscomete.lapinousecond.entity.entities.players
 import io.github.alexiscomete.lapinousecond.view.discord.commands.Command
 import io.github.alexiscomete.lapinousecond.view.discord.commands.ExecutableWithArguments
@@ -20,7 +20,7 @@ import java.awt.Color
 
 const val MAIN_SERVER_ID = 854288660147994634
 
-fun toSpawn(p: Player) {
+fun toSpawn(p: PlayerData) {
     p["serv"] = MAIN_SERVER_ID.toString()
     p["world"] = "TUTO"
     p["place_TUTO_x"] = WorldEnum.TUTO.defaultX.toString()

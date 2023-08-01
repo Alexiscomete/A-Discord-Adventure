@@ -2,11 +2,12 @@ package io.github.alexiscomete.lapinousecond.view.discord.commands.classes
 
 import io.github.alexiscomete.lapinousecond.api
 import io.github.alexiscomete.lapinousecond.entity.concrete.resources.Resource
-import io.github.alexiscomete.lapinousecond.entity.entities.Player
+import io.github.alexiscomete.lapinousecond.entity.entities.PlayerData
 import io.github.alexiscomete.lapinousecond.entity.entities.PlayerWithAccount
 import io.github.alexiscomete.lapinousecond.entity.entities.players
 import io.github.alexiscomete.lapinousecond.data.managesave.saveManager
 import io.github.alexiscomete.lapinousecond.entity.concrete.items.ITEMS
+import io.github.alexiscomete.lapinousecond.entity.entities.PlayerManager
 import io.github.alexiscomete.lapinousecond.view.contextFor
 import io.github.alexiscomete.lapinousecond.view.discord.commands.Command
 import io.github.alexiscomete.lapinousecond.view.discord.commands.ExecutableWithArguments
@@ -24,7 +25,7 @@ import org.javacord.api.interaction.SlashCommandOptionType
 import java.awt.Color
 import java.sql.SQLException
 
-fun who(slashCommand: SlashCommandInteraction): Player {
+fun who(slashCommand: SlashCommandInteraction): PlayerData {
     val arguments = slashCommand.arguments
 
     val userArg = arguments.find { it.name == "player" }
@@ -167,7 +168,7 @@ class InvCommandTop : SubCommand(
         get() = null
 
     override fun execute(slashCommand: SlashCommandInteraction) {
-        val pl: Player = who(slashCommand)
+        val pl: PlayerData = who(slashCommand)
 
         val embed = EmbedBuilder()
             .setTitle("Classement des joueurs en fonction du nombre de ${Resource.RABBIT_COIN.show}")
@@ -179,14 +180,13 @@ class InvCommandTop : SubCommand(
             saveManager.preparedStatement("SELECT * FROM players ORDER BY CAST(bal AS INTEGER) ASC LIMIT 10")
         val results = saveManager.executeMultipleQueryKey(preparedStatement, true)
 
-        val playerArrayList = ArrayList<Player>()
+        val playerDataArrayList = ArrayList<PlayerData>()
         try {
             for (result in results) {
-                val player = players[result]
+                val player = PlayerManager[result].playerData
                 if (player != null) {
-                    playerArrayList.add(player)
+                    playerDataArrayList.add(player)
                 }
-
             }
         } catch (e: SQLException) {
             e.printStackTrace()
@@ -209,7 +209,7 @@ class InvCommandTop : SubCommand(
 
 
         var top = ""
-        for (player in playerArrayList) {
+        for (player in playerDataArrayList) {
             val user = api.getUserById(player.id).join()
             top = "${user.name} ${player["bal"]} ${Resource.RABBIT_COIN.show}\n${top}"
         }

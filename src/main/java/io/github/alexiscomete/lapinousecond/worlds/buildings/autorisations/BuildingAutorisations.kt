@@ -1,6 +1,6 @@
 package io.github.alexiscomete.lapinousecond.worlds.buildings.autorisations
 
-import io.github.alexiscomete.lapinousecond.entity.entities.Player
+import io.github.alexiscomete.lapinousecond.entity.entities.PlayerData
 import io.github.alexiscomete.lapinousecond.worlds.Place
 import org.json.JSONArray
 import org.json.JSONObject
@@ -17,7 +17,7 @@ class BuildingAutorisations(jsonArray: JSONArray) : AutorisationList() {
 
 fun toAutorisation(jsonObject: JSONObject): BuildingAutorisation {
     return when (jsonObject.getString("name")) {
-        "joueurs" -> TypeAutorisation(Player::class.java)
+        "joueurs" -> TypeAutorisation(PlayerData::class.java)
         "ville" -> TypeAutorisation(Place::class.java)
         "habitants" -> Inhabitants()
         "choix_ville" -> ChoicePlaceAutorisation(jsonObject.getJSONArray("possibilites"))
@@ -27,7 +27,7 @@ fun toAutorisation(jsonObject: JSONObject): BuildingAutorisation {
 
 fun toAutorisation(string: String?): BuildingAutorisation {
     return when (string) {
-        "joueurs" -> TypeAutorisation(Player::class.java)
+        "joueurs" -> TypeAutorisation(PlayerData::class.java)
         "ville" -> TypeAutorisation(Place::class.java)
         "habitants" -> Inhabitants()
         else -> AllAutorisation()
