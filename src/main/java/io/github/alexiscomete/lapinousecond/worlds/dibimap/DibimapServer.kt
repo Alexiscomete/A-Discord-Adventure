@@ -4,7 +4,7 @@ import io.github.alexiscomete.lapinousecond.worlds.WorldEnum
 import io.github.alexiscomete.lapinousecond.worlds.Zone
 
 fun isDibimap(id: Long) : Boolean {
-    DibimapServer.values().forEach {
+    DibimapServer.entries.forEach {
         if (it.serverId == id) {
             return true
         }
@@ -13,7 +13,7 @@ fun isDibimap(id: Long) : Boolean {
 }
 
 fun getValueById(id: Long) : DibimapServer {
-    DibimapServer.values().forEach {
+    DibimapServer.entries.forEach {
         if (it.serverId == id) {
             return it
         }
@@ -22,7 +22,7 @@ fun getValueById(id: Long) : DibimapServer {
 }
 
 fun checkById(id: Long) {
-    DibimapServer.values().forEach {
+    DibimapServer.entries.forEach {
         if (it.serverId == id) {
             return
         }

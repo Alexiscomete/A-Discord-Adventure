@@ -8,11 +8,7 @@ class PlayerManager private constructor(
     companion object {
         private val playerManagers = CacheCustom(PLAYERS) { PlayerManager(it) }
         operator fun get(id: Long): PlayerManager {
-            val playerManager = playerManagers[id]
-            if (playerManager == null) {
-                throw NullPointerException("PlayerManager $id is null")
-            }
-            return playerManager
+            return playerManagers[id] ?: throw NullPointerException("PlayerManager $id is null. Please create an account first with /account start.")
         }
 
         fun getOrNull(id: Long): PlayerManager? = playerManagers[id]
@@ -20,7 +16,7 @@ class PlayerManager private constructor(
         fun createAccount(id: Long): PlayerManager {
             val pM = playerManagers[id]
             if (pM != null) {
-                throw NullPointerException("PlayerManager $id already exists")
+                throw NullPointerException("PlayerManager $id already exists.")
             }
             playerManagers.add(id)
             return playerManagers[id]!!

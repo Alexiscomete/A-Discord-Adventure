@@ -55,7 +55,12 @@ class SaveManager(path: String) {
      */
     fun typeOf(id: Long, tableName: String): String {
         try {
-            val resultSet = st!!.executeQuery("SELECT type FROM $tableName WHERE id = $id")
+            // init a prepared statement
+            val pQ = co!!.prepareCall("SELECT type FROM ? WHERE id = ?")
+            // set the parameters
+            pQ.setString(1, tableName)
+            pQ.setLong(2, id)
+            val resultSet = pQ.executeQuery()
             if (resultSet.next()) {
                 return resultSet.getString("type")
             }
@@ -97,7 +102,13 @@ class SaveManager(path: String) {
     fun setValue(where: String, which: String, whichValue: String, valueName: String, value: String) {
         val va = value.replace("\\", " ").replace("'", " ").replace("\"", " ").replace("--", " ")
         try {
-            st!!.executeUpdate("UPDATE $where SET $valueName = '$va' WHERE $which = $whichValue")
+            val pQ = co!!.prepareCall("UPDATE ? SET ? = ? WHERE ? = ?")
+            pQ.setString(1, where)
+            pQ.setString(2, valueName)
+            pQ.setString(3, va)
+            pQ.setString(4, which)
+            pQ.setString(5, whichValue)
+            pQ.executeUpdate()
         } catch (throwables: SQLException) {
             throwables.printStackTrace()
         }
