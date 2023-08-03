@@ -104,7 +104,7 @@ class ShopBuyCommand :
                 resourceManager = ResourceManager(resource, quantity)
                 player.resourceManagers[resource] = resourceManager
             } else {
-                resourceManager.quantity = resourceManager.quantity + quantity
+                resourceManager.quantity += quantity
             }
             player.updateResources()
             slashCommand.createImmediateResponder()
@@ -177,7 +177,7 @@ class ShopSellCommand :
         } else {
             if (resourceManager.quantity >= quantity) {
                 player["bal"] = (player["bal"].toDouble() + price).toString()
-                resourceManager.quantity = resourceManager.quantity - quantity
+                resourceManager.quantity -= quantity
                 player.updateResources()
                 slashCommand.createImmediateResponder()
                     .setContent("Vente réussie ! Vous avez gagné ${price.toInt()} ${Resource.RABBIT_COIN.show}")

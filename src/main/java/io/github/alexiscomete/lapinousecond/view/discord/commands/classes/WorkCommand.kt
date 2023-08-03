@@ -42,22 +42,22 @@ fun setWork(
             }
         }
         val strings = woAnswer.answer.split(" rc ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-        val r = Random().nextInt(woAnswer.max - woAnswer.min) + woAnswer.min
+        val randomQuantity = Random().nextInt(woAnswer.max - woAnswer.min) + woAnswer.min
         val answer: String = if (strings.size > 1) {
-            strings[0] + " " + r + " " + strings[1]
+            strings[0] + " " + randomQuantity + " " + strings[1]
         } else {
             strings[0]
         }
         embedBuilder.addField("Work", answer)
         if (woAnswer.resource == null) {
-            playerData["bal"] = (playerData["bal"].toDouble() + r).toString()
+            playerData["bal"] = (playerData["bal"].toDouble() + randomQuantity).toString()
         } else {
             var resourceManager = playerData.resourceManagers[woAnswer.resource]
             if (resourceManager == null) {
-                resourceManager = ResourceManager(woAnswer.resource!!, r)
+                resourceManager = ResourceManager(woAnswer.resource!!, randomQuantity)
                 playerData.resourceManagers[woAnswer.resource!!] = resourceManager
             } else {
-                resourceManager.quantity = resourceManager.quantity + r
+                resourceManager.quantity += randomQuantity
             }
             playerData.updateResources()
         }

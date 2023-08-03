@@ -278,7 +278,7 @@ open class PlayerData(id: Long) : CacheGetSet(id, PLAYERS), Owner, ContainsItems
         if (resourceManager == null) {
             throw IllegalArgumentException("Le joueur n'a pas de ressource $resource")
         } else {
-            resourceManager.quantity = resourceManager.quantity - amount.toInt()
+            resourceManager.quantity -= amount.toInt()
         }
         updateResources()
     }
@@ -304,7 +304,7 @@ open class PlayerData(id: Long) : CacheGetSet(id, PLAYERS), Owner, ContainsItems
         if (resourceManager == null) {
             resourceManagers[resource] = ResourceManager(resource, amount.toInt())
         } else {
-            resourceManager.quantity = resourceManager.quantity + amount.toInt()
+            resourceManager.quantity += amount.toInt()
         }
         updateResources()
     }
