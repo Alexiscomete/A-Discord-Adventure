@@ -344,7 +344,7 @@ class InteractCommandBase : Command(
                                     "Construire un bâtiment",
                                     "Vous pouvez construire un bâtiment dans la ville ${place["nameRP"]} en cliquant sur ce bouton"
                                 ) { ui ->
-                                    val buildsTypes = arrayListOf(*Buildings.values())
+                                    val buildsTypes = arrayListOf(*Buildings.entries.toTypedArray())
                                     ui.setLongCustomUI(
                                         EmbedPagesWithInteractions(
                                             buildsTypes,

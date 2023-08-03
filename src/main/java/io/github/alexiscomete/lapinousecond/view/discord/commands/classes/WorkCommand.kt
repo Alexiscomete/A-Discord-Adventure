@@ -26,7 +26,7 @@ fun setWork(
     response: InteractionImmediateResponseBuilder
 ) {
     if (System.currentTimeMillis() - playerData.workTime > WORK_COOLDOWN_MILLIS) {
-        val wo = WorkEnum.values()
+        val wo = WorkEnum.entries.toTypedArray()
         val random = Random()
         var total = 0
         for (w in wo) {

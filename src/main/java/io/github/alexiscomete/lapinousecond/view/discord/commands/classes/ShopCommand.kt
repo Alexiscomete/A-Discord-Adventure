@@ -59,7 +59,7 @@ class ShopBuyCommand :
                 true,
                 run {
                     val arrayList = arrayListOf<SlashCommandOptionChoice>()
-                    Resource.values().forEach {
+                    Resource.entries.forEach {
                         arrayList.add(SlashCommandOptionChoice.create(it.name, it.name))
                     }
                     return@run arrayList
@@ -130,7 +130,7 @@ class ShopSellCommand :
                 true,
                 run {
                     val arrayList = arrayListOf<SlashCommandOptionChoice>()
-                    Resource.values().forEach {
+                    Resource.entries.forEach {
                         arrayList.add(SlashCommandOptionChoice.create(it.name, it.name))
                     }
                     return@run arrayList
@@ -204,7 +204,7 @@ class ShopListCommand :
         val player = getAccount(slashCommand)
         val stringBuilder = StringBuilder()
             .append("Resource -> prix d'achat; prix de vente; prix réel; nom à entrer")
-        for (r in Resource.values()) {
+        for (r in Resource.entries) {
             stringBuilder
                 .append("\n")
                 .append(r.show)
@@ -244,7 +244,7 @@ class ShopInfoCommand :
                 true,
                 run {
                     val arrayList = arrayListOf<SlashCommandOptionChoice>()
-                    Resource.values().forEach {
+                    Resource.entries.forEach {
                         arrayList.add(SlashCommandOptionChoice.create(it.name, it.name))
                     }
                     return@run arrayList

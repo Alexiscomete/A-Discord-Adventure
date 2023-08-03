@@ -95,7 +95,7 @@ enum class RolesEnum(
 
         fun getRoles(user: User, server: Server?): ArrayList<RolesEnum> {
             val roles = ArrayList<RolesEnum>()
-            for (role in values()) {
+            for (role in entries) {
                 if (role.check(user, server)) {
                     roles.add(role)
                 }

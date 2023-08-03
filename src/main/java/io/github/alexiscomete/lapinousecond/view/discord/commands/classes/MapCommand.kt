@@ -51,7 +51,7 @@ val TRAVEL_MENU = MenuBuilderFactoryUI(
         // Etape 1 : afficher la liste des mondes
 
         // get all worlds
-        val worldEnums = WorldEnum.values()
+        val worldEnums = WorldEnum.entries.toTypedArray()
         val worlds = worldEnums.map { it }
         val player = ui.getPlayer()
 
@@ -370,7 +370,7 @@ val MAPS_MENU = MenuBuilderFactoryUI(
         "Liste des cartes",
         "Toutes les cartes permanentes du jeu ... remerciez Darki"
     ) { ui ->
-        val maps = arrayListOf(*FilesMapEnum.values())
+        val maps = arrayListOf(*FilesMapEnum.entries.toTypedArray())
         ui.setLongCustomUI(
             EmbedPages(
                 null,
