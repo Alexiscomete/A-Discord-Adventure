@@ -1,28 +1,28 @@
 package io.github.alexiscomete.lapinousecond.view.discord.commands
 
 import io.github.alexiscomete.lapinousecond.entity.entities.PlayerData
+import io.github.alexiscomete.lapinousecond.entity.entities.PlayerManager
 import io.github.alexiscomete.lapinousecond.entity.entities.PlayerWithAccount
-import io.github.alexiscomete.lapinousecond.entity.entities.players
 import io.github.alexiscomete.lapinousecond.worlds.ServerBot
 import io.github.alexiscomete.lapinousecond.worlds.servers
 import org.javacord.api.entity.user.User
 import org.javacord.api.interaction.SlashCommandInteraction
 
-fun getAccount(slashCommandInteraction: SlashCommandInteraction): PlayerData {
+const val START_COMMAND = "/account start"
+
+fun getAccount(slashCommandInteraction: SlashCommandInteraction): PlayerManager {
     try {
-        return players[slashCommandInteraction.user.id]
-            ?: throw IllegalStateException("Vous devez avoir un compte pour utiliser cette commande. Utilisez /start")
+        return PlayerManager[slashCommandInteraction.user.id]
     } catch (e: Exception) {
-        throw IllegalStateException("Vous devez avoir un compte pour utiliser cette commande. Utilisez /start")
+        throw IllegalStateException("Vous devez avoir un compte pour utiliser cette commande. Utilisez $START_COMMAND")
     }
 }
 
-fun getAccount(id: Long): PlayerData {
+fun getAccount(id: Long): PlayerManager {
     try {
-        return players[id]
-            ?: throw IllegalStateException("Vous devez avoir un compte pour utiliser cette commande. Utilisez /start")
+        return PlayerManager[id]
     } catch (e: Exception) {
-        throw IllegalStateException("Vous devez avoir un compte pour utiliser cette commande. Utilisez /start")
+        throw IllegalStateException("Vous devez avoir un compte pour utiliser cette commande. Utilisez $START_COMMAND")
     }
 }
 
@@ -30,7 +30,7 @@ fun getAccount(user: User): PlayerWithAccount {
     try {
         return PlayerWithAccount(user)
     } catch (e: Exception) {
-        throw IllegalStateException("Vous devez avoir un compte pour utiliser cette commande. Utilisez /start")
+        throw IllegalStateException("Vous devez avoir un compte pour utiliser cette commande. Utilisez $START_COMMAND")
     }
 }
 
@@ -42,7 +42,7 @@ interface ExecutableWithArguments {
     fun execute(slashCommand: SlashCommandInteraction)
 
     fun getCurrentServerBot(slashCommand: SlashCommandInteraction): ServerBot {
-        val p: PlayerData = getAccount(slashCommand)
+        val p: PlayerData = getAccount(slashCommand).playerData
         if (p["serv"] == "") {
             throw IllegalStateException("Impossible de trouver votre serveur actuel : utilisez /hub")
         }

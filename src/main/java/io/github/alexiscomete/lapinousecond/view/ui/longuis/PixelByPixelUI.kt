@@ -10,12 +10,8 @@ import io.github.alexiscomete.lapinousecond.worlds.WorldEnum
 import io.github.alexiscomete.lapinousecond.worlds.Zooms
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.BaseTileGenerator
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.DEFAULT_SIZE_RENDER
-import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.TILE_HEIGHT
-import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.TILE_WIDTH
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.WorldRenderScene
-import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.JustDrawIt
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.canvas.TextureWorldCanvas
-import java.awt.Color
 import java.awt.image.BufferedImage
 
 class PixelByPixelUI(

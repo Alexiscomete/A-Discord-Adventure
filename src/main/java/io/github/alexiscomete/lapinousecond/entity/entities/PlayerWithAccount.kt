@@ -3,7 +3,7 @@ package io.github.alexiscomete.lapinousecond.entity.entities
 import org.javacord.api.entity.user.User
 
 class PlayerWithAccount(val user: User) {
-    val player = players[user.id] ?: throw IllegalStateException("Vous n'avez pas de compte ! Utilisez la commande `/account start`")
+    val player = PlayerManager[user.id].playerData
 
     operator fun get(key: String): String {
         return player[key]

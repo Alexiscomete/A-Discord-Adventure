@@ -4,10 +4,8 @@ import io.github.alexiscomete.lapinousecond.worlds.WorldEnum
 import io.github.alexiscomete.lapinousecond.worlds.Zooms
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.BaseTileGenerator
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.WorldRenderScene
-import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.JustDrawIt
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.canvas.TerminalWorldCanvas
 import org.junit.jupiter.api.Test
-import java.awt.Color
 
 class CacheTest {
 

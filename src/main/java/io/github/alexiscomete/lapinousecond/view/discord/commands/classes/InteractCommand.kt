@@ -274,7 +274,7 @@ class InteractCommandBase : Command(
                                 ) { ui ->
                                     val buildings = Buildings.loadBuildings(place["buildings"])
                                     // remove if not with this owner
-                                    buildings.removeIf { building -> building["owner"] != player.id.toString() }
+                                    buildings.removeIf { building -> building["owner"] != player.playerData.id.toString() }
                                     ui.setLongCustomUI(
                                         EmbedPagesWithInteractions(
                                             buildings,

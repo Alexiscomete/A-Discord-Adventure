@@ -1,13 +1,12 @@
 package io.github.alexiscomete.lapinousecond.view.discord.commands.classes
 
 import io.github.alexiscomete.lapinousecond.api
-import io.github.alexiscomete.lapinousecond.entity.concrete.resources.Resource
-import io.github.alexiscomete.lapinousecond.entity.entities.PlayerData
-import io.github.alexiscomete.lapinousecond.entity.entities.PlayerWithAccount
-import io.github.alexiscomete.lapinousecond.entity.entities.players
 import io.github.alexiscomete.lapinousecond.data.managesave.saveManager
 import io.github.alexiscomete.lapinousecond.entity.concrete.items.ITEMS
+import io.github.alexiscomete.lapinousecond.entity.concrete.resources.Resource
+import io.github.alexiscomete.lapinousecond.entity.entities.PlayerData
 import io.github.alexiscomete.lapinousecond.entity.entities.PlayerManager
+import io.github.alexiscomete.lapinousecond.entity.entities.PlayerWithAccount
 import io.github.alexiscomete.lapinousecond.view.contextFor
 import io.github.alexiscomete.lapinousecond.view.discord.commands.Command
 import io.github.alexiscomete.lapinousecond.view.discord.commands.ExecutableWithArguments
@@ -35,8 +34,10 @@ fun who(slashCommand: SlashCommandInteraction): PlayerData {
         if (userOp.isPresent) {
             val user = userOp.get()
             try {
-                players[user.id]
-                    ?: throw IllegalStateException("Cette personne n'a pas de compte sur le bot")
+                (
+                        PlayerManager.getOrNull(user.id)
+                            ?: throw IllegalStateException("Cette personne n'a pas de compte sur le bot")
+                        ).playerData
             } catch (e: Exception) {
                 throw IllegalStateException("Cette personne n'a pas de compte sur le bot")
             }
@@ -183,9 +184,9 @@ class InvCommandTop : SubCommand(
         val playerDataArrayList = ArrayList<PlayerData>()
         try {
             for (result in results) {
-                val player = PlayerManager[result].playerData
+                val player = PlayerManager.getOrNull(result)
                 if (player != null) {
-                    playerDataArrayList.add(player)
+                    playerDataArrayList.add(player.playerData)
                 }
             }
         } catch (e: SQLException) {

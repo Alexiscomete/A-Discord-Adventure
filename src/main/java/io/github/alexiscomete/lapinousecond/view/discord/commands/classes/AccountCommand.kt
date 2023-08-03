@@ -6,7 +6,7 @@ import io.github.alexiscomete.lapinousecond.data.UserPerms
 import io.github.alexiscomete.lapinousecond.data.managesave.fromBooleanToString
 import io.github.alexiscomete.lapinousecond.data.managesave.saveManager
 import io.github.alexiscomete.lapinousecond.entity.entities.PlayerData
-import io.github.alexiscomete.lapinousecond.entity.entities.players
+import io.github.alexiscomete.lapinousecond.entity.entities.PlayerManager
 import io.github.alexiscomete.lapinousecond.view.discord.commands.Command
 import io.github.alexiscomete.lapinousecond.view.discord.commands.ExecutableWithArguments
 import io.github.alexiscomete.lapinousecond.view.discord.commands.SubCommand
@@ -67,7 +67,7 @@ class AccountCommandStart : SubCommand(
         get() = null
 
     override fun execute(slashCommand: SlashCommandInteraction) {
-        var p = players[slashCommand.user.id]
+        var p = PlayerManager.getOrNull(slashCommand.user.id)
         var content = ""
         if (p == null) {
             if ((slashCommand.server.isPresent && slashCommand.server.get().id != MAIN_SERVER_ID) || !slashCommand.server.isPresent) {
@@ -75,18 +75,15 @@ class AccountCommandStart : SubCommand(
             }
             val user = slashCommand.user
             content += "Le bot pour vérifier votre pixel n'est plus disponible. Si vous souhaitez associez votre pixel, contacter le dev.\n"
-            players.add(user.id)
-            p = players[user.id]
-            if (p == null) {
-                throw IllegalStateException("Erreur lors de la création du joueur. Réessayez ...")
-            }
-            p["bal"] = "0.0"
+            p = PlayerManager.createAccount(user.id)
+            p.playerData["bal"] = "0.0"
         }
-        toSpawn(p)
+        val data = p.playerData
+        toSpawn(data)
         if (slashCommand.server.isPresent) {
-            p["serv"] = slashCommand.server.get().id.toString()
+            data["serv"] = slashCommand.server.get().id.toString()
         }
-        p["tuto"] = TutoSteps.STEP_INVENTORY_EMPTY.number
+        data["tuto"] = TutoSteps.STEP_INVENTORY_EMPTY.number
         val embed = EmbedBuilder()
             .setColor(Color.CYAN)
             .setTitle("Une nouvelle aventure commence")

@@ -25,8 +25,6 @@ import io.github.alexiscomete.lapinousecond.worlds.map.PixelManager
 import io.github.alexiscomete.lapinousecond.worlds.places
 
 val PLAYERS = Table("players")
-@Deprecated("Use PlayerManager instead")
-val players = CacheCustom(PLAYERS) { id: Long -> PlayerData(id) }
 
 @Beurk
 open class PlayerData(id: Long) : CacheGetSet(id, PLAYERS), Owner, ContainsItems {

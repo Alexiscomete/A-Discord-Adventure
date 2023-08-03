@@ -1,11 +1,11 @@
 package io.github.alexiscomete.lapinousecond.entity.concrete.items
 
-import io.github.alexiscomete.lapinousecond.entity.concrete.items.items.StrasbourgSausage
-import io.github.alexiscomete.lapinousecond.entity.entities.players
 import io.github.alexiscomete.lapinousecond.data.managesave.CacheCustom
 import io.github.alexiscomete.lapinousecond.data.managesave.CacheGetSet
 import io.github.alexiscomete.lapinousecond.data.managesave.Table
 import io.github.alexiscomete.lapinousecond.data.managesave.save
+import io.github.alexiscomete.lapinousecond.entity.concrete.items.items.StrasbourgSausage
+import io.github.alexiscomete.lapinousecond.entity.entities.PlayerManager
 
 val ITEMS = Table("items")
 val itemsCacheCustom = CacheCustom(ITEMS) { id: Long ->
@@ -34,7 +34,7 @@ abstract class Item(id: Long) : CacheGetSet(id, ITEMS) {
             val containsItemsType = this["containsItemsType"]
             if (containsItemsType == "player") {
                 val playerId = this["containsItemsId"].toLong()
-                players[playerId]!!
+                PlayerManager[playerId].playerData
             } else {
                 throw IllegalStateException("Unknown containsItems type")
             }

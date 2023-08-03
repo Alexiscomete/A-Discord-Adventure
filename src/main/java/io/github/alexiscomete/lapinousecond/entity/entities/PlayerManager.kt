@@ -19,7 +19,7 @@ class PlayerManager private constructor(
                 throw NullPointerException("PlayerManager $id already exists.")
             }
             playerManagers.add(id)
-            return playerManagers[id]!!
+            return playerManagers[id] ?: throw NullPointerException("WARNING : your account cannot be found or created. Please contact the bot owner, or try again.")
         }
     }
 
