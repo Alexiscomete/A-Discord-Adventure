@@ -91,7 +91,6 @@ class Level(
     }
 
     override fun toString(): String {
-        println("level: $level")
         return ProgressionBar(
             "🟡",
             "🟨",

@@ -27,12 +27,11 @@ open class PlayerData(id: Long) : CacheGetSet(id, PLAYERS), Owner, ContainsItems
     var workTime: Long
         private set
     val roles: ArrayList<Role>
-    val resourceManagers: HashMap<Resource, ResourceManager>
+    val resourceManagers: HashMap<Resource, ResourceManager> = ResourceManager.stringToArray(this["ressources"])
 
     init {
         workTime = 0
         roles = ArrayList()
-        resourceManagers = ResourceManager.stringToArray(this["ressources"])
     }
 
     fun updateWorkTime() {
