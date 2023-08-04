@@ -1,6 +1,7 @@
 package io.github.alexiscomete.lapinousecond.view.ui.playerui
 
 import io.github.alexiscomete.lapinousecond.entity.entities.PlayerData
+import io.github.alexiscomete.lapinousecond.entity.entities.PlayerManager
 import io.github.alexiscomete.lapinousecond.view.ui.dialogue.Dialogue
 import io.github.alexiscomete.lapinousecond.view.ui.longuis.LongCustomUI
 
@@ -16,6 +17,7 @@ interface PlayerUI {
     fun getMessages(): List<String>
     fun getDialogues(): List<Dialogue>
     fun getPlayer(): PlayerData
+    fun getPlayerManager(): PlayerManager
     fun getLongCustomUI(): LongCustomUI?
     fun setLongCustomUI(longCustomUI: LongCustomUI?): PlayerUI
     fun canExecute(id: String): Boolean

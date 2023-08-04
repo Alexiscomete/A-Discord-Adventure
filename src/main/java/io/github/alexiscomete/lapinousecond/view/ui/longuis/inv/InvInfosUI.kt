@@ -58,9 +58,10 @@ class InvInfosUI(playerUI: PlayerUI) : StaticUI(
 
     override fun getFields(): List<Pair<String, String>> {
         val player = currentUI.getPlayer()
+        val playerManager = currentUI.getPlayerManager()
         return listOf(
             Pair("Position", player.positionToString()),
-            Pair("Niveau", player.level.toString()),
+            Pair("Niveau", playerManager.level.toString()),
             Pair("Pixel", """
      Compte sur le bot de Sylicium : ${if (player["has_account"] == "1") "oui" else "non"}
      Vérification : ${if (player["is_verify"] == "1") "oui" else "non"}

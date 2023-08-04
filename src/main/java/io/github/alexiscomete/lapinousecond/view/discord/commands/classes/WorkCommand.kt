@@ -5,6 +5,7 @@ import io.github.alexiscomete.lapinousecond.entity.concrete.resources.Resource
 import io.github.alexiscomete.lapinousecond.entity.concrete.resources.ResourceManager
 import io.github.alexiscomete.lapinousecond.entity.concrete.resources.WorkEnum
 import io.github.alexiscomete.lapinousecond.entity.entities.PlayerData
+import io.github.alexiscomete.lapinousecond.entity.entities.PlayerManager
 import io.github.alexiscomete.lapinousecond.entity.roles.Role
 import io.github.alexiscomete.lapinousecond.entity.roles.RolesEnum
 import io.github.alexiscomete.lapinousecond.view.discord.commands.*
@@ -21,11 +22,11 @@ const val XP_FOR_WORKING = 0.5
 const val XP_FOR_TUTO = 1.0
 
 fun setWork(
-    playerData: PlayerData,
+    playerData: PlayerManager,
     embedBuilder: EmbedBuilder,
     response: InteractionImmediateResponseBuilder
 ) {
-    if (System.currentTimeMillis() - playerData.workTime > WORK_COOLDOWN_MILLIS) {
+    if (System.currentTimeMillis() - playerData.playerData.workTime > WORK_COOLDOWN_MILLIS) {
         val wo = WorkEnum.entries.toTypedArray()
         val random = Random()
         var total = 0
@@ -50,35 +51,35 @@ fun setWork(
         }
         embedBuilder.addField("Work", answer)
         if (woAnswer.resource == null) {
-            playerData["bal"] = (playerData["bal"].toDouble() + randomQuantity).toString()
+            playerData.playerData["bal"] = (playerData.playerData["bal"].toDouble() + randomQuantity).toString()
         } else {
-            var resourceManager = playerData.resourceManagers[woAnswer.resource]
+            var resourceManager = playerData.playerData.resourceManagers[woAnswer.resource]
             if (resourceManager == null) {
                 resourceManager = ResourceManager(woAnswer.resource!!, randomQuantity)
-                playerData.resourceManagers[woAnswer.resource!!] = resourceManager
+                playerData.playerData.resourceManagers[woAnswer.resource!!] = resourceManager
             } else {
                 resourceManager.quantity += randomQuantity
             }
-            playerData.updateResources()
+            playerData.playerData.updateResources()
         }
-        playerData.updateWorkTime()
+        playerData.playerData.updateWorkTime()
         playerData.level.addXp(XP_FOR_WORKING)
-        if (playerData["tuto"] == TutoSteps.STEP_WORK.number) {
+        if (playerData.playerData["tuto"] == TutoSteps.STEP_WORK.number) {
             response.setContent("> (Aurimezi) : Bon tu as déjà plus de trucs. Maintenant on va utiliser ma fonctionnalité de magasin pour échanger ce que tu as trouvé. Bon qu'est ce qu'on a ramassé ...\n\nUtilisez à nouveau la commande d'inventaire")
-            playerData["tuto"] = TutoSteps.STEP_WORK.nextStepNum
+            playerData.playerData["tuto"] = TutoSteps.STEP_WORK.nextStepNum
             playerData.level.addXp(XP_FOR_TUTO)
         }
     } else {
         embedBuilder.addField(
             "Work",
-            "Cooldown ! Temps entre 2 work : ${WORK_COOLDOWN_SECONDS}s, temps écoulé : " + (System.currentTimeMillis() - playerData.workTime) / SECOND_TO_MILLIS + "s. Temps avant le prochain : <t:" + (Instant.now().epochSecond + WORK_COOLDOWN_SECONDS - (System.currentTimeMillis() - playerData.workTime) / SECOND_TO_MILLIS) + ":R>"
+            "Cooldown ! Temps entre 2 work : ${WORK_COOLDOWN_SECONDS}s, temps écoulé : " + (System.currentTimeMillis() - playerData.playerData.workTime) / SECOND_TO_MILLIS + "s. Temps avant le prochain : <t:" + (Instant.now().epochSecond + WORK_COOLDOWN_SECONDS - (System.currentTimeMillis() - playerData.playerData.workTime) / SECOND_TO_MILLIS) + ":R>"
         )
     }
 }
 
 private fun setRoles(
     slashCommand: SlashCommandInteraction,
-    playerData: PlayerData,
+    playerManager: PlayerManager,
     embedBuilder: EmbedBuilder
 ) {
     val roles = StringBuilder()
@@ -90,7 +91,7 @@ private fun setRoles(
         val rolesArrayList = RolesEnum.getRoles(user, server)
         for (role in rolesArrayList) {
             var find: Role? = null
-            for (r in playerData.roles) {
+            for (r in playerManager.playerData.roles) {
                 if (r.role == role) {
                     find = r
                     break
@@ -112,11 +113,11 @@ private fun setRoles(
                 totalRoles += role.salary.toDouble()
                 val r = Role(role)
                 r.currentCooldown = (System.currentTimeMillis() / SECOND_TO_MILLIS)
-                playerData.addRole(r)
+                playerManager.playerData.addRole(r)
             }
         }
-        playerData["bal"] = (playerData["bal"].toDouble() + totalRoles).toString()
-        playerData.level.addXp(XP_FOR_WORKING)
+        playerManager.playerData["bal"] = (playerManager.playerData["bal"].toDouble() + totalRoles).toString()
+        playerManager.level.addXp(XP_FOR_WORKING)
     } else {
         roles.append("Vous n'êtes pas sur un serveur")
     }

@@ -3,7 +3,8 @@ package io.github.alexiscomete.lapinousecond.entity.entities
 import org.javacord.api.entity.user.User
 
 class PlayerWithAccount(val user: User) {
-    val player = PlayerManager[user.id].playerData
+    val playerManager = PlayerManager[user.id]
+    val player = playerManager.playerData
 
     operator fun get(key: String): String {
         return player[key]

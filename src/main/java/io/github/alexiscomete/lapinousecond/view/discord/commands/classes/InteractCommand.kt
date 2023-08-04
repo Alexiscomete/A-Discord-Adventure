@@ -36,15 +36,16 @@ class InteractCommandBase : Command(
     override fun execute(slashCommand: SlashCommandInteraction) {
 
         val player = getAccount(slashCommand)
-        val world = WorldEnum.valueOf(player["world"])
+        val playerData = player.playerData
+        val world = WorldEnum.valueOf(playerData["world"])
         val context = contextFor(getAccount(slashCommand.user))
         val ui = DiscordPlayerUI(context, slashCommand as Interaction)
 
-        when (player["place_${world.progName}_type"]) {
+        when (playerData["place_${world.progName}_type"]) {
             "coos" -> {
                 // on regarde s'il existe une ville à l'endroit où le joueur est
-                val x = player["place_${world.progName}_x"].toInt()
-                val y = player["place_${world.progName}_y"].toInt()
+                val x = playerData["place_${world.progName}_x"].toInt()
+                val y = playerData["place_${world.progName}_y"].toInt()
                 val resultSet = saveManager.executeQuery(
                     "SELECT * FROM places WHERE x = $x AND y = $y AND world = '${world.progName}'",
                     true
@@ -68,8 +69,8 @@ class InteractCommandBase : Command(
                                 )
                             }
 
-                            player["place_${world.progName}_type"] = "city"
-                            player["place_${world.progName}_id"] = place["id"]
+                            playerData["place_${world.progName}_type"] = "city"
+                            playerData["place_${world.progName}_id"] = place["id"]
                             val serverId = place["server"]
                             val op = api.getServerById(serverId)
                             if (!op.isPresent) {
@@ -92,7 +93,7 @@ class InteractCommandBase : Command(
                                 Message("Vous êtes maintenant dans la ville ${place["nameRP"]} ! Voici l'invitation pour rejoindre le serveur : ${invite.url}")
                             )
 
-                            player["serv"] = serverId
+                            playerData["serv"] = serverId
                             null
                         })
                 } else {
@@ -104,7 +105,7 @@ class InteractCommandBase : Command(
             }
 
             "building" -> {
-                val building = load(player["place_${world.progName}_id"])
+                val building = load(playerData["place_${world.progName}_id"])
                     ?: throw IllegalArgumentException("Building not found")
                 ui.setLongCustomUI(MenuBuilderUI(
                     "Interactions sur le bâtiment ${building["nameRP"]} du monde ${world.nameRP}",
@@ -115,7 +116,7 @@ class InteractCommandBase : Command(
                         "Sortir du bâtiment",
                         "Vous sortez du bâtiment ${building["nameRP"]} et retournez dans la ville."
                     ) { playerUI ->
-                        player["place_${world.progName}_type"] = "city"
+                        playerData["place_${world.progName}_type"] = "city"
                         playerUI.addMessage(
                             Message("Vous êtes maintenant dans la ville ${building["nameRP"]} !")
                         )
@@ -133,7 +134,7 @@ class InteractCommandBase : Command(
             }
 
             "city" -> {
-                val place = places[player["place_${world.progName}_id"].toLong()]
+                val place = places[playerData["place_${world.progName}_id"].toLong()]
                     ?: throw IllegalArgumentException("Place not found")
 
                 /**
@@ -144,8 +145,8 @@ class InteractCommandBase : Command(
                  * @param buttonClickEvent The event that triggered the button click.
                  */
                 fun enterInBuilding(building: Building, buttonClickEvent: PlayerUI) {
-                    player["place_${world.progName}_type"] = "building"
-                    player["place_${world.progName}_building_id"] = building.id.toString()
+                    playerData["place_${world.progName}_type"] = "building"
+                    playerData["place_${world.progName}_building_id"] = building.id.toString()
                     buttonClickEvent.addMessage(Message("Vous êtes maintenant dans le bâtiment ${building["nameRP"]} !"))
                 }
 
@@ -171,7 +172,7 @@ class InteractCommandBase : Command(
                         }
 
                         var money = opMoney.toDouble()
-                        if (money > player.getMoney()) {
+                        if (money > playerData.getMoney()) {
                             throw IllegalArgumentException("You don't have enough money")
                         }
 
@@ -180,7 +181,7 @@ class InteractCommandBase : Command(
                         }
 
                         // Etape 3
-                        player.removeMoney(money)
+                        playerData.removeMoney(money)
                         building.addMoney(money)
 
                         playerUI.addMessage(
@@ -232,8 +233,8 @@ class InteractCommandBase : Command(
                         "Quitter la ville",
                         "Vous quittez la ville ${place["nameRP"]} et retournez dans la nature"
                     ) { playerUI ->
-                        player["place_${world.progName}_type"] = "coos"
-                        player["place_${world.progName}_id"] = "0"
+                        playerData["place_${world.progName}_type"] = "coos"
+                        playerData["place_${world.progName}_id"] = "0"
                         playerUI.addMessage(Message("Vous êtes maintenant dans la nature !"))
                         null
                     }
@@ -359,12 +360,12 @@ class InteractCommandBase : Command(
                                             },
                                             { buildType: Buildings, playerUI: PlayerUI ->
                                                 if (buildType.isBuild && buildType.buildingAutorisations?.isAutorise(
-                                                        player
+                                                        playerData
                                                     ) == true
                                                 ) {
-                                                    val place1 = player.place
+                                                    val place1 = playerData.place
                                                         ?: throw IllegalArgumentException("Le joueur n'est pas dans une ville")
-                                                    val building2 = Building(buildType, player, place1)
+                                                    val building2 = Building(buildType, playerData, place1)
                                                     playerUI.addMessage(
                                                         Message(
                                                             building2.title(),

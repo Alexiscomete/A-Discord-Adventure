@@ -42,10 +42,10 @@ fun who(slashCommand: SlashCommandInteraction): PlayerData {
                 throw IllegalStateException("Cette personne n'a pas de compte sur le bot")
             }
         } else {
-            getAccount(slashCommand)
+            getAccount(slashCommand).playerData
         }
     } else {
-        getAccount(slashCommand)
+        getAccount(slashCommand).playerData
     }
 }
 

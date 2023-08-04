@@ -11,10 +11,10 @@ class MessagesManager : MessageCreateListener {
     override fun onMessageCreate(messageCreateEvent: MessageCreateEvent) {
         if (messageCreateEvent.messageAuthor.isUser) {
             try {
-                val player = PlayerManager[messageCreateEvent.messageAuthor.id].playerData
-                if (player.lastLevelUpdate + XP_FOR_MESSAGE_COOLDOWN_MILLIS < System.currentTimeMillis()) {
-                    val pair = player.level.addXp(XP_FOR_MESSAGE)
-                    player.lastLevelUpdate = System.currentTimeMillis()
+                val playerManager = PlayerManager[messageCreateEvent.messageAuthor.id]
+                if (playerManager.lastLevelUpdate + XP_FOR_MESSAGE_COOLDOWN_MILLIS < System.currentTimeMillis()) {
+                    val pair = playerManager.level.addXp(XP_FOR_MESSAGE)
+                    playerManager.lastLevelUpdate = System.currentTimeMillis()
                     if (pair != null) {
                         messageCreateEvent.message.reply("Tu es passé.e du niveau " + pair.first + " au niveau " + pair.second + " ! *Pour désactiver ce message, interdisez au bot de parler dans ce salon*")
                     }

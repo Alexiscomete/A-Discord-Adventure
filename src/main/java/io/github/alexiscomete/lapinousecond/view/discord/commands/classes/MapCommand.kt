@@ -114,6 +114,7 @@ val TRAVEL_MENU = MenuBuilderFactoryUI(
     ) { ui ->
 
         val player = ui.getPlayer()
+        val playerManager = ui.getPlayerManager()
         val world = player["world"]
         val type = player["place_${world}_type"]
         if (type == "") {
@@ -218,9 +219,9 @@ val TRAVEL_MENU = MenuBuilderFactoryUI(
 
                     val image = bigger(worldEnum.drawPath(path), 3)
 
-                    val timeMillisOnePixel = timeMillisForOnePixel(player)
+                    val timeMillisOnePixel = timeMillisForOnePixel(playerManager.effectsManager)
                     val timeMillisToTravel = timeMillisOnePixel * path.size
-                    val priceToTravel = priceToTravelWithEffect(player, path.size)
+                    val priceToTravel = priceToTravelWithEffect(playerManager.effectsManager, path.size)
 
                     val builderTime = MenuBuilderFactoryUI(
                         "Confirmer",

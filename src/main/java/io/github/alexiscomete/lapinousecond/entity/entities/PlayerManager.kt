@@ -1,6 +1,8 @@
 package io.github.alexiscomete.lapinousecond.entity.entities
 
 import io.github.alexiscomete.lapinousecond.data.managesave.CacheCustom
+import io.github.alexiscomete.lapinousecond.entity.effects.EffectsManager
+import io.github.alexiscomete.lapinousecond.entity.xp.Level
 
 class PlayerManager private constructor(
     id: Long
@@ -24,4 +26,8 @@ class PlayerManager private constructor(
     }
 
     val playerData: PlayerData = PlayerData(id)
+
+    val level: Level = Level(playerData, "xp")
+    var lastLevelUpdate = 0L
+    val effectsManager = EffectsManager()
 }

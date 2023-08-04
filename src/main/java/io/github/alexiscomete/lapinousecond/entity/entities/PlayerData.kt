@@ -1,7 +1,6 @@
 package io.github.alexiscomete.lapinousecond.entity.entities
 
 import io.github.alexiscomete.lapinousecond.Beurk
-import io.github.alexiscomete.lapinousecond.data.managesave.CacheCustom
 import io.github.alexiscomete.lapinousecond.data.managesave.CacheGetSet
 import io.github.alexiscomete.lapinousecond.data.managesave.Table
 import io.github.alexiscomete.lapinousecond.data.managesave.saveManager
@@ -11,11 +10,7 @@ import io.github.alexiscomete.lapinousecond.entity.concrete.items.items.Strasbou
 import io.github.alexiscomete.lapinousecond.entity.concrete.items.itemsCacheCustom
 import io.github.alexiscomete.lapinousecond.entity.concrete.resources.Resource
 import io.github.alexiscomete.lapinousecond.entity.concrete.resources.ResourceManager
-import io.github.alexiscomete.lapinousecond.entity.effects.Effect
-import io.github.alexiscomete.lapinousecond.entity.effects.EffectEnum
-import io.github.alexiscomete.lapinousecond.entity.effects.EffectsManager
 import io.github.alexiscomete.lapinousecond.entity.roles.Role
-import io.github.alexiscomete.lapinousecond.entity.xp.Level
 import io.github.alexiscomete.lapinousecond.view.AnswerEnum
 import io.github.alexiscomete.lapinousecond.view.LangageEnum
 import io.github.alexiscomete.lapinousecond.view.answerManager
@@ -33,18 +28,11 @@ open class PlayerData(id: Long) : CacheGetSet(id, PLAYERS), Owner, ContainsItems
         private set
     val roles: ArrayList<Role>
     val resourceManagers: HashMap<Resource, ResourceManager>
-    val level: Level = Level(this, "xp")
-    var lastLevelUpdate = 0L
-    val effectsManager = EffectsManager()
 
     init {
         workTime = 0
         roles = ArrayList()
         resourceManagers = ResourceManager.stringToArray(this["ressources"])
-        
-        //temporary
-        effectsManager.addEffect(Effect(EffectEnum.SPEED_TRAVELING, 1))
-        effectsManager.addEffect(Effect(EffectEnum.COST_TRAVELING, 1))
     }
 
     fun updateWorkTime() {
