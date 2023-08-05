@@ -46,7 +46,7 @@ class PlayerOwnerManager(
         } else {
             resourceManager.quantity -= amount.toInt()
         }
-        playerData.updateResources()
+        playerData.updateResources(resourceManagers)
     }
 
     override fun hasResource(resource: Resource, amount: Double): Boolean {
@@ -72,7 +72,7 @@ class PlayerOwnerManager(
         } else {
             resourceManager.quantity += amount.toInt()
         }
-        playerData.updateResources()
+        playerData.updateResources(resourceManagers)
     }
 
     override fun hasMoney(amount: Double): Boolean {

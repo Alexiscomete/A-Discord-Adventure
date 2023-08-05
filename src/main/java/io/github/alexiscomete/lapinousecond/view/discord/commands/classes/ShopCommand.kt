@@ -100,14 +100,14 @@ class ShopBuyCommand :
         val price: Double = quantity * resource.price * BUY_COEF
         if (playerData["bal"].toDouble() >= price) {
             playerData["bal"] = (playerData["bal"].toDouble() - price).toString()
-            var resourceManager = playerData.resourceManagers[resource]
+            var resourceManager = player.playerOwnerManager.resourceManagers[resource]
             if (resourceManager == null) {
                 resourceManager = ResourceManager(resource, quantity)
-                playerData.resourceManagers[resource] = resourceManager
+                player.playerOwnerManager.resourceManagers[resource] = resourceManager
             } else {
                 resourceManager.quantity += quantity
             }
-            playerData.updateResources()
+            playerData.updateResources(player.playerOwnerManager.resourceManagers)
             slashCommand.createImmediateResponder()
                 .setContent("Achat réussi ! Vous avez payé ${price.toInt()} ${Resource.RABBIT_COIN.show}")
                 .respond()
@@ -170,17 +170,17 @@ class ShopSellCommand :
         val playerData = player.playerData
 
         val price: Double = quantity * resource.price * SELL_COEF
-        var resourceManager = playerData.resourceManagers[resource]
+        var resourceManager = player.playerOwnerManager.resourceManagers[resource]
         if (resourceManager == null) {
             resourceManager = ResourceManager(resource, 0)
-            playerData.resourceManagers[resource] = resourceManager
-            playerData.updateResources()
+            player.playerOwnerManager.resourceManagers[resource] = resourceManager
+            playerData.updateResources(player.playerOwnerManager.resourceManagers)
             throw IllegalStateException("Transaction impossible car vous n'avez pas les ressources demandées")
         } else {
             if (resourceManager.quantity >= quantity) {
                 playerData["bal"] = (playerData["bal"].toDouble() + price).toString()
                 resourceManager.quantity -= quantity
-                playerData.updateResources()
+                playerData.updateResources(player.playerOwnerManager.resourceManagers)
                 slashCommand.createImmediateResponder()
                     .setContent("Vente réussie ! Vous avez gagné ${price.toInt()} ${Resource.RABBIT_COIN.show}")
                     .respond()
@@ -265,8 +265,7 @@ class ShopInfoCommand :
         val arguments = slashCommand.arguments
         val resource = resource(arguments)
         val player = getAccount(slashCommand)
-        val playerData = player.playerData
-        val resourceManager = playerData.resourceManagers[resource]
+        val resourceManager = player.playerOwnerManager.resourceManagers[resource]
         // on calcul combien le joueur a de cette resource
         val quantity = resourceManager?.quantity ?: 0
         val embedBuilder = EmbedBuilder()

@@ -4,7 +4,6 @@ import io.github.alexiscomete.lapinousecond.data.TutoSteps
 import io.github.alexiscomete.lapinousecond.entity.concrete.resources.Resource
 import io.github.alexiscomete.lapinousecond.entity.concrete.resources.ResourceManager
 import io.github.alexiscomete.lapinousecond.entity.concrete.resources.WorkEnum
-import io.github.alexiscomete.lapinousecond.entity.entities.PlayerData
 import io.github.alexiscomete.lapinousecond.entity.entities.PlayerManager
 import io.github.alexiscomete.lapinousecond.entity.roles.Role
 import io.github.alexiscomete.lapinousecond.entity.roles.RolesEnum
@@ -22,11 +21,11 @@ const val XP_FOR_WORKING = 0.5
 const val XP_FOR_TUTO = 1.0
 
 fun setWork(
-    playerData: PlayerManager,
+    playerManager: PlayerManager,
     embedBuilder: EmbedBuilder,
     response: InteractionImmediateResponseBuilder
 ) {
-    if (System.currentTimeMillis() - playerData.playerData.workTime > WORK_COOLDOWN_MILLIS) {
+    if (System.currentTimeMillis() - playerManager.playerData.workTime > WORK_COOLDOWN_MILLIS) {
         val wo = WorkEnum.entries.toTypedArray()
         val random = Random()
         var total = 0
@@ -51,28 +50,28 @@ fun setWork(
         }
         embedBuilder.addField("Work", answer)
         if (woAnswer.resource == null) {
-            playerData.playerData["bal"] = (playerData.playerData["bal"].toDouble() + randomQuantity).toString()
+            playerManager.playerData["bal"] = (playerManager.playerData["bal"].toDouble() + randomQuantity).toString()
         } else {
-            var resourceManager = playerData.playerData.resourceManagers[woAnswer.resource]
+            var resourceManager = playerManager.playerOwnerManager.resourceManagers[woAnswer.resource]
             if (resourceManager == null) {
                 resourceManager = ResourceManager(woAnswer.resource!!, randomQuantity)
-                playerData.playerData.resourceManagers[woAnswer.resource!!] = resourceManager
+                playerManager.playerOwnerManager.resourceManagers[woAnswer.resource!!] = resourceManager
             } else {
                 resourceManager.quantity += randomQuantity
             }
-            playerData.playerData.updateResources()
+            playerManager.playerData.updateResources(playerManager.playerOwnerManager.resourceManagers)
         }
-        playerData.playerData.updateWorkTime()
-        playerData.level.addXp(XP_FOR_WORKING)
-        if (playerData.playerData["tuto"] == TutoSteps.STEP_WORK.number) {
+        playerManager.playerData.updateWorkTime()
+        playerManager.level.addXp(XP_FOR_WORKING)
+        if (playerManager.playerData["tuto"] == TutoSteps.STEP_WORK.number) {
             response.setContent("> (Aurimezi) : Bon tu as déjà plus de trucs. Maintenant on va utiliser ma fonctionnalité de magasin pour échanger ce que tu as trouvé. Bon qu'est ce qu'on a ramassé ...\n\nUtilisez à nouveau la commande d'inventaire")
-            playerData.playerData["tuto"] = TutoSteps.STEP_WORK.nextStepNum
-            playerData.level.addXp(XP_FOR_TUTO)
+            playerManager.playerData["tuto"] = TutoSteps.STEP_WORK.nextStepNum
+            playerManager.level.addXp(XP_FOR_TUTO)
         }
     } else {
         embedBuilder.addField(
             "Work",
-            "Cooldown ! Temps entre 2 work : ${WORK_COOLDOWN_SECONDS}s, temps écoulé : " + (System.currentTimeMillis() - playerData.playerData.workTime) / SECOND_TO_MILLIS + "s. Temps avant le prochain : <t:" + (Instant.now().epochSecond + WORK_COOLDOWN_SECONDS - (System.currentTimeMillis() - playerData.playerData.workTime) / SECOND_TO_MILLIS) + ":R>"
+            "Cooldown ! Temps entre 2 work : ${WORK_COOLDOWN_SECONDS}s, temps écoulé : " + (System.currentTimeMillis() - playerManager.playerData.workTime) / SECOND_TO_MILLIS + "s. Temps avant le prochain : <t:" + (Instant.now().epochSecond + WORK_COOLDOWN_SECONDS - (System.currentTimeMillis() - playerManager.playerData.workTime) / SECOND_TO_MILLIS) + ":R>"
         )
     }
 }
