@@ -3,7 +3,7 @@ package io.github.alexiscomete.lapinousecond.entity.entities
 import io.github.alexiscomete.lapinousecond.entity.concrete.resources.Resource
 import io.github.alexiscomete.lapinousecond.entity.concrete.resources.ResourceManager
 
-class PlayerRManager(
+class PlayerOwnerManager(
     val playerData: PlayerData
 ) : Owner {
     override val ownerType: String = "player"

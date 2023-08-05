@@ -1,13 +1,11 @@
 package io.github.alexiscomete.lapinousecond.entity.entities
 
 import io.github.alexiscomete.lapinousecond.data.managesave.CacheCustom
-import io.github.alexiscomete.lapinousecond.entity.concrete.resources.Resource
-import io.github.alexiscomete.lapinousecond.entity.concrete.resources.ResourceManager
 import io.github.alexiscomete.lapinousecond.entity.effects.EffectsManager
 import io.github.alexiscomete.lapinousecond.entity.xp.Level
 
 class PlayerManager private constructor(
-    id: Long
+    val id: Long
 ) {
     companion object {
         private val playerManagers = CacheCustom(PLAYERS) { PlayerManager(it) }
@@ -32,5 +30,5 @@ class PlayerManager private constructor(
     val level: Level = Level(playerData, "xp")
     var lastLevelUpdate = 0L
     val effectsManager = EffectsManager()
-    val playerRManager = PlayerRManager(playerData)
+    val playerOwnerManager = PlayerOwnerManager(playerData)
 }

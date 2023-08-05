@@ -172,7 +172,7 @@ class InteractCommandBase : Command(
                         }
 
                         var money = opMoney.toDouble()
-                        if (money > playerData.getMoney()) {
+                        if (money > player.playerOwnerManager.getMoney()) {
                             throw IllegalArgumentException("You don't have enough money")
                         }
 
@@ -181,7 +181,7 @@ class InteractCommandBase : Command(
                         }
 
                         // Etape 3
-                        playerData.removeMoney(money)
+                        player.playerOwnerManager.removeMoney(money)
                         building.addMoney(money)
 
                         playerUI.addMessage(
@@ -360,12 +360,12 @@ class InteractCommandBase : Command(
                                             },
                                             { buildType: Buildings, playerUI: PlayerUI ->
                                                 if (buildType.isBuild && buildType.buildingAutorisations?.isAutorise(
-                                                        playerData
+                                                        player.playerOwnerManager
                                                     ) == true
                                                 ) {
                                                     val place1 = playerData.place
                                                         ?: throw IllegalArgumentException("Le joueur n'est pas dans une ville")
-                                                    val building2 = Building(buildType, playerData, place1)
+                                                    val building2 = Building(buildType, player.playerOwnerManager, place1)
                                                     playerUI.addMessage(
                                                         Message(
                                                             building2.title(),

@@ -54,6 +54,7 @@ val TRAVEL_MENU = MenuBuilderFactoryUI(
         val worldEnums = WorldEnum.entries.toTypedArray()
         val worlds = worldEnums.map { it }
         val player = ui.getPlayer()
+        val playerManager = ui.getPlayerManager()
 
         val builder = MenuBuilderUI(
             "Mondes",
@@ -81,7 +82,7 @@ val TRAVEL_MENU = MenuBuilderFactoryUI(
                             // get the player's bal
                             verifyBalForWorld(player)
 
-                            player.removeMoney(RABBIT_WORLD_PRICE)
+                            playerManager.playerOwnerManager.removeMoney(RABBIT_WORLD_PRICE)
 
                             player["world"] = world.progName
                             if (player["place_${world.progName}_x"] == "") {
@@ -260,7 +261,7 @@ val TRAVEL_MENU = MenuBuilderFactoryUI(
                             "Oui je veux aller jusqu'à ce pixel"
                         ) { pui ->
                             // get the player's money
-                            val money = player.getMoney()
+                            val money = playerManager.playerOwnerManager.getMoney()
                             if (money < priceToTravel) {
                                 pui.addMessage(
                                     Message(
@@ -268,7 +269,7 @@ val TRAVEL_MENU = MenuBuilderFactoryUI(
                                     )
                                 )
                             } else {
-                                player.removeMoney(priceToTravel)
+                                playerManager.playerOwnerManager.removeMoney(priceToTravel)
                                 player["place_${worldEnum.progName}_x"] =
                                     x.toString()
                                 player["place_${worldEnum.progName}_y"] =
