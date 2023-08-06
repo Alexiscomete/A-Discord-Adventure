@@ -1,7 +1,5 @@
 package io.github.alexiscomete.lapinousecond.entity.effects
 
-import io.github.alexiscomete.lapinousecond.entity.entities.PlayerManager
-
 const val DEFAULT_TIME_FOR_ONE_PIXEL = 10000L
 const val DEFAULT_PRICE_FOR_ONE_PIXEL = 0.5
 

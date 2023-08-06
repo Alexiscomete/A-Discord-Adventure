@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>io.github.alexiscomete.lapinousecond.entity</OriginalElement>
+  <nodes>
+    <node x="-260.0" y="-14.0">io.github.alexiscomete.lapinousecond.entity.concrete</node>
+    <node x="-260.0" y="132.0">io.github.alexiscomete.lapinousecond.entity.effects</node>
+    <node x="-260.0" y="278.0">io.github.alexiscomete.lapinousecond.entity.xp</node>
+    <node x="-260.0" y="205.0">io.github.alexiscomete.lapinousecond.entity.roles</node>
+    <node x="-260.0" y="59.0">io.github.alexiscomete.lapinousecond.entity.entities</node>
+  </nodes>
+  <notes />
+  <edges />
+  <settings layout="Hierarchic" zoom="1.0" showDependencies="false" x="-0.5" y="146.0" />
+  <SelectedNodes />
+  <Categories />
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

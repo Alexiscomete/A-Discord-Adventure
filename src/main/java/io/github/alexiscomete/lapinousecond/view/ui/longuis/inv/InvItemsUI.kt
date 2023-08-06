@@ -8,7 +8,7 @@ import io.github.alexiscomete.lapinousecond.view.ui.playerui.PlayerUI
 
 class InvItemsUI(playerUI: PlayerUI) : EmbedPagesWithInteractions<Item>(
     run {
-        playerUI.getPlayer().getAllItems()
+        playerUI.getPlayerManager().playerOwnerManager.getAllItems()
     },
     { i: Int, i1: Int, items: ArrayList<Item> ->
         val pairs = items.subList(i, i1).map { Pair("${it.name} (${it.id})", it.description) }

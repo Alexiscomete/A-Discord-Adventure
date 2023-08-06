@@ -3,11 +3,6 @@ package io.github.alexiscomete.lapinousecond.entity.entities
 import io.github.alexiscomete.lapinousecond.Beurk
 import io.github.alexiscomete.lapinousecond.data.managesave.CacheGetSet
 import io.github.alexiscomete.lapinousecond.data.managesave.Table
-import io.github.alexiscomete.lapinousecond.data.managesave.saveManager
-import io.github.alexiscomete.lapinousecond.entity.concrete.items.ContainsItems
-import io.github.alexiscomete.lapinousecond.entity.concrete.items.Item
-import io.github.alexiscomete.lapinousecond.entity.concrete.items.items.StrasbourgSausage
-import io.github.alexiscomete.lapinousecond.entity.concrete.items.itemsCacheCustom
 import io.github.alexiscomete.lapinousecond.entity.concrete.resources.Resource
 import io.github.alexiscomete.lapinousecond.entity.concrete.resources.ResourceManager
 import io.github.alexiscomete.lapinousecond.entity.roles.Role
@@ -22,7 +17,7 @@ import io.github.alexiscomete.lapinousecond.worlds.places
 val PLAYERS = Table("players")
 
 @Beurk
-open class PlayerData(id: Long) : CacheGetSet(id, PLAYERS), ContainsItems {
+open class PlayerData(id: Long) : CacheGetSet(id, PLAYERS) {
 
     var workTime: Long
         private set
@@ -198,35 +193,6 @@ open class PlayerData(id: Long) : CacheGetSet(id, PLAYERS), ContainsItems {
             }
         }
 
-    }
-
-    override val ownerType: String
-        get() = "player"
-    override val ownerString: String
-        get() = id.toString()
-
-    override fun getAllItems(): ArrayList<Item> {
-        // query of all items in the inventory of the player
-        StrasbourgSausage(0).also {
-            it["containsItemsType"]
-            it["containsItemsId"]
-        } // TODO : rendre ça propre
-        val query = "SELECT * FROM items WHERE containsItemsType = 'player' AND containsItemsId = '${id}'"
-        val preparedStatement = saveManager.preparedStatement(query)
-        val result = saveManager.executeMultipleQueryKey(preparedStatement)
-        // list of all items
-        val items = ArrayList<Item>()
-        // for each item, we create an item object and add it to the list
-        for (itemId in result) {
-            items.add(itemsCacheCustom[itemId] ?: throw IllegalStateException("Votre inventaire contient un item qui n'existe pas et ne peut donc pas être ouvert. Veuillez contacter un administrateur."))
-        }
-        return items
-    }
-
-    override fun addItem(item: Item) {
-        // query to add an item to the inventory of the player
-        item["containsItemsType"] = "player"
-        item["containsItemsId"] = id.toString()
     }
 
     val world

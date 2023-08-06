@@ -3,7 +3,7 @@ package io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.sprites
 import io.github.alexiscomete.lapinousecond.data.managesave.generateUniqueID
 import io.github.alexiscomete.lapinousecond.entity.concrete.items.items.StrasbourgSausage
 import io.github.alexiscomete.lapinousecond.entity.concrete.items.itemsCacheCustom
-import io.github.alexiscomete.lapinousecond.entity.entities.PlayerData
+import io.github.alexiscomete.lapinousecond.entity.entities.PlayerOwnerManager
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.canvas.WorldCanvas
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.Sprite
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.textures.TexturesForSprites
@@ -11,7 +11,7 @@ import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.Tile
 import java.awt.Color
 import java.awt.image.BufferedImage
 
-class LootSprite(override var tile: Tile, val playerData: PlayerData) : Sprite {
+class LootSprite(override var tile: Tile, private val playerOwnerManager: PlayerOwnerManager) : Sprite {
 
     private var opened = false
 
@@ -22,7 +22,7 @@ class LootSprite(override var tile: Tile, val playerData: PlayerData) : Sprite {
             itemsCacheCustom.add(id)
             val item = StrasbourgSausage(id)
             item["type"] = "StrasbourgSausage"
-            playerData.addItem(item)
+            playerOwnerManager.addItem(item)
         }
         canvas.drawSprite(this, xToUse, yToUse, 5)
     }
