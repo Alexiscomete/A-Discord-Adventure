@@ -34,7 +34,7 @@ abstract class Item(id: Long) : CacheGetSet(id, ITEMS) {
             val containsItemsType = this["containsItemsType"]
             if (containsItemsType == "player") {
                 val playerId = this["containsItemsId"].toLong()
-                PlayerManager[playerId].playerData
+                PlayerManager[playerId].playerOwnerManager
             } else {
                 throw IllegalStateException("Unknown containsItems type")
             }
