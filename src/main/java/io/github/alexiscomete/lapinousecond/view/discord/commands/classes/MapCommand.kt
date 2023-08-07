@@ -82,7 +82,7 @@ val TRAVEL_MENU = MenuBuilderFactoryUI(
                             // get the player's bal
                             verifyBalForWorld(player)
 
-                            playerManager.playerOwnerManager.removeMoney(RABBIT_WORLD_PRICE)
+                            playerManager.ownerManager.removeMoney(RABBIT_WORLD_PRICE)
 
                             player["world"] = world.progName
                             if (player["place_${world.progName}_x"] == "") {
@@ -261,7 +261,7 @@ val TRAVEL_MENU = MenuBuilderFactoryUI(
                             "Oui je veux aller jusqu'à ce pixel"
                         ) { pui ->
                             // get the player's money
-                            val money = playerManager.playerOwnerManager.getMoney()
+                            val money = playerManager.ownerManager.getMoney()
                             if (money < priceToTravel) {
                                 pui.addMessage(
                                     Message(
@@ -269,7 +269,7 @@ val TRAVEL_MENU = MenuBuilderFactoryUI(
                                     )
                                 )
                             } else {
-                                playerManager.playerOwnerManager.removeMoney(priceToTravel)
+                                playerManager.ownerManager.removeMoney(priceToTravel)
                                 player["place_${worldEnum.progName}_x"] =
                                     x.toString()
                                 player["place_${worldEnum.progName}_y"] =

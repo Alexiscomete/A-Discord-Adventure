@@ -158,7 +158,7 @@ private fun createResearche(ui: PlayerUI) = Question(
 
     val p = ui.getPlayer()
     val pM = ui.getPlayerManager()
-    val rManager = pM.playerOwnerManager
+    val rManager = pM.ownerManager
     if (!rManager.hasMoney(costDouble)) {
         throw IllegalArgumentException("Vous n'avez pas assez de ${Resource.RABBIT_COIN.show}")
     }
@@ -214,7 +214,7 @@ private fun createAuction(ui: PlayerUI) = Question(
     }
 
     val p = ui.getPlayer()
-    val rManager = ui.getPlayerManager().playerOwnerManager
+    val rManager = ui.getPlayerManager().ownerManager
     if (!rManager.hasResource(resource, quantityDouble)) {
         throw IllegalArgumentException("Vous n'avez pas assez de ${resource.name}")
     }
@@ -262,7 +262,7 @@ private fun everyAuctions(ui: PlayerUI): Nothing? {
             { auction: Auction, playerUI: PlayerUI ->
                 val player2 = playerUI.getPlayer()
                 val playerManager2 = playerUI.getPlayerManager()
-                val rManager2 = playerManager2.playerOwnerManager
+                val rManager2 = playerManager2.ownerManager
                 // On vérifie si l'offre existe encore dans la base de données
                 val resultSet = saveManager.executeQuery("SELECT id FROM auctions WHERE id = ${auction.id}", true)
                 if (resultSet == null || !resultSet.next()) {
@@ -275,7 +275,7 @@ private fun everyAuctions(ui: PlayerUI): Nothing? {
                     throw IllegalArgumentException("Vous n'avez pas assez d'argent pour répondre à cette enchère (il faut enchérir de 100 ${Resource.RABBIT_COIN.show})")
                 }
                 rManager2.removeMoney(auction.amountRB + MIN_AUCTION_ADDING)
-                auction.whoMax.playerOwnerManager.addMoney(auction.amountRB)
+                auction.whoMax.ownerManager.addMoney(auction.amountRB)
                 auction["whoMax"] = player2.id.toString()
                 auction["amountRB"] = (auction.amountRB + MIN_AUCTION_ADDING).toString()
                 // respond
@@ -309,7 +309,7 @@ private fun myAuctions(ui: PlayerUI): Nothing? {
             },
             { auction: Auction, playerUI: PlayerUI ->
                 val player2 = playerUI.getPlayer()
-                val rManager2 = playerUI.getPlayerManager().playerOwnerManager
+                val rManager2 = playerUI.getPlayerManager().ownerManager
                 // On vérifie si l'enchère existe encore dans la base de données
                 val resultSet =
                     saveManager.executeQuery("SELECT id FROM auctions WHERE id = ${auction.id}", true)
@@ -325,7 +325,7 @@ private fun myAuctions(ui: PlayerUI): Nothing? {
                 // give the auction money
                 rManager2.addMoney(auction.amountRB)
                 // and the resources
-                auction.whoMax.playerOwnerManager.addResource(auction.what, auction.amount)
+                auction.whoMax.ownerManager.addResource(auction.what, auction.amount)
                 // remove the auction from the database
                 saveManager.execute("DELETE FROM auctions WHERE id = ${auction.id}", true)
                 // respond
@@ -361,7 +361,7 @@ private fun myResearches(
             },
             { offer: Research, playerUI: PlayerUI ->
                 val player2 = playerUI.getPlayer()
-                val rManager2 = playerUI.getPlayerManager().playerOwnerManager
+                val rManager2 = playerUI.getPlayerManager().ownerManager
                 // On vérifie si l'offre existe encore dans la base de données
                 val resultSet = saveManager.executeQuery(
                     "SELECT id FROM researches WHERE id = ${offer.id}", true
@@ -417,7 +417,7 @@ private fun everyResearches(newUI: PlayerUI): Question? {
             },
             { research: Research, playerUI: PlayerUI ->
                 val player2 = playerUI.getPlayer()
-                val rManager2 = playerUI.getPlayerManager().playerOwnerManager
+                val rManager2 = playerUI.getPlayerManager().ownerManager
                 // On vérifie si l'offre existe encore dans la base de données
                 val resultSet = saveManager.executeQuery(
                     "SELECT id FROM researches WHERE id = ${research.id}", true
@@ -432,8 +432,8 @@ private fun everyResearches(newUI: PlayerUI): Question? {
                     throw IllegalArgumentException("Vous n'avez pas assez de ${research.what.show} pour répondre à cette recherche")
                 }
                 rManager2.removeResource(research.what, research.amount)
-                research.who.playerOwnerManager.addResource(research.what, research.amount)
-                research.who.playerOwnerManager.addMoney(research.amountRB)
+                research.who.ownerManager.addResource(research.what, research.amount)
+                research.who.ownerManager.addMoney(research.amountRB)
                 // remove the research from the database
                 saveManager.execute("DELETE FROM researches WHERE id = ${research.id}", true)
                 // respond
@@ -482,7 +482,7 @@ private fun createOffer(ui: PlayerUI) = Question(
     }
 
     val p = ui.getPlayer()
-    val rManager = ui.getPlayerManager().playerOwnerManager
+    val rManager = ui.getPlayerManager().ownerManager
     if (!rManager.hasResource(resource, quantityDouble)) {
         throw IllegalArgumentException("Vous n'avez pas assez de ${resource.name}")
     }
@@ -526,7 +526,7 @@ private fun everyOffer(newUI: PlayerUI): Question? {
             },
             { offer: Offer, playerUI: PlayerUI ->
                 val player2 = playerUI.getPlayer()
-                val rManager2 = playerUI.getPlayerManager().playerOwnerManager
+                val rManager2 = playerUI.getPlayerManager().ownerManager
                 // On vérifie si l'offre existe encore dans la base de données
                 val resultSet = saveManager.executeQuery("SELECT id FROM offers WHERE id = ${offer.id}", true)
                 if (resultSet == null || !resultSet.next()) {
@@ -539,7 +539,7 @@ private fun everyOffer(newUI: PlayerUI): Question? {
                     throw IllegalArgumentException("Vous n'avez pas assez d'argent pour acheter cette offre")
                 }
                 rManager2.removeMoney(offer.amountRB)
-                offer.who.playerOwnerManager.addMoney(offer.amountRB)
+                offer.who.ownerManager.addMoney(offer.amountRB)
                 rManager2.addResource(offer.what, offer.amount)
                 // remove the offer from the database
                 saveManager.execute("DELETE FROM offers WHERE id = ${offer.id}", true)
@@ -574,7 +574,7 @@ private fun myOffers(ui: PlayerUI): Question? {
             },
             { offer: Offer, playerUI: PlayerUI ->
                 val player2 = playerUI.getPlayer()
-                val rManager2 = playerUI.getPlayerManager().playerOwnerManager
+                val rManager2 = playerUI.getPlayerManager().ownerManager
                 // On vérifie si l'offre existe encore dans la base de données
                 val resultSet = saveManager.executeQuery("SELECT id FROM offers WHERE id = ${offer.id}", true)
                 if (resultSet == null || !resultSet.next()) {

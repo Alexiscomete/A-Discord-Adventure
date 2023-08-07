@@ -95,7 +95,7 @@ class BaseTileGenerator(
                     } else {
                         when ((0..200).random()) {
                             5 -> {
-                                if (playerManager != null) spritesManager.sprites.add(LootSprite(it, playerManager.playerOwnerManager))
+                                if (playerManager != null) spritesManager.sprites.add(LootSprite(it, playerManager.ownerManager))
                             }
                             in 6..7 -> {
                                 spritesManager.sprites.add(SlimeSprite(it))

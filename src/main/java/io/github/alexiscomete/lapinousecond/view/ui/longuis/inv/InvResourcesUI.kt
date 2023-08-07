@@ -83,7 +83,7 @@ class InvResourcesUI(playerUI: PlayerUI) : StaticUI(
 
     override fun getFields(): List<Pair<String, String>> {
         val re = StringBuilder().append("Cliquez sur une resource (emoji) pour voir son nom\n")
-        for (reM in currentUI.getPlayerManager().playerOwnerManager.resourceManagers.values) {
+        for (reM in currentUI.getPlayerManager().ownerManager.resourceManagers.values) {
             re
                 .append(reM.resource.show)
                 .append(" ")

@@ -59,6 +59,7 @@ open class PlayerData(id: Long) : CacheGetSet(id, PLAYERS) {
         return answer
     }
 
+    @Deprecated("use setPath instead")
     val place: Place?
         get() {
             val worldName = world.progName
@@ -79,7 +80,7 @@ open class PlayerData(id: Long) : CacheGetSet(id, PLAYERS) {
             }
         }
 
-
+    @Deprecated("use setPath instead")
     fun setPath(path: ArrayList<PixelManager>, type: String, speed: Long) {
         savePath(path)
         this["place_${this["world"]}_path_type"] = type
@@ -88,6 +89,7 @@ open class PlayerData(id: Long) : CacheGetSet(id, PLAYERS) {
         this["place_${this["world"]}_speed"] = speed.toString()
     }
 
+    @Deprecated("use setPath instead")
     private fun getPath(): ArrayList<PixelManager> {
         val currentPath = stringSaveToPath()
         if (currentPath.isEmpty()) {
@@ -119,6 +121,7 @@ open class PlayerData(id: Long) : CacheGetSet(id, PLAYERS) {
         return remainingPath
     }
 
+    @Deprecated("use savePath")
     private fun savePath(remainingPath: ArrayList<PixelManager>) {
         val pathStr = StringBuilder()
         for (pixel in remainingPath) {
@@ -130,6 +133,7 @@ open class PlayerData(id: Long) : CacheGetSet(id, PLAYERS) {
         this["place_${this["world"]}_path"] = pathStr.toString()
     }
 
+    @Deprecated("use stringSaveToPath")
     private fun stringSaveToPath(): ArrayList<PixelManager> {
         val pathStr = getString("place_${this["world"]}_path")
         val path = ArrayList<PixelManager>()
@@ -146,6 +150,7 @@ open class PlayerData(id: Long) : CacheGetSet(id, PLAYERS) {
         return path
     }
 
+    @Deprecated("use positionToString")
     fun positionToString(): String {
         // la première étape est de récupérer le monde
         val world = this["world"]
@@ -195,6 +200,7 @@ open class PlayerData(id: Long) : CacheGetSet(id, PLAYERS) {
 
     }
 
+    @Deprecated("Use the new function")
     val world
         get() = run {
             val w = this["world"]

@@ -52,14 +52,14 @@ fun setWork(
         if (woAnswer.resource == null) {
             playerManager.playerData["bal"] = (playerManager.playerData["bal"].toDouble() + randomQuantity).toString()
         } else {
-            var resourceManager = playerManager.playerOwnerManager.resourceManagers[woAnswer.resource]
+            var resourceManager = playerManager.ownerManager.resourceManagers[woAnswer.resource]
             if (resourceManager == null) {
                 resourceManager = ResourceManager(woAnswer.resource!!, randomQuantity)
-                playerManager.playerOwnerManager.resourceManagers[woAnswer.resource!!] = resourceManager
+                playerManager.ownerManager.resourceManagers[woAnswer.resource!!] = resourceManager
             } else {
                 resourceManager.quantity += randomQuantity
             }
-            playerManager.playerData.updateResources(playerManager.playerOwnerManager.resourceManagers)
+            playerManager.playerData.updateResources(playerManager.ownerManager.resourceManagers)
         }
         playerManager.playerData.updateWorkTime()
         playerManager.level.addXp(XP_FOR_WORKING)

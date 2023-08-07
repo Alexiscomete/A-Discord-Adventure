@@ -30,5 +30,6 @@ class PlayerManager private constructor(
     val level: Level = Level(playerData, "xp")
     var lastLevelUpdate = 0L
     val effectsManager = EffectsManager()
-    val playerOwnerManager = PlayerOwnerManager(playerData)
+    val ownerManager = PlayerOwnerManager(playerData)
+    val worldManager = EntityWorldManager(playerData)
 }
