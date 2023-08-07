@@ -504,4 +504,8 @@ enum class WorldEnum(
         renderScene.renderAll()
         return canvas.bufferedImage
     }
+
+    override fun toString(): String {
+        return name
+    }
 }

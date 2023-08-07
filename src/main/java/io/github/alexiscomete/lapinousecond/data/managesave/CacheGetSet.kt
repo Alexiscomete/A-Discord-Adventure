@@ -5,17 +5,10 @@ import java.util.*
 open class CacheGetSet(open val id: Long, private val table: Table) {
     private var isDeleted: Boolean = false
     private val cache = HashMap<String, String>()
-    open fun getString(row: String): String {
-        if (isDeleted) {
-            throw IllegalStateException("This object is deleted")
-        }
-        return if (cache.containsKey(row)) {
-            cache[row]!!
-        } else {
-            val str = saveManager.getString(table, row, "TEXT", id, false)
-            cache[row] = str
-            str
-        }
+
+    @Deprecated("Please use the get method instead", replaceWith = ReplaceWith("this[row]"))
+    fun getString(row: String): String {
+        return this[row]
     }
 
     operator fun set(row: String, value: String) {
@@ -30,7 +23,7 @@ open class CacheGetSet(open val id: Long, private val table: Table) {
         if (isDeleted) {
             throw IllegalStateException("This object is deleted")
         }
-        return getString(row).split(";".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+        return this[row].split(";".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
     }
 
     override fun equals(other: Any?): Boolean {
@@ -44,11 +37,17 @@ open class CacheGetSet(open val id: Long, private val table: Table) {
         return Objects.hash(id)
     }
 
-    operator fun get(s: String): String {
+    operator fun get(row: String): String {
         if (isDeleted) {
             throw IllegalStateException("This object is deleted")
         }
-        return getString(s)
+        return if (cache.containsKey(row)) {
+            cache[row]!!
+        } else {
+            val str = saveManager.getString(table, row, "TEXT", id, false)
+            cache[row] = str
+            str
+        }
     }
 
     fun delete() {
