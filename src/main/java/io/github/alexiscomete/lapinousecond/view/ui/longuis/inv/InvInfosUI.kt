@@ -2,8 +2,8 @@ package io.github.alexiscomete.lapinousecond.view.ui.longuis.inv
 
 import io.github.alexiscomete.lapinousecond.view.ui.interactionui.InteractionStyle
 import io.github.alexiscomete.lapinousecond.view.ui.interactionui.SimpleInteractionUICustomUI
-import io.github.alexiscomete.lapinousecond.view.ui.playerui.PlayerUI
 import io.github.alexiscomete.lapinousecond.view.ui.longuis.StaticUI
+import io.github.alexiscomete.lapinousecond.view.ui.playerui.PlayerUI
 import java.awt.image.BufferedImage
 
 const val INV_IMAGE_URL = "https://cdn.discordapp.com/attachments/854322477152337920/924612939879702588/unknown.png"
@@ -60,7 +60,7 @@ class InvInfosUI(playerUI: PlayerUI) : StaticUI(
         val player = currentUI.getPlayer()
         val playerManager = currentUI.getPlayerManager()
         return listOf(
-            Pair("Position", player.positionToString()),
+            Pair("Position", playerManager.worldManager.entityWorld.positionToString()),
             Pair("Niveau", playerManager.level.toString()),
             Pair("Pixel", """
      Compte sur le bot de Sylicium : ${if (player["has_account"] == "1") "oui" else "non"}

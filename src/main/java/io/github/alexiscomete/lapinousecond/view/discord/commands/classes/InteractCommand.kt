@@ -363,7 +363,7 @@ class InteractCommandBase : Command(
                                                         player.ownerManager
                                                     ) == true
                                                 ) {
-                                                    val place1 = playerData.place
+                                                    val place1 = player.worldManager.entityWorld.place
                                                         ?: throw IllegalArgumentException("Le joueur n'est pas dans une ville")
                                                     val building2 = Building(buildType, player.ownerManager, place1)
                                                     playerUI.addMessage(

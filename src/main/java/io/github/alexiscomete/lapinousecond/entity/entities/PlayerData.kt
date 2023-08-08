@@ -9,10 +9,6 @@ import io.github.alexiscomete.lapinousecond.entity.roles.Role
 import io.github.alexiscomete.lapinousecond.view.AnswerEnum
 import io.github.alexiscomete.lapinousecond.view.LangageEnum
 import io.github.alexiscomete.lapinousecond.view.answerManager
-import io.github.alexiscomete.lapinousecond.worlds.Place
-import io.github.alexiscomete.lapinousecond.worlds.WorldEnum
-import io.github.alexiscomete.lapinousecond.worlds.map.PixelManager
-import io.github.alexiscomete.lapinousecond.worlds.places
 
 val PLAYERS = Table("players")
 
@@ -41,7 +37,7 @@ open class PlayerData(id: Long) : CacheGetSet(id, PLAYERS) {
     }
 
     fun getAnswer(answerEnum: AnswerEnum, maj: Boolean, format: ArrayList<String> = ArrayList()): String {
-        val langage = getString("langage")
+        val langage = this["langage"]
         val langageEnum: LangageEnum = if (langage == "") {
             LangageEnum.FRENCH
         } else {
@@ -58,156 +54,4 @@ open class PlayerData(id: Long) : CacheGetSet(id, PLAYERS) {
         println("answer: $answer")
         return answer
     }
-
-    @Deprecated("use setPath instead")
-    val place: Place?
-        get() {
-            val worldName = world.progName
-            return when (this["place_${worldName}_type"]) {
-                "place" -> {
-                    val placeID = this["place_${worldName}_id"]
-                    return places[placeID.toLong()]
-                }
-
-                "city" -> {
-                    val cityID = this["place_${worldName}_id"]
-                    return places[cityID.toLong()]
-                }
-
-                else -> {
-                    null
-                }
-            }
-        }
-
-    @Deprecated("use setPath instead")
-    fun setPath(path: ArrayList<PixelManager>, type: String, speed: Long) {
-        savePath(path)
-        this["place_${this["world"]}_path_type"] = type
-        this["place_${this["world"]}_path_start"] = System.currentTimeMillis().toString()
-        this["place_${this["world"]}_type"] = "path"
-        this["place_${this["world"]}_speed"] = speed.toString()
-    }
-
-    @Deprecated("use setPath instead")
-    private fun getPath(): ArrayList<PixelManager> {
-        val currentPath = stringSaveToPath()
-        if (currentPath.isEmpty()) {
-            this["place_${this["world"]}_type"] = "coos"
-            return ArrayList()
-        }
-        val lastPixel = currentPath[currentPath.size - 1]
-        val startTime = getString("place_${this["world"]}_path_start").toLong()
-        val timeForOnePixel = try {
-            getString("place_${this["world"]}_speed").toLong()
-        } catch (e: NumberFormatException) {
-            1000L
-        }
-        val currentTime = System.currentTimeMillis()
-        // le temps en ms pour 1 pixel est de timeForOnePixel, il faut enlever tous les pixels déjà parcourus de la liste puis la sauvegarder
-        val numberOfPixel = (currentTime - startTime) / timeForOnePixel
-        // les pixels à enlever sont au début de la liste, j'ai besoin que des pixels restants
-        val remainingPath = ArrayList<PixelManager>()
-        for (i in numberOfPixel.toInt() until currentPath.size) {
-            remainingPath.add(currentPath[i])
-        }
-        savePath(remainingPath)
-        if (remainingPath.size < 2) {
-            this["place_${this["world"]}_type"] = "coos"
-            this["place_${this["world"]}_x"] = lastPixel.x.toString()
-            this["place_${this["world"]}_y"] = lastPixel.y.toString()
-        }
-        this["place_${this["world"]}_path_start"] = System.currentTimeMillis().toString()
-        return remainingPath
-    }
-
-    @Deprecated("use savePath")
-    private fun savePath(remainingPath: ArrayList<PixelManager>) {
-        val pathStr = StringBuilder()
-        for (pixel in remainingPath) {
-            pathStr.append(pixel.x)
-            pathStr.append(",")
-            pathStr.append(pixel.y)
-            pathStr.append(";")
-        }
-        this["place_${this["world"]}_path"] = pathStr.toString()
-    }
-
-    @Deprecated("use stringSaveToPath")
-    private fun stringSaveToPath(): ArrayList<PixelManager> {
-        val pathStr = getString("place_${this["world"]}_path")
-        val path = ArrayList<PixelManager>()
-        if (pathStr != "") {
-            val pathSplit = pathStr.split(";")
-            for (i in pathSplit.indices) {
-                if (pathSplit[i] != "") {
-                    val pixelSplit = pathSplit[i].split(",")
-                    val world = WorldEnum.valueOf(getString("world"))
-                    path.add(world.getPixel(pixelSplit[0].toInt(), pixelSplit[1].toInt()))
-                }
-            }
-        }
-        return path
-    }
-
-    @Deprecated("use positionToString")
-    fun positionToString(): String {
-        // la première étape est de récupérer le monde
-        val world = this["world"]
-
-        // on récupère le type de lieu, on sépare encore en plusieurs possibilités
-        return when (this["place_${world}_type"]) {
-            "coos" -> {
-                // on récupère les coordonnées
-                val x = this["place_${world}_x"]
-                val y = this["place_${world}_y"]
-                // on retourne le résultat
-                "Vous êtes dans le monde ${world}, sur des coordonnées ($x, $y)"
-            }
-
-            "place" -> {
-                val placeID = this["place_${world}_id"]
-                "Vous êtes dans le monde ${world}, dans le lieu $placeID"
-            }
-
-            "path" -> {
-                val path = getPath()
-                if (path.isEmpty()) {
-                    val x = this["place_${world}_x"]
-                    val y = this["place_${world}_y"]
-                    "Vous êtes dans le monde ${world}, sur des coordonnées ($x, $y)"
-                } else {
-                    val firstPixel = path[0]
-                    val lastPixel = path[path.size - 1]
-                    "Vous êtes dans le monde ${world}, sur un chemin. Le premier pixel est (${firstPixel.x}, ${firstPixel.y}), le dernier pixel est (${lastPixel.x}, ${lastPixel.y})"
-                }
-            }
-
-            "city" -> {
-                val cityID = this["place_${world}_id"]
-                "Vous êtes dans le monde ${world}, dans la ville $cityID"
-            }
-
-            "building" -> {
-                val buildingID = this["place_${world}_building_id"]
-                "Vous êtes dans le monde ${world}, dans le bâtiment $buildingID"
-            }
-
-            else -> {
-                "Vous êtes dans le monde ${world}, mais vous ne savez pas où vous êtes"
-            }
-        }
-
-    }
-
-    @Deprecated("Use the new function")
-    val world
-        get() = run {
-            val w = this["world"]
-            if (w == "") {
-                WorldEnum.TUTO
-                this["world"] = WorldEnum.TUTO.progName
-            }
-            WorldEnum.valueOf(w)
-        }
 }

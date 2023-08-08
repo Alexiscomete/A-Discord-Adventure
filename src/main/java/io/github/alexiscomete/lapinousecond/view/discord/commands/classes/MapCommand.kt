@@ -232,7 +232,7 @@ val TRAVEL_MENU = MenuBuilderFactoryUI(
                             "Oui",
                             "Oui je veux aller jusqu'à ce pixel"
                         ) { pui ->
-                            player.setPath(
+                            playerManager.worldManager.entityWorld.setPath(
                                 path,
                                 "default_time",
                                 timeMillisOnePixel
@@ -408,9 +408,10 @@ val MAPS_MENU = MenuBuilderFactoryUI(
     ) { ui ->
 
         val player = ui.getPlayer()
+        val playerManager = ui.getPlayerManager()
         val worldStr = player["world"]
         val world = WorldEnum.valueOf(worldStr)
-        val position = player.positionToString()
+        val position = playerManager.worldManager.entityWorld.positionToString()
 
         val x = player["place_${worldStr}_x"]
         val y = player["place_${worldStr}_y"]
@@ -499,8 +500,8 @@ val MAPS_MENU = MenuBuilderFactoryUI(
                 throw IllegalArgumentException("Le y du point d'arrivée n'est pas un nombre")
             }
 
-            val player = ui.getPlayer()
-            val world = player.world
+            val playerManager = ui.getPlayerManager()
+            val world = playerManager.worldManager.world
 
             // check if the arguments are in the right range
             if (x1Int < 0 || x1Int > world.mapWidth) {
@@ -626,8 +627,8 @@ val MAPS_MENU = MenuBuilderFactoryUI(
                 throw IllegalArgumentException("Le zoom n'est pas un nombre")
             }
 
-            val player = ui.getPlayer()
-            val world = player.world
+            val playerManager = ui.getPlayerManager()
+            val world = playerManager.worldManager.world
 
             // check if the arguments are in the right range
             if (xInt < 0 || xInt > world.mapWidth) {
@@ -713,8 +714,8 @@ val MAPS_MENU = MenuBuilderFactoryUI(
                 throw IllegalArgumentException("Le y de la case n'est pas un nombre")
             }
 
-            val player = ui.getPlayer()
-            val world = player.world
+            val playerManager = ui.getPlayerManager()
+            val world = playerManager.worldManager.world
 
             if (x < 0 || x > world.mapWidth) {
                 throw IllegalArgumentException("Le x de la case n'est pas dans la carte")
