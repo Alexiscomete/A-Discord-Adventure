@@ -12,8 +12,8 @@ class EntityWorldManager(
         get() {
             val w = data["world"]
             if (w == "") {
-                WorldEnum.TUTO
                 data["world"] = WorldEnum.TUTO.progName
+                return WorldEnum.TUTO
             }
             return WorldEnum.valueOf(w)
         }
