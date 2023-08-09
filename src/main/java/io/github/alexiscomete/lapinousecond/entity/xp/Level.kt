@@ -4,7 +4,7 @@ import io.github.alexiscomete.lapinousecond.data.dataclass.ProgressionBar
 import io.github.alexiscomete.lapinousecond.data.managesave.CacheGetSet
 import kotlin.math.roundToInt
 
-const val ROUND_PRECISION = 1000.0
+const val ROUND_PRECISION_D = 1000.0
 const val PROGRESSION_STRING_SIZE = 15
 
 class Level(
@@ -98,6 +98,6 @@ class Level(
             totalXpForNextLevel,
             xpInCurrentLevel,
             PROGRESSION_STRING_SIZE
-        ).bar + " **$level** (${(xpInCurrentLevel * ROUND_PRECISION).roundToInt() / ROUND_PRECISION}/${(totalXpForNextLevel * ROUND_PRECISION).roundToInt() / ROUND_PRECISION})"
+        ).bar + " **$level** (${(xpInCurrentLevel * ROUND_PRECISION_D).roundToInt() / ROUND_PRECISION_D}/${(totalXpForNextLevel * ROUND_PRECISION_D).roundToInt() / ROUND_PRECISION_D})"
     }
 }

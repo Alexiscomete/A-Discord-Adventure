@@ -62,7 +62,7 @@ class InvInfosUI(playerUI: PlayerUI) : StaticUI(
             Pair("Position", playerManager.worldManager.entityWorld.positionToString()),
             Pair("Niveau", playerManager.level.toString()),
             Pair("Pixel officiel", "Les pixels d'origine ne sont plus pris en charge pour le moment."),
-            Pair("Vie", "${playerManager.playerData["life"]}/${playerManager.playerData["max_life"]}"),
+            Pair("Vie", playerManager.getLifeString()),
         )
     }
 

@@ -22,10 +22,10 @@ class SlimeSprite(override var tile: Tile) : BaseMonsterSprite() {
 
     override fun texture(): BufferedImage {
         if (day == 30 && (1..50).random() == 1) {
-            if ((1..2).random() == 1) return TexturesForSprites.SLIME_V2.image.mirrorImage().mirrorImageVertically()
-            return TexturesForSprites.SLIME_V2.image.mirrorImage()
+            if ((1..2).random() == 1) return TexturesForSprites.SLIME_V2.image.mirrorImageVertically()
+            return TexturesForSprites.SLIME_V2.image.mirrorImage().mirrorImageVertically()
         }
-        if ((1..2).random() == 1) return TexturesForSprites.SLIME_V2.image.mirrorImageVertically()
+        if ((1..2).random() == 1) return TexturesForSprites.SLIME_V2.image.mirrorImage()
         return TexturesForSprites.SLIME_V2.image
     }
 }

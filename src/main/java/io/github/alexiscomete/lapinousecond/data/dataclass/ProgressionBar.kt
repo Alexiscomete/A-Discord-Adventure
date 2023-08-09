@@ -15,6 +15,10 @@ data class ProgressionBar(
             return "`${before(min)}$indicator${after(numberChars - min)}`"
         }
 
+    override fun toString(): String {
+        return bar
+    }
+
     private fun before(n: Int): String {
         return fill.repeat(n)
     }
