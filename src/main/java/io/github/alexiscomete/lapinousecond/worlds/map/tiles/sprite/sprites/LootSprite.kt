@@ -3,7 +3,7 @@ package io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.sprites
 import io.github.alexiscomete.lapinousecond.data.managesave.generateUniqueID
 import io.github.alexiscomete.lapinousecond.entity.concrete.items.items.StrasbourgSausage
 import io.github.alexiscomete.lapinousecond.entity.concrete.items.itemsCacheCustom
-import io.github.alexiscomete.lapinousecond.entity.entities.PlayerOwnerManager
+import io.github.alexiscomete.lapinousecond.entity.entities.managers.PlayerOwnerManager
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.canvas.WorldCanvas
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.Sprite
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.textures.TexturesForSprites

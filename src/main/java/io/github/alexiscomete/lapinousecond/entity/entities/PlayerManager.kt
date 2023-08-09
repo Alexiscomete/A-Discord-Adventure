@@ -2,6 +2,9 @@ package io.github.alexiscomete.lapinousecond.entity.entities
 
 import io.github.alexiscomete.lapinousecond.data.managesave.CacheCustom
 import io.github.alexiscomete.lapinousecond.entity.effects.EffectsManager
+import io.github.alexiscomete.lapinousecond.entity.entities.managers.EntityWorldManager
+import io.github.alexiscomete.lapinousecond.entity.entities.managers.PlayerOwnerManager
+import io.github.alexiscomete.lapinousecond.entity.entities.managers.WorkManager
 import io.github.alexiscomete.lapinousecond.entity.xp.Level
 
 class PlayerManager private constructor(

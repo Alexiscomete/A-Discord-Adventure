@@ -56,10 +56,9 @@ class SaveManager(path: String) {
     fun typeOf(id: Long, tableName: String): String {
         try {
             // init a prepared statement
-            val pQ = co!!.prepareCall("SELECT type FROM ? WHERE id = ?")
-            // set the parameters
-            pQ.setString(1, tableName)
-            pQ.setLong(2, id)
+            val sql = "SELECT type FROM $tableName WHERE id = ?"
+            val pQ = co!!.prepareStatement(sql)
+            pQ.setLong(1, id)
             val resultSet = pQ.executeQuery()
             if (resultSet.next()) {
                 return resultSet.getString("type")
@@ -102,12 +101,10 @@ class SaveManager(path: String) {
     fun setValue(where: String, which: String, whichValue: String, valueName: String, value: String) {
         val va = value.replace("\\", " ").replace("'", " ").replace("\"", " ").replace("--", " ")
         try {
-            val pQ = co!!.prepareCall("UPDATE ? SET ? = ? WHERE ? = ?")
-            pQ.setString(1, where)
-            pQ.setString(2, valueName)
-            pQ.setString(3, va)
-            pQ.setString(4, which)
-            pQ.setString(5, whichValue)
+            val sql = "UPDATE $where SET $valueName = ? WHERE $which = ?"
+            val pQ = co!!.prepareStatement(sql)
+            pQ.setString(1, va)
+            pQ.setString(2, whichValue)
             pQ.executeUpdate()
         } catch (throwables: SQLException) {
             throwables.printStackTrace()
@@ -187,12 +184,12 @@ class SaveManager(path: String) {
     }
 
     @JvmOverloads
-            /**
-             * It executes a SQL statement
-             *
-             * @param ex The SQL statement to execute
-             * @param bo Boolean, if true, it will print the stack trace if an error occurs.
-             */
+    /**
+     * It executes a SQL statement
+     *
+     * @param ex The SQL statement to execute
+     * @param bo Boolean, if true, it will print the stack trace if an error occurs.
+     */
     fun execute(ex: String, bo: Boolean = true) {
         try {
             st!!.executeUpdate(ex)

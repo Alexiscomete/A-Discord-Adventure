@@ -1,4 +1,4 @@
-package io.github.alexiscomete.lapinousecond.entity.entities
+package io.github.alexiscomete.lapinousecond.entity.entities.managers
 
 import io.github.alexiscomete.lapinousecond.entity.roles.Role
 

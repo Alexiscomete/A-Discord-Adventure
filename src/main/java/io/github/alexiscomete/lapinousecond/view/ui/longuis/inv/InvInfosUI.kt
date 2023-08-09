@@ -57,16 +57,12 @@ class InvInfosUI(playerUI: PlayerUI) : StaticUI(
     }
 
     override fun getFields(): List<Pair<String, String>> {
-        val player = currentUI.getPlayer()
         val playerManager = currentUI.getPlayerManager()
         return listOf(
             Pair("Position", playerManager.worldManager.entityWorld.positionToString()),
             Pair("Niveau", playerManager.level.toString()),
-            Pair("Pixel", """
-     Compte sur le bot de Sylicium : ${if (player["has_account"] == "1") "oui" else "non"}
-     Vérification : ${if (player["is_verify"] == "1") "oui" else "non"}
-     Pixel : ${if (player["x"] == "" || player["x"].toInt() == -1) "pixel inconnu" else "[" + player["x"] + ":" + player["y"] + "]"}
-     """.trimIndent())
+            Pair("Pixel officiel", "Les pixels d'origine ne sont plus pris en charge pour le moment."),
+            Pair("Vie", "${playerManager.playerData["life"]}/${playerManager.playerData["max_life"]}"),
         )
     }
 

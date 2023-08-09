@@ -1,4 +1,4 @@
-package io.github.alexiscomete.lapinousecond.entity.entities
+package io.github.alexiscomete.lapinousecond.entity.entities.managers
 
 import io.github.alexiscomete.lapinousecond.data.managesave.saveManager
 import io.github.alexiscomete.lapinousecond.entity.concrete.items.ContainsItems
@@ -7,6 +7,8 @@ import io.github.alexiscomete.lapinousecond.entity.concrete.items.items.Strasbou
 import io.github.alexiscomete.lapinousecond.entity.concrete.items.itemsCacheCustom
 import io.github.alexiscomete.lapinousecond.entity.concrete.resources.Resource
 import io.github.alexiscomete.lapinousecond.entity.concrete.resources.ResourceManager
+import io.github.alexiscomete.lapinousecond.entity.entities.Owner
+import io.github.alexiscomete.lapinousecond.entity.entities.PlayerData
 
 class PlayerOwnerManager(
     val playerData: PlayerData
