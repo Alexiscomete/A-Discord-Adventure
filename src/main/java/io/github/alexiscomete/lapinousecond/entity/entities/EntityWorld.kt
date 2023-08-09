@@ -99,15 +99,23 @@ class EntityWorld(
         return path
     }
 
+    inline var xStr
+        inline get() = data["place_${world}_x"]
+        inline set(value) {
+            data["place_${world}_x"] = value
+        }
+    inline var yStr
+        inline get() = data["place_${world}_y"]
+        inline set(value) {
+            data["place_${world}_y"] = value
+        }
+
     fun positionToString(): String {
         // on récupère le type de lieu, on sépare encore en plusieurs possibilités
         return when (data["place_${world}_type"]) {
             "coos" -> {
-                // on récupère les coordonnées
-                val x = data["place_${world}_x"]
-                val y = data["place_${world}_y"]
                 // on retourne le résultat
-                "Vous êtes dans le monde ${world}, sur des coordonnées ($x, $y)"
+                "Vous êtes dans le monde ${world}, sur des coordonnées ($xStr, $yStr)"
             }
 
             "place" -> {
@@ -118,9 +126,8 @@ class EntityWorld(
             "path" -> {
                 val path = getPath()
                 if (path.isEmpty()) {
-                    val x = data["place_${world}_x"]
-                    val y = data["place_${world}_y"]
-                    "Vous êtes dans le monde ${world}, sur des coordonnées ($x, $y)"
+                    data["place_${world}_type"] = "coos"
+                    "Vous êtes dans le monde ${world}, sur des coordonnées ($xStr, $yStr)"
                 } else {
                     val firstPixel = path[0]
                     val lastPixel = path[path.size - 1]

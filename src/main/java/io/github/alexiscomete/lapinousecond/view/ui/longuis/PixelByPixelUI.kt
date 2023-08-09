@@ -30,17 +30,19 @@ class PixelByPixelUI(
 
     private val world
         get() = WorldEnum.valueOf(worldStr)
+    private val entityWorld
+        get() = playerManager.worldManager.entityWorld
 
     private var x: Int
-        get() = player["place_${worldStr}_x"].toInt()
+        get() = entityWorld.xStr.toInt()
         set(value) {
-            player["place_${worldStr}_x"] = value.toString()
+            entityWorld.xStr = value.toString()
         }
 
     private var y: Int
-        get() = player["place_${worldStr}_y"].toInt()
+        get() = entityWorld.yStr.toInt()
         set(value) {
-            player["place_${worldStr}_y"] = value.toString()
+            entityWorld.yStr = value.toString()
         }
 
     private var zooms: Zooms

@@ -1,5 +1,6 @@
 package io.github.alexiscomete.lapinousecond.worlds
 
+import io.github.alexiscomete.lapinousecond.Beurk
 import io.github.alexiscomete.lapinousecond.data.managesave.*
 import io.github.alexiscomete.lapinousecond.entity.concrete.resources.Resource
 import io.github.alexiscomete.lapinousecond.entity.entities.Owner
@@ -9,6 +10,7 @@ import java.util.*
 val PLACES = Table("places")
 val places = CacheCustom(PLACES) { id: Long -> Place(id) }
 
+@Beurk
 open class Place(
     id: Long = run {
         val tempID = generateUniqueID()
