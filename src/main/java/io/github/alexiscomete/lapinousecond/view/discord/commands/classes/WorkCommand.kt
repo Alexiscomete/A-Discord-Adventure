@@ -25,7 +25,7 @@ fun setWork(
     embedBuilder: EmbedBuilder,
     response: InteractionImmediateResponseBuilder
 ) {
-    if (System.currentTimeMillis() - playerManager.playerData.workTime > WORK_COOLDOWN_MILLIS) {
+    if (System.currentTimeMillis() - playerManager.workManager.workTime > WORK_COOLDOWN_MILLIS) {
         val wo = WorkEnum.entries.toTypedArray()
         val random = Random()
         var total = 0
@@ -61,7 +61,7 @@ fun setWork(
             }
             playerManager.playerData.updateResources(playerManager.ownerManager.resourceManagers)
         }
-        playerManager.playerData.updateWorkTime()
+        playerManager.workManager.updateWorkTime()
         playerManager.level.addXp(XP_FOR_WORKING)
         if (playerManager.playerData["tuto"] == TutoSteps.STEP_WORK.number) {
             response.setContent("> (Aurimezi) : Bon tu as déjà plus de trucs. Maintenant on va utiliser ma fonctionnalité de magasin pour échanger ce que tu as trouvé. Bon qu'est ce qu'on a ramassé ...\n\nUtilisez à nouveau la commande d'inventaire")
@@ -71,7 +71,7 @@ fun setWork(
     } else {
         embedBuilder.addField(
             "Work",
-            "Cooldown ! Temps entre 2 work : ${WORK_COOLDOWN_SECONDS}s, temps écoulé : " + (System.currentTimeMillis() - playerManager.playerData.workTime) / SECOND_TO_MILLIS + "s. Temps avant le prochain : <t:" + (Instant.now().epochSecond + WORK_COOLDOWN_SECONDS - (System.currentTimeMillis() - playerManager.playerData.workTime) / SECOND_TO_MILLIS) + ":R>"
+            "Cooldown ! Temps entre 2 work : ${WORK_COOLDOWN_SECONDS}s, temps écoulé : " + (System.currentTimeMillis() - playerManager.workManager.workTime) / SECOND_TO_MILLIS + "s. Temps avant le prochain : <t:" + (Instant.now().epochSecond + WORK_COOLDOWN_SECONDS - (System.currentTimeMillis() - playerManager.workManager.workTime) / SECOND_TO_MILLIS) + ":R>"
         )
     }
 }
@@ -90,7 +90,7 @@ private fun setRoles(
         val rolesArrayList = RolesEnum.getRoles(user, server)
         for (role in rolesArrayList) {
             var find: Role? = null
-            for (r in playerManager.playerData.roles) {
+            for (r in playerManager.workManager.roles) {
                 if (r.role == role) {
                     find = r
                     break
@@ -112,7 +112,7 @@ private fun setRoles(
                 totalRoles += role.salary.toDouble()
                 val r = Role(role)
                 r.currentCooldown = (System.currentTimeMillis() / SECOND_TO_MILLIS)
-                playerManager.playerData.addRole(r)
+                playerManager.workManager.roles.add(r)
             }
         }
         playerManager.playerData["bal"] = (playerManager.playerData["bal"].toDouble() + totalRoles).toString()

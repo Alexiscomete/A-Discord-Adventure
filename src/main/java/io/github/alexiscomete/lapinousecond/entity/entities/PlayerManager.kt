@@ -32,4 +32,5 @@ class PlayerManager private constructor(
     val effectsManager = EffectsManager()
     val ownerManager = PlayerOwnerManager(playerData)
     val worldManager = EntityWorldManager(playerData)
+    val workManager = WorkManager()
 }

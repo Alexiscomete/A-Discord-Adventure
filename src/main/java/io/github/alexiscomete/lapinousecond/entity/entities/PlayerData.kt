@@ -5,7 +5,6 @@ import io.github.alexiscomete.lapinousecond.data.managesave.CacheGetSet
 import io.github.alexiscomete.lapinousecond.data.managesave.Table
 import io.github.alexiscomete.lapinousecond.entity.concrete.resources.Resource
 import io.github.alexiscomete.lapinousecond.entity.concrete.resources.ResourceManager
-import io.github.alexiscomete.lapinousecond.entity.roles.Role
 import io.github.alexiscomete.lapinousecond.view.AnswerEnum
 import io.github.alexiscomete.lapinousecond.view.LangageEnum
 import io.github.alexiscomete.lapinousecond.view.answerManager
@@ -14,23 +13,6 @@ val PLAYERS = Table("players")
 
 @Beurk
 open class PlayerData(id: Long) : CacheGetSet(id, PLAYERS) {
-
-    var workTime: Long
-        private set
-    val roles: ArrayList<Role>
-
-    init {
-        workTime = 0
-        roles = ArrayList()
-    }
-
-    fun updateWorkTime() {
-        workTime = System.currentTimeMillis()
-    }
-
-    fun addRole(role: Role) {
-        roles.add(role)
-    }
 
     fun updateResources(resourceManagers: HashMap<Resource, ResourceManager>) {
         this["ressources"] = ResourceManager.toString(resourceManagers.values)
