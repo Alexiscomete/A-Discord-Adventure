@@ -38,7 +38,7 @@ tasks.test {
 }
 
 group = "io.github.alexiscomete.lapinoudsecond"
-version = "1.0-SNAPSHOT"
+version = "v1.0-beta.0.2.1"
 description = "A-Discord-Adventure"
 java.sourceCompatibility = JavaVersion.VERSION_17
 java.targetCompatibility = JavaVersion.VERSION_17
