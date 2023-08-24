@@ -44,10 +44,8 @@ class AccountCommandVerify : SubCommand(
     "Vérifier vos coordonnées (bot de Sylicium)"
 ),
     ExecutableWithArguments {
-    override val fullName: String
-        get() = "account verify"
-    override val botPerms: Array<String>?
-        get() = null
+    override val fullName: String = "account verify"
+    override val botPerms: Array<String>? = null
 
     override fun execute(slashCommand: SlashCommandInteraction) {
         slashCommand.createImmediateResponder()
