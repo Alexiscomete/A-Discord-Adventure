@@ -1,10 +1,10 @@
 package io.github.alexiscomete.lapinousecond.view.discord.commands
 
+import io.github.alexiscomete.lapinousecond.data.check
 import io.github.alexiscomete.lapinousecond.view.discord.commands.classes.*
 import org.javacord.api.entity.message.MessageFlag
 import org.javacord.api.event.interaction.SlashCommandCreateEvent
 import org.javacord.api.listener.interaction.SlashCommandCreateListener
-import io.github.alexiscomete.lapinousecond.data.check
 
 const val RPD_ID = 904736069080186981
 const val RPD_BOT_CHANNEL_ID = 914268153796771950
@@ -21,6 +21,7 @@ fun loadAllS() {
     MapCommand()
     ConfigCommand()
     InteractCommandBase()
+    AdminCommandBase()
     println("Loaded ${commands.size} commands")
 }
 
