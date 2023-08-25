@@ -256,6 +256,42 @@ class SaveManager(path: String) {
         return ids
     }
 
+    fun executeMultipleQuery(
+        statement: PreparedStatement,
+        bo: Boolean = false
+    ) : ArrayList<ArrayList<String>> {
+        val results = ArrayList<ArrayList<String>>()
+
+        try {
+            val isResultSet = statement.execute()
+
+            var inWhile = true
+            while (inWhile) {
+                if (isResultSet) {
+                    val resultSet = statement.resultSet
+                    do {
+                        val row = ArrayList<String>()
+                        for (i in 1..resultSet.metaData.columnCount) {
+                            row.add(resultSet.getString(i))
+                        }
+                        results.add(row)
+                    } while (resultSet.next())
+                } else {
+                    if (statement.updateCount == -1) {
+                        break
+                    }
+                }
+                inWhile = statement.moreResults
+            }
+        } catch (e: SQLException) {
+            if (bo) {
+                e.printStackTrace()
+            }
+        }
+
+        return results
+    }
+
     /**
      * It adds a column to a table, then returns the value of that column for a specific row
      *

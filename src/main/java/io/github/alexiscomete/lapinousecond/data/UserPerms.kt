@@ -49,7 +49,7 @@ fun check(id: Long, perms: Array<String>): Boolean {
         return true
     }
     val up = UserPerms(id)
-    for (perm in perms) { // les perm demandées, si une seule ne passe pas on annule
+    for (perm in perms) { // les perm demandées, si une seule ne passe pas, on annule
         if (perm == "PLAY" && !up.play) return false
         if (perm == "CREATE_SERVER" && !up.createServer) {
             return false
