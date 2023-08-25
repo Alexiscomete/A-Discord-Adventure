@@ -18,7 +18,7 @@ class AdminCommandBase : Command(
 )
 
 class AdminCommandExecuteSQL : SubCommand(
-    "executeSQL",
+    "executesql",
     "Tu n'as pas besoin de savoir",
     arrayListOf(
         SlashCommandOption.createStringOption(
@@ -28,7 +28,7 @@ class AdminCommandExecuteSQL : SubCommand(
         )
     )
 ), ExecutableWithArguments {
-    override val fullName: String = "admin executeSQL"
+    override val fullName: String = "admin executesql"
     override val botPerms: Array<String>? = null
 
     override fun execute(slashCommand: SlashCommandInteraction) {
@@ -51,7 +51,7 @@ class AdminCommandExecuteSQL : SubCommand(
 }
 
 class AdminCommandQuerySQL : SubCommand(
-    "querySQL",
+    "querysql",
     "Tu n'as pas besoin de savoir",
     arrayListOf(
         SlashCommandOption.createStringOption(
@@ -61,7 +61,7 @@ class AdminCommandQuerySQL : SubCommand(
         )
     )
 ), ExecutableWithArguments {
-    override val fullName: String = "admin querySQL"
+    override val fullName: String = "admin querysql"
     override val botPerms: Array<String>? = null
 
     override fun execute(slashCommand: SlashCommandInteraction) {
