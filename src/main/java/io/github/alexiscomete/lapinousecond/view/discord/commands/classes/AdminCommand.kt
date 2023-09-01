@@ -72,8 +72,37 @@ class AdminCommandQuerySQL : SubCommand(
                 val result = saveManager.executeMultipleQuery(
                     saveManager.preparedStatement(sqlQuery.stringValue.get())
                 )
+                // change result format
+                val resultString = "Résultat de la query : \n"
+                if (result.isEmpty()) {
+                    resultString.plus("Aucun résultat")
+                } else {
+                    // première ligne : les noms des colonnes
+                    val firstRow = result.first()
+                    resultString.plus("| ")
+                    for (i in firstRow.indices) {
+                        resultString.plus(firstRow[i])
+                        resultString.plus(" | ")
+                    }
+                    resultString.plus("\n")
+                    // séparation
+                    for (i in firstRow.indices) {
+                        resultString.plus("----")
+                    }
+                    resultString.plus("\n")
+                    // les autres lignes
+                    for (i in 1 until result.size) {
+                        val row = result[i]
+                        resultString.plus("| ")
+                        for (j in row.indices) {
+                            resultString.plus(row[j])
+                            resultString.plus(" | ")
+                        }
+                        resultString.plus("\n")
+                    }
+                }
                 slashCommand.createImmediateResponder()
-                    .setContent(result.toString())
+                    .setContent(resultString)
                     .respond()
             } catch (e: NoSuchElementException) {
                 slashCommand.createImmediateResponder()
