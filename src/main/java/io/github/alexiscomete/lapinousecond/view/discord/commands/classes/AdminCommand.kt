@@ -79,10 +79,11 @@ class AdminCommandQuerySQL : SubCommand(
                 } else {
                     // première ligne : les noms des colonnes
                     val firstRow = result.first()
-                    resultString.plus("| ")
+                    val char = '|'
+                    resultString.plus("$char ")
                     for (i in firstRow.indices) {
                         resultString.plus(firstRow[i])
-                        resultString.plus(" | ")
+                        resultString.plus(" $char ")
                     }
                     resultString.plus("\n")
                     // séparation
@@ -93,10 +94,10 @@ class AdminCommandQuerySQL : SubCommand(
                     // les autres lignes
                     for (i in 1 until result.size) {
                         val row = result[i]
-                        resultString.plus("| ")
+                        resultString.plus("$char ")
                         for (j in row.indices) {
                             resultString.plus(row[j])
-                            resultString.plus(" | ")
+                            resultString.plus(" $char ")
                         }
                         resultString.plus("\n")
                     }
