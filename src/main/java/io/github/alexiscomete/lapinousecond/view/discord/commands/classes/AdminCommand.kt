@@ -73,34 +73,35 @@ class AdminCommandQuerySQL : SubCommand(
                     saveManager.preparedStatement(sqlQuery.stringValue.get())
                 )
                 // change result format
-                val resultString = "Résultat de la query : \n"
+                var resultString = "Résultat de la query : \n"
                 if (result.isEmpty()) {
-                    resultString.plus("Aucun résultat")
+                    resultString += "Aucun résultat"
                 } else {
                     // première ligne : les noms des colonnes
                     val firstRow = result.first()
                     val char = '|'
-                    resultString.plus("$char ")
+                    resultString += "```\n$char "
                     for (i in firstRow.indices) {
-                        resultString.plus(firstRow[i])
-                        resultString.plus(" $char ")
+                        resultString += firstRow[i]
+                        resultString += (" $char ")
                     }
-                    resultString.plus("\n")
+                    resultString += "\n"
                     // séparation
                     for (i in firstRow.indices) {
-                        resultString.plus("----")
+                        resultString += "----"
                     }
-                    resultString.plus("\n")
+                    resultString += "\n"
                     // les autres lignes
                     for (i in 1 until result.size) {
                         val row = result[i]
-                        resultString.plus("$char ")
+                        resultString += "$char "
                         for (j in row.indices) {
-                            resultString.plus(row[j])
-                            resultString.plus(" $char ")
+                            resultString += row[j]
+                            resultString += " $char "
                         }
-                        resultString.plus("\n")
+                        resultString += ("\n")
                     }
+                    resultString += "```"
                 }
                 slashCommand.createImmediateResponder()
                     .setContent(resultString)
