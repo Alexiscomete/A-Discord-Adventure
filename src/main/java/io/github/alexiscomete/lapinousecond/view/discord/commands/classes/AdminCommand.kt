@@ -7,6 +7,8 @@ import io.github.alexiscomete.lapinousecond.view.discord.commands.SubCommand
 import org.javacord.api.interaction.SlashCommandInteraction
 import org.javacord.api.interaction.SlashCommandOption
 
+val logs = arrayListOf<String>()
+
 class AdminCommandBase : Command(
     "admin",
     "Commandes réservées aux administrateurs. Pour le moment c'est juste l'owner",
@@ -16,6 +18,11 @@ class AdminCommandBase : Command(
         AdminCommandCache()
     )
 )
+
+fun getDateString(): String {
+    val date = java.time.LocalDateTime.now()
+    return "${date.dayOfMonth}/${date.monthValue}/${date.year} (${date.hour}/${date.minute})"
+}
 
 class AdminCommandExecuteSQL : SubCommand(
     "executesql",
@@ -40,6 +47,7 @@ class AdminCommandExecuteSQL : SubCommand(
                 slashCommand.createImmediateResponder()
                     .setContent("Commande SQL exécutée")
                     .respond()
+                logs.add(sqlCommand.stringValue.get() + " - JJ/MM/AA (HH/mm) : " + getDateString())
             } catch (e: NoSuchElementException) {
                 slashCommand.createImmediateResponder()
                     .setContent("Tu dois mettre un argument `sql_command`")
@@ -109,6 +117,7 @@ class AdminCommandQuerySQL : SubCommand(
                 slashCommand.createImmediateResponder()
                     .setContent(resultString)
                     .respond()
+                logs.add(sqlQuery.stringValue.get() + " - JJ/MM/AA (HH/mm) : " + getDateString())
             } catch (e: NoSuchElementException) {
                 slashCommand.createImmediateResponder()
                     .setContent("Tu dois mettre un argument `sql_query`")
@@ -139,5 +148,21 @@ class AdminCommandCache : SubCommand(
                 .setContent("Tu n'es pas le propriétaire du bot")
                 .respond()
         }
+    }
+}
+
+const val NUMBER_OF_LOGS = 20
+
+class AdminCommandLogs : SubCommand(
+    "logs",
+    "Permet à n'importe qui d'afficher les logs des commandes admin"
+), ExecutableWithArguments {
+    override val fullName: String = "admin logs"
+    override val botPerms: Array<String>? = null
+
+    override fun execute(slashCommand: SlashCommandInteraction) {
+        slashCommand.createImmediateResponder()
+            .setContent("Logs des $NUMBER_OF_LOGS dernières commandes admin : \n```\n${logs.takeLast(NUMBER_OF_LOGS).joinToString("\n")}\n```")
+            .respond()
     }
 }
