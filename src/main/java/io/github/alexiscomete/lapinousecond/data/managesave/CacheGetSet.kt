@@ -54,4 +54,8 @@ open class CacheGetSet(open val id: Long, private val table: Table) {
         save?.delete(table, id)
         isDeleted = true
     }
+
+    fun clearCache() {
+        cache.clear()
+    }
 }

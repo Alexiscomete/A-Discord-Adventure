@@ -1,5 +1,6 @@
 package io.github.alexiscomete.lapinousecond.data.managesave
 
+import io.github.alexiscomete.lapinousecond.entity.entities.PlayerManager
 import java.sql.SQLException
 
 open class CacheCustom<U>(private val table: Table, protected val function: (Long) -> U) {
@@ -27,5 +28,16 @@ open class CacheCustom<U>(private val table: Table, protected val function: (Lon
         val hashMap = HashMap<String, String>()
         hashMap["id"] = id.toString()
         saveManager.insert(table.name, hashMap)
+    }
+
+    fun clearInsideCache() {
+        hashMap.values.forEach {
+            if (it is CacheGetSet) {
+                it.clearCache()
+            }
+            if (it is PlayerManager) {
+                it.clearInsideCache()
+            }
+        }
     }
 }
