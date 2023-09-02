@@ -37,6 +37,9 @@ class AdminCommandExecuteSQL : SubCommand(
             try {
                 val sqlCommand = arguments.first { it.name == "sql_command" }
                 saveManager.execute(sqlCommand.stringValue.get())
+                slashCommand.createImmediateResponder()
+                    .setContent("Commande SQL exécutée")
+                    .respond()
             } catch (e: NoSuchElementException) {
                 slashCommand.createImmediateResponder()
                     .setContent("Tu dois mettre un argument `sql_command`")
