@@ -1,9 +1,17 @@
 package io.github.alexiscomete.lapinousecond.view.discord.commands.classes
 
 import io.github.alexiscomete.lapinousecond.data.managesave.saveManager
+import io.github.alexiscomete.lapinousecond.data.transactions.auctions
+import io.github.alexiscomete.lapinousecond.data.transactions.offers
+import io.github.alexiscomete.lapinousecond.data.transactions.researches
+import io.github.alexiscomete.lapinousecond.entity.concrete.items.itemsCacheCustom
+import io.github.alexiscomete.lapinousecond.entity.entities.PlayerManager
 import io.github.alexiscomete.lapinousecond.view.discord.commands.Command
 import io.github.alexiscomete.lapinousecond.view.discord.commands.ExecutableWithArguments
 import io.github.alexiscomete.lapinousecond.view.discord.commands.SubCommand
+import io.github.alexiscomete.lapinousecond.worlds.buildings.buildings
+import io.github.alexiscomete.lapinousecond.worlds.places
+import io.github.alexiscomete.lapinousecond.worlds.servers
 import org.javacord.api.interaction.SlashCommandInteraction
 import org.javacord.api.interaction.SlashCommandOption
 
@@ -15,7 +23,8 @@ class AdminCommandBase : Command(
     subCommands = listOf(
         AdminCommandExecuteSQL(),
         AdminCommandQuerySQL(),
-        AdminCommandCache()
+        AdminCommandCache(),
+        AdminCommandLogs()
     )
 )
 
@@ -140,9 +149,18 @@ class AdminCommandCache : SubCommand(
 
     override fun execute(slashCommand: SlashCommandInteraction) {
         if (slashCommand.user.isBotOwner) {
+            servers.clearInsideCache()
+            researches.clearInsideCache()
+            auctions.clearInsideCache()
+            offers.clearInsideCache()
+            PlayerManager.clearInsideCache()
+            buildings.clearInsideCache()
+            itemsCacheCustom.clearInsideCache()
+            places.clearInsideCache()
             slashCommand.createImmediateResponder()
-                .setContent("Commande en cours de création")
+                .setContent("Cache vidé")
                 .respond()
+            logs.add("Cache vidé - JJ/MM/AA (HH/mm) : " + getDateString())
         } else {
             slashCommand.createImmediateResponder()
                 .setContent("Tu n'es pas le propriétaire du bot")
