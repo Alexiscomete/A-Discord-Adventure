@@ -180,7 +180,7 @@ class AdminCommandLogs : SubCommand(
 
     override fun execute(slashCommand: SlashCommandInteraction) {
         slashCommand.createImmediateResponder()
-            .setContent("Logs des $NUMBER_OF_LOGS dernières commandes admin : \n```\n${logs.takeLast(NUMBER_OF_LOGS).joinToString("\n")}\n```")
+            .setContent("Logs des $NUMBER_OF_LOGS dernières commandes admin (si le bot redémarre, les logs sont ne sont pas sauvegardés) : \n```\n${logs.takeLast(NUMBER_OF_LOGS).joinToString("\n- ", "- ")}\n```")
             .respond()
     }
 }
