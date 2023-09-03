@@ -100,12 +100,28 @@ class EntityWorld(
     }
 
     inline var xStr
-        inline get() = data["place_${world}_x"]
+        inline get() = run {
+            val tx = data["place_${world}_x"]
+            if (tx == "") {
+                data["place_${world}_x"] = world.defaultX.toString()
+                data["place_${world}_x"]
+            } else {
+                tx
+            }
+        }
         inline set(value) {
             data["place_${world}_x"] = value
         }
     inline var yStr
-        inline get() = data["place_${world}_y"]
+        inline get() = run {
+            val ty = data["place_${world}_y"]
+            if (ty == "") {
+                data["place_${world}_y"] = world.defaultY.toString()
+                data["place_${world}_y"]
+            } else {
+                ty
+            }
+        }
         inline set(value) {
             data["place_${world}_y"] = value
         }

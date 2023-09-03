@@ -2,6 +2,7 @@ package io.github.alexiscomete.lapinousecond.worlds.map.tiles.textures
 
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.TILE_HEIGHT
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.TILE_WIDTH
+import java.awt.Color
 import java.awt.image.BufferedImage
 import javax.imageio.ImageIO
 
@@ -30,5 +31,36 @@ enum class TexturesForSprites(val path: String) {
         stream.close()
 
         bufferedImage
+    }
+
+    private val filters = HashMap<Triple<Color, Double, Double>, BufferedImage>()
+
+    fun colorFilterFor(color: Color, intensity: Double, opacity: Double = 0.5): BufferedImage {
+        val key = Triple(color, intensity, opacity)
+        if (filters.containsKey(key)) {
+            return filters[key]!!
+        }
+
+        val filteredImage = BufferedImage(image.width, image.height, BufferedImage.TYPE_INT_ARGB)
+        for (x in 0 until image.width) {
+            for (y in 0 until image.height) {
+                val originalColor = image.getRGB(x, y)
+                val oldRed = originalColor shr 16 and 0xFF
+                val oldGreen = originalColor shr 8 and 0xFF
+                val oldBlue = originalColor and 0xFF
+
+                val newColor = Color(
+                    ((oldRed + color.red * intensity * opacity) / (1 + opacity)).toInt().coerceIn(0, 255),
+                    ((oldGreen + color.green * intensity * opacity) / (1 + opacity)).toInt().coerceIn(0, 255),
+                    ((oldBlue + color.blue * intensity * opacity) / (1 + opacity)).toInt().coerceIn(0, 255),
+                    originalColor shr 24 and 0xFF
+                )
+
+                filteredImage.setRGB(x, y, newColor.rgb)
+            }
+        }
+
+        filters[key] = filteredImage
+        return filteredImage
     }
 }
