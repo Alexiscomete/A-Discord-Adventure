@@ -6,10 +6,7 @@ import io.github.alexiscomete.lapinousecond.worlds.THRESHOLD_RIVER
 import io.github.alexiscomete.lapinousecond.worlds.WorldManager
 import io.github.alexiscomete.lapinousecond.worlds.Zooms
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.SpritesManager
-import io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.sprites.DuckSprite
-import io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.sprites.DuckZombieSprite
-import io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.sprites.LootSprite
-import io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.sprites.SlimeSprite
+import io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.sprites.*
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.MapTile
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.OCEAN_HEIGHT
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.Tile
@@ -93,12 +90,15 @@ class BaseTileGenerator(
                             }
                         }
                     } else {
-                        when ((0..200).random()) {
-                            5 -> {
+                        when ((0..400).random()) {
+                            in 5..6 -> {
                                 if (playerManager != null) spritesManager.sprites.add(LootSprite(it, playerManager.ownerManager))
                             }
-                            in 6..7 -> {
+                            in 7..8 -> {
                                 spritesManager.sprites.add(SlimeSprite(it))
+                            }
+                            in 9..10 -> {
+                                spritesManager.sprites.add(YellowSlimeSprite(it))
                             }
                         }
                     }
