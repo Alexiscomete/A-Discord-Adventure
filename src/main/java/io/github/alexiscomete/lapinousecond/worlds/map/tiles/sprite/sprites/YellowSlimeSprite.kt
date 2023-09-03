@@ -11,7 +11,7 @@ import java.awt.image.BufferedImage
  */
 class YellowSlimeSprite(override var tile: Tile) : BaseMonsterSprite() {
 
-    private val baseImage = TexturesForSprites.SLIME_V2.colorFilterFor(Color(200, 255, 0), 0.5)
+    private val baseImage = TexturesForSprites.SLIME_V2_DESATURE.colorFilterFor(Color(200, 255, 0), 1.0)
 
     override fun color(): Color {
         return Color(200, 255, 0)
