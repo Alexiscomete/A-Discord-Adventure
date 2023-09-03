@@ -41,9 +41,9 @@ enum class TexturesForSprites(val path: String) {
             return filters[key]!!
         }
 
-        val filteredImage = BufferedImage(TILE_WIDTH, TILE_HEIGHT, BufferedImage.TYPE_INT_ARGB)
-        for (x in 0 until TILE_WIDTH) {
-            for (y in 0 until TILE_HEIGHT) {
+        val filteredImage = BufferedImage(image.width, image.height, BufferedImage.TYPE_INT_ARGB)
+        for (x in 0 until image.width) {
+            for (y in 0 until image.height) {
                 val originalColor = image.getRGB(x, y)
                 val oldRed = originalColor shr 16 and 0xFF
                 val oldGreen = originalColor shr 8 and 0xFF
