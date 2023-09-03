@@ -269,13 +269,18 @@ class SaveManager(path: String) {
             while (inWhile) {
                 if (isResultSet) {
                     val resultSet = statement.resultSet
-                    do {
+                    val columnNames = ArrayList<String>()
+                    for (i in 1..resultSet.metaData.columnCount) {
+                        columnNames.add(resultSet.metaData.getColumnName(i))
+                    }
+                    results.add(columnNames)
+                    while (resultSet.next()) {
                         val row = ArrayList<String>()
                         for (i in 1..resultSet.metaData.columnCount) {
                             row.add(resultSet.getString(i))
                         }
                         results.add(row)
-                    } while (resultSet.next())
+                    }
                 } else {
                     if (statement.updateCount == -1) {
                         break

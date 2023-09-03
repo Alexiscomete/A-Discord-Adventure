@@ -30,6 +30,10 @@ class PlayerManager private constructor(
             return playerManagers[id]
                 ?: throw NullPointerException("WARNING : your account cannot be found or created. Please contact the bot owner, or try again.")
         }
+
+        fun clearInsideCache() {
+            playerManagers.clearInsideCache()
+        }
     }
 
     val playerData: PlayerData = PlayerData(id)
@@ -63,5 +67,9 @@ class PlayerManager private constructor(
             maxLife, life, 10
         )
         return "$progressionBar $life/$maxLife"
+    }
+
+    fun clearInsideCache() {
+        playerData.clearCache()
     }
 }
