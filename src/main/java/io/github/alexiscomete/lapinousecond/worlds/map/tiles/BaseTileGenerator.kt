@@ -102,6 +102,9 @@ class BaseTileGenerator(
                             9 -> {
                                 if (playerManager != null) spritesManager.sprites.add(YellowSlimeSprite(it, playerManager))
                             }
+                            10 -> {
+                                if (playerManager != null) spritesManager.sprites.add(BlueSlimeSprite(it, playerManager))
+                            }
                         }
                     }
                 }

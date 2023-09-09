@@ -38,7 +38,7 @@ class YellowSlimeSprite(override var tile: Tile, private val playerManager: Play
             return listOf(
                 BaseStaticSprite(
                     playerManager,
-                    2,
+                    5,
                     1,
                     Color(200, 255, 0),
                     'S',

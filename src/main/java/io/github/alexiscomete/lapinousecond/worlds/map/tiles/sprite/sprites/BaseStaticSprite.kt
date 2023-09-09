@@ -10,11 +10,11 @@ import java.awt.image.BufferedImage
 
 open class BaseStaticSprite(
     val player: PlayerManager,
-    private var baseLife: Int,
-    private val baseAttack: Int,
-    private val baseColor: Color,
-    private val baseLetter: Char,
-    baseTexture: TexturesForSprites,
+    protected var baseLife: Int,
+    protected val baseAttack: Int,
+    protected val baseColor: Color,
+    protected val baseLetter: Char,
+    protected val baseTexture: TexturesForSprites,
     override var tile: Tile
 ) : SpriteWithIA, BaseSprite() {
 
@@ -39,7 +39,7 @@ open class BaseStaticSprite(
         return baseLetter
     }
 
-    private val texture = baseTexture.colorFilterFor(baseColor, 1.0)
+    protected val texture = baseTexture.colorFilterFor(baseColor, 1.0)
 
     override fun texture(): BufferedImage {
         return texture
