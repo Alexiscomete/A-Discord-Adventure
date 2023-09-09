@@ -97,7 +97,7 @@ class BaseTileGenerator(
                             in 7..8 -> {
                                 spritesManager.sprites.add(SlimeSprite(it))
                             }
-                            in 9..10 -> {
+                            9 -> {
                                 spritesManager.sprites.add(YellowSlimeSprite(it))
                             }
                         }

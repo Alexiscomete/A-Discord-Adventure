@@ -17,7 +17,8 @@ enum class TexturesForSprites(val path: String) {
     SLIME("textures/sprites/slime.png"),
     SLIME_V2("textures/sprites/slime_green.png"),
     DUCK_ZOMBIE("textures/sprites/duckZ.png"),
-    SLIME_V2_DESATURE("textures/sprites/slime_desature.png"),;
+    SLIME_V2_DESATURE("textures/sprites/slime_desature.png"),
+    ATTACK_V1("textures/sprites/attackV1.png"),;
 
     val image: BufferedImage = run {
         val stream = TexturesForSprites::class.java.classLoader.getResourceAsStream(path)
