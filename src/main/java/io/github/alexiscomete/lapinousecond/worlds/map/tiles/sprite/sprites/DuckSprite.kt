@@ -82,5 +82,4 @@ class DuckSprite(override var tile: Tile) : SpriteWithIA, BaseSprite() {
         }
         return TexturesForSprites.DUCK.image
     }
-
 }

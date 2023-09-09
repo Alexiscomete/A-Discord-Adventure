@@ -8,7 +8,7 @@ abstract class BaseSprite : Sprite {
         canvas.drawSprite(this, xToUse, yToUse, 5)
     }
 
-    override fun isRendered(): Boolean {
-        return tile.isRendered()
+    override fun mustBeRemoved(): Boolean {
+        return false
     }
 }
