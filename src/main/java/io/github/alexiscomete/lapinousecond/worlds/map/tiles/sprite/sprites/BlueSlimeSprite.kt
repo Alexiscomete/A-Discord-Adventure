@@ -34,14 +34,15 @@ class BlueSlimeSprite(override var tile: Tile, private val playerManager: Player
         if (tile is MapTile && coolDown <= 0) {
             coolDown = 2
             return listOf(
-                BaseStaticSprite(
+                ExtendingAttackSprite(
                     playerManager,
                     5,
                     1,
                     Color(0, 150, 255),
                     'S',
                     TexturesForSprites.ATTACK_V1,
-                    tile
+                    tile,
+                    5
                 )
             )
         } else {
