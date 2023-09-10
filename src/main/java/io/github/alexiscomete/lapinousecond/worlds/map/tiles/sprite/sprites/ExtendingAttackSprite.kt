@@ -77,18 +77,17 @@ class ExtendingAttackSprite(
         if (!spwanOK) return listOf()
         spwanOK = false
         if (attackDistance > 0) {
-            return listOf(
-                ExtendingAttackSprite(
-                    player,
-                    baseLife,
-                    baseAttack,
-                    baseColor,
-                    baseLetter,
-                    baseTexture,
-                    findTile(),
-                    attackDistance - 1
-                )
+            val ext = ExtendingAttackSprite(
+                player,
+                baseLife,
+                baseAttack,
+                baseColor,
+                baseLetter,
+                baseTexture,
+                findTile(),
+                attackDistance - 1
             )
+            return ext.spritesToSpawn() + listOf(ext)
         } else {
             return listOf(
                 BaseStaticSprite(

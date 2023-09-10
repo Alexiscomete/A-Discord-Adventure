@@ -36,7 +36,7 @@ class BlueSlimeSprite(override var tile: Tile, private val playerManager: Player
             return listOf(
                 ExtendingAttackSprite(
                     playerManager,
-                    5,
+                    7,
                     1,
                     Color(0, 150, 255),
                     'S',
