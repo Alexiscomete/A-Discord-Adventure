@@ -69,6 +69,16 @@ class PlayerManager private constructor(
         return "$progressionBar $life/$maxLife"
     }
 
+    fun getLife() = try {
+        playerData["life"].toDouble()
+    } catch (e: Exception) {
+        90.0
+    }
+
+    fun setLife(life: Double) {
+        playerData["life"] = life.toString()
+    }
+
     fun clearInsideCache() {
         playerData.clearCache()
     }

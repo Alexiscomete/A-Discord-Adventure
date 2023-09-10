@@ -27,8 +27,8 @@ class LootSprite(override var tile: Tile, private val playerOwnerManager: Player
         canvas.drawSprite(this, xToUse, yToUse, 5)
     }
 
-    override fun isRendered(): Boolean {
-        return tile.isRendered()
+    override fun mustBeRemoved(): Boolean {
+        return false
     }
 
     override fun color(): Color {

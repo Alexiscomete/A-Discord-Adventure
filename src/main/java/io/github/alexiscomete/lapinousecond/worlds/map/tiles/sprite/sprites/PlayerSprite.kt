@@ -14,8 +14,8 @@ class PlayerSprite(override var tile: Tile) : Sprite {
         canvas.drawSprite(this, xToUse, yToUse, 5)
     }
 
-    override fun isRendered(): Boolean {
-        return true
+    override fun mustBeRemoved(): Boolean {
+        return false
     }
 
     override fun color(): Color {

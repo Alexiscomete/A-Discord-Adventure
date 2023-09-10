@@ -12,7 +12,7 @@ interface Sprite {
     // RENDERING - WORLD
 
     fun render(canvas: WorldCanvas, xToUse: Int, yToUse: Int, distance: Int)
-    fun isRendered(): Boolean
+    fun mustBeRemoved(): Boolean
 
     // RENDERING - CANVAS
 

@@ -5,6 +5,8 @@ import io.github.alexiscomete.lapinousecond.worlds.THRESHOLD_PATH
 import io.github.alexiscomete.lapinousecond.worlds.THRESHOLD_RIVER
 import io.github.alexiscomete.lapinousecond.worlds.WorldManager
 import io.github.alexiscomete.lapinousecond.worlds.Zooms
+import io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.Sprite
+import io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.SpriteSpawner
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.SpritesManager
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.sprites.*
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.types.MapTile
@@ -97,8 +99,11 @@ class BaseTileGenerator(
                             in 7..8 -> {
                                 spritesManager.sprites.add(SlimeSprite(it))
                             }
-                            in 9..10 -> {
-                                spritesManager.sprites.add(YellowSlimeSprite(it))
+                            9 -> {
+                                if (playerManager != null) spritesManager.sprites.add(YellowSlimeSprite(it, playerManager))
+                            }
+                            10 -> {
+                                if (playerManager != null) spritesManager.sprites.add(BlueSlimeSprite(it, playerManager))
                             }
                         }
                     }
@@ -123,6 +128,14 @@ class BaseTileGenerator(
             spritesManager.spritesOnTile(it.value).forEach { s -> spritesManager.sprites.remove(s) }
             dicoTiles.remove(it.key)
         }
+        spritesManager.sprites.removeIf(Sprite::mustBeRemoved)
+        val toAdd = mutableListOf<Sprite>()
+        spritesManager.sprites.forEach {
+            if (it is SpriteSpawner) {
+                it.spritesToSpawn().forEach { s -> toAdd.add(s) }
+            }
+        }
+        spritesManager.sprites.addAll(toAdd)
         val toDelete2 = mutableListOf<MultiTilesManager>()
         multiTilesManagers.forEach {
             if (it.canBeRemoved()) {
