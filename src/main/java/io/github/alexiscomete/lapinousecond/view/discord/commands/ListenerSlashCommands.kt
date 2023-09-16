@@ -1,7 +1,9 @@
 package io.github.alexiscomete.lapinousecond.view.discord.commands
 
 import io.github.alexiscomete.lapinousecond.data.check
+import io.github.alexiscomete.lapinousecond.view.ViewType
 import io.github.alexiscomete.lapinousecond.view.discord.commands.classes.*
+import io.github.alexiscomete.lapinousecond.view.exceptions.ExceptionWithViewType
 import org.javacord.api.entity.message.MessageFlag
 import org.javacord.api.event.interaction.SlashCommandCreateEvent
 import org.javacord.api.listener.interaction.SlashCommandCreateListener
@@ -73,6 +75,11 @@ class ListenerSlashCommands : SlashCommandCreateListener {
             } else {
                 throw IllegalStateException("Vous n'avez pas les permissions pour utiliser cette commande")
             }
+        } catch (e: ExceptionWithViewType) {
+            slashCommand.createImmediateResponder()
+                .setContent(e.getMessageAdaptedForViewType(ViewType.DISCORD))
+                .setFlags(MessageFlag.EPHEMERAL).respond()
+            e.printStackTrace()
         } catch (e: Exception) {
             slashCommand.createImmediateResponder()
                 .setContent("Une erreur est survenue. Vérifiez le contenu de la commande. Erreur = `${e.localizedMessage}`")
