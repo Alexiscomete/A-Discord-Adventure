@@ -3,18 +3,17 @@ package io.github.alexiscomete.lapinousecond.view.discord.commands
 import io.github.alexiscomete.lapinousecond.entity.entities.PlayerData
 import io.github.alexiscomete.lapinousecond.entity.entities.PlayerManager
 import io.github.alexiscomete.lapinousecond.entity.entities.PlayerWithAccount
+import io.github.alexiscomete.lapinousecond.view.exceptions.AccountException
 import io.github.alexiscomete.lapinousecond.worlds.ServerBot
 import io.github.alexiscomete.lapinousecond.worlds.servers
 import org.javacord.api.entity.user.User
 import org.javacord.api.interaction.SlashCommandInteraction
 
-const val START_COMMAND = "/account start"
-
 fun getAccount(slashCommandInteraction: SlashCommandInteraction): PlayerManager {
     try {
         return PlayerManager[slashCommandInteraction.user.id]
     } catch (e: Exception) {
-        throw IllegalStateException("Vous devez avoir un compte pour utiliser cette commande. Utilisez $START_COMMAND")
+        throw AccountException()
     }
 }
 
@@ -22,7 +21,7 @@ fun getAccount(id: Long): PlayerManager {
     try {
         return PlayerManager[id]
     } catch (e: Exception) {
-        throw IllegalStateException("Vous devez avoir un compte pour utiliser cette commande. Utilisez $START_COMMAND")
+        throw AccountException()
     }
 }
 
@@ -30,7 +29,7 @@ fun getAccount(user: User): PlayerWithAccount {
     try {
         return PlayerWithAccount(user)
     } catch (e: Exception) {
-        throw IllegalStateException("Vous devez avoir un compte pour utiliser cette commande. Utilisez $START_COMMAND")
+        throw AccountException()
     }
 }
 

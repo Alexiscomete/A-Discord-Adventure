@@ -3,6 +3,7 @@ package io.github.alexiscomete.lapinousecond.view.discord.commands
 import io.github.alexiscomete.lapinousecond.data.check
 import io.github.alexiscomete.lapinousecond.view.ViewType
 import io.github.alexiscomete.lapinousecond.view.discord.commands.classes.*
+import io.github.alexiscomete.lapinousecond.view.exceptions.BaseCustomException
 import io.github.alexiscomete.lapinousecond.view.exceptions.ExceptionWithViewType
 import org.javacord.api.entity.message.MessageFlag
 import org.javacord.api.event.interaction.SlashCommandCreateEvent
@@ -78,6 +79,11 @@ class ListenerSlashCommands : SlashCommandCreateListener {
         } catch (e: ExceptionWithViewType) {
             slashCommand.createImmediateResponder()
                 .setContent(e.getMessageAdaptedForViewType(ViewType.DISCORD))
+                .setFlags(MessageFlag.EPHEMERAL).respond()
+            e.printStackTrace()
+        } catch (e: BaseCustomException) {
+            slashCommand.createImmediateResponder()
+                .setContent(e.message)
                 .setFlags(MessageFlag.EPHEMERAL).respond()
             e.printStackTrace()
         } catch (e: Exception) {

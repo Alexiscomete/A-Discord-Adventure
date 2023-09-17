@@ -8,6 +8,8 @@ import io.github.alexiscomete.lapinousecond.view.contextFor
 import io.github.alexiscomete.lapinousecond.view.discord.commands.Command
 import io.github.alexiscomete.lapinousecond.view.discord.commands.ExecutableWithArguments
 import io.github.alexiscomete.lapinousecond.view.discord.commands.getAccount
+import io.github.alexiscomete.lapinousecond.view.exceptions.InvalidUserActionException
+import io.github.alexiscomete.lapinousecond.view.exceptions.UserCanSolveException
 import io.github.alexiscomete.lapinousecond.view.ui.longuis.EmbedPagesWithInteractions
 import io.github.alexiscomete.lapinousecond.view.ui.longuis.MenuBuilderFactoryUI
 import io.github.alexiscomete.lapinousecond.view.ui.longuis.MenuBuilderUI
@@ -160,7 +162,7 @@ private fun createResearche(ui: PlayerUI) = Question(
     val pM = ui.getPlayerManager()
     val rManager = pM.ownerManager
     if (!rManager.hasMoney(costDouble)) {
-        throw IllegalArgumentException("Vous n'avez pas assez de ${Resource.RABBIT_COIN.show}")
+        throw InvalidUserActionException("Vous n'avez pas assez de ${Resource.RABBIT_COIN.show}")
     }
     rManager.removeMoney(costDouble)
     val researchId = generateUniqueID()
@@ -202,7 +204,7 @@ private fun createAuction(ui: PlayerUI) = Question(
 
     // On vérifie que la quantité est bien positive
     if (quantityDouble <= 0) {
-        throw IllegalArgumentException("La quantité doit être positive")
+        throw UserCanSolveException("La quantité entrée doit être positive. Utilisez à nouveau le menu afin de créer une enchère, puis entrez une quantité positive.")
     }
 
     // On vérifie que le prix est bien un nombre
@@ -210,13 +212,13 @@ private fun createAuction(ui: PlayerUI) = Question(
 
     // On vérifie que le prix est bien positif
     if (costDouble <= 0) {
-        throw IllegalArgumentException("Le prix de départ doit être positif")
+        throw UserCanSolveException("Le prix de départ doit être positif. Utilisez à nouveau le menu afin de créer une enchère, puis entrez un prix positif.")
     }
 
     val p = ui.getPlayer()
     val rManager = ui.getPlayerManager().ownerManager
     if (!rManager.hasResource(resource, quantityDouble)) {
-        throw IllegalArgumentException("Vous n'avez pas assez de ${resource.name}")
+        throw InvalidUserActionException("Vous n'avez pas assez de ${resource.name}. Vous pouvez essayer d'en obtenir via le shop, ou en l'achetant par exemple.")
     }
     rManager.removeResource(resource, quantityDouble)
     val auctionId = generateUniqueID()
