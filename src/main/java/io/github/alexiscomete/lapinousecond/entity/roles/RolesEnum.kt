@@ -46,14 +46,14 @@ enum class RolesEnum(
     ),
     CITOYEN(
         "Citoyen",
-        "Citoyen du Dibistan / de la région / du département",
+        "Citoyen de la ville du serveur",
         arrayOf("citoy"),
         10,  /* 3 heures */
         10800
     ),
     AMBASSADOR(
         "Ambassadeur",
-        "Ambassadeur d'une région, d'un état, ou de toute autre entité qui n'existe qu'au Dibistan",
+        "Ambassadeur d'un autre serveur",
         arrayOf("ambassad"),
         10,  /* 3 heures */
         10800

@@ -98,7 +98,7 @@ class AccountCommandStart : SubCommand(
             )
             .addField(
                 "Signalement",
-                "Les serveurs sont uniquement sur le thème du **Dibistan**. Si vous voyez malgré tout un abus signalez le sur le **serveur principal du bot**."
+                "Si vous voyez un abus signalez le sur le **serveur principal du bot**."
             )
             .addField(
                 "Commençons le tuto",
