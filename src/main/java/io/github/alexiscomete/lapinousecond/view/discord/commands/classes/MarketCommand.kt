@@ -8,6 +8,7 @@ import io.github.alexiscomete.lapinousecond.view.contextFor
 import io.github.alexiscomete.lapinousecond.view.discord.commands.Command
 import io.github.alexiscomete.lapinousecond.view.discord.commands.ExecutableWithArguments
 import io.github.alexiscomete.lapinousecond.view.discord.commands.getAccount
+import io.github.alexiscomete.lapinousecond.view.exceptions.GameStateException
 import io.github.alexiscomete.lapinousecond.view.exceptions.InvalidUserActionException
 import io.github.alexiscomete.lapinousecond.view.exceptions.UserCanSolveException
 import io.github.alexiscomete.lapinousecond.view.ui.longuis.EmbedPagesWithInteractions
@@ -237,9 +238,8 @@ private fun createAuction(ui: PlayerUI) = Question(
 }
 
 private fun everyAuctions(ui: PlayerUI): Nothing? {
-    val result = saveManager.executeQuery("SELECT id FROM auctions", true) ?: throw IllegalStateException(
-        "No auctions found"
-    )
+    val result = saveManager.executeQuery("SELECT id FROM auctions", true)
+        ?: throw GameStateException("Aucun joueur n'a créé d'enchère pour le moment")
     val auctions = arrayListOf<Auction>()
     while (result.next()) {
         auctions.add(Auction(result.getLong("id")))
@@ -268,13 +268,13 @@ private fun everyAuctions(ui: PlayerUI): Nothing? {
                 // On vérifie si l'offre existe encore dans la base de données
                 val resultSet = saveManager.executeQuery("SELECT id FROM auctions WHERE id = ${auction.id}", true)
                 if (resultSet == null || !resultSet.next()) {
-                    throw IllegalStateException("L'enchère n'existe plus")
+                    throw InvalidUserActionException("L'enchère n'existe plus. Le créateur de celle-ci a décidé de la terminer, ou elle a été arrêtée par un administrateur.")
                 }
                 if (auction.who.id == player2.id || auction.whoMax.id == player2.id) {
-                    throw IllegalArgumentException("Vous ne pouvez pas répondre à votre propre enchère")
+                    throw InvalidUserActionException("Vous ne pouvez pas répondre à votre propre enchère")
                 }
                 if (!rManager2.hasMoney(auction.amountRB + MIN_AUCTION_ADDING)) {
-                    throw IllegalArgumentException("Vous n'avez pas assez d'argent pour répondre à cette enchère (il faut enchérir de 100 ${Resource.RABBIT_COIN.show})")
+                    throw InvalidUserActionException("Vous n'avez pas assez d'argent pour répondre à cette enchère (il faut enchérir de 100 ${Resource.RABBIT_COIN.show})")
                 }
                 rManager2.removeMoney(auction.amountRB + MIN_AUCTION_ADDING)
                 auction.whoMax.ownerManager.addMoney(auction.amountRB)
@@ -297,7 +297,7 @@ private fun everyAuctions(ui: PlayerUI): Nothing? {
 private fun myAuctions(ui: PlayerUI): Nothing? {
     val result = saveManager.executeQuery(
         "SELECT id FROM auctions WHERE who = ${ui.getPlayer().id}", true
-    ) ?: throw IllegalArgumentException("No auctions")
+    ) ?: throw UserCanSolveException("Vous n'avez créé aucune enchère pour le moment. Utilisez le même menu afin de créer une enchère.")
     val auctions = arrayListOf<Auction>()
     while (result.next()) {
         auctions.add(Auction(result.getLong("id")))
