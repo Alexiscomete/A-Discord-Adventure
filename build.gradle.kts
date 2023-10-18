@@ -22,7 +22,7 @@ repositories {
 dependencies {
     implementation("org.javacord:javacord:3.8.0")
     implementation("org.xerial:sqlite-jdbc:3.43.0.0")
-    implementation("org.json:json:20230618")
+    implementation("org.json:json:20231013")
     implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.10")
     implementation("com.github.Alexiscomete:procedural_generation:1-ALPHA.2")
     testImplementation("org.junit.jupiter:junit-jupiter:5.10.0")
