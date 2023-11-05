@@ -22,12 +22,12 @@ fun setUiToSettingsUi(ui: PlayerUI) {
     val pui = SETTINGS_MAIN_MENU_FACTORY
         .build(ui)
 
-    if (ui.getPlayer()["notif"] == "disable") {
+    if (ui.getPlayer()["notif"] == "d") {
         pui.addButton(
             "Activer notifications",
             "Vos notifications sont désactivées, ce boutton permet de les activer"
         ) {
-            ui.getPlayer()["notif"] = "enable"
+            ui.getPlayer()["notif"] = "e"
             ui.addMessage(Message("Succès de l'opération"))
             null
         }
@@ -36,7 +36,7 @@ fun setUiToSettingsUi(ui: PlayerUI) {
             "Désactiver notifications",
             "Vos notifications sont activées, ce boutton permet de les désactiver"
         ) {
-            ui.getPlayer()["notif"] = "disable"
+            ui.getPlayer()["notif"] = "d"
             ui.addMessage(Message("Succès de l'opération"))
             null
         }
