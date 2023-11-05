@@ -25,6 +25,7 @@ fun loadAllS() {
     ConfigCommand()
     InteractCommandBase()
     AdminCommandBase()
+    SettingsCommandBase()
     println("Loaded ${commands.size} commands")
 }
 
