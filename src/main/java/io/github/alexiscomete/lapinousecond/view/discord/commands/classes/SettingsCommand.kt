@@ -61,6 +61,8 @@ class SettingsCommandBase : Command(
         val context = contextFor(getAccount(slashCommand.user))
         val ui = DiscordPlayerUI(context, slashCommand as Interaction)
         setUiToSettingsUi(ui)
+        ui.updateOrSend()
+        context.ui(ui)
     }
 
 }
