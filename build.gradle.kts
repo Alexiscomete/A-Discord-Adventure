@@ -25,7 +25,7 @@ dependencies {
     implementation("org.json:json:20231013")
     implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.10")
     implementation("com.github.Alexiscomete:procedural_generation:1-ALPHA.2")
-    testImplementation("org.junit.jupiter:junit-jupiter:5.10.0")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.10.1")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
 }
 
