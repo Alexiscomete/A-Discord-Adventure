@@ -17,7 +17,10 @@ class Level(
     fun xpForLevel(level: Int, xpForLastLevel: Double? = null): Double {
         if (level == 1) return start
         if (level == 0) return 0.0
-        return (xpForLastLevel ?: xpForLevel(level - 1)) + accumulation * level
+
+        if (xpForLastLevel != null) return xpForLastLevel + (accumulation * level)
+
+        return ((level * (level + 1)) / 2.0 - 1.0) * accumulation + start;
     }
 
     fun levelForXp(xp: Double): Int {
