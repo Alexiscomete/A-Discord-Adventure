@@ -10,46 +10,9 @@ const val PROGRESSION_STRING_SIZE = 15
 class Level(
     val entity: CacheGetSet,
     private val field: String,
-    private val accumulation: Double = 2.5,
-    val start: Double = 2.5
-) {
-
-    fun xpForLevel(level: Int, xpForLastLevel: Double? = null): Double {
-        if (level == 1) return start
-        if (level == 0) return 0.0
-
-        if (xpForLastLevel != null) return xpForLastLevel + (accumulation * level)
-
-        return ((level * (level + 1)) / 2.0 - 1.0) * accumulation + start;
-    }
-
-    fun levelForXp(xp: Double): Int {
-        var level = 0
-        var xpForLastLevel = 0.0
-        while (xpForLevel(level + 1, xpForLastLevel) < xp) {
-            xpForLastLevel = xpForLevel(level + 1, xpForLastLevel)
-            level++
-        }
-        return level
-    }
-
-    fun xpForNextLevel(xp: Double): Double {
-        return totalXpForNextLevel(xp) - xp
-    }
-
-    fun totalXpForNextLevel(xp: Double): Double {
-        val level = levelForXp(xp)
-        return xpForLevel(level + 1)
-    }
-
-    fun xpForLastLevel(xp: Double): Double {
-        val level = levelForXp(xp)
-        return xpForLevel(level)
-    }
-
-    fun xpInCurrentLevel(xp: Double): Double {
-        return xp - xpForLastLevel(xp)
-    }
+    accumulation: Double = 2.5,
+    start: Double = 2.5
+) : ComputeLevel(accumulation, start) {
 
     val level
         get() = levelForXp(if (entity[field] == "") 0.0 else entity[field].toDouble())
