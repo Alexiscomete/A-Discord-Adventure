@@ -15,8 +15,8 @@ class MessagesManager : MessageCreateListener {
                 if (playerManager.lastLevelUpdate + XP_FOR_MESSAGE_COOLDOWN_MILLIS < System.currentTimeMillis()) {
                     val pair = playerManager.level.addXp(XP_FOR_MESSAGE)
                     playerManager.lastLevelUpdate = System.currentTimeMillis()
-                    if (pair != null) {
-                        messageCreateEvent.message.reply("Tu es passé.e du niveau " + pair.first + " au niveau " + pair.second + " ! *Pour désactiver ce message, interdisez au bot de parler dans ce salon*")
+                    if (pair != null && playerManager.playerData["notif"] != "d") {
+                        messageCreateEvent.message.reply("Tu es passé.e du niveau " + pair.first + " au niveau " + pair.second + " ! *Pour désactiver ce message, interdisez au bot de parler dans ce salon, ou utilisez la commande `/settings`*")
                     }
                 }
             } catch (_: Exception) {

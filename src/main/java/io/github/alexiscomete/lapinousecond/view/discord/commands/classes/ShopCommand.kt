@@ -7,6 +7,8 @@ import io.github.alexiscomete.lapinousecond.view.discord.commands.Command
 import io.github.alexiscomete.lapinousecond.view.discord.commands.ExecutableWithArguments
 import io.github.alexiscomete.lapinousecond.view.discord.commands.SubCommand
 import io.github.alexiscomete.lapinousecond.view.discord.commands.getAccount
+import io.github.alexiscomete.lapinousecond.view.exceptions.InvalidUserActionException
+import io.github.alexiscomete.lapinousecond.view.exceptions.UserCanSolveException
 import org.javacord.api.entity.message.embed.EmbedBuilder
 import org.javacord.api.interaction.*
 import java.awt.Color
@@ -162,7 +164,7 @@ class ShopSellCommand :
         if (opQuantity.isPresent) {
             quantity = opQuantity.get().toInt()
             if (quantity < MIN_SHOP_QUANTITY) {
-                throw IllegalArgumentException("Quantity must be greater than ${MIN_SHOP_QUANTITY - 1}")
+                throw UserCanSolveException("Quantity must be greater than ${MIN_SHOP_QUANTITY - 1}")
             }
         }
 
@@ -175,7 +177,7 @@ class ShopSellCommand :
             resourceManager = ResourceManager(resource, 0)
             player.ownerManager.resourceManagers[resource] = resourceManager
             playerData.updateResources(player.ownerManager.resourceManagers)
-            throw IllegalStateException("Transaction impossible car vous n'avez pas les ressources demandées")
+            throw InvalidUserActionException("Transaction impossible car vous n'avez pas les ressources demandées")
         } else {
             if (resourceManager.quantity >= quantity) {
                 playerData["bal"] = (playerData["bal"].toDouble() + price).toString()
@@ -185,7 +187,7 @@ class ShopSellCommand :
                     .setContent("Vente réussie ! Vous avez gagné ${price.toInt()} ${Resource.RABBIT_COIN.show}")
                     .respond()
             } else {
-                throw IllegalStateException("La transaction de " + quantity + " " + resource.show + " pour " + price + " ${Resource.RABBIT_COIN.show} n'a pas pu être effectuée car vous n'aviez pas assez de " + resource.show)
+                throw InvalidUserActionException("La transaction de " + quantity + " " + resource.show + " pour " + price + " ${Resource.RABBIT_COIN.show} n'a pas pu être effectuée car vous n'aviez pas assez de " + resource.show)
             }
         }
     }

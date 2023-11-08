@@ -54,13 +54,15 @@ class AccountCommandVerify : SubCommand(
     }
 }
 
+const val ACCOUNT_START_COMMAND = "account start"
+
 class AccountCommandStart : SubCommand(
     "start",
     "Créer votre compte sur le bot et faire le tuto"
 ),
     ExecutableWithArguments {
     override val fullName: String
-        get() = "account start"
+        get() = ACCOUNT_START_COMMAND
     override val botPerms: Array<String>?
         get() = null
 
@@ -96,7 +98,7 @@ class AccountCommandStart : SubCommand(
             )
             .addField(
                 "Signalement",
-                "Les serveurs sont uniquement sur le thème du **Dibistan**. Si vous voyez malgré tout un abus signalez le sur le **serveur principal du bot**."
+                "Si vous voyez un abus signalez le sur le **serveur principal du bot**."
             )
             .addField(
                 "Commençons le tuto",
