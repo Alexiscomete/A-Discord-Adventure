@@ -1,46 +1,69 @@
 package io.github.alexiscomete.lapinousecond.entity.concrete.items
 
 import io.github.alexiscomete.lapinousecond.data.managesave.CacheCustom
-import io.github.alexiscomete.lapinousecond.data.managesave.CacheGetSet
-import io.github.alexiscomete.lapinousecond.data.managesave.Table
 import io.github.alexiscomete.lapinousecond.data.managesave.save
 import io.github.alexiscomete.lapinousecond.entity.concrete.items.items.StrasbourgSausage
 import io.github.alexiscomete.lapinousecond.entity.entities.PlayerManager
 
-val ITEMS = Table("items")
-val itemsCacheCustom = CacheCustom(ITEMS) { id: Long ->
-    when (save!!.getString(ITEMS, "type", "TEXT", id, false)) {
-        "normal" -> NormalItem(id)
-        "StrasbourgSausage" -> StrasbourgSausage(id)
-        else -> throw IllegalStateException("Unknown item type")
-    }
-}
+abstract class Item protected constructor(val id: Long) {
 
-abstract class Item(id: Long) : CacheGetSet(id, ITEMS) {
-    var name: String
-        get() = this["name"]
+    companion object {
+        private val items = CacheCustom(ITEMS) {
+                id: Long ->
+            when (save!!.getString(ITEMS, "type", "TEXT", id, false)) {
+                "normal" -> NormalItem(id)
+                "StrasbourgSausage" -> StrasbourgSausage(id)
+                else -> throw IllegalStateException("Unknown item type")
+            }
+        }
+        operator fun get(id: Long): Item {
+            return items[id]
+                ?: throw NullPointerException("PlayerManager $id is null. Please create an account first with /account start.")
+        }
+
+        fun getOrNull(id: Long): Item? = items[id]
+
+        fun createItem(id: Long, type: ItemTypesEnum, name: String? = null, description: String? = null): Item {
+            val pM = items[id]
+            if (pM != null) {
+                throw NullPointerException("PlayerManager $id already exists.")
+            }
+            ItemData.createItemData(id, type, name, description)
+            return items[id]
+                ?: throw NullPointerException("WARNING")
+        }
+
+        fun clearInsideCache() {
+            items.clearInsideCache()
+        }
+    }
+
+    val data = ItemData[id]
+
+    var customName: String
+        get() = data["name"]
         set(value) {
-            this["name"] = value
+            data["name"] = value
         }
 
     var description: String
-        get() = this["description"]
+        get() = data["description"]
         set(value) {
-            this["description"] = value
+            data["description"] = value
         }
 
     var containsItems: ContainsItems
         get() = run {
-            val containsItemsType = this["containsItemsType"]
+            val containsItemsType = data["containsItemsType"]
             if (containsItemsType == "player") {
-                val playerId = this["containsItemsId"].toLong()
+                val playerId = data["containsItemsId"].toLong()
                 PlayerManager[playerId].ownerManager
             } else {
                 throw IllegalStateException("Unknown containsItems type")
             }
         }
         set(value) {
-            this["containsItemsType"] = value.ownerType
-            this["containsItemsId"] = value.ownerString
+            data["containsItemsType"] = value.ownerType
+            data["containsItemsId"] = value.ownerString
         }
 }
