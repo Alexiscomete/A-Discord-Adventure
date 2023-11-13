@@ -24,7 +24,7 @@ class Level(
         get() = totalXpForNextLevel(if (entity[field] == "") 0.0 else entity[field].toDouble())
 
     val xpForLastLevel
-        get() = xpForLastLevel(if (entity[field] == "") 0.0 else entity[field].toDouble())
+        get() = totalXpForCurrentLevel(if (entity[field] == "") 0.0 else entity[field].toDouble())
 
     val xpInCurrentLevel
         get() = xpInCurrentLevel(if (entity[field] == "") 0.0 else entity[field].toDouble())

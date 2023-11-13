@@ -1,5 +1,7 @@
 package io.github.alexiscomete.lapinousecond.entity.xp
 
+import kotlin.math.pow
+import kotlin.math.roundToInt
 import kotlin.math.sqrt
 
 open class ComputeLevel(
@@ -12,7 +14,7 @@ open class ComputeLevel(
 
         if (xpForLastLevel != null) return xpForLastLevel + (accumulation * level)
 
-        return ((level * (level + 1)) / 2.0 - 1.0) * accumulation + start;
+        return ((level * (level + 1)) / 2.0 - 1.0) * accumulation + start
     }
 
     fun levelForXp(xp: Double): Int {
@@ -33,12 +35,19 @@ open class ComputeLevel(
         return xpForLevel(level + 1)
     }
 
-    fun xpForLastLevel(xp: Double): Double {
+    fun totalXpForCurrentLevel(xp: Double): Double {
         val level = levelForXp(xp)
         return xpForLevel(level)
     }
 
     fun xpInCurrentLevel(xp: Double): Double {
-        return xp - xpForLastLevel(xp)
+        return xp - totalXpForCurrentLevel(xp)
     }
+}
+
+// extension function for Double
+
+fun Double.roundCustom(precision: Int = 0): Double {
+    val p = 10.0.pow(precision)
+    return (this * p).roundToInt() / p
 }
