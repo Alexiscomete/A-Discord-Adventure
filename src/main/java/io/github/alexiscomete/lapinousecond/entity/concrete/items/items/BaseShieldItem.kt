@@ -1,4 +1,6 @@
 package io.github.alexiscomete.lapinousecond.entity.concrete.items.items
 
-class BaseShieldItem {
+import io.github.alexiscomete.lapinousecond.entity.concrete.items.Item
+
+class BaseShieldItem(id: Long) : Item(id) {
 }
