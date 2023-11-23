@@ -2,20 +2,12 @@ package io.github.alexiscomete.lapinousecond.entity.concrete.items
 
 import io.github.alexiscomete.lapinousecond.data.managesave.CacheCustom
 import io.github.alexiscomete.lapinousecond.data.managesave.generateUniqueID
-import io.github.alexiscomete.lapinousecond.data.managesave.save
-import io.github.alexiscomete.lapinousecond.entity.concrete.items.items.StrasbourgSausage
 import io.github.alexiscomete.lapinousecond.entity.entities.PlayerManager
 
 abstract class Item protected constructor(val id: Long) {
 
     companion object {
-        private val items = CacheCustom(ITEMS) { id: Long ->
-            when (save!!.getString(ITEMS, "type", "TEXT", id, false)) {
-                "normal" -> NormalItem(id)
-                "StrasbourgSausage" -> StrasbourgSausage(id)
-                else -> throw IllegalStateException("Unknown item type")
-            }
-        }
+        private val items = CacheCustom(ITEMS, ItemTypesEnum.Companion::instanciateWithData)
 
         operator fun get(id: Long): Item {
             return items[id]
@@ -30,8 +22,7 @@ abstract class Item protected constructor(val id: Long) {
                 throw NullPointerException("PlayerManager $id already exists.")
             }
             ItemData.createItemData(id, type, name, description)
-            return items[id]
-                ?: throw NullPointerException("WARNING")
+            return items[id] ?: throw NullPointerException("WARNING")
         }
 
         fun createItem(type: ItemTypesEnum, name: String? = null, description: String? = null): Item {

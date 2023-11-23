@@ -93,10 +93,9 @@ class PlayerOwnerManager(
         val items = ArrayList<Item>()
         // for each item, we create an item object and add it to the list
         for (itemId in result) {
-            items.add(
-                Item.getOrNull(itemId)
-                    ?: throw IllegalStateException("Votre inventaire contient un item qui n'existe pas et ne peut donc pas être ouvert. Veuillez contacter un administrateur.")
-            )
+            Item.getOrNull(itemId)?.let {
+                items.add(it)
+            }
         }
         return items
     }
