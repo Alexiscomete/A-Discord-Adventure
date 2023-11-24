@@ -7,7 +7,7 @@ import kotlin.math.roundToInt
 const val ROUND_PRECISION_D = 1000.0
 const val PROGRESSION_STRING_SIZE = 15
 
-class Level(
+open class Level(
     val entity: CacheGetSet,
     private val field: String,
     accumulation: Double = 2.5,
@@ -29,7 +29,7 @@ class Level(
     val xpInCurrentLevel
         get() = xpInCurrentLevel(if (entity[field] == "") 0.0 else entity[field].toDouble())
 
-    fun addXp(xp: Double): Pair<Int, Int>? {
+    open fun addXp(xp: Double): Pair<Int, Int>? {
         val currentLevel = level
         entity[field] = ((if (entity[field] == "") 0.0 else entity[field].toDouble()) + xp).toString()
         val newLevel = level

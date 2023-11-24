@@ -1,5 +1,6 @@
 package io.github.alexiscomete.lapinousecond.data.managesave
 
+import io.github.alexiscomete.lapinousecond.entity.concrete.items.ITEMS
 import java.sql.*
 
 var save: SaveManager? = null
@@ -136,6 +137,10 @@ class SaveManager(path: String) {
     fun setValue(table: Table, id: Long, row: String, value: String, type: String) {
         execute("ALTER TABLE " + table.name + " ADD COLUMN " + row + " " + type, false)
         setValue(table, id, row, value)
+    }
+
+    fun addColumn(table: Table, row: String) {
+        execute("ALTER TABLE " + table.name + " ADD COLUMN " + row + " TEXT", false)
     }
 
     /**
@@ -335,5 +340,10 @@ class SaveManager(path: String) {
      */
     fun delete(table: Table, id: Long, log: Boolean = false) {
         execute("DELETE FROM " + table.name + " WHERE id=" + id, log)
+    }
+
+    fun addCriticalColumns() {
+        addColumn(ITEMS, "containsItemsType")
+        addColumn(ITEMS, "containsItemsId")
     }
 }

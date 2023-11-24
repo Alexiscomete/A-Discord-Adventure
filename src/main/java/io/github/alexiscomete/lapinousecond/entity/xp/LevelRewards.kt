@@ -3,7 +3,21 @@ package io.github.alexiscomete.lapinousecond.entity.xp
 import io.github.alexiscomete.lapinousecond.entity.concrete.items.Item
 import io.github.alexiscomete.lapinousecond.entity.concrete.items.ItemTypesEnum
 import io.github.alexiscomete.lapinousecond.entity.concrete.resources.Resource
+import io.github.alexiscomete.lapinousecond.entity.entities.managers.PlayerOwnerManager
 import kotlin.math.min
+
+fun applyLevelRewardsTo(ownerManager: PlayerOwnerManager, levelRewards: LevelRewards) {
+    // add the coin reward
+    ownerManager.addMoney(levelRewards.coinReward)
+    // add the ressources reward
+    levelRewards.ressourcesReward.forEach {
+        ownerManager.addResource(it.first, it.second.toDouble())
+    }
+    // add the items reward
+    levelRewards.items.forEach {
+        ownerManager.addItem(it)
+    }
+}
 
 class LevelRewards(val level: Int) {
     val coinReward = ((min(level * level * 0.7, level * 40.0) + level * 2 + 1) * ROUND_PRECISION_D).toInt()

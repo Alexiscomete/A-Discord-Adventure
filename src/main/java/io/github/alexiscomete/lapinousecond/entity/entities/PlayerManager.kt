@@ -6,7 +6,7 @@ import io.github.alexiscomete.lapinousecond.entity.effects.EffectsManager
 import io.github.alexiscomete.lapinousecond.entity.entities.managers.EntityWorldManager
 import io.github.alexiscomete.lapinousecond.entity.entities.managers.PlayerOwnerManager
 import io.github.alexiscomete.lapinousecond.entity.entities.managers.WorkManager
-import io.github.alexiscomete.lapinousecond.entity.xp.Level
+import io.github.alexiscomete.lapinousecond.entity.xp.PlayerLevel
 import io.github.alexiscomete.lapinousecond.view.discord.commands.classes.ROUND_PRECISION
 
 class PlayerManager private constructor(
@@ -38,10 +38,10 @@ class PlayerManager private constructor(
 
     val playerData: PlayerData = PlayerData(id)
 
-    val level: Level = Level(playerData, "xp")
     var lastLevelUpdate = 0L
     val effectsManager = EffectsManager()
     val ownerManager = PlayerOwnerManager(playerData)
+    val level = PlayerLevel(playerData, ownerManager, "xp")
     val worldManager = EntityWorldManager(playerData)
     val workManager = WorkManager()
 

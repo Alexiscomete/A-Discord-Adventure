@@ -3,7 +3,6 @@ package io.github.alexiscomete.lapinousecond
 import io.github.alexiscomete.lapinousecond.data.managesave.SaveLocation
 import io.github.alexiscomete.lapinousecond.data.managesave.SaveManager
 import io.github.alexiscomete.lapinousecond.data.managesave.saveManager
-import io.github.alexiscomete.lapinousecond.entity.concrete.items.ItemData
 import io.github.alexiscomete.lapinousecond.view.discord.commands.ListenerSlashCommands
 import io.github.alexiscomete.lapinousecond.view.discord.commands.loadAllS
 import io.github.alexiscomete.lapinousecond.view.discord.manager.ButtonsManager
@@ -51,11 +50,8 @@ fun main() {
         // Ajout des commandes
         loadAllS()
 
-        // Ajout des colonnes critiques
-        ItemData[0].also {
-            it["containsItemsType"]
-            it["containsItemsId"]
-        }
+        // Ajout des colonnes critiques dans la BDD
+        saveManager.addCriticalColumns()
     } catch (e: IOException) {
         e.printStackTrace()
     }
