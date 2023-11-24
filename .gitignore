@@ -4,3 +4,4 @@ target/
 build/
 .idea/
 .obsidian/
+.gradle/
