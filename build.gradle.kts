@@ -19,7 +19,7 @@ dependencies {
     implementation("org.javacord:javacord:3.8.0")
     implementation("org.xerial:sqlite-jdbc:3.44.1.0")
     implementation("org.json:json:20231013")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.20")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.21")
     implementation("com.github.Alexiscomete:procedural_generation:1-ALPHA.2")
     testImplementation("org.junit.jupiter:junit-jupiter:5.10.1")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
