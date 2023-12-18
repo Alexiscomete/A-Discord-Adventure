@@ -11,6 +11,8 @@ fun applyLevelRewardsTo(ownerManager: PlayerOwnerManager, levelRewards: LevelRew
     ownerManager.addMoney(levelRewards.coinReward)
     // add the ressources reward
     levelRewards.ressourcesReward.forEach {
+        // DEBUG
+        println("Adding ${it.second} ${it.first.show} to ${ownerManager.ownerString}")
         ownerManager.addResource(it.first, it.second.toDouble())
     }
     // add the items reward

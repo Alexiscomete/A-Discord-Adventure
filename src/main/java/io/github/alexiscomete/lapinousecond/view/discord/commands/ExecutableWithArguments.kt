@@ -43,14 +43,14 @@ interface ExecutableWithArguments {
     fun getCurrentServerBot(slashCommand: SlashCommandInteraction): ServerBot {
         val p: PlayerData = getAccount(slashCommand).playerData
         if (p["serv"] == "") {
-            throw IllegalStateException("Impossible de trouver votre serveur actuel : utilisez /hub")
+            throw IllegalStateException("Impossible de trouver votre serveur actuel : utilisez `/map` puis cliquez sur le bouton `Hub` pour vous téléporter au hub.")
         }
         val servOp = slashCommand.server
         if (servOp.isPresent) {
             val serv = servOp.get()
             if (serv.id == p["serv"].toLong()) {
                 return servers[serv.id]
-                    ?: throw IllegalStateException("L'owner du server ou un admin doit utiliser le /config pour configurer le serveur")
+                    ?: throw IllegalStateException("L'owner du server ou un admin doit utiliser le `/config` pour configurer le serveur")
             } else {
                 throw WrongServerException("Utilisez cette commande dans un salon du serveur actuel : " + p["serv"].toLong() + ". Astuce : pour changer de serveur déplacez vous dans une ville située dans le serveur voulu avec /map. Si vous êtes actuellement dans le tuto, relisez les instructions.")
             }
