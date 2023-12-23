@@ -49,6 +49,9 @@ fun main() {
 
         // Ajout des commandes
         loadAllS()
+
+        // Ajout des colonnes critiques dans la BDD
+        saveManager.addCriticalColumns()
     } catch (e: IOException) {
         e.printStackTrace()
     }

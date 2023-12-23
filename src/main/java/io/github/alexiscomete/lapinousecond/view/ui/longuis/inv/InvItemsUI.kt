@@ -11,7 +11,7 @@ class InvItemsUI(playerUI: PlayerUI) : EmbedPagesWithInteractions<Item>(
         playerUI.getPlayerManager().ownerManager.getAllItems()
     },
     { i: Int, i1: Int, items: ArrayList<Item> ->
-        val pairs = items.subList(i, i1).map { Pair("${it.name} (${it.id})", it.description) }
+        val pairs = items.subList(i, i1).map { Pair("${it.customName} (${it.id})", it.description) }
         pairs.ifEmpty { listOf(Pair("Aucun item", "Revenez plus tard")) }
     },
     { _: Item, _: PlayerUI ->

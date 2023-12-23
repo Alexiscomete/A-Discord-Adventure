@@ -8,6 +8,7 @@ import io.github.alexiscomete.lapinousecond.entity.entities.PlayerManager
 import io.github.alexiscomete.lapinousecond.entity.roles.Role
 import io.github.alexiscomete.lapinousecond.entity.roles.RolesEnum
 import io.github.alexiscomete.lapinousecond.view.discord.commands.*
+import io.github.alexiscomete.lapinousecond.view.discord.manager.getLevelEmbed
 import org.javacord.api.entity.message.embed.EmbedBuilder
 import org.javacord.api.interaction.SlashCommandInteraction
 import org.javacord.api.interaction.callback.InteractionImmediateResponseBuilder
@@ -62,11 +63,19 @@ fun setWork(
             playerManager.playerData.updateResources(playerManager.ownerManager.resourceManagers)
         }
         playerManager.workManager.updateWorkTime()
-        playerManager.level.addXp(XP_FOR_WORKING)
+        val pair = playerManager.level.addXpWithReward(XP_FOR_WORKING)
+        if (pair != null && playerManager.playerData["notif"] != "d") {
+            // send to the user
+            response.addEmbed(getLevelEmbed(pair))
+        }
         if (playerManager.playerData["tuto"] == TutoSteps.STEP_WORK.number) {
             response.setContent("> (Aurimezi) : Bon tu as déjà plus de trucs. Maintenant on va utiliser ma fonctionnalité de magasin pour échanger ce que tu as trouvé. Bon qu'est ce qu'on a ramassé ...\n\nUtilisez à nouveau la commande d'inventaire")
             playerManager.playerData["tuto"] = TutoSteps.STEP_WORK.nextStepNum
-            playerManager.level.addXp(XP_FOR_TUTO)
+            val pair2 = playerManager.level.addXpWithReward(XP_FOR_TUTO)
+            if (pair2 != null && playerManager.playerData["notif"] != "d") {
+                // send to the user
+                response.addEmbed(getLevelEmbed(pair2))
+            }
         }
     } else {
         embedBuilder.addField(
@@ -116,7 +125,10 @@ private fun setRoles(
             }
         }
         playerManager.playerData["bal"] = (playerManager.playerData["bal"].toDouble() + totalRoles).toString()
-        playerManager.level.addXp(XP_FOR_WORKING)
+        val pair = playerManager.level.addXpWithReward(XP_FOR_WORKING)
+        if (pair != null && playerManager.playerData["notif"] != "d") {
+            user.sendMessage(getLevelEmbed(pair))
+        }
     } else {
         roles.append("Vous n'êtes pas sur un serveur")
     }

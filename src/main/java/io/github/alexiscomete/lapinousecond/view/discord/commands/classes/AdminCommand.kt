@@ -4,7 +4,8 @@ import io.github.alexiscomete.lapinousecond.data.managesave.saveManager
 import io.github.alexiscomete.lapinousecond.data.transactions.auctions
 import io.github.alexiscomete.lapinousecond.data.transactions.offers
 import io.github.alexiscomete.lapinousecond.data.transactions.researches
-import io.github.alexiscomete.lapinousecond.entity.concrete.items.itemsCacheCustom
+import io.github.alexiscomete.lapinousecond.entity.concrete.items.Item
+import io.github.alexiscomete.lapinousecond.entity.concrete.items.ItemData
 import io.github.alexiscomete.lapinousecond.entity.entities.PlayerManager
 import io.github.alexiscomete.lapinousecond.view.discord.commands.Command
 import io.github.alexiscomete.lapinousecond.view.discord.commands.ExecutableWithArguments
@@ -155,7 +156,8 @@ class AdminCommandCache : SubCommand(
             offers.clearInsideCache()
             PlayerManager.clearInsideCache()
             buildings.clearInsideCache()
-            itemsCacheCustom.clearInsideCache()
+            Item.clearInsideCache()
+            ItemData.clearInsideCache()
             places.clearInsideCache()
             slashCommand.createImmediateResponder()
                 .setContent("Cache vidé")

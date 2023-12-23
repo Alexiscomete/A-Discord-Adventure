@@ -1,8 +1,7 @@
 package io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.sprites
 
-import io.github.alexiscomete.lapinousecond.data.managesave.generateUniqueID
-import io.github.alexiscomete.lapinousecond.entity.concrete.items.items.StrasbourgSausage
-import io.github.alexiscomete.lapinousecond.entity.concrete.items.itemsCacheCustom
+import io.github.alexiscomete.lapinousecond.entity.concrete.items.Item
+import io.github.alexiscomete.lapinousecond.entity.concrete.items.ItemTypesEnum
 import io.github.alexiscomete.lapinousecond.entity.entities.managers.PlayerOwnerManager
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.render.canvas.WorldCanvas
 import io.github.alexiscomete.lapinousecond.worlds.map.tiles.sprite.Sprite
@@ -18,11 +17,7 @@ class LootSprite(override var tile: Tile, private val playerOwnerManager: Player
     override fun render(canvas: WorldCanvas, xToUse: Int, yToUse: Int, distance: Int) {
         if (!opened && distance <= 1) {
             opened = true
-            val id = generateUniqueID()
-            itemsCacheCustom.add(id)
-            val item = StrasbourgSausage(id)
-            item["type"] = "StrasbourgSausage"
-            playerOwnerManager.addItem(item)
+            playerOwnerManager.addItem(Item.createItem(ItemTypesEnum.STRASBOURG_SAUSAGE))
         }
         canvas.drawSprite(this, xToUse, yToUse, 5)
     }
