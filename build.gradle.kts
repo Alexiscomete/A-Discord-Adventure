@@ -22,7 +22,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.23")
     implementation("com.github.Alexiscomete:procedural_generation:1-ALPHA.2")
     testImplementation("org.junit.jupiter:junit-jupiter:5.10.2")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0")
     implementation(kotlin("reflect"))
 }
 
